@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pulleySheave" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="360" rx="14" fill="#0b1120" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="30" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    SISTEM KATROL &amp; TAKAL (CHAIN BLOCK): KEUNTUNGAN MEKANIS MENGANGKAT BEBAN
+  </text>
+  <text x="400" y="48" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Bagaimana Seorang Mekanik Mampu Mengangkat Mesin 1.000 kg Sendirian Menggunakan Chain Block?
+  </text>
+
+  <!-- Left: KATROL TETAP TUNGGAL (KM = 1) -->
+  <g transform="translate(60, 70)">
+    <rect x="0" y="0" width="310" height="260" rx="10" fill="#111827" stroke="#64748b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="310" height="32" rx="10" fill="#1e293b"/>
+    <text x="155" y="21" font-size="11" font-weight="900" fill="#e2e8f0" text-anchor="middle">
+      1. KATROL TETAP TUNGGAL (KM = 1)
+    </text>
+
+    <!-- Overhead Beam -->
+    <rect x="50" y="45" width="210" height="10" rx="2" fill="#475569"/>
+    <!-- Bracket to pulley -->
+    <line x1="155" y1="55" x2="155" y2="80" stroke="#94a3b8" stroke-width="3"/>
+    
+    <!-- Pulley Wheel -->
+    <circle cx="155" cy="95" r="22" fill="url(#pulleySheave)" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="155" cy="95" r="6" fill="#0f172a"/>
+
+    <!-- Rope left (to load) and right (to pull) -->
+    <line x1="133" y1="95" x2="133" y2="185" stroke="#facc15" stroke-width="3"/>
+    <line x1="177" y1="95" x2="177" y2="155" stroke="#facc15" stroke-width="3"/>
+
+    <!-- Load (100 kg = 1000 N) -->
+    <g transform="translate(113, 185)">
+      <rect x="0" y="0" width="40" height="35" rx="4" fill="#ef4444"/>
+      <text x="20" y="22" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle">100 kg</text>
+      <text x="20" y="45" font-size="8" fill="#fca5a5" text-anchor="middle">(W = 1000 N)</text>
+    </g>
+
+    <!-- Pull Force Arrow (F = 1000 N) -->
+    <g transform="translate(177, 155)">
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#ef4444" stroke-width="4"/>
+      <polygon points="-5,35 0,45 5,35" fill="#ef4444"/>
+      <text x="25" y="25" font-size="11" font-weight="900" fill="#f87171">F = 1000 N</text>
+    </g>
+
+    <!-- Bottom Note -->
+    <g transform="translate(15, 225)">
+      <text x="0" y="14" font-size="10" font-weight="800" fill="#f87171">❌ Tidak Meringankan Beban!</text>
+      <text x="0" y="26" font-size="9" fill="#94a3b8">Hanya membalik arah tarikan (menarik ke bawah lebih nyaman).</text>
+    </g>
+  </g>
+
+  <!-- Right: KATROL MAJEMUK / TAKAL (KM = 4) -->
+  <g transform="translate(430, 70)">
+    <rect x="0" y="0" width="310" height="260" rx="10" fill="#111827" stroke="#10b981" stroke-width="2"/>
+    <rect x="0" y="0" width="310" height="32" rx="10" fill="#065f46"/>
+    <text x="155" y="21" font-size="11" font-weight="900" fill="#a7f3d0" text-anchor="middle">
+      2. TAKAL MAJEMUK 4 TALI / CHAIN BLOCK (KM = 4)
+    </text>
+
+    <!-- Overhead Beam -->
+    <rect x="50" y="45" width="210" height="10" rx="2" fill="#475569"/>
+    
+    <!-- Top 2 Fixed Pulleys -->
+    <circle cx="130" cy="85" r="18" fill="url(#pulleySheave)" stroke="#cbd5e1" stroke-width="1.5"/>
+    <circle cx="170" cy="85" r="18" fill="url(#pulleySheave)" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- Bottom 2 Moving Pulleys -->
+    <g transform="translate(0, 70)">
+      <circle cx="130" cy="85" r="18" fill="url(#pulleySheave)" stroke="#cbd5e1" stroke-width="1.5"/>
+      <circle cx="170" cy="85" r="18" fill="url(#pulleySheave)" stroke="#cbd5e1" stroke-width="1.5"/>
+      <rect x="110" y="103" width="80" height="8" rx="2" fill="#64748b"/>
+      <line x1="150" y1="111" x2="150" y2="125" stroke="#94a3b8" stroke-width="3"/>
+
+      <!-- Load 100 kg -->
+      <rect x="125" y="125" width="50" height="35" rx="4" fill="#ef4444"/>
+      <text x="150" y="146" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">100 kg</text>
+      <text x="150" y="172" font-size="8" fill="#fca5a5" text-anchor="middle">(W = 1000 N)</text>
+    </g>
+
+    <!-- 4 Ropes Supporting Load -->
+    <line x1="112" y1="85" x2="112" y2="155" stroke="#facc15" stroke-width="2"/>
+    <line x1="148" y1="85" x2="148" y2="155" stroke="#facc15" stroke-width="2"/>
+    <line x1="152" y1="85" x2="152" y2="155" stroke="#facc15" stroke-width="2"/>
+    <line x1="188" y1="85" x2="188" y2="155" stroke="#facc15" stroke-width="2"/>
+
+    <!-- Pull Rope End (F = 250 N) -->
+    <line x1="210" y1="85" x2="210" y2="185" stroke="#facc15" stroke-width="2.5"/>
+    <g transform="translate(210, 185)">
+      <line x1="0" y1="0" x2="0" y2="30" stroke="#10b981" stroke-width="3"/>
+      <polygon points="-4,25 0,33 4,25" fill="#10b981"/>
+      <text x="15" y="18" font-size="11" font-weight="900" fill="#34d399">F = 250 N</text>
+      <text x="15" y="30" font-size="8" fill="#a7f3d0">(4x Lebih Ringan!)</text>
+    </g>
+
+    <!-- Bottom Note -->
+    <g transform="translate(15, 225)">
+      <text x="0" y="14" font-size="10" font-weight="900" fill="#34d399">✅ Keuntungan Mekanis KM = 4:</text>
+      <text x="0" y="26" font-size="9" fill="#e2e8f0">Beban 1000 N dibagi 4 tali ➔ Tenaga tarik hanya 250 N (25 kg)!</text>
+    </g>
+  </g>
+</svg>

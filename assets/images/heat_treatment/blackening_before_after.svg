@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="metalRawGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+    <linearGradient id="blackOxideGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="40%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="rustGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="360" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="32" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    ILUSTRASI PERBANDINGAN: SEBELUM VS SESUDAH BLACKENING
+  </text>
+  <text x="400" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Bukan Lapisan Cat Tambahan! Konversi Molekul Fe Terluar Menjadi Magnetit Fe₃O₄ Tanpa Mengubah Ukuran
+  </text>
+
+  <!-- Left: SEBELUM BLACKENING (Baja Mentah / Berkarat) -->
+  <g transform="translate(60, 75)">
+    <rect x="0" y="0" width="310" height="260" rx="12" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+    <rect x="0" y="0" width="310" height="36" rx="12" fill="#334155"/>
+    <text x="155" y="23" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="900" fill="#fca5a5" text-anchor="middle">
+      ❌ SEBELUM BLACKENING (Baja Mentah)
+    </text>
+
+    <!-- Raw Bolt Graphic -->
+    <g transform="translate(65, 55)">
+      <!-- Bolt Head (Hex) -->
+      <polygon points="20,10 70,10 90,35 70,60 20,60 0,35" fill="url(#metalRawGrad)" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="45" cy="35" r="14" fill="#64748b" stroke="#94a3b8"/>
+      <!-- Bolt Thread Shaft -->
+      <rect x="90" y="18" width="80" height="34" fill="url(#metalRawGrad)" stroke="#cbd5e1" stroke-width="1.5"/>
+      <!-- Thread grooves -->
+      <line x1="105" y1="18" x2="105" y2="52" stroke="#475569" stroke-width="2"/>
+      <line x1="120" y1="18" x2="120" y2="52" stroke="#475569" stroke-width="2"/>
+      <line x1="135" y1="18" x2="135" y2="52" stroke="#475569" stroke-width="2"/>
+      <line x1="150" y1="18" x2="150" y2="52" stroke="#475569" stroke-width="2"/>
+      <line x1="165" y1="18" x2="165" y2="52" stroke="#475569" stroke-width="2"/>
+
+      <!-- Rust Patches -->
+      <ellipse cx="115" cy="28" rx="8" ry="4" fill="url(#rustGrad)" opacity="0.85"/>
+      <ellipse cx="140" cy="40" rx="10" ry="5" fill="url(#rustGrad)" opacity="0.85"/>
+      <circle cx="40" cy="25" r="5" fill="url(#rustGrad)" opacity="0.85"/>
+    </g>
+
+    <!-- Bullet Points -->
+    <g transform="translate(20, 140)">
+      <circle cx="8" cy="8" r="4" fill="#ef4444"/>
+      <text x="20" y="12" font-size="11" font-weight="700" fill="#fecaca">Permukaan reflektif menyilaukan mata</text>
+
+      <circle cx="8" cy="32" r="4" fill="#ef4444"/>
+      <text x="20" y="36" font-size="11" font-weight="700" fill="#fecaca">Rentan berkarat dalam 24 jam (udara lembap)</text>
+
+      <circle cx="8" cy="56" r="4" fill="#ef4444"/>
+      <text x="20" y="60" font-size="11" font-weight="700" fill="#fecaca">Oli pelumas mudah menetes / luntur terbuang</text>
+
+      <circle cx="8" cy="80" r="4" fill="#ef4444"/>
+      <text x="20" y="84" font-size="11" font-weight="700" fill="#fecaca">Jika dicat: Ulir macet karena cat tebal 50 µm</text>
+    </g>
+  </g>
+
+  <!-- Right: SESUDAH BLACKENING (Hot Black Oxide + Oil) -->
+  <g transform="translate(430, 75)">
+    <rect x="0" y="0" width="310" height="260" rx="12" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <rect x="0" y="0" width="310" height="36" rx="12" fill="#065f46"/>
+    <text x="155" y="23" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="900" fill="#a7f3d0" text-anchor="middle">
+      ✅ SESUDAH BLACKENING (Hitam Magnetit Fe₃O₄)
+    </text>
+
+    <!-- Blackened Bolt Graphic -->
+    <g transform="translate(65, 55)">
+      <!-- Bolt Head (Hex) Black Oxide -->
+      <polygon points="20,10 70,10 90,35 70,60 20,60 0,35" fill="url(#blackOxideGrad)" stroke="#475569" stroke-width="2"/>
+      <circle cx="45" cy="35" r="14" fill="#020617" stroke="#1e293b"/>
+      <!-- Glossy Oil Highlight -->
+      <path d="M 28,14 L 62,14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <!-- Bolt Thread Shaft -->
+      <rect x="90" y="18" width="80" height="34" fill="url(#blackOxideGrad)" stroke="#334155" stroke-width="1.5"/>
+      <!-- Thread grooves -->
+      <line x1="105" y1="18" x2="105" y2="52" stroke="#020617" stroke-width="2"/>
+      <line x1="120" y1="18" x2="120" y2="52" stroke="#020617" stroke-width="2"/>
+      <line x1="135" y1="18" x2="135" y2="52" stroke="#020617" stroke-width="2"/>
+      <line x1="150" y1="18" x2="150" y2="52" stroke="#020617" stroke-width="2"/>
+      <line x1="165" y1="18" x2="165" y2="52" stroke="#020617" stroke-width="2"/>
+      <!-- Oil sheen line -->
+      <line x1="95" y1="22" x2="165" y2="22" stroke="#ffffff" stroke-width="1.2" opacity="0.3"/>
+
+      <!-- Tolerance Badge -->
+      <rect x="110" y="-12" width="70" height="22" rx="4" fill="#0284c7"/>
+      <text x="145" y="3" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">± 0.000 mm</text>
+    </g>
+
+    <!-- Bullet Points -->
+    <g transform="translate(20, 140)">
+      <circle cx="8" cy="8" r="4" fill="#10b981"/>
+      <text x="20" y="12" font-size="11" font-weight="800" fill="#d1fae5">Toleransi 0.000 mm: Ulir baut presisi tetap pas!</text>
+
+      <circle cx="8" cy="32" r="4" fill="#10b981"/>
+      <text x="20" y="36" font-size="11" font-weight="800" fill="#d1fae5">Hitam matte anti-silau: Standar senjata api &amp; optik</text>
+
+      <circle cx="8" cy="56" r="4" fill="#10b981"/>
+      <text x="20" y="60" font-size="11" font-weight="800" fill="#d1fae5">Pori magnetit mengunci oli: Anti karat ratusan jam</text>
+
+      <circle cx="8" cy="80" r="4" fill="#10b981"/>
+      <text x="20" y="84" font-size="11" font-weight="800" fill="#d1fae5">Bebas kelupas: Menyatu dengan kisi atom besi</text>
+    </g>
+  </g>
+</svg>

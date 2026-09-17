@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="700" height="240" rx="10" fill="url(#bgGrad)" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="26" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="14" font-weight="bold" letter-spacing="1">STANDAR ALAT PELINDUNG DIRI (APD) WAJIB BENGKEL MESIN</text>
+
+  <!-- 5 Cards for 5 APD -->
+  <!-- Card 1: Kacamata Safety -->
+  <g transform="translate(20, 42)">
+    <rect width="120" height="180" rx="6" fill="url(#cardGrad)" stroke="#0284c7" stroke-width="1.5"/>
+    <circle cx="60" cy="55" r="35" fill="#0369a1" fill-opacity="0.2"/>
+    <!-- Glasses icon -->
+    <path d="M 32 50 Q 45 42 60 48 Q 75 42 88 50 C 92 65 80 72 65 68 C 62 67 58 67 55 68 C 40 72 28 65 32 50 Z" fill="#38bdf8" fill-opacity="0.3" stroke="#38bdf8" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M 48 50 Q 60 52 72 50" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+    <path d="M 32 50 L 25 45" stroke="#38bdf8" stroke-width="2"/>
+    <path d="M 88 50 L 95 45" stroke="#38bdf8" stroke-width="2"/>
+    <text x="60" y="110" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Safety Glasses</text>
+    <text x="60" y="126" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="9" font-weight="600">ANSI Z87.1</text>
+    <text x="60" y="146" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">Lindungi mata dari</text>
+    <text x="60" y="158" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">tatal gram panas</text>
+    <rect x="15" y="166" width="90" height="3" rx="1.5" fill="#0284c7"/>
+  </g>
+
+  <!-- Card 2: Wearpack Pas Badan -->
+  <g transform="translate(155, 42)">
+    <rect width="120" height="180" rx="6" fill="url(#cardGrad)" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="60" cy="55" r="35" fill="#b45309" fill-opacity="0.2"/>
+    <!-- Wearpack icon -->
+    <path d="M 42 35 L 52 35 L 56 46 L 64 46 L 68 35 L 78 35 L 90 48 L 84 58 L 76 52 L 76 80 L 44 80 L 44 52 L 36 58 L 30 48 Z" fill="#f59e0b" fill-opacity="0.3" stroke="#f59e0b" stroke-width="2" stroke-linejoin="round"/>
+    <line x1="60" y1="46" x2="60" y2="80" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="2 2"/>
+    <text x="60" y="110" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Pakaian Kerja</text>
+    <text x="60" y="126" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="9" font-weight="600">Wearpack Kancing</text>
+    <text x="60" y="146" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">Lengan berkancing,</text>
+    <text x="60" y="158" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">anti lilitan spindel</text>
+    <rect x="15" y="166" width="90" height="3" rx="1.5" fill="#f59e0b"/>
+  </g>
+
+  <!-- Card 3: Safety Shoes Besi -->
+  <g transform="translate(290, 42)">
+    <rect width="120" height="180" rx="6" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="60" cy="55" r="35" fill="#047857" fill-opacity="0.2"/>
+    <!-- Safety Boot icon -->
+    <path d="M 40 38 L 56 38 L 58 54 L 75 58 C 85 60 90 68 90 74 L 32 74 L 32 50 C 32 42 36 38 40 38 Z" fill="#10b981" fill-opacity="0.3" stroke="#10b981" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="30" y="72" width="62" height="6" rx="2" fill="#10b981" stroke="#10b981" stroke-width="1"/>
+    <path d="M 74 60 C 82 62 86 68 86 72 L 72 72 Z" fill="#34d399" opacity="0.6"/>
+    <text x="60" y="110" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Safety Shoes</text>
+    <text x="60" y="126" text-anchor="middle" fill="#10b981" font-family="sans-serif" font-size="9" font-weight="600">Steel Toe Cap 200J</text>
+    <text x="60" y="146" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">Tahan kejatuhan</text>
+    <text x="60" y="158" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">logam &amp; tatal tajam</text>
+    <rect x="15" y="166" width="90" height="3" rx="1.5" fill="#10b981"/>
+  </g>
+
+  <!-- Card 4: Pelindung Telinga -->
+  <g transform="translate(425, 42)">
+    <rect width="120" height="180" rx="6" fill="url(#cardGrad)" stroke="#8b5cf6" stroke-width="1.5"/>
+    <circle cx="60" cy="55" r="35" fill="#6d28d9" fill-opacity="0.2"/>
+    <!-- Earmuff icon -->
+    <path d="M 36 60 A 26 26 0 0 1 84 60" fill="none" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"/>
+    <rect x="30" y="50" width="12" height="24" rx="5" fill="#a78bfa" stroke="#8b5cf6" stroke-width="1.5"/>
+    <rect x="78" y="50" width="12" height="24" rx="5" fill="#a78bfa" stroke="#8b5cf6" stroke-width="1.5"/>
+    <text x="60" y="110" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Ear Protection</text>
+    <text x="60" y="126" text-anchor="middle" fill="#8b5cf6" font-family="sans-serif" font-size="9" font-weight="600">Earmuff / Earplug</text>
+    <text x="60" y="146" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">Reduksi bising</text>
+    <text x="60" y="158" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">mesin > 85 dBA</text>
+    <rect x="15" y="166" width="90" height="3" rx="1.5" fill="#8b5cf6"/>
+  </g>
+
+  <!-- Card 5: Helm &amp; Masker -->
+  <g transform="translate(560, 42)">
+    <rect width="120" height="180" rx="6" fill="url(#cardGrad)" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="60" cy="55" r="35" fill="#be185d" fill-opacity="0.2"/>
+    <!-- Helmet &amp; Mask icon -->
+    <path d="M 38 52 C 38 38 50 36 60 36 C 70 36 82 38 82 52 L 86 55 L 34 55 Z" fill="#ec4899" fill-opacity="0.4" stroke="#ec4899" stroke-width="2"/>
+    <path d="M 45 60 L 75 60 L 70 74 L 50 74 Z" fill="#f472b6" fill-opacity="0.3" stroke="#ec4899" stroke-width="1.5"/>
+    <line x1="45" y1="64" x2="36" y2="60" stroke="#ec4899" stroke-width="1.5"/>
+    <line x1="75" y1="64" x2="84" y2="60" stroke="#ec4899" stroke-width="1.5"/>
+    <text x="60" y="110" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Helm &amp; Masker</text>
+    <text x="60" y="126" text-anchor="middle" fill="#ec4899" font-family="sans-serif" font-size="9" font-weight="600">Safety Cap &amp; Mask</text>
+    <text x="60" y="146" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">Benturan overhead</text>
+    <text x="60" y="158" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8.5">&amp; debu gerinda</text>
+    <rect x="15" y="166" width="90" height="3" rx="1.5" fill="#ec4899"/>
+  </g>
+</svg>

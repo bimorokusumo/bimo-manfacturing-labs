@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 210" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="740" height="210" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <rect width="740" height="34" rx="8" fill="#0f172a"/>
+  <rect y="26" width="740" height="8" fill="#0f172a"/>
+  <text x="370" y="22" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" letter-spacing="0.5">SKALA WARNA OKSIDASI TEMPERING BAJA (TEMPER COLORS OF STEEL)</text>
+
+  <!-- Content row -->
+  <g transform="translate(18, 48)">
+    <!-- 220°C Pale Straw -->
+    <g transform="translate(0, 0)">
+      <rect width="110" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="90" height="38" rx="4" fill="#fef08a" stroke="#ca8a04"/>
+      <text x="55" y="33" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">220°C</text>
+      <text x="55" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Kuning Jerami</text>
+      <text x="55" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Pale Straw)</text>
+      <text x="55" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~63 HRC</text>
+      <text x="55" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Pisau Cukur / Bubut</text>
+    </g>
+
+    <!-- 240°C Dark Straw -->
+    <g transform="translate(119, 0)">
+      <rect width="110" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="90" height="38" rx="4" fill="#fde047" stroke="#b45309"/>
+      <text x="55" y="33" fill="#78350f" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">240°C</text>
+      <text x="55" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Jerami Tua</text>
+      <text x="55" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Dark Straw)</text>
+      <text x="55" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~60 HRC</text>
+      <text x="55" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Mata Bor &amp; Reamer</text>
+    </g>
+
+    <!-- 260°C Brown / Gold -->
+    <g transform="translate(238, 0)">
+      <rect width="110" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="90" height="38" rx="4" fill="#d97706" stroke="#92400e"/>
+      <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">260°C</text>
+      <text x="55" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Cokelat Emas</text>
+      <text x="55" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Brown Gold)</text>
+      <text x="55" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~58 HRC</text>
+      <text x="55" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Tap, Snei, Pahat Kayu</text>
+    </g>
+
+    <!-- 280°C Purple -->
+    <g transform="translate(357, 0)">
+      <rect width="110" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="90" height="38" rx="4" fill="#a855f7" stroke="#6b21a8"/>
+      <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">280°C</text>
+      <text x="55" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Ungu Lembayung</text>
+      <text x="55" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Purple)</text>
+      <text x="55" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~55 HRC</text>
+      <text x="55" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Pahat Dingin / Kampak</text>
+    </g>
+
+    <!-- 300°C Bright Blue -->
+    <g transform="translate(476, 0)">
+      <rect width="110" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="90" height="38" rx="4" fill="#3b82f6" stroke="#1d4ed8"/>
+      <text x="55" y="33" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">300°C</text>
+      <text x="55" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Biru Terang</text>
+      <text x="55" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Bright Blue)</text>
+      <text x="55" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~52 HRC</text>
+      <text x="55" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Daun Gergaji / Obeng</text>
+    </g>
+
+    <!-- 320°C Dark Blue -->
+    <g transform="translate(595, 0)">
+      <rect width="109" height="110" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+      <rect x="10" y="10" width="89" height="38" rx="4" fill="#1e3a8a" stroke="#172554"/>
+      <text x="54" y="33" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">320°C</text>
+      <text x="54" y="62" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Biru Gelap</text>
+      <text x="54" y="73" fill="#854d0e" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">(Dark Blue)</text>
+      <text x="54" y="90" fill="#475569" font-family="'Segoe UI', Roboto, sans-serif" font-size="7.5" text-anchor="middle">Kekerasan: ~48 HRC</text>
+      <text x="54" y="101" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="7" font-weight="bold" text-anchor="middle">Pegas / Per Daun Spiral</text>
+    </g>
+  </g>
+
+  <!-- Note Footer -->
+  <rect x="18" y="168" width="704" height="28" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="370" y="185" fill="#334155" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" text-anchor="middle">
+    <tspan font-weight="bold" fill="#0284c7">Prinsip Fisika:</tspan> Warna oksida terbentuk akibat interferensi gelombang cahaya pada lapisan tipis FeO/Fe₂O₃ yang menebal secara teratur seiring naiknya suhu pemanasan.
+  </text>
+</svg>

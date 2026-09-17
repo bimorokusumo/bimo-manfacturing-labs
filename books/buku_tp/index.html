@@ -1,0 +1,3636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buku Digital Interaktif: Teknik Pemesinan (TP) - Kurikulum Deep Learning SMK N 2 Depok (50 Halaman Lengkap)</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/interactives.css">
+</head>
+<body data-view-mode="flipbook" data-theme="light">
+
+  <!-- APP HEADER & NAVIGATION TOOLBAR -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-badge">Kurikulum Deep Learning</div>
+      <div class="brand-title">
+        <h1>Dasar-Dasar Keahlian Teknik Pemesinan</h1>
+        <p>SMK Negeri 2 Depok Sleman • Bimoro Kusumo, S.Pd (PPG 2025/2026)</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <!-- Mode Toggle Button -->
+      <button class="btn-control btn-mode-toggle" id="btnToggleMode" title="Beralih antara Mode 3D Flip Book dan Mode Smart Continuous Reader">
+        <span>📜 Mode Smart Reader</span>
+      </button>
+
+      <!-- Table of Contents -->
+      <button class="btn-control" id="btnOpenTOC" title="Daftar Isi Buku (50 Halaman)">
+        <span>📑 Daftar Isi (50 Hal)</span>
+      </button>
+
+      <!-- Search -->
+      <button class="btn-control" id="btnOpenSearch" title="Cari Materi">
+        <span>🔍 Cari</span>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button class="btn-control" id="btnToggleMute" title="Efek Suara Lembaran Kertas">
+        <span>🔊 Suara ON</span>
+      </button>
+
+      <!-- Theme Selector -->
+      <select class="btn-control" id="selectTheme" title="Pilih Tema Tampilan" style="background: rgba(255,255,255,0.08); color: #fff;">
+        <option value="light" style="color: #000;">☀️ Terang</option>
+        <option value="dark" style="color: #000;">🌙 Gelap</option>
+        <option value="sepia" style="color: #000;">📜 Sepia</option>
+      </select>
+    </div>
+
+    <!-- Reading Progress Track -->
+    <div class="reading-progress-track">
+      <div class="reading-progress-fill" id="readingProgressFill"></div>
+    </div>
+  </header>
+
+  <!-- VIEWPORTS CONTAINER -->
+  <main class="viewport-container">
+
+    <!-- ========================================================== -->
+    <!-- 3D FLIP BOOK VIEWPORT (KLIK LANGSUNG DI HALAMAN UNTUK MEMBALIK) -->
+    <!-- ========================================================== -->
+    <div class="flipbook-viewport" id="flipbookViewport">
+
+      <!-- Sticky Navigation Bar (Active in Reader Mode) -->
+      <div class="reader-chapter-sticky">
+        <span>📜 Mode Membaca Terus-Menerus (50 Halaman Lengkap):</span>
+        <select id="selectReaderJump">
+          <option value="0">Hal 1: [Sampul] Sampul Depan (Cover Buku) - Teknik Pemesinan SMK N 2 Depok</option>
+          <option value="1">Hal 2: [Legal] Halaman Pengesahan & Identitas Buku Digital TP</option>
+          <option value="2">Hal 3: [Teori] Framework Pendekatan Deep Learning Teknik Pemesinan</option>
+          <option value="3">Hal 4: [Peta] Peta Capaian & Alur Tujuan Pembelajaran (CP/ATP) Fase E</option>
+          <option value="4">Hal 5: [BAB 1] 1.1 Kecakapan Kerja: Etika, Komunikasi & Hierarki Bengkel</option>
+          <option value="5">Hal 6: [BAB 1] 1.2 Landasan Hukum K3LH (UU No. 1/1970) & Zero Accident</option>
+          <option value="6">Hal 7: [BAB 1] 1.3 APD Khusus Pemesinan & Simulator APD Interaktif</option>
+          <option value="7">Hal 8: [BAB 1] 1.4 Pengendalian Bahaya Tatal Beram & Rotasi Spindel</option>
+          <option value="8">Hal 9: [BAB 1] 1.5 Prosedur Tanggap Darurat & Penanggulangan Kebakaran PASS</option>
+          <option value="9">Hal 10: [BAB 1] 1.6 Budaya Kerja 5R / 5S Industri Manufaktur & Kaizen</option>
+          <option value="10">Hal 11: [BAB 1] 1.7 Rangkuman & Kuis Formatif Bab 1</option>
+          <option value="11">Hal 12: [BAB 2] 2.1 Klasifikasi Logam Fero & Baja Karbon Manufaktur</option>
+          <option value="12">Hal 13: [BAB 2] 2.2 Logam Non-Fero (Aluminium, Tembaga, Kuningan, Paduan)</option>
+          <option value="13">Hal 14: [BAB 2] 2.3 Sifat Fisik Bahan (Densitas, Titik Lebur, Konduktivitas)</option>
+          <option value="14">Hal 15: [BAB 2] 2.4 Sifat Kimia & Ketahanan Korosi Logam</option>
+          <option value="15">Hal 16: [BAB 2] 2.5 Sifat Listrik & Konduktivitas Material Teknik</option>
+          <option value="16">Hal 17: [BAB 2] 2.6 Sifat Mekanik Bahan (Kekuatan, Kekerasan, Keuletan, Ketangguhan)</option>
+          <option value="17">Hal 18: [BAB 2] 2.7 Uji Tarik, Diagram Tegangan-Regangan & Kuis Formatif Bab 2</option>
+          <option value="18">Hal 19: [BAB 3] 3.1 Klasifikasi Proses Produksi: Cutting vs Non-Cutting</option>
+          <option value="19">Hal 20: [BAB 3] 3.2 Konsep Metrologi Industri & Klasifikasi Alat Ukur</option>
+          <option value="20">Hal 21: [BAB 3] 3.3 Jangka Sorong (Vernier Caliper) Ketelitian 0,05 mm</option>
+          <option value="21">Hal 22: [BAB 3] 3.4 Lab Virtual: Simulator Jangka Sorong Interaktif 0,05 mm</option>
+          <option value="22">Hal 23: [BAB 3] 3.5 Mikrometer Luar Ketelitian 0,01 mm & Kalibrasi</option>
+          <option value="23">Hal 24: [BAB 3] 3.6 Perkakas Tangan Benchwork (Kikir, Gergaji, Ragum, Tap & Snei)</option>
+          <option value="24">Hal 25: [BAB 3] 3.7 Mesin Perkakas Dasar (Mesin Bor Duduk & Gerinda Alat)</option>
+          <option value="25">Hal 26: [BAB 3] 3.8 Mesin Bubut Standar (Anatomi, Fungsi & Gerak Pemotongan)</option>
+          <option value="26">Hal 27: [BAB 3] 3.9 Parameter Pemotongan Mesin Bubut & Kalkulator RPM Spindel</option>
+          <option value="27">Hal 28: [BAB 3] 3.10 Penanganan Material (Material Handling) & Kuis Formatif Bab 3</option>
+          <option value="28">Hal 29: [BAB 4] 4.1 Bahasa Universal Teknik & Evolusi CAD Modern</option>
+          <option value="29">Hal 30: [BAB 4] 4.2 Standar Kertas Gambar ISO 216 & Kepala Gambar (Etiket ISO 7200)</option>
+          <option value="30">Hal 31: [BAB 4] 4.3 Standar Garis Gambar Teknik ISO 128</option>
+          <option value="31">Hal 32: [BAB 4] 4.4 Sistem Penunjukan Ukuran & Dimensi ISO</option>
+          <option value="32">Hal 33: [BAB 4] 4.5 Proyeksi Piktorial 3D (Isometri, Dimetri, Kavalir)</option>
+          <option value="33">Hal 34: [BAB 4] 4.6 Proyeksi Ortogonal Simulator: Kuadran I (Eropa) vs III (Amerika)</option>
+          <option value="34">Hal 35: [BAB 4] 4.7 Sistem Toleransi Linier ISO & Simbol Kekasaran Permukaan Ra</option>
+          <option value="35">Hal 36: [BAB 4] 4.8 Rangkuman & Kuis Formatif Bab 4 (Gambar Teknik)</option>
+          <option value="36">Hal 37: [BAB 5] 5.1 Sambungan Mekanik Tetap & Lepas (Baut, Pasak, Keling, Las)</option>
+          <option value="37">Hal 38: [BAB 5] 5.2 Tumpuan Mekanik: Plain Bearing (Bushing) & Rolling Bearing</option>
+          <option value="38">Hal 39: [BAB 5] 5.3 Standar Kode Bearing ISO & Simulator Dekoder Interaktif</option>
+          <option value="39">Hal 40: [BAB 5] 5.4 Transmisi Roda Gigi (Spur, Helical, Bevel) & Rasio Kecepatan</option>
+          <option value="40">Hal 41: [BAB 5] 5.5 Transmisi Sabuk (V-Belt), Rantai (Sprocket) & Poros Fleksibel</option>
+          <option value="41">Hal 42: [BAB 5] 5.6 Rangkuman & Kuis Formatif Bab 5 (Dasar Sistem Mekanik)</option>
+          <option value="42">Hal 43: [BAB 6] 6.1 Ekosistem Industri Manufaktur Mesin & Rantai Pasok Global</option>
+          <option value="43">Hal 44: [BAB 6] 6.2 Evolusi Teknologi Pemesinan: Dari Manual ke CNC Multi-Axis</option>
+          <option value="44">Hal 45: [BAB 6] 6.3 Manufaktur Cerdas (Smart Manufacturing), IoT & Additive Manufacturing</option>
+          <option value="45">Hal 46: [BAB 6] 6.4 Standar Kompetensi SKKNI Pemesinan & Skema Sertifikasi BNSP</option>
+          <option value="46">Hal 47: [BAB 6] 6.5 Technopreneurship Bengkel Bubut & Fabrikasi Presisi</option>
+          <option value="47">Hal 48: [BAB 6] 6.6 Pembelajaran Berbasis Proyek (PjBL) & Kuis Formatif Bab 6</option>
+          <option value="48">Hal 49: [Sertifikat] Sertifikat Kelulusan Resmi Digital Interaktif Dasar Teknik Pemesinan</option>
+          <option value="49">Hal 50: [Glosarium] Glosarium Komprehensif Teknik Pemesinan (A - Z) & Daftar Pustaka</option>
+        </select>
+      </div>
+
+      <div class="flipbook-stage">
+        <div class="book-spine"></div>
+
+
+                <div class="book-page page-right" data-page-index="0" id="p0" title="Klik di mana saja pada cover untuk membuka buku">
+          <div class="page-cover">
+            <div class="cover-bg-wrap">
+              <img src="assets/images/general/cover_book.jpg" alt="Cover Buku Dasar-Dasar Teknik Pemesinan">
+            </div>
+            <div class="cover-overlay-gradient"></div>
+            <div class="cover-content">
+              <div class="cover-top-badges">
+                <span class="school-tag">🏛️ SMK NEGERI 2 DEPOK SLEMAN</span>
+                <span class="kurikulum-tag">⚡ KURIKULUM DEEP LEARNING</span>
+              </div>
+
+              <div class="cover-title-panel">
+                <div class="super-title">⚙️ BUKU AJAR DIGITAL VOKASI TEKNIK MESIN</div>
+                <h1>DASAR-DASAR TEKNIK PEMESINAN</h1>
+                <div class="sub-title">Konsentrasi Keahlian Teknik Pemesinan • Fase E (Kelas X SMK)</div>
+              </div>
+
+              <div class="cover-bottom-group">
+                <div class="cover-footer-meta">
+                  <p><strong>Penyusun:</strong> Bimoro Kusumo, S.Pd (PPG Calon Guru 2025/2026)</p>
+                  <p><strong>Institusi:</strong> SMK Negeri 2 Depok Sleman, D.I. Yogyakarta</p>
+                  <p><strong>Pendekatan:</strong> Mindful, Meaningful, & Joyful Learning (50 Halaman Lengkap)</p>
+                </div>
+
+                <div class="cover-open-prompt">
+                  <span style="font-size: 1.1rem;">📖</span>
+                  <span>KLIK COVER UNTUK MEMBUKA BUKU ➔</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="1" id="p1">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk kembali ke Cover"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>Halaman Pengesahan & Identitas Buku</span>
+              <span class="page-num">Hal 2</span>
+            </div>
+
+            <div class="chapter-hero" style="padding: 16px; margin-bottom: 16px;">
+              <div class="chapter-number">IDENTITAS MODUL AJAR VOKASI</div>
+              <div class="chapter-title" style="font-size: 1.15rem;">Buku Ajar Digital Berbasis Pendekatan Deep Learning</div>
+              <div class="chapter-desc">SMK Negeri 2 Depok Sleman • Program Keahlian Teknik Mesin (Teknik Pemesinan)</div>
+            </div>
+
+            <table class="standard-table" style="font-size: 0.85rem; margin-bottom: 16px;">
+              <tbody>
+                <tr>
+                  <td style="width: 32%; font-weight: 600;">Mata Pelajaran</td>
+                  <td>Dasar-Dasar Keahlian Teknik Mesin (Teknik Pemesinan / TP)</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">Fase / Kelas</td>
+                  <td>Fase E / Kelas X SMK (Semester 1 & 2)</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">Penyusun Modul</td>
+                  <td>Bimoro Kusumo, S.Pd. (Mahasiswa PPG Guru Tertentu 2025/2026)</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">Satuan Pendidikan</td>
+                  <td>SMK Negeri 2 Depok Sleman, Daerah Istimewa Yogyakarta</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600;">Pendekatan Pedagogik</td>
+                  <td><strong>Kurikulum Deep Learning</strong> (Mindful, Meaningful, & Joyful Learning)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="callout-box info" style="margin-bottom: 16px;">
+              <strong>Lembar Pengesahan Resmi:</strong>
+              Modul ajar digital ini telah diperiksa dan disahkan untuk digunakan sebagai pegangan belajar mandiri dan pembelajaran interaktif di bengkel pemesinan manufaktur SMK Negeri 2 Depok Sleman.
+            </div>
+
+            <div class="cert-signatures" style="margin-top: 24px;">
+              <div class="sig-box">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Mengesahkan,<br>Kepala SMK Negeri 2 Depok Sleman</div>
+                <div class="sig-line">Dodot Yuliantoro, S.Pd., M.T.</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">NIP. 19711225 199702 1 002</div>
+              </div>
+              <div class="sig-box">
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Sleman, September 2026<br>Guru Pengampu / Penyusun Modul</div>
+                <div class="sig-line">Bimoro Kusumo, S.Pd.</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">NIM PPG. 2025/2026</div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Halaman Pengesahan • TP Fase E</span>
+              <span>Hal 2</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="2" id="p2">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 4"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>Framework Kurikulum Deep Learning</span>
+              <span class="page-num">Hal 3</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Konstruksi Pembelajaran Bermakna, Berkesadaran & Menggembirakan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Buku ajar digital ini bertumpu pada <strong>Pendekatan Deep Learning</strong> yang mentransformasi pendidikan vokasi teknik pemesinan dari sekadar hafalan teknis mekanis menjadi pemahaman holistik tingkat tinggi melalui tiga pilar pengalaman belajar:
+            </p>
+
+            <div class="deep-learning-pillars-grid">
+              <div class="pillar-card">
+                <div class="pillar-icon">🧠</div>
+                <h4>Berkesadaran (Mindful)</h4>
+                <p><strong>Mindful Learning:</strong> Membangun kepekaan penuh terhadap keselamatan kerja, ketelitian pengukuran hingga 0,02 mm, serta disiplin prosedur pencegahan kecelakaan pada mesin berputar.</p>
+              </div>
+
+              <div class="pillar-card">
+                <div class="pillar-icon">💡</div>
+                <h4>Bermakna (Meaningful)</h4>
+                <p><strong>Meaningful Learning:</strong> Mengaitkan setiap teori bahan, rumus kecepatan potong, toleransi ISO, dan sistem mekanik dengan implementasi nyata pada industri manufaktur kelas dunia.</p>
+              </div>
+
+              <div class="pillar-card">
+                <div class="pillar-icon">🚀</div>
+                <h4>Menggembirakan (Joyful)</h4>
+                <p><strong>Joyful Learning:</strong> Menghadirkan simulasi digital interaktif kanvas, kalkulator putaran spindel bubut dinamis, visualisasi 3D, dan kuis formatif yang menantang dan memotivasi.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Siklus 3 Tahap Deep Learning dalam Setiap Pembelajaran:</h3>
+            <div class="step-guide">
+              <div class="step-guide-item">
+                <div class="step-num">1</div>
+                <div>
+                  <strong>Tahap Memahami (Understand):</strong> Mengonstruksi konsep esensial material, prinsip kinematika perkakas, simbol gambar kerja, dan hierarki K3LH.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">2</div>
+                <div>
+                  <strong>Tahap Mengaplikasikan (Apply):</strong> Mengoperasikan perkakas ukur, menentukan parameter putaran spindel bubut, serta membaca toleransi suaian.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">3</div>
+                <div>
+                  <strong>Tahap Merefleksi (Reflect):</strong> Menganalisis deviasi dimensi, mengevaluasi budaya kerja 5R, dan merefleksikan peluang karir technopreneurship.
+                </div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Kurikulum Deep Learning TP</span>
+              <span>Hal 3</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="3" id="p3">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 3"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>Peta Capaian Pembelajaran & Alur Tujuan (ATP)</span>
+              <span class="page-num">Hal 4</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Peta Alur Tujuan Pembelajaran (ATP) TP Fase E</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Berdasarkan dokumen rujukan resmi <code>CP:ATP.docx</code> Teknik Pemesinan SMK Negeri 2 Depok Sleman, alur kompetensi diorganisasikan ke dalam 6 elemen terpadu:
+            </p>
+
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Elemen & Semester</th>
+                    <th>Capaian Pembelajaran (CP) Elemen</th>
+                    <th>Alur Tujuan Pembelajaran (ATP) Kunci</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Kecakapan Kerja & K3LH</strong><br>(Semester 1)</td>
+                    <td>Penerapan praktik kerja aman, bahaya tempat kerja, prosedur darurat, budaya 5R, dan etika kerja teknisi.</td>
+                    <td>Menerapkan K3LH, budaya 5R industri, etika kerja bengkel, dan prosedur darurat APAR.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pengetahuan Bahan</strong><br>(Semester 1)</td>
+                    <td>Jenis bahan teknik, sifat fisik, kimia, kelistrikan, mampu mekanik, dan fungsi bahan manufaktur.</td>
+                    <td>Mengidentifikasi logam fero/non-fero, polimer, komposit, uji tarik, kekerasan, dan perlakuan panas.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Teknik Dasar Produksi</strong><br>(Semester 1)</td>
+                    <td>Teknologi cutting/non-cutting, metrologi presisi, perkakas tangan, mesin bubut, bor, dan las dasar.</td>
+                    <td>Menggunakan caliper 0,05 mm, mikrometer 0,01 mm, mengoperasikan mesin bor bangku dan mesin bubut.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Gambar Teknik Mesin</strong><br>(Semester 2)</td>
+                    <td>Peralatan gambar, CADD, standardisasi ISO, sketsa, proyeksi piktorial & ortogonal, membaca gambar.</td>
+                    <td>Menggambar proyeksi Eropa vs Amerika, etiket ISO 7200, aturan penunjukan ukuran, toleransi H7/g6.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dasar Sistem Mekanik</strong><br>(Semester 2)</td>
+                    <td>Jenis sambungan tetap/lepas, tumpuan luncur/gelinding (bushing & bearing), transmisi mesin.</td>
+                    <td>Menganalisis sambungan baut/pasak, dekoder bearing ISO 6205-2RS, rasio roda gigi dan transmisi sabuk.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Wawasan Bidang Mesin</strong><br>(Semester 2)</td>
+                    <td>Perkembangan manufaktur 4.0, IoT, AI predictive maintenance, green skills, technopreneurship.</td>
+                    <td>Memahami otomasi CNC, arsitektur IoT 5-lapis, pemeliharaan berbasis AI, dan peluang usaha bengkel.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Peta CP/ATP • TP Fase E</span>
+              <span>Hal 4</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="4" id="p4">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 6"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Kecakapan Kerja, K3LH & Budaya Kerja</span>
+              <span class="page-num">Hal 5</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 1</div>
+              <div class="chapter-title">Kecakapan Kerja Dasar, K3LH, dan Budaya Kerja Industri</div>
+              <div class="chapter-desc">Etika Disiplin Bengkel, Regulasi Keselamatan Kerja, Manajemen Risiko, dan Budaya 5R Kaizen</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.1 Etika Kerja & Disiplin Industri Pemesinan Manufaktur</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Di bengkel pemesinan presisi, etos kerja profesional adalah fondasi keselamatan dan kualitas. Sikap sembrono 1 detik di dekat mesin berputar dapat mengakibatkan fatalitas fisik seumur hidup:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/briefing_k3.jpg" alt="Briefing Keselamatan & Koordinasi Kerja Bengkel Mesin">
+                <h4>Briefing Keselamatan (Tool Box Meeting)</h4>
+                <p>Pengarahan 5 menit sebelum praktik kerja untuk memeriksa kesiapan fisik, APD, dan SOP pengerjaan mesin.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/svg/k3_hierarchy.svg" alt="Hierarki K3LH Industri">
+                <h4>Komitmen Nol Kecelakaan (Zero Accident)</h4>
+                <p>Sikap mental menolak kompromi keselamatan demi mengejar kecepatan produksi yang ceroboh.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Tiga Nilai Etika Kunci Teknisi Pemesinan Profesional:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Integritas Ukuran Presisi</h5>
+                </div>
+                <p>Jujur dalam mengukur dan mencatat toleransi benda kerja. Tidak memanipulasi hasil inspeksi demi lolos uji.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Tanggung Jawab Pemeliharaan Alat</h5>
+                </div>
+                <p>Selalu membersihkan meja mesin dari beram tatal logam dan melumasi komponen eretan sebelum meninggalkan bengkel.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Komunikasi Tim & Saling Mengingatkan</h5>
+                </div>
+                <p>Berani mengingatkan rekan kerja yang lalai memakai kacamata pengaman atau melanggar SOP mesin berputar.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 5</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="5" id="p5">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 5"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Regulasi K3LH & Pengendalian Risiko</span>
+              <span class="page-num">Hal 6</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.2 Regulasi K3LH & Hierarki Pengendalian Bahaya Industri</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Keselamatan dan Kesehatan Kerja serta Lingkungan Hidup (K3LH) di Indonesia dijamin oleh <strong>Undang-Undang No. 1 Tahun 1970</strong> tentang Keselamatan Kerja dan standar internasional <strong>ISO 45001:2018</strong>:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/k3_hierarchy.svg" alt="Hierarki Pengendalian Bahaya">
+                <h4>5 Tingkat Hierarki Pengendalian Risiko</h4>
+                <p>Urutan prioritas mitigasi: Eliminasi, Substitusi, Rekayasa Teknik, Kontrol Administratif, dan APD.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/safety_signs_k3.jpg" alt="Rambu-Rambu K3 Standar Internasional di Area Bengkel Pemesinan">
+                <h4>Analisis Keselamatan Kerja (JSA)</h4>
+                <p>Mengidentifikasi potensi bahaya di setiap langkah kerja pemesinan sebelum mesin dihidupkan.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Penerapan Hierarki Pengendalian di Bengkel Pemesinan:</h3>
+            <div class="step-guide">
+              <div class="step-guide-item">
+                <div class="step-num">1</div>
+                <div>
+                  <strong>Eliminasi (Paling Efektif):</strong> Menghilangkan total sumber bahaya, misal menyingkirkan ceceran oli pendingin licin dari lantai lalu lintas bengkel.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">2</div>
+                <div>
+                  <strong>Substitusi:</strong> Mengganti cairan pendingin berbahan kimia beracun dengan cairan biosintetik ramah lingkungan (teknologi MQL berbasis minyak nabati).
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">3</div>
+                <div>
+                  <strong>Rekayasa Teknik (Engineering Control):</strong> Memasang perisai kaca polikarbonat penahan lontaran beram (<em>chip guard</em>) dan tombol darurat <em>Emergency Stop</em> otomatis.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">4</div>
+                <div>
+                  <strong>Kontrol Administratif:</strong> Pelatihan SOP pengoperasian mesin bubut, jadwal piket perawatan, dan rambu peringatan bahaya mesin berputar.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">5</div>
+                <div>
+                  <strong>Alat Pelindung Diri (APD):</strong> Garis pertahanan terakhir saat bahaya residu masih ada (kacamata safety, sepatu keselamatan ujung baja).
+                </div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 6</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="6" id="p6">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 8"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: APD Inspector Bengkel Pemesinan</span>
+              <span class="page-num">Hal 7</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.3 Standar APD Bengkel & Aturan Khusus Mesin Berputar</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Klik tombol APD di bawah ini untuk menginspeksi fungsi perlindungan dan potensi bahaya yang dicegah di bengkel mesin perkakas:
+            </p>
+
+            <!-- Interactive APD TP Inspector -->
+            <div class="apd-inspector-box">
+              <div class="apd-interactive-grid">
+                <div class="apd-list-buttons">
+                  <button class="apd-tp-btn active" data-apdtp="glasses">
+                    <span class="apd-icon">👓</span>
+                    <span>Kacamata Pengaman (Safety Glasses)</span>
+                  </button>
+                  <button class="apd-tp-btn" data-apdtp="shoes">
+                    <span class="apd-icon">🥾</span>
+                    <span>Sepatu Baja 200J (Safety Shoes)</span>
+                  </button>
+                  <button class="apd-tp-btn" data-apdtp="earplug">
+                    <span class="apd-icon">🎧</span>
+                    <span>Penyumbat Telinga (Ear Plug)</span>
+                  </button>
+                  <button class="apd-tp-btn" data-apdtp="shield">
+                    <span class="apd-icon">🛡️</span>
+                    <span>Perisai Tatal Mesin (Chip Guard)</span>
+                  </button>
+                  <button class="apd-tp-btn" data-apdtp="nogloves" style="border-color: #ef4444; color: #dc2626;">
+                    <span class="apd-icon">🚫</span>
+                    <span>LARANGAN: Sarung Tangan Mesin Berputar</span>
+                  </button>
+                </div>
+
+                <div class="apd-detail-display">
+                  <h5 id="apdTPTitle">Kacamata Pengaman (Safety Glasses / Goggles)</h5>
+                  <p id="apdTPDesc">Melindungi mata dari serpihan tatal/beram logam panas yang terlempar dengan kecepatan tinggi saat membubut, memfrais, dan mengebor.</p>
+                  <div class="hazard-prevented" id="apdTPHazard">Bahaya Dicegah: Mencegah kebutaan permanen akibat tusukan beram pijar tajam.</div>
+                  <div style="font-size: 0.72rem; color: #64748b; margin-top: 6px;" id="apdTPStandard">Standar: ANSI Z87.1 / EN 166</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="callout-box danger" style="margin-top: 14px;">
+              <strong>PERINGATAN FATAL:</strong>
+              DILARANG KERAS menggunakan sarung tangan rajut/kain saat membubut, mengebor, atau memfrais! Serat sarung tangan yang tersambar benda berputar akan menarik jari dan tangan ke dalam cekam mesin dalam sekejap tanpa ampun.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 7</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="7" id="p7">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 7"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Bahaya Mekanis & Penanganan Beram</span>
+              <span class="page-num">Hal 8</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.4 Bahaya Fisik, Mekanis & Penanganan Beram (Tatal) Logam</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Tatal logam hasil pemotongan (*chips/swarf*) memiliki tepi setajam silet dan bersuhu tinggi (200°C s.d. 400°C) akibat gesekan pemotongan:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/swarf_chips.jpg" alt="Bentuk Tatal Beram Logam Panas (Continuous Chip) & Pengait Pembersih">
+                <h4>Mekanisme Pembentukan Tatal</h4>
+                <p>Tatal spiral kontinu yang melilit benda kerja rawan menyabet tangan operator bila tidak diputuskan dengan pemutus tatal (chip breaker).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/lathe_chip_hook.jpg" alt="Pengait Tatal Khusus (Chip Hook) Pembersih Beram Mesin Bubut dengan Hand Guard">
+                <h4>Pengait Tatal Khusus (Chip Hook)</h4>
+                <p>Wajib menggunakan tongkat pengait kawat atau kuas untuk menarik beram. DILARANG MENARIK DENGAN TANGAN TELANJANG!</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Empat Sumber Bahaya Mekanis Utama Mesin Perkakas:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Titik Jepit Cekam (Rotating Chuck Nip Points):</strong> Rahang cekam 3-jaw atau 4-jaw yang menonjol dapat menyambar lengan baju yang longgar atau rambut terurai.</li>
+              <li><strong>Lontaran Benda Kerja (Workpiece Ejection):</strong> Benda kerja yang tidak dicekam kuat atau kunci cekam yang tertinggal akan terlontar seperti peluru berkecepatan tinggi saat motor mesin dinyalakan.</li>
+              <li><strong>Gesekan & Suhu Panas Ekstrem:</strong> Tatal baja yang baru terpotong dapat membakar kulit dan pakaian kerja katun bila tidak dilengkapi perisai chip guard.</li>
+              <li><strong>Bahaya Sengatan Listrik & Kebocoran Grounding:</strong> Motor penggerak mesin perkakas bertenaga 3-fase 380V wajib memiliki pentanahan (grounding) sempurna dengan tahanan &lt; 5 Ohm.</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 8</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="8" id="p8">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 10"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Tanggap Darurat & Teknik PASS APAR</span>
+              <span class="page-num">Hal 9</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.5 Prosedur Tanggap Darurat, P3K & Teknik Pemadaman Api PASS</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Kesiapsiagaan menghadapi kebakaran akibat korsleting listrik panel kontrol atau percikan gerinda di dekat bahan mudah terbakar:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/emergency_stop_button.jpg" alt="Tombol Emergency Stop Jamur Merah Standar Industri Mesin Perkakas">
+                <h4>Tombol Emergency Stop Jamur Merah</h4>
+                <p>Segera tekan tombol jamur merah untuk memutus suplai listrik seketika saat terjadi kecelakaan atau suara gemeretak abnormal.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/fire_extinguisher.jpg" alt="Alat Pemadam Api Ringan (APAR) Standar K3 Bengkel Pemesinan">
+                <h4>Alat Pemadam Api Ringan (APAR Powder/CO2)</h4>
+                <p>Gunakan APAR tipe CO₂ atau Dry Chemical Powder untuk kebakaran panel listrik mesin manufaktur (Kelas C).</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Teknik Operasi Pemadaman Api Menggunakan APAR (PASS):</h3>
+            <div class="step-guide">
+              <div class="step-guide-item">
+                <div class="step-num">P</div>
+                <div>
+                  <strong>Pull the Pin (Tarik Pin Pengaman):</strong> Cabut pin segel pengaman tuas APAR dengan memutar dan menarik kawat segel.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">A</div>
+                <div>
+                  <strong>Aim at Base of Fire (Arahkan ke Pangkal Lidah Api):</strong> Arahkan ujung corong semprot ke pangkal bahan yang terbakar, bukan ke ujung kobaran api atas.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">S</div>
+                <div>
+                  <strong>Squeeze the Lever (Tekan Tuas Katup):</strong> Tekan tuas katup APAR dengan mantap untuk menyemprotkan media pemadam serbuk/gas.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">S</div>
+                <div>
+                  <strong>Sweep Side to Side (Sapukan Menyamping):</strong> Gerakkan corong menyapu ke kiri dan ke kanan secara merata dari jarak aman 2 hingga 3 meter.
+                </div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 9</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="9" id="p9">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 9"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Budaya Kerja Industri 5R / 5S</span>
+              <span class="page-num">Hal 10</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>1.6 Budaya Kerja Industri 5R / 5S & Kaizen Bengkel Pemesinan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Budaya 5R (<em>Seiri, Seiton, Seiso, Seiketsu, Shitsuke</em>) meniadakan pemborosan waktu pencarian alat dan menciptakan bengkel kelas dunia:
+            </p>
+
+            <!-- Interactive 5R TP Board -->
+            <div class="r5-board-container" style="background: var(--bg-page-alt); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; margin: 14px 0;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                <button class="r5-tp-card active" data-r="seiri">1. Ringkas (Seiri)</button>
+                <button class="r5-tp-card" data-r="seiton">2. Rapi (Seiton)</button>
+                <button class="r5-tp-card" data-r="seiso">3. Resik (Seiso)</button>
+                <button class="r5-tp-card" data-r="seiketsu">4. Rawat (Seiketsu)</button>
+                <button class="r5-tp-card" data-r="shitsuke">5. Rajin (Shitsuke)</button>
+              </div>
+
+              <div class="r5-explanation-box" id="r5TPExplanationBox">
+                <h5 style="color: var(--accent-blue); margin-bottom: 6px; font-size: 0.95rem;">Ringkas (Seiri) - Pemilahan Nyata Bengkel Mesin</h5>
+                <p style="margin-bottom: 8px;">Pilah tatal logam (scrap/beram) bekas pemakanan ke dalam bak penampung chip. Singkirkan pahat yang patah atau aus ke kotak perbaikan.</p>
+                <div style="background: rgba(2, 132, 199, 0.08); border-left: 3px solid var(--accent-cyan); padding: 6px 10px; font-size: 0.76rem; border-radius: 0 4px 4px 0;">
+                  <strong>Aksi Nyata Siswa:</strong> Bebaskan meja mesin bubut dari benda-benda yang tidak dipakai saat proses pemesinan berlangsung.
+                </div>
+              </div>
+            </div>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/budaya_5r.svg" alt="Diagram Budaya 5R">
+                <h4>Prinsip 5R di Bengkel SMK N 2 Depok</h4>
+                <p>Standarisasi papan bayangan perkakas (shadow board) dan garis pembatas kuning-hitam di lantai mesin.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/5s_shadow_board.jpg" alt="Papan Bayangan (Shadow Board) Perkakas 5S Bengkel Pemesinan">
+                <h4>Shadow Board Kunci & Pahat</h4>
+                <p>Kunci cekam dan pahat bubut memiliki slot khusus bertanda visual sehingga kehilangan alat terdeteksi dalam 3 detik.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 10</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="10" id="p10">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 12"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 1: Rangkuman & Kuis Formatif 1</span>
+              <span class="page-num">Hal 11</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Rangkuman Pembelajaran Bab 1 (Deep Reflection)</span>
+            </h2>
+
+            <div class="callout-box tip">
+              <strong>Intisari Bab 1 (Kecakapan Kerja, K3LH & Budaya 5R):</strong>
+              <ul style="margin-left: 18px; line-height: 1.6; font-size: 0.85rem;">
+                <li>Etos kerja profesional dibangun di atas komitmen nol kecelakaan (Zero Accident) dan kepatuhan penuh terhadap SOP mesin.</li>
+                <li>Hierarki pengendalian bahaya menempatkan Eliminasi dan Rekayasa Teknik di atas APD sebagai solusi mitigasi paling mendasar.</li>
+                <li>Aturan keselamatan mutlak mesin berputar: Dilarang keras memakai sarung tangan, pakaian kerja longgar, atau aksesoris perhiasan.</li>
+                <li>Penanganan tatal beram logam wajib menggunakan tongkat pengait atau kuas pelindung untuk menghindari sayatan tangan.</li>
+                <li>Kesiapsiagaan darurat mencakup pengetahuan lokasi tombol Emergency Stop dan teknik pemadaman api PASS pada APAR.</li>
+                <li>Budaya 5R (Ringkas, Rapi, Resik, Rawat, Rajin) meningkatkan efisiensi kerja dan meniadakan bahaya tersandung di bengkel.</li>
+              </ul>
+            </div>
+
+            <!-- Interactive Quiz Bab 1 -->
+            <div class="quiz-box">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 1</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab1"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 1: Kecakapan Kerja & K3LH</span>
+              <span>Hal 11</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="11" id="p11">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 11"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Pengetahuan Bahan Teknik</span>
+              <span class="page-num">Hal 12</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 2</div>
+              <div class="chapter-title">Pengetahuan Bahan Teknik (Material Science)</div>
+              <div class="chapter-desc">Klasifikasi Bahan Manufaktur, Sifat Fisik, Kimia, Kelistrikan, Sifat Mekanik, dan Pengujian Material</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.1 Klasifikasi Bahan Teknik Manufaktur Mesin</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Pemilihan bahan baku dalam manufaktur mesin menentukan keawetan komponen, kemudahan proses pemotongan (<em>machinability</em>), dan biaya produksi:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/material_tree.svg" alt="Pohon Klasifikasi Bahan Teknik">
+                <h4>Pohon Silsilah Material Teknik</h4>
+                <p>Pembagian 4 kelompok besar: Logam (Ferro & Non-Ferro), Polimer, Keramik Teknik, dan Material Komposit.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/steel_raw_stock.jpg" alt="Batangan Logam Baja Karbon (Mild Steel & Tool Steel) di Gudang Material">
+                <h4>Material Baja Karbon & Paduan</h4>
+                <p>Baja konstruksi St 37, baja perkakas karbon tinggi, besi tuang kelabu FC250, dan paduan aluminium ringan.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Karakteristik 4 Kelompok Material Manufaktur:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">A</span>
+                  <h5>Logam Ferro (Ferrous Metals)</h5>
+                </div>
+                <p>Paduan berbahan dasar besi (Fe) dan karbon (C): Baja karbon rendah (St 37), baja karbon sedang (S45C poros roda gigi), dan besi tuang kelabu (badan mesin bubut penahan getaran).</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">B</span>
+                  <h5>Logam Non-Ferro</h5>
+                </div>
+                <p>Bebas kandungan besi: Paduan aluminium (Al 6061 ringan anti karat), tembaga (Cu penghantar listrik kabel), dan kuningan (brass tahan gesekan bantalan).</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">C</span>
+                  <h5>Material Polimer (Plastik Teknik)</h5>
+                </div>
+                <p>Termoplastik (Nylon/Poliamida roda gigi hening, Teflon tahan panas) dan Termoset (Bakelit isolator listrik switchboard mesin).</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">D</span>
+                  <h5>Komposit & Keramik Teknik</h5>
+                </div>
+                <p>Keramik mata pahat sisipan karbida (insert tungsten carbide) tahan suhu potong 1000°C dan komposit serat karbon (CFRP).</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 12</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="12" id="p12">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 14"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Sifat Fisik Bahan Teknik</span>
+              <span class="page-num">Hal 13</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.2 Sifat Fisik Bahan: Titik Lebur, Massa Jenis & Pemuaian Termal</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Sifat fisik adalah karakteristik bahan yang dapat diamati tanpa mengubah komposisi kimia zat tersebut:
+            </p>
+
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Material Logam</th>
+                    <th>Massa Jenis (g/cm³)</th>
+                    <th>Titik Lebur (°C)</th>
+                    <th>Koefisien Muai Panjang (×10⁻⁶ /°C)</th>
+                    <th>Aplikasi Khas di Industri</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Baja Karbon (St 37 / S45C)</strong></td>
+                    <td>7,85</td>
+                    <td>1.450 – 1.520</td>
+                    <td>11,5</td>
+                    <td>Poros transmisi, roda gigi mesin, rangka meja bubut.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aluminium (Al 99,5 / 6061)</strong></td>
+                    <td>2,70 (Sangat Ringan)</td>
+                    <td>660</td>
+                    <td>23,0 (Muai 2x Baja)</td>
+                    <td>Komponen dirgantara, casing motor, puli transmisi.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tembaga (Copper Cu)</strong></td>
+                    <td>8,96</td>
+                    <td>1.083</td>
+                    <td>16,5</td>
+                    <td>Kabel lilitan motor listrik, elektroda EDM, pipa pendingin.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Besi Tuang Kelabu (FC 250)</strong></td>
+                    <td>7,20</td>
+                    <td>1.150 – 1.250</td>
+                    <td>10,5</td>
+                    <td>Meja mesin bubut (lathe bed) karena mampu meredam getaran.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 class="sub-heading">Dampak Pemuaian Termal pada Ketelitian Ukuran Pembubutan:</h3>
+            <p class="content-text">
+              Saat pembubutan kasar tanpa cairan pendingin (<em>coolant</em>), suhu benda kerja baja dapat meningkat hingga 80°C di atas suhu ruang (ΔT = 60°C).
+              <br>Rumus pertambahan panjang/diameter benda kerja:
+              <br><code>ΔL = L₀ × α × ΔT</code>
+              <br>Jika benda kerja berdiameter 50 mm diukur saat masih panas membara, ukurannya akan memuai sebesar <code>50 × (11,5 × 10⁻⁶) × 60 ≈ +0,035 mm</code>.
+            </p>
+
+            <div class="callout-box warning">
+              <strong>Kaidah Metrologi Deep Learning:</strong>
+              Jangan pernah melakukan pengukuran presisi akhir (finishing) pada benda kerja yang masih panas dari pemotongan! Biarkan benda kerja mendingin hingga suhu standar ruang kalibrasi 20°C agar tidak timbul penyimpangan ukuran di luar batas toleransi ISO.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 13</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="13" id="p13">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 13"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Sifat Kimia & Proteksi Korosi</span>
+              <span class="page-num">Hal 14</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.3 Sifat Kimia Bahan & 4 Metode Proteksi Permukaan Logam</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Korosi elektrokimia adalah degradasi logam akibat reaksi redoks dengan lingkungan basah/oksigen yang merugikan industri manufaktur hingga triliunan rupiah setiap tahun:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/metal_corrosion_rust.jpg" alt="Korosi dan Karat Oksidasi Besi Fe2O3 Akibat Kelembaban dan Udara">
+                <h4>Mekanisme Pembentukan Karat (Fe₂O₃)</h4>
+                <p>Besi melepaskan elektron di anoda dan bereaksi dengan ion hidroksil air membentuk karat rapuh.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/metal_coating_galvanizing.jpg" alt="Proses Pelapisan Permukaan Logam Hot-Dip Galvanizing Anti-Karat">
+                <h4>Proteksi Pelapisan Permukaan</h4>
+                <p>Pemberian penghalang fisik dan anoda korban untuk menghentikan kontak langsung dengan elektrolit.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Empat Metode Pengendalian Korosi Komponen Mesin:</h3>
+            <div class="step-guide">
+              <div class="step-guide-item">
+                <div class="step-num">1</div>
+                <div>
+                  <strong>Pelapisan Minyak / Gemuk Antikarat:</strong> Metode perlindungan jangka pendek pada eretan meja mesin bubut, jangka sorong, dan mikrometer saat penyimpanan.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">2</div>
+                <div>
+                  <strong>Galvanisasi Seng (Hot-Dip Galvanizing):</strong> Pelapisan baja dengan lelehan seng (Zn). Seng bertindak sebagai anoda korban (<em>sacrificial anode</em>) yang berkorban teroksidasi lebih dulu demi melindungi besi.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">3</div>
+                <div>
+                  <strong>Pelapisan Khrom Keras (Hard Chrome Plating):</strong> Mengendapkan lapisan kromium mengkilap tahan gesek setebal 20–100 mikron pada poros hidrolik mesin press.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">4</div>
+                <div>
+                  <strong>Anodisasi Aluminium (Anodizing):</strong> Mempertebal lapisan aluminium oksida (Al₂O₃) alami secara elektrolitik hingga tahan gores dan dapat diberi warna artistik.
+                </div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 14</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="14" id="p14">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 16"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Sifat Mampu Listrik Bahan</span>
+              <span class="page-num">Hal 15</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.4 Sifat Mampu Listrik: Konduktor, Semikonduktor & Isolator Mesin</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Mesin manufaktur modern digerakkan oleh motor listrik 3-fase dan dikendalikan oleh modul semikonduktor inverter CNC yang membutuhkan pemilihan bahan kelistrikan presisi:
+            </p>
+
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">⚡</span>
+                  <h5>Konduktor Listrik Unggul</h5>
+                </div>
+                <p><strong>Tembaga Elektrolitik (Cu 99,9%):</strong> Memiliki resistivitas sangat rendah (1,68 × 10⁻⁸ Ω·m). Digunakan untuk lilitan kawat dinamo motor spindel mesin bubut dan transformator mesin las.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">🔌</span>
+                  <h5>Isolator Tegangan Tinggi</h5>
+                </div>
+                <p><strong>Polimer Bakelit & Keramik Steatit:</strong> Resistivitas sangat tinggi (&gt; 10¹² Ω·m). Digunakan pada saklar panel listrik 380V, pembungkus kabel las, dan penyangga rel terminal listrik.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">💻</span>
+                  <h5>Semikonduktor Otomasi Mesin</h5>
+                </div>
+                <p><strong>Silikon (Si) & Silikon Karbida (SiC):</strong> Digunakan pada modul daya IGBT Inverter, mikroprosesor pengendali sumbu motor servo mesin bubut CNC, dan sensor optik proximity.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">🧲</span>
+                  <h5>Sifat Kemagnetan Logam (Feromagnetik)</h5>
+                </div>
+                <p>Baja dan besi mampu menarik fluks magnetik kuat, memungkinkan penggunaan <strong>Magnetic Chuck</strong> untuk menjepit pelat tipis saat penggerindaan permukaan datar (surface grinding).</p>
+              </div>
+            </div>
+
+            <div class="callout-box info" style="margin-top: 14px;">
+              <strong>Pemeriksaan Tahanan Isolasi Motor Mesin (Megger Test):</strong>
+              Sebelum menyalakan mesin bubut yang lama tidak digunakan, periksa nilai resistansi isolasi lilitan motor menggunakan Insulation Tester (Megger). Nilai tahanan isolasi aman wajib di atas <strong>1 Mega-Ohm (1 MΩ)</strong> untuk mencegah kebocoran tegangan ke rangka bodi mesin.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 15</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="15" id="p15">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 15"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Sifat Mampu Mekanik Bahan</span>
+              <span class="page-num">Hal 16</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.5 Sifat Mampu Mekanik: Kekuatan, Kekerasan, Keuletan & Ketangguhan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Sifat mekanik menentukan respon material saat menerima pembebanan gaya luar tarik, tekan, puntir, atau tumbukan:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/pengujian_mekanik_material.svg" alt="Pengujian Sifat Mekanik">
+                <h4>Uji Tarik, Tekan & Impak</h4>
+                <p>Pemberian gaya aksial terukur untuk mengetahui batas luluh (yield) dan kekuatan patah maksimum (tensile strength).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/svg/stress_strain_curve.svg" alt="Kurva Tegangan Regangan">
+                <h4>Kurva Tegangan-Regangan (Stress-Strain)</h4>
+                <p>Transisi dari daerah deformasi elastis (hukum Hooke) menuju daerah deformasi plastis permanen hingga putus.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Enam Parameter Sifat Mekanik Utama Komponen Mesin:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Kekuatan Tarik (Tensile Strength)</h5>
+                </div>
+                <p>Tegangan maksimum yang mampu ditahan sebelum material mengalami pengecilan penampang (<em>necking</em>) dan putus.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Batas Luluh (Yield Strength)</h5>
+                </div>
+                <p>Titik kritis di mana material berhenti berdeformasi elastis dan mulai berubah bentuk permanen plastis.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Kekerasan (Hardness)</h5>
+                </div>
+                <p>Ketahanan terhadap deformasi plastis lokal berupa goresan dan penetrasi indentor uji Brinell atau Rockwell C.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">4</span>
+                  <h5>Keuletan (Ductility)</h5>
+                </div>
+                <p>Kemampuan meregang membentuk kawat atau lembaran tipis tanpa retak (dinyatakan dalam % pertambahan panjang Elongation).</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 16</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="16" id="p16">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 18"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Pengujian Mekanik & Perlakuan Panas</span>
+              <span class="page-num">Hal 17</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>2.6 Metode Uji Mekanik & Perlakuan Panas Logam (Heat Treatment)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Sifat mekanik baja karbon dapat dimodifikasi melalui siklus pemanasan dan laju pendinginan teratur:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/heat_treatment_quench.jpg" alt="Proses Perlakuan Panas Logam: Pencelupan Cepat (Quenching) Benda Kerja Merah Membara">
+                <h4>Siklus Perlakuan Panas (Heat Treatment)</h4>
+                <p>Pemanasan austenisasi 850°C, penahanan waktu (soaking), pencelupan cepat (quenching), dan penemperan (tempering).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/rockwell_hardness_tester.jpg" alt="Mesin Penguji Kekerasan Logam Standar Rockwell HRC dengan Indentor Intan">
+                <h4>Uji Kekerasan Rockwell HRC</h4>
+                <p>Indentor kerucut intan ditekan beban 150 kgf untuk menguji kekerasan mata pahat HSS (HRC 62–65).</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Empat Macam Proses Perlakuan Panas Baku di Industri:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Nama Proses</th>
+                    <th>Metode Pendinginan</th>
+                    <th>Tujuan & Perubahan Sifat Mekanik</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Pengerasan (Hardening / Quenching)</strong></td>
+                    <td>Celup cepat ke dalam air garam atau oli pendingin.</td>
+                    <td>Membentuk struktur kristal martensit yang sangat keras dan tahan aus untuk pisau potong dan roda gigi.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Penemperan (Tempering)</strong></td>
+                    <td>Dipanaskan ulang 200°C–500°C lalu didinginkan di udara.</td>
+                    <td>Menghilangkan kerapuhan (brittleness) pasca-quenching sehingga diperoleh kombinasi keras dan tangguh.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pelunakan (Annealing)</strong></td>
+                    <td>Didinginkan sangat lambat di dalam tungku oven tertutup.</td>
+                    <td>Melunakkan struktur kristal logam agar mudah dikerjakan dengan mesin bubut (machinability tinggi).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Penormalan (Normalizing)</strong></td>
+                    <td>Didinginkan secara bebas di udara terbuka bengkel.</td>
+                    <td>Menyeragamkan butiran kristal dan menghilangkan tegangan sisa akibat pengelasan atau penempaan.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 17</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="17" id="p17">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 17"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 2: Rangkuman & Kuis Formatif 2</span>
+              <span class="page-num">Hal 18</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Rangkuman Pembelajaran Bab 2 (Refleksi Ilmu Bahan)</span>
+            </h2>
+
+            <div class="callout-box tip">
+              <strong>Intisari Bab 2 (Pengetahuan Bahan Teknik):</strong>
+              <ul style="margin-left: 18px; line-height: 1.6; font-size: 0.85rem;">
+                <li>Material teknik terbagi atas logam fero (baja St37, S45C, besi tuang), logam non-fero (aluminium, tembaga, kuningan), polimer, keramik, dan komposit.</li>
+                <li>Pemuaian termal saat pemesinan panas wajib diperhitungkan agar pengukuran tidak menyimpang dari toleransi ISO standar 20°C.</li>
+                <li>Proteksi korosi elektrokimia dilakukan dengan pelapisan minyak pelindung, galvanisasi seng, hard chrome plating, dan anodisasi aluminium.</li>
+                <li>Sifat mampu listrik menempatkan tembaga murni sebagai konduktor dinamo motor mesin, sedangkan polimer dan keramik sebagai isolator keselamatan.</li>
+                <li>Uji tarik menghasilkan kurva tegangan-regangan yang memperlihatkan batas elastis, batas luluh, dan kekuatan tarik maksimum.</li>
+                <li>Proses perlakuan panas (quenching dan tempering) memodifikasi struktur mikro baja untuk menghasilkan kekuatan dan ketahanan aus yang optimal.</li>
+              </ul>
+            </div>
+
+            <!-- Interactive Quiz Bab 2 -->
+            <div class="quiz-box">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 2</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab2"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 2: Pengetahuan Bahan Teknik</span>
+              <span>Hal 18</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="18" id="p18">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 20"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Teknik Dasar Proses Produksi</span>
+              <span class="page-num">Hal 19</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 3</div>
+              <div class="chapter-title">Teknik Dasar Proses Produksi Manufaktur Mesin</div>
+              <div class="chapter-desc">Teknologi Cutting & Non-Cutting, Metrologi Alat Ukur Presisi, Perkakas Bangku, dan Operasi Mesin Bubut</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.1 Klasifikasi Proses Manufaktur: Cutting vs Non-Cutting</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Manufaktur modern mengelompokkan pembuatan komponen mesin menjadi dua cabang teknologi utama:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/lathe_cutting_coolant.jpg" alt="Proses Pemotongan Mesin Bubut (Cutting) dengan Sirkulasi Cairan Pendingin Coolant">
+                <h4>Proses Pemotongan (Cutting Process)</h4>
+                <p>Pengurangan volume material menghasilkan tatal (chips): Pembubutan, pemfraisan, pengeboran, penyerutan, dan penggerindaan presisi.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/metal_casting_foundry.jpg" alt="Pengecoran Logam Cair (Foundry Metal Casting) Proses Non-Cutting">
+                <h4>Proses Tanpa Pemotongan (Non-Cutting)</h4>
+                <p>Pembentukan bentuk tanpa membuang beram: Pengecoran logam cair (casting), penempaan (forging), penekukan (bending), dan pengelasan dasar.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Perbandingan Karakteristik Kedua Teknologi:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Aspek Perbandingan</th>
+                    <th>Teknologi Cutting (Pemesinan)</th>
+                    <th>Teknologi Non-Cutting (Pembentukan & Cetak)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Tingkat Ketelitian Dimensi</strong></td>
+                    <td>Sangat tinggi (toleransi mikron hingga ±0,01 mm).</td>
+                    <td>Sedang hingga kasar (±0,5 mm s.d. ±2,0 mm).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kekasaran Permukaan (Ra)</strong></td>
+                    <td>Sangat halus (Ra 0,8 s.d. 3,2 µm).</td>
+                    <td>Cenderung kasar (Ra 6,3 s.d. 25 µm), butuh finishing lanjut.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Efisiensi Bahan Baku</strong></td>
+                    <td>Ada sisa tatal terbuang (scrap beram 10%–40%).</td>
+                    <td>Tinggi (hampir 100% material termanfaatkan mendekati bentuk jadi / net-shape).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aplikasi Komponen</strong></td>
+                    <td>Poros pasak bearing, ulir baut presisi, roda gigi.</td>
+                    <td>Blok silinder mesin, velg mobil cetak, rangka bejana tekan.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 19</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="19" id="p19">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 19"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Metrologi Industri & Alat Ukur</span>
+              <span class="page-num">Hal 20</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.2 Metrologi Industri & Klasifikasi Alat Ukur Pemesinan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Metrologi industri adalah sains pengukuran dimensi geometris untuk memastikan ketercukupan suaian rakitan antar-komponen mesin:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/granite_surface_plate.jpg" alt="Meja Rata Granit (Granite Surface Plate) & Pengukur Ketinggian Presisi (Height Gauge)">
+                <h4>Klasifikasi Alat Ukur Metrologi</h4>
+                <p>Alat ukur langsung berskala (caliper, micrometer) dan alat pembanding tanpa skala (dial indicator, hairline, gauge block).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/dial_indicator_lathe.jpg" alt="Pengujian Kebulatan (Run-Out) Poros Bubut Menggunakan Jam Ukur (Dial Test Indicator)">
+                <h4>Jam Ukur (Dial Indicator)</h4>
+                <p>Ketelitian 0,01 mm untuk menguji kebulatan (run-out) poros bubut dan kelurusan gerakan meja mesin frais.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Hierarki Ketelitian Alat Ukur Dimensi Panjang:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Mistar Baja (Steel Rule)</h5>
+                </div>
+                <p>Ketelitian: <strong>0,5 mm</strong>. Digunakan untuk pengukuran panjang awal balok kasar dan pemotongan bahan mentah.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Jangka Sorong (Vernier Caliper)</h5>
+                </div>
+                <p>Ketelitian: <strong>0,05 mm & 0,02 mm</strong>. Multifungsi mengukur dimensi luar, lubang dalam, dan kedalaman ceruk.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Mikrometer Luar (Outside Micrometer)</h5>
+                </div>
+                <p>Ketelitian: <strong>0,01 mm</strong>. Khusus untuk diameter dudukan bearing dan toleransi suaian poros ISO grade 6.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">4</span>
+                  <h5>Blok Ukur Presisi (Gauge Block)</h5>
+                </div>
+                <p>Ketelitian: <strong>0,001 mm (1 mikron)</strong>. Standar acuan sekunder bengkel untuk mengalibrasi jangka sorong dan mikrometer.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 20</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="20" id="p20">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 22"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Jangka Sorong (Vernier Caliper)</span>
+              <span class="page-num">Hal 21</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.3 Jangka Sorong (Vernier Caliper) Ketelitian 0,05 mm & 0,02 mm</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Jangka sorong adalah instrumen pengukuran serbaguna yang mampu melakukan 3 macam pengukuran: luar, dalam, dan kedalaman:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/vernier_caliper_reading.svg" alt="Prinsip Pembacaan Jangka Sorong">
+                <h4>Prinsip Pembacaan Nonius</h4>
+                <p>Selisih 1 strip skala utama (1 mm) dengan 1 strip skala nonius 20 bagian (0,95 mm) menghasilkan resolusi 0,05 mm.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/vernier_caliper_real.jpg" alt="Jangka Sorong (Vernier Caliper) Baja Presisi Ketelitian 0,05 mm">
+                <h4>Bagian-Bagian Jangka Sorong</h4>
+                <p>Rahang tetap, rahang geser, pengukur lubang dalam, bilah pengukur kedalaman, dan baut pengunci posisi.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Langkah Matematis Menghitung Hasil Pengukuran:</h3>
+            <p class="content-text">
+              <code>Hasil Ukur = Nilai Skala Utama (mm) + (Garis Nonius Segaris × 0,05 mm)</code>
+            </p>
+
+            <div class="step-guide">
+              <div class="step-guide-item">
+                <div class="step-num">1</div>
+                <div>
+                  <strong>Baca Skala Utama:</strong> Amati garis milimeter tepat di sebelah kiri garis nol (0) skala nonius. Contoh: garis nol melewati 24 mm.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">2</div>
+                <div>
+                  <strong>Cari Garis Nonius Segaris:</strong> Cari garis skala nonius yang lurus sempurna dengan salah satu garis di skala utama. Misal: garis ke-7.
+                </div>
+              </div>
+              <div class="step-guide-item">
+                <div class="step-num">3</div>
+                <div>
+                  <strong>Jumlahkan Nilai:</strong> Nilai total = 24 mm + (7 × 0,05 mm) = 24 mm + 0,35 mm = <strong>24,35 mm</strong>.
+                </div>
+              </div>
+            </div>
+
+            <div class="callout-box warning">
+              <strong>Pencegahan Kesalahan Paralaks:</strong>
+              Arah pandangan mata pengamat wajib tegak lurus 90° tepat di atas garis skala pembacaan. Sudut pandang miring dari kiri atau kanan akan menggeser garis nonius hingga menyimpang 0,05 mm.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 21</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="21" id="p21">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 21"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Laboratorium Virtual Jangka Sorong</span>
+              <span class="page-num">Hal 22</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.4 Laboratorium Virtual: Simulator Jangka Sorong 0,05 mm</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Geser slider rahang jangka sorong di bawah ini untuk melihat pergeseran skala nonius 0,05 mm secara langsung pada kanvas presisi:
+            </p>
+
+            <!-- Vernier Caliper Simulator Widget -->
+            <div class="caliper-sim-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h4 style="color: var(--accent-cyan); font-size: 0.95rem; margin: 0;">🔬 Simulator Vernier Caliper 0.05 mm</h4>
+                <span class="lab-badge">Presisi Kanvas 2D</span>
+              </div>
+
+              <div class="caliper-canvas-wrap">
+                <canvas id="caliperCanvas" width="480" height="160"></canvas>
+              </div>
+
+              <div style="margin-top: 14px;">
+                <label style="font-size: 0.8rem; color: #94a3b8; display: block; margin-bottom: 6px;">
+                  Geser Rahang Ukur (Rentang 0,00 s.d. 60,00 mm):
+                </label>
+                <input type="range" id="sliderCaliper" min="0" max="60" step="0.05" value="24.35" style="width: 100%; accent-color: var(--accent-cyan); cursor: pointer;">
+              </div>
+
+              <div class="caliper-readout">
+                <div>
+                  <div style="font-size: 0.72rem; color: #94a3b8;">HASIL PEMBACAAN TOTAL:</div>
+                  <div class="readout-total" id="caliperTotal">24.35 mm</div>
+                </div>
+                <div class="readout-breakdown">
+                  <div>Skala Utama: <strong id="caliperMain" style="color:#fff;">24.00 mm</strong></div>
+                  <div>Skala Nonius: <strong id="caliperVernier" style="color:var(--accent-cyan);">0.35 mm (Strip ke-7)</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini Challenge Box -->
+            <div class="callout-box tip" style="margin-top: 12px;">
+              <strong>Tantangan Uji Ketelitian Mandiri:</strong>
+              <p style="margin: 4px 0 8px 0; font-size: 0.82rem;">
+                Instruktur meminta Anda mengukur diameter poros bertingkat sebesar <strong>28,65 mm</strong>. Geser slider hingga angka tersebut tercapai dan ketikkan tebakan Anda:
+              </p>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="number" id="inputCaliperAnswer" placeholder="Ketik tebakan mm..." style="padding: 6px 10px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.82rem; width: 160px;">
+                <button id="btnCaliperQuiz" style="background: var(--accent-blue); color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">Periksa Tebakan</button>
+                <span id="caliperQuizFeedback" style="font-size: 0.8rem; font-weight: 600;"></span>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 22</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="22" id="p22">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 24"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Mikrometer Luar 0,01 mm</span>
+              <span class="page-num">Hal 23</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.5 Mikrometer Luar (0,01 mm) & Kalibrasi Titik Nol (Zero Adjustment)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Mikrometer luar memanfaatkan prinsip ulir presisi dengan kisar (<em>pitch</em>) 0,5 mm untuk mengukur diameter dudukan bantalan poros bubut:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/outside_micrometer_real.jpg" alt="Mikrometer Luar (Outside Micrometer) 0-25 mm Ketelitian 0,01 mm">
+                <h4>Anatomi Mikrometer Luar 0–25 mm</h4>
+                <p>Landasan tetap (anvil), poros geser (spindle), silinder tetap (sleeve), tabung putar (thimble), dan raset (ratchet stop).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/micrometer_calibration_wrench.jpg" alt="Penyetelan dan Kalibrasi Titik Nol Mikrometer Luar Menggunakan Kunci Pas C (Spanner)">
+                <h4>Penyetelan Titik Nol dengan Kunci C</h4>
+                <p>Garis nol silinder tetap harus lurus sempurna dengan garis nol tabung putar saat anvil dan spindle bersentuhan.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kaidah Baku Penggunaan Mikrometer:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Gunakan Gigi Gelincir (Ratchet Stop):</strong> Saat spindle mendekati benda kerja, hentikan memutar thimble dan putar raset perlahan hingga berbunyi 'klik' 2 s.d. 3 kali untuk menjamin tekanan pengukuran konstan.</li>
+              <li><strong>Kunci Tuas Pengunci (Lock Nut):</strong> Kunci poros spindle sebelum membaca skala agar ukuran tidak bergeser saat mikrometer diangkat dari benda kerja.</li>
+              <li><strong>Pembersihan Bidang Kontak:</strong> Selalu jepit selembar kertas bersih di antara anvil dan spindle lalu tarik perlahan untuk membersihkan lapisan debu mikro sebelum pengukuran.</li>
+            </ul>
+
+            <div class="callout-box info">
+              <strong>Rumus Pembacaan Mikrometer Luar:</strong>
+              <br><code>Hasil = Skala Laras Tetap (mm & 0,5 mm) + (Garis Tabung Putar × 0,01 mm)</code>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 23</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="23" id="p23">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 23"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Perkakas Tangan (Hand Tools)</span>
+              <span class="page-num">Hal 24</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.6 Perkakas Tangan Manual (Hand Tools) & Kerja Bangku Pemesinan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Keterampilan kerja bangku manual membentuk kepekaan rasa (feeling) dan ketelitian tangan calon teknisi mesin:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/benchwork_tools.svg" alt="Perkakas Tangan Kerja Bangku">
+                <h4>Keluarga Perkakas Tangan Manual</h4>
+                <p>Ragum bangku meja, kikir baja (pelat, setengah bulat, bulat, segitiga), gergaji besi (hacksaw), pahat tangan, dan tap-snei.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/bench_vise_filing.jpg" alt="Perkakas Tangan Kerja Bangku: Ragum Menjepit Benda Kerja & Teknik Mengikir Silang">
+                <h4>Teknik Mengikir Silang (Cross Filing)</h4>
+                <p>Gerakan kikir membentuk sudut diagonal 45° saling menyilang untuk menghasilkan permukaan bidang rata tanpa cekungan.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Pembuatan Ulir Manual Menggunakan Tap & Snei:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">A</span>
+                  <h5>Tap Ulir Dalam (Hand Tap Set)</h5>
+                </div>
+                <p>1 set terdiri dari 3 tap: Tap 1 (Taper / tirus awal), Tap 2 (Plug / pembentuk), dan Tap 3 (Bottoming / perata dasar lubang buntu). Putaran maju 1 putaran, mundur 1/2 putaran untuk memutus tatal.</p>
+              </div>
+
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">B</span>
+                  <h5>Snei Ulir Luar (Threading Die)</h5>
+                </div>
+                <p>Mata pembuat ulir luar pada poros silindris. Ujung poros wajib di-chamfer 45° terlebih dahulu agar snei dapat mencengkeram tegak lurus sumbu poros.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 24</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="24" id="p24">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 26"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Perkakas Bertenaga & Mesin Bor</span>
+              <span class="page-num">Hal 25</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.7 Perkakas Bertenaga: Mesin Gerinda Tangan & Mesin Bor Bangku</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Pembuatan lubang presisi dan pemotongan profil baja menggunakan mesin stasioner bertenaga:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/mesin_bor_geometri.svg" alt="Geometri Mata Bor & Mesin Bor">
+                <h4>Geometri Mata Bor Pilin (Twist Drill)</h4>
+                <p>Sudut puncak standar 118° untuk baja lunak, sudut heliks alur tatal, dan bibir potong simetris sama panjang.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/drill_press_bench.jpg" alt="Mesin Bor Meja (Bench Drill Press) untuk Pembuatan Lubang Silindris Presisi">
+                <h4>Pencekaman Ragum Mesin Bor</h4>
+                <p>Benda kerja WAJIB dibaut kuat pada meja mesin bor. Dilarang memegang pelat dengan tangan saat mengebor!</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kalkulasi Kecepatan Putaran Spindel Bor (RPM):</h3>
+            <p class="content-text">
+              <code>n = (1000 × Cs) / (π × d)</code>
+              <br>Di mana <em>Cs</em> adalah kecepatan potong material (m/menit) dan <em>d</em> adalah diameter mata bor (mm).
+              <br>Contoh: Mata bor Ø 8 mm pada baja St 37 (Cs = 25 m/menit):
+              <br><code>n = (1000 × 25) / (3,14 × 8) = 25.000 / 25,12 ≈ 995 RPM</code> (pilih tingkat puli terdekat ~1000 RPM).
+            </p>
+
+            <div class="callout-box warning">
+              <strong>Aturan Pemakaian Center Drill:</strong>
+              Sebelum mengebor dengan mata bor berdiameter &gt; 5 mm, buat lubang panduan awal menggunakan <strong>Center Drill</strong> sedalam 1/2 konusnya untuk mencegah mata bor meleset dari titik penitik.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 25</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="25" id="p25">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 25"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Mesin Bubut Standar (Lathe Machine)</span>
+              <span class="page-num">Hal 26</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.8 Anatomi Mesin Bubut Standar & Operasi Pembubutan Dasar</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Mesin bubut (*Center Lathe Machine*) adalah mesin perkakas induk manufaktur yang memutar benda kerja sementara pahat potong bergerak translasi:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/lathe_anatomy.svg" alt="Anatomi Mesin Bubut">
+                <h4>6 Komponen Utama Mesin Bubut</h4>
+                <p>1. Kepala Tetap (Headstock), 2. Kepala Lepas (Tailstock), 3. Alas Mesin (Bed), 4. Eretan (Carriage), 5. Poros Pengarah, 6. Rumah Pahat (Toolpost).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/lathe_chuck_3jaw.jpg" alt="Cekam Tiga Rahang (3-Jaw Self-Centering Chuck) Mencekam Benda Kerja Silindris">
+                <h4>Cekam Tiga Rahang (3-Jaw Self-Centering)</h4>
+                <p>Ketiga rahang bergerak memusat secara serentak untuk mencekam benda kerja silindris bundar konsentris.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Enam Macam Operasi Pembubutan Dasar di Bengkel SMK:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Bubut Muka (Facing)</h5>
+                </div>
+                <p>Meratakan penampang ujung benda kerja tegak lurus sumbu putar untuk mendapatkan ukuran panjang presisi.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Bubut Rata Silindris (Turning)</h5>
+                </div>
+                <p>Mengurangi diameter luar benda kerja secara memanjang sepanjang sumbu spindel.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Bubut Bertingkat (Stepped Turning)</h5>
+                </div>
+                <p>Membuat variasi beberapa diameter poros berbeda untuk dudukan bantalan bearing dan roda gigi.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">4</span>
+                  <h5>Bubut Alur & Potong (Grooving & Parting)</h5>
+                </div>
+                <p>Membuat alur pasak/snap ring dan memotong benda kerja jadi menggunakan pahat potong tipis.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 26</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="26" id="p26">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 28"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Parameter Pemotongan Mesin Bubut</span>
+              <span class="page-num">Hal 27</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.9 Simulator Parameter Bubut & Kalkulator Putaran Spindel (RPM)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Pilih material dan geser diameter benda kerja di bawah ini untuk menghitung kecepatan putaran spindel bubut yang aman dan efisien:
+            </p>
+
+            <!-- Lathe Calculator Interactive Widget -->
+            <div class="arc-lab-container" style="background: #0b1522; border-color: #1e3a5f;">
+              <div class="lab-header">
+                <h4 style="color: var(--accent-cyan);">⚙️ Kalkulator Putaran Spindel Mesin Bubut (n)</h4>
+                <span class="lab-badge">Simulasi Interaktif</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div class="control-item">
+                  <label>Material Benda Kerja:</label>
+                  <select id="selectLatheMat" style="width:100%; background:#0f172a; color:#fff; border:1px solid #334155; padding:6px; border-radius:4px; font-size:0.8rem;">
+                    <option value="st37" selected>Baja Karbon Rendah (St 37)</option>
+                    <option value="s45c">Baja Karbon Sedang (S45C)</option>
+                    <option value="fc250">Besi Tuang Kelabu (FC 250)</option>
+                    <option value="al6061">Paduan Aluminium (Al 6061)</option>
+                    <option value="brass">Kuningan (Brass)</option>
+                  </select>
+                </div>
+
+                <div class="control-item">
+                  <label>Jenis Pahat Potong:</label>
+                  <div style="display:flex; gap:10px; margin-top:4px; font-size:0.8rem;">
+                    <label><input type="radio" name="latheToolType" value="hss" checked> HSS</label>
+                    <label><input type="radio" name="latheToolType" value="carbide"> Sisipan Karbida</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-item" style="margin-bottom: 12px;">
+                <label>Diameter Benda Kerja (d): <span class="val-highlight" id="valLatheDiam">30 mm</span></label>
+                <input type="range" id="sliderLatheDiam" min="10" max="100" value="30" step="2" style="width:100%;">
+              </div>
+
+              <div style="background: rgba(255,255,255,0.06); padding: 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
+                <div>
+                  <div style="font-size: 0.72rem; color: #94a3b8;">PUTARAN TEORETIS:</div>
+                  <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-amber); font-family: var(--font-mono, monospace);" id="displayLatheRpm">265 RPM</div>
+                  <div style="font-size: 0.75rem; color: #94a3b8;">Kecepatan Potong (Cs): <strong id="valLatheCs" style="color: #fff;">25 m/menit</strong></div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.72rem; color: #94a3b8;">STANDAR TUAS GEARBOX MESIN:</div>
+                  <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent-cyan); font-family: var(--font-mono, monospace);" id="displayLatheStdRpm">280 RPM</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 10px; height: 90px; background: #020617; border-radius: 4px; overflow: hidden;">
+                <canvas id="latheCanvas" width="480" height="90" style="width:100%; height:100%; display:block;"></canvas>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 27</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="27" id="p27">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 27"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 3: Material Handling & Kuis Formatif 3</span>
+              <span class="page-num">Hal 28</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>3.10 Peralatan Angkat & Pemindah Bahan (Material Handling)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Pengangkutan balok baja berat dan bahan coran di bengkel manufaktur wajib menggunakan peralatan angkat bersertifikasi:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/pallet_jack_warehouse.jpg" alt="Hand Pallet Jack Hidrolik & Forklift Pemindah Logam Berat di Bengkel">
+                <h4>Forklift & Hand Pallet Hidrolik</h4>
+                <p>Memindahkan palet bahan mentah baja batangan dan kotak suku cadang jadi hingga kapasitas 3 ton.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/overhead_crane_shop.jpg" alt="Overhead Gantry Crane Derek Gantung Pengangkat Benda Kerja Logam Berat">
+                <h4>Derek Gantung (Overhead Crane)</h4>
+                <p>Mengangkat benda kerja silindris berat untuk dipasang pada cekam mesin bubut besar menggunakan sling sabuk tekstil (webbing sling).</p>
+              </div>
+            </div>
+
+            <!-- Interactive Quiz Bab 3 -->
+            <div class="quiz-box" style="margin-top: 14px;">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 3</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab3"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 3: Teknik Dasar Proses Produksi</span>
+              <span>Hal 28</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="28" id="p28">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 30"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Gambar Teknik Mesin (Drawing)</span>
+              <span class="page-num">Hal 29</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 4</div>
+              <div class="chapter-title">Gambar Teknik Mesin (Engineering Drawing)</div>
+              <div class="chapter-desc">Standardisasi ISO, Konstruksi Geometris, Proyeksi Ortogonal Eropa vs Amerika, dan Toleransi Suaian</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.1 Peran Gambar Teknik sebagai Bahasa Universal & Peralatan CAD</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Gambar teknik adalah "bahasa universal orang teknik" yang menyampaikan gagasan rancang bangun secara akurat tanpa terhalang perbedaan bahasa tutur manusia:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/cad_3d_modeling.svg" alt="Pemodelan 3D CAD">
+                <h4>Perangkat Lunak CADD Modern</h4>
+                <p>AutoCAD 2D, Autodesk Inventor, dan SolidWorks 3D parametrik menghasilkan gambar kerja terintegrasi mesin CNC.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/manual_drafting_table.jpg" alt="Meja Gambar Teknik Manual dengan Mesin Gambar (Drafting Machine)">
+                <h4>Peralatan Gambar Manual Klasik</h4>
+                <p>Meja gambar hidrolik, sepasang penggaris segitiga 45° dan 30°/60°, pensil teknik 2H/HB, dan jangka orisinil.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Peran Krusial Gambar Teknik di Industri:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Media Komunikasi Tunggal:</strong> Menghubungkan divisi perancang (engineering designer) dengan juru bubut di lantai bengkel tanpa salah tafsir.</li>
+              <li><strong>Penyimpan Informasi Geometris:</strong> Mencatat bentuk 3D, batas toleransi linier, kekasaran permukaan, jenis bahan, dan petunjuk perlakuan panas.</li>
+              <li><strong>Dasar Kendali Mutu (Quality Control):</strong> Dokumen hukum resmi pengesahan kepatuhan produk terhadap kontrak pemesanan pelanggan.</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 29</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="29" id="p29">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 29"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Kertas Standar ISO & Kepala Gambar</span>
+              <span class="page-num">Hal 30</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.2 Standardisasi Kertas Gambar ISO Seri A & Kepala Gambar (Etiket ISO 7200)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Standar internasional <strong>ISO 5457</strong> dan <strong>ISO 7200</strong> mengatur dimensi kertas serta identitas kepala gambar:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/etiket_iso_7200.svg" alt="Etiket Kepala Gambar ISO 7200">
+                <h4>Kepala Gambar (Etiket ISO 7200)</h4>
+                <p>Terletak di pojok kanan bawah: Judul gambar, instansi (SMK N 2 Depok), skala, proyeksi, pemeriksa, dan tanggal.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/blueprint_iso_drawing.jpg" alt="Lembar Gambar Kerja Teknik ISO Lengkap dengan Garis Tepi & Etiket Kepala Gambar">
+                <h4>Format Kertas Seri A</h4>
+                <p>A0 (1 m² luas) dibagi dua menghasilkan A1, A2, A3 (420×297 mm), dan A4 (297×210 mm) dengan rasio 1:√2.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kaidah Garis Tepi & Kolom Etiket:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Ukuran Kertas</th>
+                    <th>Dimensi (mm)</th>
+                    <th>Garis Tepi Kiri (Arsip)</th>
+                    <th>Garis Tepi Atas, Kanan, Bawah</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>A4</strong></td>
+                    <td>210 × 297</td>
+                    <td><strong>20 mm</strong> (Wajib untuk lubang binder ordner)</td>
+                    <td>5 mm</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A3</strong></td>
+                    <td>297 × 420</td>
+                    <td><strong>20 mm</strong></td>
+                    <td>10 mm</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A2, A1, A0</strong></td>
+                    <td>594×420 s.d. 841×1189</td>
+                    <td><strong>20 mm</strong></td>
+                    <td>10 mm (A2) / 20 mm (A1/A0)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 30</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="30" id="p30">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 32"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Standardisasi Garis Gambar ISO 128</span>
+              <span class="page-num">Hal 31</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.3 Standardisasi Macam Garis ISO 128 & Sketsa Bebas (Freehand)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Setiap jenis dan ketebalan garis pada gambar teknik memiliki arti simbolis tersendiri sesuai standar internasional <strong>ISO 128</strong>:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/iso_line_types.svg" alt="Tipe Garis Gambar ISO 128">
+                <h4>Klasifikasi Garis Gambar ISO</h4>
+                <p>Garis tebal kontinu (0,5 mm), garis tipis kontinu (0,25 mm), garis putus-putus, dan garis strip-titik sumbu simetri.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/freehand_technical_sketch.jpg" alt="Sketsa Tangan Bebas (Freehand Technical Sketch) Komponen Mekanik Proporsional">
+                <h4>Sketsa Bebas Proporsional (Freehand)</h4>
+                <p>Menggambar sketsa ide rancangan tanpa penggaris dengan proporsi ukuran mendekati skala nyata.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Hierarki 4 Garis Pokok dalam Gambar Mesin:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Bentuk Garis</th>
+                    <th>Tebal Acuan (Seri 0,5)</th>
+                    <th>Fungsi Utama dalam Gambar Komponen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Garis Tebal Kontinu</strong></td>
+                    <td>0,5 mm</td>
+                    <td>Garis nyata benda kerja dan garis tepi batas bidang luar yang terlihat langsung.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Garis Tipis Kontinu</strong></td>
+                    <td>0,25 mm</td>
+                    <td>Garis ukur dimensi, garis bantu perpanjangan, garis arsir potongan penampang logam.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Garis Gores Putus-Putus</strong></td>
+                    <td>0,35 mm</td>
+                    <td>Garis tepi atau sudut benda yang terhalang di belakang (garis tak terlihat).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Garis Strip-Titik Tipis</strong></td>
+                    <td>0,25 mm</td>
+                    <td>Garis sumbu putar silinder, poros bubut, lingkaran jarak lubang baut, bidang simetri.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 31</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="31" id="p31">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 31"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Penunjukan Ukuran Standar ISO</span>
+              <span class="page-num">Hal 32</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.4 Kaidah Baku Penunjukan Ukuran (Dimensioning Standar ISO)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Kesalahan mencantumkan garis ukur dapat menyebabkan salah pengerjaan di bengkel bubut. Patuhi 6 kaidah emas penunjukan ukuran:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/kaidah_penunjukan_ukuran.svg" alt="Aturan Penunjukan Ukuran ISO">
+                <h4>Elemen Penunjukan Ukuran</h4>
+                <p>Garis ukur paralel, garis bantu dengan celah 1 mm dari benda, mata panah hitam 15° berasio 1:3, dan angka ukur di atas garis.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/dimensioning_drawing.jpg" alt="Kaidah Penunjukan Ukuran Dimensi ISO: Garis Ukur, Tanda Panah, dan Angka Ukuran">
+                <h4>Simbol Huruf Dimensi ISO</h4>
+                <p>Simbol Ø (Diameter lingkaran), R (Radius busur), SØ (Diameter bola), □ (Bujur sangkar bidang), dan sudut kemiringan tirus.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kaidah Utama Penunjukan Ukuran Benda Mesin:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Jangan Mengulang Ukuran (No Redundancy):</strong> Setiap elemen ukuran hanya boleh dicantumkan satu kali pada pandangan yang paling jelas memperlihatkan bentuknya.</li>
+              <li><strong>Ukuran Luar Benda:</strong> Garis ukur diletakkan di luar kontur gambar benda kerja; jangan menumpuk garis ukur di dalam arsir benda.</li>
+              <li><strong>Urutan Ukuran Paralel:</strong> Ukuran terkecil diletakkan paling dekat dengan benda (jarak minimal 10 mm), diikuti ukuran yang lebih besar di luarnya (jarak seragam 7 mm) agar garis ukur tidak saling memotong.</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 32</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="32" id="p32">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 34"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Proyeksi Piktorial 3D</span>
+              <span class="page-num">Hal 33</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.5 Teori Gambar Proyeksi Piktorial 3D (Isometri, Dimetri, Kavalir)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Proyeksi piktorial menyajikan wujud visual 3 dimensi benda kerja dalam satu bidang gambar datar agar mudah dibayangkan oleh operator:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/proyeksi_iso.svg" alt="Perbandingan Proyeksi Piktorial">
+                <h4>Tiga Metode Proyeksi 3D</h4>
+                <p>Isometri (30°-30°), Dimetri (7°-40°), dan Kavalir/Miring (sudut sumbu 45° dengan perpendekan sumbu surut 1/2).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/isometric_drawing.jpg" alt="Proyeksi Piktorial 3D Isometri Komponen Mekanik Sumbu 30 Derajat">
+                <h4>Sumbu Isometri Standar</h4>
+                <p>Sumbu X dan Y miring 30° terhadap garis horizontal; sumbu Z tegak lurus vertikal. Rasio skala 1:1:1 tanpa perpendekan.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Karakteristik & Ketentuan Perpendekan Sumbu:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Tipe Proyeksi</th>
+                    <th>Sudut Sumbu X</th>
+                    <th>Sudut Sumbu Y</th>
+                    <th>Rasio Skala Panjang (X : Y : Z)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Isometri</strong></td>
+                    <td>30°</td>
+                    <td>30°</td>
+                    <td><strong>1 : 1 : 1</strong> (Semua ukuran asli digambar penuh)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dimetri</strong></td>
+                    <td>7°</td>
+                    <td>40°</td>
+                    <td><strong>1 : 1/2 : 1</strong> (Sumbu Y diperpendek setengahnya)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Miring (Kavalir)</strong></td>
+                    <td>0° (Horisontal)</td>
+                    <td>45°</td>
+                    <td><strong>1 : 1/2 : 1</strong> (Pandangan depan tampak normal tak berubah)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 33</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="33" id="p33">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 33"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Proyeksi Ortogonal Eropa vs Amerika</span>
+              <span class="page-num">Hal 34</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.6 Proyeksi Ortogonal: Perbandingan Kuadran I (Eropa) vs Kuadran III (Amerika)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Klik tombol di bawah ini untuk melihat perbandingan susunan pandangan dan lambang resmi kerucut terpancung:
+            </p>
+
+            <!-- Interactive Projection Viewer -->
+            <div class="arc-lab-container" style="background: #091524; border-color: #1e3a5f;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="color:var(--accent-cyan); margin:0;">📐 Simulator Penampil Proyeksi Ortogonal</h4>
+                <div style="display:flex; gap:8px;">
+                  <button class="proj-btn active" id="btnProjEropa">Proyeksi Eropa (Kuadran I)</button>
+                  <button class="proj-btn" id="btnProjAmerika">Proyeksi Amerika (Kuadran III)</button>
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1.2fr; gap:14px; align-items:center;">
+                <div id="projLayoutDisplay" style="background:rgba(255,255,255,0.04); padding:12px; border-radius:4px; border:1px solid rgba(255,255,255,0.08);">
+                  <div style="display:grid; grid-template-columns: 80px 80px 80px; gap:6px; justify-content:center; text-align:center; font-size:0.75rem; font-weight:700;">
+                    <div></div><div style="background:#1e3a5f; color:#fff; padding:8px; border-radius:4px;">Bawah</div><div></div>
+                    <div style="background:#1e3a5f; color:#fff; padding:8px; border-radius:4px;">Kanan</div>
+                    <div style="background:#0284c7; color:#fff; padding:8px; border-radius:4px;">DEPAN</div>
+                    <div style="background:#1e3a5f; color:#fff; padding:8px; border-radius:4px;">Kiri</div>
+                    <div></div><div style="background:#1e3a5f; color:#fff; padding:8px; border-radius:4px;">Atas</div><div></div>
+                  </div>
+                </div>
+
+                <div id="projDescDisplay" style="font-size:0.82rem; line-height:1.5; color:#cbd5e1;">
+                  <h5 style="color: var(--accent-cyan); margin-bottom: 6px;">Proyeksi Sudut Pertama (Proyeksi Eropa / First Angle)</h5>
+                  <p>Benda diletakkan di <strong>Kuadran I</strong> di antara pengamat dan bidang proyeksi. Bayangan menembus benda ke bidang belakangnya.</p>
+                  <p><strong>Karakteristik Tata Letak (Terbalik):</strong> Pandangan Kiri diletakkan di KANAN; Pandangan Atas diletakkan di BAWAH.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="media-grid-2" style="margin-top: 14px;">
+              <div class="grid-card">
+                <img src="assets/svg/projection_symbols.svg" alt="Simbol Proyeksi ISO">
+                <h4>Simbol Resmi ISO Kerucut Terpancung</h4>
+                <p>Eropa: Lingkaran di kanan kerucut. Amerika: Lingkaran di kiri kerucut.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/orthographic_projection.jpg" alt="Gambar Proyeksi Ortogonal Tiga Pandangan (Tampak Depan, Atas, Samping)">
+                <h4>Pandangan Jamak (Multiview 2D)</h4>
+                <p>Pandangan depan dipilih yang menampilkan wujud bentuk komponen paling informatif.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 34</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="34" id="p34">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 36"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Toleransi Suaian & Kekasaran Ra</span>
+              <span class="page-num">Hal 35</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>4.7 Membaca Gambar Kerja: Toleransi Linier, Sistem Suaian & Kekasaran Ra</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Komponen mesin tidak dapat dibuat dengan ukuran absolut nol deviasi. Sistem toleransi ISO memastikan keterpasangan rakitan (*interchangeability*):
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/toleransi_dan_kekasaran.svg" alt="Sistem Suaian & Kekasaran ISO">
+                <h4>Suaian ISO Basis Lubang (H7/g6)</h4>
+                <p>Suaian Longgar (Clearance Fit), Suaian Pas/Transisi (Transition Fit), dan Suaian Sesak/Paksa (Interference Fit).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/surface_roughness_tester.jpg" alt="Alat Ukur Kekasaran Permukaan (Surface Roughness Tester) Penguji Nilai Ra Mesin">
+                <h4>Simbol Kekasaran Permukaan (ISO 1302)</h4>
+                <p>Nilai Ra dalam mikrometer (µm): N6 (Ra 0,8 µm bubut halus), N7 (Ra 1,6 µm bubut rata), N9 (Ra 6,3 µm kasar).</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Cara Menginterpretasikan Kode Toleransi Suaian "Ø 30 H7/g6":</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Ø 30:</strong> Ukuran nominal dasar diameter poros dan lubang adalah 30 mm.</li>
+              <li><strong>H7 (Toleransi Lubang):</strong> Huruf kapital 'H' menunjukkan sistem basis lubang (garis penyimpangan bawah EI = 0, ES = +21 µm &rarr; rentang lubang Ø 30,000 s.d. 30,021 mm).</li>
+              <li><strong>g6 (Toleransi Poros):</strong> Huruf kecil 'g' menunjukkan poros longgar (es = -7 µm, ei = -20 µm &rarr; rentang poros Ø 29,980 s.d. 29,993 mm).</li>
+              <li><strong>Karakter Rakitan:</strong> Selalu ada celah bebas (clearance) 7 s.d. 41 mikron, memungkinkan poros berputar bebas dengan pelumasan oli lancar.</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 35</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="35" id="p35">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 35"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 4: Rangkuman & Kuis Formatif 4</span>
+              <span class="page-num">Hal 36</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Rangkuman Pembelajaran Bab 4 (Refleksi Gambar Teknik)</span>
+            </h2>
+
+            <div class="callout-box tip">
+              <strong>Intisari Bab 4 (Gambar Teknik Mesin):</strong>
+              <ul style="margin-left: 18px; line-height: 1.6; font-size: 0.85rem;">
+                <li>Gambar teknik adalah bahasa universal yang diatur secara presisi oleh standardisasi internasional ISO.</li>
+                <li>Etiket ISO 7200 di sudut kanan bawah memuat seluruh metadata resmi validasi rancang bangun.</li>
+                <li>Garis tebal kontinu untuk benda tampak nyata, garis putus-putus untuk bagian terhalang, dan garis strip-titik untuk sumbu putar.</li>
+                <li>Proyeksi Isometri (30°-30°) menggambarkan benda 3D tanpa perpendekan ukuran skala (1:1:1).</li>
+                <li>Proyeksi Eropa membalik letak pandangan, sedangkan Proyeksi Amerika menata pandangan sesuai arah hadap wajar pengamat.</li>
+                <li>Sistem toleransi ISO H7/g6 menjamin kelonggaran mikro agar poros bubut dapat berputar mulus pada rumah bantalannya.</li>
+              </ul>
+            </div>
+
+            <!-- Interactive Quiz Bab 4 -->
+            <div class="quiz-box">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 4</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab4"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 4: Gambar Teknik Mesin</span>
+              <span>Hal 36</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="36" id="p36">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 38"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Dasar Sistem Mekanik Mesin</span>
+              <span class="page-num">Hal 37</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 5</div>
+              <div class="chapter-title">Dasar Sistem Mekanik Mesin Manufaktur</div>
+              <div class="chapter-desc">Sambungan Tetap & Lepas, Tumpuan Bushing & Bearing, Transmisi Roda Gigi, Sabuk Puli, dan Rantai Sproket</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.1 Klasifikasi Sambungan Mesin: Sambungan Tetap vs Tidak Tetap</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Struktur mesin tersusun atas ribuan elemen yang dirakit menggunakan dua kategori sambungan mekanik:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/bolts_nuts_fasteners.jpg" alt="Sambungan Lepas: Baut Baja Mutu Tinggi (Grade 8.8), Mur Hexagonal, dan Ring Pengunci">
+                <h4>Sambungan Lepas (Demountable)</h4>
+                <p>Baut-mur metris ISO, pasak (feather key) pengunci roda gigi ke poros, pin tirus, dan gelang pengunci (snap ring).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/welded_structural_joint.jpg" alt="Sambungan Las Busur Listrik Fillet Baja Struktural (Permanent Joint)">
+                <h4>Sambungan Tetap (Permanent)</h4>
+                <p>Sambungan las busur listrik (SMAW/MIG/TIG) dan sambungan paku keling (rivet) yang tidak dapat dilepas tanpa merusak komponen.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kaidah Pemasangan Sambungan Baut-Mur Standar Metris ISO:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Spesifikasi Ulir Metris (Contoh: M10 × 1,5):</strong> Huruf 'M' menunjukkan ulir segitiga metris dengan sudut puncak 60°, angka '10' adalah diameter luar puncak ulir 10 mm, dan '1,5' adalah kisar jarak antar-puncak ulir (pitch 1,5 mm).</li>
+              <li><strong>Penggunaan Ring Pegas (Spring Washer):</strong> Mencegah mur mengendur akibat getaran frekuensi tinggi motor mesin perkakas.</li>
+              <li><strong>Kunci Momen (Torque Wrench):</strong> Mengencangkan baut silinder dengan nilai torsi (Nm) seragam sesuai buku manual perakitan mesin.</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 37</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="37" id="p37">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 37"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Tumpuan Bushing & Bantalan Bearing</span>
+              <span class="page-num">Hal 38</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.2 Tumpuan Poros: Bantalan Luncur (Bushing) vs Bantalan Gelinding (Bearing)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Bantalan (*bearing*) berfungsi menumpu poros yang berputar agar putaran stabil dengan koefisien gesek seminimal mungkin:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/ball_roller_bearings.jpg" alt="Bantalan Gelinding: Deep Groove Ball Bearing dan Tapered Roller Bearing Pemikul Beban Poros">
+                <h4>Bantalan Gelinding (Rolling Bearing)</h4>
+                <p>Mengganti gesekan luncur dengan gesekan gelinding bola/rol baja di antara cincin dalam (inner ring) dan cincin luar (outer ring).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/bronze_sleeve_bushing.jpg" alt="Bantalan Luncur Selongsong Perunggu (Bronze Sleeve Bushing Bearing)">
+                <h4>Bantalan Luncur (Bushing Bronze)</h4>
+                <p>Selongsong perunggu fosfor tahan gesek hening untuk beban kejut besar pada kecepatan putar rendah hingga sedang.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Perbandingan Karakteristik Bushing vs Rolling Bearing:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Aspek Evaluasi</th>
+                    <th>Bantalan Luncur (Bushing Bronze)</th>
+                    <th>Bantalan Gelinding (Ball/Roller Bearing)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Gesekan Awal (Start-Up Friction)</strong></td>
+                    <td>Tinggi (gesekan batas kontak langsung sebelum lapisan oli terbentuk).</td>
+                    <td>Sangat rendah (kontak gelinding bola presisi).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ketahanan Beban Kejut</strong></td>
+                    <td>Sangat tangguh (bidang kontak selongsong luas meredam hentakan).</td>
+                    <td>Rentan pecah/cacat fatik bila menerima tumbukan titik ekstrem.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tingkat Kebisingan</strong></td>
+                    <td>Sangat hening tanpa desingan logam.</td>
+                    <td>Terdengar desingan bola menggelinding pada kecepatan tinggi.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kebutuhan Pelumasan</strong></td>
+                    <td>Kritis wajib suplai oli hidro-dinamik kontinu.</td>
+                    <td>Dapat menggunakan gemuk grease tertutup (sealed 2RS) tahan lama.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 38</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="38" id="p38">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 40"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Standar Kode Bantalan ISO</span>
+              <span class="page-num">Hal 39</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.3 Sistem Kode Standar Bantalan ISO & Simulator Dekoder Bearing</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Mengaplikasikan (<em>Apply</em>): Klik tipe bantalan di bawah ini untuk membedah arti digit kode penomoran standar ISO secara visual dan interaktif:
+            </p>
+
+            <!-- Bearing Decoder Interactive Container -->
+            <div class="aws-decoder-container">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h4 style="color:var(--accent-cyan); margin:0;">🔍 ISO Rolling Bearing Decoder</h4>
+                <span class="lab-badge">Interaktif</span>
+              </div>
+
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                <button class="bearing-select-pill active" data-bearing="6205">ISO 6205-2RS (Ball Bearing)</button>
+                <button class="bearing-select-pill" data-bearing="6308">ISO 6308-ZZ (Heavy Duty)</button>
+                <button class="bearing-select-pill" data-bearing="30206">ISO 30206 (Tapered Roller)</button>
+              </div>
+
+              <div class="aws-code-visual" id="bearingCodeDisplay">
+                <div class="aws-pill active"><span class="aws-char">6</span><span class="aws-meaning-tag">Tipe</span></div>
+                <div class="aws-pill active"><span class="aws-char">2</span><span class="aws-meaning-tag">Seri Beban</span></div>
+                <div class="aws-pill active"><span class="aws-char">05</span><span class="aws-meaning-tag">Bore × 5</span></div>
+                <div class="aws-pill active"><span class="aws-char">2RS</span><span class="aws-meaning-tag">Seal</span></div>
+              </div>
+
+              <div class="aws-desc-card" id="bearingDescDisplay">
+                <h5 style="color:var(--accent-cyan); font-size:0.95rem; margin-bottom:6px;">Standar ISO Bearing: 6205-2RS</h5>
+                <p><strong>Tipe Bantalan:</strong> Bantalan Bola Alur Dalam Baris Tunggal (Deep Groove Ball Bearing)</p>
+                <p><strong>Seri Beban:</strong> 2 = Seri Beban Ringan (Light Duty Series)</p>
+                <p><strong>Diameter Dalam Poros:</strong> 05 × 5 = Ø 25 mm Diameter Lubang Poros Dalam</p>
+                <p><strong>Tutup / Perapat:</strong> 2RS = Dua Karet Sintetis Penutup (Rubber Seal) Tahan Debu & Cipratan Air</p>
+              </div>
+            </div>
+
+            <div class="callout-box tip" style="margin-top: 14px;">
+              <strong>Kaidah Emas Menghitung Diameter Poros Bearing:</strong>
+              Dua digit terakhir kode bearing dikalikan 5 mm:
+              <br>• 04 &rarr; 4 × 5 = Ø 20 mm &nbsp;|&nbsp; • 05 &rarr; 5 × 5 = Ø 25 mm &nbsp;|&nbsp; • 06 &rarr; 6 × 5 = Ø 30 mm &nbsp;|&nbsp; • 08 &rarr; 8 × 5 = Ø 40 mm.
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 39</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="39" id="p39">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 39"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Transmisi Roda Gigi Mesin</span>
+              <span class="page-num">Hal 40</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.4 Transmisi Daya Roda Gigi (Gear Train) & Rasio Kecepatan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Transmisi roda gigi memindahkan putaran dan torsi tanpa selip dengan rasio putaran pasti:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/gear_train_ratio.svg" alt="Rasio Transmisi Roda Gigi">
+                <h4>Kinematika Roda Gigi (Gear Ratio)</h4>
+                <p>Roda gigi penggerak (pinion) memutar roda gigi yang digerakkan dengan arah putaran berlawanan.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/gears_transmission.jpg" alt="Transmisi Pasangan Roda Gigi Baja (Spur Gears & Helical Gears) Pemindah Daya Putar">
+                <h4>Kotak Roda Gigi Spindel (Gearbox)</h4>
+                <p>Kombinasi roda gigi geser untuk mengatur variasi kecepatan spindel dan kisar pemotongan ulir bubut.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Kalkulasi Rasio Reduksi Roda Gigi (Gear Ratio):</h3>
+            <p class="content-text">
+              <code>i = n₁ / n₂ = z₂ / z₁</code>
+              <br>Di mana <em>n₁</em> = RPM penggerak, <em>n₂</em> = RPM yang digerakkan, <em>z₁</em> = jumlah gigi penggerak, dan <em>z₂</em> = jumlah gigi digerakkan.
+              <br>Contoh: Pinion <em>z₁</em> = 20 gigi berputar 1200 RPM memutar roda gigi <em>z₂</em> = 60 gigi:
+              <br><code>n₂ = n₁ × (z₁ / z₂) = 1200 × (20 / 60) = 1200 / 3 = 400 RPM</code> (Torsi meningkat 3 kali lipat!).
+            </p>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 40</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="40" id="p40">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 42"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Transmisi Sabuk & Rantai</span>
+              <span class="page-num">Hal 41</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.5 Transmisi Fleksibel: Sabuk Puli (V-Belt & Timing Belt) serta Rantai Sproket</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami & Mengaplikasikan (<em>Understand & Apply</em>): Transmisi sabuk dan rantai digunakan untuk menghubungkan dua poros dengan jarak sumbu yang relatif jauh:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/transmisi_daya.svg" alt="Transmisi Sabuk dan Rantai">
+                <h4>Klasifikasi Transmisi Fleksibel</h4>
+                <p>Sabuk V (V-Belt trapesium), Sabuk Bergigi (Timing Belt sinkron), dan Rantai Rol (Roller Chain).</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/vbelt_pulley_drive.jpg" alt="Transmisi Puli & Sabuk V-Belt Bertingkat Pengatur Kecepatan Mesin">
+                <h4>Transmisi Sabuk Puli Mesin Bor</h4>
+                <p>Pengubahan tingkat kecepatan putaran spindel mesin bor bangku dengan memindahkan sabuk V antar-alur puli bertingkat.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Perbandingan Karakteristik Transmisi Fleksibel:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Fitur Evaluasi</th>
+                    <th>Sabuk V (V-Belt 40°)</th>
+                    <th>Sabuk Bergigi (Timing Belt)</th>
+                    <th>Rantai Rol (Roller Chain)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Sifat Selip</strong></td>
+                    <td>Ada selip mikro (berfungsi sebagai pengaman overload).</td>
+                    <td>Bebas selip 100% (sinkronisasi poros nok mesin).</td>
+                    <td>Bebas selip (transmisi positif bergigi baja).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kebutuhan Pelumasan</strong></td>
+                    <td>Kering (pantang terkena oli/gemuk agar tidak selip).</td>
+                    <td>Kering tanpa oli.</td>
+                    <td>Wajib pelumasan oli/gemuk berkala pada rol rantai.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tingkat Kebisingan</strong></td>
+                    <td>Sangat hening dan menyerap getaran kejut.</td>
+                    <td>Hening pada kecepatan tinggi.</td>
+                    <td>Cenderung bising pada kecepatan tinggi.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 41</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="41" id="p41">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 41"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 5: Kopling Mesin & Kuis Formatif 5</span>
+              <span class="page-num">Hal 42</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>5.6 Kopling Mesin (Coupling & Clutch) & Sistem Pemipaan Industri</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Kopling menghubungkan poros motor penggerak dengan poros mesin: Kopling Tetap (*Flexible Coupling*) menyerap misalignment, sedangkan Kopling Gesek (*Clutch*) dapat memutus/menyambung putaran saat mesin berjalan:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/flexible_jaw_coupling.jpg" alt="Kopling Fleksibel Rahang (Jaw Coupling) dengan Elemen Karet Elastomer Spider">
+                <h4>Kopling Fleksibel Rahang (Jaw Coupling)</h4>
+                <p>Elemen karet peredam (spider insert) di antara rahang logam mengkompensasi ketidaksejajaran sumbu poros.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/ball_valve_piping.jpg" alt="Katup Bola Industri (Industrial Ball Valve) pada Sistem Pemipaan Tekanan Tinggi">
+                <h4>Katup Saluran Fluida (Valves)</h4>
+                <p>Katup bola (ball valve), katup sorong (gate valve), dan katup satu arah (check valve) pada sistem pendingin coolant mesin.</p>
+              </div>
+            </div>
+
+            <!-- Interactive Quiz Bab 5 -->
+            <div class="quiz-box" style="margin-top: 14px;">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 5</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab5"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 5: Dasar Sistem Mekanik</span>
+              <span>Hal 42</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="42" id="p42">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 44"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: Wawasan Bidang Teknik Mesin</span>
+              <span class="page-num">Hal 43</span>
+            </div>
+
+            <div class="chapter-hero">
+              <div class="chapter-number">BAB 6</div>
+              <div class="chapter-title">Wawasan Bidang Teknik Mesin & Industri 4.0</div>
+              <div class="chapter-desc">Revolusi Industri Manufaktur, IoT Digitalisasi, AI Predictive Maintenance, Manufaktur Hijau, dan Technopreneurship</div>
+            </div>
+
+            <h2 class="section-heading">
+              <span>6.1 Perkembangan Revolusi Industri Manufaktur & Pemesinan CNC Modern</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Dunia manufaktur bertransformasi dari mesin bertenaga uap mekanik (Industri 1.0) hingga integrasi sistem siber-fisik dan kecerdasan buatan (Industri 4.0 & Society 5.0):
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/rev_industri.svg" alt="Evolusi Revolusi Industri">
+                <h4>Evolusi Industri 1.0 hingga 4.0</h4>
+                <p>1.0 Tenaga Uap, 2.0 Lini Perakitan Massal, 3.0 Otomasi Elektronika & PLC, 4.0 Smart Factory Cyber-Physical.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/cnc_machine_shop.jpg" alt="Pusat Pemesinan Modern CNC Lathe & Milling Multi-Axis Berkecepatan Tinggi">
+                <h4>Mesin Bubut & Frais CNC Multi-Axis</h4>
+                <p>Pemesinan presisi terkomputerisasi dengan kecepatan spindel hingga 12.000 RPM dan akurasi mikron (0,001 mm).</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Karakteristik Unggul Mesin Bubut CNC Dibanding Konvensional:</h3>
+            <ul style="margin-left: 20px; line-height: 1.6; font-size: 0.85rem;">
+              <li><strong>Konsistensi Dimensi Massal:</strong> Memproduksi ribuan poros dengan profil radius dan ulir kompleks yang identik sempurna sesuai kode program G-Code / M-Code.</li>
+              <li><strong>Kecepatan Produksi Tinggi:</strong> Dilengkapi penukar pahat otomatis (<em>Automatic Tool Changer / ATC</em>) yang mengganti pahat hanya dalam 1–2 detik.</li>
+              <li><strong>Simulasi Layar Grafis (Dry Run):</strong> Gerakan pahat diverifikasi terlebih dahulu pada monitor sebelum pemotongan nyata untuk mencegah tabrakan (<em>machine crash</em>).</li>
+            </ul>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 43</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="43" id="p43">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 43"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: IoT & Digitalisasi Manufaktur</span>
+              <span class="page-num">Hal 44</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>6.2 Internet of Things (IoT) & Digitalisasi Pabrik Manufaktur Cerdas</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Pabrik cerdas (*Smart Factory*) menghubungkan mesin perkakas, robot pemindah bahan, dan sensor ke jaringan awan (cloud) secara nirkabel:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/svg/iot_architecture.svg" alt="Arsitektur IoT Manufaktur">
+                <h4>Arsitektur IoT 5 Lapis Pabrik</h4>
+                <p>1. Lapisan Sensor & Aktuator, 2. Edge Gateway, 3. Jaringan Komunikasi, 4. Cloud Analytics, 5. Dashboard Pengguna.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/cnc_milling_5axis.jpg" alt="Pusat Pemesinan CNC Multi-Axis (Machining Center) Pemotong Logam Presisi Tinggi">
+                <h4>Pemantauan Efisiensi Mesin (OEE)</h4>
+                <p>Nilai Overall Equipment Effectiveness (OEE) dihitung otomatis secara real-time dari konsumsi daya dan kecepatan putar spindel.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Tiga Manfaat Implementasi IoT di Bengkel Manufaktur:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Pemantauan Kondisi Waktu Nyata</h5>
+                </div>
+                <p>Sensor getaran aksial pada bantalan spindel bubut mengirimkan data telemetry setiap detik ke smartphone kepala bengkel.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Pelacakan Alur Kerja Benda Kerja</h5>
+                </div>
+                <p>Penggunaan tag RFID pada palet job sheet memungkinkan pelacakan tahapan pembubutan, pemfraisan, hingga inspeksi QC secara transparan.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Efisiensi Konsumsi Energi Listrik</h5>
+                </div>
+                <p>Sistem otomatis mematikan motor hidrolik dan lampu bilik kerja saat mesin berada dalam kondisi siaga (idle mode) lebih dari 10 menit.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 44</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="44" id="p44">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 46"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: AI & Perawatan Prediktif Mesin</span>
+              <span class="page-num">Hal 45</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>6.3 Perawatan Mesin Berbantuan AI (Predictive Maintenance & Computer Vision)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Memahami (<em>Understand</em>): Kecerdasan Buatan (Artificial Intelligence) mengubah paradigma perawatan dari sekadar menunggu mesin rusak (*reactive*) menjadi pencegahan cerdas sebelum kerusakan terjadi:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/smart_manufacturing_iot.jpg" alt="Dashboard Smart Factory & Sistem IoT Pemantau Getaran dan Suhu Mesin Real-Time">
+                <h4>Analisis Spektrum Getaran Spindel AI</h4>
+                <p>Algoritma Machine Learning mendeteksi keausan dini cincin bantalan bearing berminggu-minggu sebelum terjadi macet total.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/industrial_cmm_inspection.jpg" alt="Sistem Pengukuran & Inspeksi Otomatis Presisi Tinggi Mitutoyo CNC CMM">
+                <h4>Inspeksi Visual Otomatis (Computer Vision)</h4>
+                <p>Kamera berkecepatan tinggi dengan kecerdasan AI memindai cacat goresan mikro dan keausan bibir pahat potong secara otomatis.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Perbandingan Tiga Paradigma Pemeliharaan Mesin Perkakas:</h3>
+            <div class="table-responsive">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th>Strategi Perawatan</th>
+                    <th>Waktu Tindakan Servis</th>
+                    <th>Dampak Biaya & Waktu Mati (Downtime)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Perawatan Reaktif (Breakdown)</strong></td>
+                    <td>Setelah mesin rusak dan berhenti mendadak di tengah produksi.</td>
+                    <td>Biaya perbaikan sangat mahal, waktu henti produksi lama, merusak benda kerja.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Perawatan Preventif (Jadwal)</strong></td>
+                    <td>Berdasarkan interval kalender tetap (misal ganti oli tiap 3 bulan).</td>
+                    <td>Bagus, namun sering mengganti komponen yang sebenarnya masih layak pakai.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Perawatan Prediktif Berbantuan AI</strong></td>
+                    <td>Tepat saat data sensor menunjukkan deviasi degradasi fungsi kritis.</td>
+                    <td>Sangat efisien: <strong>Nol waktu henti tak terduga</strong>, menghemat 40% biaya suku cadang!</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 45</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="45" id="p45">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 45"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: Wawasan Hijau (Green Skills)</span>
+              <span class="page-num">Hal 46</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>6.4 Wawasan Hijau (Green Manufacturing) & Teknologi MQL Bengkel</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Merefleksi (<em>Reflect</em>): Pendidikan vokasi modern menanamkan *Green Skills* untuk menciptakan teknisi yang bertanggung jawab terhadap kelestarian lingkungan hidup dan efisiensi sumber daya alam:
+            </p>
+
+            <div class="media-grid-2">
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/metal_swarf_recycling.jpg" alt="Koleksi dan Daur Ulang Tatal Beram Logam (Aluminium & Steel Swarf Recycling)">
+                <h4>Daur Ulang Tatal Logam (Swarf Recycling)</h4>
+                <p>Tatal baja dan aluminium dipres menjadi briket padat untuk dilebur kembali di tungku induksi pengecoran.</p>
+              </div>
+              <div class="grid-card">
+                <img src="assets/images/tp_hd/mql_lubrication_system.jpg" alt="Sistem Pemotongan Presisi dengan Nozel Pendingin Mikro MQL pada Mesin CNC">
+                <h4>Minimum Quantity Lubrication (MQL)</h4>
+                <p>Menyemprotkan kabut mikro aerosol minyak nabati (10–50 ml/jam) menggantikan banjir cairan coolant kimia beracun.</p>
+              </div>
+            </div>
+
+            <h3 class="sub-heading">Manajemen Enam Kategori Limbah Bengkel Pemesinan:</h3>
+            <div class="concept-grid">
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">1</span>
+                  <h5>Limbah B3 Cairan Pendingin (Coolant)</h5>
+                </div>
+                <p>Oli emulsi bekas wajib disaring pemisah minyak (oil skimmer) dan diolah instalasi IPAL khusus sebelum dibuang.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">2</span>
+                  <h5>Debu Gerinda & Serpihan Batu Asah</h5>
+                </div>
+                <p>Ditampung dalam cyclone dust collector tertutup agar partikel silika tidak terhirup ke paru-paru operator.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">3</span>
+                  <h5>Kain Majun & Sarung Tangan Tercemar Oli</h5>
+                </div>
+                <p>Ditempatkan dalam drum logam berpenutup kedap api berlabel Limbah B3 Padat untuk dimusnahkan secara berlisensi.</p>
+              </div>
+              <div class="concept-item">
+                <div class="concept-item-header">
+                  <span class="concept-badge">4</span>
+                  <h5>Efisiensi Konsumsi Listrik & Standar ISO 14001</h5>
+                </div>
+                <p>Penggunaan inverter hemat daya dan peredaman kebisingan mesin perkakas di bawah ambang batas baku mutu 85 dB.</p>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 46</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="46" id="p46">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 48"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: Jenjang Karir & Technopreneurship</span>
+              <span class="page-num">Hal 47</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>6.5 Jenjang Karir Profesi Teknisi Mesin & Technopreneurship Bengkel Bubut</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Merefleksi (<em>Reflect</em>): Lulusan SMK Teknik Pemesinan memiliki peluang karir industri yang sangat luas serta potensi besar merintis wirausaha rekayasa (*technopreneur*):
+            </p>
+
+            <!-- Interactive Career Ladder -->
+            <div class="career-ladder-container">
+              <div class="career-step">
+                <div class="career-step-info">
+                  <h5>Level 1: Operator Mesin Perkakas Konvensional (Bubut & Frais)</h5>
+                  <p>Membaca gambar kerja kerja bangku, membubut poros bertingkat toleransi 0,05 mm, dan membuat ulir.</p>
+                </div>
+                <span class="career-step-badge">Sertifikat KKNI Level 2</span>
+              </div>
+
+              <div class="career-step">
+                <div class="career-step-info">
+                  <h5>Level 2: Teknisi Mesin CNC & CAD/CAM Programmer</h5>
+                  <p>Memprogram G-Code, setting titik nol mesin CNC, memilih insert karbida, dan optimasi pemakanan.</p>
+                </div>
+                <span class="career-step-badge">Sertifikat KKNI Level 3 / BNSP</span>
+              </div>
+
+              <div class="career-step">
+                <div class="career-step-info">
+                  <h5>Level 3: Pembuat Perkakas Presisi (Toolmaker & Die Maker)</h5>
+                  <p>Membuat cetakan injeksi plastik (mould) dan cetakan tekan pelat logam (stamping dies) berakurasi mikron.</p>
+                </div>
+                <span class="career-step-badge">High Skill & High Demand</span>
+              </div>
+
+              <div class="career-step">
+                <div class="career-step-info">
+                  <h5>Level 4: Technopreneur Bengkel Bubut & Fabrikasi Mandiri</h5>
+                  <p>Mendirikan bengkel rekayasa suku cadang mesin pertanian, perbaikan poros kapal, dan komponen kustom.</p>
+                </div>
+                <span class="career-step-badge">Wirausaha Mandiri</span>
+              </div>
+            </div>
+
+            <div class="callout-box tip" style="margin-top: 14px;">
+              <strong>Peluang Technopreneurship Bengkel Mesin di Yogyakarta & Sleman:</strong>
+              Kebutuhan perbaikan suku cadang mesin pertanian, modifikasi komponen otomotif balap, hingga pembuatan prototipe penelitian universitas di Sleman membuka peluang jasa pembubutan mandiri dengan margin laba tinggi!
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 47</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="47" id="p47">
+          <div class="page-flip-indicator">❮ Klik halaman untuk kembali</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 47"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>BAB 6: Rangkuman & Kuis Formatif 6</span>
+              <span class="page-num">Hal 48</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Rangkuman Pembelajaran Bab 6 (Deep Reflection)</span>
+            </h2>
+
+            <div class="callout-box tip">
+              <strong>Intisari Bab 6 (Wawasan Bidang Teknik Mesin & Industri 4.0):</strong>
+              <ul style="margin-left: 18px; line-height: 1.6; font-size: 0.85rem;">
+                <li>Revolusi industri bertransisi ke era manufaktur cerdas yang memadukan mesin CNC multi-axis dengan kecerdasan buatan.</li>
+                <li>Internet of Things (IoT) menghubungkan sensor getaran dan temperatur mesin ke sistem cloud untuk pemantauan OEE real-time.</li>
+                <li>AI Predictive Maintenance memangkas biaya perbaikan hingga 40% dengan mendeteksi anomali getaran sebelum bantalan rusak.</li>
+                <li>Wawasan hijau (Green Manufacturing) mewajibkan daur ulang tatal beram logam dan pemanfaatan teknologi kabut mikro MQL ramah lingkungan.</li>
+                <li>Jenjang kompetensi BNSP dan jiwa technopreneurship membekali lulusan SMK N 2 Depok Sleman untuk menjadi juragan bengkel bubut mandiri berdaya saing tinggi.</li>
+              </ul>
+            </div>
+
+            <!-- Interactive Quiz Bab 6 -->
+            <div class="quiz-box">
+              <div class="quiz-header">
+                <h4>🎯 Evaluasi Deep Learning: Kuis Formatif Bab 6</h4>
+                <span class="quiz-badge">Kuis Interaktif</span>
+              </div>
+              <div id="quiz-bab6"></div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Bab 6: Wawasan Bidang Teknik Mesin</span>
+              <span>Hal 48</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-right" data-page-index="48" id="p48">
+          <div class="page-flip-indicator">Klik halaman untuk membalik ❯</div>
+          <div class="corner-curl bottom-right" title="Klik untuk ke Halaman 50"><span class="curl-arrow">❯</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>Sertifikat Kelulusan Modul Resmi TP</span>
+              <span class="page-num">Hal 49</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Sertifikat Digital Penyelesaian Modul Teknik Pemesinan</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <p class="content-text">
+              Tahap Merefleksi (<em>Reflect</em>): Selamat atas ketekunan Anda menuntaskan pembelajaran seluruh 6 Elemen Dasar-Dasar Keahlian Teknik Pemesinan Fase E berbasis Pendekatan Deep Learning. Terbitkan sertifikat digital resmi Anda di bawah ini:
+            </p>
+
+            <div style="background: var(--bg-page-alt); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <input type="text" id="inputStudentName" placeholder="Ketikkan Nama Lengkap Anda..." style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85rem;">
+              <button id="btnGenerateCert" style="background: var(--accent-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; cursor: pointer;">Terbitkan Sertifikat 🎓</button>
+              <button id="btnPrintCert" style="background: #334155; color: #fff; border: none; padding: 8px 14px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">Cetak / Unduh PDF 🖨️</button>
+            </div>
+
+            <!-- Printable Certificate Box -->
+            <div class="certificate-preview-wrap" id="printableCertificate">
+              <div class="cert-header">
+                <div style="font-size: 0.82rem; font-weight: 700; color: #0284c7; letter-spacing: 2px;">PEMERINTAH DAERAH DAERAH ISTIMEWA YOGYAKARTA</div>
+                <div style="font-size: 0.78rem; font-weight: 600; color: #475569;">DINAS PENDIDIKAN, PEMUDA, DAN OLAHRAGA</div>
+                <h3 style="margin-top: 4px; color: #0f172a;">SMK NEGERI 2 DEPOK SLEMAN</h3>
+                <p>SERTIFIKAT KELULUSAN PEMBELAJARAN DEEP LEARNING</p>
+                <div style="font-size: 0.75rem; color: #64748b; font-style: italic;">Nomor Registrasi: 421.5/TP-DL/SMKN2DEP/2026</div>
+              </div>
+
+              <div style="margin: 14px 0 6px 0; font-size: 0.82rem; color: #334155;">Diberikan dengan penuh kehormatan kepada:</div>
+
+              <div class="cert-name-display" id="certStudentNameDisplay">NAMA SISWA LENGKAP</div>
+
+              <p style="font-size: 0.82rem; line-height: 1.5; color: #334155; max-width: 520px; margin: 0 auto;">
+                Telah berhasil menyelesaikan seluruh rangkaian siklus pembelajaran mandiri (<em>Mindful, Meaningful, & Joyful Learning</em>), simulasi virtual laboratorium, serta evaluasi formatif dalam modul ajar digital:
+                <br><strong>Dasar-Dasar Keahlian Teknik Pemesinan (TP) • Fase E SMK</strong>
+              </p>
+
+              <div style="margin-top: 10px; font-size: 0.78rem; color: #64748b;">
+                Diterbitkan di Sleman, <span id="certDateDisplay">14 September 2026</span>
+              </div>
+
+              <div class="cert-signatures">
+                <div class="sig-box">
+                  <div style="font-size: 0.72rem; color: #64748b;">Kepala SMK Negeri 2 Depok</div>
+                  <div class="sig-line">Dodot Yuliantoro, S.Pd., M.T.</div>
+                  <div style="font-size: 0.7rem; color: #64748b;">NIP. 19711225 199702 1 002</div>
+                </div>
+
+                <div class="sig-box">
+                  <div style="font-size: 0.72rem; color: #64748b;">Guru Pengampu / Penyusun Modul</div>
+                  <div class="sig-line">Bimoro Kusumo, S.Pd.</div>
+                  <div style="font-size: 0.7rem; color: #64748b;">Mahasiswa PPG 2025/2026</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Sertifikat Kelulusan Modul TP</span>
+              <span>Hal 49</span>
+            </div>
+          </div>
+        </div>
+    
+
+        <div class="book-page page-left" data-page-index="49" id="p49">
+          <div class="page-flip-indicator">❮ Kembali ke Halaman 49</div>
+          <div class="corner-curl bottom-left" title="Klik untuk ke Halaman 49"><span class="curl-arrow">❮</span></div>
+          <div class="page-container">
+            <div class="page-header-meta">
+              <span>Glosarium Istilah & Daftar Pustaka</span>
+              <span class="page-num">Hal 50</span>
+            </div>
+
+            <h2 class="section-heading">
+              <span>Glosarium Komprehensif Teknik Pemesinan (A - Z)</span>
+              <button class="audio-read-btn">🔊 Bacakan</button>
+            </h2>
+
+            <div class="table-responsive" style="max-height: 280px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); margin-bottom: 14px;">
+              <table class="standard-table">
+                <thead>
+                  <tr>
+                    <th style="width: 25%;">Istilah Teknis</th>
+                    <th>Definisi Baku Standar Internasional</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Anodizing</strong></td>
+                    <td>Proses perlakuan permukaan elektrolitik untuk mempertebal lapisan oksida pelindung alami pada paduan aluminium.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bushing</strong></td>
+                    <td>Bantalan luncur berbentuk selongsong (umumnya berbahan perunggu) untuk menumpu poros pada beban kejut tinggi.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Center Drill</strong></td>
+                    <td>Mata bor kombinasi bersudut 60° untuk membuat lubang panduan awal dan lubang tumpuan senter putar kepala lepas.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Chuck 3-Jaw</strong></td>
+                    <td>Cekam bubut dengan tiga rahang yang bergerak memusat serentak secara konsentris (self-centering).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cutting Speed (Cs)</strong></td>
+                    <td>Panjang tatal logam yang terpotong oleh mata pahat dalam satuan meter per menit (m/menit).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dial Indicator</strong></td>
+                    <td>Jam ukur presisi dengan kecermatan 0,01 mm untuk mendeteksi keolengan poros dan kerataan bidang geser.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Hole Basis (H7)</strong></td>
+                    <td>Sistem toleransi ISO di mana ukuran lubang dibuat tetap dengan batas penyimpangan bawah persis 0 (garis nol).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>MQL</strong></td>
+                    <td>Minimum Quantity Lubrication: teknik pelumasan pemesinan ramah lingkungan menggunakan kabut mikro aerosol nabati.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Predictive Maintenance</strong></td>
+                    <td>Perawatan mesin berbasis data sensor IoT dan algoritma AI untuk memprediksi kerusakan komponen sebelum terjadi kegagalan.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ratchet Stop</strong></td>
+                    <td>Mekanisme roda gigi gelincir pada mikrometer luar untuk memastikan tekanan jepit pengukuran selalu konstan seragam.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Worm Gear</strong></td>
+                    <td>Transmisi roda gigi cacing untuk reduksi putaran besar pada sudut 90° tegak lurus dengan karakteristik mengunci sendiri.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 class="sub-heading">Daftar Pustaka & Standar Rujukan Industri:</h3>
+            <ul style="margin-left: 20px; line-height: 1.5; font-size: 0.78rem; color: #475569;">
+              <li>International Organization for Standardization. (2020). <em>ISO 128: Technical product documentation - General principles of presentation</em>. Geneva: ISO.</li>
+              <li>ISO. (2018). <em>ISO 286: Geometrical product specifications (GPS) - ISO code system for tolerances on linear sizes</em>. Geneva: ISO.</li>
+              <li>ISO. (2018). <em>ISO 45001: Occupational health and safety management systems</em>. Geneva: ISO.</li>
+              <li>Kemendikbudristek RI. (2023). <em>Dasar-Dasar Keahlian Teknik Mesin - Fase E SMK</em>. Jakarta: Pusat Perbukuan.</li>
+              <li>Gerling, H. (1982). <em>All About Machine Tools</em>. New Delhi: Wiley Eastern Ltd.</li>
+            </ul>
+
+            <div style="margin-top: 14px; padding: 12px; background: #0f172a; color: #e2e8f0; border-radius: var(--radius-sm); font-size: 0.75rem; text-align: center;">
+              <strong>Buku Ajar Digital Interaktif Fase E TP • Kurikulum Deep Learning</strong><br>
+              Hak Cipta © 2026 SMK Negeri 2 Depok Sleman, D.I. Yogyakarta.<br>
+              <em>Dikembangkan dengan Dedikasi untuk Memajukan Pendidikan Vokasi Teknik Pemesinan Indonesia.</em>
+            </div>
+
+            <div class="page-footer-meta">
+              <span>Glosarium & Daftar Pustaka • Akhir Buku</span>
+              <span>Hal 50</span>
+            </div>
+          </div>
+        </div>
+    
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- BOTTOM CONTROL BAR -->
+  <footer class="bottom-control-bar">
+    <div class="bar-left">
+      <button class="btn-page-nav" id="btnPrevPage" title="Halaman Sebelumnya (atau klik halaman kiri)">❮</button>
+      <span class="click-hint-text">💡 Tips: Klik langsung di sembarang area halaman atau sudut lipatan untuk membalik buku</span>
+    </div>
+
+    <div class="bar-center">
+      <input type="range" class="page-slider" id="pageSlider" min="0" max="49" value="0" title="Geser untuk melompat halaman">
+      <div class="page-counter" id="pageCounterDisplay">Hal 1 / 50</div>
+    </div>
+
+    <div class="bar-right">
+      <button class="btn-page-nav" id="btnNextPage" title="Halaman Selanjutnya (atau klik halaman kanan)">❯</button>
+    </div>
+  </footer>
+
+  <!-- ==================== TABLE OF CONTENTS MODAL (50 HALAMAN) ==================== -->
+  <div class="modal-overlay" id="modalTOC">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>📑 Daftar Isi Lengkap (50 Halaman Deep Learning Teknik Pemesinan)</h3>
+        <button class="modal-close" id="btnCloseTOC">&times;</button>
+      </div>
+      <div class="modal-body">
+        <ul class="toc-list">
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="0">
+              <span><span class="toc-chap-num">Sampul</span> Sampul Depan (Cover Buku) - Teknik Pemesinan SMK N 2 Depok</span>
+              <span class="toc-page-badge">Hal 1</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="1">
+              <span><span class="toc-chap-num">Legal</span> Halaman Pengesahan & Identitas Buku Digital TP</span>
+              <span class="toc-page-badge">Hal 2</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="2">
+              <span><span class="toc-chap-num">Teori</span> Framework Pendekatan Deep Learning Teknik Pemesinan</span>
+              <span class="toc-page-badge">Hal 3</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="3">
+              <span><span class="toc-chap-num">Peta</span> Peta Capaian & Alur Tujuan Pembelajaran (CP/ATP) Fase E</span>
+              <span class="toc-page-badge">Hal 4</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="4">
+              <span><span class="toc-chap-num">BAB 1</span> 1.1 Kecakapan Kerja: Etika, Komunikasi & Hierarki Bengkel</span>
+              <span class="toc-page-badge">Hal 5</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="5">
+              <span><span class="toc-chap-num">BAB 1</span> 1.2 Landasan Hukum K3LH (UU No. 1/1970) & Zero Accident</span>
+              <span class="toc-page-badge">Hal 6</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="6">
+              <span><span class="toc-chap-num">BAB 1</span> 1.3 APD Khusus Pemesinan & Simulator APD Interaktif</span>
+              <span class="toc-page-badge">Hal 7</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="7">
+              <span><span class="toc-chap-num">BAB 1</span> 1.4 Pengendalian Bahaya Tatal Beram & Rotasi Spindel</span>
+              <span class="toc-page-badge">Hal 8</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="8">
+              <span><span class="toc-chap-num">BAB 1</span> 1.5 Prosedur Tanggap Darurat & Penanggulangan Kebakaran PASS</span>
+              <span class="toc-page-badge">Hal 9</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="9">
+              <span><span class="toc-chap-num">BAB 1</span> 1.6 Budaya Kerja 5R / 5S Industri Manufaktur & Kaizen</span>
+              <span class="toc-page-badge">Hal 10</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="10">
+              <span><span class="toc-chap-num">BAB 1</span> 1.7 Rangkuman & Kuis Formatif Bab 1</span>
+              <span class="toc-page-badge">Hal 11</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="11">
+              <span><span class="toc-chap-num">BAB 2</span> 2.1 Klasifikasi Logam Fero & Baja Karbon Manufaktur</span>
+              <span class="toc-page-badge">Hal 12</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="12">
+              <span><span class="toc-chap-num">BAB 2</span> 2.2 Logam Non-Fero (Aluminium, Tembaga, Kuningan, Paduan)</span>
+              <span class="toc-page-badge">Hal 13</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="13">
+              <span><span class="toc-chap-num">BAB 2</span> 2.3 Sifat Fisik Bahan (Densitas, Titik Lebur, Konduktivitas)</span>
+              <span class="toc-page-badge">Hal 14</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="14">
+              <span><span class="toc-chap-num">BAB 2</span> 2.4 Sifat Kimia & Ketahanan Korosi Logam</span>
+              <span class="toc-page-badge">Hal 15</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="15">
+              <span><span class="toc-chap-num">BAB 2</span> 2.5 Sifat Listrik & Konduktivitas Material Teknik</span>
+              <span class="toc-page-badge">Hal 16</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="16">
+              <span><span class="toc-chap-num">BAB 2</span> 2.6 Sifat Mekanik Bahan (Kekuatan, Kekerasan, Keuletan, Ketangguhan)</span>
+              <span class="toc-page-badge">Hal 17</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="17">
+              <span><span class="toc-chap-num">BAB 2</span> 2.7 Uji Tarik, Diagram Tegangan-Regangan & Kuis Formatif Bab 2</span>
+              <span class="toc-page-badge">Hal 18</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="18">
+              <span><span class="toc-chap-num">BAB 3</span> 3.1 Klasifikasi Proses Produksi: Cutting vs Non-Cutting</span>
+              <span class="toc-page-badge">Hal 19</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="19">
+              <span><span class="toc-chap-num">BAB 3</span> 3.2 Konsep Metrologi Industri & Klasifikasi Alat Ukur</span>
+              <span class="toc-page-badge">Hal 20</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="20">
+              <span><span class="toc-chap-num">BAB 3</span> 3.3 Jangka Sorong (Vernier Caliper) Ketelitian 0,05 mm</span>
+              <span class="toc-page-badge">Hal 21</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="21">
+              <span><span class="toc-chap-num">BAB 3</span> 3.4 Lab Virtual: Simulator Jangka Sorong Interaktif 0,05 mm</span>
+              <span class="toc-page-badge">Hal 22</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="22">
+              <span><span class="toc-chap-num">BAB 3</span> 3.5 Mikrometer Luar Ketelitian 0,01 mm & Kalibrasi</span>
+              <span class="toc-page-badge">Hal 23</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="23">
+              <span><span class="toc-chap-num">BAB 3</span> 3.6 Perkakas Tangan Benchwork (Kikir, Gergaji, Ragum, Tap & Snei)</span>
+              <span class="toc-page-badge">Hal 24</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="24">
+              <span><span class="toc-chap-num">BAB 3</span> 3.7 Mesin Perkakas Dasar (Mesin Bor Duduk & Gerinda Alat)</span>
+              <span class="toc-page-badge">Hal 25</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="25">
+              <span><span class="toc-chap-num">BAB 3</span> 3.8 Mesin Bubut Standar (Anatomi, Fungsi & Gerak Pemotongan)</span>
+              <span class="toc-page-badge">Hal 26</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="26">
+              <span><span class="toc-chap-num">BAB 3</span> 3.9 Parameter Pemotongan Mesin Bubut & Kalkulator RPM Spindel</span>
+              <span class="toc-page-badge">Hal 27</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="27">
+              <span><span class="toc-chap-num">BAB 3</span> 3.10 Penanganan Material (Material Handling) & Kuis Formatif Bab 3</span>
+              <span class="toc-page-badge">Hal 28</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="28">
+              <span><span class="toc-chap-num">BAB 4</span> 4.1 Bahasa Universal Teknik & Evolusi CAD Modern</span>
+              <span class="toc-page-badge">Hal 29</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="29">
+              <span><span class="toc-chap-num">BAB 4</span> 4.2 Standar Kertas Gambar ISO 216 & Kepala Gambar (Etiket ISO 7200)</span>
+              <span class="toc-page-badge">Hal 30</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="30">
+              <span><span class="toc-chap-num">BAB 4</span> 4.3 Standar Garis Gambar Teknik ISO 128</span>
+              <span class="toc-page-badge">Hal 31</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="31">
+              <span><span class="toc-chap-num">BAB 4</span> 4.4 Sistem Penunjukan Ukuran & Dimensi ISO</span>
+              <span class="toc-page-badge">Hal 32</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="32">
+              <span><span class="toc-chap-num">BAB 4</span> 4.5 Proyeksi Piktorial 3D (Isometri, Dimetri, Kavalir)</span>
+              <span class="toc-page-badge">Hal 33</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="33">
+              <span><span class="toc-chap-num">BAB 4</span> 4.6 Proyeksi Ortogonal Simulator: Kuadran I (Eropa) vs III (Amerika)</span>
+              <span class="toc-page-badge">Hal 34</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="34">
+              <span><span class="toc-chap-num">BAB 4</span> 4.7 Sistem Toleransi Linier ISO & Simbol Kekasaran Permukaan Ra</span>
+              <span class="toc-page-badge">Hal 35</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="35">
+              <span><span class="toc-chap-num">BAB 4</span> 4.8 Rangkuman & Kuis Formatif Bab 4 (Gambar Teknik)</span>
+              <span class="toc-page-badge">Hal 36</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="36">
+              <span><span class="toc-chap-num">BAB 5</span> 5.1 Sambungan Mekanik Tetap & Lepas (Baut, Pasak, Keling, Las)</span>
+              <span class="toc-page-badge">Hal 37</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="37">
+              <span><span class="toc-chap-num">BAB 5</span> 5.2 Tumpuan Mekanik: Plain Bearing (Bushing) & Rolling Bearing</span>
+              <span class="toc-page-badge">Hal 38</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="38">
+              <span><span class="toc-chap-num">BAB 5</span> 5.3 Standar Kode Bearing ISO & Simulator Dekoder Interaktif</span>
+              <span class="toc-page-badge">Hal 39</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="39">
+              <span><span class="toc-chap-num">BAB 5</span> 5.4 Transmisi Roda Gigi (Spur, Helical, Bevel) & Rasio Kecepatan</span>
+              <span class="toc-page-badge">Hal 40</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="40">
+              <span><span class="toc-chap-num">BAB 5</span> 5.5 Transmisi Sabuk (V-Belt), Rantai (Sprocket) & Poros Fleksibel</span>
+              <span class="toc-page-badge">Hal 41</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="41">
+              <span><span class="toc-chap-num">BAB 5</span> 5.6 Rangkuman & Kuis Formatif Bab 5 (Dasar Sistem Mekanik)</span>
+              <span class="toc-page-badge">Hal 42</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="42">
+              <span><span class="toc-chap-num">BAB 6</span> 6.1 Ekosistem Industri Manufaktur Mesin & Rantai Pasok Global</span>
+              <span class="toc-page-badge">Hal 43</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="43">
+              <span><span class="toc-chap-num">BAB 6</span> 6.2 Evolusi Teknologi Pemesinan: Dari Manual ke CNC Multi-Axis</span>
+              <span class="toc-page-badge">Hal 44</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="44">
+              <span><span class="toc-chap-num">BAB 6</span> 6.3 Manufaktur Cerdas (Smart Manufacturing), IoT & Additive Manufacturing</span>
+              <span class="toc-page-badge">Hal 45</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="45">
+              <span><span class="toc-chap-num">BAB 6</span> 6.4 Standar Kompetensi SKKNI Pemesinan & Skema Sertifikasi BNSP</span>
+              <span class="toc-page-badge">Hal 46</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="46">
+              <span><span class="toc-chap-num">BAB 6</span> 6.5 Technopreneurship Bengkel Bubut & Fabrikasi Presisi</span>
+              <span class="toc-page-badge">Hal 47</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="47">
+              <span><span class="toc-chap-num">BAB 6</span> 6.6 Pembelajaran Berbasis Proyek (PjBL) & Kuis Formatif Bab 6</span>
+              <span class="toc-page-badge">Hal 48</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="48">
+              <span><span class="toc-chap-num">Sertifikat</span> Sertifikat Kelulusan Resmi Digital Interaktif Dasar Teknik Pemesinan</span>
+              <span class="toc-page-badge">Hal 49</span>
+            </a>
+          </li>
+          <li class="toc-item">
+            <a href="#" class="toc-link" data-page="49">
+              <span><span class="toc-chap-num">Glosarium</span> Glosarium Komprehensif Teknik Pemesinan (A - Z) & Daftar Pustaka</span>
+              <span class="toc-page-badge">Hal 50</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SEARCH MODAL ==================== -->
+  <div class="modal-overlay" id="modalSearch">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>🔍 Cari Materi Buku (50 Halaman)</h3>
+        <button class="modal-close" id="btnCloseSearch">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-input-wrap">
+          <input type="text" class="search-input" id="searchInput" placeholder="Ketik kata kunci (misal: deep learning, bubut, jangka sorong, RPM spindel, bearing, proyeksi, toleransi, 5R, APD)...">
+        </div>
+        <ul class="search-results-list" id="searchResults">
+          <li style="padding: 10px; color: #94a3b8; font-size: 0.85rem;">Ketik minimal 2 huruf untuk mulai mencari...</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/audio.js"></script>
+  <script src="js/flipbook.js"></script>
+  <script src="js/simulators.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rampGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="crateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <marker id="arrowRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#ef4444" />
+    </marker>
+    <marker id="arrowGreen" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#10b981" />
+    </marker>
+    <marker id="arrowBlue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowYellow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 z" fill="#facc15" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="380" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="32" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    MEKANIKA BIDANG MIRING &amp; HUKUM GESEKAN COULOMB (STATIS &amp; KINETIS)
+  </text>
+  <text x="400" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Prinsip: Benda Diam Jika F_gesek &ge; W &middot; sin(&alpha;). Tepat Akan Meluncur Saat tan(&alpha;) = &mu;_s.
+  </text>
+
+  <!-- Left: Inclined Plane Diagram with Free Body Forces -->
+  <g transform="translate(40, 80)">
+    <!-- Base Ground Line -->
+    <line x1="10" y1="210" x2="380" y2="210" stroke="#475569" stroke-width="3" stroke-dasharray="6,4"/>
+    
+    <!-- Triangle Wedge Ramp (Slope ~ 25 degrees) -->
+    <!-- (10, 210) to (360, 210) to (10, 70) -->
+    <polygon points="20,210 360,210 20,70" fill="url(#rampGrad)" stroke="#64748b" stroke-width="2"/>
+
+    <!-- Angle Arc alpha at vertex (360, 210) -->
+    <path d="M 310,210 A 50 50 0 0 0 320,192" fill="none" stroke="#38bdf8" stroke-width="2"/>
+    <text x="290" y="202" font-size="13" font-weight="900" fill="#38bdf8">&alpha; = 25&deg;</text>
+
+    <!-- Workpiece Crate on Incline -->
+    <!-- Located along slope at around (170, 130) rotated by -22 deg -->
+    <g transform="translate(165, 130) rotate(-22.4)">
+      <!-- Crate Body -->
+      <rect x="-35" y="-50" width="70" height="50" rx="4" fill="url(#crateGrad)" stroke="#fde047" stroke-width="2"/>
+      <line x1="-35" y1="-50" x2="35" y2="0" stroke="#78350f" stroke-width="1.5"/>
+      <line x1="35" y1="-50" x2="-35" y2="0" stroke="#78350f" stroke-width="1.5"/>
+      <text x="0" y="-22" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle">MESIN (m)</text>
+
+      <!-- Center of Mass Dot -->
+      <circle cx="0" cy="-25" r="3.5" fill="#ffffff"/>
+
+      <!-- Normal Force N (Perpendicular pointing outward from ramp) -->
+      <line x1="0" y1="-25" x2="0" y2="-95" stroke="#facc15" stroke-width="3" marker-end="url(#arrowYellow)"/>
+      <text x="-6" y="-100" font-size="10" font-weight="900" fill="#facc15" text-anchor="end">Gaya Normal N = W &middot; cos(&alpha;)</text>
+
+      <!-- Friction Force Fs (Parallel pointing UP the ramp) -->
+      <line x1="0" y1="-2" x2="70" y2="-2" stroke="#10b981" stroke-width="3.5" marker-end="url(#arrowGreen)"/>
+      <text x="75" y="10" font-size="10" font-weight="900" fill="#10b981">Gaya Gesek F_s &le; &mu; &middot; N</text>
+
+      <!-- Downhill Component W_sin(alpha) pointing DOWN the ramp -->
+      <line x1="0" y1="-2" x2="-65" y2="-2" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+      <text x="-70" y="10" font-size="10" font-weight="900" fill="#38bdf8" text-anchor="end">Gaya Luncur W &middot; sin(&alpha;)</text>
+
+      <!-- Straight Down Gravity Vector W = m*g (counter-rotate to stay vertical) -->
+      <g transform="translate(0, -25) rotate(22.4)">
+        <line x1="0" y1="0" x2="0" y2="75" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowRed)"/>
+        <text x="6" y="85" font-size="11" font-weight="900" fill="#ef4444">Berat W = m &middot; g</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Right: Technical Principles & Workshop Rules Cards -->
+  <g transform="translate(430, 75)">
+    <!-- Card 1: Syarat Meluncur -->
+    <rect x="0" y="0" width="340" height="85" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="14" y="22" font-size="11" font-weight="900" fill="#38bdf8">1. KONDISI KESETIMBANGAN STATIS</text>
+    <text x="14" y="42" font-size="9.5" fill="#f8fafc" font-weight="700">
+      &bull; Diam: tan(&alpha;) &le; &mu;_s &rarr; Gesekan mampu menahan beban
+    </text>
+    <text x="14" y="60" font-size="9.5" fill="#f87171" font-weight="700">
+      &bull; Meluncur: tan(&alpha;) &gt; &mu;_s &rarr; Gaya luncur melampaui gesekan
+    </text>
+    <text x="14" y="76" font-size="8.5" fill="#94a3b8">
+      Sudut kritis saat tepat akan merosot: &alpha;_kritis = arctan(&mu;)
+    </text>
+
+    <!-- Card 2: Koefisien Gesek di Bengkel Mesin -->
+    <rect x="0" y="95" width="340" height="95" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="14" y="117" font-size="11" font-weight="900" fill="#f59e0b">2. KOEFISIEN GESEK DI BENGKEL PEMESINAN</text>
+    <text x="14" y="136" font-size="9" fill="#f8fafc">
+      &bull; Besi Karat / Kasar: &mu; &asymp; 0.60 &ndash; 0.70 (Sangat seret, sulit meluncur)
+    </text>
+    <text x="14" y="153" font-size="9" fill="#f8fafc">
+      &bull; Baja Kering Halus: &mu; &asymp; 0.30 &ndash; 0.40 (Standar pencekaman ragum)
+    </text>
+    <text x="14" y="170" font-size="9" fill="#f8fafc">
+      &bull; Baja Terlumasi Gemuk (Grease): &mu; &asymp; 0.05 &ndash; 0.10 (Licin pada bantalan)
+    </text>
+    <text x="14" y="184" font-size="8" fill="#cbd5e1">
+      💡 Oli/grease menurunkan &mu; secara drastis untuk mencegah keausan rel mesin bubut!
+    </text>
+
+    <!-- Card 3: Aplikasi Nyata di Bengkel -->
+    <rect x="0" y="200" width="340" height="90" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+    <text x="14" y="222" font-size="11" font-weight="900" fill="#10b981">3. APLIKASI TEKNIK BIDANG MIRING</text>
+    <text x="14" y="240" font-size="9" fill="#f8fafc">
+      &bull; Ramp Muat Truk: Mengurangi gaya dorong F = W &middot; (h / s)
+    </text>
+    <text x="14" y="257" font-size="9" fill="#f8fafc">
+      &bull; Ulir Baut &amp; Mur: Bidang miring melingkar! Gesekan ulir mengunci
+    </text>
+    <text x="14" y="271" font-size="9" fill="#f8fafc">
+      &nbsp;&nbsp;baut agar tidak lepas sendiri saat terkena getaran mesin.
+    </text>
+    <text x="14" y="284" font-size="8.5" fill="#4ade80">
+      &bull; Pahat Bubut &amp; Baji (Wedge): Membelah serat logam dengan efisien
+    </text>
+  </g>
+</svg>

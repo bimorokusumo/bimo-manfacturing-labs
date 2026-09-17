@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="leverBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="50%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="360" rx="14" fill="#0b1120" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="30" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    3 KELAS SISTEM TUAS (PENGUNGKIT) DI BENGKEL PEMESINAN
+  </text>
+  <text x="400" y="48" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Prinsip Pengganda Gaya Mekanik: Lengan Kuasa (Lk) vs Lengan Beban (Lb)
+  </text>
+
+  <!-- CLASS 1: Titik Tumpu di Tengah (Tang / Gunting Plat) -->
+  <g transform="translate(40, 70)">
+    <rect x="0" y="0" width="225" height="265" rx="10" fill="#111827" stroke="#38bdf8" stroke-width="1.5"/>
+    <rect x="0" y="0" width="225" height="34" rx="10" fill="#0369a1"/>
+    <text x="112" y="22" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">
+      TUAS KELAS 1 (TUMPUAN DI TENGAH)
+    </text>
+
+    <!-- Schematic Diagram -->
+    <g transform="translate(15, 60)">
+      <!-- Lever Bar -->
+      <rect x="0" y="30" width="195" height="12" rx="3" fill="url(#leverBar)" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <!-- Fulcrum Triangle (T) at 120 -->
+      <polygon points="120,42 108,65 132,65" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="120" cy="42" r="3" fill="#ffffff"/>
+      <text x="120" y="77" font-size="9" font-weight="900" fill="#facc15" text-anchor="middle">TUMPUAN (T)</text>
+
+      <!-- Load (W) at Left (0) -->
+      <g transform="translate(10, 5)">
+        <rect x="0" y="0" width="30" height="25" rx="3" fill="#ef4444"/>
+        <text x="15" y="16" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle">BEBAN</text>
+        <line x1="15" y1="25" x2="15" y2="30" stroke="#ef4444" stroke-width="2"/>
+      </g>
+
+      <!-- Effort (F) at Right (185) pushing DOWN -->
+      <g transform="translate(185, 5)">
+        <line x1="0" y1="0" x2="0" y2="25" stroke="#10b981" stroke-width="3"/>
+        <polygon points="-4,20 0,28 4,20" fill="#10b981"/>
+        <text x="0" y="-4" font-size="9" font-weight="900" fill="#34d399" text-anchor="middle">GAYA (F)</text>
+      </g>
+    </g>
+
+    <!-- Details -->
+    <g transform="translate(15, 160)">
+      <rect x="0" y="0" width="195" height="90" rx="6" fill="#1e293b"/>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#38bdf8">✂️ Contoh Alat Bengkel:</text>
+      <text x="10" y="34" font-size="9" fill="#e2e8f0">• Tang kombinasi &amp; tang potong</text>
+      <text x="10" y="48" font-size="9" fill="#e2e8f0">• Gunting plat seng manual</text>
+      <text x="10" y="62" font-size="9" fill="#e2e8f0">• Linggis pencabut paku</text>
+      <text x="10" y="78" font-size="9" font-weight="800" fill="#4ade80">KM: Gaya berlipat ganda!</text>
+    </g>
+  </g>
+
+  <!-- CLASS 2: Beban di Tengah (Pemotong Plat Guillotine) -->
+  <g transform="translate(285, 70)">
+    <rect x="0" y="0" width="225" height="265" rx="10" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="0" y="0" width="225" height="34" rx="10" fill="#b45309"/>
+    <text x="112" y="22" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">
+      TUAS KELAS 2 (BEBAN DI TENGAH)
+    </text>
+
+    <!-- Schematic Diagram -->
+    <g transform="translate(15, 60)">
+      <!-- Lever Bar -->
+      <rect x="0" y="30" width="195" height="12" rx="3" fill="url(#leverBar)" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <!-- Fulcrum Triangle (T) at Left (15) -->
+      <polygon points="15,42 3,65 27,65" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="15" cy="42" r="3" fill="#ffffff"/>
+      <text x="15" y="77" font-size="8" font-weight="900" fill="#facc15" text-anchor="middle">TUMPUAN</text>
+
+      <!-- Load (W) in the Middle (85) pushing down -->
+      <g transform="translate(85, 5)">
+        <rect x="-15" y="0" width="30" height="25" rx="3" fill="#ef4444"/>
+        <text x="0" y="16" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle">BEBAN</text>
+      </g>
+
+      <!-- Effort (F) at Far Right (185) pulling UP -->
+      <g transform="translate(185, 30)">
+        <line x1="0" y1="20" x2="0" y2="-5" stroke="#10b981" stroke-width="3"/>
+        <polygon points="-4,0 0,-8 4,0" fill="#10b981"/>
+        <text x="0" y="34" font-size="9" font-weight="900" fill="#34d399" text-anchor="middle">GAYA (F)</text>
+      </g>
+    </g>
+
+    <!-- Details -->
+    <g transform="translate(15, 160)">
+      <rect x="0" y="0" width="195" height="90" rx="6" fill="#1e293b"/>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#fbbf24">📐 Contoh Alat Bengkel:</text>
+      <text x="10" y="34" font-size="9" fill="#e2e8f0">• Tuas pemotong plat guillotine</text>
+      <text x="10" y="48" font-size="9" fill="#e2e8f0">• Gerobak dorong tatal bubut</text>
+      <text x="10" y="62" font-size="9" fill="#e2e8f0">• Pemecah mur &amp; pembuka botol</text>
+      <text x="10" y="78" font-size="9" font-weight="800" fill="#4ade80">KM: Selalu &gt; 1 (Sangat Ringan!)</text>
+    </g>
+  </g>
+
+  <!-- CLASS 3: Kuasa di Tengah (Pinset Presisi & Sekop) -->
+  <g transform="translate(530, 70)">
+    <rect x="0" y="0" width="230" height="265" rx="10" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="0" y="0" width="230" height="34" rx="10" fill="#047857"/>
+    <text x="115" y="22" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">
+      TUAS KELAS 3 (KUASA DI TENGAH)
+    </text>
+
+    <!-- Schematic Diagram -->
+    <g transform="translate(15, 60)">
+      <!-- Lever Bar -->
+      <rect x="0" y="30" width="195" height="12" rx="3" fill="url(#leverBar)" stroke="#cbd5e1" stroke-width="1"/>
+      
+      <!-- Fulcrum Triangle (T) at Left (15) -->
+      <polygon points="15,42 3,65 27,65" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="15" cy="42" r="3" fill="#ffffff"/>
+      <text x="15" y="77" font-size="8" font-weight="900" fill="#facc15" text-anchor="middle">TUMPUAN</text>
+
+      <!-- Effort (F) in the Middle (95) pulling UP -->
+      <g transform="translate(95, 30)">
+        <line x1="0" y1="20" x2="0" y2="-5" stroke="#10b981" stroke-width="3"/>
+        <polygon points="-4,0 0,-8 4,0" fill="#10b981"/>
+        <text x="0" y="34" font-size="9" font-weight="900" fill="#34d399" text-anchor="middle">GAYA (F)</text>
+      </g>
+
+      <!-- Load (W) at Far Right (180) pushing down -->
+      <g transform="translate(180, 5)">
+        <rect x="-15" y="0" width="30" height="25" rx="3" fill="#ef4444"/>
+        <text x="0" y="16" font-size="9" font-weight="900" fill="#ffffff" text-anchor="middle">BEBAN</text>
+      </g>
+    </g>
+
+    <!-- Details -->
+    <g transform="translate(15, 160)">
+      <rect x="0" y="0" width="200" height="90" rx="6" fill="#1e293b"/>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#34d399">🔬 Contoh Alat Bengkel:</text>
+      <text x="10" y="34" font-size="9" fill="#e2e8f0">• Pinset perakit mikro-mekanik</text>
+      <text x="10" y="48" font-size="9" fill="#e2e8f0">• Sekop tatal beram mesin bubut</text>
+      <text x="10" y="62" font-size="9" fill="#e2e8f0">• Lengan robot hidrolik CNC</text>
+      <text x="10" y="78" font-size="9" font-weight="800" fill="#38bdf8">KM &lt; 1: Menghasilkan Presisi Tinggi!</text>
+    </g>
+  </g>
+</svg>

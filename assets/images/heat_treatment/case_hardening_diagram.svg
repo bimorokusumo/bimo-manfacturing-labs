@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 380" width="100%" height="100%">
+  <defs>
+    <linearGradient id="caseOuterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="caseHardSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+    <linearGradient id="coreToughGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <pattern id="grainPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="1.5" fill="#ffffff" opacity="0.3"/>
+      <path d="M0,10 Q5,0 10,10 T20,10" stroke="#ffffff" stroke-width="0.5" fill="none" opacity="0.2"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="380" rx="14" fill="#0b1120" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="32" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    ANATOMI CASE HARDENING: GIGI TRANSMISI &amp; PIN PISTON
+  </text>
+  <text x="400" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Kombinasi Rekayasa: Kulit Super Keras Tahan Aus (60-64 HRC) + Inti Alot Penyerap Torsi Kejut (28-34 HRC)
+  </text>
+
+  <!-- Left: Cross-section Diagram of a Gear Tooth -->
+  <g transform="translate(60, 80)">
+    <!-- Base outline frame -->
+    <rect x="0" y="0" width="310" height="260" rx="10" fill="#111827" stroke="#374151" stroke-width="1.5"/>
+    <text x="155" y="24" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="800" fill="#e2e8f0" text-anchor="middle">
+      Penampang Melintang Satu Gigi Roda Gigi
+    </text>
+
+    <!-- Gear tooth shape outer boundary (Case) -->
+    <path d="M 55,230 L 75,120 Q 95,60 155,50 Q 215,60 235,120 L 255,230 Z" 
+          fill="#ef4444" stroke="#f87171" stroke-width="2" opacity="0.9"/>
+    
+    <!-- Transition zone (Gradient) -->
+    <path d="M 68,230 L 85,125 Q 102,74 155,65 Q 208,74 225,125 L 242,230 Z" 
+          fill="#fb923c" opacity="0.85"/>
+
+    <!-- Tough Ductile Core -->
+    <path d="M 85,230 L 100,135 Q 115,92 155,85 Q 195,92 210,135 L 225,230 Z" 
+          fill="url(#coreToughGrad)" stroke="#7dd3fc" stroke-width="2"/>
+    <path d="M 85,230 L 100,135 Q 115,92 155,85 Q 195,92 210,135 L 225,230 Z" 
+          fill="url(#grainPattern)"/>
+
+    <!-- Labels with arrows -->
+    <!-- Case Label -->
+    <line x1="230" y1="80" x2="280" y2="70" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="230" cy="80" r="3" fill="#ef4444"/>
+    <rect x="230" y="55" width="70" height="34" rx="4" fill="#7f1d1d"/>
+    <text x="265" y="68" font-family="'Segoe UI', sans-serif" font-size="10" font-weight="800" fill="#fecaca" text-anchor="middle">KULIT LUAR</text>
+    <text x="265" y="82" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="900" fill="#ffffff" text-anchor="middle">60-64 HRC</text>
+
+    <!-- Case depth dimension arrow -->
+    <line x1="155" y1="50" x2="155" y2="85" stroke="#ffffff" stroke-width="2"/>
+    <polygon points="152,54 158,54 155,48" fill="#ffffff"/>
+    <polygon points="152,81 158,81 155,87" fill="#ffffff"/>
+    <text x="135" y="70" font-family="'Segoe UI', sans-serif" font-size="10" font-weight="700" fill="#ffffff">0.8 mm</text>
+
+    <!-- Core Label -->
+    <rect x="115" y="150" width="80" height="38" rx="6" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="155" y="165" font-family="'Segoe UI', sans-serif" font-size="10" font-weight="800" fill="#bae6fd" text-anchor="middle">INTI ULET</text>
+    <text x="155" y="180" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">30 HRC</text>
+    <text x="155" y="215" font-family="'Segoe UI', sans-serif" font-size="9" fill="#e0f2fe" text-anchor="middle">
+      Menahan Hentakan Torsi
+    </text>
+  </g>
+
+  <!-- Right: Hardness Profile Graph vs Depth from Surface -->
+  <g transform="translate(420, 80)">
+    <rect x="0" y="0" width="320" height="260" rx="10" fill="#111827" stroke="#374151" stroke-width="1.5"/>
+    <text x="160" y="24" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="800" fill="#e2e8f0" text-anchor="middle">
+      Kurva Profil Kekerasan vs Kedalaman (mm)
+    </text>
+
+    <!-- Graph Axis -->
+    <!-- Y Axis: Hardness HRC (20 to 70) -->
+    <line x1="50" y1="45" x2="50" y2="210" stroke="#64748b" stroke-width="1.5"/>
+    <!-- X Axis: Depth in mm (0.0 to 2.5) -->
+    <line x1="50" y1="210" x2="295" y2="210" stroke="#64748b" stroke-width="1.5"/>
+
+    <!-- Y-axis labels -->
+    <text x="42" y="55" font-size="9" fill="#94a3b8" text-anchor="end">65 HRC</text>
+    <text x="42" y="90" font-size="9" fill="#94a3b8" text-anchor="end">55 HRC</text>
+    <text x="42" y="130" font-size="9" fill="#94a3b8" text-anchor="end">45 HRC</text>
+    <text x="42" y="170" font-size="9" fill="#94a3b8" text-anchor="end">35 HRC</text>
+    <text x="42" y="208" font-size="9" fill="#94a3b8" text-anchor="end">25 HRC</text>
+
+    <!-- Horizontal grid lines -->
+    <line x1="50" y1="52" x2="295" y2="52" stroke="#334155" stroke-dasharray="3,3"/>
+    <line x1="50" y1="88" x2="295" y2="88" stroke="#334155" stroke-dasharray="3,3"/>
+    <line x1="50" y1="128" x2="295" y2="128" stroke="#334155" stroke-dasharray="3,3"/>
+    <line x1="50" y1="168" x2="295" y2="168" stroke="#334155" stroke-dasharray="3,3"/>
+
+    <!-- X-axis labels -->
+    <text x="50" y="225" font-size="9" fill="#94a3b8" text-anchor="middle">0.0 (Permukaan)</text>
+    <text x="110" y="225" font-size="9" fill="#94a3b8" text-anchor="middle">0.5</text>
+    <text x="170" y="225" font-size="9" fill="#94a3b8" text-anchor="middle">1.0</text>
+    <text x="230" y="225" font-size="9" fill="#94a3b8" text-anchor="middle">1.5</text>
+    <text x="280" y="225" font-size="9" fill="#94a3b8" text-anchor="middle">2.0+ (Inti)</text>
+
+    <!-- Effective Case Depth Threshold Line (50 HRC) -->
+    <line x1="50" y1="108" x2="295" y2="108" stroke="#eab308" stroke-width="1" stroke-dasharray="4,2"/>
+    <text x="290" y="104" font-size="8" fill="#facc15" text-anchor="end">Batas Standar Efektif (50 HRC)</text>
+
+    <!-- The Hardness Curve -->
+    <path d="M 50,56 
+             C 90,58 120,68 150,110
+             C 170,140 190,175 220,185
+             L 295,188" 
+          fill="none" stroke="#f97316" stroke-width="3.5" stroke-linecap="round"/>
+
+    <!-- Curve Data Points -->
+    <circle cx="50" cy="56" r="4.5" fill="#ef4444"/>
+    <circle cx="150" cy="110" r="4.5" fill="#facc15"/>
+    <circle cx="220" cy="185" r="4.5" fill="#38bdf8"/>
+
+    <text x="60" y="48" font-size="10" font-weight="800" fill="#f87171">63 HRC (Aus Ringan)</text>
+    <text x="155" y="126" font-size="9" font-weight="700" fill="#fde047">Transisi Difusi</text>
+    <text x="225" y="178" font-size="10" font-weight="800" fill="#7dd3fc">30 HRC (Inti Alot)</text>
+
+    <!-- Footnote -->
+    <text x="160" y="248" font-family="'Segoe UI', sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">
+      Kedalaman Karburasi Efektif (t): ~0.85 mm (Suhu 920°C, 4 Jam)
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" width="100%" height="100%">
+  <defs>
+    <!-- Filled closed arrowhead for technical dimensioning (1:3 ratio) -->
+    <marker id="arrow-start" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 10 2 L 0 5 L 10 8 Z" fill="#0284c7"/>
+    </marker>
+    <marker id="arrow-end" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 2 L 10 5 L 0 8 Z" fill="#0284c7"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="360" height="200" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  
+  <!-- Header Bar -->
+  <rect x="0" y="0" width="360" height="32" rx="8" fill="#1e293b"/>
+  <rect x="0" y="24" width="360" height="8" fill="#1e293b"/>
+  <text x="180" y="21" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" letter-spacing="0.5">GARIS UKURAN &amp; PENUNJUK (ISO 128)</text>
+
+  <!-- Specimen Line Demonstration -->
+  <g transform="translate(25, 45)">
+    <rect width="310" height="42" rx="5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="15" y="18" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="600">Spesimen Garis Dimensi:</text>
+    <line x1="25" y1="28" x2="200" y2="28" stroke="#0284c7" stroke-width="1.5" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+    <text x="112" y="24" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">50 mm</text>
+    <rect x="225" y="16" width="72" height="20" rx="3" fill="#f0f9ff" stroke="#0284c7" stroke-width="1"/>
+    <text x="261" y="30" fill="#0284c7" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle">0.25 – 0.35 mm</text>
+  </g>
+
+  <!-- Engineering Drawing Part Example -->
+  <g transform="translate(25, 96)">
+    <rect width="310" height="92" rx="5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Part geometry (thick solid outline) -->
+    <rect x="25" y="32" width="115" height="42" rx="2" fill="#f8fafc" stroke="#334155" stroke-width="2.2"/>
+
+    <!-- Extension lines (garis bantu ukur - continuous thin 0.25mm) -->
+    <line x1="25" y1="28" x2="25" y2="10" stroke="#0284c7" stroke-width="1.2"/>
+    <line x1="140" y1="28" x2="140" y2="10" stroke="#0284c7" stroke-width="1.2"/>
+
+    <!-- Dimension line with arrows -->
+    <line x1="27" y1="15" x2="138" y2="15" stroke="#0284c7" stroke-width="1.2" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+    <text x="82" y="12" fill="#0f172a" font-family="'Segoe UI', Roboto, sans-serif" font-size="9" font-weight="bold" text-anchor="middle">85 ±0.1</text>
+
+    <!-- Leader line pointing to edge (garis penunjuk) -->
+    <path d="M 65 52 L 95 76 L 125 76" fill="none" stroke="#0284c7" stroke-width="1.2"/>
+    <circle cx="65" cy="52" r="2.5" fill="#0284c7"/>
+    <text x="128" y="79" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="600">R2</text>
+
+    <!-- Annotations with Arrow -->
+    <text x="180" y="30" fill="#1e293b" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="bold">Garis Ukur &amp; Garis Bantu</text>
+    <text x="180" y="44" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="9">Ujung anak panah runcing sudut 15–30°</text>
+
+    <text x="180" y="64" fill="#0284c7" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="600">Angka Ukuran Standar ISO</text>
+    <text x="180" y="77" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5">Tertulis di atas garis ukur mendatar</text>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="360" height="200" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  
+  <!-- Header Bar -->
+  <rect x="0" y="0" width="360" height="32" rx="8" fill="#1e293b"/>
+  <rect x="0" y="24" width="360" height="8" fill="#1e293b"/>
+  <text x="180" y="21" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" letter-spacing="0.5">GARIS TEBAL KONTINU (ISO 128 - TYPE A)</text>
+
+  <!-- Specimen Line Demonstration -->
+  <g transform="translate(25, 45)">
+    <rect width="310" height="42" rx="5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="15" y="18" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="600">Spesimen Garis Acuan:</text>
+    <line x1="15" y1="28" x2="210" y2="28" stroke="#0f172a" stroke-width="4"/>
+    <rect x="225" y="16" width="72" height="20" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+    <text x="261" y="30" fill="#1d4ed8" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle">0.5 – 0.7 mm</text>
+  </g>
+
+  <!-- Engineering Drawing Part Example -->
+  <g transform="translate(25, 96)">
+    <rect width="310" height="92" rx="5" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Outer Visible Contour of Machine Component in THICK CONTINUOUS LINE -->
+    <path d="M 25 72 L 25 25 L 85 25 L 85 45 L 145 45 L 145 72 Z" fill="#f1f5f9" stroke="#0f172a" stroke-width="3.5" stroke-linejoin="round"/>
+    
+    <!-- Thin Hatch Lines -->
+    <line x1="35" y1="72" x2="75" y2="32" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="55" y1="72" x2="85" y2="42" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="75" y1="72" x2="105" y2="42" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="95" y1="72" x2="125" y2="42" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="115" y1="72" x2="145" y2="42" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="135" y1="72" x2="145" y2="62" stroke="#94a3b8" stroke-width="1"/>
+    
+    <!-- Annotations with Arrow -->
+    <path d="M 175 32 L 88 32" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+    <circle cx="85" cy="32" r="3" fill="#2563eb"/>
+    <text x="180" y="32" fill="#1e293b" font-family="'Segoe UI', Roboto, sans-serif" font-size="10" font-weight="bold">Garis Tepi Benda Nyata</text>
+    <text x="180" y="46" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="9">(Kontur Luar yang Terlihat Langsung)</text>
+
+    <path d="M 175 62 L 147 62" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <circle cx="145" cy="62" r="3" fill="#2563eb"/>
+    <text x="180" y="65" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="600">Garis Batas Potongan Nyata</text>
+    <text x="180" y="78" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5">Tampak jelas dari sudut pandang</text>
+  </g>
+</svg>

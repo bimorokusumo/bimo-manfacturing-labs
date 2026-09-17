@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">PRINSIP PENGUJIAN MEKANIK MATERIAL: TARIK, IMPAK &amp; KEKERASAN</text>
+
+  <!-- 3 Columns: Uji Tarik, Uji Impak Charpy, Uji Kekerasan -->
+  <!-- 1. Uji Tarik (Tensile Test) -->
+  <g transform="translate(25, 38)">
+    <rect width="205" height="175" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+    <text x="102" y="20" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="bold">Uji Tarik (Tensile)</text>
+    <!-- Specimen in grips -->
+    <rect x="82" y="35" width="40" height="15" fill="#475569" stroke="#94a3b8"/>
+    <rect x="92" y="50" width="20" height="50" fill="#cbd5e1" stroke="#64748b"/>
+    <!-- Necking in middle -->
+    <ellipse cx="102" cy="75" rx="7" ry="10" fill="#94a3b8"/>
+    <rect x="82" y="100" width="40" height="15" fill="#475569" stroke="#94a3b8"/>
+    <!-- Arrows pulling -->
+    <line x1="102" y1="32" x2="102" y2="22" stroke="#ef4444" stroke-width="2.5"/>
+    <polygon points="102,18 98,24 106,24" fill="#ef4444"/>
+    <line x1="102" y1="118" x2="102" y2="128" stroke="#ef4444" stroke-width="2.5"/>
+    <polygon points="102,132 98,126 106,126" fill="#ef4444"/>
+    <text x="102" y="145" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Pengecilan / Necking</text>
+    <text x="102" y="160" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Kekuatan Luluh &amp; Tarik Maks (UTS)</text>
+  </g>
+
+  <!-- 2. Uji Impak Charpy -->
+  <g transform="translate(248, 38)">
+    <rect width="205" height="175" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.2"/>
+    <text x="102" y="20" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="11" font-weight="bold">Uji Impak (Charpy)</text>
+    <!-- Pendulum hammer -->
+    <circle cx="102" cy="40" r="4" fill="#f8fafc"/>
+    <line x1="102" y1="40" x2="65" y2="85" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="65" cy="85" r="10" fill="#f59e0b" stroke="#d97706"/>
+    <!-- Specimen with notch -->
+    <rect x="85" y="95" width="40" height="14" rx="1" fill="#64748b" stroke="#cbd5e1"/>
+    <polygon points="105,95 107,100 103,100" fill="#1e293b"/>
+    <path d="M 65 95 Q 85 110 105 105" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="2 2"/>
+    <text x="102" y="135" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Bandul Ayun &amp; Takik-V</text>
+    <text x="102" y="150" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8">Energi Serap (Joule)</text>
+    <text x="102" y="163" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Ketangguhan terhadap beban kejut</text>
+  </g>
+
+  <!-- 3. Uji Kekerasan (Hardness) -->
+  <g transform="translate(470, 38)">
+    <rect width="205" height="175" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.2"/>
+    <text x="102" y="20" text-anchor="middle" fill="#10b981" font-family="sans-serif" font-size="11" font-weight="bold">Uji Kekerasan (Hardness)</text>
+    <!-- Indenters: Rockwell, Brinell, Vickers -->
+    <g transform="translate(15, 35)">
+      <!-- Brinell: Ball -->
+      <circle cx="35" cy="50" r="8" fill="#38bdf8" stroke="#0284c7"/>
+      <rect x="15" y="60" width="40" height="15" fill="#64748b"/>
+      <text x="35" y="90" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8" font-weight="bold">Brinell (HB)</text>
+      <text x="35" y="102" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="7.5">Bola Baja</text>
+      <!-- Rockwell: Cone -->
+      <polygon points="95,42 88,58 102,58" fill="#f59e0b" stroke="#d97706"/>
+      <rect x="75" y="60" width="40" height="15" fill="#64748b"/>
+      <text x="95" y="90" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8" font-weight="bold">Rockwell (HRC)</text>
+      <text x="95" y="102" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="7.5">Kerucut Intan</text>
+      <!-- Vickers: Pyramid -->
+      <polygon points="155,44 148,58 162,58" fill="#10b981" stroke="#047857"/>
+      <rect x="135" y="60" width="40" height="15" fill="#64748b"/>
+      <text x="155" y="90" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8" font-weight="bold">Vickers (HV)</text>
+      <text x="155" y="102" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="7.5">Piramida Intan</text>
+    </g>
+    <text x="102" y="163" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Ketahanan penetrasi permukaan</text>
+  </g>
+</svg>

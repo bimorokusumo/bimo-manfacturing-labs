@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" width="100%" height="100%">
+  <rect width="820" height="220" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="410" y="26" text-anchor="middle" fill="#0f172a" font-family="sans-serif" font-size="15" font-weight="bold">EMPAT SISTEM TRANSMISI MEKANIK UTAMA PADA MESIN</text>
+
+  <g transform="translate(20, 45)">
+    <!-- Box 1: Roda Gigi -->
+    <rect x="0" y="0" width="180" height="155" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <rect x="0" y="0" width="180" height="28" rx="8" fill="#2563eb"/>
+    <text x="90" y="19" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">RODA GIGI (GEARS)</text>
+    <circle cx="65" cy="65" r="22" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="6 4"/>
+    <circle cx="110" cy="65" r="16" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="5 3"/>
+    <text x="90" y="108" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="11" font-weight="bold">Jarak Poros Dekat</text>
+    <text x="90" y="126" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Tanpa Slip, Rasio Presisi</text>
+    <text x="90" y="142" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Torsi Sangat Besar</text>
+
+    <!-- Box 2: Pulley &amp; Sabuk -->
+    <rect x="200" y="0" width="180" height="155" rx="8" fill="#ffffff" stroke="#0ea5e9" stroke-width="1.5"/>
+    <rect x="200" y="0" width="180" height="28" rx="8" fill="#0ea5e9"/>
+    <text x="290" y="19" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">SABUK &amp; PULLEY</text>
+    <circle cx="245" cy="65" r="18" fill="none" stroke="#0ea5e9" stroke-width="3"/>
+    <circle cx="335" cy="65" r="12" fill="none" stroke="#0ea5e9" stroke-width="3"/>
+    <line x1="245" y1="47" x2="335" y2="53" stroke="#334155" stroke-width="3"/>
+    <line x1="245" y1="83" x2="335" y2="77" stroke="#334155" stroke-width="3"/>
+    <text x="290" y="108" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="11" font-weight="bold">Jarak Poros Menengah/Jauh</text>
+    <text x="290" y="126" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Halus, Peredam Kejut</text>
+    <text x="290" y="142" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Ada Potensi Slip (V-Belt)</text>
+
+    <!-- Box 3: Rantai &amp; Sprocket -->
+    <rect x="400" y="0" width="180" height="155" rx="8" fill="#ffffff" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="400" y="0" width="180" height="28" rx="8" fill="#10b981"/>
+    <text x="490" y="19" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">RANTAI &amp; SPROCKET</text>
+    <circle cx="445" cy="65" r="18" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="4 3"/>
+    <circle cx="535" cy="65" r="14" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="4 3"/>
+    <line x1="445" y1="47" x2="535" y2="51" stroke="#059669" stroke-width="2" stroke-dasharray="4 2"/>
+    <line x1="445" y1="83" x2="535" y2="79" stroke="#059669" stroke-width="2" stroke-dasharray="4 2"/>
+    <text x="490" y="108" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="11" font-weight="bold">Jarak Menengah Tanpa Slip</text>
+    <text x="490" y="126" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Tahan Suhu &amp; Beban Berat</text>
+    <text x="490" y="142" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Butuh Pelumasan Rutin</text>
+
+    <!-- Box 4: Kopling -->
+    <rect x="600" y="0" width="180" height="155" rx="8" fill="#ffffff" stroke="#f59e0b" stroke-width="1.5"/>
+    <rect x="600" y="0" width="180" height="28" rx="8" fill="#f59e0b"/>
+    <text x="690" y="19" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">KOPLING (COUPLING)</text>
+    <rect x="640" y="50" width="40" height="30" fill="#cbd5e1" stroke="#475569" stroke-width="1"/>
+    <rect x="685" y="50" width="40" height="30" fill="#cbd5e1" stroke="#475569" stroke-width="1"/>
+    <line x1="620" y1="65" x2="640" y2="65" stroke="#334155" stroke-width="4"/>
+    <line x1="725" y1="65" x2="745" y2="65" stroke="#334155" stroke-width="4"/>
+    <text x="690" y="108" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="11" font-weight="bold">Penyambung Poros Sebaris</text>
+    <text x="690" y="126" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Kopling Tetap &amp; Fleksibel</text>
+    <text x="690" y="142" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="10">Kopling Gesek (Putus/Hubung)</text>
+  </g>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">SIKLUS PERLAKUAN PANAS LOGAM (HEAT TREATMENT): QUENCHING &amp; TEMPERING</text>
+
+  <!-- Left: Temperature vs Time Curve -->
+  <g transform="translate(25, 38)">
+    <rect width="360" height="175" rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1.2"/>
+    <text x="180" y="20" text-anchor="middle" fill="#f87171" font-family="sans-serif" font-size="11" font-weight="bold">Kurva Temperatur - Waktu (Austenisasi &amp; Quenching)</text>
+    <!-- Axes -->
+    <line x1="45" y1="145" x2="330" y2="145" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="45" y1="145" x2="45" y2="35" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="335" y="149" fill="#94a3b8" font-family="sans-serif" font-size="9">Waktu (t)</text>
+    <text x="35" y="30" fill="#94a3b8" font-family="sans-serif" font-size="9">Suhu (°C)</text>
+    <text x="40" y="55" text-anchor="end" fill="#ef4444" font-family="sans-serif" font-size="8">850°</text>
+    <text x="40" y="105" text-anchor="end" fill="#f59e0b" font-family="sans-serif" font-size="8">400°</text>
+    <text x="40" y="145" text-anchor="end" fill="#38bdf8" font-family="sans-serif" font-size="8">25°</text>
+    <!-- Heating line -->
+    <line x1="45" y1="145" x2="105" y2="55" stroke="#ef4444" stroke-width="2.5"/>
+    <!-- Soaking line -->
+    <line x1="105" y1="55" x2="160" y2="55" stroke="#ef4444" stroke-width="2.5"/>
+    <!-- Rapid Quench line -->
+    <line x1="160" y1="55" x2="190" y2="140" stroke="#38bdf8" stroke-width="3" stroke-dasharray="none"/>
+    <!-- Tempering reheat -->
+    <line x1="210" y1="140" x2="245" y2="105" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="245" y1="105" x2="285" y2="105" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="285" y1="105" x2="315" y2="145" stroke="#10b981" stroke-width="2"/>
+    <!-- Annotations -->
+    <text x="132" y="48" text-anchor="middle" fill="#fca5a5" font-family="sans-serif" font-size="8">Holding/Soaking</text>
+    <text x="198" y="90" fill="#38bdf8" font-family="sans-serif" font-size="8" font-weight="bold">Quench (Oli/Air)</text>
+    <text x="265" y="98" text-anchor="middle" fill="#fde68a" font-family="sans-serif" font-size="8">Tempering</text>
+    <text x="180" y="165" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Martensit Keras Getas &#8594; Martensit Temper Tangguh</text>
+  </g>
+
+  <!-- Right: 3 Key Stages Card -->
+  <g transform="translate(405, 38)">
+    <rect width="270" height="175" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+    <text x="135" y="20" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="bold">Tujuan &amp; Struktur Kristal</text>
+    <g transform="translate(15, 32)">
+      <rect width="240" height="36" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+      <text x="8" y="15" fill="#f87171" font-family="sans-serif" font-size="9" font-weight="bold">1. Hardening (Pengerasan)</text>
+      <text x="8" y="28" fill="#cbd5e1" font-family="sans-serif" font-size="8">Dipanaskan ke fase Austenit, dicelup cepat (HRC naik tajam)</text>
+    </g>
+    <g transform="translate(15, 76)">
+      <rect width="240" height="36" rx="4" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+      <text x="8" y="15" fill="#fbbf24" font-family="sans-serif" font-size="9" font-weight="bold">2. Tempering (Penurunan Getas)</text>
+      <text x="8" y="28" fill="#cbd5e1" font-family="sans-serif" font-size="8">Pemanasan ulang 200-500°C meredakan tegangan sisa</text>
+    </g>
+    <g transform="translate(15, 120)">
+      <rect width="240" height="36" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+      <text x="8" y="15" fill="#34d399" font-family="sans-serif" font-size="9" font-weight="bold">3. Annealing &amp; Normalizing</text>
+      <text x="8" y="28" fill="#cbd5e1" font-family="sans-serif" font-size="8">Pendinginan lambat di tungku untuk melunakkan &amp; homogenisasi</text>
+    </g>
+  </g>
+</svg>

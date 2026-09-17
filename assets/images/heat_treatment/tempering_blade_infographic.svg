@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%">
+  <defs>
+    <!-- Multi-stop gradient simulating real heat temper oxide colors along a chisel -->
+    <linearGradient id="chiselTemperRainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <!-- Heated butt / back end: grey/dark oxide 500°C+ -->
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="15%" stop-color="#475569" />
+      <!-- Dark Blue 320°C -->
+      <stop offset="30%" stop-color="#1e3a8a" />
+      <!-- Peacock Blue 300°C -->
+      <stop offset="45%" stop-color="#2563eb" />
+      <!-- Purple 280°C -->
+      <stop offset="60%" stop-color="#9333ea" />
+      <!-- Golden Brown 250°C -->
+      <stop offset="75%" stop-color="#d97706" />
+      <!-- Pale Straw Yellow 220°C -->
+      <stop offset="90%" stop-color="#fef08a" />
+      <!-- Fresh Ground Cutting Edge (Silver 20°C) -->
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+    <radialGradient id="torchFlame" cx="20%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#38bdf8" />
+      <stop offset="80%" stop-color="#2563eb" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="360" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <text x="400" y="32" font-family="'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="900" fill="#f8fafc" text-anchor="middle">
+    ILUSTRASI VISUAL TEMPERING: RAMBATAN SPEKTRUM WARNA OKSIDASI
+  </text>
+  <text x="400" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
+    Teknik Klasik Pahat Bubut &amp; Pahat Dingin: Panaskan Bagian Belakang, Biarkan Warna Oksida Merambat ke Ujung Potong
+  </text>
+
+  <!-- Chisel Body Illustrated -->
+  <g transform="translate(100, 80)">
+    <!-- Torch Heating Flame at Butt End -->
+    <ellipse cx="20" cy="50" rx="35" ry="25" fill="url(#torchFlame)"/>
+    <path d="M -30,50 L 10,40 L 10,60 Z" fill="#60a5fa"/>
+
+    <!-- Chisel / Tool Shank with Rainbow Temper Oxide Gradient -->
+    <polygon points="30,30 500,20 540,50 500,80 30,70" fill="url(#chiselTemperRainbow)" stroke="#64748b" stroke-width="2"/>
+    
+    <!-- Sharp Beveled Cutting Tip (Straw Yellow / Pale Silver @ 220°C) -->
+    <polygon points="500,20 540,50 500,80 490,50" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+    <line x1="540" y1="50" x2="540" y2="50" stroke="#ffffff" stroke-width="3"/>
+
+    <!-- Sheen Reflection on Chisel Center -->
+    <line x1="50" y1="45" x2="520" y2="45" stroke="#ffffff" stroke-width="2" opacity="0.35"/>
+  </g>
+
+  <!-- Color Pointers & Tool Applications -->
+  <!-- 1. 220°C Kuning Jerami (Ujung Pahat) -->
+  <g transform="translate(600, 185)">
+    <line x1="0" y1="0" x2="30" y2="25" stroke="#fef08a" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#fef08a"/>
+    <rect x="30" y="10" width="150" height="42" rx="6" fill="#1e293b" stroke="#fef08a" stroke-width="1.5"/>
+    <text x="40" y="27" font-size="11" font-weight="900" fill="#fef08a">220°C: JERAMI (64 HRC)</text>
+    <text x="40" y="42" font-size="9" fill="#e2e8f0">Pahat Bubut, Pisau Cukur</text>
+  </g>
+
+  <!-- 2. 240°C Cokelat Emas -->
+  <g transform="translate(490, 185)">
+    <line x1="0" y1="0" x2="0" y2="65" stroke="#f59e0b" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#f59e0b"/>
+    <rect x="-65" y="65" width="135" height="42" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="2" y="82" font-size="11" font-weight="900" fill="#f59e0b" text-anchor="middle">240°C: COKELAT (61 HRC)</text>
+    <text x="2" y="97" font-size="9" fill="#e2e8f0" text-anchor="middle">Mata Bor, Tap &amp; Snei</text>
+  </g>
+
+  <!-- 3. 280°C Ungu -->
+  <g transform="translate(370, 185)">
+    <line x1="0" y1="0" x2="-20" y2="75" stroke="#c084fc" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#c084fc"/>
+    <rect x="-95" y="75" width="145" height="42" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1.5"/>
+    <text x="-22" y="92" font-size="11" font-weight="900" fill="#c084fc" text-anchor="middle">280°C: UNGU (55 HRC)</text>
+    <text x="-22" y="107" font-size="9" fill="#e2e8f0" text-anchor="middle">Pahat Dingin, Kapak Kayu</text>
+  </g>
+
+  <!-- 4. 300°C - 320°C Biru -->
+  <g transform="translate(240, 185)">
+    <line x1="0" y1="0" x2="-40" y2="40" stroke="#38bdf8" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="#38bdf8"/>
+    <rect x="-170" y="40" width="135" height="42" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="-102" y="57" font-size="11" font-weight="900" fill="#38bdf8" text-anchor="middle">300°C: BIRU (50 HRC)</text>
+    <text x="-102" y="72" font-size="9" fill="#e2e8f0" text-anchor="middle">Pegas, Obeng, Gergaji</text>
+  </g>
+
+  <!-- Bottom Rule -->
+  <rect x="50" y="325" width="700" height="24" rx="4" fill="#1e293b"/>
+  <text x="400" y="341" font-size="10" font-weight="700" fill="#94a3b8" text-anchor="middle">
+    💡 PRINSIP DASAR: Semakin tinggi suhu temper ➔ Semakin ulet/liat logamnya, namun kekerasannya sedikit berkurang.
+  </text>
+</svg>

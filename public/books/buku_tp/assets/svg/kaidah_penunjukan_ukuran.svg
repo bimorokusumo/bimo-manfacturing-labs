@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">KAIDAH PENUNJUKAN UKURAN (DIMENSIONING) MENURUT STANDAR ISO 129</text>
+
+  <!-- Stepped Shaft Dimensioning Drawing -->
+  <g transform="translate(40, 38)">
+    <rect width="620" height="175" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+
+    <!-- Center Line -->
+    <line x1="40" y1="90" x2="520" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="15 3 3 3"/>
+
+    <!-- Stepped Shaft Geometry (Half Section / Outline) -->
+    <!-- Section 1: Dia 25, L 60 -->
+    <rect x="80" y="65" width="100" height="50" fill="#334155" stroke="#f8fafc" stroke-width="2"/>
+    <!-- Section 2: Dia 45, L 120 -->
+    <rect x="180" y="45" width="140" height="90" fill="#334155" stroke="#f8fafc" stroke-width="2"/>
+    <!-- Section 3: Dia 32, L 90 -->
+    <rect x="320" y="58" width="120" height="64" fill="#334155" stroke="#f8fafc" stroke-width="2"/>
+
+    <!-- Fillet Radii -->
+    <path d="M 180 65 Q 180 50 175 45" stroke="#f8fafc" stroke-width="2" fill="none"/>
+    <!-- Chamfer 2x45° at front -->
+    <line x1="80" y1="65" x2="86" y2="71" stroke="#f8fafc" stroke-width="2"/>
+    <line x1="80" y1="115" x2="86" y2="109" stroke="#f8fafc" stroke-width="2"/>
+
+    <!-- Dimension 1: Length 60 -->
+    <line x1="80" y1="115" x2="80" y2="145" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="180" y1="135" x2="180" y2="145" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="80" y1="140" x2="180" y2="140" stroke="#38bdf8" stroke-width="1.5"/>
+    <!-- Arrowheads -->
+    <polygon points="80,140 88,138 88,142" fill="#38bdf8"/>
+    <polygon points="180,140 172,138 172,142" fill="#38bdf8"/>
+    <text x="130" y="136" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="10" font-weight="bold">60</text>
+
+    <!-- Dimension 2: Length 120 -->
+    <line x1="320" y1="135" x2="320" y2="145" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="180" y1="140" x2="320" y2="140" stroke="#38bdf8" stroke-width="1.5"/>
+    <polygon points="180,140 188,138 188,142" fill="#38bdf8"/>
+    <polygon points="320,140 312,138 312,142" fill="#38bdf8"/>
+    <text x="250" y="136" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="10" font-weight="bold">120</text>
+
+    <!-- Total Length 270 (Chain dimension) -->
+    <line x1="440" y1="122" x2="440" y2="165" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="80" y1="145" x2="80" y2="165" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="80" y1="160" x2="440" y2="160" stroke="#f59e0b" stroke-width="1.5"/>
+    <polygon points="80,160 88,158 88,162" fill="#f59e0b"/>
+    <polygon points="440,160 432,158 432,162" fill="#f59e0b"/>
+    <text x="260" y="156" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="10" font-weight="bold">270 (Panjang Total)</text>
+
+    <!-- Vertical Diameter Dimension: Ø 45 -->
+    <line x1="180" y1="45" x2="160" y2="45" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="180" y1="135" x2="160" y2="135" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="165" y1="45" x2="165" y2="135" stroke="#10b981" stroke-width="1.5"/>
+    <polygon points="165,45 163,53 167,53" fill="#10b981"/>
+    <polygon points="165,135 163,127 167,127" fill="#10b981"/>
+    <text x="160" y="94" text-anchor="end" fill="#10b981" font-family="sans-serif" font-size="10" font-weight="bold">&#8960; 45</text>
+
+    <!-- Diameter Dimension: Ø 32 -->
+    <line x1="440" y1="58" x2="460" y2="58" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="440" y1="122" x2="460" y2="122" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="455" y1="58" x2="455" y2="122" stroke="#10b981" stroke-width="1.5"/>
+    <polygon points="455,58 453,66 457,66" fill="#10b981"/>
+    <polygon points="455,122 453,114 457,114" fill="#10b981"/>
+    <text x="465" y="94" fill="#10b981" font-family="sans-serif" font-size="10" font-weight="bold">&#8960; 32</text>
+
+    <!-- Radius Dimension: R3 -->
+    <line x1="178" y1="58" x2="205" y2="25" stroke="#ec4899" stroke-width="1.5"/>
+    <polygon points="178,58 183,52 186,56" fill="#ec4899"/>
+    <text x="210" y="24" fill="#ec4899" font-family="sans-serif" font-size="9" font-weight="bold">R3 (Radius)</text>
+
+    <!-- Chamfer Leader -->
+    <line x1="83" y1="68" x2="50" y2="38" stroke="#a855f7" stroke-width="1.5"/>
+    <line x1="50" y1="38" x2="20" y2="38" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="22" y="32" fill="#a855f7" font-family="sans-serif" font-size="9" font-weight="bold">2 × 45°</text>
+
+    <!-- Legend box -->
+    <rect x="470" y="15" width="135" height="55" rx="4" fill="#0f172a" stroke="#475569"/>
+    <text x="478" y="28" fill="#38bdf8" font-family="sans-serif" font-size="8">&#8226; Garis Ukur: Tipis kontinu</text>
+    <text x="478" y="41" fill="#10b981" font-family="sans-serif" font-size="8">&#8226; Simbol &#8960;: Diameter lingkar</text>
+    <text x="478" y="54" fill="#f59e0b" font-family="sans-serif" font-size="8">&#8226; Angka: Di atas garis sejajar</text>
+  </g>
+</svg>

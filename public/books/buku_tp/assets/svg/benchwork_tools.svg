@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">RAGAM PERKAKAS TANGAN KERJA BANGKU (BENCHWORK TOOLS)</text>
+
+  <!-- 4 Items: Ragum Meja, Gergaji Besi, Kikir Baja, Penitik Pusat -->
+  <!-- 1. Ragum Meja (Bench Vise) -->
+  <g transform="translate(25, 38)">
+    <rect width="145" height="175" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+    <rect x="35" y="90" width="75" height="20" rx="2" fill="#475569" stroke="#94a3b8"/>
+    <rect x="45" y="50" width="25" height="40" rx="2" fill="#64748b" stroke="#cbd5e1"/>
+    <rect x="75" y="50" width="25" height="40" rx="2" fill="#38bdf8" stroke="#cbd5e1"/>
+    <!-- Spindle handle -->
+    <line x1="115" y1="70" x2="135" y2="70" stroke="#94a3b8" stroke-width="4"/>
+    <circle cx="135" cy="70" r="5" fill="#cbd5e1"/>
+    <!-- Base mount -->
+    <path d="M 30 110 L 115 110 L 125 125 L 20 125 Z" fill="#334155" stroke="#64748b"/>
+    <text x="72" y="145" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Ragum Meja</text>
+    <text x="72" y="160" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="9">Bench Vise Rahang Baja</text>
+    <text x="72" y="173" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Mencekam benda kerja kokoh</text>
+  </g>
+
+  <!-- 2. Gergaji Besi (Hacksaw) -->
+  <g transform="translate(190, 38)">
+    <rect width="145" height="175" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.2"/>
+    <!-- Hacksaw frame -->
+    <path d="M 25 100 L 25 55 Q 25 45 35 45 L 115 45 Q 125 45 125 65 L 125 100" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+    <!-- Blade -->
+    <line x1="25" y1="98" x2="125" y2="98" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="2 1"/>
+    <!-- Handle -->
+    <path d="M 125 65 C 135 70 135 95 125 105 Z" fill="#b45309" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="72" y="145" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Gergaji Besi</text>
+    <text x="72" y="160" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="9">Hacksaw Daun HSS</text>
+    <text x="72" y="173" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Pemotongan profil &amp; batang</text>
+  </g>
+
+  <!-- 3. Kikir Presisi (Steel File) -->
+  <g transform="translate(355, 38)">
+    <rect width="145" height="175" rx="6" fill="#1e293b" stroke="#10b981" stroke-width="1.2"/>
+    <!-- File handle &amp; blade -->
+    <path d="M 25 72 L 55 72 L 55 68 L 25 68 Z" fill="#d97706" stroke="#b45309" rx="2"/>
+    <rect x="55" y="66" width="75" height="8" fill="#94a3b8" stroke="#cbd5e1"/>
+    <!-- Teeth pattern -->
+    <line x1="65" y1="66" x2="70" y2="74" stroke="#475569" stroke-width="1"/>
+    <line x1="75" y1="66" x2="80" y2="74" stroke="#475569" stroke-width="1"/>
+    <line x1="85" y1="66" x2="90" y2="74" stroke="#475569" stroke-width="1"/>
+    <line x1="95" y1="66" x2="100" y2="74" stroke="#475569" stroke-width="1"/>
+    <line x1="105" y1="66" x2="110" y2="74" stroke="#475569" stroke-width="1"/>
+    <line x1="115" y1="66" x2="120" y2="74" stroke="#475569" stroke-width="1"/>
+    <text x="72" y="145" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Kikir Baja</text>
+    <text x="72" y="160" text-anchor="middle" fill="#10b981" font-family="sans-serif" font-size="9">Plat, Segitiga, Bulat</text>
+    <text x="72" y="173" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Perataan &amp; finishing bidang</text>
+  </g>
+
+  <!-- 4. Penitik &amp; Penggores (Scriber &amp; Punch) -->
+  <g transform="translate(520, 38)">
+    <rect width="145" height="175" rx="6" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.2"/>
+    <!-- Center punch -->
+    <polygon points="45,55 55,55 52,105 48,105 45,55" fill="#64748b" stroke="#a78bfa" stroke-width="1"/>
+    <polygon points="48,105 52,105 50,115" fill="#cbd5e1" stroke="#a78bfa"/>
+    <!-- Scriber -->
+    <line x1="85" y1="45" x2="105" y2="115" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+    <polygon points="105,115 107,120 102,118" fill="#38bdf8"/>
+    <text x="72" y="145" text-anchor="middle" fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold">Penitik &amp; Penggores</text>
+    <text x="72" y="160" text-anchor="middle" fill="#8b5cf6" font-family="sans-serif" font-size="9">Center Punch &amp; Scriber</text>
+    <text x="72" y="173" text-anchor="middle" fill="#94a3b8" font-family="sans-serif" font-size="8">Penandaan sumbu bor presisi</text>
+  </g>
+</svg>

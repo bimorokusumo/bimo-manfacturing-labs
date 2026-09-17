@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 320" width="100%" height="100%">
+  <rect width="850" height="320" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="425" y="28" text-anchor="middle" fill="#0f172a" font-family="sans-serif" font-size="16" font-weight="bold">BAGIAN-BAGIAN UTAMA MESIN BUBUT KONVENSIONAL (LATHE)</text>
+
+  <!-- Machine Base &amp; Bed -->
+  <rect x="100" y="230" width="650" height="45" rx="4" fill="#334155"/>
+  <rect x="140" y="275" width="100" height="30" rx="4" fill="#1e293b"/>
+  <rect x="610" y="275" width="100" height="30" rx="4" fill="#1e293b"/>
+  <text x="425" y="258" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="bold">Alas Mesin (Bed Machine) - Penumpu Presisi</text>
+
+  <!-- Headstock (Kepala Tetap) -->
+  <rect x="100" y="80" width="180" height="150" rx="6" fill="#1e3a8a" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="190" y="110" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">Kepala Tetap</text>
+  <text x="190" y="128" text-anchor="middle" fill="#93c5fd" font-family="sans-serif" font-size="11">(Headstock)</text>
+  <text x="190" y="155" text-anchor="middle" fill="#e0e7ff" font-family="sans-serif" font-size="11">Gearbox &amp; Motor</text>
+  <text x="190" y="175" text-anchor="middle" fill="#e0e7ff" font-family="sans-serif" font-size="11">Spindle Utama</text>
+
+  <!-- Chuck (Cekam) -->
+  <rect x="280" y="110" width="35" height="90" rx="4" fill="#475569" stroke="#0f172a" stroke-width="1.5"/>
+  <rect x="315" y="135" width="140" height="30" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/>
+  <text x="385" y="154" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="11" font-weight="bold">Benda Kerja</text>
+
+  <!-- Carriage / Eretan &amp; Tool Post -->
+  <rect x="440" y="145" width="120" height="85" rx="4" fill="#0284c7"/>
+  <rect x="470" y="95" width="55" height="50" rx="3" fill="#f59e0b" stroke="#b45309" stroke-width="2"/>
+  <!-- Cutting tool -->
+  <polygon points="455,140 475,135 475,145" fill="#1e293b"/>
+  <text x="500" y="80" text-anchor="middle" fill="#b45309" font-family="sans-serif" font-size="12" font-weight="bold">Tool Post (Pahat)</text>
+  <text x="500" y="190" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="13" font-weight="bold">Eretan (Carriage)</text>
+  <text x="500" y="208" text-anchor="middle" fill="#e0f2fe" font-family="sans-serif" font-size="10">Memanjang &amp; Melintang</text>
+
+  <!-- Tailstock (Kepala Lepas) -->
+  <rect x="610" y="100" width="120" height="130" rx="6" fill="#0f766e" stroke="#115e59" stroke-width="2"/>
+  <rect x="570" y="145" width="40" height="18" rx="2" fill="#94a3b8"/>
+  <polygon points="555,154 570,147 570,161" fill="#475569"/>
+  <text x="670" y="130" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">Kepala Lepas</text>
+  <text x="670" y="148" text-anchor="middle" fill="#99f6e4" font-family="sans-serif" font-size="11">(Tailstock)</text>
+  <text x="670" y="175" text-anchor="middle" fill="#ccfbf1" font-family="sans-serif" font-size="11">Senter Putar &amp; Bor</text>
+
+  <!-- Lead Screw &amp; Feed Rod -->
+  <line x1="280" y1="245" x2="650" y2="245" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6 3"/>
+  <line x1="280" y1="255" x2="650" y2="255" stroke="#38bdf8" stroke-width="3"/>
+</svg>

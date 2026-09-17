@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" width="100%" height="100%">
+  <rect width="820" height="220" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="410" y="26" text-anchor="middle" fill="#0f172a" font-family="sans-serif" font-size="15" font-weight="bold">STANDAR SIMBOL PROYEKSI GAMBAR TEKNIK (ISO 5456-2)</text>
+
+  <!-- Kolom Kiri: Proyeksi Sudut Pertama (Eropa) -->
+  <g transform="translate(30, 45)">
+    <rect x="0" y="0" width="360" height="155" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <rect x="0" y="0" width="360" height="30" rx="8" fill="#2563eb"/>
+    <text x="180" y="20" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">PROYEKSI SUDUT PERTAMA (EROPA) — ISO E</text>
+    
+    <!-- Simbol Kerucut Terpancung -->
+    <!-- Kerucut sisi kiri -->
+    <polygon points="50,60 130,45 130,115 50,100" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+    <line x1="30" y1="80" x2="150" y2="80" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+    
+    <!-- Lingkaran tampak samping kanan -->
+    <circle cx="210" cy="80" r="35" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+    <circle cx="210" cy="80" r="20" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <line x1="160" y1="80" x2="260" y2="80" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+    <line x1="210" y1="35" x2="210" y2="125" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+
+    <text x="180" y="142" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="10" font-weight="bold">Letak Pandangan: Benda di antara Pengamat &amp; Bidang</text>
+  </g>
+
+  <!-- Kolom Kanan: Proyeksi Sudut Ketiga (Amerika) -->
+  <g transform="translate(430, 45)">
+    <rect x="0" y="0" width="360" height="155" rx="8" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+    <rect x="0" y="0" width="360" height="30" rx="8" fill="#059669"/>
+    <text x="180" y="20" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="12" font-weight="bold">PROYEKSI SUDUT KETIGA (AMERIKA) — ISO A</text>
+
+    <!-- Lingkaran tampak samping kiri -->
+    <circle cx="90" cy="80" r="35" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+    <circle cx="90" cy="80" r="20" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <line x1="40" y1="80" x2="140" y2="80" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+    <line x1="90" y1="35" x2="90" y2="125" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+
+    <!-- Kerucut sisi kanan -->
+    <polygon points="170,45 250,60 250,100 170,115" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+    <line x1="150" y1="80" x2="270" y2="80" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 3"/>
+
+    <text x="180" y="142" text-anchor="middle" fill="#475569" font-family="sans-serif" font-size="10" font-weight="bold">Letak Pandangan: Bidang Proyeksi di antara Pengamat &amp; Benda</text>
+  </g>
+</svg>

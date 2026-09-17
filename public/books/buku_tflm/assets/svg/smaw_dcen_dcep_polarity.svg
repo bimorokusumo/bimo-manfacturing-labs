@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 260" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="540" height="260" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  
+  <!-- Header Bar -->
+  <rect x="0" y="0" width="540" height="32" rx="8" fill="#1e293b"/>
+  <rect x="0" y="24" width="540" height="8" fill="#1e293b"/>
+  <text x="270" y="21" fill="#38bdf8" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" letter-spacing="0.5">KARAKTERISTIK PENETRASI POLARITAS LAS SMAW: DCEN vs DCEP</text>
+
+  <!-- Left: DCEN (Direct Current Electrode Negative / Polaritas Lurus) -->
+  <g transform="translate(20, 45)">
+    <rect width="240" height="200" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Card Title -->
+    <rect x="0" y="0" width="240" height="26" rx="6" fill="#0284c7"/>
+    <rect x="0" y="18" width="240" height="8" fill="#0284c7"/>
+    <text x="120" y="17" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">DCEN (Direct Current Electrode Negative)</text>
+    
+    <!-- Polarity Labels -->
+    <text x="120" y="42" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle">Polaritas Lurus: Elektroda (-) • Benda Kerja (+)</text>
+
+    <!-- Electrode representation -->
+    <rect x="112" y="52" width="16" height="42" fill="#64748b" rx="1"/>
+    <line x1="120" y1="52" x2="120" y2="94" stroke="#94a3b8" stroke-width="2"/>
+    <!-- Arc plasma -->
+    <polygon points="112,94 128,94 134,108 106,108" fill="#f59e0b" opacity="0.85"/>
+    <polygon points="116,94 124,94 128,106 112,106" fill="#fef08a"/>
+
+    <!-- Base metal plate -->
+    <rect x="25" y="108" width="190" height="45" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/>
+    <!-- DCEN Shallow/Wide Penetration Profile -->
+    <path d="M 85 108 Q 120 126 155 108 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+    <!-- Weld bead crown -->
+    <path d="M 85 108 Q 120 98 155 108 Z" fill="#60a5fa" opacity="0.9"/>
+
+    <!-- Annotations -->
+    <text x="120" y="132" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Penetrasi Dangkal / Lebar</text>
+    
+    <rect x="15" y="162" width="210" height="30" rx="3" fill="#f0f9ff"/>
+    <text x="120" y="174" fill="#0369a1" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="600" text-anchor="middle">Kawat las mencair lebih cepat (70% panas di kawat)</text>
+    <text x="120" y="186" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="8" text-anchor="middle">Ideal untuk pelat tipis dan kecepatan lebur tinggi</text>
+  </g>
+
+  <!-- Right: DCEP (Direct Current Electrode Positive / Polaritas Balik) -->
+  <g transform="translate(280, 45)">
+    <rect width="240" height="200" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Card Title -->
+    <rect x="0" y="0" width="240" height="26" rx="6" fill="#dc2626"/>
+    <rect x="0" y="18" width="240" height="8" fill="#dc2626"/>
+    <text x="120" y="17" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">DCEP (Direct Current Electrode Positive)</text>
+    
+    <!-- Polarity Labels -->
+    <text x="120" y="42" fill="#b91c1c" font-family="'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="bold" text-anchor="middle">Polaritas Balik: Elektroda (+) • Benda Kerja (-)</text>
+
+    <!-- Electrode representation -->
+    <rect x="112" y="52" width="16" height="42" fill="#64748b" rx="1"/>
+    <line x1="120" y1="52" x2="120" y2="94" stroke="#94a3b8" stroke-width="2"/>
+    <!-- Arc plasma -->
+    <polygon points="112,94 128,94 136,108 104,108" fill="#f59e0b" opacity="0.85"/>
+    <polygon points="116,94 124,94 129,106 111,106" fill="#fef08a"/>
+
+    <!-- Base metal plate -->
+    <rect x="25" y="108" width="190" height="45" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/>
+    <!-- DCEP Deep Penetration Profile into base metal -->
+    <path d="M 90 108 Q 120 144 150 108 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="1.5"/>
+    <!-- Weld bead crown -->
+    <path d="M 90 108 Q 120 96 150 108 Z" fill="#f87171" opacity="0.9"/>
+
+    <!-- Annotations -->
+    <text x="120" y="130" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="bold" text-anchor="middle">Penetrasi Sangat Dalam</text>
+    
+    <rect x="15" y="162" width="210" height="30" rx="3" fill="#fef2f2"/>
+    <text x="120" y="174" fill="#991b1b" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="600" text-anchor="middle">Panas terkonsentrasi di benda kerja (70% panas di pelat)</text>
+    <text x="120" y="186" fill="#64748b" font-family="'Segoe UI', Roboto, sans-serif" font-size="8" text-anchor="middle">Standar kampuh V tebal &amp; elektroda Low-Hydrogen E7018</text>
+  </g>
+</svg>

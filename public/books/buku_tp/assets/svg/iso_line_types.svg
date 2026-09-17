@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">STANDAR JENIS GARIS GAMBAR TEKNIK (ISO 128) &amp; FORMAT KERTAS</text>
+
+  <!-- Left: Table of Lines -->
+  <g transform="translate(25, 38)">
+    <rect width="420" height="175" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+    <!-- Headers -->
+    <text x="30" y="20" fill="#38bdf8" font-family="sans-serif" font-size="10" font-weight="bold">Jenis Garis</text>
+    <text x="150" y="20" fill="#38bdf8" font-family="sans-serif" font-size="10" font-weight="bold">Bentuk Garis</text>
+    <text x="320" y="20" fill="#38bdf8" font-family="sans-serif" font-size="10" font-weight="bold">Penggunaan Baku</text>
+    <line x1="15" y1="28" x2="405" y2="28" stroke="#334155" stroke-width="1"/>
+
+    <!-- Line 1: Tebal Kontinu -->
+    <text x="30" y="50" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Garis Tebal (0.7 mm)</text>
+    <line x1="130" y1="47" x2="240" y2="47" stroke="#f8fafc" stroke-width="3.5"/>
+    <text x="260" y="50" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Garis benda nyata / tepi terlihat</text>
+
+    <!-- Line 2: Tipis Kontinu -->
+    <text x="30" y="80" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Garis Tipis (0.35 mm)</text>
+    <line x1="130" y1="77" x2="240" y2="77" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="260" y="80" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Garis ukur, bantu, arsir penampang</text>
+
+    <!-- Line 3: Gores Tipis (Hidden) -->
+    <text x="30" y="110" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Garis Gores (Putus)</text>
+    <line x1="130" y1="107" x2="240" y2="107" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6 3"/>
+    <text x="260" y="110" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Garis benda terhalang / tak terlihat</text>
+
+    <!-- Line 4: Bergores Tipis (Center) -->
+    <text x="30" y="140" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Garis Sumbu (Strip-Titik)</text>
+    <line x1="130" y1="137" x2="240" y2="137" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="12 3 2 3"/>
+    <text x="260" y="140" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Garis sumbu simetri &amp; lintasan gerak</text>
+
+    <!-- Line 5: Potongan -->
+    <text x="30" y="165" fill="#f8fafc" font-family="sans-serif" font-size="9" font-weight="bold">Garis Potongan</text>
+    <line x1="130" y1="162" x2="150" y2="162" stroke="#10b981" stroke-width="3.5"/>
+    <line x1="150" y1="162" x2="220" y2="162" stroke="#10b981" stroke-width="1.5" stroke-dasharray="12 3 2 3"/>
+    <line x1="220" y1="162" x2="240" y2="162" stroke="#10b981" stroke-width="3.5"/>
+    <text x="260" y="165" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Jejak bidang pemotongan penampang</text>
+  </g>
+
+  <!-- Right: Kertas ISO 216 -->
+  <g transform="translate(460, 38)">
+    <rect width="215" height="175" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.2"/>
+    <text x="107" y="20" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="11" font-weight="bold">Standar Ukuran Kertas (ISO 216)</text>
+    <!-- Nested paper representation -->
+    <rect x="25" y="35" width="165" height="115" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    <text x="30" y="50" fill="#94a3b8" font-family="sans-serif" font-size="8">A2: 420 × 594 mm</text>
+    <line x1="107" y1="35" x2="107" y2="150" stroke="#475569" stroke-dasharray="2 2"/>
+    <text x="112" y="50" fill="#38bdf8" font-family="sans-serif" font-size="8">A3: 297 × 420 mm</text>
+    <line x1="107" y1="92" x2="190" y2="92" stroke="#475569" stroke-dasharray="2 2"/>
+    <text x="112" y="107" fill="#10b981" font-family="sans-serif" font-size="8" font-weight="bold">A4: 210 × 297 mm</text>
+    <text x="107" y="165" text-anchor="middle" fill="#cbd5e1" font-family="sans-serif" font-size="8.5">Rasio Luas 1:&#8730;2 Selalu Proporsional</text>
+  </g>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rev1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a5568"/><stop offset="100%" stop-color="#2b6cb0"/>
+    </linearGradient>
+    <linearGradient id="rev4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3182ce"/><stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="240" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <!-- Timeline Line -->
+  <line x1="80" y1="100" x2="820" y2="100" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
+  <line x1="80" y1="100" x2="650" y2="100" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- 1.0 -->
+  <g transform="translate(110,100)">
+    <circle cx="0" cy="0" r="26" fill="#64748b" stroke="#ffffff" stroke-width="4"/>
+    <text x="0" y="7" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">1.0</text>
+    <text x="0" y="-42" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="14" font-weight="bold">Tahun 1784</text>
+    <text x="0" y="46" text-anchor="middle" fill="#334155" font-family="sans-serif" font-size="13" font-weight="bold">Mekanisasi</text>
+    <text x="0" y="64" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Mesin Uap James Watt</text>
+    <text x="0" y="80" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Tenaga Air &amp; Mekanis</text>
+  </g>
+
+  <!-- 2.0 -->
+  <g transform="translate(320,100)">
+    <circle cx="0" cy="0" r="26" fill="#2563eb" stroke="#ffffff" stroke-width="4"/>
+    <text x="0" y="7" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">2.0</text>
+    <text x="0" y="-42" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="14" font-weight="bold">Tahun 1870</text>
+    <text x="0" y="46" text-anchor="middle" fill="#334155" font-family="sans-serif" font-size="13" font-weight="bold">Produksi Massal</text>
+    <text x="0" y="64" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Lini Ban Berjalan</text>
+    <text x="0" y="80" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Tenaga Listrik &amp; Perakitan</text>
+  </g>
+
+  <!-- 3.0 -->
+  <g transform="translate(540,100)">
+    <circle cx="0" cy="0" r="26" fill="#0284c7" stroke="#ffffff" stroke-width="4"/>
+    <text x="0" y="7" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">3.0</text>
+    <text x="0" y="-42" text-anchor="middle" fill="#1e293b" font-family="sans-serif" font-size="14" font-weight="bold">Tahun 1969</text>
+    <text x="0" y="46" text-anchor="middle" fill="#334155" font-family="sans-serif" font-size="13" font-weight="bold">Otomasi &amp; PLC</text>
+    <text x="0" y="64" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Komputer &amp; Elektronika</text>
+    <text x="0" y="80" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Mesin CNC Generasi Awal</text>
+  </g>
+
+  <!-- 4.0 -->
+  <g transform="translate(760,100)">
+    <circle cx="0" cy="0" r="30" fill="#0ea5e9" stroke="#f59e0b" stroke-width="4"/>
+    <text x="0" y="7" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="15" font-weight="bold">4.0</text>
+    <text x="0" y="-44" text-anchor="middle" fill="#0284c7" font-family="sans-serif" font-size="14" font-weight="bold">Kini &amp; Masa Depan</text>
+    <text x="0" y="48" text-anchor="middle" fill="#0f172a" font-family="sans-serif" font-size="13" font-weight="bold">Siber-Fisik &amp; AI</text>
+    <text x="0" y="66" text-anchor="middle" fill="#0369a1" font-family="sans-serif" font-size="11">IoT, Cloud, Big Data</text>
+    <text x="0" y="82" text-anchor="middle" fill="#d97706" font-family="sans-serif" font-size="11" font-weight="bold">Predictive Maintenance</text>
+  </g>
+</svg>

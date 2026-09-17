@@ -1,0 +1,960 @@
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap');
+
+:root {
+  /* VMLAB THEME - ELEGANT LIGHT */
+  --bg-game: #f8fafc; /* Light slate / off-white */
+  --bg-sidebar: #ffffff; /* Pure white */
+  --bg-card: #ffffff; /* Pure white */
+  --bg-card-light: #f1f5f9; /* Slate 100 */
+  
+  --game-primary: #f59e0b; /* Amber 500 */
+  --game-tp: #3b82f6; /* Blue 500 */
+  --game-tflm: #f59e0b; /* Amber 500 */
+  
+  --game-success: #10b981; /* Emerald 500 */
+  --game-warning: #f59e0b;
+  --game-danger: #ef4444; /* Red 500 */
+  
+  --text-main: #0f172a; /* Slate 900 (Dark text for white bg) */
+  --text-muted: #475569; /* Slate 600 */
+  --text-subtle: #64748b; /* Slate 500 */
+  
+  --border-light: rgba(0, 0, 0, 0.08); /* Dark border for light theme */
+  --border-glow-tp: rgba(59, 130, 246, 0.3);
+  --border-glow-tflm: rgba(245, 158, 11, 0.3);
+  
+  --radius-game: 12px;
+  --shadow-game: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1, h2, h3, h4, .cyber-font {
+  font-family: 'Chakra Petch', sans-serif;
+  text-transform: uppercase;
+}
+
+html, body {
+  background-color: var(--bg-game);
+  color: var(--text-main);
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+#root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Remove Scanlines to match clean VMLAB look */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* GAMIFIED CARDS (GLASSMORPHISM) */
+.game-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-game);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.game-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   DASHBOARD RESPONSIVE GRID & LAB CARDS SYSTEM
+   ========================================================================== */
+
+/* 1. STATS ROW GRID */
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1080px) and (min-height: 551px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 580px) and (min-height: 551px) {
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* 2. PILIH LAB CARDS GRID (EXPANDED TO FULL WIDTH - NO EMPTY SPACE) */
+.dashboard-labs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) and (min-height: 551px) {
+  .dashboard-labs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (max-width: 620px) and (min-height: 551px) {
+  .dashboard-labs-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.dashboard-lab-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+}
+
+.dashboard-lab-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+  border-color: #cbd5e1;
+}
+
+.dashboard-lab-card-img {
+  height: 145px;
+  position: relative;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.dashboard-lab-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.dashboard-lab-card:hover .dashboard-lab-card-img img {
+  transform: scale(1.08);
+}
+
+.dashboard-lab-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.dashboard-lab-card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.5px;
+  z-index: 2;
+}
+
+.dashboard-lab-card-body {
+  padding: 16px 16px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justifyContent: space-between;
+  gap: 10px;
+}
+
+.dashboard-lab-card-body h4 {
+  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.dashboard-lab-card-body p {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.dashboard-lab-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.dashboard-lab-card-tags span {
+  font-size: 0.66rem;
+  font-weight: 700;
+  background: #f8fafc;
+  color: #475569;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard-lab-card-footer {
+  display: flex;
+  align-items: center;
+  justifyContent: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 4px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.dashboard-lab-card-arrow {
+  font-size: 0.9rem;
+  font-weight: 900;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-lab-card:hover .dashboard-lab-card-arrow {
+  transform: translateX(4px);
+}
+
+/* 3. MIDDLE ROW GRID */
+.dashboard-middle-grid {
+  display: grid;
+  grid-template-columns: minmax(270px, 1fr) minmax(360px, 1.4fr) minmax(290px, 1.1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) and (min-height: 551px) {
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .dashboard-middle-grid > div:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 800px) and (min-height: 551px) {
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .dashboard-middle-grid > div:last-child {
+    grid-column: span 1;
+  }
+}
+
+/* 4. PROGRESS GRID */
+.dashboard-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1100px) and (min-height: 551px) {
+  .dashboard-progress-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 580px) and (min-height: 551px) {
+  .dashboard-progress-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* 5. WELDING ROADMAP */
+.dashboard-welding-flow {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dashboard-welding-steps {
+  display: flex;
+  justifyContent: space-between;
+  align-items: flex-start;
+  position: relative;
+  min-width: 680px;
+  padding: 10px 0;
+}
+
+.game-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 45px 0 rgba(0, 225, 255, 0.25);
+  border-color: var(--game-primary);
+}
+
+/* SHAKE ANIMATION FOR ERRORS */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px) rotate(-1deg); }
+  50% { transform: translateX(8px) rotate(1deg); }
+  75% { transform: translateX(-8px) rotate(-1deg); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+  border-color: var(--game-danger) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.5) !important;
+}
+
+/* BUTTONS */
+.btn-game {
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-game::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: all 0.4s ease;
+}
+
+.btn-game:hover::before {
+  left: 100%;
+}
+
+.btn-game:hover {
+  transform: translateY(-2px);
+}
+
+.btn-game:active {
+  transform: translateY(2px);
+}
+
+.btn-game-tp {
+  background: var(--game-tp);
+  color: white;
+  border-color: var(--game-tp);
+}
+.btn-game-tp:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-game-tflm {
+  background: var(--game-tflm);
+  color: #fff;
+  border-color: var(--game-tflm);
+}
+.btn-game-tflm:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.btn-game-success {
+  background: rgba(0, 255, 102, 0.1);
+  color: var(--game-success);
+  border-color: var(--game-success);
+  box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+}
+
+.btn-game-neutral {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+}
+.btn-game-neutral:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* REFLECTION / FEEDBACK BOX (HOLOGRAM STYLE) */
+.reflection-box {
+  background: rgba(255, 0, 60, 0.05);
+  border: 1px solid var(--game-danger);
+  border-left: 4px solid var(--game-danger);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 15px rgba(255, 0, 60, 0.15);
+}
+
+.reflection-box-success {
+  background: rgba(0, 255, 102, 0.05);
+  border: 1px solid var(--game-success);
+  border-left: 4px solid var(--game-success);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.15);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* BADGES */
+.game-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.badge-blue { background: rgba(0, 225, 255, 0.15); color: var(--game-tp); border: 1px solid var(--game-tp); }
+.badge-orange { background: rgba(255, 94, 0, 0.15); color: var(--game-tflm); border: 1px solid var(--game-tflm); }
+.badge-green { background: rgba(0, 255, 102, 0.15); color: var(--game-success); border: 1px solid var(--game-success); }
+.badge-purple { background: rgba(188, 19, 254, 0.15); color: #bc13fe; border: 1px solid #bc13fe; }
+
+/* UTILITIES */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+
+/* METROLOGY & ALAT UKUR PRESISI RESPONSIVE SYSTEM */
+.metrology-lab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .metrology-lab-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.metrology-svg-container {
+  width: 100%;
+  max-width: 100%;
+  background: #090e18;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  padding: 20px 14px;
+  display: flex;
+  justifyContent: center;
+  align-items: center;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.metrology-svg-container svg {
+  width: 100%;
+  max-width: 860px;
+  height: auto;
+  display: block;
+}
+
+.metrology-cards-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.metrology-cards-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   MOBILE LANDSCAPE (HP MODE LANDSCAPE) RESPONSIVE SYSTEM
+   Target: Smartphone in landscape orientation (Viewport height <= 550px)
+   ========================================================================== */
+
+/* Drawer backdrop default (hidden on desktop) */
+.app-sidebar-backdrop {
+  display: none;
+}
+
+@media screen and (orientation: landscape) and (max-height: 550px),
+       screen and (max-width: 950px) and (max-height: 550px) {
+
+  /* 1. Global Shell & Layout */
+  html, body {
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .app-sidebar-backdrop {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    z-index: 99 !important;
+  }
+
+  .app-main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  .app-header {
+    height: 44px !important;
+    padding: 0 12px !important;
+    background: #ffffff !important;
+  }
+
+  .app-header-title {
+    font-size: 0.92rem !important;
+  }
+
+  .app-header-subtitle {
+    display: none !important;
+  }
+
+  .app-header-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .app-header-user-text {
+    font-size: 0.72rem !important;
+  }
+
+  .app-header-class-text {
+    display: none !important;
+  }
+
+  .app-main-body {
+    padding: 8px 10px !important;
+  }
+
+  .app-sound-toggle-btn {
+    bottom: 10px !important;
+    right: 10px !important;
+    transform: scale(0.75) !important;
+    transform-origin: bottom right !important;
+  }
+
+  /* 2. Sidebar Drawer in Landscape */
+  .sidebar-container {
+    width: 220px !important;
+    z-index: 100 !important;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .sidebar-brand {
+    padding: 10px 14px !important;
+  }
+
+  .sidebar-brand-title {
+    font-size: 1.15rem !important;
+  }
+
+  .sidebar-menu-list {
+    padding: 6px !important;
+    gap: 2px !important;
+  }
+
+  .sidebar-menu-btn {
+    padding: 6px 10px !important;
+    font-size: 0.76rem !important;
+    gap: 8px !important;
+  }
+
+  .sidebar-menu-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .sidebar-footer {
+    padding: 8px 12px !important;
+  }
+
+  /* 3. Dashboard in Landscape */
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .dashboard-stats-grid .dashboard-card {
+    padding: 8px 12px !important;
+    gap: 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .dashboard-stats-grid .stat-value {
+    font-size: 1.25rem !important;
+  }
+
+  .dashboard-stats-grid .stat-label {
+    font-size: 0.62rem !important;
+  }
+
+  .dashboard-labs-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-lab-card {
+    border-radius: 10px !important;
+  }
+
+  .dashboard-lab-card-img {
+    height: 84px !important;
+  }
+
+  .dashboard-lab-card-badge {
+    top: 6px !important;
+    right: 6px !important;
+    font-size: 0.55rem !important;
+    padding: 2px 5px !important;
+  }
+
+  .dashboard-lab-card-body {
+    padding: 8px 10px !important;
+    gap: 4px !important;
+  }
+
+  .dashboard-lab-card-body h4 {
+    font-size: 0.8rem !important;
+    margin-bottom: 2px !important;
+    line-height: 1.15 !important;
+  }
+
+  .dashboard-lab-card-body p {
+    font-size: 0.64rem !important;
+    line-height: 1.25 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard-lab-card-tags {
+    display: none !important;
+  }
+
+  .dashboard-lab-card-footer {
+    padding-top: 4px !important;
+    margin-top: 2px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .dashboard-middle-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .dashboard-middle-grid > div:last-child {
+    grid-column: span 2 !important;
+  }
+
+  .dashboard-progress-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-welding-flow {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 6px !important;
+  }
+
+  .dashboard-welding-steps {
+    min-width: 620px !important;
+  }
+
+  /* 4. Cutting Tools Lab (Alat Pemotong) in Landscape */
+  .cutting-tools-header {
+    padding: 6px 12px !important;
+    gap: 6px !important;
+  }
+
+  .cutting-tools-header-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.1rem !important;
+    border-radius: 8px !important;
+  }
+
+  .cutting-tools-title {
+    font-size: 0.88rem !important;
+  }
+
+  .cutting-tools-subtitle {
+    display: none !important;
+  }
+
+  .cutting-tools-tabs {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+    padding: 2px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .cutting-tools-tab-btn {
+    padding: 4px 8px !important;
+    font-size: 0.68rem !important;
+    white-space: nowrap !important;
+  }
+
+  .cutting-tools-sidebar {
+    width: 195px !important;
+    min-width: 180px !important;
+  }
+
+  .cutting-tools-sidebar-filter {
+    padding: 6px 8px !important;
+  }
+
+  .cutting-tools-tool-item {
+    padding: 6px 8px !important;
+    margin-bottom: 4px !important;
+    gap: 8px !important;
+  }
+
+  .cutting-tools-thumb {
+    width: 42px !important;
+    height: 32px !important;
+  }
+
+  .cutting-tools-tool-name {
+    font-size: 0.72rem !important;
+  }
+
+  .cutting-tools-tool-eng {
+    font-size: 0.58rem !important;
+  }
+
+  .cutting-tools-main {
+    padding: 10px 12px !important;
+    gap: 12px !important;
+  }
+
+  .cutting-tools-photo-grid {
+    grid-template-columns: 1.15fr 1fr !important;
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  .cutting-tools-photo-box {
+    min-height: 180px !important;
+    max-height: 230px !important;
+  }
+
+  .cutting-tools-photo-img {
+    max-height: 220px !important;
+  }
+
+  .cutting-tools-anatomy-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .cutting-tools-spec-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .lightbox-img {
+    max-height: 65vh !important;
+  }
+
+  /* 5. 3D Simulators & Canvas Containers in Landscape */
+  canvas {
+    touch-action: none !important;
+  }
+}
+
+/* =============================================================================
+   ACCESSIBILITY & INCLUSION STYLES (WCAG 2.1 AAA & UDL SUPPORT)
+   ============================================================================= */
+
+/* 1. Font Size Scaling */
+html.a11y-font-large body {
+  font-size: 112% !important;
+}
+
+html.a11y-font-large p, 
+html.a11y-font-large span, 
+html.a11y-font-large button,
+html.a11y-font-large div {
+  line-height: 1.6 !important;
+}
+
+html.a11y-font-xlarge body {
+  font-size: 125% !important;
+}
+
+html.a11y-font-xlarge p, 
+html.a11y-font-xlarge span, 
+html.a11y-font-xlarge button,
+html.a11y-font-xlarge div {
+  line-height: 1.75 !important;
+}
+
+/* 2. Dyslexia-Friendly Font & Letter Spacing (Lexend) */
+html.a11y-dyslexic * {
+  font-family: 'Lexend', sans-serif !important;
+  letter-spacing: 0.045em !important;
+  word-spacing: 0.08em !important;
+}
+
+html.a11y-dyslexic p,
+html.a11y-dyslexic li,
+html.a11y-dyslexic span {
+  line-height: 1.8 !important;
+}
+
+/* 3. High Contrast Mode (Low Vision) */
+html.a11y-high-contrast {
+  --bg-game: #000000 !important;
+  --bg-sidebar: #050505 !important;
+  --bg-card: #0a0a0a !important;
+  --bg-card-light: #151515 !important;
+  --text-main: #ffffff !important;
+  --text-muted: #e2e8f0 !important;
+  --text-subtle: #cbd5e1 !important;
+  --border-light: #475569 !important;
+}
+
+html.a11y-high-contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.a11y-high-contrast button,
+html.a11y-high-contrast .dashboard-lab-card,
+html.a11y-high-contrast .dashboard-card {
+  border: 1.5px solid #ffffff !important;
+}
+
+/* 4. Reduced Motion */
+html.a11y-reduced-motion *,
+html.a11y-reduced-motion *::before,
+html.a11y-reduced-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* 5. Sound Wave Animation for Active Narration Indicator */
+.sound-wave-bar {
+  display: inline-block;
+  width: 3px;
+  background: #f59e0b;
+  border-radius: 2px;
+  animation: soundWave 1.2s ease-in-out infinite;
+}
+
+.sound-wave-bar.bar-1 {
+  height: 8px;
+  animation-delay: 0.1s;
+}
+
+.sound-wave-bar.bar-2 {
+  height: 14px;
+  animation-delay: 0.3s;
+}
+
+.sound-wave-bar.bar-3 {
+  height: 10px;
+  animation-delay: 0.2s;
+}
+
+@keyframes soundWave {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+}
+
+/* Mobile hide label on a11y widget if screen is tiny */
+@media (max-width: 600px) {
+  .a11y-widget-label {
+    display: none;
+  }
+}
+

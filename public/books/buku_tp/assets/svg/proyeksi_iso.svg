@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 200" width="100%" height="100%">
+  <rect width="750" height="200" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="375" y="26" text-anchor="middle" fill="#0f172a" font-family="sans-serif" font-size="15" font-weight="bold">SIMBOL RESMI STANDAR ISO: PROYEKSI EROPA VS AMERIKA</text>
+
+  <!-- Proyeksi Eropa (Sudut Pertama) -->
+  <g transform="translate(50, 45)">
+    <rect x="0" y="0" width="300" height="135" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="150" y="25" text-anchor="middle" fill="#1d4ed8" font-family="sans-serif" font-size="13" font-weight="bold">PROYEKSI EROPA (Sudut Pertama)</text>
+    <!-- Truncated cone -->
+    <polygon points="40,55 40,95 85,85 85,65" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <!-- Center line -->
+    <line x1="25" y1="75" x2="170" y2="75" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 2 2 2"/>
+    <line x1="135" y1="45" x2="135" y2="105" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 2 2 2"/>
+    <!-- Circles -->
+    <circle cx="135" cy="75" r="10" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <circle cx="135" cy="75" r="20" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <text x="150" y="122" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Pandangan Kanan diletakkan di Kiri</text>
+  </g>
+
+  <!-- Proyeksi Amerika (Sudut Ketiga) -->
+  <g transform="translate(400, 45)">
+    <rect x="0" y="0" width="300" height="135" rx="8" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+    <text x="150" y="25" text-anchor="middle" fill="#059669" font-family="sans-serif" font-size="13" font-weight="bold">PROYEKSI AMERIKA (Sudut Ketiga)</text>
+    <!-- Circles first -->
+    <line x1="30" y1="75" x2="175" y2="75" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 2 2 2"/>
+    <line x1="65" y1="45" x2="65" y2="105" stroke="#dc2626" stroke-width="1" stroke-dasharray="6 2 2 2"/>
+    <circle cx="65" cy="75" r="10" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <circle cx="65" cy="75" r="20" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <!-- Truncated cone -->
+    <polygon points="115,65 115,85 160,95 160,55" fill="none" stroke="#1e293b" stroke-width="2"/>
+    <text x="150" y="122" text-anchor="middle" fill="#64748b" font-family="sans-serif" font-size="11">Pandangan Kanan diletakkan di Kanan</text>
+  </g>
+</svg>

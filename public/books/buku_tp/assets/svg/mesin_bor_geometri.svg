@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 230" width="100%" height="100%">
+  <rect width="700" height="230" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <text x="350" y="24" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="bold" letter-spacing="0.5">ANATOMI MESIN BOR TIANG &amp; GEOMETRI MATA BOR (TWIST DRILL)</text>
+
+  <!-- Left: Mesin Bor Tiang (Pillar Drill) -->
+  <g transform="translate(25, 38)">
+    <rect width="310" height="175" rx="6" fill="#1e293b" stroke="#0284c7" stroke-width="1.2"/>
+    <text x="155" y="20" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="bold">Mesin Bor Tiang (Pillar Drill Press)</text>
+    <!-- Base -->
+    <rect x="35" y="145" width="80" height="15" rx="2" fill="#334155" stroke="#64748b"/>
+    <!-- Column -->
+    <rect x="55" y="40" width="14" height="110" fill="#64748b" stroke="#94a3b8"/>
+    <!-- Table -->
+    <rect x="45" y="95" width="65" height="10" rx="2" fill="#475569" stroke="#cbd5e1"/>
+    <rect x="60" y="105" width="35" height="8" fill="#334155"/>
+    <!-- Head / Motor box -->
+    <rect x="45" y="35" width="85" height="30" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+    <!-- Spindle &amp; Chuck -->
+    <rect x="100" y="65" width="8" height="15" fill="#94a3b8"/>
+    <polygon points="98,80 110,80 106,90 102,90" fill="#cbd5e1" stroke="#475569"/>
+    <!-- Drill bit -->
+    <line x1="104" y1="90" x2="104" y2="105" stroke="#f59e0b" stroke-width="2"/>
+    <!-- Feed handle -->
+    <circle cx="88" cy="52" r="5" fill="#f8fafc"/>
+    <line x1="88" y1="52" x2="75" y2="65" stroke="#f8fafc" stroke-width="2"/>
+    <!-- Labels -->
+    <text x="145" y="45" fill="#cbd5e1" font-family="sans-serif" font-size="9">1. Headstock / Sabuk Bertingkat</text>
+    <text x="145" y="65" fill="#cbd5e1" font-family="sans-serif" font-size="9">2. Handel Penekan (Feed)</text>
+    <text x="145" y="85" fill="#cbd5e1" font-family="sans-serif" font-size="9">3. Cekam Bor (Drill Chuck)</text>
+    <text x="145" y="105" fill="#cbd5e1" font-family="sans-serif" font-size="9">4. Meja Kerja Berpenjepit</text>
+    <text x="145" y="125" fill="#cbd5e1" font-family="sans-serif" font-size="9">5. Kolom Tiang Baja Utama</text>
+    <text x="145" y="145" fill="#cbd5e1" font-family="sans-serif" font-size="9">6. Base Alas Penumpu</text>
+  </g>
+
+  <!-- Right: Geometri Mata Bor Twist Drill -->
+  <g transform="translate(355, 38)">
+    <rect width="320" height="175" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.2"/>
+    <text x="160" y="20" text-anchor="middle" fill="#f59e0b" font-family="sans-serif" font-size="11" font-weight="bold">Geometri Mata Bor Spiral (Twist Drill)</text>
+    <!-- Twist drill illustration -->
+    <g transform="translate(30, 40)">
+      <!-- Shank -->
+      <rect x="10" y="10" width="60" height="18" fill="#64748b" stroke="#94a3b8"/>
+      <!-- Body with flutes -->
+      <rect x="70" y="10" width="80" height="18" fill="#475569" stroke="#cbd5e1"/>
+      <path d="M 70 10 Q 80 19 90 10 Q 100 1 110 10 Q 120 19 130 10 Q 140 1 150 10" fill="none" stroke="#38bdf8" stroke-width="2"/>
+      <path d="M 70 28 Q 80 19 90 28 Q 100 37 110 28 Q 120 19 130 28 Q 140 37 150 28" fill="none" stroke="#38bdf8" stroke-width="2"/>
+      <!-- Point Angle -->
+      <polygon points="150,10 168,19 150,28" fill="#f59e0b" stroke="#d97706"/>
+      <!-- Angle callout -->
+      <path d="M 148 6 A 15 15 0 0 1 148 32" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <text x="180" y="23" fill="#ef4444" font-family="sans-serif" font-size="10" font-weight="bold">118°</text>
+    </g>
+    <!-- Labels -->
+    <text x="20" y="90" fill="#cbd5e1" font-family="sans-serif" font-size="9"><tspan fill="#f59e0b" font-weight="bold">• Sudut Ujung (Point Angle):</tspan> 118° standar baja umum</text>
+    <text x="20" y="108" fill="#cbd5e1" font-family="sans-serif" font-size="9"><tspan fill="#38bdf8" font-weight="bold">• Alur Spiral (Flute):</tspan> Mengalirkan tatal keluar &amp; pendingin</text>
+    <text x="20" y="126" fill="#cbd5e1" font-family="sans-serif" font-size="9"><tspan fill="#10b981" font-weight="bold">• Bibir Potong (Cutting Lip):</tspan> Menyayat logam seragam</text>
+    <text x="20" y="144" fill="#cbd5e1" font-family="sans-serif" font-size="9"><tspan fill="#e2e8f0" font-weight="bold">• Tangkai (Shank):</tspan> Lurus (Straight) / Tirus Morse (Taper)</text>
+  </g>
+</svg>

@@ -592,32 +592,149 @@ const InteractivePart = ({ data, onSelect, isActive, children, labelOffset = [0,
 };
 
 // ==========================================
+// ==========================================
 // 3D MESIN BUBUT REALISTIS (OBJ KNUTH V28)
 // ==========================================
+const LatheFallback = () => (
+  <group position={[0, 0, 0]}>
+    {/* Base Stand & Chip Pan */}
+    <mesh castShadow position={[0, 0.4, 0]}>
+      <boxGeometry args={[4.2, 0.8, 1.4]} />
+      <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
+    </mesh>
+    {/* Bed & Slideways */}
+    <mesh castShadow position={[0, 1.1, 0]}>
+      <boxGeometry args={[4.0, 0.5, 0.9]} />
+      <meshStandardMaterial color="#e2e8f0" metalness={0.85} roughness={0.2} />
+    </mesh>
+    {/* Headstock */}
+    <mesh castShadow position={[-1.4, 1.8, 0]}>
+      <boxGeometry args={[1.1, 0.9, 0.9]} />
+      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
+    </mesh>
+    {/* Chuck */}
+    <mesh castShadow position={[-0.65, 1.8, 0.05]} rotation={[0, 0, Math.PI / 2]}>
+      <cylinderGeometry args={[0.35, 0.35, 0.3, 32]} />
+      <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.15} />
+    </mesh>
+    {/* Carriage & Apron */}
+    <mesh castShadow position={[0.4, 1.5, 0.2]}>
+      <boxGeometry args={[0.9, 0.8, 1.0]} />
+      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
+    </mesh>
+    {/* Toolpost */}
+    <mesh castShadow position={[0.4, 2.05, 0.2]}>
+      <boxGeometry args={[0.35, 0.3, 0.35]} />
+      <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.25} />
+    </mesh>
+    {/* Tailstock */}
+    <mesh castShadow position={[1.5, 1.7, 0]}>
+      <boxGeometry args={[0.7, 0.7, 0.7]} />
+      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
+    </mesh>
+    {/* Leadscrew */}
+    <mesh castShadow position={[0.2, 1.2, 0.45]} rotation={[0, 0, Math.PI / 2]}>
+      <cylinderGeometry args={[0.035, 0.035, 3.2, 16]} />
+      <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.2} />
+    </mesh>
+  </group>
+);
+
+const LatheLoadingFallback = () => (
+  <group position={[0, 0, 0]}>
+    <Html position={[0, 2.7, 0]} center distanceFactor={14}>
+      <div
+        style={{
+          background: 'rgba(15, 23, 42, 0.95)',
+          color: '#ffffff',
+          padding: '10px 18px',
+          borderRadius: '12px',
+          border: '1.5px solid #38bdf8',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(10px)',
+          pointerEvents: 'none',
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '6px',
+          minWidth: '240px'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '12px', color: '#38bdf8' }}>
+          <span>⏳ Memuat Model Mesin Bubut Presisi...</span>
+        </div>
+        <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+          Sedang mengunduh model 3D HD (~21 MB), mohon tunggu...
+        </span>
+      </div>
+    </Html>
+    <LatheFallback />
+  </group>
+);
+
 class LatheErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
-  static getDerivedStateFromError() {
-    return { hasError: true };
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
   }
   componentDidCatch(err) {
     console.warn('Lathe model fallback active:', err);
   }
   render() {
     if (this.state.hasError) {
-      return <LatheFallback />;
+      return (
+        <group>
+          <Html position={[0, 2.7, 0]} center distanceFactor={14}>
+            <div
+              style={{
+                background: 'rgba(30, 41, 59, 0.95)',
+                color: '#ffffff',
+                padding: '8px 16px',
+                borderRadius: '10px',
+                border: '1.5px solid #f59e0b',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                backdropFilter: 'blur(8px)',
+                pointerEvents: 'none',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '3px',
+                minWidth: '220px'
+              }}
+            >
+              <div style={{ fontWeight: 700, fontSize: '12px', color: '#fbbf24' }}>
+                ⚠️ Mode Visual Cadangan Aktif
+              </div>
+              <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+                Mesin Bubut Standar (Mode Kompatibilitas)
+              </span>
+            </div>
+          </Html>
+          <LatheFallback />
+        </group>
+      );
     }
     return this.props.children;
   }
 }
 
 const RealisticLatheOBJ = () => {
-  const materials = useLoader(MTLLoader, '/Knuth v28.mtl');
-  const obj = useLoader(OBJLoader, '/Knuth v28.obj', (loader) => {
-    materials.preload();
-    loader.setMaterials(materials);
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const cleanBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+  const mtlUrl = `${cleanBase}Knuth_v28.mtl`;
+  const objUrl = `${cleanBase}Knuth_v28.obj`;
+
+  const materials = useLoader(MTLLoader, mtlUrl);
+  const obj = useLoader(OBJLoader, objUrl, (loader) => {
+    if (materials) {
+      materials.preload();
+      loader.setMaterials(materials);
+    }
   });
 
   useMemo(() => {
@@ -708,51 +825,6 @@ const RealisticLatheOBJ = () => {
     />
   );
 };
-
-const LatheFallback = () => (
-  <group position={[0, 0, 0]}>
-    {/* Base Stand & Chip Pan */}
-    <mesh castShadow position={[0, 0.4, 0]}>
-      <boxGeometry args={[4.2, 0.8, 1.4]} />
-      <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
-    </mesh>
-    {/* Bed & Slideways */}
-    <mesh castShadow position={[0, 1.1, 0]}>
-      <boxGeometry args={[4.0, 0.5, 0.9]} />
-      <meshStandardMaterial color="#e2e8f0" metalness={0.85} roughness={0.2} />
-    </mesh>
-    {/* Headstock */}
-    <mesh castShadow position={[-1.4, 1.8, 0]}>
-      <boxGeometry args={[1.1, 0.9, 0.9]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Chuck */}
-    <mesh castShadow position={[-0.65, 1.8, 0.05]} rotation={[0, 0, Math.PI / 2]}>
-      <cylinderGeometry args={[0.35, 0.35, 0.3, 32]} />
-      <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.15} />
-    </mesh>
-    {/* Carriage & Apron */}
-    <mesh castShadow position={[0.4, 1.5, 0.2]}>
-      <boxGeometry args={[0.9, 0.8, 1.0]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Toolpost */}
-    <mesh castShadow position={[0.4, 2.05, 0.2]}>
-      <boxGeometry args={[0.35, 0.3, 0.35]} />
-      <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.25} />
-    </mesh>
-    {/* Tailstock */}
-    <mesh castShadow position={[1.5, 1.7, 0]}>
-      <boxGeometry args={[0.7, 0.7, 0.7]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Leadscrew */}
-    <mesh castShadow position={[0.2, 1.2, 0.45]} rotation={[0, 0, Math.PI / 2]}>
-      <cylinderGeometry args={[0.035, 0.035, 3.2, 16]} />
-      <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.2} />
-    </mesh>
-  </group>
-);
 
 // ==========================================
 // 3D MESIN FRAIS INDUSTRI LENGKAP
@@ -2377,7 +2449,7 @@ const VirtualBengkel = () => {
             {/* 1. MESIN BUBUT REALISTIS & KOMPONEN KLIK LANGSUNG */}
             <group position={[-5.0, 0, 0]}>
               <LatheErrorBoundary>
-                <Suspense fallback={<LatheFallback />}>
+                <Suspense fallback={<LatheLoadingFallback />}>
                   <group
                     scale={[0.022, 0.022, 0.022]}
                     rotation={[-Math.PI / 2, 0, 0]}

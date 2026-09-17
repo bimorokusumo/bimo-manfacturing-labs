@@ -21,7 +21,7 @@ if (baseUrl && baseUrl !== '/') {
         url.startsWith('/icons.svg') ||
         url.startsWith('/Knuth')
       ) {
-        return cleanBase + url.slice(1);
+        return cleanBase + encodeURI(decodeURI(url.slice(1)));
       }
     }
     return url;

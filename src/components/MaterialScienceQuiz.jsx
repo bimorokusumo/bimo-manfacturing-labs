@@ -63,8 +63,10 @@ const MaterialScienceQuiz = () => {
         boxShadow: '0 0 30px rgba(0, 225, 255, 0.1)'
       }}>
         <img 
-          src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+          src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=65" 
           alt="Material Metal" 
+          loading="lazy"
+          decoding="async"
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.15, filter: 'grayscale(50%) contrast(150%)' }}
         />
         {/* GRID OVERLAY */}

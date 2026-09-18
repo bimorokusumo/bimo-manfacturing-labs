@@ -208,7 +208,7 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
           right: 0,
           width: '65%',
           height: '100%',
-          backgroundImage: 'url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80")', // Industrial machinery image
+          backgroundImage: 'url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=960&q=70")', // Industrial machinery image
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 0,

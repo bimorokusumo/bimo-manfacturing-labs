@@ -2,7 +2,7 @@ import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
 const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
-  const { student, isLoggedIn, openLoginModal } = useStudent();
+  const { student, isLoggedIn, openLoginModal, isTeacher } = useStudent();
 
   const handleLoginClick = () => {
     if (typeof onOpenLogin === 'function') {
@@ -165,28 +165,30 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
             </button>
           )}
 
-          <button
-            onClick={onOpenGradebook}
-            style={{ 
-              padding: '10px 22px', 
-              borderRadius: '8px', 
-              background: 'linear-gradient(135deg, #f59e0b, #d97706)', 
-              border: 'none', 
-              color: '#fff', 
-              fontWeight: 800, 
-              fontSize: '0.88rem', 
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)',
-              transition: 'transform 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-            onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-          >
-            <span>📊 Rekap Nilai Guru</span>
-          </button>
+          {isTeacher && (
+            <button
+              onClick={onOpenGradebook}
+              style={{ 
+                padding: '10px 22px', 
+                borderRadius: '8px', 
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)', 
+                border: 'none', 
+                color: '#fff', 
+                fontWeight: 800, 
+                fontSize: '0.88rem', 
+                cursor: 'pointer',
+                boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)',
+                transition: 'transform 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
+              onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+            >
+              <span>📊 Rekap Nilai Guru</span>
+            </button>
+          )}
         </div>
       </header>
 

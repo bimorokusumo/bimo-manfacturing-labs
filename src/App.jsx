@@ -24,7 +24,7 @@ import AccessibilityFloatingWidget from './components/AccessibilityFloatingWidge
 import LiveCaptionsOverlay from './components/LiveCaptionsOverlay';
 
 function AppInner() {
-  const { isLoggedIn, openLoginModal } = useStudent();
+  const { isLoggedIn, openLoginModal, isTeacher } = useStudent();
   const [isStarted, setIsStarted] = useState(false);
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [isSoundMuted, setIsSoundMuted] = useState(true);
@@ -144,7 +144,11 @@ function AppInner() {
       case 'evaluasi-c1':
         return <EvaluationView />;
       case 'gradebook':
-        return <TeacherGradebook />;
+        return isTeacher ? (
+          <TeacherGradebook />
+        ) : (
+          <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />
+        );
       default:
         return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
     }
@@ -162,8 +166,10 @@ function AppInner() {
             }
           }}
           onOpenGradebook={() => {
-            setIsStarted(true);
-            setActiveMenu('gradebook');
+            if (isTeacher) {
+              setIsStarted(true);
+              setActiveMenu('gradebook');
+            }
           }}
           onOpenLogin={() => openLoginModal()}
         />

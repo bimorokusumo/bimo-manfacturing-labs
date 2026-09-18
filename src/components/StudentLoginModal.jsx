@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useStudent } from '../context/StudentContext';
+import { useStudent, isTeacherUser } from '../context/StudentContext';
 import { sound } from '../utils/audio';
 
 const CLASS_OPTIONS = [
@@ -25,6 +25,13 @@ const StudentLoginModal = () => {
     className: 'X TPM 1',
     customClass: '',
     school: ''
+  });
+
+  const isEnteringTeacher = isTeacherUser({
+    name: formData.name,
+    studentNumber: formData.studentNumber,
+    className: formData.className === 'Lainnya (Tulis Manual)' ? formData.customClass : formData.className,
+    school: formData.school
   });
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -319,45 +326,65 @@ const StudentLoginModal = () => {
           {/* INPUT ASAL SEKOLAH */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-              Nama Sekolah / Instansi <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>(Opsional)</span>
+              Nama Sekolah / Instansi <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>(Wajib untuk Guru SMKN 2 Depok)</span>
             </label>
             <input
               type="text"
-              placeholder="Contoh: SMK Negeri 2 Yogyakarta"
+              placeholder="Contoh: SMKN 2 Depok"
               value={formData.school}
               onChange={(e) => setFormData({ ...formData, school: e.target.value })}
               style={{
                 width: '100%',
                 padding: '12px 14px',
                 borderRadius: '10px',
-                border: '1.5px solid #cbd5e1',
+                border: isEnteringTeacher ? '2px solid #f59e0b' : '1.5px solid #cbd5e1',
                 fontSize: '0.92rem',
                 color: '#0f172a',
                 outline: 'none',
-                background: '#f8fafc'
+                background: isEnteringTeacher ? '#fffbeb' : '#f8fafc'
               }}
               onFocus={(e) => (e.target.style.borderColor = '#f59e0b')}
-              onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
+              onBlur={(e) => (e.target.style.borderColor = isEnteringTeacher ? '#f59e0b' : '#cbd5e1')}
             />
           </div>
 
           {/* INFO BADGE */}
-          <div
-            style={{
-              background: '#f0fdf4',
-              border: '1px solid #bbf7d0',
-              borderRadius: '10px',
-              padding: '10px 14px',
-              fontSize: '0.78rem',
-              color: '#166534',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <span>📊</span>
-            <span>Nilai otomatis terekam ke Spreadsheet Guru secara real-time setiap kali Anda menyelesaikan kuis.</span>
-          </div>
+          {isEnteringTeacher ? (
+            <div
+              style={{
+                background: '#fef3c7',
+                border: '1.5px solid #f59e0b',
+                borderRadius: '10px',
+                padding: '10px 14px',
+                fontSize: '0.8rem',
+                color: '#92400e',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontWeight: 700
+              }}
+            >
+              <span>⭐</span>
+              <span>Akses Khusus Guru Terdeteksi: Panel Monitoring Nilai akan otomatis diaktifkan untuk Anda.</span>
+            </div>
+          ) : (
+            <div
+              style={{
+                background: '#f0fdf4',
+                border: '1px solid #bbf7d0',
+                borderRadius: '10px',
+                padding: '10px 14px',
+                fontSize: '0.78rem',
+                color: '#166534',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <span>📊</span>
+              <span>Nilai otomatis terekam ke Spreadsheet Guru secara real-time setiap kali Anda menyelesaikan kuis.</span>
+            </div>
+          )}
 
           {/* SUBMIT BUTTON */}
           <button

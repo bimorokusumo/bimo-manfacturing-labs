@@ -4,7 +4,7 @@ import { useStudent } from '../context/StudentContext';
 
 const Header = ({ toggleSidebar, onOpenGradebook }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
-  const { student, isLoggedIn, openLoginModal } = useStudent();
+  const { student, isLoggedIn, openLoginModal, isTeacher } = useStudent();
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -35,10 +35,10 @@ const Header = ({ toggleSidebar, onOpenGradebook }) => {
         </button>
         <div>
           <h2 className="app-header-title" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            Halo, {isLoggedIn ? student.name : 'Siswa Praktikan'}! <span role="img" aria-label="wave">👋</span>
+            Halo, {isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}! <span role="img" aria-label="wave">{isTeacher ? '👨‍🏫' : '👋'}</span>
           </h2>
-          <p className="app-header-subtitle" style={{ color: 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px' }}>
-            {isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Selamat datang di Virtual Manufacturing Lab'}
+          <p className="app-header-subtitle" style={{ color: isTeacher ? '#d97706' : 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px', fontWeight: isTeacher ? 700 : 400 }}>
+            {isTeacher ? `Pengajar • ${student.school || 'SMKN 2 Depok'} (Panel Guru Aktif)` : (isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Selamat datang di Virtual Manufacturing Lab')}
           </p>
         </div>
       </div>
@@ -114,22 +114,23 @@ const Header = ({ toggleSidebar, onOpenGradebook }) => {
           <span className="app-header-class-text">Fullscreen</span>
         </button>
 
-        {/* TOMBOL MONITORING GURU DI HEADER */}
-        {onOpenGradebook && (
+        {/* TOMBOL MONITORING GURU DI HEADER - KHUSUS GURU BIMORO KUSUMO */}
+        {isTeacher && onOpenGradebook && (
           <button
             onClick={onOpenGradebook}
             style={{
-              background: 'rgba(245, 158, 11, 0.1)',
-              border: '1px solid rgba(245, 158, 11, 0.4)',
+              background: 'rgba(245, 158, 11, 0.15)',
+              border: '1.5px solid #f59e0b',
               color: '#d97706',
               cursor: 'pointer',
-              padding: '6px 12px',
+              padding: '6px 14px',
               borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: '0.74rem',
-              fontWeight: 800
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.2)'
             }}
             title="Buka Panel Rekap Nilai Guru"
           >
@@ -153,18 +154,18 @@ const Header = ({ toggleSidebar, onOpenGradebook }) => {
           }}
           onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.04)')}
           onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
-          title="Klik untuk Edit Identitas / Ganti Siswa"
+          title={isTeacher ? "Akun Guru Terverifikasi (Klik untuk Ganti)" : "Klik untuk Edit Identitas / Ganti Siswa"}
         >
           <div style={{ textAlign: 'right' }}>
-            <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {isLoggedIn ? student.name : 'Masuk / Login'}
+            <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: isTeacher ? '#d97706' : 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {isLoggedIn ? (isTeacher ? `⭐ ${student.name}` : student.name) : 'Masuk / Login'}
             </div>
-            <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 600 }}>
-              {isLoggedIn ? `Absen: ${student.studentNumber}` : 'Klik untuk data'}
+            <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: isTeacher ? '#d97706' : '#0284c7', fontWeight: 700 }}>
+              {isLoggedIn ? (isTeacher ? 'Pengajar' : `Absen: ${student.studentNumber}`) : 'Klik untuk data'}
             </div>
           </div>
-          <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: '2px solid #f59e0b', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
-            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=f59e0b&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
+          <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=${isTeacher ? 'f59e0b' : '0284c7'}&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
           </div>
         </div>
       </div>

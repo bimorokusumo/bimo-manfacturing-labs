@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import HeatTreatmentYouTubeCard from './HeatTreatmentYouTubeCard';
+import { recordQuizResult } from '../services/sheetService';
 
 // =============================================================================
 // DATABASE SIMULATOR BLACKENING (7-STAGE HOT BLACK OXIDE)
@@ -557,6 +558,16 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
 
     setQuizScore(score);
     setQuizFeedback(feedback);
+
+    const correctCount = Math.round(score / 20);
+    recordQuizResult({
+      modul: 'Heat Treatment & Metalurgi',
+      judulKuis: 'Kuis Evaluasi Perlakuan Panas Logam',
+      skor: score,
+      jawabanBenar: correctCount,
+      totalSoal: HEAT_TREATMENT_QUIZ.length,
+      detailJawaban: `${correctCount} dari ${HEAT_TREATMENT_QUIZ.length} soal metalurgi dijawab benar (Skor: ${score}/100).`
+    });
 
     if (score >= 80) {
       sound.playSuccess();

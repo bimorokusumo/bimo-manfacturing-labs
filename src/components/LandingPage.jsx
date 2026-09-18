@@ -1,6 +1,8 @@
 import React from 'react';
+import { useStudent } from '../context/StudentContext';
 
-const LandingPage = ({ onStart }) => {
+const LandingPage = ({ onStart, onOpenGradebook }) => {
+  const { student, isLoggedIn, openLoginModal } = useStudent();
   return (
     <div style={{
       minHeight: '100vh',
@@ -114,40 +116,68 @@ const LandingPage = ({ onStart }) => {
         </nav>
 
         {/* LOGIN BUTTONS */}
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <button style={{ 
-            padding: '10px 24px', 
-            borderRadius: '8px', 
-            background: 'rgba(255,255,255,0.05)', 
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255,255,255,0.1)', 
-            color: '#fff', 
-            fontWeight: 600, 
-            fontSize: '0.9rem', 
-            cursor: 'pointer',
-            transition: 'all 0.3s'
-          }}
-          onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
-          onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          {isLoggedIn ? (
+            <button
+              onClick={onOpenLogin || openLoginModal}
+              style={{
+                padding: '8px 18px',
+                borderRadius: '8px',
+                background: 'rgba(2, 132, 199, 0.2)',
+                border: '1px solid #0284c7',
+                color: '#38bdf8',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              title="Klik untuk Edit Identitas / Ganti Siswa"
+            >
+              <span>👤 {student.name} (Absen: {student.studentNumber})</span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenLogin || openLoginModal}
+              style={{ 
+                padding: '10px 22px', 
+                borderRadius: '8px', 
+                background: 'rgba(255,255,255,0.08)', 
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.2)', 
+                color: '#fff', 
+                fontWeight: 700, 
+                fontSize: '0.88rem', 
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              🎓 Login Siswa
+            </button>
+          )}
+
+          <button
+            onClick={onOpenGradebook}
+            style={{ 
+              padding: '10px 22px', 
+              borderRadius: '8px', 
+              background: 'linear-gradient(135deg, #f59e0b, #d97706)', 
+              border: 'none', 
+              color: '#fff', 
+              fontWeight: 800, 
+              fontSize: '0.88rem', 
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)',
+              transition: 'transform 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
+            onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
           >
-            Login Siswa
-          </button>
-          <button style={{ 
-            padding: '10px 24px', 
-            borderRadius: '8px', 
-            background: 'linear-gradient(135deg, #f59e0b, #d97706)', 
-            border: 'none', 
-            color: '#fff', 
-            fontWeight: 700, 
-            fontSize: '0.9rem', 
-            cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3)',
-            transition: 'transform 0.2s'
-          }}
-          onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-          onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-          >
-            Login Guru
+            <span>📊 Rekap Nilai Guru</span>
           </button>
         </div>
       </header>

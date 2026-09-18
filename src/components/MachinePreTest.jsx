@@ -3,6 +3,7 @@ import { sound } from '../utils/audio';
 import { latheQuestions } from '../data/questionBankLathe';
 import { millingQuestions } from '../data/questionBankMilling';
 import { cncQuestions } from '../data/questionBankCNC';
+import { recordQuizResult } from '../services/sheetService';
 
 const getTestData = (type) => {
   if (type === 'lathe') return latheQuestions;
@@ -51,8 +52,24 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
 
   const nextEssay = () => {
     sound.playClick();
-    if (essayIndex < testData.essays.length - 1) setEssayIndex(essayIndex + 1);
-    else setStage('result');
+    if (essayIndex < testData.essays.length - 1) {
+      setEssayIndex(essayIndex + 1);
+    } else {
+      setStage('result');
+      let cCount = 0;
+      testData.mcqs.forEach(q => {
+        if (mcqAnswers[q.id] === q.correctAnswer) cCount++;
+      });
+      const sc = Math.round((cCount / testData.mcqs.length) * 100);
+      recordQuizResult({
+        modul: `Machine Lab - Pre-Test`,
+        judulKuis: testData.title || 'Pre-Test Teori Permesinan',
+        skor: sc,
+        jawabanBenar: cCount,
+        totalSoal: testData.mcqs.length,
+        detailJawaban: `Pilihan Ganda: ${cCount}/${testData.mcqs.length} Benar. Esai dijawab: ${Object.keys(essayAnswers).length} soal.`
+      });
+    }
   };
   
   const prevEssay = () => {

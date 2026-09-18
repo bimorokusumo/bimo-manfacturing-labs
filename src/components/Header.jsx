@@ -1,8 +1,10 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { useStudent } from '../context/StudentContext';
 
-const Header = ({ toggleSidebar }) => {
+const Header = ({ toggleSidebar, onOpenGradebook }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
+  const { student, isLoggedIn, openLoginModal } = useStudent();
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -32,16 +34,16 @@ const Header = ({ toggleSidebar }) => {
           </svg>
         </button>
         <div>
-          <h2 className="app-header-title" style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            Halo, Siswa! <span role="img" aria-label="wave">👋</span>
+          <h2 className="app-header-title" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            Halo, {isLoggedIn ? student.name : 'Siswa Praktikan'}! <span role="img" aria-label="wave">👋</span>
           </h2>
-          <p className="app-header-subtitle" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0, marginTop: '4px' }}>
-            Selamat datang di Virtual Manufacturing Lab
+          <p className="app-header-subtitle" style={{ color: 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px' }}>
+            {isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Selamat datang di Virtual Manufacturing Lab'}
           </p>
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         {/* Button Aksesibilitas & Inklusi */}
         <button
           onClick={() => setIsModalOpen(true)}
@@ -112,20 +114,57 @@ const Header = ({ toggleSidebar }) => {
           <span className="app-header-class-text">Fullscreen</span>
         </button>
 
-        <button style={{ position: 'relative', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
-          <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-          </svg>
-          <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', background: 'var(--game-danger)', borderRadius: '50%', border: '2px solid var(--bg-game)' }}></span>
-        </button>
+        {/* TOMBOL MONITORING GURU DI HEADER */}
+        {onOpenGradebook && (
+          <button
+            onClick={onOpenGradebook}
+            style={{
+              background: 'rgba(245, 158, 11, 0.1)',
+              border: '1px solid rgba(245, 158, 11, 0.4)',
+              color: '#d97706',
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.74rem',
+              fontWeight: 800
+            }}
+            title="Buka Panel Rekap Nilai Guru"
+          >
+            <span>📊</span>
+            <span className="app-header-class-text">Nilai Guru</span>
+          </button>
+        )}
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* IDENTITAS SISWA & AVATAR (KLIK UNTUK GANTI SISWA) */}
+        <div
+          onClick={() => openLoginModal()}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            cursor: 'pointer',
+            padding: '4px 8px',
+            borderRadius: '10px',
+            transition: 'background 0.2s',
+            border: '1px solid transparent'
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.04)')}
+          onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
+          title="Klik untuk Edit Identitas / Ganti Siswa"
+        >
           <div style={{ textAlign: 'right' }}>
-            <div className="app-header-user-text" style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>Siswa</div>
-            <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Kelas X TPM</div>
+            <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {isLoggedIn ? student.name : 'Masuk / Login'}
+            </div>
+            <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 600 }}>
+              {isLoggedIn ? `Absen: ${student.studentNumber}` : 'Klik untuk data'}
+            </div>
           </div>
-          <div className="app-header-avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#334155', overflow: 'hidden' }}>
-            <img src="https://ui-avatars.com/api/?name=Siswa&background=f59e0b&color=fff&bold=true" alt="Avatar" style={{ width: '100%', height: '100%' }} />
+          <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: '2px solid #f59e0b', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=f59e0b&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
           </div>
         </div>
       </div>

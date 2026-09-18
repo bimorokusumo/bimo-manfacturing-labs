@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
+import { recordQuizResult } from '../services/sheetService';
 
 const QUESTIONS = [
   {
@@ -176,6 +177,15 @@ const CNCQuiz = ({ addXP }) => {
       setShowExplanation(false);
     } else {
       setIsFinished(true);
+      const percentage = Math.round((score / QUESTIONS.length) * 100);
+      recordQuizResult({
+        modul: 'Machine Lab - CNC',
+        judulKuis: 'Kuis Asesmen Teori & Kode CNC',
+        skor: percentage,
+        jawabanBenar: score,
+        totalSoal: QUESTIONS.length,
+        detailJawaban: `${score} dari ${QUESTIONS.length} soal dijawab dengan benar.`
+      });
       if (addXP) {
         addXP(1000);
       }

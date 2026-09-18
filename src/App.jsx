@@ -14,13 +14,17 @@ import MeasuringToolsLab from './components/MeasuringToolsLab';
 import CuttingToolsLab from './components/CuttingToolsLab';
 import HeatTreatmentLab from './components/HeatTreatmentLab';
 import MekanikaTeknikLab from './components/MekanikaTeknikLab';
+import TeacherGradebook from './components/TeacherGradebook';
+import StudentLoginModal from './components/StudentLoginModal';
 import { sound } from './utils/audio';
 import { AccessibilityProvider } from './context/AccessibilityContext';
+import { StudentProvider, useStudent } from './context/StudentContext';
 import AccessibilityModal from './components/AccessibilityModal';
 import AccessibilityFloatingWidget from './components/AccessibilityFloatingWidget';
 import LiveCaptionsOverlay from './components/LiveCaptionsOverlay';
 
-function App() {
+function AppInner() {
+  const { isLoggedIn, openLoginModal } = useStudent();
   const [isStarted, setIsStarted] = useState(false);
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [isSoundMuted, setIsSoundMuted] = useState(true);
@@ -139,6 +143,8 @@ function App() {
       case 'evaluasi':
       case 'evaluasi-c1':
         return <EvaluationView />;
+      case 'gradebook':
+        return <TeacherGradebook />;
       default:
         return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
     }
@@ -146,87 +152,112 @@ function App() {
 
   if (!isStarted) {
     return (
-      <AccessibilityProvider>
-        <LandingPage onStart={() => setIsStarted(true)} />
+      <>
+        <LandingPage
+          onStart={() => {
+            if (isLoggedIn) {
+              setIsStarted(true);
+            } else {
+              openLoginModal(() => setIsStarted(true));
+            }
+          }}
+          onOpenGradebook={() => {
+            setIsStarted(true);
+            setActiveMenu('gradebook');
+          }}
+        />
+        <StudentLoginModal />
         <AccessibilityModal />
-      </AccessibilityProvider>
+      </>
     );
   }
 
   return (
-    <AccessibilityProvider>
-      <div className="app-shell" style={{ display: 'flex', minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden', background: 'var(--bg-game)' }}>
-        {/* BACKDROP OVERLAY FOR MOBILE & LANDSCAPE */}
-        {isSidebarOpen && (
-          <div 
-            className="app-sidebar-backdrop"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-
-        {/* SIDEBAR */}
-        <Sidebar 
-          activeMenu={activeMenu} 
-          setActiveMenu={setActiveMenu} 
-          onLogout={() => setIsStarted(false)} 
-          isOpen={isSidebarOpen} 
-          closeSidebar={() => setIsSidebarOpen(false)}
-        />
-
-        {/* MAIN CONTENT AREA */}
+    <div className="app-shell" style={{ display: 'flex', minHeight: '100vh', maxWidth: '100vw', overflowX: 'hidden', background: 'var(--bg-game)' }}>
+      {/* BACKDROP OVERLAY FOR MOBILE & LANDSCAPE */}
+      {isSidebarOpen && (
         <div 
-          className="app-main-content"
-          style={{
-            flex: 1,
-            marginLeft: isSidebarOpen ? '260px' : '0',
-            width: isSidebarOpen ? 'calc(100% - 260px)' : '100%',
-            maxWidth: isSidebarOpen ? 'calc(100vw - 260px)' : '100vw',
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            transition: 'margin-left 0.3s ease-in-out, width 0.3s ease-in-out, max-width 0.3s ease-in-out',
-            overflowX: 'hidden'
-          }}
-        >
-          <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-          
-          <main className="app-main-body" style={{ padding: '20px 16px', flex: 1, overflowY: 'auto', overflowX: 'hidden', minWidth: 0, maxWidth: '100%' }}>
-            {renderContent()}
-          </main>
-        </div>
+          className="app-sidebar-backdrop"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
-        {/* GLOBAL SOUND TOGGLE */}
-        <div className="app-sound-toggle-btn" style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000 }}>
-          <button 
-            onClick={toggleSound}
-            style={{
-              background: isSoundMuted ? 'var(--bg-card-light)' : 'var(--game-primary)',
-              color: isSoundMuted ? 'var(--text-muted)' : '#000',
-              border: '1px solid var(--border-light)',
-              padding: '12px',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              boxShadow: '0 8px 15px rgba(0,0,0,0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s'
-            }}
-            title={isSoundMuted ? "Sound Off" : "Sound On"}
-          >
-            {isSoundMuted ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M23 9L17 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 9L23 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.54 8.46C16.4774 9.39764 17.004 10.6692 17.004 11.995C17.004 13.3208 16.4774 14.5924 15.54 15.53" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M19.07 4.92999C20.9447 6.80527 21.9979 9.34835 21.9979 12C21.9979 14.6516 20.9447 17.1947 19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            )}
-          </button>
-        </div>
+      {/* SIDEBAR */}
+      <Sidebar 
+        activeMenu={activeMenu} 
+        setActiveMenu={setActiveMenu} 
+        onLogout={() => setIsStarted(false)} 
+        isOpen={isSidebarOpen} 
+        closeSidebar={() => setIsSidebarOpen(false)}
+      />
 
-        {/* INCLUSION & ACCESSIBILITY WIDGETS */}
-        <AccessibilityFloatingWidget />
-        <LiveCaptionsOverlay />
-        <AccessibilityModal />
+      {/* MAIN CONTENT AREA */}
+      <div 
+        className="app-main-content"
+        style={{
+          flex: 1,
+          marginLeft: isSidebarOpen ? '260px' : '0',
+          width: isSidebarOpen ? 'calc(100% - 260px)' : '100%',
+          maxWidth: isSidebarOpen ? 'calc(100vw - 260px)' : '100vw',
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          transition: 'margin-left 0.3s ease-in-out, width 0.3s ease-in-out, max-width 0.3s ease-in-out',
+          overflowX: 'hidden'
+        }}
+      >
+        <Header
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          onOpenGradebook={() => setActiveMenu('gradebook')}
+        />
+        
+        <main className="app-main-body" style={{ padding: '20px 16px', flex: 1, overflowY: 'auto', overflowX: 'hidden', minWidth: 0, maxWidth: '100%' }}>
+          {renderContent()}
+        </main>
       </div>
+
+      {/* GLOBAL SOUND TOGGLE */}
+      <div className="app-sound-toggle-btn" style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000 }}>
+        <button 
+          onClick={toggleSound}
+          style={{
+            background: isSoundMuted ? 'var(--bg-card-light)' : 'var(--game-primary)',
+            color: isSoundMuted ? 'var(--text-muted)' : '#000',
+            border: '1px solid var(--border-light)',
+            padding: '12px',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            boxShadow: '0 8px 15px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.2s'
+          }}
+          title={isSoundMuted ? "Sound Off" : "Sound On"}
+        >
+          {isSoundMuted ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M23 9L17 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M17 9L23 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 5L6 9H2V15H6L11 19V5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M15.54 8.46C16.4774 9.39764 17.004 10.6692 17.004 11.995C17.004 13.3208 16.4774 14.5924 15.54 15.53" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="M19.07 4.92999C20.9447 6.80527 21.9979 9.34835 21.9979 12C21.9979 14.6516 20.9447 17.1947 19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          )}
+        </button>
+      </div>
+
+      {/* INCLUSION & ACCESSIBILITY WIDGETS */}
+      <AccessibilityFloatingWidget />
+      <LiveCaptionsOverlay />
+      <AccessibilityModal />
+      <StudentLoginModal />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AccessibilityProvider>
+      <StudentProvider>
+        <AppInner />
+      </StudentProvider>
     </AccessibilityProvider>
   );
 }

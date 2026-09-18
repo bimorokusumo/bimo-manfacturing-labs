@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import Safety3DOperator from './Safety3DOperator';
+import { recordQuizResult } from '../services/sheetService';
 
 // =============================================================================
 // DATABASE PEKERJAAN BENGKEL MESIN & MATRIKS BAHAYA K3
@@ -502,6 +503,19 @@ export default function SafetyK3Game() {
 
       speakFeedback(`Luar biasa! Penampilan operator sudah seratus persen memenuhi standar keselamatan kerja industri. Aman untuk mulai bekerja.`);
     }
+
+    const finalScore = forbiddenList.length > 0
+      ? Math.max(0, 40 - (forbiddenList.length * 20))
+      : (missingMandatory.length > 0 ? Math.max(30, 85 - (missingMandatory.length * 15)) : 100);
+
+    recordQuizResult({
+      modul: 'Safety Lab - K3 & APD',
+      judulKuis: `Inspeksi APD: ${currentJobObj.name}`,
+      skor: finalScore,
+      jawabanBenar: finalScore === 100 ? 1 : 0,
+      totalSoal: 1,
+      detailJawaban: `Pemeriksaan APD ${currentJobObj.name}: ${finalScore === 100 ? 'Lulus 100%' : (forbiddenList.length > 0 ? 'Item Terlarang: ' + forbiddenList.join(', ') : 'Kurang: ' + missingMandatory.join(', '))}`
+    });
   };
 
   // Filtered inventory list

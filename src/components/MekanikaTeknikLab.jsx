@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { recordQuizResult } from '../services/sheetService';
 
 // =============================================================================
 // DATABASE KUIS MEKANIKA TEKNIK
@@ -275,6 +276,16 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
     setQuizScore(score);
     setQuizFeedback(feedback);
+
+    const correctCount = Math.round(score / 20);
+    recordQuizResult({
+      modul: 'Mekanika Teknik Permesinan',
+      judulKuis: 'Kuis Kasus Bengkel & Fisika Terapan',
+      skor: score,
+      jawabanBenar: correctCount,
+      totalSoal: MECHANICS_QUIZ.length,
+      detailJawaban: `${correctCount} dari ${MECHANICS_QUIZ.length} kasus fisika bengkel dijawab benar (Skor: ${score}/100).`
+    });
 
     if (score >= 80) {
       sound.playSuccess();

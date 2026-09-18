@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { recordQuizResult } from '../services/sheetService';
 
 const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} }) => {
   const [activeTool, setActiveTool] = useState('vernier'); // vernier, micrometer, height, dial, feeler, block, quiz
@@ -3302,6 +3303,17 @@ ightarrow$ pilih balok 30.0 mm.</li>
                         setQuizCompleted(true);
                         addMissionCompleted();
                         sound.playSuccess();
+                        const totalPossible = quizQuestions.length * 50;
+                        const finalScore = totalPossible > 0 ? Math.round((quizScore / totalPossible) * 100) : 0;
+                        const correctCount = Math.round(quizScore / 50);
+                        recordQuizResult({
+                          modul: 'Alat Ukur Presisi (Metrologi)',
+                          judulKuis: 'Kuis Asesmen Membaca Alat Ukur',
+                          skor: finalScore,
+                          jawabanBenar: correctCount,
+                          totalSoal: quizQuestions.length,
+                          detailJawaban: `${correctCount} dari ${quizQuestions.length} soal instrumen ukur dijawab benar (Skor: ${quizScore} Pts).`
+                        });
                       }
                     }}
                     style={{

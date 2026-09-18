@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { evaluationData } from '../data/questionBankEvaluation';
 import { sound } from '../utils/audio';
+import { useStudent } from '../context/StudentContext';
+import { recordQuizResult } from '../services/sheetService';
 
 const EvaluationView = () => {
+  const { student, openLoginModal } = useStudent();
   const [activeLevel, setActiveLevel] = useState('c1'); // 'c1' | 'c2' | 'c3' | 'hots'
   
   // Data identitas siswa untuk memudahkan guru mendata
   const [studentInfo, setStudentInfo] = useState({
-    name: '',
-    classRoom: '',
-    studentId: ''
+    name: student?.name || '',
+    classRoom: student?.className || '',
+    studentId: student?.studentNumber || ''
   });
+
+  useEffect(() => {
+    if (student?.name) {
+      setStudentInfo({
+        name: student.name,
+        classRoom: student.className || '',
+        studentId: student.studentNumber || ''
+      });
+    }
+  }, [student]);
 
   const [copiedToast, setCopiedToast] = useState(false);
 
@@ -103,6 +116,22 @@ const EvaluationView = () => {
         submitTime: timeStr
       }
     }));
+
+    // Rekam nilai ke Google Spreadsheet & Local Storage
+    recordQuizResult({
+      student: {
+        name: studentInfo.name,
+        studentNumber: studentInfo.studentId,
+        className: studentInfo.classRoom,
+        school: student?.school || ''
+      },
+      modul: 'Evaluasi Komprehensif',
+      judulKuis: `Evaluasi ${currentLevelData.title}`,
+      skor: calculatedScore,
+      jawabanBenar: correctCount,
+      totalSoal: mcqList.length,
+      detailJawaban: `Pilihan Ganda: ${correctCount}/${mcqList.length} Benar. Esai dijawab: ${Object.keys(currentAnswers.essay || {}).length} soal.`
+    });
 
     sound.playSuccess();
     window.scrollTo({ top: 0, behavior: 'smooth' });

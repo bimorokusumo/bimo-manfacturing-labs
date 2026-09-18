@@ -165,6 +165,7 @@ function AppInner() {
             setIsStarted(true);
             setActiveMenu('gradebook');
           }}
+          onOpenLogin={() => openLoginModal()}
         />
         <StudentLoginModal />
         <AccessibilityModal />

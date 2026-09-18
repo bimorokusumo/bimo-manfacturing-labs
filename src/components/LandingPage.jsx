@@ -1,8 +1,16 @@
 import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
-const LandingPage = ({ onStart, onOpenGradebook }) => {
+const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
   const { student, isLoggedIn, openLoginModal } = useStudent();
+
+  const handleLoginClick = () => {
+    if (typeof onOpenLogin === 'function') {
+      onOpenLogin();
+    } else if (typeof openLoginModal === 'function') {
+      openLoginModal();
+    }
+  };
   return (
     <div style={{
       minHeight: '100vh',
@@ -119,7 +127,7 @@ const LandingPage = ({ onStart, onOpenGradebook }) => {
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           {isLoggedIn ? (
             <button
-              onClick={onOpenLogin || openLoginModal}
+              onClick={handleLoginClick}
               style={{
                 padding: '8px 18px',
                 borderRadius: '8px',
@@ -139,7 +147,7 @@ const LandingPage = ({ onStart, onOpenGradebook }) => {
             </button>
           ) : (
             <button
-              onClick={onOpenLogin || openLoginModal}
+              onClick={handleLoginClick}
               style={{ 
                 padding: '10px 22px', 
                 borderRadius: '8px', 

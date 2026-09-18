@@ -322,6 +322,29 @@ const TeacherGradebook = () => {
               <span>{webhookUrl ? '🟢 Spreadsheet Terhubung' : '⚙️ Hubungkan Spreadsheet'}</span>
             </button>
 
+            {/* BUTTON BUKA GOOGLE SHEETS */}
+            <a
+              href="https://sheets.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                color: '#ffffff',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              title="Buka Google Sheets di tab baru"
+            >
+              <span>📊 Buka Google Sheets ↗</span>
+            </a>
+
             {/* BUTTON PANDUAN & KODE */}
             <button
               onClick={() => { sound.playClick(); setIsGuideModalOpen(true); }}
@@ -714,9 +737,57 @@ const TeacherGradebook = () => {
               <button onClick={() => setIsConfigModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
             </div>
 
-            <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+            <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 14px 0' }}>
               Tempelkan (Paste) <strong>URL Aplikasi Web Google Apps Script</strong> dari Spreadsheet Anda di bawah ini agar nilai siswa otomatis terkirim.
             </p>
+
+            {/* QUICK LINK BUTTONS */}
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 14px', marginBottom: '16px' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>📌</span>
+                <span>Tautan Cepat Membuka Google Sheets:</span>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <a
+                  href="https://sheets.new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '7px 12px',
+                    background: '#10b981',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>➕ Buat File Baru (sheets.new) ↗</span>
+                </a>
+                <a
+                  href="https://sheets.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '7px 12px',
+                    background: '#0284c7',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>📂 Buka Daftar Sheets Anda (sheets.google.com) ↗</span>
+                </a>
+              </div>
+            </div>
 
             <form onSubmit={handleSaveWebhook} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>

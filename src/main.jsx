@@ -29,16 +29,13 @@ try {
       return url;
     };
 
-    // 1. Hook HTMLImageElement.src property safely with automatic lazy loading & async decoding
+    // 1. Hook HTMLImageElement.src property safely with async decoding and fast URL resolution
     try {
       const originalImgDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
       if (originalImgDescriptor && originalImgDescriptor.set) {
         Object.defineProperty(HTMLImageElement.prototype, 'src', {
           set(val) {
             try {
-              if (!this.getAttribute('loading')) {
-                this.setAttribute('loading', 'lazy');
-              }
               if (!this.getAttribute('decoding')) {
                 this.setAttribute('decoding', 'async');
               }
@@ -54,7 +51,7 @@ try {
       console.warn('[AssetResolver] Failed to hook HTMLImageElement.src:', e);
     }
 
-    // 2. Hook Element.prototype.setAttribute safely with automatic lazy loading & async decoding
+    // 2. Hook Element.prototype.setAttribute safely with fast URL resolution
     try {
       const originalSetAttr = Element.prototype.setAttribute;
       Element.prototype.setAttribute = function(name, val) {
@@ -62,9 +59,6 @@ try {
           val = fixUrl(val);
           if (this.tagName === 'IMG') {
             try {
-              if (!this.getAttribute('loading')) {
-                originalSetAttr.call(this, 'loading', 'lazy');
-              }
               if (!this.getAttribute('decoding')) {
                 originalSetAttr.call(this, 'decoding', 'async');
               }

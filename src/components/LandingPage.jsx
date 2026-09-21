@@ -239,11 +239,12 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
           right: 0,
           width: '65%',
           height: '100%',
-          backgroundImage: 'url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=960&q=70")', // Industrial machinery image
+          backgroundColor: '#0f172a',
+          backgroundImage: 'radial-gradient(circle at 70% 30%, rgba(245, 158, 11, 0.12) 0%, transparent 60%), url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=720&q=65")', // Optimized lightweight industrial image
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 0,
-          filter: 'contrast(1.1) brightness(0.9)'
+          filter: 'contrast(1.08) brightness(0.9)'
         }}>
           {/* Dark Fade Gradient Overlay to blend with background color */}
           <div style={{

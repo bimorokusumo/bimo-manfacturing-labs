@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useStudent } from '../context/StudentContext';
+import { getInitialsAvatar } from '../utils/assets';
 
 const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
@@ -167,7 +168,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
                 </div>
               </div>
               <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
-                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=${isTeacher ? 'f59e0b' : '0284c7'}&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
+                <img src={getInitialsAvatar(student?.name, isTeacher)} alt="Avatar" style={{ width: '100%', height: '100%', display: 'block' }} />
               </div>
             </div>
 

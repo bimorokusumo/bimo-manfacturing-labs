@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { getAssetUrl } from '../utils/assets';
 
 const LABS_CONFIG = [
   {
@@ -306,10 +307,16 @@ const DashboardView = ({
                 }}
               >
                 {/* Gambar Cover Lab */}
-                <div className="dashboard-lab-card-img">
+                <div className="dashboard-lab-card-img" style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', position: 'relative', overflow: 'hidden' }}>
                   <img 
-                    src={lab.image} 
+                    src={getAssetUrl(lab.image)} 
                     alt={lab.title} 
+                    loading="eager"
+                    decoding="async"
+                    onError={(e) => {
+                      e.target.style.opacity = '0.3';
+                    }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
                   />
                   <div className="dashboard-lab-card-overlay" />
                   <span 

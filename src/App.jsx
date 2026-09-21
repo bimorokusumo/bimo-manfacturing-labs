@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import LandingPage from './components/LandingPage';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import DashboardView from './components/DashboardView';
-import MachineLab from './components/MachineLab';
-import WeldingSimulator from './components/WeldingSimulator';
-import SafetyK3Game from './components/SafetyK3Game';
-import DesignLab from './components/DesignLab';
-import EvaluationView from './components/EvaluationView';
-import ModulesView from './components/ModulesView';
-import VirtualBengkel from './components/VirtualBengkel';
-import MeasuringToolsLab from './components/MeasuringToolsLab';
-import CuttingToolsLab from './components/CuttingToolsLab';
-import HeatTreatmentLab from './components/HeatTreatmentLab';
-import MekanikaTeknikLab from './components/MekanikaTeknikLab';
-import TeacherGradebook from './components/TeacherGradebook';
+
+// LAZY LOADING MODUL LAB (Mencegah beban unduhan besar diawal & mempercepat akses)
+const MachineLab = lazy(() => import('./components/MachineLab'));
+const WeldingSimulator = lazy(() => import('./components/WeldingSimulator'));
+const SafetyK3Game = lazy(() => import('./components/SafetyK3Game'));
+const DesignLab = lazy(() => import('./components/DesignLab'));
+const EvaluationView = lazy(() => import('./components/EvaluationView'));
+const ModulesView = lazy(() => import('./components/ModulesView'));
+const VirtualBengkel = lazy(() => import('./components/VirtualBengkel'));
+const MeasuringToolsLab = lazy(() => import('./components/MeasuringToolsLab'));
+const CuttingToolsLab = lazy(() => import('./components/CuttingToolsLab'));
+const HeatTreatmentLab = lazy(() => import('./components/HeatTreatmentLab'));
+const MekanikaTeknikLab = lazy(() => import('./components/MekanikaTeknikLab'));
+const TeacherGradebook = lazy(() => import('./components/TeacherGradebook'));
+
 import StudentLoginModal from './components/StudentLoginModal';
 import { sound } from './utils/audio';
 import { AccessibilityProvider } from './context/AccessibilityContext';
@@ -220,7 +223,36 @@ function AppInner() {
         />
         
         <main className="app-main-body" style={{ padding: '20px 16px', flex: 1, overflowY: 'auto', overflowX: 'hidden', minWidth: 0, maxWidth: '100%' }}>
-          {renderContent()}
+          <Suspense fallback={
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: '55vh',
+              gap: '16px'
+            }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                border: '4px solid rgba(245, 158, 11, 0.2)',
+                borderTop: '4px solid #f59e0b',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }} />
+              <div style={{
+                fontWeight: 800,
+                color: '#f59e0b',
+                fontSize: '0.92rem',
+                letterSpacing: '1px',
+                fontFamily: "'Chakra Petch', sans-serif"
+              }}>
+                MEMUAT MODUL LAB...
+              </div>
+            </div>
+          }>
+            {renderContent()}
+          </Suspense>
         </main>
       </div>
 

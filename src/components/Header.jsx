@@ -120,14 +120,14 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
           <span className="app-header-fullscreen-text">Layar Penuh</span>
         </button>
 
-        {/* TOMBOL MONITORING GURU DI HEADER - KHUSUS GURU BIMORO KUSUMO */}
+        {/* TOMBOL LIHAT REKAP SPREADSHEET DI HEADER - KHUSUS GURU BIMORO KUSUMO */}
         {isTeacher && onOpenGradebook && (
           <button
             onClick={onOpenGradebook}
             style={{
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1.5px solid #f59e0b',
-              color: '#d97706',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              border: 'none',
+              color: '#ffffff',
               cursor: 'pointer',
               padding: '6px 14px',
               borderRadius: '8px',
@@ -136,12 +136,12 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
               gap: '6px',
               fontSize: '0.78rem',
               fontWeight: 800,
-              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.2)'
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.35)'
             }}
-            title="Buka Panel Rekap Nilai Guru"
+            title="Buka Lembar Rekap Spreadsheet Nilai Siswa"
           >
             <span>📊</span>
-            <span className="app-header-class-text">Nilai Guru</span>
+            <span className="app-header-class-text">Lihat Rekap Spreadsheet</span>
           </button>
         )}
 

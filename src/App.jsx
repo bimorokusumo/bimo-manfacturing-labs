@@ -216,6 +216,11 @@ function AppInner() {
             if (isTeacher) {
               setIsStarted(true);
               setActiveMenu('gradebook');
+            } else {
+              openLoginModal(() => {
+                setIsStarted(true);
+                setActiveMenu('gradebook');
+              });
             }
           }}
           onOpenLogin={() => openLoginModal()}

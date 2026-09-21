@@ -199,19 +199,19 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
             </button>
           )}
 
-          {isTeacher && (
+          {isTeacher ? (
             <button
               onClick={onOpenGradebook}
               style={{ 
                 padding: '10px 22px', 
                 borderRadius: '8px', 
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)', 
+                background: 'linear-gradient(135deg, #10b981, #059669)', 
                 border: 'none', 
                 color: '#fff', 
                 fontWeight: 800, 
                 fontSize: '0.88rem', 
                 cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)',
+                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.35)',
                 transition: 'transform 0.2s',
                 display: 'flex',
                 alignItems: 'center',
@@ -219,8 +219,32 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
               }}
               onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
               onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+              title="Buka Lembar Rekap Spreadsheet Nilai Siswa"
             >
-              <span>📊 Rekap Nilai Guru</span>
+              <span>📊</span>
+              <span>Lihat Rekap Spreadsheet</span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenGradebook}
+              style={{ 
+                padding: '9px 18px', 
+                borderRadius: '8px', 
+                background: 'rgba(16, 185, 129, 0.12)', 
+                border: '1.5px solid #10b981', 
+                color: '#10b981', 
+                fontWeight: 800, 
+                fontSize: '0.85rem', 
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Akses Lembar Rekap Spreadsheet Guru"
+            >
+              <span>📊</span>
+              <span>Lihat Rekap Spreadsheet</span>
             </button>
           )}
         </div>

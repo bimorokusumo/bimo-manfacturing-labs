@@ -17,6 +17,7 @@ const CuttingToolsLab = lazy(() => import('./components/CuttingToolsLab'));
 const HeatTreatmentLab = lazy(() => import('./components/HeatTreatmentLab'));
 const MekanikaTeknikLab = lazy(() => import('./components/MekanikaTeknikLab'));
 const TeacherGradebook = lazy(() => import('./components/TeacherGradebook'));
+const DiagnosticTestView = lazy(() => import('./components/DiagnosticTestView'));
 
 import StudentLoginModal from './components/StudentLoginModal';
 import { sound } from './utils/audio';
@@ -143,6 +144,15 @@ function AppInner() {
       case 'design':
         return <DesignLab />;
 
+      case 'diagnostic':
+      case 'diagnostic-komprehensif':
+      case 'diagnostic-mesin_konvensional':
+      case 'diagnostic-alat_ukur':
+      case 'diagnostic-k3_5r':
+      case 'diagnostic-pengelasan': {
+        const cat = activeMenu.startsWith('diagnostic-') ? activeMenu.replace('diagnostic-', '') : 'komprehensif';
+        return <DiagnosticTestView initialCategory={cat} />;
+      }
       case 'evaluasi':
       case 'evaluasi-c1':
         return <EvaluationView />;

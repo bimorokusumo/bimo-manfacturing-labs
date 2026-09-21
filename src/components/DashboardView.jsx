@@ -248,7 +248,84 @@ const DashboardView = ({
             <div style={{ height: '100%', width: `${missionPct}%`, background: '#10b981', borderRadius: '3px' }} />
           </div>
         </div>
+      </div>
 
+      {/* ASESMEN DIAGNOSTIK AWAL HERO BANNER */}
+      <div style={{
+        width: '100%',
+        background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%)',
+        borderRadius: '16px',
+        padding: '20px 24px',
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '16px',
+        marginBottom: '28px',
+        boxShadow: '0 8px 24px rgba(37, 99, 235, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '720px' }}>
+          <div style={{
+            fontSize: '2.5rem',
+            background: 'rgba(255, 255, 255, 0.15)',
+            width: '64px',
+            height: '64px',
+            borderRadius: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            📋
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span style={{
+                background: '#f59e0b',
+                color: '#000',
+                fontSize: '0.68rem',
+                fontWeight: 900,
+                padding: '2px 8px',
+                borderRadius: '6px'
+              }}>
+                LANGKAH AWAL PEMBELAJARAN
+              </span>
+              <span style={{ fontSize: '0.74rem', color: '#bfdbfe', fontWeight: 600 }}>
+                10 Soal Pilihan Ganda (Pilgan)
+              </span>
+            </div>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', fontWeight: 800 }}>
+              Asesmen Diagnostik Kognitif Awal Siswa
+            </h4>
+            <p style={{ margin: 0, fontSize: '0.82rem', color: '#dbeafe', lineHeight: 1.4 }}>
+              Diagnosa kesiapan awal siswa terkait K3LH, gambar teknik, alat ukur presisi, dan perhitungan parameter bubut/frais sebelum memulai kegiatan praktikum.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => onSelectLab('diagnostic')}
+          style={{
+            background: '#ffffff',
+            color: '#1e40af',
+            border: 'none',
+            padding: '12px 22px',
+            borderRadius: '10px',
+            fontWeight: 800,
+            fontSize: '0.88rem',
+            cursor: 'pointer',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            whiteSpace: 'nowrap',
+            transition: 'all 0.15s'
+          }}
+        >
+          <span>Mulai Tes Diagnostik (10 Soal)</span>
+          <span>➔</span>
+        </button>
       </div>
 
       {/* PILIH LAB SECTION (CARDS DIBESARKAN AGAR TIDAK ADA RUANG KOSONG) */}

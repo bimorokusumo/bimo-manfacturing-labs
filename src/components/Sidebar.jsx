@@ -6,6 +6,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
 
   const menus = [
     { id: 'dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Awal', badge: '10 Soal', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
     { id: 'modules', label: 'Perpustakaan & Modul Ajar', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
     { id: 'machine', label: 'Machine Lab', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
     { id: 'cutting-tools', label: 'Alat Pemotong', icon: 'M12 4v2m0 12v2m8-8h-2M6 12H4m12.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0l-1.414-1.414M7.05 7.05L5.636 5.636M12 8a4 4 0 100 8 4 4 0 000-8z' },
@@ -27,6 +28,14 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
     }
   };
 
+  const diagnosticSubmenus = [
+    { id: 'diagnostic-komprehensif', label: 'Umum & K3 (10 Soal)', icon: '🎯' },
+    { id: 'diagnostic-mesin_konvensional', label: 'Bubut & Frais (10 Soal)', icon: '⚙️' },
+    { id: 'diagnostic-alat_ukur', label: 'Alat Ukur Presisi (10 Soal)', icon: '📏' },
+    { id: 'diagnostic-k3_5r', label: 'K3LH & Budaya 5R (10 Soal)', icon: '🛡️' },
+    { id: 'diagnostic-pengelasan', label: 'Pengelasan SMAW (10 Soal)', icon: '⚡' },
+  ];
+
   const heatTreatmentSubmenus = [
     { id: 'heat-treatment-hardening', label: 'Hardening (Pengerasan)', icon: '⚡' },
     { id: 'heat-treatment-quenching', label: 'Quenching (Media Dingin)', icon: '💧' },
@@ -47,6 +56,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
     { id: 'mechanics-calculator', label: 'Kalkulator Rumus Pintar', icon: '🧮' },
   ];
 
+  const isDiagnosticActive = activeMenu === 'diagnostic' || activeMenu.startsWith('diagnostic-');
   const isHeatTreatmentActive = activeMenu === 'heat-treatment' || activeMenu.startsWith('heat-treatment-');
   const isMechanicsActive = activeMenu === 'mechanics' || activeMenu.startsWith('mechanics-');
 
@@ -99,6 +109,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
       <div className="sidebar-menu-list" style={{ padding: '20px 12px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {menus.map(menu => {
           const isCurrentActive = activeMenu === menu.id ||
+            (menu.id === 'diagnostic' && isDiagnosticActive) ||
             (menu.id === 'heat-treatment' && isHeatTreatmentActive) ||
             (menu.id === 'mechanics' && isMechanicsActive);
 
@@ -106,7 +117,11 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
             <React.Fragment key={menu.id}>
               <button
                 className="sidebar-menu-btn"
-                onClick={() => handleMenuClick(menu.id === 'heat-treatment' ? 'heat-treatment' : (menu.id === 'mechanics' ? 'mechanics' : menu.id))}
+                onClick={() => handleMenuClick(
+                  menu.id === 'diagnostic' ? 'diagnostic' :
+                  menu.id === 'heat-treatment' ? 'heat-treatment' :
+                  (menu.id === 'mechanics' ? 'mechanics' : menu.id)
+                )}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -114,34 +129,108 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
                   gap: '12px',
                   padding: '11px 16px',
                   borderRadius: '8px',
-                  background: isCurrentActive ? (menu.id === 'mechanics' ? 'rgba(2, 132, 199, 0.12)' : 'rgba(245, 158, 11, 0.12)') : 'transparent',
-                  color: isCurrentActive ? (menu.id === 'mechanics' ? '#0284c7' : '#b45309') : '#334155',
+                  background: isCurrentActive ? (
+                    menu.id === 'diagnostic' ? 'rgba(37, 99, 235, 0.12)' :
+                    menu.id === 'mechanics' ? 'rgba(2, 132, 199, 0.12)' :
+                    'rgba(245, 158, 11, 0.12)'
+                  ) : 'transparent',
+                  color: isCurrentActive ? (
+                    menu.id === 'diagnostic' ? '#1d4ed8' :
+                    menu.id === 'mechanics' ? '#0284c7' :
+                    '#b45309'
+                  ) : '#334155',
                   border: 'none',
                   cursor: 'pointer',
                   fontWeight: isCurrentActive ? 700 : 600,
                   fontSize: '0.88rem',
                   textAlign: 'left',
                   transition: 'all 0.2s',
-                  borderLeft: isCurrentActive ? (menu.id === 'mechanics' ? '3px solid #0284c7' : '3px solid #f59e0b') : '3px solid transparent'
+                  borderLeft: isCurrentActive ? (
+                    menu.id === 'diagnostic' ? '3px solid #2563eb' :
+                    menu.id === 'mechanics' ? '3px solid #0284c7' :
+                    '3px solid #f59e0b'
+                  ) : '3px solid transparent'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={menu.icon}></path>
                   </svg>
-                  {menu.label}
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{menu.label}</span>
                 </div>
-                {menu.id === 'heat-treatment' && (
-                  <span style={{ fontSize: '0.7rem', color: '#ea580c', fontWeight: 800 }}>
-                    {isHeatTreatmentActive ? '▼' : '▶'}
-                  </span>
-                )}
-                {menu.id === 'mechanics' && (
-                  <span style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 800 }}>
-                    {isMechanicsActive ? '▼' : '▶'}
-                  </span>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                  {menu.badge && (
+                    <span style={{
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      padding: '2px 7px',
+                      borderRadius: '10px',
+                      background: menu.id === 'diagnostic' ? '#2563eb' : (menu.id === 'gradebook' ? '#d97706' : '#64748b'),
+                      color: '#ffffff',
+                      boxShadow: menu.id === 'diagnostic' ? '0 1px 4px rgba(37, 99, 235, 0.3)' : 'none'
+                    }}>
+                      {menu.badge}
+                    </span>
+                  )}
+                  {menu.id === 'diagnostic' && (
+                    <span style={{ fontSize: '0.7rem', color: '#2563eb', fontWeight: 800 }}>
+                      {isDiagnosticActive ? '▼' : '▶'}
+                    </span>
+                  )}
+                  {menu.id === 'heat-treatment' && (
+                    <span style={{ fontSize: '0.7rem', color: '#ea580c', fontWeight: 800 }}>
+                      {isHeatTreatmentActive ? '▼' : '▶'}
+                    </span>
+                  )}
+                  {menu.id === 'mechanics' && (
+                    <span style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 800 }}>
+                      {isMechanicsActive ? '▼' : '▶'}
+                    </span>
+                  )}
+                </div>
               </button>
+
+              {/* Diagnostic Submenus */}
+              {menu.id === 'diagnostic' && isDiagnosticActive && (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  paddingLeft: '28px',
+                  marginTop: '2px',
+                  marginBottom: '6px',
+                  borderLeft: '2px dashed rgba(37, 99, 235, 0.35)',
+                  marginLeft: '20px'
+                }}>
+                  {diagnosticSubmenus.map(sub => {
+                    const isSubActive = activeMenu === sub.id || (activeMenu === 'diagnostic' && sub.id === 'diagnostic-komprehensif');
+                    return (
+                      <button
+                        key={sub.id}
+                        onClick={() => handleMenuClick(sub.id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '7px 10px',
+                          borderRadius: '6px',
+                          background: isSubActive ? '#dbeafe' : 'transparent',
+                          color: isSubActive ? '#1e40af' : '#475569',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontWeight: isSubActive ? 800 : 500,
+                          fontSize: '0.78rem',
+                          textAlign: 'left',
+                          transition: 'all 0.15s'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.85rem' }}>{sub.icon}</span>
+                        <span>{sub.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Heat Treatment Submenus */}
               {menu.id === 'heat-treatment' && isHeatTreatmentActive && (
@@ -229,6 +318,43 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
             </React.Fragment>
           );
         })}
+
+        {/* Quick Diagnostic Card in Sidebar */}
+        <div style={{
+          marginTop: '12px',
+          padding: '12px',
+          background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)',
+          borderRadius: '10px',
+          color: '#ffffff',
+          boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+            <span style={{ fontSize: '1rem' }}>📋</span>
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, letterSpacing: '0.4px', textTransform: 'uppercase' }}>
+              Tes Diagnostik Awal
+            </span>
+          </div>
+          <div style={{ fontSize: '0.7rem', color: '#bfdbfe', lineHeight: 1.3, marginBottom: '8px' }}>
+            10 Soal Pilgan untuk mendiagnosa kesiapan & pemahaman awal siswa.
+          </div>
+          <button
+            onClick={() => handleMenuClick('diagnostic')}
+            style={{
+              width: '100%',
+              padding: '6px 10px',
+              background: '#ffffff',
+              color: '#1d4ed8',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              textAlign: 'center'
+            }}
+          >
+            Mulai Tes (10 Soal) ➔
+          </button>
+        </div>
       </div>
 
       {/* FOOTER */}

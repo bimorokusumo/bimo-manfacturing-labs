@@ -13,135 +13,52 @@ import {
 import { sound } from '../utils/audio';
 
 const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(30000);
-
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getActiveSheet();
 
     if (sheet.getLastRow() === 0) {
-      var headers = [
-        "Waktu & Tanggal",
-        "Nama Lengkap Siswa",
-        "No. Absen",
-        "Kelas / Jurusan",
-        "Sekolah / Instansi",
-        "Modul Laboratorium",
-        "Nama Kuis / Asesmen",
-        "Nilai (0 - 100)",
-        "Jawaban Benar",
-        "Total Soal",
-        "Status KKM",
-        "Rincian Jawaban Siswa"
-      ];
-      sheet.appendRow(headers);
-
-      var headerRange = sheet.getRange(1, 1, 1, headers.length);
-      headerRange.setBackground("#064e3b");
-      headerRange.setFontColor("#ffffff");
-      headerRange.setFontWeight("bold");
-      headerRange.setHorizontalAlignment("center");
-      sheet.setFrozenRows(1);
-
-      sheet.setColumnWidth(1, 180);
-      sheet.setColumnWidth(2, 220);
-      sheet.setColumnWidth(3, 90);
-      sheet.setColumnWidth(4, 130);
-      sheet.setColumnWidth(5, 180);
-      sheet.setColumnWidth(6, 170);
-      sheet.setColumnWidth(7, 240);
-      sheet.setColumnWidth(8, 110);
-      sheet.setColumnWidth(9, 110);
-      sheet.setColumnWidth(10, 100);
-      sheet.setColumnWidth(11, 110);
-      sheet.setColumnWidth(12, 280);
+      sheet.appendRow([
+        "Waktu", "Nama Siswa", "No. Absen", "Kelas", "Sekolah",
+        "Modul", "Judul Kuis", "Nilai", "Benar", "Total Soal",
+        "Status", "Rincian Jawaban"
+      ]);
     }
 
     var data = {};
     if (e && e.postData && e.postData.contents) {
-      try {
-        data = JSON.parse(e.postData.contents);
-      } catch (err) {
-        data = e.parameter || {};
-      }
+      try { data = JSON.parse(e.postData.contents); } catch (err) { data = e.parameter || {}; }
     } else if (e && e.parameter) {
       data = e.parameter;
     }
 
-    var nowStr = data.waktu || Utilities.formatDate(new Date(), "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss");
+    var nowStr = data.waktu || new Date().toLocaleString();
     var namaSiswa = data.namaSiswa || "Siswa Praktikan";
-    var nomorAbsen = data.nomorAbsen !== undefined ? String(data.nomorAbsen) : "-";
+    var nomorAbsen = data.nomorAbsen || "-";
     var kelas = data.kelas || "-";
     var sekolah = data.sekolah || "-";
     var modul = data.modul || "-";
     var judulKuis = data.judulKuis || "-";
-    var skor = Number(data.skor !== undefined ? data.skor : 0);
-    var jawabanBenar = data.jawabanBenar !== undefined ? data.jawabanBenar : "-";
-    var totalSoal = data.totalSoal !== undefined ? data.totalSoal : "-";
+    var skor = Number(data.skor || 0);
+    var jawabanBenar = data.jawabanBenar || "-";
+    var totalSoal = data.totalSoal || "-";
     var status = data.status || (skor >= 75 ? "LULUS" : "REMEDIAL");
-    var detailJawaban = typeof data.detailJawaban === 'object' ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
+    var detail = typeof data.detailJawaban === "object" ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
 
     sheet.appendRow([
-      nowStr,
-      namaSiswa,
-      nomorAbsen,
-      kelas,
-      sekolah,
-      modul,
-      judulKuis,
-      skor,
-      jawabanBenar,
-      totalSoal,
-      status,
-      detailJawaban
+      nowStr, namaSiswa, nomorAbsen, kelas, sekolah,
+      modul, judulKuis, skor, jawabanBenar, totalSoal,
+      status, detail
     ]);
 
-    var lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow, 3).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 4).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 8).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 9).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 10).setHorizontalAlignment("center");
-    sheet.getRange(lastRow, 11).setHorizontalAlignment("center");
-
-    var scoreCell = sheet.getRange(lastRow, 8);
-    var statusCell = sheet.getRange(lastRow, 11);
-    scoreCell.setFontWeight("bold");
-    statusCell.setFontWeight("bold");
-
-    if (skor >= 75) {
-      statusCell.setBackground("#dcfce7");
-      statusCell.setFontColor("#166534");
-      scoreCell.setFontColor("#16a34a");
-    } else {
-      statusCell.setBackground("#fee2e2");
-      statusCell.setFontColor("#991b1b");
-      scoreCell.setFontColor("#dc2626");
-    }
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      message: "Data nilai " + namaSiswa + " berhasil dicatat ke spreadsheet.",
-      row: lastRow
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } finally {
-    lock.releaseLock();
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({
-    status: "active",
-    message: "Google Apps Script BIMO Manufacturing Labs aktif & siap menerima data nilai siswa."
-  })).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({ status: "active" })).setMimeType(ContentService.MimeType.JSON);
 }`;
 
 const TeacherGradebook = () => {

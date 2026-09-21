@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
+import { recordQuizResult } from '../services/sheetService';
 
 const QUESTIONS = [
   {
@@ -165,6 +166,17 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
     } else {
       setQuizFinished(true);
       if (onComplete) onComplete(score);
+
+      const correctCount = Math.round(score / 100);
+      const score100 = Math.round((correctCount / QUESTIONS.length) * 100);
+      recordQuizResult({
+        modul: 'Design Lab',
+        judulKuis: 'Kuis Gambar Teknik Mesin & Proyeksi',
+        skor: score100,
+        jawabanBenar: correctCount,
+        totalSoal: QUESTIONS.length,
+        detailJawaban: `${correctCount} dari ${QUESTIONS.length} soal gambar teknik dijawab benar (Skor: ${score100}/100)`
+      });
     }
   };
 

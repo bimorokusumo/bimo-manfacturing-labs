@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
+import { recordQuizResult } from '../services/sheetService';
 
 const QUESTIONS = [
   {
@@ -165,6 +166,17 @@ const WeldingQuiz = ({ onComplete }) => {
     } else {
       setQuizFinished(true);
       if (onComplete) onComplete(score);
+
+      const correctCount = Math.round(score / 100);
+      const score100 = Math.round((correctCount / QUESTIONS.length) * 100);
+      recordQuizResult({
+        modul: 'Welding Lab',
+        judulKuis: 'Kuis Evaluasi Teori Pengelasan',
+        skor: score100,
+        jawabanBenar: correctCount,
+        totalSoal: QUESTIONS.length,
+        detailJawaban: `${correctCount} dari ${QUESTIONS.length} soal las dijawab benar (Skor: ${score100}/100)`
+      });
     }
   };
 

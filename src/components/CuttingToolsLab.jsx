@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { recordQuizResult } from '../services/sheetService';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
@@ -679,6 +680,19 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
     }
     sound.playSuccess?.();
     setQuizSubmitted(true);
+
+    const scoreXP = calculateScore();
+    const correctCount = Math.round(scoreXP / 100);
+    const score100 = Math.round((correctCount / QUIZ_QUESTIONS.length) * 100);
+
+    recordQuizResult({
+      modul: 'Alat Pemotong',
+      judulKuis: 'Kuis Ensiklopedia Alat Pemotong',
+      skor: score100,
+      jawabanBenar: correctCount,
+      totalSoal: QUIZ_QUESTIONS.length,
+      detailJawaban: `${correctCount} dari ${QUIZ_QUESTIONS.length} soal dijawab benar (Skor: ${score100}/100)`
+    });
   };
 
   const handleClaimXP = () => {

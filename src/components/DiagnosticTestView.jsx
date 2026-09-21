@@ -4,9 +4,9 @@ import { sound } from '../utils/audio';
 import { useStudent } from '../context/StudentContext';
 import { recordQuizResult } from '../services/sheetService';
 
-const DiagnosticTestView = ({ initialCategory = 'komprehensif' }) => {
+const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = null }) => {
   const { student, isLoggedIn, openLoginModal } = useStudent();
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'komprehensif');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'machine');
 
   useEffect(() => {
     if (initialCategory && DIAGNOSTIC_CATEGORIES[initialCategory]) {
@@ -33,13 +33,17 @@ const DiagnosticTestView = ({ initialCategory = 'komprehensif' }) => {
     }
   }, [student]);
 
-  // State penyimpanan jawaban per kategori (masing-masing 10 soal)
+  // State penyimpanan jawaban per kategori (masing-masing tepat 10 soal)
   const [answersState, setAnswersState] = useState({
-    komprehensif: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    mesin_konvensional: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    alat_ukur: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    k3_5r: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    pengelasan: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
+    machine: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    'cutting-tools': { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    'heat-treatment': { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    mechanics: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    welding: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    measuring: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    design: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    safety: { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+    'virtual-bengkel': { answers: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
   });
 
   const [copiedToast, setCopiedToast] = useState(false);
@@ -262,27 +266,53 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             </span>
           </div>
 
-          <h1 style={{
-            margin: '0 0 10px 0',
-            fontSize: '1.75rem',
-            fontWeight: 800,
-            letterSpacing: '-0.5px',
-            lineHeight: 1.2
-          }}>
-            Tes Diagnostik Kemampuan Siswa Teknik Pemesinan
-          </h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ maxWidth: '750px' }}>
+              <h1 style={{
+                margin: '0 0 10px 0',
+                fontSize: '1.75rem',
+                fontWeight: 800,
+                letterSpacing: '-0.5px',
+                lineHeight: 1.2
+              }}>
+                Tes Diagnostik Kemampuan: {currentCategoryData?.title || 'Teknik Pemesinan'}
+              </h1>
 
-          <p style={{
-            margin: 0,
-            color: '#cbd5e1',
-            fontSize: '0.92rem',
-            lineHeight: 1.5,
-            maxWidth: '850px'
-          }}>
-            Gunakan asesmen ini <strong>di awal semester atau sebelum modul praktik dimulai</strong> untuk mengukur
-            pengetahuan prasyarat, kesiapan kerja aman (K3LH), pemahaman alat ukur, serta parameter permesinan siswa.
-            Hasil tes langsung memetakan diferensiasi kesiapan belajar (Mahir, Cakap, atau Perlu Bimbingan).
-          </p>
+              <p style={{
+                margin: 0,
+                color: '#cbd5e1',
+                fontSize: '0.92rem',
+                lineHeight: 1.5
+              }}>
+                Asesmen diagnostik <strong>10 soal pilihan ganda</strong> untuk mengukur kesiapan kognitif, pemahaman konsep dasar,
+                dan SOP keselamatan siswa sebelum memulai praktikum di <strong>{currentCategoryData?.shortTitle || 'Lab'}</strong>.
+              </p>
+            </div>
+
+            {onNavigateToLab && (
+              <button
+                onClick={() => onNavigateToLab(selectedCategory)}
+                style={{
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '10px 18px',
+                  borderRadius: '10px',
+                  fontWeight: 800,
+                  fontSize: '0.84rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 14px rgba(245, 158, 11, 0.35)',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <span>🔬 Buka Simulasi {currentCategoryData?.shortTitle || 'Lab'}</span>
+                <span>➔</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -614,6 +644,28 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             >
               🖨️ Cetak / Simpan PDF
             </button>
+
+            {onNavigateToLab && (
+              <button
+                onClick={() => onNavigateToLab(selectedCategory)}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '9px 18px',
+                  borderRadius: '8px',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                🚀 Lanjut Praktik ke {currentCategoryData?.shortTitle || 'Lab'} ➔
+              </button>
+            )}
 
             <button
               onClick={handleReset}

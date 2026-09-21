@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
 // DATABASE 9 ALAT PEMOTONG (FOTO REALISTIS, ANATOMI, SPESIFIKASI & SOP NYATA)
@@ -592,7 +593,7 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
-const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} }) => {
+const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null }) => {
   const [labTab, setLabTab] = useState('katalog'); // 'katalog', 'materi', 'safety', 'quiz'
   const [selectedToolId, setSelectedToolId] = useState('gerinda-tangan');
   const [categoryFilter, setCategoryFilter] = useState('all'); // 'all', 'portable', 'shearing', 'drilling', 'sawing', 'finishing'
@@ -694,6 +695,14 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} }) =
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff', color: '#0f172a', overflow: 'hidden' }}>
       
+      <div style={{ padding: '16px 20px 0 20px' }}>
+        <LabDiagnosticBanner
+          labTitle="Alat Pemotong & Perkakas Pemesinan"
+          desc="Diagnosa 10 soal sudut baji pahat, jenis mata bor (twist drill), gergaji besi (TPI), dan SOP gerinda tangan."
+          onOpenDiagnostic={onOpenDiagnostic}
+        />
+      </div>
+
       {/* =====================================================================
           HEADER MODUL PEMBELAJARAN
           ===================================================================== */}
@@ -779,6 +788,33 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} }) =
               </button>
             );
           })}
+
+          {onOpenDiagnostic && (
+            <button
+              onClick={() => {
+                sound.playClick();
+                onOpenDiagnostic();
+              }}
+              style={{
+                padding: '7px 14px',
+                borderRadius: '7px',
+                border: 'none',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                color: '#ffffff',
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Mulai Tes Diagnostik Alat Pemotong (10 Soal Pilgan)"
+            >
+              <span>📋</span>
+              <span>Tes Diagnostik (10 Soal)</span>
+            </button>
+          )}
         </div>
       </div>
 

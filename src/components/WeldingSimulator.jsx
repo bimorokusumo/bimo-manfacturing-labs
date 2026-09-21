@@ -5,6 +5,7 @@ import Welding3D from './Welding3D';
 import ErrorBoundary from './ErrorBoundary';
 import WeldingTheoryGuide from './WeldingTheoryGuide';
 import WeldingQuiz from './WeldingQuiz';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 const DEFECT_TYPES = [
   { 
@@ -594,7 +595,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
   return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 };
 
-const WeldingSimulator = () => {
+const WeldingSimulator = ({ onOpenDiagnostic }) => {
   const [labMode, setLabMode] = useState('materi'); // 'materi' | 'simulasi' | 'quiz'
   const [torchPos, setTorchPos] = useState(0);
   const [weldProgress, setWeldProgress] = useState(0);
@@ -708,6 +709,12 @@ const WeldingSimulator = () => {
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box', overflowX: 'hidden' }}>
       
+      <LabDiagnosticBanner
+        labTitle="Welding Lab (SMAW, GMAW, OAW & K3 Las)"
+        desc="Diagnosa 10 soal kode elektroda (E6013/E7018), cacat las (undercut/porosity), dan keselamatan helm filter shade #10-12."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
+
       {/* TOP HEADER: LAB MODE SWITCHER */}
       <div style={{
         display: 'flex',

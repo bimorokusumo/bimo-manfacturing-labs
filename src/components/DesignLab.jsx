@@ -3,13 +3,19 @@ import TechnicalDrawingGuide from './TechnicalDrawingGuide';
 import TechnicalDrawingQuiz from './TechnicalDrawingQuiz';
 import OrthogonalMultiViewSimulator from './OrthogonalMultiViewSimulator';
 import CADStudioSimulator from './CADStudioSimulator';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
 
-const DesignLab = () => {
+const DesignLab = ({ onOpenDiagnostic }) => {
   const [labTab, setLabTab] = useState('cad'); // Default to CAD studio for direct access
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100%', boxSizing: 'border-box' }}>
+      <LabDiagnosticBanner
+        labTitle="Design Lab & Gambar Teknik Mesin"
+        desc="Diagnosa 10 soal standarisasi garis ISO 128, etiket gambar, perbedaan proyeksi Amerika vs Eropa, toleransi ISO & CAD."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
       
       {/* HEADER UTAMA DESIGN LAB */}
       <div style={{

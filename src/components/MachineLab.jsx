@@ -6,9 +6,10 @@ import CNCLatheModule from './CNCLatheModule';
 import MachinePreTest from './MachinePreTest';
 import CNCTheoryGuide from './CNCTheoryGuide';
 import CNCQuiz from './CNCQuiz';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
 
-const MachineLab = ({ addXP }) => {
+const MachineLab = ({ addXP, onOpenDiagnostic }) => {
   const [selectedMachine, setSelectedMachine] = useState(null); // 'lathe', 'milling', 'cnc'
   const [pendingMachine, setPendingMachine] = useState(null);
   const [cncMode, setCncMode] = useState('materi'); // 'materi', 'simulasi', 'quiz'
@@ -280,6 +281,11 @@ const MachineLab = ({ addXP }) => {
   // Otherwise, show the Garage Menu
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '40px' }}>
+      <LabDiagnosticBanner
+        labTitle="Machine Lab (Bubut, Frais & CNC)"
+        desc="Diagnosa 10 soal pemahaman parameter sayat RPM, pencekaman chuck/ragum, dan keselamatan mesin sebelum praktik."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
       
       <div style={{ marginBottom: '40px', textAlign: 'center' }}>
         <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '12px' }}>

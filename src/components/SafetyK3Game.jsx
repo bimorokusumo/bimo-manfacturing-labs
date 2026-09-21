@@ -6,6 +6,7 @@ import K3LHEmergencyModule from './K3LHEmergencyModule';
 import Budaya5REthicsModule from './Budaya5REthicsModule';
 import BenchToolsModule from './BenchToolsModule';
 import JSABenchProjectModule from './JSABenchProjectModule';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
 // DATABASE PEKERJAAN BENGKEL MESIN & MATRIKS BAHAYA K3
@@ -363,7 +364,7 @@ const APD_ITEMS = [
 // =============================================================================
 // COMPONENT UTAMA SAFETY K3 LAB
 // =============================================================================
-export default function SafetyK3Game() {
+export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
   const [activeTab, setActiveTab] = useState('apd');
   const [selectedJob, setSelectedJob] = useState('konvensional');
   const [equippedItems, setEquippedItems] = useState(['wearpack', 'shoes', 'kacamata_safety']);
@@ -549,6 +550,12 @@ export default function SafetyK3Game() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
+      <LabDiagnosticBanner
+        labTitle="Safety Lab (K3LH, APD, APAR PASS & 5R)"
+        desc="Diagnosa 10 soal larangan sarung tangan di mesin bubut, teknik APAR PASS, klasifikasi kebakaran, dan budaya industri 5R."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
+
       {/* HEADER & TOP TABS */}
       <div style={{
         background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',

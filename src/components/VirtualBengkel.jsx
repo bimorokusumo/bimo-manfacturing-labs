@@ -4,6 +4,7 @@ import { OrbitControls, ContactShadows, Html, GizmoHelper, GizmoViewcube } from 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import * as THREE from 'three';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // ==========================================
 // DATA INFORMASI AREA PEMESINAN (BUBUT & FRAIS)
@@ -2031,7 +2032,7 @@ const WorkshopHallEnvironment = ({ viewMode }) => {
 // ==========================================
 // KOMPONEN UTAMA VIRTUAL BENGKEL 3D
 // ==========================================
-const VirtualBengkel = () => {
+const VirtualBengkel = ({ onOpenDiagnostic }) => {
   const [viewMode, setViewMode] = useState('mesin'); // 'mesin' | 'bangku'
   const [activeItem, setActiveItem] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -2136,19 +2137,26 @@ const VirtualBengkel = () => {
   };
 
   return (
-    <div
-      className="animate-fade-in"
-      style={{
-        width: '100%',
-        height: 'calc(100vh - 140px)',
-        position: 'relative',
-        backgroundColor: '#cbd5e1', // Latar belakang abu-abu terang
-        borderRadius: '16px',
-        overflow: 'hidden',
-        boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '16px', minWidth: 0 }}>
+      <LabDiagnosticBanner
+        labTitle="Virtual Bengkel 3D & Tata Letak Workshop"
+        desc="Diagnosa 10 soal zonasi marka kuning bengkel, SOP keselamatan mesin bubut & frais, penataan alat 5S, dan penanganan darurat."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
+      <div
+        className="animate-fade-in"
+        style={{
+          width: '100%',
+          height: 'calc(100vh - 200px)',
+          minHeight: '580px',
+          position: 'relative',
+          backgroundColor: '#cbd5e1', // Latar belakang abu-abu terang
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
+          fontFamily: 'system-ui, -apple-system, sans-serif'
+        }}
+      >
       {/* ==================================================== */}
       {/* HEADER ATAS: JUDUL & SWITCHER TAB AREA */}
       {/* ==================================================== */}
@@ -2762,6 +2770,7 @@ const VirtualBengkel = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

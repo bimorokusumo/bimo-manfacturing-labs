@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import HeatTreatmentYouTubeCard from './HeatTreatmentYouTubeCard';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { recordQuizResult } from '../services/sheetService';
 
 // =============================================================================
@@ -174,7 +175,7 @@ const HEAT_TREATMENT_QUIZ = [
   }
 ];
 
-export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () => {}, addMissionCompleted = () => {} }) {
+export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null }) {
   const { isVoiceActive } = useAccessibility();
 
   // Tab State
@@ -587,6 +588,11 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
       fontFamily: "'Segoe UI', Roboto, sans-serif",
       color: '#0f172a'
     }}>
+      <LabDiagnosticBanner
+        labTitle="Heat Treatment & Metalurgi"
+        desc="Diagnosa 10 soal pemahaman proses quenching, pembentukan martensit, tempering, dan 7-bak blackening."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
       {/* =====================================================================
           HEADER HERO SECTION (VISUAL INFOGRAPHIC BADGES)
       ===================================================================== */}

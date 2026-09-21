@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
 // DATABASE KUIS MEKANIKA TEKNIK
@@ -69,7 +70,7 @@ const MECHANICS_QUIZ = [
   }
 ];
 
-export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () => {}, addMissionCompleted = () => {} }) {
+export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic }) {
   const { isVoiceActive } = useAccessibility();
 
   // Tab State: 'torque', 'lever', 'equilibrium', 'stress', 'pulley', 'friction', 'calculator', 'quiz'
@@ -1313,6 +1314,12 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       fontFamily: "'Segoe UI', Roboto, sans-serif",
       color: '#0f172a'
     }}>
+      <LabDiagnosticBanner
+        labTitle="Mekanika Teknik & Statika Struktur"
+        desc="Diagnosa 10 soal konsep torsi momen gaya, hukum tuas, kesetimbangan statis, dan kurva tegangan-regangan material."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
+
       {/* =====================================================================
           HEADER HERO SECTION
       ===================================================================== */}

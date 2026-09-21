@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
+import LabDiagnosticBanner from './LabDiagnosticBanner';
 
-const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} }) => {
+const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic }) => {
   const [activeTool, setActiveTool] = useState('vernier'); // vernier, micrometer, height, dial, feeler, block, quiz
   const [activeTab, setActiveTab] = useState('simulator'); // simulator, theory, sop
   
@@ -290,6 +291,12 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {} })
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px', paddingBottom: '60px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
       
+      <LabDiagnosticBanner
+        labTitle="Alat Ukur Presisi & Metrologi Industri"
+        desc="Diagnosa 10 soal cara membaca jangka sorong (0.05/0.02 mm), mikrometer sekrup (0.01 mm), dial indicator, dan standar suhu ISO 1."
+        onOpenDiagnostic={onOpenDiagnostic}
+      />
+
       {/* HEADER BANNER */}
       <div style={{
         background: 'linear-gradient(135deg, #064e3b 0%, #0f172a 60%, #1e293b 100%)',

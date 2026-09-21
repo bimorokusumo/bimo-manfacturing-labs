@@ -83,9 +83,9 @@ function AppInner() {
       case 'modules':
         return <ModulesView />;
       case 'machine':
-        return <MachineLab addXP={addXP} addMissionCompleted={addMissionCompleted} />;
+        return <MachineLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('machine-diagnostic')} />;
       case 'cutting-tools':
-        return <CuttingToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} />;
+        return <CuttingToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('cutting-tools-diagnostic')} />;
       case 'heat-treatment':
       case 'heat-treatment-hardening':
       case 'heat-treatment-quenching':
@@ -107,6 +107,7 @@ function AppInner() {
             }
             addXP={addXP}
             addMissionCompleted={addMissionCompleted}
+            onOpenDiagnostic={() => setActiveMenu('heat-treatment-diagnostic')}
           />
         );
       case 'mechanics':
@@ -131,27 +132,37 @@ function AppInner() {
             }
             addXP={addXP}
             addMissionCompleted={addMissionCompleted}
+            onOpenDiagnostic={() => setActiveMenu('mechanics-diagnostic')}
           />
         );
       case 'welding':
-        return <WeldingSimulator />;
+        return <WeldingSimulator onOpenDiagnostic={() => setActiveMenu('welding-diagnostic')} />;
       case 'measuring':
-        return <MeasuringToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} />;
+        return <MeasuringToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('measuring-diagnostic')} />;
       case 'safety':
-        return <SafetyK3Game />;
+        return <SafetyK3Game onOpenDiagnostic={() => setActiveMenu('safety-diagnostic')} />;
       case 'virtual-bengkel':
-        return <VirtualBengkel />;
+        return <VirtualBengkel onOpenDiagnostic={() => setActiveMenu('virtual-bengkel-diagnostic')} />;
       case 'design':
-        return <DesignLab />;
+        return <DesignLab onOpenDiagnostic={() => setActiveMenu('design-diagnostic')} />;
 
-      case 'diagnostic':
-      case 'diagnostic-komprehensif':
-      case 'diagnostic-mesin_konvensional':
-      case 'diagnostic-alat_ukur':
-      case 'diagnostic-k3_5r':
-      case 'diagnostic-pengelasan': {
-        const cat = activeMenu.startsWith('diagnostic-') ? activeMenu.replace('diagnostic-', '') : 'komprehensif';
-        return <DiagnosticTestView initialCategory={cat} />;
+      case 'machine-diagnostic':
+      case 'cutting-tools-diagnostic':
+      case 'heat-treatment-diagnostic':
+      case 'mechanics-diagnostic':
+      case 'welding-diagnostic':
+      case 'measuring-diagnostic':
+      case 'design-diagnostic':
+      case 'safety-diagnostic':
+      case 'virtual-bengkel-diagnostic':
+      case 'diagnostic': {
+        const labKey = activeMenu.includes('-diagnostic') ? activeMenu.replace('-diagnostic', '') : 'machine';
+        return (
+          <DiagnosticTestView
+            initialCategory={labKey}
+            onNavigateToLab={(targetLab) => setActiveMenu(targetLab)}
+          />
+        );
       }
       case 'evaluasi':
       case 'evaluasi-c1':

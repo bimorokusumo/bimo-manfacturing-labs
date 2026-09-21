@@ -2,6 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import Safety3DOperator from './Safety3DOperator';
 import { recordQuizResult } from '../services/sheetService';
+import K3LHEmergencyModule from './K3LHEmergencyModule';
+import Budaya5REthicsModule from './Budaya5REthicsModule';
+import BenchToolsModule from './BenchToolsModule';
+import JSABenchProjectModule from './JSABenchProjectModule';
 
 // =============================================================================
 // DATABASE PEKERJAAN BENGKEL MESIN & MATRIKS BAHAYA K3
@@ -540,61 +544,7 @@ export default function SafetyK3Game() {
     });
   }, [inventoryFilter, searchQuery]);
 
-  // 5R Quiz State
-  const [quizIndex, setQuizIndex] = useState(0);
-  const [selectedOpt, setSelectedOpt] = useState(null);
-  const [show5RReflection, setShow5RReflection] = useState(false);
-  const [score5R, setScore5R] = useState(0);
 
-  const questions5R = [
-    {
-      question: 'Memisahkan peralatan yang masih dipakai dan menyingkirkan barang bekas/rusak di meja mesin bubut adalah prinsip...',
-      options: ['RINGKAS (Seiri)', 'RAPI (Seiton)', 'RESIK (Seiso)', 'RAJIN (Shitsuke)'],
-      answer: 'RINGKAS (Seiri)',
-      reflectionWrong: 'REFLEKSI KESALAHAN: Memisahkan barang yang perlu dan tidak perlu adalah kunci utama RINGKAS (Seiri).',
-      reflectionCorrect: 'REFLEKSI BENAR: Tepat! RINGKAS (Seiri) bertujuan menyingkirkan barang yang tidak diperlukan dari area kerja.'
-    },
-    {
-      question: 'Menata pahat bubut dan Kunci Chuck pada papan panel berbintik (toolboard) sesuai posisinya merupakan contoh...',
-      options: ['RAPI (Seiton)', 'RINGKAS (Seiri)', 'RAWAT (Seiketsu)', 'RESIK (Seiso)'],
-      answer: 'RAPI (Seiton)',
-      reflectionWrong: 'REFLEKSI KESALAHAN: Meletakkan perkakas pada tempatnya agar mudah ditemukan adalah RAPI (Seiton).',
-      reflectionCorrect: 'REFLEKSI BENAR: Mantap! RAPI (Seiton) menghilangkan waktu terbuang untuk mencari-cari perkakas.'
-    },
-    {
-      question: 'Membersihkan tatal gram sisa pembubutan dari bed mesin dan menyapu lantai kerja setiap akhir jam praktik adalah prinsip...',
-      options: ['RESIK (Seiso)', 'RAPI (Seiton)', 'RINGKAS (Seiri)', 'RAJIN (Shitsuke)'],
-      answer: 'RESIK (Seiso)',
-      reflectionWrong: 'REFLEKSI KESALAHAN: Menjaga kebersihan mesin dan lantai dari tatal tajam adalah prinsip RESIK (Seiso).',
-      reflectionCorrect: 'REFLEKSI BENAR: Sempurna! RESIK (Seiso) mencegah mesin macet dan lantai licin akibat tumpahan coolant.'
-    },
-    {
-      question: 'Mempertahankan standar kebersihan dan kerapian dengan membuat checklist harian perawatan berkala adalah...',
-      options: ['RAWAT (Seiketsu)', 'RESIK (Seiso)', 'RAPI (Seiton)', 'RINGKAS (Seiri)'],
-      answer: 'RAWAT (Seiketsu)',
-      reflectionWrong: 'REFLEKSI KESALAHAN: Menstandarkan dan memelihara 3R sebelumnya adalah RAWAT (Seiketsu).',
-      reflectionCorrect: 'REFLEKSI BENAR: Tepat! RAWAT (Seiketsu) memastikan 3R sebelumnya menjadi kebiasaan tetap.'
-    },
-    {
-      question: 'Membiasakan diri selalu mematuhi SOP K3 dan memakai APD lengkap tanpa harus diawasi guru atau instruktur adalah...',
-      options: ['RAJIN (Shitsuke)', 'RAWAT (Seiketsu)', 'RESIK (Seiso)', 'RINGKAS (Seiri)'],
-      answer: 'RAJIN (Shitsuke)',
-      reflectionWrong: 'REFLEKSI KESALAHAN: Kedisiplinan diri menjalankan K3 secara konsisten adalah RAJIN (Shitsuke).',
-      reflectionCorrect: 'REFLEKSI BENAR: Luar biasa! RAJIN (Shitsuke) adalah pembentukan karakter disiplin industri sejati.'
-    }
-  ];
-
-  const handle5RAnswer = (opt) => {
-    sound.playClick();
-    setSelectedOpt(opt);
-    setShow5RReflection(true);
-    if (opt === questions5R[quizIndex].answer) {
-      setScore5R(score5R + 20);
-      sound.playSuccess();
-    } else {
-      sound.playError();
-    }
-  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -627,45 +577,36 @@ export default function SafetyK3Game() {
         </div>
 
         {/* Tab Switcher */}
-        <div style={{ display: 'flex', gap: '8px', background: 'rgba(255,255,255,0.08)', padding: '4px', borderRadius: '10px' }}>
-          <button
-            onClick={() => { sound.playClick(); setActiveTab('apd'); }}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              background: activeTab === 'apd' ? '#ea580c' : 'transparent',
-              color: '#ffffff',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.82rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s'
-            }}
-          >
-            <span>🧍</span> Simulator APD 3D Orbit
-          </button>
-          <button
-            onClick={() => { sound.playClick(); setActiveTab('5r'); }}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              background: activeTab === '5r' ? '#ea580c' : 'transparent',
-              color: '#ffffff',
-              border: 'none',
-              fontWeight: 800,
-              fontSize: '0.82rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s'
-            }}
-          >
-            <span>🧹</span> Budaya Kerja 5R (Kuis)
-          </button>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', background: 'rgba(255,255,255,0.08)', padding: '6px', borderRadius: '12px' }}>
+          {[
+            { id: 'apd', label: '🧍 Simulator APD 3D Orbit', desc: 'Seleksi APD' },
+            { id: 'k3lh_apar', label: '🛡️ K3LH, Bahaya & APAR', desc: 'Simulasi PASS' },
+            { id: 'budaya_5r', label: '🧹 Budaya 5R & Etika DUDI', desc: 'Audit 5S & Kuis' },
+            { id: 'perkakas', label: '🔨 Perkakas Tangan & Mesin', desc: 'Bor, Gerinda & Kikir' },
+            { id: 'jsa_dudi', label: '📋 JSA & Benda Uji DUDI', desc: 'SOP & Rubrik QC' }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => { sound.playClick(); setActiveTab(tab.id); }}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                background: activeTab === tab.id ? '#ea580c' : 'transparent',
+                color: '#ffffff',
+                border: activeTab === tab.id ? '1px solid #fdba74' : 'none',
+                fontWeight: 800,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              <span>{tab.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -1199,65 +1140,24 @@ export default function SafetyK3Game() {
       )}
 
       {/* =====================================================================
-          TAB 2: 5R REFLECTION QUIZ
+          TAB 2: K3LH, HIRARKI BAHAYA & SIMULATOR APAR
       ===================================================================== */}
-      {activeTab === '5r' && (
-        <div className="game-card" style={{ padding: '30px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center' }}>
-            <span className="game-badge badge-blue">SOAL 5R #{quizIndex + 1} / {questions5R.length}</span>
-            <span className="cyber-font" style={{ fontWeight: 700, color: 'var(--game-tp)', textShadow: '0 0 10px var(--game-tp)' }}>
-              [ SCORE: {score5R} XP ]
-            </span>
-          </div>
+      {activeTab === 'k3lh_apar' && <K3LHEmergencyModule />}
 
-          <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '20px', lineHeight: 1.5, color: 'var(--text-main)' }}>
-            {questions5R[quizIndex].question}
-          </h3>
+      {/* =====================================================================
+          TAB 3: BUDAYA KERJA 5R / 5S & ETIKA PROFESIONAL DUDI
+      ===================================================================== */}
+      {activeTab === 'budaya_5r' && <Budaya5REthicsModule />}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
-            {questions5R[quizIndex].options.map((opt, idx) => (
-              <button
-                key={idx}
-                className="btn-game btn-game-neutral"
-                style={{ textAlign: 'left', justifyContent: 'flex-start', padding: '12px 16px', fontSize: '0.9rem' }}
-                onClick={() => handle5RAnswer(opt)}
-                disabled={show5RReflection}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
+      {/* =====================================================================
+          TAB 4: PERKAKAS TANGAN MANUAL & MESIN PORTABEL / RINGAN
+      ===================================================================== */}
+      {activeTab === 'perkakas' && <BenchToolsModule />}
 
-          {show5RReflection && (
-            <div className={`${selectedOpt === questions5R[quizIndex].answer ? 'reflection-box-success' : 'reflection-box animate-shake'}`} style={{ padding: '16px 20px', borderRadius: '10px' }}>
-              <h4 className="cyber-font" style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '8px', color: selectedOpt === questions5R[quizIndex].answer ? 'var(--game-success)' : 'var(--game-danger)' }}>
-                {selectedOpt === questions5R[quizIndex].answer ? 'JAWABAN BENAR (+20 XP)' : 'REFLEKSI KESALAHAN'}
-              </h4>
-              <p style={{ fontSize: '0.92rem', fontWeight: 500, color: 'var(--text-main)', lineHeight: 1.6, margin: 0 }}>
-                {selectedOpt === questions5R[quizIndex].answer ? questions5R[quizIndex].reflectionCorrect : questions5R[quizIndex].reflectionWrong}
-              </p>
-
-              {quizIndex < questions5R.length - 1 ? (
-                <button
-                  className="btn-game btn-game-tp"
-                  style={{ width: '100%', marginTop: '16px', padding: '12px' }}
-                  onClick={() => {
-                    sound.playClick();
-                    setShow5RReflection(false);
-                    setQuizIndex(quizIndex + 1);
-                  }}
-                >
-                  Lanjut Soal Berikutnya →
-                </button>
-              ) : (
-                <div style={{ marginTop: '16px', padding: '12px', background: '#ecfdf5', borderRadius: '8px', color: '#065f46', fontWeight: 800, textAlign: 'center' }}>
-                  🎉 Selamat! Kamu telah menyelesaikan kuis Budaya Kerja 5R dengan total skor {score5R} XP!
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      {/* =====================================================================
+          TAB 5: JOB SAFETY ANALYSIS (JSA) & PROYEK BENDA UJI DUDI
+      ===================================================================== */}
+      {activeTab === 'jsa_dudi' && <JSABenchProjectModule />}
 
     </div>
   );

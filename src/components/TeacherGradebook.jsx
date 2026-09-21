@@ -1333,13 +1333,30 @@ const TeacherGradebook = () => {
 
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.86rem', lineHeight: 1.6 }}>
               <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>Langkah Pemasangan di Google Spreadsheet Pribadi:</div>
-              <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <li>Buka <strong>https://sheets.new</strong> di tab baru untuk membuat spreadsheet kosong.</li>
                 <li>Klik menu <strong>Ekstensi (Extensions)</strong> ➔ pilih <strong>Apps Script</strong>.</li>
                 <li>Hapus kode lama, lalu klik tombol <strong>"Salin Kode Apps Script"</strong> di bawah dan tempelkan.</li>
-                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> ➔ <strong>Penerapan baru</strong>.</li>
-                <li>Pilih jenis <strong>Aplikasi web</strong>, ubah <em>Yang memiliki akses</em> menjadi: <strong>Siapa saja (Anyone)</strong>.</li>
-                <li>Salin URL Web App yang berakhiran <code>/exec</code> lalu tempelkan di menu pengaturan webhook.</li>
+                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> ➔ <strong>Penerapan baru (New deployment)</strong>.</li>
+                <li>Klik ikon gerigi ⚙️ ➔ pilih <strong>Aplikasi web (Web app)</strong>.</li>
+                <li>
+                  Konfigurasi wajib:
+                  <ul style={{ marginTop: '4px', paddingLeft: '18px' }}>
+                    <li><strong>Jalankan sebagai (Execute as):</strong> Saya (email Anda)</li>
+                    <li><strong>Yang memiliki akses (Who has access):</strong> <strong style={{ color: '#dc2626' }}>Siapa saja (Anyone)</strong> <em>(wajib agar 36 siswa dapat mengirim nilai langsung dari ponsel mereka)</em></li>
+                  </ul>
+                </li>
+                <li>
+                  Klik <strong>Terapkan (Deploy)</strong> ➔ klik <strong>Otorisasi akses (Authorize access)</strong>.
+                  <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '10px 12px', marginTop: '6px', fontSize: '0.82rem', color: '#92400e', lineHeight: 1.5 }}>
+                    ⚠️ <strong>CARA MELEWATI PERINGATAN "Google hasn’t verified this app":</strong><br/>
+                    1. Klik tulisan <strong>"Advanced"</strong> (atau <strong>"Lanjutan"</strong>) di pojok kiri bawah.<br/>
+                    2. Klik tautan <strong>"Go to ... (unsafe)"</strong> (atau <strong>"Buka ... (tidak aman)"</strong>).<br/>
+                    3. Klik tombol biru <strong>"Allow"</strong> (atau <strong>"Izinkan"</strong>).<br/>
+                    <em>(Peringatan ini 100% normal dan aman karena script ini Anda buat sendiri di akun Google pribadi Anda, bukan aplikasi komersial pihak ketiga).</em>
+                  </div>
+                </li>
+                <li>Salin <strong>URL Aplikasi Web (Web App URL)</strong> yang berakhiran <code>/exec</code> lalu tempelkan di menu pengaturan webhook.</li>
               </ol>
             </div>
 

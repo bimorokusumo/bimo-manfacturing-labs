@@ -7,7 +7,6 @@ import {
   clearAllStoredScores,
   syncPendingScores,
   sendToGoogleSheet,
-  seedSampleScores,
   copyScoresToClipboard,
   exportScoresToExcelHTML
 } from '../services/sheetService';
@@ -193,7 +192,11 @@ const TeacherGradebook = () => {
       (item.judulKuis || '').toLowerCase().includes(searchQuery.toLowerCase());
 
     const effectiveModule = activeTab !== 'all' ? activeTab : selectedModule;
-    const matchModule = effectiveModule === 'all' || item.modul === effectiveModule;
+    const matchModule = effectiveModule === 'all' ||
+      item.modul === effectiveModule ||
+      (item.modul && item.modul.toLowerCase().includes(effectiveModule.toLowerCase())) ||
+      (item.judulKuis && item.judulKuis.toLowerCase().includes(effectiveModule.toLowerCase())) ||
+      (effectiveModule === 'Safety Lab' && (String(item.modul || '') + String(item.judulKuis || '')).toLowerCase().includes('safety'));
     const matchStatus = selectedStatus === 'all' || item.status === selectedStatus;
 
     return matchSearch && matchModule && matchStatus;
@@ -233,14 +236,6 @@ const TeacherGradebook = () => {
     } else {
       showToast(res.message);
     }
-  };
-
-  const handleSeedSamples = () => {
-    sound.playClick();
-    const updated = seedSampleScores();
-    setScores(updated);
-    sound.playSuccess();
-    showToast('✅ 6 Contoh Data Nilai Siswa SMKN 2 Depok berhasil dimuat ke Spreadsheet!');
   };
 
   const handleSaveWebhook = (e) => {
@@ -506,23 +501,6 @@ const TeacherGradebook = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              onClick={handleSeedSamples}
-              style={{
-                background: 'rgba(16, 185, 129, 0.25)',
-                border: '1px solid #10b981',
-                color: '#ecfdf5',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-              title="Tambahkan 6 baris data nilai contoh siswa untuk keperluan demonstrasi"
-            >
-              ➕ Muat Contoh Siswa
-            </button>
-
             <button
               onClick={handleClearData}
               style={{
@@ -843,26 +821,11 @@ const TeacherGradebook = () => {
                   <td colSpan="12" style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
                     <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
                     <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
-                      Tidak Ada Data yang Sesuai dengan Filter
+                      Belum Ada Data Rekapan Nilai
                     </div>
-                    <p style={{ margin: '6px 0 16px 0', fontSize: '0.85rem' }}>
-                      Klik tombol di bawah ini untuk memuat contoh data siswa SMKN 2 Depok ke dalam spreadsheet.
+                    <p style={{ margin: '6px 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+                      Nilai siswa akan otomatis tercatat secara real-time di sini saat siswa menyelesaikan kuis atau tes diagnostik.
                     </p>
-                    <button
-                      onClick={handleSeedSamples}
-                      style={{
-                        padding: '8px 18px',
-                        borderRadius: '8px',
-                        background: '#10b981',
-                        color: '#fff',
-                        border: 'none',
-                        fontWeight: 800,
-                        fontSize: '0.85rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      ➕ Muat 6 Contoh Data Siswa
-                    </button>
                   </td>
                 </tr>
               ) : (

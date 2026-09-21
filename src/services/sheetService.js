@@ -10,112 +10,9 @@ const STORAGE_KEY_WEBHOOK = 'bimo_sheets_webhook_url';
 const DEFAULT_WEBHOOK_URL = '';
 
 /**
- * Data Contoh Nilai Siswa Awal SMKN 2 Depok (agar spreadsheet langsung berpenampilan terisi)
+ * Data Nilai Siswa Awal (Kosong, murni menampung data riil siswa)
  */
-export const SAMPLE_STUDENT_SCORES = [
-  {
-    id: 'sample_01',
-    timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-    waktu: 'Senin, 21 September 2026, 08:30 WIB',
-    namaSiswa: 'Ahmad Fauzi',
-    nomorAbsen: '03',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Machine Lab',
-    judulKuis: 'Tes Diagnostik Machine Lab (Bubut & CNC)',
-    skor: 90,
-    jawabanBenar: 9,
-    totalSoal: 10,
-    status: 'LULUS',
-    detailJawaban: '1:A (Benar), 2:C (Benar), 3:B (Benar), 4:D (Benar), 5:A (Benar), 6:C (Salah, Kunci: B), 7:D (Benar), 8:A (Benar), 9:B (Benar), 10:C (Benar)',
-    synced: true
-  },
-  {
-    id: 'sample_02',
-    timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
-    waktu: 'Senin, 21 September 2026, 08:45 WIB',
-    namaSiswa: 'Budi Santoso',
-    nomorAbsen: '07',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Alat Pemotong',
-    judulKuis: 'Tes Diagnostik Alat Potong & RPM',
-    skor: 80,
-    jawabanBenar: 8,
-    totalSoal: 10,
-    status: 'LULUS',
-    detailJawaban: '1:B (Benar), 2:D (Benar), 3:A (Benar), 4:C (Salah, Kunci: A), 5:B (Benar), 6:C (Benar), 7:A (Benar), 8:B (Salah, Kunci: D), 9:C (Benar), 10:A (Benar)',
-    synced: true
-  },
-  {
-    id: 'sample_03',
-    timestamp: new Date(Date.now() - 3600000 * 5).toISOString(),
-    waktu: 'Senin, 21 September 2026, 09:15 WIB',
-    namaSiswa: 'Siti Rahmawati',
-    nomorAbsen: '28',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Heat Treatment',
-    judulKuis: 'Tes Diagnostik Perlakuan Panas Logam',
-    skor: 100,
-    jawabanBenar: 10,
-    totalSoal: 10,
-    status: 'LULUS',
-    detailJawaban: 'Semua 10 soal dijawab benar sempurna (Hardening, Quenching, Tempering, Annealing, Normalizing, Blackening).',
-    synced: true
-  },
-  {
-    id: 'sample_04',
-    timestamp: new Date(Date.now() - 3600000 * 6).toISOString(),
-    waktu: 'Senin, 21 September 2026, 09:40 WIB',
-    namaSiswa: 'Rizky Pratama',
-    nomorAbsen: '22',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Mekanika Teknik',
-    judulKuis: 'Tes Diagnostik Momen Gaya & Torsi',
-    skor: 70,
-    jawabanBenar: 7,
-    totalSoal: 10,
-    status: 'REMEDIAL',
-    detailJawaban: '1:C (Benar), 2:A (Benar), 3:D (Salah, Kunci: B), 4:A (Benar), 5:B (Salah, Kunci: C), 6:D (Benar), 7:B (Benar), 8:C (Salah, Kunci: A), 9:A (Benar), 10:D (Benar)',
-    synced: true
-  },
-  {
-    id: 'sample_05',
-    timestamp: new Date(Date.now() - 3600000 * 8).toISOString(),
-    waktu: 'Senin, 21 September 2026, 10:05 WIB',
-    namaSiswa: 'Dewi Lestari',
-    nomorAbsen: '11',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Alat Ukur Presisi',
-    judulKuis: 'Tes Diagnostik Jangka Sorong & Mikrometer',
-    skor: 90,
-    jawabanBenar: 9,
-    totalSoal: 10,
-    status: 'LULUS',
-    detailJawaban: '1:A (Benar), 2:B (Benar), 3:C (Benar), 4:D (Benar), 5:A (Salah, Kunci: B), 6:C (Benar), 7:D (Benar), 8:A (Benar), 9:B (Benar), 10:C (Benar)',
-    synced: true
-  },
-  {
-    id: 'sample_06',
-    timestamp: new Date(Date.now() - 3600000 * 10).toISOString(),
-    waktu: 'Senin, 21 September 2026, 10:30 WIB',
-    namaSiswa: 'Fajar Nugroho',
-    nomorAbsen: '14',
-    kelas: 'X TPM 1',
-    sekolah: 'SMKN 2 Depok',
-    modul: 'Welding Lab',
-    judulKuis: 'Tes Diagnostik Pengelasan SMAW',
-    skor: 80,
-    jawabanBenar: 8,
-    totalSoal: 10,
-    status: 'LULUS',
-    detailJawaban: '1:B (Benar), 2:B (Benar), 3:A (Benar), 4:C (Benar), 5:A (Salah, Kunci: D), 6:A (Benar), 7:C (Benar), 8:B (Salah, Kunci: A), 9:B (Benar), 10:C (Benar)',
-    synced: true
-  }
-];
+export const SAMPLE_STUDENT_SCORES = [];
 
 /**
  * Mengambil URL Webhook Google Apps Script yang tersimpan
@@ -148,35 +45,34 @@ export const setSpreadsheetWebhookUrl = (url) => {
 
 /**
  * Mengambil semua data nilai yang tersimpan di Local Storage.
- * Jika belum ada data sama sekali, otomatis mengisi data contoh awal agar spreadsheet langsung terlihat.
+ * Murni mengembalikan data riil siswa dan otomatis membersihkan data contoh dummy jika pernah tersimpan.
  */
 export const getAllStoredScores = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_SCORES);
     if (!raw) {
-      // Inisialisasi awal dengan data contoh agar guru langsung melihat format spreadsheet yang rapi
-      localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(SAMPLE_STUDENT_SCORES));
-      return SAMPLE_STUDENT_SCORES;
+      return [];
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    
+    // Otomatis memfilter dan membersihkan data sample_* jika ada tersisa di storage browser
+    const cleaned = parsed.filter(item => item && item.id && !String(item.id).startsWith('sample_'));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch (err) {
     console.error('Gagal membaca data nilai dari localStorage:', err);
-    return SAMPLE_STUDENT_SCORES;
+    return [];
   }
 };
 
 /**
- * Mengisi ulang data contoh siswa (SMKN 2 Depok)
+ * Mengambil data nilai siswa aktif
  */
 export const seedSampleScores = () => {
-  try {
-    const current = getAllStoredScores();
-    const merged = [...SAMPLE_STUDENT_SCORES, ...current.filter(c => !c.id.startsWith('sample_'))];
-    localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(merged));
-    return merged;
-  } catch {
-    return SAMPLE_STUDENT_SCORES;
-  }
+  return getAllStoredScores();
 };
 
 /**

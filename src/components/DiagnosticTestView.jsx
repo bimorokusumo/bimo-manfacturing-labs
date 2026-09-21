@@ -151,8 +151,8 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
           className: studentInfo.classRoom || 'X TPM',
           school: studentInfo.school || 'SMKN 2 Depok'
         },
-        modul: 'Asesmen Diagnostik Awal',
-        judulKuis: `Diagnostik: ${currentCategoryData.title}`,
+        modul: currentCategoryData.shortTitle || 'Safety Lab',
+        judulKuis: `Tes Diagnostik: ${currentCategoryData.title}`,
         skor: calculatedScore,
         jawabanBenar: correct,
         totalSoal: currentQuestions.length,

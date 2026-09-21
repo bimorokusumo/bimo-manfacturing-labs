@@ -159,7 +159,7 @@ export const sendToGoogleSheet = async (payload) => {
       mode: 'no-cors',
       cache: 'no-cache',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain;charset=utf-8'
       },
       body: JSON.stringify(payload)
     });

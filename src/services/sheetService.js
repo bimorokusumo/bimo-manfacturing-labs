@@ -7,7 +7,7 @@ const STORAGE_KEY_SCORES = 'bimo_quiz_scores';
 const STORAGE_KEY_WEBHOOK = 'bimo_sheets_webhook_url';
 
 // Default / fallback Webhook URL (Bisa diganti oleh guru melalui Panel Monitoring Nilai)
-const DEFAULT_WEBHOOK_URL = '';
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyK77i-GvCECETlbF2xJfOFSpAed6unfBlwNTDOeH7wBhJuPfpb8pJHkF1ExrYOzQe2lA/exec';
 
 /**
  * Data Nilai Siswa Awal (Kosong, murni menampung data riil siswa)

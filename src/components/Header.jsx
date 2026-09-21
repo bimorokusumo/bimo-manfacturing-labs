@@ -2,9 +2,9 @@ import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useStudent } from '../context/StudentContext';
 
-const Header = ({ toggleSidebar, onOpenGradebook }) => {
+const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
-  const { student, isLoggedIn, openLoginModal, isTeacher } = useStudent();
+  const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -38,7 +38,7 @@ const Header = ({ toggleSidebar, onOpenGradebook }) => {
             Halo, {isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}! <span role="img" aria-label="wave">{isTeacher ? '👨‍🏫' : '👋'}</span>
           </h2>
           <p className="app-header-subtitle" style={{ color: isTeacher ? '#d97706' : 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px', fontWeight: isTeacher ? 700 : 400 }}>
-            {isTeacher ? `Pengajar • ${student.school || 'SMKN 2 Depok'} (Panel Guru Aktif)` : (isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Selamat datang di Virtual Manufacturing Lab')}
+            {isTeacher ? `Pengajar • ${student.school || 'SMKN 2 Depok'} (Panel Guru Aktif)` : (isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Silakan Login untuk mencatat progres & nilai ke Spreadsheet Guru')}
           </p>
         </div>
       </div>
@@ -139,35 +139,95 @@ const Header = ({ toggleSidebar, onOpenGradebook }) => {
           </button>
         )}
 
-        {/* IDENTITAS SISWA & AVATAR (KLIK UNTUK GANTI SISWA) */}
-        <div
-          onClick={() => openLoginModal()}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            cursor: 'pointer',
-            padding: '4px 8px',
-            borderRadius: '10px',
-            transition: 'background 0.2s',
-            border: '1px solid transparent'
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.04)')}
-          onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
-          title={isTeacher ? "Akun Guru Terverifikasi (Klik untuk Ganti)" : "Klik untuk Edit Identitas / Ganti Siswa"}
-        >
-          <div style={{ textAlign: 'right' }}>
-            <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: isTeacher ? '#d97706' : 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {isLoggedIn ? (isTeacher ? `⭐ ${student.name}` : student.name) : 'Masuk / Login'}
+        {/* IDENTITAS SISWA / LOGIN & LOGOUT ACTIONS */}
+        {isLoggedIn ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div
+              onClick={() => openLoginModal()}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                cursor: 'pointer',
+                padding: '4px 8px',
+                borderRadius: '10px',
+                transition: 'background 0.2s',
+                border: '1px solid transparent'
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.04)')}
+              onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
+              title={isTeacher ? "Akun Guru Terverifikasi (Klik untuk Ganti/Edit)" : "Klik untuk Edit Identitas / Ganti Siswa"}
+            >
+              <div style={{ textAlign: 'right' }}>
+                <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: isTeacher ? '#d97706' : 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {isTeacher ? `⭐ ${student.name}` : student.name}
+                </div>
+                <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: isTeacher ? '#d97706' : '#0284c7', fontWeight: 700 }}>
+                  {isTeacher ? 'Pengajar' : `Absen: ${student.studentNumber}`}
+                </div>
+              </div>
+              <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
+                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=${isTeacher ? 'f59e0b' : '0284c7'}&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
+              </div>
             </div>
-            <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: isTeacher ? '#d97706' : '#0284c7', fontWeight: 700 }}>
-              {isLoggedIn ? (isTeacher ? 'Pengajar' : `Absen: ${student.studentNumber}`) : 'Klik untuk data'}
-            </div>
+
+            {/* TOMBOL LOGOUT */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (window.confirm("Apakah Anda yakin ingin keluar (Logout)? Sesi akun Anda akan ditutup.")) {
+                  logout();
+                  if (typeof onLogout === 'function') {
+                    onLogout();
+                  }
+                }
+              }}
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#ef4444',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.2s',
+                whiteSpace: 'nowrap'
+              }}
+              title="Keluar / Logout dari sesi ini"
+            >
+              <span>🚪</span>
+              <span className="app-header-class-text">Logout</span>
+            </button>
           </div>
-          <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
-            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student?.name || 'Siswa')}&background=${isTeacher ? 'f59e0b' : '0284c7'}&color=fff&bold=true`} alt="Avatar" style={{ width: '100%', height: '100%' }} />
-          </div>
-        </div>
+        ) : (
+          /* TOMBOL LOGIN JIKA BELUM LOGIN */
+          <button
+            onClick={() => openLoginModal()}
+            style={{
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              border: 'none',
+              color: '#ffffff',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)',
+              transition: 'all 0.2s'
+            }}
+            title="Masuk / Login Siswa"
+          >
+            <span>🔑</span>
+            <span>Masuk / Login</span>
+          </button>
+        )}
       </div>
     </div>
   );

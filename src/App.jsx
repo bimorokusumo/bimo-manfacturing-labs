@@ -216,6 +216,7 @@ function AppInner() {
         <Header
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onOpenGradebook={() => setActiveMenu('gradebook')}
+          onLogout={() => setIsStarted(false)}
         />
         
         <main className="app-main-body" style={{ padding: '20px 16px', flex: 1, overflowY: 'auto', overflowX: 'hidden', minWidth: 0, maxWidth: '100%' }}>

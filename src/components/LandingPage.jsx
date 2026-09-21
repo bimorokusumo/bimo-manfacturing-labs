@@ -2,7 +2,7 @@ import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
 const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
-  const { student, isLoggedIn, openLoginModal, isTeacher } = useStudent();
+  const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
   const handleLoginClick = () => {
     if (typeof onOpenLogin === 'function') {
@@ -126,42 +126,73 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
         {/* LOGIN BUTTONS */}
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           {isLoggedIn ? (
-            <button
-              onClick={handleLoginClick}
-              style={{
-                padding: '8px 18px',
-                borderRadius: '8px',
-                background: 'rgba(2, 132, 199, 0.2)',
-                border: '1px solid #0284c7',
-                color: '#38bdf8',
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              title="Klik untuk Edit Identitas / Ganti Siswa"
-            >
-              <span>👤 {student.name} (Absen: {student.studentNumber})</span>
-            </button>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button
+                onClick={handleLoginClick}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  background: 'rgba(2, 132, 199, 0.2)',
+                  border: '1px solid #0284c7',
+                  color: '#38bdf8',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                title="Klik untuk Edit Identitas / Ganti Siswa"
+              >
+                <span>👤 {student.name} (Absen: {student.studentNumber})</span>
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm("Apakah Anda yakin ingin keluar (Logout)?")) {
+                    logout();
+                  }
+                }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  color: '#f87171',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  transition: 'all 0.2s'
+                }}
+                title="Keluar / Logout Akun"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </button>
+            </div>
           ) : (
             <button
               onClick={handleLoginClick}
               style={{ 
                 padding: '10px 22px', 
                 borderRadius: '8px', 
-                background: 'rgba(255,255,255,0.08)', 
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255,255,255,0.2)', 
+                background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', 
+                border: 'none', 
                 color: '#fff', 
-                fontWeight: 700, 
+                fontWeight: 800, 
                 fontSize: '0.88rem', 
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                boxShadow: '0 2px 10px rgba(245, 158, 11, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              🎓 Login Siswa
+              <span>🔑</span>
+              <span>Masuk / Login</span>
             </button>
           )}
 

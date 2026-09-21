@@ -2,7 +2,7 @@ import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
 const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) => {
-  const { student, isLoggedIn, openLoginModal, isTeacher } = useStudent();
+  const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
   const menus = [
     { id: 'dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
@@ -233,34 +233,86 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
 
       {/* FOOTER */}
       <div className="sidebar-footer" style={{ padding: '16px', borderTop: '1px solid var(--border-light)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {isLoggedIn && (
-          <div style={{ background: isTeacher ? '#fffbeb' : '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: isTeacher ? '1px solid #fde68a' : '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ overflow: 'hidden', flex: 1, marginRight: '6px' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: isTeacher ? '#92400e' : '#0f172a', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {isTeacher ? '⭐ ' : '👤 '}{student.name}
+        {isLoggedIn ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ background: isTeacher ? '#fffbeb' : '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: isTeacher ? '1px solid #fde68a' : '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ overflow: 'hidden', flex: 1, marginRight: '6px' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: isTeacher ? '#92400e' : '#0f172a', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                  {isTeacher ? '⭐ ' : '👤 '}{student.name}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: isTeacher ? '#b45309' : '#64748b', fontWeight: isTeacher ? 700 : 500 }}>
+                  {isTeacher ? 'Pengajar (Akses Monitoring)' : `Absen ${student.studentNumber} • ${student.className}`}
+                </div>
               </div>
-              <div style={{ fontSize: '0.7rem', color: isTeacher ? '#b45309' : '#64748b', fontWeight: isTeacher ? 700 : 500 }}>
-                {isTeacher ? 'Pengajar (Akses Monitoring)' : `Absen ${student.studentNumber} • ${student.className}`}
-              </div>
+              <button
+                onClick={() => openLoginModal()}
+                style={{
+                  background: isTeacher ? 'rgba(245, 158, 11, 0.15)' : 'rgba(2, 132, 199, 0.1)',
+                  border: 'none',
+                  color: isTeacher ? '#b45309' : '#0284c7',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+                title="Ganti Identitas Pengguna"
+              >
+                Ganti
+              </button>
             </div>
+
             <button
-              onClick={() => openLoginModal()}
-              style={{
-                background: isTeacher ? 'rgba(245, 158, 11, 0.15)' : 'rgba(2, 132, 199, 0.1)',
-                border: 'none',
-                color: isTeacher ? '#b45309' : '#0284c7',
-                padding: '4px 8px',
-                borderRadius: '6px',
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
+              onClick={() => {
+                if (window.confirm("Apakah Anda yakin ingin keluar (Logout)? Sesi Anda akan ditutup.")) {
+                  logout();
+                  if (typeof onLogout === 'function') onLogout();
+                }
               }}
-              title="Ganti Identitas Pengguna"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                background: 'rgba(239, 68, 68, 0.08)',
+                color: '#ef4444',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: 700,
+                fontSize: '0.82rem',
+                transition: 'all 0.15s'
+              }}
+              title="Logout dari akun ini"
             >
-              Ganti
+              <span>🚪</span>
+              <span>Keluar (Logout)</span>
             </button>
           </div>
+        ) : (
+          <button
+            onClick={() => openLoginModal()}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '10px 14px',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+            }}
+          >
+            <span>🔑</span>
+            <span>Masuk / Login Siswa</span>
+          </button>
         )}
 
         <button 
@@ -269,15 +321,15 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            padding: '10px 12px',
+            padding: '8px 12px',
             background: 'transparent',
             color: 'var(--text-muted)',
             border: 'none',
             cursor: 'pointer',
             fontWeight: 500,
-            fontSize: '0.88rem'
+            fontSize: '0.82rem'
           }}>
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
           </svg>
           Kembali ke Beranda

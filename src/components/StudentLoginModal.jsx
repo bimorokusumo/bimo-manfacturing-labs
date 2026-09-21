@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useStudent, isTeacherUser } from '../context/StudentContext';
+import { useStudent } from '../context/StudentContext';
 import { sound } from '../utils/audio';
 
 const CLASS_OPTIONS = [
@@ -17,7 +17,7 @@ const CLASS_OPTIONS = [
 ];
 
 const StudentLoginModal = () => {
-  const { student, isLoggedIn, isModalOpen, closeLoginModal, login } = useStudent();
+  const { student, isLoggedIn, isModalOpen, closeLoginModal, login, logout } = useStudent();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -27,29 +27,32 @@ const StudentLoginModal = () => {
     school: ''
   });
 
-  const isEnteringTeacher = isTeacherUser({
-    name: formData.name,
-    studentNumber: formData.studentNumber,
-    className: formData.className === 'Lainnya (Tulis Manual)' ? formData.customClass : formData.className,
-    school: formData.school
-  });
-
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Sync form data whenever modal opens or student changes
+  // Form bersih saat modal dibuka jika belum login
   useEffect(() => {
     if (isModalOpen) {
-      const isPreset = CLASS_OPTIONS.includes(student?.className);
-      setFormData({
-        name: student?.name || '',
-        studentNumber: student?.studentNumber || '',
-        className: isPreset ? (student?.className || 'X TPM 1') : 'Lainnya (Tulis Manual)',
-        customClass: isPreset ? '' : (student?.className || ''),
-        school: student?.school || ''
-      });
+      if (isLoggedIn && student?.name) {
+        const isPreset = CLASS_OPTIONS.includes(student?.className);
+        setFormData({
+          name: student?.name || '',
+          studentNumber: student?.studentNumber || '',
+          className: isPreset ? (student?.className || 'X TPM 1') : 'Lainnya (Tulis Manual)',
+          customClass: isPreset ? '' : (student?.className || ''),
+          school: student?.school || ''
+        });
+      } else {
+        setFormData({
+          name: '',
+          studentNumber: '',
+          className: 'X TPM 1',
+          customClass: '',
+          school: ''
+        });
+      }
       setErrorMsg('');
     }
-  }, [isModalOpen, student]);
+  }, [isModalOpen, isLoggedIn, student]);
 
   if (!isModalOpen) return null;
 
@@ -326,65 +329,45 @@ const StudentLoginModal = () => {
           {/* INPUT ASAL SEKOLAH */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-              Nama Sekolah / Instansi <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>(Wajib untuk Guru SMKN 2 Depok)</span>
+              Nama Sekolah / Instansi <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>(Opsional)</span>
             </label>
             <input
               type="text"
-              placeholder="Contoh: SMKN 2 Depok"
+              placeholder="Contoh: Nama Sekolah / Instansi"
               value={formData.school}
               onChange={(e) => setFormData({ ...formData, school: e.target.value })}
               style={{
                 width: '100%',
                 padding: '12px 14px',
                 borderRadius: '10px',
-                border: isEnteringTeacher ? '2px solid #f59e0b' : '1.5px solid #cbd5e1',
+                border: '1.5px solid #cbd5e1',
                 fontSize: '0.92rem',
                 color: '#0f172a',
                 outline: 'none',
-                background: isEnteringTeacher ? '#fffbeb' : '#f8fafc'
+                background: '#f8fafc'
               }}
               onFocus={(e) => (e.target.style.borderColor = '#f59e0b')}
-              onBlur={(e) => (e.target.style.borderColor = isEnteringTeacher ? '#f59e0b' : '#cbd5e1')}
+              onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
             />
           </div>
 
           {/* INFO BADGE */}
-          {isEnteringTeacher ? (
-            <div
-              style={{
-                background: '#fef3c7',
-                border: '1.5px solid #f59e0b',
-                borderRadius: '10px',
-                padding: '10px 14px',
-                fontSize: '0.8rem',
-                color: '#92400e',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontWeight: 700
-              }}
-            >
-              <span>⭐</span>
-              <span>Akses Khusus Guru Terdeteksi: Panel Monitoring Nilai akan otomatis diaktifkan untuk Anda.</span>
-            </div>
-          ) : (
-            <div
-              style={{
-                background: '#f0fdf4',
-                border: '1px solid #bbf7d0',
-                borderRadius: '10px',
-                padding: '10px 14px',
-                fontSize: '0.78rem',
-                color: '#166534',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <span>📊</span>
-              <span>Nilai otomatis terekam ke Spreadsheet Guru secara real-time setiap kali Anda menyelesaikan kuis.</span>
-            </div>
-          )}
+          <div
+            style={{
+              background: '#f0fdf4',
+              border: '1px solid #bbf7d0',
+              borderRadius: '10px',
+              padding: '10px 14px',
+              fontSize: '0.8rem',
+              color: '#166534',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            <span>📊</span>
+            <span>Nilai otomatis terekam ke Spreadsheet Guru secara real-time setiap kali Anda menyelesaikan kuis &amp; simulasi.</span>
+          </div>
 
           {/* SUBMIT BUTTON */}
           <button
@@ -407,9 +390,48 @@ const StudentLoginModal = () => {
               gap: '8px'
             }}
           >
-            <span>Masuk Laboratorium & Mulai Praktik</span>
+            <span>{isLoggedIn ? 'Simpan Identitas & Lanjut Praktik' : 'Masuk Laboratorium & Mulai Praktik'}</span>
             <span>🚀</span>
           </button>
+
+          {/* TOMBOL LOGOUT JIKA SUDAH LOGIN */}
+          {isLoggedIn && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playClick();
+                logout();
+                setFormData({
+                  name: '',
+                  studentNumber: '',
+                  className: 'X TPM 1',
+                  customClass: '',
+                  school: ''
+                });
+                setErrorMsg('');
+                closeLoginModal();
+              }}
+              style={{
+                marginTop: '4px',
+                padding: '12px',
+                borderRadius: '10px',
+                background: 'rgba(239, 68, 68, 0.08)',
+                color: '#ef4444',
+                border: '1.5px solid rgba(239, 68, 68, 0.3)',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'all 0.2s'
+              }}
+            >
+              <span>🚪</span>
+              <span>Keluar / Logout Akun ({student.name})</span>
+            </button>
+          )}
         </form>
       </div>
     </div>

@@ -13,17 +13,11 @@ import {
 import { sound } from '../utils/audio';
 
 const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(30000);
+
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getActiveSheet();
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Waktu", "Nama Siswa", "No. Absen", "Kelas", "Sekolah",
-        "Modul", "Judul Kuis", "Nilai", "Benar", "Total Soal",
-        "Status", "Rincian Jawaban"
-      ]);
-    }
 
     var data = {};
     if (e && e.postData && e.postData.contents) {
@@ -32,33 +26,167 @@ const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
       data = e.parameter;
     }
 
-    var nowStr = data.waktu || new Date().toLocaleString();
+    var nowStr = data.waktu || Utilities.formatDate(new Date(), "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss");
     var namaSiswa = data.namaSiswa || "Siswa Praktikan";
-    var nomorAbsen = data.nomorAbsen || "-";
+    var nomorAbsen = data.nomorAbsen !== undefined ? String(data.nomorAbsen) : "-";
     var kelas = data.kelas || "-";
     var sekolah = data.sekolah || "-";
     var modul = data.modul || "-";
     var judulKuis = data.judulKuis || "-";
-    var skor = Number(data.skor || 0);
-    var jawabanBenar = data.jawabanBenar || "-";
-    var totalSoal = data.totalSoal || "-";
+    var skor = Number(data.skor !== undefined ? data.skor : 0);
+    var jawabanBenar = data.jawabanBenar !== undefined ? data.jawabanBenar : "-";
+    var totalSoal = data.totalSoal !== undefined ? data.totalSoal : "-";
     var status = data.status || (skor >= 75 ? "LULUS" : "REMEDIAL");
     var detail = typeof data.detailJawaban === "object" ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
 
-    sheet.appendRow([
+    var rowData = [
       nowStr, namaSiswa, nomorAbsen, kelas, sekolah,
       modul, judulKuis, skor, jawabanBenar, totalSoal,
       status, detail
-    ]);
+    ];
 
-    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+    // 1. Tentukan Sheet Modul dan Warna Tema
+    var sheetInfo = getSheetInfo(modul, judulKuis);
+
+    // 2. Simpan ke Tab Modul Khusus
+    var moduleSheet = getOrCreateSheet(ss, sheetInfo.name, sheetInfo.color);
+    appendStudentRow(moduleSheet, rowData);
+
+    // 3. Simpan juga ke Tab Rekap Master
+    var masterSheet = getOrCreateSheet(ss, "📊 Rekap Semua Nilai", "#1e293b");
+    appendStudentRow(masterSheet, rowData);
+
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      message: "Data " + namaSiswa + " berhasil dicatat ke " + sheetInfo.name
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      message: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } finally {
+    lock.releaseLock();
   }
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({ status: "active" })).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "active",
+    message: "Google Apps Script Multi-Sheet BIMO Manufacturing Labs Aktif"
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function getSheetInfo(modul, judul) {
+  var t = (String(modul || "") + " " + String(judul || "")).toLowerCase();
+  if (t.indexOf("safety") !== -1 || t.indexOf("k3") !== -1 || t.indexOf("budaya") !== -1 || t.indexOf("5r") !== -1) {
+    return { name: "1. Safety Lab K3", color: "#065f46" };
+  }
+  if (t.indexOf("machine") !== -1 || t.indexOf("bubut") !== -1 || t.indexOf("cnc") !== -1) {
+    return { name: "2. Machine & CNC", color: "#1e40af" };
+  }
+  if (t.indexOf("pemotong") !== -1 || t.indexOf("potong") !== -1) {
+    return { name: "3. Alat Pemotong", color: "#c2410c" };
+  }
+  if (t.indexOf("heat") !== -1 || t.indexOf("treatment") !== -1 || t.indexOf("termal") !== -1) {
+    return { name: "4. Heat Treatment", color: "#991b1b" };
+  }
+  if (t.indexOf("mekanika") !== -1 || t.indexOf("fisika") !== -1 || t.indexOf("statika") !== -1) {
+    return { name: "5. Mekanika Teknik", color: "#0e7490" };
+  }
+  if (t.indexOf("weld") !== -1 || t.indexOf("las") !== -1) {
+    return { name: "6. Welding Lab", color: "#b45309" };
+  }
+  if (t.indexOf("ukur") !== -1 || t.indexOf("presisi") !== -1 || t.indexOf("metrologi") !== -1) {
+    return { name: "7. Alat Ukur Presisi", color: "#3730a3" };
+  }
+  if (t.indexOf("design") !== -1 || t.indexOf("gambar") !== -1 || t.indexOf("cad") !== -1) {
+    return { name: "8. Design & CAD", color: "#6b21a8" };
+  }
+  if (t.indexOf("evaluasi") !== -1 || t.indexOf("komprehensif") !== -1) {
+    return { name: "9. Evaluasi Akhir", color: "#9f1239" };
+  }
+  return { name: "10. Modul Praktik Lain", color: "#475569" };
+}
+
+function getOrCreateSheet(ss, sheetName, themeColor) {
+  var sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+
+  if (sheet.getLastRow() === 0) {
+    var headers = [
+      "Waktu & Tanggal",
+      "Nama Lengkap Siswa",
+      "No. Absen",
+      "Kelas / Jurusan",
+      "Sekolah / Instansi",
+      "Modul Laboratorium",
+      "Nama Kuis / Asesmen",
+      "Nilai (0-100)",
+      "Benar",
+      "Total Soal",
+      "Status KKM",
+      "Rincian Jawaban Siswa"
+    ];
+    sheet.appendRow(headers);
+
+    var headerRange = sheet.getRange(1, 1, 1, headers.length);
+    headerRange.setBackground(themeColor || "#1e293b");
+    headerRange.setFontColor("#ffffff");
+    headerRange.setFontWeight("bold");
+    headerRange.setHorizontalAlignment("center");
+    sheet.setRowHeight(1, 35);
+    sheet.setFrozenRows(1);
+
+    sheet.setColumnWidth(1, 170);
+    sheet.setColumnWidth(2, 220);
+    sheet.setColumnWidth(3, 85);
+    sheet.setColumnWidth(4, 110);
+    sheet.setColumnWidth(5, 160);
+    sheet.setColumnWidth(6, 160);
+    sheet.setColumnWidth(7, 240);
+    sheet.setColumnWidth(8, 100);
+    sheet.setColumnWidth(9, 80);
+    sheet.setColumnWidth(10, 90);
+    sheet.setColumnWidth(11, 110);
+    sheet.setColumnWidth(12, 300);
+  }
+
+  return sheet;
+}
+
+function appendStudentRow(sheet, rowData) {
+  sheet.appendRow(rowData);
+  var lastRow = sheet.getLastRow();
+  sheet.setRowHeight(lastRow, 26);
+
+  sheet.getRange(lastRow, 3).setHorizontalAlignment("center");
+  sheet.getRange(lastRow, 4).setHorizontalAlignment("center");
+  sheet.getRange(lastRow, 8).setHorizontalAlignment("center");
+  sheet.getRange(lastRow, 9).setHorizontalAlignment("center");
+  sheet.getRange(lastRow, 10).setHorizontalAlignment("center");
+  sheet.getRange(lastRow, 11).setHorizontalAlignment("center");
+
+  var score = Number(rowData[7] || 0);
+  var scoreCell = sheet.getRange(lastRow, 8);
+  var statusCell = sheet.getRange(lastRow, 11);
+
+  scoreCell.setFontWeight("bold");
+  statusCell.setFontWeight("bold");
+
+  if (score >= 75) {
+    statusCell.setBackground("#dcfce7");
+    statusCell.setFontColor("#166534");
+    scoreCell.setFontColor("#16a34a");
+  } else {
+    statusCell.setBackground("#fee2e2");
+    statusCell.setFontColor("#991b1b");
+    scoreCell.setFontColor("#dc2626");
+  }
 }`;
 
 const TeacherGradebook = () => {

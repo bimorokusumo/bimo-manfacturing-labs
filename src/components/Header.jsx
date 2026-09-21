@@ -44,75 +44,80 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        {/* Button Aksesibilitas & Inklusi */}
-        <button
-          onClick={() => setIsModalOpen(true)}
-          style={{
-            background: 'rgba(59, 130, 246, 0.08)',
-            border: '1px solid rgba(59, 130, 246, 0.25)',
-            color: '#2563eb',
-            cursor: 'pointer',
-            padding: '6px 12px',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '0.74rem',
-            fontWeight: 800,
-            transition: 'all 0.2s ease'
-          }}
-          title="Pengaturan Aksesibilitas & Mode Inklusi"
-        >
-          <span style={{ fontSize: '1rem' }}>♿</span>
-          <span className="app-header-class-text">Inklusi</span>
-        </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Extra tools (Inklusi & Narator) - disembunyikan di mode HP Landscape agar simpel */}
+        <div className="app-header-extra-tools" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Button Aksesibilitas & Inklusi */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              background: 'rgba(59, 130, 246, 0.08)',
+              border: '1px solid rgba(59, 130, 246, 0.25)',
+              color: '#2563eb',
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              transition: 'all 0.2s ease'
+            }}
+            title="Pengaturan Aksesibilitas & Mode Inklusi"
+          >
+            <span style={{ fontSize: '1rem' }}>♿</span>
+            <span className="app-header-class-text">Inklusi</span>
+          </button>
 
-        {/* Button Quick Audio Narator Toggle */}
-        <button
-          onClick={isSpeaking ? stopSpeech : () => speakText('Selamat datang di Virtual Manufacturing Lab. Silakan pilih menu di samping atau klik tombol narator pada modul yang sedang Anda pelajari untuk mendengarkan penjelasan materi.', 'Panduan Navigasi Lab')}
-          style={{
-            background: isSpeaking ? '#fff7ed' : 'rgba(0, 0, 0, 0.05)',
-            border: isSpeaking ? '1px solid #f59e0b' : '1px solid var(--border-light)',
-            color: isSpeaking ? '#ea580c' : 'var(--text-muted)',
-            cursor: 'pointer',
-            padding: '6px 12px',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            fontSize: '0.74rem',
-            fontWeight: 800,
-            transition: 'all 0.2s ease'
-          }}
-          title={isSpeaking ? "Hentikan Narator Suara" : "Dengarkan Panduan Suara"}
-        >
-          <span>{isSpeaking ? '🔊' : '🔈'}</span>
-          <span className="app-header-class-text">{isSpeaking ? 'Berhenti' : 'Narator'}</span>
-        </button>
+          {/* Button Quick Audio Narator Toggle */}
+          <button
+            onClick={isSpeaking ? stopSpeech : () => speakText('Selamat datang di Virtual Manufacturing Lab. Silakan pilih menu di samping atau klik tombol narator pada modul yang sedang Anda pelajari untuk mendengarkan penjelasan materi.', 'Panduan Navigasi Lab')}
+            style={{
+              background: isSpeaking ? '#fff7ed' : 'rgba(0, 0, 0, 0.05)',
+              border: isSpeaking ? '1px solid #f59e0b' : '1px solid var(--border-light)',
+              color: isSpeaking ? '#ea580c' : 'var(--text-muted)',
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              transition: 'all 0.2s ease'
+            }}
+            title={isSpeaking ? "Hentikan Narator Suara" : "Dengarkan Panduan Suara"}
+          >
+            <span>{isSpeaking ? '🔊' : '🔈'}</span>
+            <span className="app-header-class-text">{isSpeaking ? 'Berhenti' : 'Narator'}</span>
+          </button>
+        </div>
 
         {/* Fullscreen Button for Mobile Landscape */}
         <button
+          className="app-header-fullscreen-btn"
           onClick={toggleFullscreen}
           style={{
-            background: 'rgba(0, 0, 0, 0.05)',
-            border: '1px solid var(--border-light)',
-            color: 'var(--text-muted)',
+            background: 'rgba(245, 158, 11, 0.12)',
+            border: '1px solid rgba(245, 158, 11, 0.35)',
+            color: '#d97706',
             cursor: 'pointer',
             padding: '6px 10px',
-            borderRadius: '6px',
+            borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            fontSize: '0.72rem',
-            fontWeight: 700
+            fontSize: '0.74rem',
+            fontWeight: 800,
+            transition: 'all 0.15s'
           }}
-          title="Layar Penuh (Landscape)"
+          title="Mode Layar Penuh (Landscape)"
         >
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
           </svg>
-          <span className="app-header-class-text">Fullscreen</span>
+          <span className="app-header-fullscreen-text">Layar Penuh</span>
         </button>
 
         {/* TOMBOL MONITORING GURU DI HEADER - KHUSUS GURU BIMORO KUSUMO */}
@@ -174,6 +179,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
 
             {/* TOMBOL LOGOUT */}
             <button
+              className="app-header-logout-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 if (window.confirm("Apakah Anda yakin ingin keluar (Logout)? Sesi akun Anda akan ditutup.")) {
@@ -207,6 +213,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
         ) : (
           /* TOMBOL LOGIN JIKA BELUM LOGIN */
           <button
+            className="app-header-login-btn"
             onClick={() => openLoginModal()}
             style={{
               background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',

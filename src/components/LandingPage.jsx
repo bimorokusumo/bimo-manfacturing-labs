@@ -75,18 +75,21 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
       </style>
 
       {/* HEADER NAV */}
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '24px 60px',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        zIndex: 20,
-        boxSizing: 'border-box'
-      }}>
+      <header 
+        className="landing-header"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '24px 60px',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          zIndex: 20,
+          boxSizing: 'border-box'
+        }}
+      >
         {/* BRAND TEXT */}
         <div style={{ cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <div style={{ 
@@ -116,7 +119,7 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
         </div>
 
         {/* NAV LINKS */}
-        <nav style={{ display: 'flex', gap: '40px' }}>
+        <nav className="landing-nav" style={{ display: 'flex', gap: '40px' }}>
           <a href="#" className="landing-nav-link" style={{ color: '#f59e0b' }}>Beranda</a>
           <a href="#" className="landing-nav-link" onClick={(e) => { e.preventDefault(); alert("Fitur: Modul Interaktif, Simulasi 3D, Safety Lab."); }}>Fitur</a>
           <a href="#" className="landing-nav-link" onClick={(e) => { e.preventDefault(); onStart(); }}>Perpustakaan & Modul</a>
@@ -224,14 +227,17 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
       </header>
 
       {/* HERO SECTION */}
-      <div style={{
-        position: 'relative',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 80px',
-        boxSizing: 'border-box'
-      }}>
+      <div 
+        className="landing-hero"
+        style={{
+          position: 'relative',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 80px',
+          boxSizing: 'border-box'
+        }}
+      >
         {/* HERO BACKGROUND IMAGE */}
         <div style={{
           position: 'absolute',

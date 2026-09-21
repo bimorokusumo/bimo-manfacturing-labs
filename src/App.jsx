@@ -1,8 +1,9 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import LandingPage from './components/LandingPage';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import DashboardView from './components/DashboardView';
+import MobileRotatePrompt from './components/MobileRotatePrompt';
 
 // LAZY LOADING MODUL LAB (Mencegah beban unduhan besar diawal & mempercepat akses)
 const MachineLab = lazy(() => import('./components/MachineLab'));
@@ -32,7 +33,29 @@ function AppInner() {
   const [isStarted, setIsStarted] = useState(false);
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [isSoundMuted, setIsSoundMuted] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  // Di HP / Mode Landscape, default sidebar tertutup agar tampilan langsung luas & simpel
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth > 1024 && window.innerHeight > 550;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024 || window.innerHeight <= 550) {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, []);
+
   const [globalXP, setGlobalXP] = useState(0); // Dimulai dari 0
   const [completedMissions, setCompletedMissions] = useState(0); // Dimulai dari 0
   
@@ -199,6 +222,7 @@ function AppInner() {
         />
         <StudentLoginModal />
         <AccessibilityModal />
+        <MobileRotatePrompt />
       </>
     );
   }
@@ -309,6 +333,7 @@ function AppInner() {
       <LiveCaptionsOverlay />
       <AccessibilityModal />
       <StudentLoginModal />
+      <MobileRotatePrompt />
     </div>
   );
 }

@@ -115,13 +115,14 @@ const StudentLoginModal = () => {
       }}
     >
       <div
-        className="dashboard-card"
+        className="dashboard-card student-login-card"
         style={{
           width: '100%',
           maxWidth: '520px',
+          maxHeight: '94vh',
+          overflowY: 'auto',
           background: '#ffffff',
           borderRadius: '20px',
-          overflow: 'hidden',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
           border: '1px solid rgba(245, 158, 11, 0.3)',
           position: 'relative',

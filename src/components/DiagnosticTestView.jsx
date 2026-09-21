@@ -213,24 +213,30 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
   };
 
   return (
-    <div style={{
-      maxWidth: '1100px',
-      margin: '0 auto',
-      padding: '24px 16px',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: '#1e293b'
-    }}>
+    <div 
+      className="diagnostic-view-container"
+      style={{
+        maxWidth: '1100px',
+        margin: '0 auto',
+        padding: '24px 16px',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+        color: '#1e293b'
+      }}
+    >
       {/* HEADER BANNER */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
-        color: '#ffffff',
-        borderRadius: '16px',
-        padding: '28px 24px',
-        marginBottom: '24px',
-        boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.25)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
+      <div 
+        className="diagnostic-header-banner"
+        style={{
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+          color: '#ffffff',
+          borderRadius: '16px',
+          padding: '28px 24px',
+          marginBottom: '24px',
+          boxShadow: '0 10px 25px -5px rgba(15, 23, 42, 0.25)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
             <span style={{
@@ -799,6 +805,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             <div
               key={q.id}
               id={`diag-q-${q.id}`}
+              className="diagnostic-question-card"
               style={{
                 background: '#ffffff',
                 border: isSubmitted
@@ -861,7 +868,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
               </div>
 
               {/* OPTIONS (A, B, C, D) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="diagnostic-options-list" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {q.options.map((opt, optIdx) => {
                   const isThisSelected = selectedOption === optIdx;
                   const isThisCorrectAnswer = isSubmitted && q.correct === optIdx;

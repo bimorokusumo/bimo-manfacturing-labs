@@ -102,34 +102,57 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
       transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
       transition: 'transform 0.3s ease-in-out'
     }}>
-      {/* BRAND TEXT */}
-      <div className="sidebar-brand" style={{ padding: '22px 20px', borderBottom: '1px solid var(--border-light)' }}>
-        <div className="sidebar-brand-title" style={{
-          fontWeight: 900,
-          fontSize: '1.45rem',
-          color: '#0f172a',
-          letterSpacing: '2px',
-          fontFamily: "'Chakra Petch', sans-serif",
-          lineHeight: 1.1
-        }}>
-          <span style={{
-            background: 'linear-gradient(135deg, #0f172a 0%, #d97706 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            fontWeight: 900
-          }}>BIMO</span>
+      {/* BRAND TEXT & MOBILE CLOSE BUTTON */}
+      <div className="sidebar-brand" style={{ padding: '16px 18px', borderBottom: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <div className="sidebar-brand-title" style={{
+            fontWeight: 900,
+            fontSize: '1.45rem',
+            color: '#0f172a',
+            letterSpacing: '2px',
+            fontFamily: "'Chakra Petch', sans-serif",
+            lineHeight: 1.1
+          }}>
+            <span style={{
+              background: 'linear-gradient(135deg, #0f172a 0%, #d97706 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 900
+            }}>BIMO</span>
+          </div>
+          <div style={{
+            fontSize: '0.66rem',
+            color: '#334155',
+            fontWeight: 800,
+            letterSpacing: '0.6px',
+            marginTop: '3px',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap'
+          }}>
+            Virtual Manufacturing Lab
+          </div>
         </div>
-        <div style={{
-          fontSize: '0.66rem',
-          color: '#334155',
-          fontWeight: 800,
-          letterSpacing: '0.6px',
-          marginTop: '4px',
-          textTransform: 'uppercase',
-          whiteSpace: 'nowrap'
-        }}>
-          Virtual Manufacturing Lab
-        </div>
+
+        <button
+          onClick={closeSidebar}
+          className="sidebar-close-btn"
+          style={{
+            background: 'rgba(0,0,0,0.06)',
+            border: 'none',
+            borderRadius: '8px',
+            width: '30px',
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1rem',
+            color: '#475569',
+            cursor: 'pointer'
+          }}
+          title="Tutup Menu"
+        >
+          ✕
+        </button>
       </div>
 
       {/* MENUS */}

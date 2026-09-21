@@ -371,7 +371,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             <input
               id="diagnostic-student-name"
               type="text"
-              placeholder="Contoh: Muhammad Rizky Pratama"
+              placeholder="Masukkan nama lengkap siswa..."
               value={studentInfo.name}
               onChange={(e) => setStudentInfo(prev => ({ ...prev, name: e.target.value }))}
               style={{
@@ -391,7 +391,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             </label>
             <input
               type="text"
-              placeholder="Contoh: X TPM 1"
+              placeholder="Masukkan kelas (misal: X TPM 1)..."
               value={studentInfo.classRoom}
               onChange={(e) => setStudentInfo(prev => ({ ...prev, classRoom: e.target.value }))}
               style={{
@@ -411,7 +411,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             </label>
             <input
               type="text"
-              placeholder="Contoh: 18"
+              placeholder="Masukkan no. absen..."
               value={studentInfo.studentId}
               onChange={(e) => setStudentInfo(prev => ({ ...prev, studentId: e.target.value }))}
               style={{

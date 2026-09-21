@@ -223,7 +223,7 @@ const StudentLoginModal = () => {
             <input
               type="text"
               required
-              placeholder="Contoh: Muhammad Budi Pratama"
+              placeholder="Masukkan nama lengkap siswa..."
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               style={{
@@ -312,7 +312,7 @@ const StudentLoginModal = () => {
               </label>
               <input
                 type="text"
-                placeholder="Contoh: XII Teknik Pemesinan B"
+                placeholder="Ketik kelas / keahlian (misal: XII TPM B)"
                 value={formData.customClass}
                 onChange={(e) => setFormData({ ...formData, customClass: e.target.value })}
                 style={{

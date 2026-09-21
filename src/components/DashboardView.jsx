@@ -1,5 +1,7 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { useStudent } from '../context/StudentContext';
+import { getAllStoredScores } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
 
 const LABS_CONFIG = [
@@ -126,6 +128,62 @@ const DashboardView = ({
   const xpPct = Math.min(100, Math.round((levelInfo.xpInCurrentLevel / (levelInfo.xpNeededForNextLevel || 500)) * 100));
 
   const { speakText, stopSpeech, isSpeaking, currentNarrativeTitle } = useAccessibility();
+  const { student, isTeacher } = useStudent();
+
+  const leaderboardData = React.useMemo(() => {
+    let scores = [];
+    try {
+      scores = getAllStoredScores();
+    } catch {
+      scores = [];
+    }
+
+    const currentStudentName = student?.name?.trim() || 'Praktikan (Anda)';
+    const currentClassName = student?.className || 'X TPM 1';
+
+    // Map: name -> { name, xp, isCurrent, count }
+    const studentMap = {};
+
+    // Tambahkan praktikan aktif saat ini
+    studentMap[currentStudentName.toLowerCase()] = {
+      name: currentStudentName,
+      xp: globalXP,
+      isCurrent: true,
+      className: currentClassName
+    };
+
+    scores.forEach(item => {
+      if (!item || !item.namaSiswa) return;
+      const rawName = String(item.namaSiswa).trim();
+      const key = rawName.toLowerCase();
+      const earnedXP = Number(item.skorAngka || item.nilai || 0) * 10;
+      
+      if (!studentMap[key]) {
+        studentMap[key] = {
+          name: rawName,
+          xp: earnedXP,
+          isCurrent: false,
+          className: item.kelas || currentClassName
+        };
+      } else {
+        if (studentMap[key].isCurrent) {
+          studentMap[key].xp = Math.max(studentMap[key].xp, earnedXP);
+        } else {
+          studentMap[key].xp += earnedXP;
+        }
+      }
+    });
+
+    const sorted = Object.values(studentMap).sort((a, b) => b.xp - a.xp);
+
+    return sorted.map((u, i) => ({
+      rank: i + 1,
+      name: u.isCurrent ? `${u.name.replace(' (Anda)', '')} (Anda)` : u.name,
+      xp: u.xp.toLocaleString('id-ID'),
+      active: u.isCurrent,
+      badge: i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`
+    }));
+  }, [student, globalXP]);
 
   const isSpeakingAllLabs = isSpeaking && currentNarrativeTitle === 'Ringkasan Laboratorium';
 
@@ -589,18 +647,12 @@ const DashboardView = ({
               LEADERBOARD KELAS
             </h3>
             <span style={{ fontSize: '0.72rem', background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-              X TPM 1
+              {student?.className || 'X TPM 1'}
             </span>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
-            {[
-              { rank: 1, name: 'Siswa (Anda)', xp: (2450 + globalXP).toLocaleString('id-ID'), active: true, badge: '🥇' },
-              { rank: 2, name: 'Budi Santoso', xp: '2.210', badge: '🥈' },
-              { rank: 3, name: 'Siti Aisyah', xp: '2.050', badge: '🥉' },
-              { rank: 4, name: 'Raka Maulana', xp: '1.980', badge: '4' },
-              { rank: 5, name: 'Dika Pratama', xp: '1.750', badge: '5' }
-            ].map((u, i) => (
+            {leaderboardData.slice(0, 5).map((u, i) => (
               <div 
                 key={i} 
                 style={{ 
@@ -625,7 +677,11 @@ const DashboardView = ({
                     {u.badge}
                   </div>
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e2e8f0', overflow: 'hidden', flexShrink: 0 }}>
-                    <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(u.name.split(' ')[0])}&background=${u.active ? 'ea580c' : '64748b'}&color=fff&bold=true`} alt={u.name} style={{ width: '100%', height: '100%' }} />
+                    <img 
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(u.name.replace(' (Anda)', '').split(' ')[0] || 'P')}&background=${u.active ? 'ea580c' : '64748b'}&color=fff&bold=true`} 
+                      alt={u.name} 
+                      style={{ width: '100%', height: '100%' }} 
+                    />
                   </div>
                   <div style={{ color: u.active ? '#ea580c' : 'var(--text-main)', fontSize: '0.86rem', fontWeight: u.active ? 800 : 700 }}>
                     {u.name}
@@ -636,10 +692,36 @@ const DashboardView = ({
                 </div>
               </div>
             ))}
+
+            {leaderboardData.length <= 1 && (
+              <div style={{
+                textAlign: 'center',
+                padding: '16px 12px',
+                background: '#f8fafc',
+                borderRadius: '8px',
+                border: '1px dashed #cbd5e1',
+                color: '#64748b',
+                fontSize: '0.8rem',
+                marginTop: '4px'
+              }}>
+                <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>📋</div>
+                <div style={{ fontWeight: 600 }}>Belum ada data praktikan lain</div>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>
+                  Peringkat akan diperbarui otomatis saat praktikan lain menyelesaikan evaluasi/misi.
+                </div>
+              </div>
+            )}
           </div>
 
-          <button style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)' }}>
-            Lihat Peringkat Sekolah Lengkap
+          <button 
+            onClick={() => {
+              if (onSelectLab) {
+                onSelectLab('gradebook');
+              }
+            }}
+            style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)' }}
+          >
+            {isTeacher ? 'Buka Rekap Gradebook Guru' : 'Lihat Rekap Evaluasi'}
           </button>
         </div>
 

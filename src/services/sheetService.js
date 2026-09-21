@@ -56,8 +56,29 @@ export const getAllStoredScores = () => {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     
-    // Otomatis memfilter dan membersihkan data sample_* jika ada tersisa di storage browser
-    const cleaned = parsed.filter(item => item && item.id && !String(item.id).startsWith('sample_'));
+    const sampleNames = [
+      'ahmad fauzi',
+      'budi santoso',
+      'siti rahmawati',
+      'rizky pratama',
+      'dewi lestari',
+      'fajar nugroho',
+      'siswa praktikan',
+      'siti aisyah',
+      'raka maulana',
+      'dika pratama'
+    ];
+    
+    // Otomatis memfilter dan membersihkan data sample_* atau nama dummy jika ada tersisa di storage browser
+    const cleaned = parsed.filter(item => {
+      if (!item) return false;
+      const id = String(item.id || '').toLowerCase();
+      const nama = String(item.namaSiswa || '').trim().toLowerCase();
+      if (id.startsWith('sample_')) return false;
+      if (sampleNames.includes(nama)) return false;
+      return true;
+    });
+
     if (cleaned.length !== parsed.length) {
       localStorage.setItem(STORAGE_KEY_SCORES, JSON.stringify(cleaned));
     }

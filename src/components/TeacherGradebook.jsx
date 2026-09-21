@@ -168,6 +168,34 @@ const TeacherGradebook = () => {
   };
 
   const loadData = () => {
+    try {
+      const raw = localStorage.getItem('bimo_quiz_scores');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          const sampleNames = [
+            'ahmad fauzi',
+            'budi santoso',
+            'siti rahmawati',
+            'rizky pratama',
+            'dewi lestari',
+            'fajar nugroho',
+            'siswa praktikan',
+            'siti aisyah',
+            'raka maulana',
+            'dika pratama'
+          ];
+          const cleaned = parsed.filter(item => {
+            if (!item) return false;
+            const id = String(item.id || '').toLowerCase();
+            const nama = String(item.namaSiswa || '').trim().toLowerCase();
+            return !id.startsWith('sample_') && !sampleNames.includes(nama);
+          });
+          localStorage.setItem('bimo_quiz_scores', JSON.stringify(cleaned));
+        }
+      }
+    } catch {}
+
     const data = getAllStoredScores();
     setScores(data);
     setWebhookUrl(getSpreadsheetWebhookUrl());
@@ -298,7 +326,7 @@ const TeacherGradebook = () => {
 
   const handleClearData = () => {
     sound.playClick();
-    if (window.confirm('PERINGATAN GURU:\nApakah Anda yakin ingin menghapus seluruh data nilai di perangkat ini?\n\nAnda dapat menekan tombol "Muat Contoh Siswa" kapan saja untuk memunculkan kembali format tabel.')) {
+    if (window.confirm('PERINGATAN GURU:\nApakah Anda yakin ingin menghapus seluruh data nilai di perangkat ini?')) {
       clearAllStoredScores();
       setScores([]);
       sound.playSuccess();

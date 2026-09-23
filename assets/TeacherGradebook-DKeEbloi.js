@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-CXNHmCcw.js";var d=e(n(),1),f=t(),p=`function doPost(e) {
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-Br7GXLhC.js";var d=e(n(),1),f=t(),p=`function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(30000);
 
@@ -396,7 +396,18 @@ function getCleanTabName(quizTitle) {
   if (q.indexOf("5r") !== -1 || q.indexOf("budaya") !== -1) return "✨ Budaya Kerja 5R";
   if (q.indexOf("perkakas") !== -1) return "🔧 Perkakas Tangan";
   if (q.indexOf("qc") !== -1 || q.indexOf("benda uji") !== -1) return "🔍 Audit QC Benda Uji";
-  if (q.indexOf("diagnostik") !== -1) return "📝 Tes Diagnostik";
+  if (q.indexOf("diagnostik") !== -1) {
+    if (q.indexOf("heat") !== -1 || q.indexOf("panas") !== -1 || q.indexOf("metalurgi") !== -1) return "🔥 Diagnostik Heat Treatment";
+    if (q.indexOf("machine") !== -1 || q.indexOf("bubut") !== -1 || q.indexOf("permesinan") !== -1) return "⚙️ Diagnostik Machine Lab";
+    if (q.indexOf("cutting") !== -1 || q.indexOf("potong") !== -1) return "🔪 Diagnostik Alat Potong";
+    if (q.indexOf("weld") !== -1 || q.indexOf("las") !== -1) return "⚡ Diagnostik Welding Lab";
+    if (q.indexOf("mechanic") !== -1 || q.indexOf("mekanika") !== -1) return "🔧 Diagnostik Mekanika";
+    if (q.indexOf("measur") !== -1 || q.indexOf("ukur") !== -1) return "📏 Diagnostik Alat Ukur";
+    if (q.indexOf("design") !== -1 || q.indexOf("gambar") !== -1) return "📐 Diagnostik Design Lab";
+    if (q.indexOf("safety") !== -1 || q.indexOf("k3") !== -1) return "🛡️ Diagnostik Safety K3";
+    if (q.indexOf("bengkel") !== -1) return "🏭 Diagnostik Bengkel 3D";
+    return "📝 Tes Diagnostik";
+  }
   if (q.indexOf("evaluasi") !== -1) return "🎓 Evaluasi Akhir";
   var clean = quizTitle.replace(/[:\\\\/?*\\[\\]]/g, "-").trim();
   return clean.length > 35 ? clean.substring(0, 32) + "..." : clean;

@@ -249,38 +249,56 @@ function doGet(e) {
 
 /**
  * =============================================================================
- * FUNGSI 1-KLIK UNTUK GURU: RAPIIKAN & PISAHKAN SEMUA KUIS KE TAB SENDIRI-SENDIRI
+ * MENU OTOMATIS BIMO LABS PADA GOOGLE SHEETS
  * =============================================================================
- * Cara Pakai:
- * 1. Di Google Sheets, buka menu: Ekstensi > Apps Script
- * 2. Di bagian atas editor Apps Script, pilih fungsi: "rapikanDanPisahkanKuisOtomatis"
- * 3. Klik tombol "Jalankan" (Run).
- * 4. Selesai! Seluruh baris di lembar "1. Safety Lab K3" akan otomatis dipisahkan
- *    ke dalam tab khusus masing-masing kuis (Inspeksi APD, JSA, dll) secara rapi!
+ * Menu ini akan muncul secara otomatis di baris atas Google Sheets (sebelah menu Bantuan)
+ * setiap kali Bapak membuka dokumen Spreadsheet.
+ */
+function onOpen() {
+  try {
+    var ui = SpreadsheetApp.getUi();
+    ui.createMenu('⚡ Menu BIMO Labs')
+      .addItem('📊 1. Klasifikasikan Nilai per Tab Kuis (Otomatis)', 'rapikanDanPisahkanKuisOtomatis')
+      .addItem('📋 2. Buat Matriks Rekap Pengumpulan Siswa', 'buatMatriksRekapPengumpulan')
+      .addSeparator()
+      .addItem('ℹ️ Panduan Pemakaian', 'tampilkanPanduan')
+      .addToUi();
+  } catch (e) {
+    // Abaikan jika dibuka dalam konteks web service
+  }
+}
+
+function tampilkanPanduan() {
+  var pesan = "CARA MENGGUNAKAN MENU BIMO LABS:\n\n" +
+    "1. Klik menu '📊 1. Klasifikasikan Nilai per Tab Kuis':\n" +
+    "   Sistem akan otomatis membuat tab khusus untuk masing-masing kuis (seperti '🛡️ Inspeksi APD', '📋 JSA Pengeboran', dll) dan mengelompokkan siswa yang sudah mengumpulkan tugas tersebut.\n\n" +
+    "2. Klik menu '📋 2. Buat Matriks Rekap Pengumpulan Siswa':\n" +
+    "   Sistem akan membuat tabel rekap utama yang memperlihatkan daftar seluruh siswa beserta ceklis kuis mana yang sudah dikumpulkan dan mana yang belum.\n\n" +
+    "Semua data nilai dan riwayat siswa dijamin 100% aman dan tidak akan terhapus.";
+  SpreadsheetApp.getUi().alert("Panduan Menu BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+/**
+ * =============================================================================
+ * FUNGSI 1: KLASIFIKASIKAN SELURUH DATA KE TAB NAMA KUIS MASING-MASING
  * =============================================================================
  */
 function rapikanDanPisahkanKuisOtomatis() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var masterSheet = ss.getSheetByName("1. Safety Lab K3") || ss.getActiveSheet();
-  var dataRange = masterSheet.getDataRange();
-  var values = dataRange.getValues();
+  var allRows = getAllDataRows(ss);
 
-  if (values.length <= 1) {
-    SpreadsheetApp.getUi().alert("Data masih kosong atau hanya baris header.");
+  if (allRows.length === 0) {
+    SpreadsheetApp.getUi().alert("Belum ada data nilai siswa yang tersimpan di spreadsheet.");
     return;
   }
 
-  var headers = values[0];
-  var rows = values.slice(1);
-
   // Kelompokkan baris berdasarkan Nama Kuis (Kolom G / indeks 6)
   var groups = {};
-  rows.forEach(function(row) {
+  allRows.forEach(function(row) {
     var quizTitle = String(row[6] || "").trim();
-    if (!quizTitle) return;
+    if (!quizTitle || quizTitle.toLowerCase().indexOf("percobaan") !== -1) return;
 
-    var tabName = quizTitle.length > 50 ? quizTitle.substring(0, 47) + "..." : quizTitle;
-    tabName = tabName.replace(/[:\\/?*\[\]]/g, "-").trim();
+    var tabName = getCleanTabName(quizTitle);
 
     if (!groups[tabName]) {
       groups[tabName] = {
@@ -291,8 +309,14 @@ function rapikanDanPisahkanKuisOtomatis() {
     groups[tabName].rows.push(row);
   });
 
+  var groupKeys = Object.keys(groups);
+  if (groupKeys.length === 0) {
+    SpreadsheetApp.getUi().alert("Tidak ditemukan nama kuis yang valid untuk diklasifikasikan.");
+    return;
+  }
+
   // Buat Sheet untuk tiap kelompok kuis
-  Object.keys(groups).forEach(function(tabName) {
+  groupKeys.forEach(function(tabName) {
     var sheet = ss.getSheetByName(tabName);
     if (!sheet) {
       sheet = ss.insertSheet(tabName);
@@ -300,34 +324,109 @@ function rapikanDanPisahkanKuisOtomatis() {
       sheet.clear();
     }
 
-    // Pasang Header
-    sheet.appendRow(headers);
-    var hRange = sheet.getRange(1, 1, 1, headers.length);
-    hRange.setBackground("#064e3b");
-    hRange.setFontColor("#ffffff");
-    hRange.setFontWeight("bold");
-    hRange.setHorizontalAlignment("center");
-    sheet.setRowHeight(1, 35);
-    sheet.setFrozenRows(1);
-
-    // Urutkan siswa berdasarkan nama (Kolom B / indeks 1)
+    var quizTitle = groups[tabName].title;
     var items = groups[tabName].rows;
+
+    // Urutkan siswa berdasarkan No. Absen jika angka, atau Nama Siswa
     items.sort(function(a, b) {
+      var numA = parseInt(a[2], 10);
+      var numB = parseInt(b[2], 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
       return String(a[1]).localeCompare(String(b[1]));
     });
 
+    var totalCount = items.length;
+    var passedCount = items.filter(function(r) { return Number(r[7] || 0) >= 75; }).length;
+    var avgScore = totalCount > 0 ? Math.round(items.reduce(function(acc, curr) { return acc + Number(curr[7] || 0); }, 0) / totalCount) : 0;
+
+    // BARIS 1: BANNER JUDUL KUIS & DAFTAR SISWA YANG MENGUMPULKAN
+    sheet.appendRow(["📋 DAFTAR SISWA YANG SUDAH MENGUMPULKAN: " + quizTitle.toUpperCase()]);
+    var b1 = sheet.getRange(1, 1, 1, 11);
+    b1.merge();
+    b1.setBackground("#064e3b");
+    b1.setFontColor("#ffffff");
+    b1.setFontWeight("bold");
+    b1.setFontSize(11);
+    b1.setVerticalAlignment("middle");
+    sheet.setRowHeight(1, 38);
+
+    // BARIS 2: STATISTIK RINGKAS
+    sheet.appendRow([
+      "Total Siswa Mengumpulkan: " + totalCount + " Siswa  |  Lulus KKM (>=75): " + passedCount + " Siswa  |  Remedial: " + (totalCount - passedCount) + " Siswa  |  Rata-rata Nilai: " + avgScore + " / 100"
+    ]);
+    var b2 = sheet.getRange(2, 1, 1, 11);
+    b2.merge();
+    b2.setBackground("#0f766e");
+    b2.setFontColor("#ecfdf5");
+    b2.setFontWeight("bold");
+    b2.setFontSize(9);
+    b2.setVerticalAlignment("middle");
+    sheet.setRowHeight(2, 28);
+
+    // BARIS 3: HEADER TABEL
+    var headers = [
+      "No",
+      "Waktu Pengumpulan",
+      "Nama Lengkap Siswa",
+      "No. Absen",
+      "Kelas / Jurusan",
+      "Sekolah / Instansi",
+      "Modul Laboratorium",
+      "Nilai (0 - 100)",
+      "Benar / Total",
+      "Status KKM",
+      "Rincian Jawaban Siswa"
+    ];
+    sheet.appendRow(headers);
+
+    var hRange = sheet.getRange(3, 1, 1, headers.length);
+    hRange.setBackground("#1e293b");
+    hRange.setFontColor("#ffffff");
+    hRange.setFontWeight("bold");
+    hRange.setFontSize(9);
+    hRange.setHorizontalAlignment("center");
+    hRange.setVerticalAlignment("middle");
+    sheet.setRowHeight(3, 32);
+    sheet.setFrozenRows(3);
+
+    // BARIS 4+: DATA SISWA
+    var no = 1;
     items.forEach(function(r) {
-      sheet.appendRow(r);
+      var score = Number(r[7] || 0);
+      var correct = r[8] !== undefined ? r[8] : "-";
+      var total = r[9] !== undefined ? r[9] : "-";
+      var status = r[10] || (score >= 75 ? "LULUS" : "REMEDIAL");
+      var detail = r[11] || "-";
+
+      sheet.appendRow([
+        no++,
+        r[0], // Waktu
+        r[1], // Nama
+        r[2], // Absen
+        r[3], // Kelas
+        r[4], // Sekolah
+        r[5], // Modul
+        score,
+        correct + " / " + total,
+        status,
+        detail
+      ]);
+
       var lr = sheet.getLastRow();
       sheet.setRowHeight(lr, 26);
 
-      var score = Number(r[7]);
+      sheet.getRange(lr, 1).setHorizontalAlignment("center");
+      sheet.getRange(lr, 2).setHorizontalAlignment("center");
+      sheet.getRange(lr, 4).setHorizontalAlignment("center");
+      sheet.getRange(lr, 5).setHorizontalAlignment("center");
+      sheet.getRange(lr, 8).setHorizontalAlignment("center");
+      sheet.getRange(lr, 9).setHorizontalAlignment("center");
+      sheet.getRange(lr, 10).setHorizontalAlignment("center");
+
       var scCell = sheet.getRange(lr, 8);
-      var stCell = sheet.getRange(lr, 11);
+      var stCell = sheet.getRange(lr, 10);
       scCell.setFontWeight("bold");
       stCell.setFontWeight("bold");
-      scCell.setHorizontalAlignment("center");
-      stCell.setHorizontalAlignment("center");
 
       if (score >= 75) {
         stCell.setBackground("#dcfce7");
@@ -340,10 +439,273 @@ function rapikanDanPisahkanKuisOtomatis() {
       }
     });
 
-    for (var col = 1; col <= Math.min(headers.length, 12); col++) {
-      try { sheet.autoResizeColumn(col); } catch (e) {}
+    // Atur Lebar Kolom yang Nyaman Dibaca
+    sheet.setColumnWidth(1, 45);  // No
+    sheet.setColumnWidth(2, 160); // Waktu
+    sheet.setColumnWidth(3, 230); // Nama Lengkap
+    sheet.setColumnWidth(4, 85);  // Absen
+    sheet.setColumnWidth(5, 110); // Kelas
+    sheet.setColumnWidth(6, 160); // Sekolah
+    sheet.setColumnWidth(7, 150); // Modul
+    sheet.setColumnWidth(8, 100); // Nilai
+    sheet.setColumnWidth(9, 100); // Benar/Total
+    sheet.setColumnWidth(10, 110); // Status
+    sheet.setColumnWidth(11, 280); // Detail
+  });
+
+  // Otomatis buat juga lembar Matriks Rekap Pengumpulan Siswa
+  buatMatriksRekapPengumpulan();
+
+  SpreadsheetApp.getUi().alert("✅ Berhasil!\n\nSeluruh nilai siswa berhasil diklasifikasikan ke tab masing-masing kuis (Inspeksi APD, Penyusunan JSA, dll) dan lembar '📊 Matriks Rekap Pengumpulan' sudah selesai dibuat.");
+}
+
+/**
+ * =============================================================================
+ * FUNGSI 2: BUAT MATRIKS REKAP PENGUMPULAN SISWA (CEKLIS KELENGKAPAN TUGAS)
+ * =============================================================================
+ */
+function buatMatriksRekapPengumpulan() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var allRows = getAllDataRows(ss);
+
+  if (allRows.length === 0) return;
+
+  var studentsMap = {};
+  var quizzesSet = {};
+
+  allRows.forEach(function(r) {
+    var nama = String(r[1] || "").trim();
+    if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
+    var absen = String(r[2] || "-");
+    var kelas = String(r[3] || "-");
+    var judulKuis = String(r[6] || "").trim();
+    var skor = Number(r[7] || 0);
+
+    if (!judulKuis) return;
+
+    var studentKey = nama.toLowerCase();
+    if (!studentsMap[studentKey]) {
+      studentsMap[studentKey] = {
+        nama: nama,
+        absen: absen,
+        kelas: kelas,
+        scores: {}
+      };
+    } else {
+      if (studentsMap[studentKey].absen === "-" && absen !== "-") {
+        studentsMap[studentKey].absen = absen;
+      }
+      if (studentsMap[studentKey].kelas === "-" && kelas !== "-") {
+        studentsMap[studentKey].kelas = kelas;
+      }
+    }
+
+    if (studentsMap[studentKey].scores[judulKuis] === undefined || skor > studentsMap[studentKey].scores[judulKuis].skor) {
+      studentsMap[studentKey].scores[judulKuis] = {
+        skor: skor,
+        waktu: String(r[0] || "")
+      };
+    }
+
+    quizzesSet[judulKuis] = true;
+  });
+
+  var quizList = Object.keys(quizzesSet).sort();
+  var studentKeys = Object.keys(studentsMap).sort(function(a, b) {
+    var numA = parseInt(studentsMap[a].absen, 10);
+    var numB = parseInt(studentsMap[b].absen, 10);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
+  });
+
+  var matrixSheetName = "📊 Matriks Rekap Pengumpulan";
+  var sheet = ss.getSheetByName(matrixSheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(matrixSheetName, 0);
+  } else {
+    sheet.clear();
+  }
+
+  // Header matriks
+  var matrixHeaders = ["No", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan"];
+  quizList.forEach(function(q) {
+    matrixHeaders.push(getCleanTabName(q));
+  });
+  matrixHeaders.push("Total Selesai");
+  matrixHeaders.push("Rata-rata Nilai");
+  matrixHeaders.push("Status Kelengkapan");
+
+  sheet.appendRow(matrixHeaders);
+
+  var hRange = sheet.getRange(1, 1, 1, matrixHeaders.length);
+  hRange.setBackground("#0f172a");
+  hRange.setFontColor("#ffffff");
+  hRange.setFontWeight("bold");
+  hRange.setFontSize(9);
+  hRange.setHorizontalAlignment("center");
+  hRange.setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 40);
+  sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(2);
+
+  var no = 1;
+  studentKeys.forEach(function(k) {
+    var s = studentsMap[k];
+    var row = [no++, s.nama, s.absen, s.kelas];
+    var finishedCount = 0;
+    var totalScore = 0;
+
+    quizList.forEach(function(q) {
+      if (s.scores[q] !== undefined) {
+        finishedCount++;
+        totalScore += s.scores[q].skor;
+        row.push(s.scores[q].skor + " (LULUS)");
+      } else {
+        row.push("⏳ Belum");
+      }
+    });
+
+    var avg = finishedCount > 0 ? Math.round(totalScore / finishedCount) : 0;
+    row.push(finishedCount + " / " + quizList.length + " Kuis");
+    row.push(avg);
+    row.push(finishedCount === quizList.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA"));
+
+    sheet.appendRow(row);
+    var lr = sheet.getLastRow();
+    sheet.setRowHeight(lr, 26);
+
+    sheet.getRange(lr, 1).setHorizontalAlignment("center");
+    sheet.getRange(lr, 3).setHorizontalAlignment("center");
+    sheet.getRange(lr, 4).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length - 2).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length - 1).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length).setHorizontalAlignment("center");
+
+    for (var c = 0; c < quizList.length; c++) {
+      var colIdx = 5 + c;
+      var cell = sheet.getRange(lr, colIdx);
+      cell.setHorizontalAlignment("center");
+      var val = String(row[4 + c]);
+      if (val.indexOf("Belum") !== -1) {
+        cell.setBackground("#f1f5f9");
+        cell.setFontColor("#94a3b8");
+      } else {
+        cell.setBackground("#dcfce7");
+        cell.setFontColor("#166534");
+        cell.setFontWeight("bold");
+      }
+    }
+
+    var compCell = sheet.getRange(lr, matrixHeaders.length);
+    compCell.setFontWeight("bold");
+    if (finishedCount === quizList.length) {
+      compCell.setBackground("#dcfce7");
+      compCell.setFontColor("#166534");
+    } else {
+      compCell.setBackground("#fef3c7");
+      compCell.setFontColor("#92400e");
     }
   });
 
-  SpreadsheetApp.getUi().alert("Berhasil! Seluruh data nilai sudah otomatis dipisahkan ke tab masing-masing kuis.");
+  sheet.setColumnWidth(1, 45);
+  sheet.setColumnWidth(2, 220);
+  sheet.setColumnWidth(3, 85);
+  sheet.setColumnWidth(4, 110);
+  for (var i = 0; i < quizList.length; i++) {
+    sheet.setColumnWidth(5 + i, 180);
+  }
+  sheet.setColumnWidth(matrixHeaders.length - 2, 130);
+  sheet.setColumnWidth(matrixHeaders.length - 1, 100);
+  sheet.setColumnWidth(matrixHeaders.length, 140);
+}
+
+/**
+ * Helper: Ambil nama tab yang ramah dan representatif
+ */
+function getCleanTabName(quizTitle) {
+  var q = String(quizTitle || "").toLowerCase();
+  if (q.indexOf("inspeksi apd") !== -1 || q.indexOf("apd") !== -1) {
+    return "🛡️ Inspeksi APD";
+  }
+  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety analysis") !== -1) {
+    return "📋 JSA Pengeboran Pelat";
+  }
+  if (q.indexOf("apar") !== -1 || q.indexOf("kebakaran") !== -1) {
+    return "🧯 Kuis APAR PASS";
+  }
+  if (q.indexOf("5r") !== -1 || q.indexOf("budaya") !== -1) {
+    return "✨ Budaya Kerja 5R";
+  }
+  if (q.indexOf("perkakas") !== -1 || q.indexOf("bench") !== -1) {
+    return "🔧 Perkakas Tangan";
+  }
+  if (q.indexOf("diagnostik") !== -1) {
+    return "📝 Tes Diagnostik";
+  }
+  if (q.indexOf("evaluasi") !== -1) {
+    return "🎓 Evaluasi Akhir";
+  }
+  var clean = quizTitle.replace(/[:\\/?*\[\]]/g, "-").trim();
+  return clean.length > 35 ? clean.substring(0, 32) + "..." : clean;
+}
+
+/**
+ * Helper: Ambil seluruh data baris siswa dari spreadsheet tanpa duplikasi
+ */
+function getAllDataRows(ss) {
+  var allRows = [];
+  var seenIds = {};
+  var sheets = ss.getSheets();
+
+  sheets.forEach(function(sheet) {
+    var name = sheet.getName();
+    if (name.indexOf("📊 Matriks") !== -1) return;
+
+    var data = sheet.getDataRange().getValues();
+    if (data.length <= 1) return;
+
+    // Temukan baris header (bisa baris 1 atau 3 jika ada banner)
+    var headerRowIdx = -1;
+    for (var i = 0; i < Math.min(data.length, 5); i++) {
+      var rowStr = data[i].join(" ").toLowerCase();
+      if (rowStr.indexOf("nama") !== -1 && (rowStr.indexOf("nilai") !== -1 || rowStr.indexOf("kuis") !== -1)) {
+        headerRowIdx = i;
+        break;
+      }
+    }
+
+    if (headerRowIdx === -1) return;
+
+    for (var r = headerRowIdx + 1; r < data.length; r++) {
+      var row = data[r];
+      var studentName = String(row[1] || "").trim();
+      var quizTitle = String(row[6] || "").trim();
+
+      // Jika format baris memiliki kolom No di awal
+      if (typeof row[0] === "number" && isNaN(new Date(row[1]).getTime())) {
+        studentName = String(row[2] || "").trim();
+        quizTitle = String(row[6] || "").trim();
+      }
+
+      if (studentName && quizTitle && studentName.toLowerCase().indexOf("percobaan") === -1) {
+        var uniqueId = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
+        if (!seenIds[uniqueId]) {
+          seenIds[uniqueId] = true;
+          allRows.push(row);
+        }
+      }
+    }
+  });
+
+  // Fallback jika belum terdeteksi dari multi-sheet
+  if (allRows.length === 0) {
+    var curData = ss.getActiveSheet().getDataRange().getValues();
+    for (var i = 1; i < curData.length; i++) {
+      if (curData[i][1] && String(curData[i][1]).toLowerCase().indexOf("percobaan") === -1) {
+        allRows.push(curData[i]);
+      }
+    }
+  }
+
+  return allRows;
 }

@@ -150,6 +150,308 @@ function doGet(e) {
     status: "active",
     message: "Google Apps Script BIMO Manufacturing Labs aktif & siap menerima data nilai siswa."
   })).setMimeType(ContentService.MimeType.JSON);
+}
+
+// MENU OTOMATIS BIMO LABS PADA GOOGLE SHEETS
+function onOpen() {
+  try {
+    var ui = SpreadsheetApp.getUi();
+    ui.createMenu('⚡ Menu BIMO Labs')
+      .addItem('📊 1. Klasifikasikan Nilai per Tab Kuis (Otomatis)', 'rapikanDanPisahkanKuisOtomatis')
+      .addItem('📋 2. Buat Matriks Rekap Pengumpulan Siswa', 'buatMatriksRekapPengumpulan')
+      .addSeparator()
+      .addItem('ℹ️ Panduan Pemakaian', 'tampilkanPanduan')
+      .addToUi();
+  } catch (e) {}
+}
+
+function tampilkanPanduan() {
+  var pesan = "CARA MENGGUNAKAN MENU BIMO LABS:\\n\\n" +
+    "1. Klik menu '📊 1. Klasifikasikan Nilai per Tab Kuis':\\n" +
+    "   Sistem otomatis membuat tab khusus per kuis (seperti '🛡️ Inspeksi APD', '📋 JSA Pengeboran') dan mengelompokkan siswa.\\n\\n" +
+    "2. Klik menu '📋 2. Buat Matriks Rekap Pengumpulan Siswa':\\n" +
+    "   Sistem membuat tabel rekap silang nama siswa vs seluruh kuis (ceklis skor dan status pengumpulan).\\n\\n" +
+    "Semua data siswa aman dan tidak akan terhapus.";
+  SpreadsheetApp.getUi().alert("Panduan Menu BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+function rapikanDanPisahkanKuisOtomatis() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var allRows = getAllDataRows(ss);
+  if (allRows.length === 0) {
+    SpreadsheetApp.getUi().alert("Belum ada data nilai siswa yang tersimpan di spreadsheet.");
+    return;
+  }
+
+  var groups = {};
+  allRows.forEach(function(row) {
+    var quizTitle = String(row[6] || "").trim();
+    if (!quizTitle || quizTitle.toLowerCase().indexOf("percobaan") !== -1) return;
+    var tabName = getCleanTabName(quizTitle);
+    if (!groups[tabName]) groups[tabName] = { title: quizTitle, rows: [] };
+    groups[tabName].rows.push(row);
+  });
+
+  var groupKeys = Object.keys(groups);
+  if (groupKeys.length === 0) {
+    SpreadsheetApp.getUi().alert("Tidak ditemukan nama kuis yang valid untuk diklasifikasikan.");
+    return;
+  }
+
+  groupKeys.forEach(function(tabName) {
+    var sheet = ss.getSheetByName(tabName);
+    if (!sheet) { sheet = ss.insertSheet(tabName); } else { sheet.clear(); }
+
+    var quizTitle = groups[tabName].title;
+    var items = groups[tabName].rows;
+
+    items.sort(function(a, b) {
+      var numA = parseInt(a[2], 10);
+      var numB = parseInt(b[2], 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return String(a[1]).localeCompare(String(b[1]));
+    });
+
+    var totalCount = items.length;
+    var passedCount = items.filter(function(r) { return Number(r[7] || 0) >= 75; }).length;
+    var avgScore = totalCount > 0 ? Math.round(items.reduce(function(acc, curr) { return acc + Number(curr[7] || 0); }, 0) / totalCount) : 0;
+
+    sheet.appendRow(["📋 DAFTAR SISWA YANG SUDAH MENGUMPULKAN: " + quizTitle.toUpperCase()]);
+    var b1 = sheet.getRange(1, 1, 1, 11);
+    b1.merge();
+    b1.setBackground("#064e3b");
+    b1.setFontColor("#ffffff");
+    b1.setFontWeight("bold");
+    b1.setFontSize(11);
+    sheet.setRowHeight(1, 38);
+
+    sheet.appendRow(["Total Siswa Mengumpulkan: " + totalCount + " Siswa  |  Lulus KKM (>=75): " + passedCount + " Siswa  |  Rata-rata: " + avgScore + " / 100"]);
+    var b2 = sheet.getRange(2, 1, 1, 11);
+    b2.merge();
+    b2.setBackground("#0f766e");
+    b2.setFontColor("#ecfdf5");
+    b2.setFontWeight("bold");
+    b2.setFontSize(9);
+    sheet.setRowHeight(2, 28);
+
+    var headers = ["No", "Waktu Pengumpulan", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan", "Sekolah / Instansi", "Modul Laboratorium", "Nilai (0 - 100)", "Benar / Total", "Status KKM", "Rincian Jawaban Siswa"];
+    sheet.appendRow(headers);
+    var hRange = sheet.getRange(3, 1, 1, headers.length);
+    hRange.setBackground("#1e293b");
+    hRange.setFontColor("#ffffff");
+    hRange.setFontWeight("bold");
+    hRange.setHorizontalAlignment("center");
+    sheet.setRowHeight(3, 32);
+    sheet.setFrozenRows(3);
+
+    var no = 1;
+    items.forEach(function(r) {
+      var score = Number(r[7] || 0);
+      var correct = r[8] !== undefined ? r[8] : "-";
+      var total = r[9] !== undefined ? r[9] : "-";
+      var status = r[10] || (score >= 75 ? "LULUS" : "REMEDIAL");
+      var detail = r[11] || "-";
+
+      sheet.appendRow([no++, r[0], r[1], r[2], r[3], r[4], r[5], score, correct + " / " + total, status, detail]);
+      var lr = sheet.getLastRow();
+      sheet.setRowHeight(lr, 26);
+      sheet.getRange(lr, 1).setHorizontalAlignment("center");
+      sheet.getRange(lr, 2).setHorizontalAlignment("center");
+      sheet.getRange(lr, 4).setHorizontalAlignment("center");
+      sheet.getRange(lr, 5).setHorizontalAlignment("center");
+      sheet.getRange(lr, 8).setHorizontalAlignment("center");
+      sheet.getRange(lr, 9).setHorizontalAlignment("center");
+      sheet.getRange(lr, 10).setHorizontalAlignment("center");
+
+      var scCell = sheet.getRange(lr, 8);
+      var stCell = sheet.getRange(lr, 10);
+      scCell.setFontWeight("bold");
+      stCell.setFontWeight("bold");
+      if (score >= 75) {
+        stCell.setBackground("#dcfce7");
+        stCell.setFontColor("#166534");
+        scCell.setFontColor("#16a34a");
+      } else {
+        stCell.setBackground("#fee2e2");
+        stCell.setFontColor("#991b1b");
+        scCell.setFontColor("#dc2626");
+      }
+    });
+
+    sheet.setColumnWidth(1, 45);
+    sheet.setColumnWidth(2, 160);
+    sheet.setColumnWidth(3, 230);
+    sheet.setColumnWidth(4, 85);
+    sheet.setColumnWidth(5, 110);
+    sheet.setColumnWidth(6, 160);
+    sheet.setColumnWidth(7, 150);
+    sheet.setColumnWidth(8, 100);
+    sheet.setColumnWidth(9, 100);
+    sheet.setColumnWidth(10, 110);
+    sheet.setColumnWidth(11, 280);
+  });
+
+  buatMatriksRekapPengumpulan();
+  SpreadsheetApp.getUi().alert("✅ Berhasil! Nilai siswa diklasifikasikan ke tab kuis masing-masing dan lembar Matriks Rekap Pengumpulan telah selesai dibuat.");
+}
+
+function buatMatriksRekapPengumpulan() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var allRows = getAllDataRows(ss);
+  if (allRows.length === 0) return;
+
+  var studentsMap = {};
+  var quizzesSet = {};
+
+  allRows.forEach(function(r) {
+    var nama = String(r[1] || "").trim();
+    if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
+    var absen = String(r[2] || "-");
+    var kelas = String(r[3] || "-");
+    var judulKuis = String(r[6] || "").trim();
+    var skor = Number(r[7] || 0);
+    if (!judulKuis) return;
+
+    var studentKey = nama.toLowerCase();
+    if (!studentsMap[studentKey]) {
+      studentsMap[studentKey] = { nama: nama, absen: absen, kelas: kelas, scores: {} };
+    }
+    if (studentsMap[studentKey].scores[judulKuis] === undefined || skor > studentsMap[studentKey].scores[judulKuis].skor) {
+      studentsMap[studentKey].scores[judulKuis] = { skor: skor, waktu: String(r[0] || "") };
+    }
+    quizzesSet[judulKuis] = true;
+  });
+
+  var quizList = Object.keys(quizzesSet).sort();
+  var studentKeys = Object.keys(studentsMap).sort(function(a, b) {
+    var numA = parseInt(studentsMap[a].absen, 10);
+    var numB = parseInt(studentsMap[b].absen, 10);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
+  });
+
+  var matrixSheetName = "📊 Matriks Rekap Pengumpulan";
+  var sheet = ss.getSheetByName(matrixSheetName);
+  if (!sheet) { sheet = ss.insertSheet(matrixSheetName, 0); } else { sheet.clear(); }
+
+  var matrixHeaders = ["No", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan"];
+  quizList.forEach(function(q) { matrixHeaders.push(getCleanTabName(q)); });
+  matrixHeaders.push("Total Selesai");
+  matrixHeaders.push("Rata-rata Nilai");
+  matrixHeaders.push("Status");
+
+  sheet.appendRow(matrixHeaders);
+  var hRange = sheet.getRange(1, 1, 1, matrixHeaders.length);
+  hRange.setBackground("#0f172a");
+  hRange.setFontColor("#ffffff");
+  hRange.setFontWeight("bold");
+  hRange.setHorizontalAlignment("center");
+  sheet.setRowHeight(1, 40);
+  sheet.setFrozenRows(1);
+  sheet.setFrozenColumns(2);
+
+  var no = 1;
+  studentKeys.forEach(function(k) {
+    var s = studentsMap[k];
+    var row = [no++, s.nama, s.absen, s.kelas];
+    var finishedCount = 0;
+    var totalScore = 0;
+
+    quizList.forEach(function(q) {
+      if (s.scores[q] !== undefined) {
+        finishedCount++;
+        totalScore += s.scores[q].skor;
+        row.push(s.scores[q].skor + " (LULUS)");
+      } else {
+        row.push("⏳ Belum");
+      }
+    });
+
+    var avg = finishedCount > 0 ? Math.round(totalScore / finishedCount) : 0;
+    row.push(finishedCount + " / " + quizList.length + " Kuis");
+    row.push(avg);
+    row.push(finishedCount === quizList.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA"));
+
+    sheet.appendRow(row);
+    var lr = sheet.getLastRow();
+    sheet.setRowHeight(lr, 26);
+    sheet.getRange(lr, 1).setHorizontalAlignment("center");
+    sheet.getRange(lr, 3).setHorizontalAlignment("center");
+    sheet.getRange(lr, 4).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length - 2).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length - 1).setHorizontalAlignment("center");
+    sheet.getRange(lr, matrixHeaders.length).setHorizontalAlignment("center");
+
+    for (var c = 0; c < quizList.length; c++) {
+      var cell = sheet.getRange(lr, 5 + c);
+      cell.setHorizontalAlignment("center");
+      var val = String(row[4 + c]);
+      if (val.indexOf("Belum") !== -1) {
+        cell.setBackground("#f1f5f9");
+        cell.setFontColor("#94a3b8");
+      } else {
+        cell.setBackground("#dcfce7");
+        cell.setFontColor("#166534");
+        cell.setFontWeight("bold");
+      }
+    }
+  });
+
+  sheet.setColumnWidth(1, 45);
+  sheet.setColumnWidth(2, 220);
+  sheet.setColumnWidth(3, 85);
+  sheet.setColumnWidth(4, 110);
+  for (var i = 0; i < quizList.length; i++) { sheet.setColumnWidth(5 + i, 180); }
+}
+
+function getCleanTabName(quizTitle) {
+  var q = String(quizTitle || "").toLowerCase();
+  if (q.indexOf("inspeksi apd") !== -1 || q.indexOf("apd") !== -1) return "🛡️ Inspeksi APD";
+  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety") !== -1) return "📋 JSA Pengeboran Pelat";
+  if (q.indexOf("apar") !== -1 || q.indexOf("kebakaran") !== -1) return "🧯 Kuis APAR PASS";
+  if (q.indexOf("5r") !== -1 || q.indexOf("budaya") !== -1) return "✨ Budaya Kerja 5R";
+  if (q.indexOf("perkakas") !== -1) return "🔧 Perkakas Tangan";
+  if (q.indexOf("diagnostik") !== -1) return "📝 Tes Diagnostik";
+  if (q.indexOf("evaluasi") !== -1) return "🎓 Evaluasi Akhir";
+  var clean = quizTitle.replace(/[:\\\\/?*\\[\\]]/g, "-").trim();
+  return clean.length > 35 ? clean.substring(0, 32) + "..." : clean;
+}
+
+function getAllDataRows(ss) {
+  var allRows = [];
+  var seenIds = {};
+  var sheets = ss.getSheets();
+  sheets.forEach(function(sheet) {
+    if (sheet.getName().indexOf("📊 Matriks") !== -1) return;
+    var data = sheet.getDataRange().getValues();
+    if (data.length <= 1) return;
+    var headerRowIdx = -1;
+    for (var i = 0; i < Math.min(data.length, 5); i++) {
+      var rowStr = data[i].join(" ").toLowerCase();
+      if (rowStr.indexOf("nama") !== -1 && (rowStr.indexOf("nilai") !== -1 || rowStr.indexOf("kuis") !== -1)) {
+        headerRowIdx = i;
+        break;
+      }
+    }
+    if (headerRowIdx === -1) return;
+    for (var r = headerRowIdx + 1; r < data.length; r++) {
+      var row = data[r];
+      var studentName = String(row[1] || "").trim();
+      var quizTitle = String(row[6] || "").trim();
+      if (typeof row[0] === "number" && isNaN(new Date(row[1]).getTime())) {
+        studentName = String(row[2] || "").trim();
+        quizTitle = String(row[6] || "").trim();
+      }
+      if (studentName && quizTitle && studentName.toLowerCase().indexOf("percobaan") === -1) {
+        var id = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
+        if (!seenIds[id]) {
+          seenIds[id] = true;
+          allRows.push(row);
+        }
+      }
+    }
+  });
+  return allRows;
 }`;
 
 // DEFINISI MODUL LAB SESUAI SIDEBAR
@@ -232,7 +534,8 @@ const TeacherGradebook = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedQuizName, setSelectedQuizName] = useState('all');
-  const [isGroupedByQuiz, setIsGroupedByQuiz] = useState(true);
+  const [viewMode, setViewMode] = useState('grouped'); // 'grouped' | 'matrix' | 'flat'
+  const isGroupedByQuiz = viewMode === 'grouped';
   const [sortBy, setSortBy] = useState('quiz_name');
   
   // Tab Navigasi Sesuai Sidebar & Sub-Kuis
@@ -430,6 +733,64 @@ const TeacherGradebook = () => {
       };
     });
   }, [filteredScores, sortBy]);
+
+  // Data Matriks Rekap Pengumpulan Siswa per Kuis (Ceklis Siapa Saja yang Sudah Mengumpulkan)
+  const studentSubmissionMatrix = useMemo(() => {
+    const studentsMap = {};
+    const quizzesSet = new Set();
+
+    const baseData = activeTab === 'all'
+      ? enrichedScores
+      : enrichedScores.filter(s => s.labId === activeTab);
+
+    baseData.forEach(item => {
+      const nama = (item.namaSiswa || '').trim();
+      const judulKuis = (item.judulKuis || '').trim();
+      if (!nama || !judulKuis) return;
+
+      quizzesSet.add(judulKuis);
+      const studentKey = nama.toLowerCase();
+
+      if (!studentsMap[studentKey]) {
+        studentsMap[studentKey] = {
+          nama: nama,
+          nomorAbsen: item.nomorAbsen || '-',
+          kelas: item.kelas || '-',
+          sekolah: item.sekolah || 'SMKN 2 Depok',
+          submissions: {}
+        };
+      }
+
+      if (studentsMap[studentKey].nomorAbsen === '-' && item.nomorAbsen) {
+        studentsMap[studentKey].nomorAbsen = item.nomorAbsen;
+      }
+      if (studentsMap[studentKey].kelas === '-' && item.kelas) {
+        studentsMap[studentKey].kelas = item.kelas;
+      }
+
+      const existing = studentsMap[studentKey].submissions[judulKuis];
+      if (!existing || Number(item.skor) > Number(existing.skor)) {
+        studentsMap[studentKey].submissions[judulKuis] = {
+          skor: Number(item.skor) || 0,
+          status: item.status || (Number(item.skor) >= 75 ? 'LULUS' : 'REMEDIAL'),
+          waktu: item.waktu || item.timestamp?.slice(0, 10),
+          jawabanBenar: item.jawabanBenar,
+          totalSoal: item.totalSoal,
+          record: item
+        };
+      }
+    });
+
+    const quizList = Array.from(quizzesSet).sort();
+    const studentList = Object.values(studentsMap).sort((a, b) => {
+      const numA = parseInt(a.nomorAbsen, 10);
+      const numB = parseInt(b.nomorAbsen, 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.nama.localeCompare(b.nama);
+    });
+
+    return { quizList, studentList };
+  }, [enrichedScores, activeTab]);
 
   // Data Terurut untuk Mode Flat Table
   const sortedFlatScores = useMemo(() => {
@@ -1192,13 +1553,13 @@ const TeacherGradebook = () => {
           {/* VIEW MODE TOGGLE */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f1f5f9', padding: '3px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
             <button
-              onClick={() => { sound.playClick(); setIsGroupedByQuiz(true); }}
+              onClick={() => { sound.playClick(); setViewMode('grouped'); }}
               style={{
                 padding: '6px 12px',
                 borderRadius: '6px',
                 border: 'none',
-                background: isGroupedByQuiz ? '#064e3b' : 'transparent',
-                color: isGroupedByQuiz ? '#ffffff' : '#475569',
+                background: viewMode === 'grouped' ? '#064e3b' : 'transparent',
+                color: viewMode === 'grouped' ? '#ffffff' : '#475569',
                 fontWeight: 800,
                 fontSize: '0.78rem',
                 cursor: 'pointer',
@@ -1212,13 +1573,33 @@ const TeacherGradebook = () => {
               <span>Dikelompokkan per Kuis</span>
             </button>
             <button
-              onClick={() => { sound.playClick(); setIsGroupedByQuiz(false); }}
+              onClick={() => { sound.playClick(); setViewMode('matrix'); }}
               style={{
                 padding: '6px 12px',
                 borderRadius: '6px',
                 border: 'none',
-                background: !isGroupedByQuiz ? '#064e3b' : 'transparent',
-                color: !isGroupedByQuiz ? '#ffffff' : '#475569',
+                background: viewMode === 'matrix' ? '#064e3b' : 'transparent',
+                color: viewMode === 'matrix' ? '#ffffff' : '#475569',
+                fontWeight: 800,
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+              title="Tampilkan matriks ceklis pengumpulan siswa per kuis"
+            >
+              <span>📊</span>
+              <span>Matriks Pengumpulan Siswa</span>
+            </button>
+            <button
+              onClick={() => { sound.playClick(); setViewMode('flat'); }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: viewMode === 'flat' ? '#064e3b' : 'transparent',
+                color: viewMode === 'flat' ? '#ffffff' : '#475569',
                 fontWeight: 800,
                 fontSize: '0.78rem',
                 cursor: 'pointer',
@@ -1236,7 +1617,11 @@ const TeacherGradebook = () => {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '0.78rem', color: '#64748b', borderTop: '1px solid #f1f5f9', paddingTop: '8px' }}>
           <div>
-            Menampilkan <strong>{filteredScores.length}</strong> data nilai siswa pada <strong>{groupedScoresByQuiz.length}</strong> kelompok kuis di lembar <strong>{currentLabTitle}</strong>.
+            {viewMode === 'matrix' ? (
+              <>Menampilkan Matriks Rekap Pengumpulan: <strong>{studentSubmissionMatrix.studentList.length}</strong> Siswa terdaftar pada <strong>{studentSubmissionMatrix.quizList.length}</strong> Kuis di lembar <strong>{currentLabTitle}</strong>.</>
+            ) : (
+              <>Menampilkan <strong>{filteredScores.length}</strong> data nilai siswa pada <strong>{groupedScoresByQuiz.length}</strong> kelompok kuis di lembar <strong>{currentLabTitle}</strong>.</>
+            )}
           </div>
           {selectedQuizName !== 'all' && (
             <button
@@ -1261,7 +1646,257 @@ const TeacherGradebook = () => {
         }}
       >
         <div style={{ overflowX: 'auto', maxHeight: '650px' }}>
-          <table
+          {viewMode === 'matrix' ? (
+            /* TABEL MATRIKS PENGUMPULAN SISWA PER KUIS */
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                textAlign: 'left',
+                fontSize: '0.83rem',
+                fontFamily: 'system-ui, -apple-system, sans-serif'
+              }}
+            >
+              <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                {/* KOORDINAT KOLOM */}
+                <tr style={{ background: '#f1f5f9', color: '#64748b', fontSize: '0.72rem', borderBottom: '1px solid #cbd5e1' }}>
+                  <th style={{ width: '45px', padding: '6px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>#</th>
+                  <th style={{ padding: '6px 14px', borderRight: '1px solid #cbd5e1' }}>A</th>
+                  <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>B</th>
+                  <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>C</th>
+                  {studentSubmissionMatrix.quizList.map((_, i) => (
+                    <th key={i} style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>
+                      {String.fromCharCode(68 + i)}
+                    </th>
+                  ))}
+                  <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>Σ Selesai</th>
+                  <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>Rata-rata</th>
+                  <th style={{ padding: '6px 10px', textAlign: 'center' }}>Status</th>
+                </tr>
+
+                {/* LABEL HEADER MATRIKS */}
+                <tr style={{ background: '#064e3b', color: '#f0fdf4', borderBottom: '2px solid #047857' }}>
+                  <th style={{ padding: '12px 6px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, width: '45px' }}>
+                    No
+                  </th>
+                  <th style={{ padding: '12px 16px', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap', minWidth: '190px' }}>
+                    Nama Lengkap Siswa
+                  </th>
+                  <th style={{ padding: '12px 10px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    Absen
+                  </th>
+                  <th style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    Kelas
+                  </th>
+                  {studentSubmissionMatrix.quizList.map((quiz, qIdx) => (
+                    <th
+                      key={quiz}
+                      style={{
+                        padding: '10px 12px',
+                        textAlign: 'center',
+                        borderRight: '1px solid #047857',
+                        fontWeight: 800,
+                        minWidth: '170px',
+                        maxWidth: '220px',
+                        fontSize: '0.78rem'
+                      }}
+                      title={quiz}
+                    >
+                      <div style={{ background: 'rgba(255,255,255,0.18)', padding: '2px 6px', borderRadius: '4px', marginBottom: '3px', fontSize: '0.68rem', display: 'inline-block' }}>
+                        KUIS {qIdx + 1}
+                      </div>
+                      <div style={{ lineHeight: '1.25' }}>{quiz}</div>
+                    </th>
+                  ))}
+                  <th style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    Total Selesai
+                  </th>
+                  <th style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    Rata-rata Skor
+                  </th>
+                  <th style={{ padding: '12px 14px', textAlign: 'center', fontWeight: 800, whiteSpace: 'nowrap' }}>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {studentSubmissionMatrix.studentList.length === 0 ? (
+                  <tr>
+                    <td colSpan={7 + studentSubmissionMatrix.quizList.length} style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
+                      <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
+                      <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
+                        Belum Ada Siswa yang Mengumpulkan Tugas
+                      </div>
+                      <p style={{ margin: '6px 0 0 0', fontSize: '0.85rem' }}>
+                        Data pengerjaan siswa untuk modul ini akan otomatis tercatat di sini saat siswa menekan tombol Kirim Nilai.
+                      </p>
+                    </td>
+                  </tr>
+                ) : (
+                  studentSubmissionMatrix.studentList.map((student, sIdx) => {
+                    const completedQuizzes = Object.keys(student.submissions);
+                    const finishedCount = completedQuizzes.length;
+                    const totalQuizzes = studentSubmissionMatrix.quizList.length;
+                    const totalScore = completedQuizzes.reduce((acc, q) => acc + (student.submissions[q]?.skor || 0), 0);
+                    const avgScore = finishedCount > 0 ? Math.round(totalScore / finishedCount) : 0;
+                    const isComplete = totalQuizzes > 0 && finishedCount === totalQuizzes;
+                    const isEven = sIdx % 2 === 0;
+
+                    return (
+                      <tr
+                        key={student.nama + sIdx}
+                        style={{
+                          background: isEven ? '#ffffff' : '#f8fafc',
+                          borderBottom: '1px solid #e2e8f0',
+                          transition: 'background 0.15s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#f0fdf4'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = isEven ? '#ffffff' : '#f8fafc'}
+                      >
+                        <td style={{
+                          padding: '10px 6px',
+                          textAlign: 'center',
+                          fontFamily: 'monospace',
+                          color: '#64748b',
+                          background: '#f1f5f9',
+                          borderRight: '1px solid #cbd5e1',
+                          fontWeight: 700,
+                          fontSize: '0.78rem'
+                        }}>
+                          {sIdx + 1}
+                        </td>
+                        <td style={{ padding: '10px 16px', fontWeight: 800, color: '#0f172a', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                          {student.nama}
+                        </td>
+                        <td style={{ padding: '10px 10px', textAlign: 'center', fontWeight: 800, borderRight: '1px solid #e2e8f0' }}>
+                          <span style={{ background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
+                            {student.nomorAbsen || '-'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 12px', textAlign: 'center', color: '#334155', fontWeight: 600, borderRight: '1px solid #e2e8f0' }}>
+                          {student.kelas || '-'}
+                        </td>
+
+                        {/* STATUS PENGUMPULAN PER KUIS */}
+                        {studentSubmissionMatrix.quizList.map((quiz) => {
+                          const sub = student.submissions[quiz];
+                          if (!sub) {
+                            return (
+                              <td key={quiz} style={{ padding: '8px 10px', textAlign: 'center', borderRight: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                                <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600 }}>
+                                  ⏳ Belum
+                                </span>
+                              </td>
+                            );
+                          }
+                          const isPassed = sub.status === 'LULUS' || sub.skor >= 75;
+                          return (
+                            <td
+                              key={quiz}
+                              onClick={() => {
+                                if (sub.record) {
+                                  sound.playClick();
+                                  setSelectedDetailRecord(sub.record);
+                                }
+                              }}
+                              style={{
+                                padding: '8px 10px',
+                                textAlign: 'center',
+                                borderRight: '1px solid #e2e8f0',
+                                background: isPassed ? 'rgba(220, 252, 231, 0.25)' : 'rgba(254, 226, 226, 0.25)',
+                                cursor: sub.record ? 'pointer' : 'default'
+                              }}
+                              title={sub.record ? `Klik untuk lihat rincian lembar jawaban ${student.nama}` : ''}
+                            >
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                                <span style={{
+                                  background: isPassed ? '#10b981' : '#ef4444',
+                                  color: '#ffffff',
+                                  padding: '2px 8px',
+                                  borderRadius: '10px',
+                                  fontWeight: 900,
+                                  fontSize: '0.78rem'
+                                }}>
+                                  {isPassed ? '✓' : '✗'} {sub.skor}
+                                </span>
+                                {sub.jawabanBenar !== undefined && (
+                                  <span style={{ fontSize: '0.68rem', color: '#64748b' }}>
+                                    {sub.jawabanBenar}/{sub.totalSoal} soal
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          );
+                        })}
+
+                        <td style={{ padding: '10px 12px', textAlign: 'center', fontWeight: 800, borderRight: '1px solid #e2e8f0' }}>
+                          <span style={{
+                            padding: '3px 8px',
+                            borderRadius: '6px',
+                            background: isComplete ? '#dcfce7' : '#fef3c7',
+                            color: isComplete ? '#166534' : '#92400e',
+                            fontSize: '0.78rem'
+                          }}>
+                            {finishedCount} / {totalQuizzes} Kuis
+                          </span>
+                        </td>
+
+                        <td style={{
+                          padding: '10px 12px',
+                          textAlign: 'center',
+                          fontFamily: 'monospace',
+                          fontWeight: 900,
+                          fontSize: '0.95rem',
+                          borderRight: '1px solid #e2e8f0',
+                          color: avgScore >= 75 ? '#166534' : '#991b1b'
+                        }}>
+                          {finishedCount > 0 ? avgScore : '-'}
+                        </td>
+
+                        <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                          <span style={{
+                            padding: '3px 10px',
+                            borderRadius: '12px',
+                            fontSize: '0.72rem',
+                            fontWeight: 800,
+                            background: isComplete ? '#dcfce7' : (finishedCount > 0 ? '#fef3c7' : '#fee2e2'),
+                            color: isComplete ? '#166534' : (finishedCount > 0 ? '#92400e' : '#991b1b'),
+                            border: `1px solid ${isComplete ? '#bbf7d0' : (finishedCount > 0 ? '#fde68a' : '#fecaca')}`,
+                            display: 'inline-block'
+                          }}>
+                            {isComplete ? '✓ LENGKAP' : (finishedCount > 0 ? 'SEBAGIAN' : 'BELUM ADA')}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+              {studentSubmissionMatrix.studentList.length > 0 && (
+                <tfoot style={{ position: 'sticky', bottom: 0, zIndex: 10, background: '#f8fafc', borderTop: '2px solid #064e3b' }}>
+                  <tr style={{ fontWeight: 800, fontSize: '0.8rem', color: '#0f172a' }}>
+                    <td colSpan={4} style={{ padding: '10px 14px', textAlign: 'right', borderRight: '1px solid #cbd5e1' }}>
+                      Total Siswa yang Sudah Mengumpulkan:
+                    </td>
+                    {studentSubmissionMatrix.quizList.map((quiz) => {
+                      const count = studentSubmissionMatrix.studentList.filter(s => s.submissions[quiz]).length;
+                      const pct = Math.round((count / studentSubmissionMatrix.studentList.length) * 100);
+                      return (
+                        <td key={quiz} style={{ padding: '10px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1', color: '#065f46' }}>
+                          <strong>{count}</strong> Siswa ({pct}%)
+                        </td>
+                      );
+                    })}
+                    <td colSpan={3} style={{ padding: '10px 14px', textAlign: 'center', color: '#64748b' }}>
+                      {studentSubmissionMatrix.studentList.length} Total Siswa Terdata
+                    </td>
+                  </tr>
+                </tfoot>
+              )}
+            </table>
+          ) : (
+            /* TABEL DETAIL NILAI (GROUPED ATAU FLAT) */
+            <table
             style={{
               width: '100%',
               borderCollapse: 'collapse',
@@ -1371,7 +2006,7 @@ const TeacherGradebook = () => {
                     <React.Fragment key={group.quizName}>
                       {/* BANNER KLASIFIKASI KUIS / ASESMEN */}
                       <tr style={{ background: 'linear-gradient(90deg, #064e3b 0%, #0f172a 100%)', color: '#ffffff' }}>
-                        <td colSpan="13" style={{ padding: '10px 16px', borderBottom: '2px solid #10b981', borderTop: gIdx > 0 ? '6px solid #e2e8f0' : 'none' }}>
+                        <td colSpan="13" style={{ padding: '12px 16px', borderBottom: '2px solid #10b981', borderTop: gIdx > 0 ? '6px solid #e2e8f0' : 'none' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                               <span style={{ background: '#10b981', color: '#064e3b', padding: '2px 8px', borderRadius: '6px', fontWeight: 900, fontSize: '0.72rem' }}>
@@ -1392,6 +2027,48 @@ const TeacherGradebook = () => {
                                 ✅ Kelulusan KKM: <strong>{group.passedCount}/{group.totalCount} ({group.passPct}%)</strong>
                               </span>
                             </div>
+                          </div>
+
+                          {/* DAFTAR NAMA SISWA YANG MENGUMPULKAN KUIS INI */}
+                          <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.15)', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                            <span style={{ fontSize: '0.72rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                              👤 Siswa yang Sudah Mengumpulkan ({group.totalCount} Siswa):
+                            </span>
+                            {group.items.map((it, i) => {
+                              const passed = it.status === 'LULUS' || Number(it.skor) >= 75;
+                              return (
+                                <span
+                                  key={it.id || i}
+                                  onClick={() => { sound.playClick(); setSelectedDetailRecord(it); }}
+                                  style={{
+                                    background: passed ? 'rgba(16, 185, 129, 0.22)' : 'rgba(239, 68, 68, 0.22)',
+                                    color: '#ffffff',
+                                    border: `1px solid ${passed ? '#10b981' : '#f87171'}`,
+                                    padding: '2px 8px',
+                                    borderRadius: '12px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '5px',
+                                    cursor: 'pointer'
+                                  }}
+                                  title={`Klik untuk lihat rincian lembar pengerjaan ${it.namaSiswa}`}
+                                >
+                                  <span>{it.namaSiswa}</span>
+                                  <span style={{
+                                    background: passed ? '#10b981' : '#ef4444',
+                                    color: '#ffffff',
+                                    borderRadius: '6px',
+                                    padding: '0 5px',
+                                    fontSize: '0.68rem',
+                                    fontWeight: 800
+                                  }}>
+                                    {it.skor}
+                                  </span>
+                                </span>
+                              );
+                            })}
                           </div>
                         </td>
                       </tr>
@@ -1783,6 +2460,7 @@ const TeacherGradebook = () => {
               </tfoot>
             )}
           </table>
+          )}
         </div>
       </div>
 

@@ -120,8 +120,8 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
           <span className="app-header-fullscreen-text">Layar Penuh</span>
         </button>
 
-        {/* TOMBOL LIHAT REKAP SPREADSHEET DI HEADER - KHUSUS GURU BIMORO KUSUMO */}
-        {isTeacher && onOpenGradebook && (
+        {/* TOMBOL LIHAT REKAP SPREADSHEET DI HEADER */}
+        {onOpenGradebook && (
           <button
             onClick={onOpenGradebook}
             style={{

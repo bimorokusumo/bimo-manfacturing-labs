@@ -261,19 +261,40 @@ const TeacherGradebook = () => {
     }
   };
 
+  const [lastSyncTime, setLastSyncTime] = useState(() => new Date().toLocaleTimeString('id-ID'));
+
   const loadData = () => {
     const data = getAllStoredScores();
     setScores(data);
     setWebhookUrl(getSpreadsheetWebhookUrl());
+    setLastSyncTime(new Date().toLocaleTimeString('id-ID'));
   };
 
   useEffect(() => {
     loadData();
 
-    // Re-load when quiz is submitted
+    // 1. Re-load when quiz is submitted in current window
     const handleUpdate = () => loadData();
     window.addEventListener('bimo:quiz_submitted', handleUpdate);
-    return () => window.removeEventListener('bimo:quiz_submitted', handleUpdate);
+
+    // 2. Re-load when quiz is submitted across tabs or windows
+    const handleStorage = (e) => {
+      if (e.key === 'bimo_quiz_scores') {
+        loadData();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
+    // 3. Auto-polling interval every 3 seconds for continuous live monitoring
+    const pollInterval = setInterval(() => {
+      loadData();
+    }, 3000);
+
+    return () => {
+      window.removeEventListener('bimo:quiz_submitted', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(pollInterval);
+    };
   }, []);
 
   // Normalisasi data dengan penandaan Lab dan Sub-Kuis yang rapi & akurat
@@ -492,21 +513,48 @@ const TeacherGradebook = () => {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', padding: '4px 12px', borderRadius: '20px', color: '#6ee7b7', fontSize: '0.78rem', fontWeight: 800, marginBottom: '10px' }}>
-              <span>📗</span>
-              <span>LEMBAR REKAPITULASI NILAI TERPISAH PER KUIS</span>
-              <span style={{ background: '#10b981', color: '#064e3b', padding: '1px 8px', borderRadius: '10px', fontSize: '0.7rem' }}>SESUAI SIDEBAR</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.25)', border: '1.5px solid #10b981', padding: '5px 14px', borderRadius: '20px', color: '#6ee7b7', fontSize: '0.8rem', fontWeight: 800, marginBottom: '10px' }}>
+              <span style={{ display: 'inline-block', width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 10px #10b981' }}></span>
+              <span>LIVE SPREADSHEET MONITORING - REAL TIME</span>
+              <span style={{ background: '#10b981', color: '#064e3b', padding: '1px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 900 }}>TERHUBUNG</span>
             </div>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', margin: 0, fontFamily: "'Chakra Petch', sans-serif", letterSpacing: '0.5px' }}>
               REKAP NILAI SISWA (SMKN 2 DEPOK)
             </h1>
             <p style={{ color: '#cbd5e1', fontSize: '0.88rem', marginTop: '6px', maxWidth: '800px', lineHeight: 1.5, margin: 0 }}>
-              Setiap kuis & aktivitas praktikum dikelompokkan rapi per modul sidebar. Bapak dapat memilih lembar kuis spesifik (seperti <strong>Kuis Inspeksi APD</strong> atau <strong>Tes Diagnostik</strong>) tanpa perlu memfilter atau mengeliminasi baris secara manual.
+              Pantau langsung hasil kuis seluruh siswa secara real-time di spreadsheet ini. Nilai otomatis masuk dan terkelompok rapi per modul lab & sub-kuis (seperti <strong>Kuis Inspeksi APD</strong>) tanpa perlu rumus manual.
             </p>
           </div>
 
           {/* TOP QUICK ACTION BUTTONS */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {/* SEGARKAN DATA (LIVE REFRESH) */}
+            <button
+              onClick={() => {
+                sound.playClick();
+                loadData();
+                showToast('✅ Data nilai siswa berhasil diperbarui!');
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                border: 'none',
+                color: '#ffffff',
+                padding: '9px 15px',
+                borderRadius: '8px',
+                fontWeight: 800,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
+              }}
+              title="Segarkan data nilai terbaru sekarang"
+            >
+              <span>🔄</span>
+              <span>Segarkan Data</span>
+            </button>
+
             {/* UNDUH EXCEL LEMBAR INI */}
             <button
               onClick={() => { sound.playClick(); exportScoresToExcelHTML(filteredScores); }}
@@ -568,10 +616,10 @@ const TeacherGradebook = () => {
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Salin data lembar ini agar bisa langsung di-Paste (Ctrl+V) ke Google Sheets atau Excel"
+              title="Salin data lembar ini ke clipboard"
             >
               <span>📋</span>
-              <span>Salin Lembar Ini (Paste)</span>
+              <span>Salin Lembar Ini</span>
             </button>
 
             {/* CETAK / PDF */}
@@ -595,29 +643,6 @@ const TeacherGradebook = () => {
               <span>🖨️</span>
               <span>Cetak / PDF</span>
             </button>
-
-            {/* SALIN & BUKA GOOGLE SHEETS */}
-            <button
-              onClick={handleOpenAndPasteGoogleSheets}
-              style={{
-                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-                border: 'none',
-                color: '#ffffff',
-                padding: '9px 15px',
-                borderRadius: '8px',
-                fontWeight: 800,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
-              }}
-              title="Salin seluruh data nilai dan buka Google Sheets di tab baru untuk langsung di-Paste"
-            >
-              <span>↗️</span>
-              <span>Buka Google Sheets (Paste)</span>
-            </button>
           </div>
         </div>
 
@@ -632,6 +657,10 @@ const TeacherGradebook = () => {
             <span style={{ color: '#cbd5e1' }}>Guru Pengampu: <strong>Bimoro Kusumo, S.Pd.</strong></span>
             <span style={{ color: '#94a3b8' }}>|</span>
             <span style={{ color: '#cbd5e1' }}>Kelas: <strong>X TPM 1 (Teknik Permesinan)</strong></span>
+            <span style={{ color: '#94a3b8' }}>|</span>
+            <span style={{ color: '#6ee7b7', fontSize: '0.78rem' }}>
+              🕒 Pembaruan Terakhir: <strong>{lastSyncTime} WIB</strong>
+            </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

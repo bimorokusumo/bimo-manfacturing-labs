@@ -191,11 +191,7 @@ function AppInner() {
       case 'evaluasi-c1':
         return <EvaluationView />;
       case 'gradebook':
-        return isTeacher ? (
-          <TeacherGradebook />
-        ) : (
-          <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />
-        );
+        return <TeacherGradebook />;
       default:
         return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
     }
@@ -213,15 +209,8 @@ function AppInner() {
             }
           }}
           onOpenGradebook={() => {
-            if (isTeacher) {
-              setIsStarted(true);
-              setActiveMenu('gradebook');
-            } else {
-              openLoginModal(() => {
-                setIsStarted(true);
-                setActiveMenu('gradebook');
-              });
-            }
+            setIsStarted(true);
+            setActiveMenu('gradebook');
           }}
           onOpenLogin={() => openLoginModal()}
         />

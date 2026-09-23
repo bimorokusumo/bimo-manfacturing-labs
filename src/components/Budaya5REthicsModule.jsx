@@ -147,7 +147,9 @@ export default function Budaya5REthicsModule() {
 
     if (quizIndex === questions5R.length - 1) {
       recordQuizResult({
-        modul: 'Safety Lab - Budaya Kerja 5R',
+        modul: 'Safety Lab',
+        subModul: 'Budaya 5R',
+        jenisKuis: 'Budaya Kerja 5R & Etika DUDI',
         judulKuis: 'Kuis Refleksi Pemahaman Budaya Industri 5R',
         skor: newScore,
         jawabanBenar: Math.round(newScore / 20),
@@ -168,7 +170,9 @@ export default function Budaya5REthicsModule() {
     setAuditSubmitted(true);
 
     recordQuizResult({
-      modul: 'Safety Lab - Budaya Kerja 5R',
+      modul: 'Safety Lab',
+      subModul: 'Audit 5R',
+      jenisKuis: 'Budaya Kerja 5R & Etika DUDI',
       judulKuis: 'Audit Kepatuhan 5R Bengkel Mesin Berstandar DUDI',
       skor: auditPercentage,
       jawabanBenar: totalAuditScore,

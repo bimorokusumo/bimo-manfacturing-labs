@@ -50,7 +50,9 @@ export default function K3LHEmergencyModule() {
         setAparFeedback('🏆 API BERHASIL DIPADAMKAN (SWEEP)! Gerakan menyapu dari kiri ke kanan menutupi seluruh sumber oksigen.');
         
         recordQuizResult({
-          modul: 'Safety Lab - K3 & APD',
+          modul: 'Safety Lab',
+          subModul: 'Simulasi APAR',
+          jenisKuis: 'Simulasi APAR & Tanggap Darurat',
           judulKuis: `Simulasi APAR PASS: ${FIRE_SCENARIOS[selectedFireScenario].title}`,
           skor: 100,
           jawabanBenar: 4,

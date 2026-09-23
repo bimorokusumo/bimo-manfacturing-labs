@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   getAllStoredScores,
   getSpreadsheetWebhookUrl,
@@ -8,7 +8,8 @@ import {
   syncPendingScores,
   sendToGoogleSheet,
   copyScoresToClipboard,
-  exportScoresToExcelHTML
+  exportScoresToExcelHTML,
+  detectLabAndSubQuiz
 } from '../services/sheetService';
 import { sound } from '../utils/audio';
 
@@ -18,10 +19,55 @@ const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
 
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getActiveSheet();
+
+    if (sheet.getLastRow() === 0) {
+      var headers = [
+        "Waktu & Tanggal",
+        "Nama Lengkap Siswa",
+        "No. Absen",
+        "Kelas / Jurusan",
+        "Sekolah / Instansi",
+        "Modul Lab (Sidebar)",
+        "Sub-Kuis / Lembar",
+        "Nama Kuis / Asesmen",
+        "Nilai (0 - 100)",
+        "Jawaban Benar",
+        "Total Soal",
+        "Status KKM",
+        "Rincian Jawaban Siswa"
+      ];
+      sheet.appendRow(headers);
+
+      var headerRange = sheet.getRange(1, 1, 1, headers.length);
+      headerRange.setBackground("#064e3b");
+      headerRange.setFontColor("#ffffff");
+      headerRange.setFontWeight("bold");
+      headerRange.setHorizontalAlignment("center");
+      sheet.setFrozenRows(1);
+
+      sheet.setColumnWidth(1, 180);
+      sheet.setColumnWidth(2, 220);
+      sheet.setColumnWidth(3, 90);
+      sheet.setColumnWidth(4, 130);
+      sheet.setColumnWidth(5, 180);
+      sheet.setColumnWidth(6, 170);
+      sheet.setColumnWidth(7, 200);
+      sheet.setColumnWidth(8, 240);
+      sheet.setColumnWidth(9, 110);
+      sheet.setColumnWidth(10, 110);
+      sheet.setColumnWidth(11, 100);
+      sheet.setColumnWidth(12, 110);
+      sheet.setColumnWidth(13, 280);
+    }
 
     var data = {};
     if (e && e.postData && e.postData.contents) {
-      try { data = JSON.parse(e.postData.contents); } catch (err) { data = e.parameter || {}; }
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (err) {
+        data = e.parameter || {};
+      }
     } else if (e && e.parameter) {
       data = e.parameter;
     }
@@ -32,33 +78,57 @@ const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
     var kelas = data.kelas || "-";
     var sekolah = data.sekolah || "-";
     var modul = data.modul || "-";
+    var subModul = data.subModul || data.jenisKuis || "-";
     var judulKuis = data.judulKuis || "-";
     var skor = Number(data.skor !== undefined ? data.skor : 0);
     var jawabanBenar = data.jawabanBenar !== undefined ? data.jawabanBenar : "-";
     var totalSoal = data.totalSoal !== undefined ? data.totalSoal : "-";
     var status = data.status || (skor >= 75 ? "LULUS" : "REMEDIAL");
-    var detail = typeof data.detailJawaban === "object" ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
+    var detailJawaban = typeof data.detailJawaban === 'object' ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
 
-    var rowData = [
-      nowStr, namaSiswa, nomorAbsen, kelas, sekolah,
-      modul, judulKuis, skor, jawabanBenar, totalSoal,
-      status, detail
-    ];
+    sheet.appendRow([
+      nowStr,
+      namaSiswa,
+      nomorAbsen,
+      kelas,
+      sekolah,
+      modul,
+      subModul,
+      judulKuis,
+      skor,
+      jawabanBenar,
+      totalSoal,
+      status,
+      detailJawaban
+    ]);
 
-    // 1. Tentukan Sheet Modul dan Warna Tema
-    var sheetInfo = getSheetInfo(modul, judulKuis);
+    var lastRow = sheet.getLastRow();
+    sheet.getRange(lastRow, 3).setHorizontalAlignment("center");
+    sheet.getRange(lastRow, 4).setHorizontalAlignment("center");
+    sheet.getRange(lastRow, 9).setHorizontalAlignment("center");
+    sheet.getRange(lastRow, 10).setHorizontalAlignment("center");
+    sheet.getRange(lastRow, 11).setHorizontalAlignment("center");
+    sheet.getRange(lastRow, 12).setHorizontalAlignment("center");
 
-    // 2. Simpan ke Tab Modul Khusus
-    var moduleSheet = getOrCreateSheet(ss, sheetInfo.name, sheetInfo.color);
-    appendStudentRow(moduleSheet, rowData);
+    var scoreCell = sheet.getRange(lastRow, 9);
+    var statusCell = sheet.getRange(lastRow, 12);
+    scoreCell.setFontWeight("bold");
+    statusCell.setFontWeight("bold");
 
-    // 3. Simpan juga ke Tab Rekap Master
-    var masterSheet = getOrCreateSheet(ss, "📊 Rekap Semua Nilai", "#1e293b");
-    appendStudentRow(masterSheet, rowData);
+    if (skor >= 75) {
+      statusCell.setBackground("#dcfce7");
+      statusCell.setFontColor("#166534");
+      scoreCell.setFontColor("#16a34a");
+    } else {
+      statusCell.setBackground("#fee2e2");
+      statusCell.setFontColor("#991b1b");
+      scoreCell.setFontColor("#dc2626");
+    }
 
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
-      message: "Data " + namaSiswa + " berhasil dicatat ke " + sheetInfo.name
+      message: "Data nilai " + namaSiswa + " berhasil dicatat ke spreadsheet.",
+      row: lastRow
     })).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -75,129 +145,95 @@ const GOOGLE_APPS_SCRIPT_CODE = `function doPost(e) {
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: "active",
-    message: "Google Apps Script Multi-Sheet BIMO Manufacturing Labs Aktif"
+    message: "Google Apps Script BIMO Manufacturing Labs aktif & siap menerima data nilai siswa."
   })).setMimeType(ContentService.MimeType.JSON);
-}
-
-function getSheetInfo(modul, judul) {
-  var t = (String(modul || "") + " " + String(judul || "")).toLowerCase();
-  if (t.indexOf("safety") !== -1 || t.indexOf("k3") !== -1 || t.indexOf("budaya") !== -1 || t.indexOf("5r") !== -1) {
-    return { name: "1. Safety Lab K3", color: "#065f46" };
-  }
-  if (t.indexOf("machine") !== -1 || t.indexOf("bubut") !== -1 || t.indexOf("cnc") !== -1) {
-    return { name: "2. Machine & CNC", color: "#1e40af" };
-  }
-  if (t.indexOf("pemotong") !== -1 || t.indexOf("potong") !== -1) {
-    return { name: "3. Alat Pemotong", color: "#c2410c" };
-  }
-  if (t.indexOf("heat") !== -1 || t.indexOf("treatment") !== -1 || t.indexOf("termal") !== -1) {
-    return { name: "4. Heat Treatment", color: "#991b1b" };
-  }
-  if (t.indexOf("mekanika") !== -1 || t.indexOf("fisika") !== -1 || t.indexOf("statika") !== -1) {
-    return { name: "5. Mekanika Teknik", color: "#0e7490" };
-  }
-  if (t.indexOf("weld") !== -1 || t.indexOf("las") !== -1) {
-    return { name: "6. Welding Lab", color: "#b45309" };
-  }
-  if (t.indexOf("ukur") !== -1 || t.indexOf("presisi") !== -1 || t.indexOf("metrologi") !== -1) {
-    return { name: "7. Alat Ukur Presisi", color: "#3730a3" };
-  }
-  if (t.indexOf("design") !== -1 || t.indexOf("gambar") !== -1 || t.indexOf("cad") !== -1) {
-    return { name: "8. Design & CAD", color: "#6b21a8" };
-  }
-  if (t.indexOf("evaluasi") !== -1 || t.indexOf("komprehensif") !== -1) {
-    return { name: "9. Evaluasi Akhir", color: "#9f1239" };
-  }
-  return { name: "10. Modul Praktik Lain", color: "#475569" };
-}
-
-function getOrCreateSheet(ss, sheetName, themeColor) {
-  var sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(sheetName);
-  }
-
-  if (sheet.getLastRow() === 0) {
-    var headers = [
-      "Waktu & Tanggal",
-      "Nama Lengkap Siswa",
-      "No. Absen",
-      "Kelas / Jurusan",
-      "Sekolah / Instansi",
-      "Modul Laboratorium",
-      "Nama Kuis / Asesmen",
-      "Nilai (0-100)",
-      "Benar",
-      "Total Soal",
-      "Status KKM",
-      "Rincian Jawaban Siswa"
-    ];
-    sheet.appendRow(headers);
-
-    var headerRange = sheet.getRange(1, 1, 1, headers.length);
-    headerRange.setBackground(themeColor || "#1e293b");
-    headerRange.setFontColor("#ffffff");
-    headerRange.setFontWeight("bold");
-    headerRange.setHorizontalAlignment("center");
-    sheet.setRowHeight(1, 35);
-    sheet.setFrozenRows(1);
-
-    sheet.setColumnWidth(1, 170);
-    sheet.setColumnWidth(2, 220);
-    sheet.setColumnWidth(3, 85);
-    sheet.setColumnWidth(4, 110);
-    sheet.setColumnWidth(5, 160);
-    sheet.setColumnWidth(6, 160);
-    sheet.setColumnWidth(7, 240);
-    sheet.setColumnWidth(8, 100);
-    sheet.setColumnWidth(9, 80);
-    sheet.setColumnWidth(10, 90);
-    sheet.setColumnWidth(11, 110);
-    sheet.setColumnWidth(12, 300);
-  }
-
-  return sheet;
-}
-
-function appendStudentRow(sheet, rowData) {
-  sheet.appendRow(rowData);
-  var lastRow = sheet.getLastRow();
-  sheet.setRowHeight(lastRow, 26);
-
-  sheet.getRange(lastRow, 3).setHorizontalAlignment("center");
-  sheet.getRange(lastRow, 4).setHorizontalAlignment("center");
-  sheet.getRange(lastRow, 8).setHorizontalAlignment("center");
-  sheet.getRange(lastRow, 9).setHorizontalAlignment("center");
-  sheet.getRange(lastRow, 10).setHorizontalAlignment("center");
-  sheet.getRange(lastRow, 11).setHorizontalAlignment("center");
-
-  var score = Number(rowData[7] || 0);
-  var scoreCell = sheet.getRange(lastRow, 8);
-  var statusCell = sheet.getRange(lastRow, 11);
-
-  scoreCell.setFontWeight("bold");
-  statusCell.setFontWeight("bold");
-
-  if (score >= 75) {
-    statusCell.setBackground("#dcfce7");
-    statusCell.setFontColor("#166534");
-    scoreCell.setFontColor("#16a34a");
-  } else {
-    statusCell.setBackground("#fee2e2");
-    statusCell.setFontColor("#991b1b");
-    scoreCell.setFontColor("#dc2626");
-  }
 }`;
+
+// DEFINISI MODUL LAB SESUAI SIDEBAR
+const ALL_LAB_TABS = [
+  { id: 'all', label: 'Semua Modul', icon: '📋' },
+  { id: 'safety', label: 'Safety Lab (K3)', icon: '🛡️' },
+  { id: 'machine', label: 'Machine Lab', icon: '⚙️' },
+  { id: 'cutting-tools', label: 'Alat Pemotong', icon: '🔪' },
+  { id: 'heat-treatment', label: 'Heat Treatment', icon: '🌡️' },
+  { id: 'mechanics', label: 'Mekanika Teknik', icon: '🔧' },
+  { id: 'welding', label: 'Welding Lab', icon: '⚡' },
+  { id: 'measuring', label: 'Alat Ukur Presisi', icon: '📏' },
+  { id: 'design', label: 'Design Lab', icon: '📐' },
+  { id: 'virtual-bengkel', label: 'Virtual Bengkel 3D', icon: '🏭' },
+  { id: 'evaluasi', label: 'Evaluasi', icon: '📝' }
+];
+
+// DEFINISI SUB-KUIS SPESIFIK UNTUK TIAP MODUL SIDEBAR
+const SUB_QUIZ_CONFIG = {
+  safety: [
+    { id: 'all', label: 'Semua Kuis Safety Lab', icon: '📑' },
+    { id: 'apd', label: 'Kuis Inspeksi APD Operator', icon: '🛡️' },
+    { id: 'diagnostic', label: 'Tes Diagnostik K3 (10 Soal)', icon: '📋' },
+    { id: 'apar', label: 'Simulasi APAR P-A-S-S', icon: '🧯' },
+    { id: '5r', label: 'Budaya Kerja 5R & Etika DUDI', icon: '🧹' },
+    { id: 'perkakas', label: 'SOP Perkakas Tangan', icon: '🛠️' },
+    { id: 'jsa', label: 'Penyusunan JSA DUDI', icon: '📋' },
+    { id: 'qc', label: 'Audit QC Benda Uji DUDI', icon: '🔍' }
+  ],
+  machine: [
+    { id: 'all', label: 'Semua Machine Lab', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Machine Lab (10 Soal)', icon: '📋' },
+    { id: 'pretest', label: 'Pre-Test Teori Permesinan', icon: '📝' },
+    { id: 'cnc', label: 'Kuis Teori & Kode CNC', icon: '💻' },
+    { id: 'lathe', label: 'Praktik Mesin Bubut', icon: '⚙️' }
+  ],
+  'cutting-tools': [
+    { id: 'all', label: 'Semua Alat Pemotong', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Alat Potong (10 Soal)', icon: '📋' },
+    { id: 'cutting_quiz', label: 'Kuis Pahat & Kalkulasi RPM', icon: '🔪' }
+  ],
+  'heat-treatment': [
+    { id: 'all', label: 'Semua Heat Treatment', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Heat Treatment (10 Soal)', icon: '📋' },
+    { id: 'metallurgy', label: 'Kuis Evaluasi Metalurgi', icon: '🌡️' }
+  ],
+  mechanics: [
+    { id: 'all', label: 'Semua Mekanika Teknik', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Mekanika (10 Soal)', icon: '📋' },
+    { id: 'torque', label: 'Kuis Momen Gaya & Torsi', icon: '🔧' }
+  ],
+  welding: [
+    { id: 'all', label: 'Semua Welding Lab', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Welding Lab (10 Soal)', icon: '📋' },
+    { id: 'smaw', label: 'Kuis Asesmen Las SMAW', icon: '⚡' }
+  ],
+  measuring: [
+    { id: 'all', label: 'Semua Alat Ukur', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Alat Ukur (10 Soal)', icon: '📋' },
+    { id: 'caliper_micrometer', label: 'Uji Pembacaan Kaliper & Mikrometer', icon: '📏' }
+  ],
+  design: [
+    { id: 'all', label: 'Semua Design Lab', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Design Lab (10 Soal)', icon: '📋' },
+    { id: 'cad_drawing', label: 'Kuis Gambar Teknik & CAD', icon: '📐' }
+  ],
+  'virtual-bengkel': [
+    { id: 'all', label: 'Semua Bengkel 3D', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Bengkel 3D (10 Soal)', icon: '📋' }
+  ],
+  evaluasi: [
+    { id: 'all', label: 'Semua Evaluasi', icon: '📑' },
+    { id: 'evaluasi_final', label: 'Evaluasi Akhir Komprehensif', icon: '📝' }
+  ]
+};
 
 const TeacherGradebook = () => {
   const [scores, setScores] = useState([]);
   const [webhookUrl, setWebhookUrl] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedModule, setSelectedModule] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [activeTab, setActiveTab] = useState('all');
+  
+  // Tab Navigasi Sesuai Sidebar & Sub-Kuis
+  const [activeTab, setActiveTab] = useState('safety'); // Default langsung ke Safety Lab K3 sesuai permintaan guru
+  const [activeSubTab, setActiveSubTab] = useState('all');
   const [toastMessage, setToastMessage] = useState('');
-  const [activeCell, setActiveCell] = useState('H2');
+  const [activeCell, setActiveCell] = useState('I2');
   
   // Modals & Accordions
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
@@ -213,34 +249,6 @@ const TeacherGradebook = () => {
   };
 
   const loadData = () => {
-    try {
-      const raw = localStorage.getItem('bimo_quiz_scores');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const sampleNames = [
-            'ahmad fauzi',
-            'budi santoso',
-            'siti rahmawati',
-            'rizky pratama',
-            'dewi lestari',
-            'fajar nugroho',
-            'siswa praktikan',
-            'siti aisyah',
-            'raka maulana',
-            'dika pratama'
-          ];
-          const cleaned = parsed.filter(item => {
-            if (!item) return false;
-            const id = String(item.id || '').toLowerCase();
-            const nama = String(item.namaSiswa || '').trim().toLowerCase();
-            return !id.startsWith('sample_') && !sampleNames.includes(nama);
-          });
-          localStorage.setItem('bimo_quiz_scores', JSON.stringify(cleaned));
-        }
-      }
-    } catch {}
-
     const data = getAllStoredScores();
     setScores(data);
     setWebhookUrl(getSpreadsheetWebhookUrl());
@@ -255,27 +263,62 @@ const TeacherGradebook = () => {
     return () => window.removeEventListener('bimo:quiz_submitted', handleUpdate);
   }, []);
 
-  // Filtered scores based on search, module, and tab
-  const filteredScores = scores.filter(item => {
-    const matchSearch =
-      (item.namaSiswa || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      String(item.nomorAbsen || '').includes(searchQuery) ||
-      (item.kelas || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.sekolah || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.judulKuis || '').toLowerCase().includes(searchQuery.toLowerCase());
+  // Normalisasi data dengan penandaan Lab dan Sub-Kuis yang rapi & akurat
+  const enrichedScores = useMemo(() => {
+    return scores.map(item => {
+      const detected = detectLabAndSubQuiz(item);
+      return {
+        ...item,
+        labId: detected.labId,
+        labLabel: detected.labLabel,
+        labIcon: detected.labIcon,
+        subId: detected.subId,
+        subLabel: item.subModul || item.jenisKuis || detected.subLabel
+      };
+    });
+  }, [scores]);
 
-    const effectiveModule = activeTab !== 'all' ? activeTab : selectedModule;
-    const matchModule = effectiveModule === 'all' ||
-      item.modul === effectiveModule ||
-      (item.modul && item.modul.toLowerCase().includes(effectiveModule.toLowerCase())) ||
-      (item.judulKuis && item.judulKuis.toLowerCase().includes(effectiveModule.toLowerCase())) ||
-      (effectiveModule === 'Safety Lab' && (String(item.modul || '') + String(item.judulKuis || '')).toLowerCase().includes('safety'));
-    const matchStatus = selectedStatus === 'all' || item.status === selectedStatus;
+  // Handle pergantian tab modul utama
+  const handleMainTabChange = (labId) => {
+    sound.playClick();
+    setActiveTab(labId);
+    setActiveSubTab('all'); // Reset sub-tab ke "Semua" di lab tersebut
+  };
 
-    return matchSearch && matchModule && matchStatus;
-  });
+  // Handle pergantian sub-kuis tab
+  const handleSubTabChange = (subId) => {
+    sound.playClick();
+    setActiveSubTab(subId);
+  };
 
-  // Calculate Metrics
+  // Filter skor sesuai tab lab aktif, sub-kuis aktif, search query, dan status
+  const filteredScores = useMemo(() => {
+    return enrichedScores.filter(item => {
+      // 1. Filter Modul Utama (Sidebar)
+      const matchMainLab = activeTab === 'all' || item.labId === activeTab;
+
+      // 2. Filter Sub-Kuis Spesifik (Misal: Kuis Inspeksi APD sendiri)
+      const matchSubQuiz = activeSubTab === 'all' || item.subId === activeSubTab;
+
+      // 3. Filter Pencarian Teks
+      const q = searchQuery.toLowerCase();
+      const matchSearch =
+        !searchQuery.trim() ||
+        (item.namaSiswa || '').toLowerCase().includes(q) ||
+        String(item.nomorAbsen || '').includes(q) ||
+        (item.kelas || '').toLowerCase().includes(q) ||
+        (item.sekolah || '').toLowerCase().includes(q) ||
+        (item.judulKuis || '').toLowerCase().includes(q) ||
+        (item.subLabel || '').toLowerCase().includes(q);
+
+      // 4. Filter Status Kelulusan
+      const matchStatus = selectedStatus === 'all' || item.status === selectedStatus;
+
+      return matchMainLab && matchSubQuiz && matchSearch && matchStatus;
+    });
+  }, [enrichedScores, activeTab, activeSubTab, searchQuery, selectedStatus]);
+
+  // Hitung Metrik & KPI Live untuk Lembar yang Sedang Aktif
   const totalSubmissions = filteredScores.length;
   const uniqueStudents = new Set(filteredScores.map(s => `${s.namaSiswa}_${s.nomorAbsen}`)).size;
   const averageScore = totalSubmissions > 0
@@ -287,20 +330,24 @@ const TeacherGradebook = () => {
   const totalSoal = filteredScores.reduce((acc, curr) => acc + (Number(curr.totalSoal) || 0), 0);
   const pendingSyncCount = scores.filter(s => !s.synced).length;
 
-  const ALL_LAB_TABS = [
-    { id: 'all', label: 'Semua Modul', icon: '📋' },
-    { id: 'Machine Lab', label: 'Machine Lab', icon: '⚙️' },
-    { id: 'Alat Pemotong', label: 'Alat Potong', icon: '🔪' },
-    { id: 'Heat Treatment', label: 'Heat Treatment', icon: '🌡️' },
-    { id: 'Mekanika Teknik', label: 'Mekanika', icon: '🔧' },
-    { id: 'Welding Lab', label: 'Welding Lab', icon: '⚡' },
-    { id: 'Alat Ukur Presisi', label: 'Alat Ukur', icon: '📏' },
-    { id: 'Design Lab', label: 'Design Lab', icon: '📐' },
-    { id: 'Safety Lab', label: 'Safety K3', icon: '🛡️' },
-    { id: 'Virtual Bengkel 3D', label: 'Bengkel 3D', icon: '🏭' }
-  ];
+  // Daftar sub-kuis untuk lab yang sedang aktif
+  const currentSubQuizList = useMemo(() => {
+    if (activeTab === 'all') return [];
+    return SUB_QUIZ_CONFIG[activeTab] || [];
+  }, [activeTab]);
 
-  const handleCopyClipboard = async () => {
+  // Menemukan judul tampilan lembar yang ramah guru
+  const currentLabTitle = useMemo(() => {
+    const foundLab = ALL_LAB_TABS.find(t => t.id === activeTab);
+    const labName = foundLab ? foundLab.label : 'Semua Modul';
+    if (activeSubTab !== 'all') {
+      const foundSub = currentSubQuizList.find(s => s.id === activeSubTab);
+      return `${labName} ➔ ${foundSub ? foundSub.label : ''}`;
+    }
+    return labName;
+  }, [activeTab, activeSubTab, currentSubQuizList]);
+
+  const handleCopyCurrentSheet = async () => {
     sound.playClick();
     const res = await copyScoresToClipboard(filteredScores);
     if (res.success) {
@@ -338,11 +385,13 @@ const TeacherGradebook = () => {
       nomorAbsen: '99',
       kelas: 'X TPM 1',
       sekolah: 'SMKN 2 Depok',
-      modul: 'Uji Koneksi Sistem',
-      judulKuis: 'Verifikasi Webhook Spreadsheet',
+      modul: 'Safety Lab',
+      subModul: 'Kuis Inspeksi APD',
+      jenisKuis: 'Kuis Inspeksi APD',
+      judulKuis: 'Inspeksi APD Operator: Mesin Bubut Konvensional (Uji Coba)',
       skor: 100,
-      jawabanBenar: 10,
-      totalSoal: 10,
+      jawabanBenar: 1,
+      totalSoal: 1,
       status: 'LULUS',
       detailJawaban: 'Tes koneksi webhook berhasil terhubung dari website BIMO Labs!'
     };
@@ -387,7 +436,7 @@ const TeacherGradebook = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '1440px', margin: '0 auto', paddingBottom: '40px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', maxWidth: '1440px', margin: '0 auto', paddingBottom: '50px' }}>
       
       {/* TOAST NOTIFICATION */}
       {toastMessage && (
@@ -432,20 +481,20 @@ const TeacherGradebook = () => {
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16, 185, 129, 0.2)', border: '1px solid #10b981', padding: '4px 12px', borderRadius: '20px', color: '#6ee7b7', fontSize: '0.78rem', fontWeight: 800, marginBottom: '10px' }}>
               <span>📗</span>
-              <span>LEMBAR KERJA SPREADSHEET TERINTEGRASI</span>
-              <span style={{ background: '#10b981', color: '#064e3b', padding: '1px 8px', borderRadius: '10px', fontSize: '0.7rem' }}>OTOMATIS AKTIF</span>
+              <span>LEMBAR REKAPITULASI NILAI TERPISAH PER KUIS</span>
+              <span style={{ background: '#10b981', color: '#064e3b', padding: '1px 8px', borderRadius: '10px', fontSize: '0.7rem' }}>SESUAI SIDEBAR</span>
             </div>
             <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', margin: 0, fontFamily: "'Chakra Petch', sans-serif", letterSpacing: '0.5px' }}>
-              REKAPITULASI NILAI SISWA (SMKN 2 DEPOK)
+              REKAP NILAI SISWA (SMKN 2 DEPOK)
             </h1>
-            <p style={{ color: '#cbd5e1', fontSize: '0.88rem', marginTop: '6px', maxWidth: '750px', lineHeight: 1.5, margin: 0 }}>
-              Lembar spreadsheet siap pakai untuk memantau hasil pengerjaan kuis & tes diagnostik siswa (Machine Lab, Bubut, CNC, Heat Treatment, Mekanika, Las, dll). Format tabel tersusun rapi sesuai standar kurikulum dan dapat diunduh langsung.
+            <p style={{ color: '#cbd5e1', fontSize: '0.88rem', marginTop: '6px', maxWidth: '800px', lineHeight: 1.5, margin: 0 }}>
+              Setiap kuis & aktivitas praktikum dikelompokkan rapi per modul sidebar. Bapak dapat memilih lembar kuis spesifik (seperti <strong>Kuis Inspeksi APD</strong> atau <strong>Tes Diagnostik</strong>) tanpa perlu memfilter atau mengeliminasi baris secara manual.
             </p>
           </div>
 
           {/* TOP QUICK ACTION BUTTONS */}
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-            {/* UNDUH EXCEL */}
+            {/* UNDUH EXCEL LEMBAR INI */}
             <button
               onClick={() => { sound.playClick(); exportScoresToExcelHTML(filteredScores); }}
               style={{
@@ -462,10 +511,10 @@ const TeacherGradebook = () => {
                 gap: '6px',
                 boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
               }}
-              title="Unduh file Excel (.xls) dengan tabel terformat rapi"
+              title="Unduh tabel yang sedang aktif ke format Excel (.xls)"
             >
               <span>📥</span>
-              <span>Unduh Excel (.xls)</span>
+              <span>Unduh Excel Lembar Ini (.xls)</span>
             </button>
 
             {/* UNDUH CSV */}
@@ -484,7 +533,7 @@ const TeacherGradebook = () => {
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Unduh format standar CSV (Kompatibel Google Sheets & Excel)"
+              title="Unduh format standar CSV"
             >
               <span>📄</span>
               <span>Unduh CSV</span>
@@ -492,7 +541,7 @@ const TeacherGradebook = () => {
 
             {/* SALIN CLIPBOARD */}
             <button
-              onClick={handleCopyClipboard}
+              onClick={handleCopyCurrentSheet}
               style={{
                 background: 'rgba(245, 158, 11, 0.18)',
                 border: '1px solid #f59e0b',
@@ -506,10 +555,10 @@ const TeacherGradebook = () => {
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Salin seluruh data tabel agar bisa langsung di-Paste (Ctrl+V) ke Google Sheets atau Excel"
+              title="Salin data lembar ini agar bisa langsung di-Paste (Ctrl+V) ke Google Sheets atau Excel"
             >
               <span>📋</span>
-              <span>Salin Tabel (Paste ke Sheets)</span>
+              <span>Salin Lembar Ini (Paste)</span>
             </button>
 
             {/* CETAK / PDF */}
@@ -528,7 +577,7 @@ const TeacherGradebook = () => {
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Cetak atau simpan sebagai dokumen PDF"
+              title="Cetak atau simpan sebagai dokumen PDF resmi"
             >
               <span>🖨️</span>
               <span>Cetak / PDF</span>
@@ -552,7 +601,7 @@ const TeacherGradebook = () => {
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Buka lembar kerja Google Sheets baru di tab terpisah"
+              title="Buka Google Sheets baru di tab terpisah"
             >
               <span>↗️</span>
               <span>Buka sheets.new</span>
@@ -563,9 +612,9 @@ const TeacherGradebook = () => {
         {/* STATUS & INFO SUBBAR */}
         <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.12)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', fontSize: '0.82rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6ee7b7', fontWeight: 700 }}>
-              <span>🟢</span>
-              <span>Status: Spreadsheet Aktif & Terformat Otomatis</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6ee7b7', fontWeight: 800 }}>
+              <span>📍</span>
+              <span>Lembar Aktif: <strong>{currentLabTitle}</strong></span>
             </span>
             <span style={{ color: '#94a3b8' }}>|</span>
             <span style={{ color: '#cbd5e1' }}>Guru Pengampu: <strong>Bimoro Kusumo, S.Pd.</strong></span>
@@ -574,6 +623,23 @@ const TeacherGradebook = () => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              onClick={() => { sound.playClick(); exportScoresToExcelHTML(enrichedScores); }}
+              style={{
+                background: 'rgba(16, 185, 129, 0.2)',
+                border: '1px solid #10b981',
+                color: '#ecfdf5',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+              title="Unduh seluruh rekap semua modul lab sekaligus"
+            >
+              📦 Unduh Seluruh Lab (.xls)
+            </button>
+
             <button
               onClick={handleClearData}
               style={{
@@ -586,13 +652,137 @@ const TeacherGradebook = () => {
                 fontWeight: 700,
                 cursor: 'pointer'
               }}
-              title="Bersihkan data nilai di browser ini"
+              title="Bersihkan riwayat data nilai lokal di perangkat ini"
             >
               🗑️ Reset Data
             </button>
           </div>
         </div>
       </div>
+
+      {/* TIER 1: PILIHAN MODUL UTAMA SESUAI SIDEBAR */}
+      <div>
+        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted, #64748b)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          1. Pilih Modul Laboratorium (Sesuai Sidebar):
+        </div>
+        <div style={{
+          display: 'flex',
+          gap: '6px',
+          overflowX: 'auto',
+          paddingBottom: '4px',
+          borderBottom: '2px solid var(--border-light, #e2e8f0)'
+        }}>
+          {ALL_LAB_TABS.map(tab => {
+            const isActive = activeTab === tab.id;
+            const count = tab.id === 'all' 
+              ? enrichedScores.length 
+              : enrichedScores.filter(s => s.labId === tab.id).length;
+
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleMainTabChange(tab.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '9px 15px',
+                  borderRadius: '8px 8px 0 0',
+                  border: isActive ? '1.5px solid #10b981' : '1px solid #cbd5e1',
+                  borderBottom: isActive ? '3px solid #10b981' : '1px solid #cbd5e1',
+                  background: isActive ? '#064e3b' : 'var(--bg-card, #ffffff)',
+                  color: isActive ? '#ffffff' : 'var(--text-main, #0f172a)',
+                  fontWeight: isActive ? 800 : 600,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s'
+                }}
+              >
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+                <span style={{
+                  background: isActive ? '#10b981' : '#e2e8f0',
+                  color: isActive ? '#064e3b' : '#475569',
+                  padding: '2px 7px',
+                  borderRadius: '10px',
+                  fontSize: '0.72rem',
+                  fontWeight: 800
+                }}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* TIER 2: PILIHAN LEMBAR SUB-KUIS SPESIFIK (AGAR TIDAK PERLU ELIMINASI LAGI) */}
+      {currentSubQuizList.length > 0 && (
+        <div style={{
+          background: '#f8fafc',
+          padding: '12px 16px',
+          borderRadius: '10px',
+          border: '1.5px solid #cbd5e1',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
+              <span>📑</span>
+              <span>2. Pilih Lembar Sub-Kuis Spesifik di <strong>{currentLabTitle.split(' ➔ ')[0]}</strong>:</span>
+            </div>
+            <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+              <em>Klik sub-kuis untuk mengisolasi nilainya tanpa tercampur dengan kuis lain</em>
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {currentSubQuizList.map(sub => {
+              const isSubActive = activeSubTab === sub.id;
+              const subCount = sub.id === 'all'
+                ? enrichedScores.filter(s => s.labId === activeTab).length
+                : enrichedScores.filter(s => s.labId === activeTab && s.subId === sub.id).length;
+
+              return (
+                <button
+                  key={sub.id}
+                  onClick={() => handleSubTabChange(sub.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    border: isSubActive ? '1.5px solid #059669' : '1px solid #cbd5e1',
+                    background: isSubActive ? '#059669' : '#ffffff',
+                    color: isSubActive ? '#ffffff' : '#1e293b',
+                    fontSize: '0.78rem',
+                    fontWeight: isSubActive ? 800 : 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s',
+                    boxShadow: isSubActive ? '0 2px 6px rgba(5, 150, 105, 0.3)' : 'none'
+                  }}
+                >
+                  <span>{sub.icon}</span>
+                  <span>{sub.label}</span>
+                  <span style={{
+                    background: isSubActive ? '#ffffff' : '#f1f5f9',
+                    color: isSubActive ? '#059669' : '#475569',
+                    padding: '1px 6px',
+                    borderRadius: '8px',
+                    fontSize: '0.7rem',
+                    fontWeight: 800
+                  }}>
+                    {subCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* SPREADSHEET FORMULA BAR (fx) */}
       <div
@@ -642,14 +832,18 @@ const TeacherGradebook = () => {
           borderRadius: '6px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '6px'
         }}>
           <span>
-            <strong style={{ color: '#059669' }}>=AVERAGE(H2:H{filteredScores.length + 1})</strong>
-            <span style={{ color: '#64748b', marginLeft: '10px' }}>➔ Rata-rata Skor: <strong>{averageScore} / 100</strong></span>
+            <strong style={{ color: '#059669' }}>=AVERAGE(I2:I{filteredScores.length + 1})</strong>
+            <span style={{ color: '#64748b', marginLeft: '10px' }}>
+              ➔ Lembar: <strong>{currentLabTitle}</strong> | Rata-rata Skor: <strong>{averageScore} / 100</strong>
+            </span>
           </span>
           <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
-            Format: Kemendikbudristek SMK Teknik Permesinan
+            KKM Standar: 75
           </span>
         </div>
       </div>
@@ -664,9 +858,9 @@ const TeacherGradebook = () => {
             <span style={{ fontSize: '1.2rem' }}>📝</span>
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginTop: '4px' }}>
-            {totalSubmissions} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Baris Data</span>
+            {totalSubmissions} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Siswa Mengerjakan</span>
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>Total asesmen & kuis siswa terdata</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>Pada lembar: {currentLabTitle}</div>
         </div>
 
         {/* KPI 2: UNIQUE STUDENTS */}
@@ -676,7 +870,7 @@ const TeacherGradebook = () => {
             <span style={{ fontSize: '1.2rem' }}>👥</span>
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#10b981', marginTop: '4px' }}>
-            {uniqueStudents} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Siswa Aktif</span>
+            {uniqueStudents} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Siswa Unik</span>
           </div>
           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>SMKN 2 Depok Jurusan TPM</div>
         </div>
@@ -684,19 +878,19 @@ const TeacherGradebook = () => {
         {/* KPI 3: AVERAGE SCORE */}
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #f59e0b' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =AVERAGE(H2:H)</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =AVERAGE(I2:I)</span>
             <span style={{ fontSize: '1.2rem' }}>⭐</span>
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: averageScore >= 75 ? '#10b981' : '#f59e0b', marginTop: '4px' }}>
             {averageScore} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>/ 100</span>
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>Batas KKM Standar: 75</div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>Batas KKM Kelulusan: 75</div>
         </div>
 
         {/* KPI 4: PASSING RATE */}
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #8b5cf6' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =COUNTIF(J:J, "LULUS")</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =COUNTIF(K:K, "LULUS")</span>
             <span style={{ fontSize: '1.2rem' }}>🎯</span>
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: passingRate >= 75 ? '#10b981' : '#ef4444', marginTop: '4px' }}>
@@ -704,58 +898,6 @@ const TeacherGradebook = () => {
           </div>
           <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>Siswa mencapai KKM kompetensi</div>
         </div>
-      </div>
-
-      {/* SPREADSHEET SHEET TABS (PILIHAN LEMBAR MODUL PRAKTIK) */}
-      <div style={{
-        display: 'flex',
-        gap: '6px',
-        overflowX: 'auto',
-        paddingBottom: '4px',
-        borderBottom: '2px solid var(--border-light, #e2e8f0)'
-      }}>
-        {ALL_LAB_TABS.map(tab => {
-          const isActive = activeTab === tab.id;
-          const count = tab.id === 'all' 
-            ? scores.length 
-            : scores.filter(s => s.modul === tab.id).length;
-
-          return (
-            <button
-              key={tab.id}
-              onClick={() => { sound.playClick(); setActiveTab(tab.id); }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                borderRadius: '8px 8px 0 0',
-                border: isActive ? '1.5px solid #10b981' : '1px solid #cbd5e1',
-                borderBottom: isActive ? '2px solid #10b981' : '1px solid #cbd5e1',
-                background: isActive ? '#064e3b' : 'var(--bg-card, #ffffff)',
-                color: isActive ? '#ffffff' : 'var(--text-main, #0f172a)',
-                fontWeight: isActive ? 800 : 600,
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s'
-              }}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-              <span style={{
-                background: isActive ? '#10b981' : '#e2e8f0',
-                color: isActive ? '#064e3b' : '#475569',
-                padding: '1px 6px',
-                borderRadius: '10px',
-                fontSize: '0.7rem',
-                fontWeight: 800
-              }}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
       </div>
 
       {/* FILTER & SEARCH BAR */}
@@ -766,7 +908,7 @@ const TeacherGradebook = () => {
             <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>🔍</span>
             <input
               type="text"
-              placeholder="Cari nama siswa, no. absen, kelas, kuis..."
+              placeholder="Cari nama siswa, nomor absen, kuis..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -803,7 +945,7 @@ const TeacherGradebook = () => {
         </div>
 
         <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-          Menampilkan <strong>{filteredScores.length}</strong> dari <strong>{scores.length}</strong> entri nilai
+          Menampilkan <strong>{filteredScores.length}</strong> baris data pada lembar <strong>{currentLabTitle}</strong>
         </div>
       </div>
 
@@ -828,7 +970,7 @@ const TeacherGradebook = () => {
               fontFamily: 'system-ui, -apple-system, sans-serif'
             }}
           >
-            {/* COLUMN COORDINATES HEADER (A, B, C, D, E, F, G, H, I, J, K) */}
+            {/* COLUMN COORDINATES HEADER (A, B, C, D, E, F, G, H, I, J, K, L) */}
             <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
               {/* ROW COORDINATES: A, B, C... */}
               <tr style={{ background: '#f1f5f9', color: '#64748b', fontSize: '0.72rem', borderBottom: '1px solid #cbd5e1' }}>
@@ -840,10 +982,11 @@ const TeacherGradebook = () => {
                 <th style={{ padding: '6px 12px', borderRight: '1px solid #cbd5e1' }}>E</th>
                 <th style={{ padding: '6px 12px', borderRight: '1px solid #cbd5e1' }}>F</th>
                 <th style={{ padding: '6px 14px', borderRight: '1px solid #cbd5e1' }}>G</th>
-                <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>H</th>
+                <th style={{ padding: '6px 16px', borderRight: '1px solid #cbd5e1' }}>H</th>
                 <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>I</th>
                 <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>J</th>
-                <th style={{ padding: '6px 10px', textAlign: 'center' }}>K</th>
+                <th style={{ padding: '6px 10px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>K</th>
+                <th style={{ padding: '6px 10px', textAlign: 'center' }}>L</th>
               </tr>
 
               {/* COLUMN LABELS: Waktu, Nama, Absen, dll */}
@@ -867,10 +1010,13 @@ const TeacherGradebook = () => {
                   Sekolah
                 </th>
                 <th style={{ padding: '12px 14px', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  Modul Praktik
+                  Modul Lab (Sidebar)
+                </th>
+                <th style={{ padding: '12px 14px', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap', background: '#047857' }}>
+                  Lembar / Sub-Kuis
                 </th>
                 <th style={{ padding: '12px 16px', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  Kuis / Diagnostik
+                  Rincian Pekerjaan / Asesmen
                 </th>
                 <th style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
                   Skor (0-100)
@@ -882,7 +1028,7 @@ const TeacherGradebook = () => {
                   Status KKM
                 </th>
                 <th style={{ padding: '12px 12px', textAlign: 'center', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  Aksi & Rincian
+                  Aksi
                 </th>
               </tr>
             </thead>
@@ -891,14 +1037,31 @@ const TeacherGradebook = () => {
             <tbody>
               {filteredScores.length === 0 ? (
                 <tr>
-                  <td colSpan="12" style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
+                  <td colSpan="13" style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
                     <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
                     <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
-                      Belum Ada Data Rekapan Nilai
+                      Belum Ada Hasil Pengerjaan untuk Lembar Ini
                     </div>
-                    <p style={{ margin: '6px 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>
-                      Nilai siswa akan otomatis tercatat secara real-time di sini saat siswa menyelesaikan kuis atau tes diagnostik.
+                    <p style={{ margin: '6px 0 16px 0', fontSize: '0.85rem' }}>
+                      Belum ada siswa yang menyelesaikan kuis pada kategori <strong>"{currentLabTitle}"</strong>.
                     </p>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                      <button
+                        onClick={() => setActiveSubTab('all')}
+                        style={{
+                          padding: '8px 16px',
+                          borderRadius: '8px',
+                          background: '#064e3b',
+                          color: '#fff',
+                          border: 'none',
+                          fontWeight: 700,
+                          fontSize: '0.82rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Lihat Semua Kuis di Modul Ini
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -910,7 +1073,7 @@ const TeacherGradebook = () => {
                   return (
                     <tr
                       key={row.id || idx}
-                      onClick={() => setActiveCell(`H${rowNum}`)}
+                      onClick={() => setActiveCell(`I${rowNum}`)}
                       style={{
                         background: isEven ? '#ffffff' : '#f8fafc',
                         borderBottom: '1px solid #e2e8f0',
@@ -960,17 +1123,42 @@ const TeacherGradebook = () => {
                         {row.sekolah || 'SMKN 2 Depok'}
                       </td>
 
-                      {/* [F] MODUL LAB */}
+                      {/* [F] MODUL LAB (SIDEBAR) */}
                       <td style={{ padding: '10px 14px', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
-                        <span style={{ fontWeight: 700, color: '#065f46' }}>{row.modul}</span>
+                        <span style={{
+                          fontWeight: 800,
+                          color: '#065f46',
+                          background: 'rgba(16, 185, 129, 0.12)',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(16, 185, 129, 0.25)',
+                          fontSize: '0.78rem'
+                        }}>
+                          {row.labIcon} {row.labLabel}
+                        </span>
                       </td>
 
-                      {/* [G] KUIS / DIAGNOSTIK */}
+                      {/* [G] LEMBAR / SUB-KUIS */}
+                      <td style={{ padding: '10px 14px', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                        <span style={{
+                          fontWeight: 700,
+                          color: '#1e293b',
+                          background: '#f1f5f9',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          border: '1px solid #e2e8f0'
+                        }}>
+                          {row.subLabel}
+                        </span>
+                      </td>
+
+                      {/* [H] DETAIL ASESMEN / PEKERJAAN */}
                       <td style={{ padding: '10px 16px', borderRight: '1px solid #e2e8f0' }}>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>{row.judulKuis}</div>
                       </td>
 
-                      {/* [H] SKOR (0-100) */}
+                      {/* [I] SKOR (0-100) */}
                       <td style={{
                         padding: '10px 12px',
                         textAlign: 'center',
@@ -984,12 +1172,12 @@ const TeacherGradebook = () => {
                         {row.skor}
                       </td>
 
-                      {/* [I] BENAR / TOTAL */}
+                      {/* [J] BENAR / TOTAL */}
                       <td style={{ padding: '10px 10px', textAlign: 'center', color: '#475569', fontWeight: 700, borderRight: '1px solid #e2e8f0' }}>
                         {row.jawabanBenar} / {row.totalSoal}
                       </td>
 
-                      {/* [J] STATUS KKM */}
+                      {/* [K] STATUS KKM */}
                       <td style={{ padding: '10px 12px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
                         <span
                           style={{
@@ -1007,7 +1195,7 @@ const TeacherGradebook = () => {
                         </span>
                       </td>
 
-                      {/* [K] DETAIL & AKSI */}
+                      {/* [L] AKSI */}
                       <td style={{ padding: '10px 12px', textAlign: 'center' }}>
                         <button
                           onClick={() => { sound.playClick(); setSelectedDetailRecord(row); }}
@@ -1048,8 +1236,11 @@ const TeacherGradebook = () => {
                   <td style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #cbd5e1' }}>-</td>
                   <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1' }}>SMKN 2 Depok</td>
                   <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1' }}>-</td>
+                  <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1', color: '#065f46' }}>
+                    {activeSubTab !== 'all' ? currentLabTitle.split(' ➔ ')[1] : 'Semua Sub-Kuis'}
+                  </td>
                   <td style={{ padding: '12px 16px', borderRight: '1px solid #cbd5e1', color: '#64748b' }}>
-                    =AVERAGE(H:H)
+                    =AVERAGE(I:I)
                   </td>
                   <td style={{
                     padding: '12px 12px',
@@ -1113,15 +1304,15 @@ const TeacherGradebook = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ background: '#064e3b', color: '#ffffff', padding: '3px 8px', borderRadius: '4px', fontWeight: 800 }}>
-            Sheet1
+            {activeSubTab !== 'all' ? activeSubTab.toUpperCase() : 'SHEET 1'}
           </span>
           <span style={{ fontWeight: 700, color: '#334155' }}>
-            Rekapitulasi Nilai Siswa SMK - Kurikulum Merdeka & Industri Permesinan
+            Lembar Aktif: <strong>{currentLabTitle}</strong> (SMKN 2 Depok - Kurikulum Merdeka)
           </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', color: '#64748b' }}>
-          <span>💡 <em>Tips: Klik <strong>"Unduh Excel (.xls)"</strong> untuk langsung membuka laporan ini di Microsoft Excel.</em></span>
+          <span>💡 <em>Klik tombol <strong>"Unduh Excel Lembar Ini (.xls)"</strong> untuk langsung mencetak atau mengolah nilai sub-kuis ini.</em></span>
         </div>
       </div>
 
@@ -1243,8 +1434,9 @@ const TeacherGradebook = () => {
               <div><strong>No. Absen:</strong> {selectedDetailRecord.nomorAbsen}</div>
               <div><strong>Kelas / Jurusan:</strong> {selectedDetailRecord.kelas}</div>
               <div><strong>Sekolah:</strong> {selectedDetailRecord.sekolah || 'SMKN 2 Depok'}</div>
-              <div><strong>Modul Lab:</strong> {selectedDetailRecord.modul}</div>
-              <div><strong>Nama Kuis:</strong> {selectedDetailRecord.judulKuis}</div>
+              <div><strong>Modul Lab:</strong> {selectedDetailRecord.labLabel || selectedDetailRecord.modul}</div>
+              <div><strong>Lembar Sub-Kuis:</strong> {selectedDetailRecord.subLabel}</div>
+              <div style={{ gridColumn: 'span 2' }}><strong>Nama Kuis / Asesmen:</strong> {selectedDetailRecord.judulKuis}</div>
               <div>
                 <strong>Skor Hasil:</strong>{' '}
                 <span style={{ fontWeight: 900, fontSize: '1.05rem', color: selectedDetailRecord.status === 'LULUS' ? '#16a34a' : '#dc2626' }}>
@@ -1378,30 +1570,13 @@ const TeacherGradebook = () => {
 
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.86rem', lineHeight: 1.6 }}>
               <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>Langkah Pemasangan di Google Spreadsheet Pribadi:</div>
-              <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <li>Buka <strong>https://sheets.new</strong> di tab baru untuk membuat spreadsheet kosong.</li>
                 <li>Klik menu <strong>Ekstensi (Extensions)</strong> ➔ pilih <strong>Apps Script</strong>.</li>
                 <li>Hapus kode lama, lalu klik tombol <strong>"Salin Kode Apps Script"</strong> di bawah dan tempelkan.</li>
-                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> ➔ <strong>Penerapan baru (New deployment)</strong>.</li>
-                <li>Klik ikon gerigi ⚙️ ➔ pilih <strong>Aplikasi web (Web app)</strong>.</li>
-                <li>
-                  Konfigurasi wajib:
-                  <ul style={{ marginTop: '4px', paddingLeft: '18px' }}>
-                    <li><strong>Jalankan sebagai (Execute as):</strong> Saya (email Anda)</li>
-                    <li><strong>Yang memiliki akses (Who has access):</strong> <strong style={{ color: '#dc2626' }}>Siapa saja (Anyone)</strong> <em>(wajib agar 36 siswa dapat mengirim nilai langsung dari ponsel mereka)</em></li>
-                  </ul>
-                </li>
-                <li>
-                  Klik <strong>Terapkan (Deploy)</strong> ➔ klik <strong>Otorisasi akses (Authorize access)</strong>.
-                  <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '10px 12px', marginTop: '6px', fontSize: '0.82rem', color: '#92400e', lineHeight: 1.5 }}>
-                    ⚠️ <strong>CARA MELEWATI PERINGATAN "Google hasn’t verified this app":</strong><br/>
-                    1. Klik tulisan <strong>"Advanced"</strong> (atau <strong>"Lanjutan"</strong>) di pojok kiri bawah.<br/>
-                    2. Klik tautan <strong>"Go to ... (unsafe)"</strong> (atau <strong>"Buka ... (tidak aman)"</strong>).<br/>
-                    3. Klik tombol biru <strong>"Allow"</strong> (atau <strong>"Izinkan"</strong>).<br/>
-                    <em>(Peringatan ini 100% normal dan aman karena script ini Anda buat sendiri di akun Google pribadi Anda, bukan aplikasi komersial pihak ketiga).</em>
-                  </div>
-                </li>
-                <li>Salin <strong>URL Aplikasi Web (Web App URL)</strong> yang berakhiran <code>/exec</code> lalu tempelkan di menu pengaturan webhook.</li>
+                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> ➔ <strong>Penerapan baru</strong>.</li>
+                <li>Pilih jenis <strong>Aplikasi web</strong>, ubah <em>Yang memiliki akses</em> menjadi: <strong>Siapa saja (Anyone)</strong>.</li>
+                <li>Salin URL Web App yang berakhiran <code>/exec</code> lalu tempelkan di menu pengaturan webhook.</li>
               </ol>
             </div>
 

@@ -134,7 +134,9 @@ export default function JSABenchProjectModule() {
     }
 
     recordQuizResult({
-      modul: 'Safety Lab - JSA & Benda Uji DUDI',
+      modul: 'Safety Lab',
+      subModul: 'JSA DUDI',
+      jenisKuis: 'Penyusunan JSA (Job Safety Analysis)',
       judulKuis: `Penyusunan Job Safety Analysis (JSA): ${currentScenario.title}`,
       skor: score,
       jawabanBenar: totalCorrect,
@@ -204,7 +206,9 @@ export default function JSABenchProjectModule() {
     }
 
     recordQuizResult({
-      modul: 'Safety Lab - JSA & Benda Uji DUDI',
+      modul: 'Safety Lab',
+      subModul: 'QC Benda Kerja',
+      jenisKuis: 'Audit Mutu Benda Kerja DUDI',
       judulKuis: 'Audit Mutu Benda Uji Kerja Bangku Presisi (QC DUDI)',
       skor: Math.max(score, 0),
       jawabanBenar: score >= 75 ? 1 : 0,

@@ -172,12 +172,144 @@ export const sendToGoogleSheet = async (payload) => {
 };
 
 /**
+ * Mendeteksi ID Lab dan Sub-Kuis yang spesifik sesuai struktur Sidebar
+ */
+export const detectLabAndSubQuiz = (item) => {
+  const m = String(item?.modul || '').toLowerCase();
+  const j = String(item?.judulKuis || '').toLowerCase();
+
+  // 1. Identifikasi Lab Utama (sesuai ID Sidebar)
+  let labId = 'machine';
+  let labLabel = 'Machine Lab';
+  let labIcon = '⚙️';
+
+  if (m.includes('safety') || m.includes('k3') || m.includes('5r') || m.includes('apar') || j.includes('apd') || j.includes('k3') || j.includes('5r') || j.includes('apar') || j.includes('jsa')) {
+    labId = 'safety';
+    labLabel = 'Safety Lab';
+    labIcon = '🛡️';
+  } else if (m.includes('cutting') || m.includes('potong') || j.includes('potong') || j.includes('pahat')) {
+    labId = 'cutting-tools';
+    labLabel = 'Alat Pemotong';
+    labIcon = '🔪';
+  } else if (m.includes('heat') || m.includes('perlakuan panas') || m.includes('metalurgi') || j.includes('hardening') || j.includes('quenching') || j.includes('annealing')) {
+    labId = 'heat-treatment';
+    labLabel = 'Heat Treatment';
+    labIcon = '🌡️';
+  } else if (m.includes('mekanika') || m.includes('mechanic') || j.includes('torsi') || j.includes('tuas') || j.includes('momen gaya')) {
+    labId = 'mechanics';
+    labLabel = 'Mekanika Teknik';
+    labIcon = '🔧';
+  } else if (m.includes('weld') || m.includes('las') || j.includes('smaw') || j.includes('pengelasan')) {
+    labId = 'welding';
+    labLabel = 'Welding Lab';
+    labIcon = '⚡';
+  } else if (m.includes('ukur') || m.includes('measur') || m.includes('metrologi') || j.includes('jangka sorong') || j.includes('mikrometer') || j.includes('kaliper')) {
+    labId = 'measuring';
+    labLabel = 'Alat Ukur Presisi';
+    labIcon = '📏';
+  } else if (m.includes('design') || m.includes('gambar') || m.includes('cad') || j.includes('proyeksi') || j.includes('cad')) {
+    labId = 'design';
+    labLabel = 'Design Lab';
+    labIcon = '📐';
+  } else if (m.includes('bengkel') || m.includes('virtual') || j.includes('bengkel 3d')) {
+    labId = 'virtual-bengkel';
+    labLabel = 'Virtual Bengkel 3D';
+    labIcon = '🏭';
+  } else if (m.includes('evaluasi') || j.includes('evaluasi komprehensif')) {
+    labId = 'evaluasi';
+    labLabel = 'Evaluasi';
+    labIcon = '📝';
+  } else {
+    labId = 'machine';
+    labLabel = 'Machine Lab';
+    labIcon = '⚙️';
+  }
+
+  // 2. Identifikasi Sub-Kuis / Sub-Aktivitas Spesifik
+  let subId = 'other';
+  let subLabel = 'Kuis / Praktik';
+
+  if (j.includes('diagnostik')) {
+    subId = 'diagnostic';
+    subLabel = 'Tes Diagnostik (10 Soal)';
+  } else if (labId === 'safety') {
+    if (j.includes('inspeksi apd') || j.includes('apd') || m.includes('apd')) {
+      subId = 'apd';
+      subLabel = 'Kuis Inspeksi APD';
+    } else if (j.includes('apar') || j.includes('pass') || j.includes('kebakaran')) {
+      subId = 'apar';
+      subLabel = 'Simulasi APAR & Tanggap Darurat';
+    } else if (j.includes('5r') || j.includes('budaya')) {
+      subId = '5r';
+      subLabel = 'Budaya Kerja 5R & Etika DUDI';
+    } else if (j.includes('perkakas') || j.includes('ragum') || j.includes('bor')) {
+      subId = 'perkakas';
+      subLabel = 'SOP Perkakas Tangan & Ragum';
+    } else if (j.includes('jsa') || j.includes('job safety')) {
+      subId = 'jsa';
+      subLabel = 'Penyusunan JSA (Job Safety Analysis)';
+    } else if (j.includes('qc') || j.includes('benda uji')) {
+      subId = 'qc';
+      subLabel = 'Audit Mutu Benda Kerja DUDI';
+    } else {
+      subId = 'safety_general';
+      subLabel = 'Kuis Praktik K3';
+    }
+  } else if (labId === 'machine') {
+    if (j.includes('pre-test') || j.includes('pretest')) {
+      subId = 'pretest';
+      subLabel = 'Pre-Test Teori Permesinan';
+    } else if (j.includes('cnc') || m.includes('cnc')) {
+      subId = 'cnc';
+      subLabel = 'Kuis Teori & Kode CNC';
+    } else if (j.includes('bubut') || m.includes('bubut')) {
+      subId = 'lathe';
+      subLabel = 'Praktik Mesin Bubut';
+    } else {
+      subId = 'machine_general';
+      subLabel = 'Praktik Permesinan';
+    }
+  } else if (labId === 'cutting-tools') {
+    subId = 'cutting_quiz';
+    subLabel = 'Kuis Alat Potong & RPM';
+  } else if (labId === 'heat-treatment') {
+    subId = 'metallurgy';
+    subLabel = 'Kuis Evaluasi Metalurgi';
+  } else if (labId === 'mechanics') {
+    subId = 'torque';
+    subLabel = 'Kuis Momen Gaya & Torsi';
+  } else if (labId === 'welding') {
+    subId = 'smaw';
+    subLabel = 'Kuis Asesmen Las SMAW';
+  } else if (labId === 'measuring') {
+    subId = 'caliper_micrometer';
+    subLabel = 'Uji Pembacaan Kaliper & Mikrometer';
+  } else if (labId === 'design') {
+    subId = 'cad_drawing';
+    subLabel = 'Kuis Gambar Teknik & CAD';
+  } else if (labId === 'evaluasi') {
+    subId = 'evaluasi_final';
+    subLabel = 'Evaluasi Akhir Komprehensif';
+  }
+
+  return {
+    labId,
+    labLabel,
+    labIcon,
+    subId,
+    subLabel
+  };
+};
+
+/**
  * FUNGSI UTAMA: Merekam hasil evaluasi siswa
  * Secara otomatis menyimpan ke Local Storage DAN mengirim ke Google Spreadsheet
  */
 export const recordQuizResult = async ({
   student = null,
   modul = 'Modul Permesinan',
+  subModul = '',
+  jenisKuis = '',
   judulKuis = 'Kuis Evaluasi',
   skor = 0,
   jawabanBenar = 0,
@@ -211,6 +343,10 @@ export const recordQuizResult = async ({
   const numericScore = Math.round(Number(skor) || 0);
   const status = numericScore >= 75 ? 'LULUS' : 'REMEDIAL';
 
+  const detected = detectLabAndSubQuiz({ modul, judulKuis });
+  const finalSubModul = subModul || detected.subLabel;
+  const finalJenisKuis = jenisKuis || detected.subLabel;
+
   const record = {
     id: `quiz_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     timestamp: now.toISOString(),
@@ -219,7 +355,9 @@ export const recordQuizResult = async ({
     nomorAbsen,
     kelas,
     sekolah,
-    modul,
+    modul: detected.labLabel,
+    subModul: finalSubModul,
+    jenisKuis: finalJenisKuis,
     judulKuis,
     skor: numericScore,
     jawabanBenar: Number(jawabanBenar) || 0,
@@ -288,12 +426,13 @@ export const exportScoresToCSV = (scores = null) => {
     'No. Absen',
     'Kelas',
     'Sekolah / Instansi',
-    'Modul Lab',
-    'Nama Kuis',
+    'Modul Lab (Sidebar)',
+    'Sub-Kuis / Kategori',
+    'Nama Kuis / Asesmen',
     'Nilai (0-100)',
     'Jawaban Benar',
     'Total Soal',
-    'Status',
+    'Status KKM',
     'Tersinkron Spreadsheet',
     'Rincian Jawaban'
   ];
@@ -304,21 +443,25 @@ export const exportScoresToCSV = (scores = null) => {
     return `"${str}"`;
   };
 
-  const rows = data.map(item => [
-    escapeCSV(item.waktu),
-    escapeCSV(item.namaSiswa),
-    escapeCSV(item.nomorAbsen),
-    escapeCSV(item.kelas),
-    escapeCSV(item.sekolah),
-    escapeCSV(item.modul),
-    escapeCSV(item.judulKuis),
-    escapeCSV(item.skor),
-    escapeCSV(item.jawabanBenar),
-    escapeCSV(item.totalSoal),
-    escapeCSV(item.status),
-    escapeCSV(item.synced ? 'SUDAH' : 'BELUM'),
-    escapeCSV(item.detailJawaban)
-  ].join(','));
+  const rows = data.map(item => {
+    const det = detectLabAndSubQuiz(item);
+    return [
+      escapeCSV(item.waktu),
+      escapeCSV(item.namaSiswa),
+      escapeCSV(item.nomorAbsen),
+      escapeCSV(item.kelas),
+      escapeCSV(item.sekolah),
+      escapeCSV(item.modul || det.labLabel),
+      escapeCSV(item.subModul || item.jenisKuis || det.subLabel),
+      escapeCSV(item.judulKuis),
+      escapeCSV(item.skor),
+      escapeCSV(item.jawabanBenar),
+      escapeCSV(item.totalSoal),
+      escapeCSV(item.status),
+      escapeCSV(item.synced ? 'SUDAH' : 'BELUM'),
+      escapeCSV(item.detailJawaban)
+    ].join(',');
+  });
 
   const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -350,6 +493,7 @@ export const copyScoresToClipboard = async (scores = null) => {
     'Kelas',
     'Sekolah',
     'Modul Lab',
+    'Sub-Kuis / Kategori',
     'Nama Kuis / Asesmen',
     'Nilai (0-100)',
     'Jawaban Benar',
@@ -358,20 +502,24 @@ export const copyScoresToClipboard = async (scores = null) => {
     'Rincian Jawaban'
   ];
 
-  const rows = data.map(item => [
-    item.waktu || '',
-    item.namaSiswa || '',
-    item.nomorAbsen || '',
-    item.kelas || '',
-    item.sekolah || '',
-    item.modul || '',
-    item.judulKuis || '',
-    item.skor ?? '',
-    item.jawabanBenar ?? '',
-    item.totalSoal ?? '',
-    item.status || '',
-    (item.detailJawaban || '').replace(/\r?\n|\r/g, ' ')
-  ].join('\t'));
+  const rows = data.map(item => {
+    const det = detectLabAndSubQuiz(item);
+    return [
+      item.waktu || '',
+      item.namaSiswa || '',
+      item.nomorAbsen || '',
+      item.kelas || '',
+      item.sekolah || '',
+      item.modul || det.labLabel,
+      item.subModul || item.jenisKuis || det.subLabel,
+      item.judulKuis || '',
+      item.skor ?? '',
+      item.jawabanBenar ?? '',
+      item.totalSoal ?? '',
+      item.status || '',
+      (item.detailJawaban || '').replace(/\r?\n|\r/g, ' ')
+    ].join('\t');
+  });
 
   const tsvText = [headers.join('\t'), ...rows].join('\n');
 
@@ -394,21 +542,25 @@ export const exportScoresToExcelHTML = (scores = null) => {
     return;
   }
 
-  const rowsHtml = data.map((item, idx) => `
+  const rowsHtml = data.map((item, idx) => {
+    const det = detectLabAndSubQuiz(item);
+    return `
     <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.waktu || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; font-weight: bold;">${item.namaSiswa || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.nomorAbsen || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.kelas || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.sekolah || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.modul || ''}</td>
+      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; font-weight: bold; color: #065f46;">${item.modul || det.labLabel}</td>
+      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; background-color: #f1f5f9; font-weight: 600;">${item.subModul || item.jenisKuis || det.subLabel}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.judulKuis || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center; font-weight: bold; color: ${item.skor >= 75 ? '#16a34a' : '#dc2626'};">${item.skor ?? ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.jawabanBenar ?? ''} / ${item.totalSoal ?? ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center; font-weight: bold; background-color: ${item.status === 'LULUS' ? '#dcfce7' : '#fee2e2'}; color: ${item.status === 'LULUS' ? '#166534' : '#991b1b'};">${item.status || ''}</td>
       <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 10pt;">${(item.detailJawaban || '').replace(/"/g, '&quot;')}</td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 
   const htmlContent = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
@@ -432,18 +584,19 @@ export const exportScoresToExcelHTML = (scores = null) => {
       <p style="font-family: Arial, sans-serif; font-size: 10pt; color: #64748b;">Instansi: SMKN 2 Depok | Guru Pengampu: Bimoro Kusumo, S.Pd. | Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')}</p>
       <table border="1" style="border-collapse: collapse; font-family: Arial, sans-serif;">
         <thead>
-          <tr style="background-color: #0f172a; color: #ffffff; font-weight: bold; text-align: center;">
+          <tr style="background-color: #064e3b; color: #ffffff; font-weight: bold; text-align: center;">
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[A] Waktu / Tanggal</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[B] Nama Siswa</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[C] No. Absen</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[D] Kelas</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[E] Sekolah</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[F] Modul Lab</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[G] Nama Kuis</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[H] Nilai (0-100)</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[I] Benar / Total</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[J] Status KKM</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[K] Rincian Jawaban</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[G] Sub-Kuis / Lembar</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[H] Nama Kuis</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[I] Nilai (0-100)</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[J] Benar / Total</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[K] Status KKM</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[L] Rincian Jawaban</th>
           </tr>
         </thead>
         <tbody>

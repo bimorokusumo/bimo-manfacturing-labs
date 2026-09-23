@@ -180,7 +180,9 @@ export default function BenchToolsModule() {
       setQuizCompleted(true);
       const finalScore = quizScore + (selectedAnswer === BENCH_QUIZ[quizIndex].correct ? 0 : 0); // already updated
       recordQuizResult({
-        modul: 'Safety Lab - Perkakas Tangan & Mesin Portabel',
+        modul: 'Safety Lab',
+        subModul: 'Perkakas Tangan',
+        jenisKuis: 'SOP Perkakas Tangan & Ragum',
         judulKuis: 'Uji Kompetensi SOP & K3 Perkakas Tangan & Bor/Gerinda',
         skor: finalScore,
         jawabanBenar: Math.round(finalScore / 10),

@@ -514,8 +514,10 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
       : (missingMandatory.length > 0 ? Math.max(30, 85 - (missingMandatory.length * 15)) : 100);
 
     recordQuizResult({
-      modul: 'Safety Lab - K3 & APD',
-      judulKuis: `Inspeksi APD: ${currentJobObj.name}`,
+      modul: 'Safety Lab',
+      subModul: 'Kuis Inspeksi APD',
+      jenisKuis: 'Kuis Inspeksi APD',
+      judulKuis: `Inspeksi APD Operator: ${currentJobObj.name}`,
       skor: finalScore,
       jawabanBenar: finalScore === 100 ? 1 : 0,
       totalSoal: 1,

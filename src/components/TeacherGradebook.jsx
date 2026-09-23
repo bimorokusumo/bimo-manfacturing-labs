@@ -238,6 +238,7 @@ const TeacherGradebook = () => {
   // Modals & Accordions
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const [isPasteGuideModalOpen, setIsPasteGuideModalOpen] = useState(false);
   const [isWebhookAccordionOpen, setIsWebhookAccordionOpen] = useState(false);
   const [selectedDetailRecord, setSelectedDetailRecord] = useState(null);
   const [testStatus, setTestStatus] = useState('');
@@ -246,6 +247,18 @@ const TeacherGradebook = () => {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 3500);
+  };
+
+  const handleOpenAndPasteGoogleSheets = async () => {
+    sound.playClick();
+    const res = await copyScoresToClipboard(filteredScores);
+    if (res.success) {
+      sound.playSuccess();
+      window.open('https://sheets.new', '_blank');
+      setIsPasteGuideModalOpen(true);
+    } else {
+      showToast('Gagal menyalin tabel. Silakan gunakan tombol Unduh Excel.');
+    }
   };
 
   const loadData = () => {
@@ -583,29 +596,28 @@ const TeacherGradebook = () => {
               <span>Cetak / PDF</span>
             </button>
 
-            {/* BUKA GOOGLE SHEETS BARU */}
-            <a
-              href="https://sheets.new"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* SALIN & BUKA GOOGLE SHEETS */}
+            <button
+              onClick={handleOpenAndPasteGoogleSheets}
               style={{
-                background: 'rgba(2, 132, 199, 0.25)',
-                border: '1px solid #0284c7',
-                color: '#e0f2fe',
-                padding: '9px 14px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                border: 'none',
+                color: '#ffffff',
+                padding: '9px 15px',
                 borderRadius: '8px',
-                fontWeight: 700,
+                fontWeight: 800,
                 fontSize: '0.82rem',
-                textDecoration: 'none',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px'
+                gap: '6px',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.35)'
               }}
-              title="Buka Google Sheets baru di tab terpisah"
+              title="Salin seluruh data nilai dan buka Google Sheets di tab baru untuk langsung di-Paste"
             >
               <span>↗️</span>
-              <span>Buka sheets.new</span>
-            </a>
+              <span>Buka Google Sheets (Paste)</span>
+            </button>
           </div>
         </div>
 
@@ -1638,6 +1650,68 @@ const TeacherGradebook = () => {
                 }}
               >
                 Lanjut Masukkan URL Webhook ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PANDUAN PASTE GOOGLE SHEETS */}
+      {isPasteGuideModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.75)', zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="dashboard-card" style={{ width: '100%', maxWidth: '620px', background: '#fff', borderRadius: '18px', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.4rem' }}>📋</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+                  Data Nilai Berhasil Disalin! Buka Google Sheets & Paste
+                </h3>
+              </div>
+              <button onClick={() => setIsPasteGuideModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+            </div>
+
+            <div style={{ background: '#ecfdf5', border: '1.5px solid #10b981', borderRadius: '12px', padding: '16px', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#065f46', fontWeight: 800, fontSize: '0.95rem', marginBottom: '6px' }}>
+                <span>✅</span>
+                <span>Data Siswa Bapak Tetap Aman & Tidak Hilang!</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.86rem', color: '#047857', lineHeight: 1.5 }}>
+                Tautan <em>sheets.new</em> membuka dokumen baru yang masih kosong dari Google. Sebanyak <strong>{filteredScores.length} data nilai siswa</strong> pada lembar ini sudah otomatis disalin ke memori komputer Anda.
+              </p>
+            </div>
+
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.88rem', lineHeight: 1.6 }}>
+              <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                Langkah Mudah Menempelkan Data di Tab Google Sheets:
+              </div>
+              <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li>Buka <strong>tab baru Google Sheets</strong> yang baru saja terbuka di sebelah tab ini.</li>
+                <li>Klik pada sel <strong>A1</strong> (kotak paling kiri atas).</li>
+                <li>Tekan tombol keyboard:
+                  <div style={{ marginTop: '4px' }}>
+                    <kbd style={{ background: '#e2e8f0', border: '1px solid #cbd5e1', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, color: '#0f172a', fontFamily: 'monospace' }}>Cmd + V</kbd> (di Mac) atau <kbd style={{ background: '#e2e8f0', border: '1px solid #cbd5e1', padding: '3px 8px', borderRadius: '6px', fontWeight: 800, color: '#0f172a', fontFamily: 'monospace' }}>Ctrl + V</kbd> (di Windows).
+                  </div>
+                </li>
+                <li>Selesai! Seluruh tabel nilai akan langsung tertempel rapi dengan kolom dan skor lengkap.</li>
+              </ol>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button
+                onClick={() => setIsPasteGuideModalOpen(false)}
+                style={{
+                  padding: '10px 22px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#fff',
+                  border: 'none',
+                  fontWeight: 800,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)'
+                }}
+              >
+                Saya Mengerti, Tutup Panduan
               </button>
             </div>
           </div>

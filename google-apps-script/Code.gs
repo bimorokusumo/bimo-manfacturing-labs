@@ -702,7 +702,6 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   hRange.setHorizontalAlignment("center");
   sheet.setRowHeight(3, 34);
   sheet.setFrozenRows(3);
-  sheet.setFrozenColumns(2);
 
   // Total semua tugas di website
   var grandTotalTasks = 0;

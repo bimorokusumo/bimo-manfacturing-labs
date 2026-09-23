@@ -649,6 +649,15 @@ function getCleanTabName(quizTitle) {
     return "🔍 Audit QC Benda Uji";
   }
   if (q.indexOf("diagnostik") !== -1) {
+    if (q.indexOf("heat") !== -1 || q.indexOf("panas") !== -1 || q.indexOf("metalurgi") !== -1) return "🔥 Diagnostik Heat Treatment";
+    if (q.indexOf("machine") !== -1 || q.indexOf("bubut") !== -1 || q.indexOf("permesinan") !== -1) return "⚙️ Diagnostik Machine Lab";
+    if (q.indexOf("cutting") !== -1 || q.indexOf("potong") !== -1) return "🔪 Diagnostik Alat Potong";
+    if (q.indexOf("weld") !== -1 || q.indexOf("las") !== -1) return "⚡ Diagnostik Welding Lab";
+    if (q.indexOf("mechanic") !== -1 || q.indexOf("mekanika") !== -1) return "🔧 Diagnostik Mekanika";
+    if (q.indexOf("measur") !== -1 || q.indexOf("ukur") !== -1) return "📏 Diagnostik Alat Ukur";
+    if (q.indexOf("design") !== -1 || q.indexOf("gambar") !== -1) return "📐 Diagnostik Design Lab";
+    if (q.indexOf("safety") !== -1 || q.indexOf("k3") !== -1) return "🛡️ Diagnostik Safety K3";
+    if (q.indexOf("bengkel") !== -1) return "🏭 Diagnostik Bengkel 3D";
     return "📝 Tes Diagnostik";
   }
   if (q.indexOf("evaluasi") !== -1) {

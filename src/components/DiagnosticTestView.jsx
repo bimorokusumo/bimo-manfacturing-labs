@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DIAGNOSTIC_CATEGORIES, DIAGNOSTIC_QUESTIONS } from '../data/diagnosticQuestions';
 import { sound } from '../utils/audio';
 import { useStudent } from '../context/StudentContext';
-import { recordQuizResult } from '../services/sheetService';
+import { recordQuizResult, getAllStoredScores, sendToGoogleSheet } from '../services/sheetService';
 
 const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = null }) => {
   const { student, isLoggedIn, openLoginModal } = useStudent();
@@ -48,6 +48,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
   const [copiedToast, setCopiedToast] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [syncStatus, setSyncStatus] = useState(null);
 
   const currentCategoryData = DIAGNOSTIC_CATEGORIES[selectedCategory];
   const currentQuestions = DIAGNOSTIC_QUESTIONS[selectedCategory] || [];
@@ -144,22 +145,31 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
     // Simpan ke Gradebook & Google Sheets
     try {
-      await recordQuizResult({
+      const res = await recordQuizResult({
         student: {
           name: studentInfo.name,
           studentNumber: studentInfo.studentId || '-',
           className: studentInfo.classRoom || 'X TPM',
           school: studentInfo.school || 'SMKN 2 Depok'
         },
-        modul: currentCategoryData.shortTitle || 'Safety Lab',
+        modul: currentCategoryData.shortTitle || 'Heat Treatment',
         judulKuis: `Tes Diagnostik: ${currentCategoryData.title}`,
         skor: calculatedScore,
         jawabanBenar: correct,
         totalSoal: currentQuestions.length,
         detailJawaban: `Kategori: ${levelLabel}. Benar: ${correct}/${currentQuestions.length} Soal. Diagnostik ${currentCategoryData.title}`
       });
+
+      if (res && res.sheetResult) {
+        setSyncStatus({
+          success: res.sheetResult.success,
+          reason: res.sheetResult.reason || res.sheetResult.error,
+          record: res.record
+        });
+      }
     } catch (e) {
       console.warn('Gagal sync diagnostik:', e);
+      setSyncStatus({ success: false, reason: e.message });
     }
 
     setIsSubmitting(false);
@@ -575,6 +585,68 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* STATUS SINKRONISASI GOOGLE SPREADSHEET */}
+          <div style={{
+            background: syncStatus?.success ? '#f0fdf4' : '#fffbeb',
+            border: `1.5px solid ${syncStatus?.success ? '#86efac' : '#fde68a'}`,
+            borderRadius: '12px',
+            padding: '12px 18px',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '1.3rem' }}>{syncStatus?.success ? '🟢' : '💾'}</span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '0.86rem', color: syncStatus?.success ? '#166534' : '#92400e' }}>
+                  {syncStatus?.success
+                    ? 'Nilai Diagnostik Berhasil Terkirim ke Google Spreadsheet!'
+                    : 'Nilai Diagnostik Tersimpan Aman di Buku Nilai Web Labs'}
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                  {syncStatus?.success
+                    ? 'Nilai otomatis tercatat dan dapat dilihat di lembar spreadsheet Bapak.'
+                    : 'Nilai tersimpan di perangkat ini. Klik tombol di kanan jika ingin mengirim ulang ke Google Sheets.'}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={async () => {
+                sound.playClick();
+                const all = getAllStoredScores();
+                if (all.length > 0) {
+                  const target = syncStatus?.record || all[0];
+                  const res = await sendToGoogleSheet(target);
+                  if (res.success) {
+                    setSyncStatus({ success: true, record: target });
+                    alert('✅ Sukses! Nilai diagnostik berhasil dikirim ke Google Spreadsheet.');
+                  } else {
+                    alert('⚠️ Gagal terhubung ke Google Sheets. Pastikan URL Webhook Web App sudah ditempel di menu Buku Nilai Guru.');
+                  }
+                }
+              }}
+              style={{
+                background: syncStatus?.success ? '#10b981' : '#f59e0b',
+                color: '#ffffff',
+                border: 'none',
+                padding: '7px 14px',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <span>{syncStatus?.success ? '✓ Terkirim ke Sheets' : '📤 Kirim ke Spreadsheet'}</span>
+            </button>
           </div>
 
           {/* TINDAK LANJUT GURU & STRATEGI DIFERENSIASI */}

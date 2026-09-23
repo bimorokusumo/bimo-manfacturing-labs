@@ -407,10 +407,13 @@ function buatMatriksRekapPengumpulan() {
 function getCleanTabName(quizTitle) {
   var q = String(quizTitle || "").toLowerCase();
   if (q.indexOf("inspeksi apd") !== -1 || q.indexOf("apd") !== -1) return "🛡️ Inspeksi APD";
-  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety") !== -1) return "📋 JSA Pengeboran Pelat";
+  if (q.indexOf("pengeboran") !== -1 || q.indexOf("pelat") !== -1) return "📋 JSA Pengeboran Pelat";
+  if (q.indexOf("pengasahan") !== -1 || q.indexOf("pahat") !== -1 || q.indexOf("gerinda") !== -1) return "📋 JSA Pengasahan Pahat";
+  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety") !== -1) return "📋 JSA Praktik Mesin";
   if (q.indexOf("apar") !== -1 || q.indexOf("kebakaran") !== -1) return "🧯 Kuis APAR PASS";
   if (q.indexOf("5r") !== -1 || q.indexOf("budaya") !== -1) return "✨ Budaya Kerja 5R";
   if (q.indexOf("perkakas") !== -1) return "🔧 Perkakas Tangan";
+  if (q.indexOf("qc") !== -1 || q.indexOf("benda uji") !== -1) return "🔍 Audit QC Benda Uji";
   if (q.indexOf("diagnostik") !== -1) return "📝 Tes Diagnostik";
   if (q.indexOf("evaluasi") !== -1) return "🎓 Evaluasi Akhir";
   var clean = quizTitle.replace(/[:\\\\/?*\\[\\]]/g, "-").trim();
@@ -418,11 +421,11 @@ function getCleanTabName(quizTitle) {
 }
 
 function getAllDataRows(ss) {
-  var allRows = [];
-  var seenIds = {};
+  var bestRows = {};
   var sheets = ss.getSheets();
   sheets.forEach(function(sheet) {
-    if (sheet.getName().indexOf("📊 Matriks") !== -1) return;
+    var name = sheet.getName();
+    if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("📋") !== -1 || name.indexOf("🧯") !== -1 || name.indexOf("✨") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("🔍") !== -1) return;
     var data = sheet.getDataRange().getValues();
     if (data.length <= 1) return;
     var headerRowIdx = -1;
@@ -443,15 +446,24 @@ function getAllDataRows(ss) {
         quizTitle = String(row[6] || "").trim();
       }
       if (studentName && quizTitle && studentName.toLowerCase().indexOf("percobaan") === -1) {
-        var id = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
-        if (!seenIds[id]) {
-          seenIds[id] = true;
-          allRows.push(row);
+        var studentKey = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
+        var score = Number(row[7] || 0);
+        if (!bestRows[studentKey] || score > Number(bestRows[studentKey][7] || 0)) {
+          bestRows[studentKey] = row;
         }
       }
     }
   });
-  return allRows;
+  var result = Object.keys(bestRows).map(function(k) { return bestRows[k]; });
+  if (result.length === 0) {
+    var curData = ss.getActiveSheet().getDataRange().getValues();
+    for (var i = 1; i < curData.length; i++) {
+      if (curData[i][1] && String(curData[i][1]).toLowerCase().indexOf("percobaan") === -1) {
+        result.push(curData[i]);
+      }
+    }
+  }
+  return result;
 }`;
 
 // DEFINISI MODUL LAB SESUAI SIDEBAR

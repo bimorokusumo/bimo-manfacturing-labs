@@ -154,8 +154,7 @@ function doPost(e) {
 
     // 4. Catat juga secara otomatis ke Tab Sheet Khusus untuk Kuis ini
     try {
-      var quizTabName = judulKuis.length > 50 ? judulKuis.substring(0, 47) + "..." : judulKuis;
-      quizTabName = quizTabName.replace(/[:\\/?*\[\]]/g, "-").trim();
+      var quizTabName = getCleanTabName(judulKuis);
       
       var quizSheet = ss.getSheetByName(quizTabName);
       if (!quizSheet) {
@@ -627,8 +626,15 @@ function getCleanTabName(quizTitle) {
   if (q.indexOf("inspeksi apd") !== -1 || q.indexOf("apd") !== -1) {
     return "🛡️ Inspeksi APD";
   }
-  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety analysis") !== -1) {
+  // Pembedaan spesifik untuk JSA Pengeboran vs Pengasahan Pahat Bubut:
+  if (q.indexOf("pengeboran") !== -1 || q.indexOf("pelat") !== -1) {
     return "📋 JSA Pengeboran Pelat";
+  }
+  if (q.indexOf("pengasahan") !== -1 || q.indexOf("pahat") !== -1 || q.indexOf("gerinda") !== -1) {
+    return "📋 JSA Pengasahan Pahat";
+  }
+  if (q.indexOf("jsa") !== -1 || q.indexOf("job safety") !== -1) {
+    return "📋 JSA Praktik Mesin";
   }
   if (q.indexOf("apar") !== -1 || q.indexOf("kebakaran") !== -1) {
     return "🧯 Kuis APAR PASS";
@@ -638,6 +644,9 @@ function getCleanTabName(quizTitle) {
   }
   if (q.indexOf("perkakas") !== -1 || q.indexOf("bench") !== -1) {
     return "🔧 Perkakas Tangan";
+  }
+  if (q.indexOf("qc") !== -1 || q.indexOf("benda uji") !== -1 || q.indexOf("tarik") !== -1) {
+    return "🔍 Audit QC Benda Uji";
   }
   if (q.indexOf("diagnostik") !== -1) {
     return "📝 Tes Diagnostik";
@@ -650,21 +659,21 @@ function getCleanTabName(quizTitle) {
 }
 
 /**
- * Helper: Ambil seluruh data baris siswa dari spreadsheet tanpa duplikasi
+ * Helper: Ambil seluruh data baris siswa dari spreadsheet (mengambil skor tertinggi tiap siswa)
  */
 function getAllDataRows(ss) {
-  var allRows = [];
-  var seenIds = {};
+  var bestRows = {};
   var sheets = ss.getSheets();
 
   sheets.forEach(function(sheet) {
     var name = sheet.getName();
-    if (name.indexOf("📊 Matriks") !== -1) return;
+    // Lewati sheet matriks atau sheet hasil klasifikasi agar tidak menduplikasi data
+    if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("📋") !== -1 || name.indexOf("🧯") !== -1 || name.indexOf("✨") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("🔍") !== -1) return;
 
     var data = sheet.getDataRange().getValues();
     if (data.length <= 1) return;
 
-    // Temukan baris header (bisa baris 1 atau 3 jika ada banner)
+    // Temukan baris header
     var headerRowIdx = -1;
     for (var i = 0; i < Math.min(data.length, 5); i++) {
       var rowStr = data[i].join(" ").toLowerCase();
@@ -688,24 +697,28 @@ function getAllDataRows(ss) {
       }
 
       if (studentName && quizTitle && studentName.toLowerCase().indexOf("percobaan") === -1) {
-        var uniqueId = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
-        if (!seenIds[uniqueId]) {
-          seenIds[uniqueId] = true;
-          allRows.push(row);
+        var studentKey = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
+        var score = Number(row[7] || 0);
+
+        // Pertahankan baris dengan nilai terbaik / tertinggi untuk siswa tersebut
+        if (!bestRows[studentKey] || score > Number(bestRows[studentKey][7] || 0)) {
+          bestRows[studentKey] = row;
         }
       }
     }
   });
 
+  var result = Object.keys(bestRows).map(function(k) { return bestRows[k]; });
+
   // Fallback jika belum terdeteksi dari multi-sheet
-  if (allRows.length === 0) {
+  if (result.length === 0) {
     var curData = ss.getActiveSheet().getDataRange().getValues();
     for (var i = 1; i < curData.length; i++) {
       if (curData[i][1] && String(curData[i][1]).toLowerCase().indexOf("percobaan") === -1) {
-        allRows.push(curData[i]);
+        result.push(curData[i]);
       }
     }
   }
 
-  return allRows;
+  return result;
 }

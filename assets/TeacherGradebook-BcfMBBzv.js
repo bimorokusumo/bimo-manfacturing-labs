@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-BINjS2ir.js";var d=e(n(),1),f=t(),p=`/**
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-CF1pRU_Q.js";var d=e(n(),1),f=t(),p=`/**
  * =============================================================================
  * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
  * =============================================================================
@@ -716,7 +716,6 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   hRange.setHorizontalAlignment("center");
   sheet.setRowHeight(3, 34);
   sheet.setFrozenRows(3);
-  sheet.setFrozenColumns(2);
 
   // Total semua tugas di website
   var grandTotalTasks = 0;

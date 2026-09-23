@@ -266,6 +266,13 @@ function doPost(e) {
       scoreCell.setFontColor("#dc2626");
     }
 
+    // Otomatis perbarui tab modul lab terkait & tab Rekap Seluruh Lab secara real-time
+    try {
+      autoUpdateLabSheetOnPost(ss, modul, judulKuis);
+    } catch (errSync) {
+      console.warn("Auto-update tab modul error: " + errSync);
+    }
+
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
       message: "Data nilai " + namaSiswa + " (" + skor + ") berhasil dicatat ke spreadsheet.",
@@ -281,6 +288,74 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * Otomatis memperbarui tab modul lab terkait dan tab matriks rekap
+ * setiap kali ada siswa yang mengirim nilai kuis secara real-time.
+ */
+function autoUpdateLabSheetOnPost(ss, modulStr, quizStr) {
+  var allRows = getAllDataRows(ss);
+  if (!allRows || allRows.length === 0) return;
+
+  var studentsMap = {};
+  allRows.forEach(function(parsed) {
+    var nama = parsed.nama;
+    if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
+    var absen = parsed.absen || "-";
+    var kelas = parsed.kelas || "-";
+    var key = nama.toLowerCase();
+
+    if (!studentsMap[key]) {
+      studentsMap[key] = {
+        nama: nama,
+        absen: absen,
+        kelas: kelas,
+        scoresByTask: {}
+      };
+    } else {
+      if (studentsMap[key].absen === "-" && absen !== "-") studentsMap[key].absen = absen;
+      if (studentsMap[key].kelas === "-" && kelas !== "-") studentsMap[key].kelas = kelas;
+    }
+
+    var qTitle = parsed.judulKuis || "";
+    var mName = parsed.modul || "";
+    var score = parsed.skor;
+    var matched = identifyLabAndTask(mName, qTitle);
+
+    var taskFullKey = matched.labId + "_" + matched.taskKey;
+    if (studentsMap[key].scoresByTask[taskFullKey] === undefined || score > studentsMap[key].scoresByTask[taskFullKey].skor) {
+      studentsMap[key].scoresByTask[taskFullKey] = {
+        skor: score,
+        waktu: parsed.waktu || "",
+        labId: matched.labId,
+        taskKey: matched.taskKey,
+        taskName: matched.taskName
+      };
+    }
+  });
+
+  var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
+    var numA = parseInt(studentsMap[a].absen, 10);
+    var numB = parseInt(studentsMap[b].absen, 10);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
+  });
+
+  var currentMatched = identifyLabAndTask(modulStr, quizStr);
+  var targetLab = null;
+  for (var i = 0; i < LAB_CONFIGS.length; i++) {
+    if (LAB_CONFIGS[i].id === currentMatched.labId) {
+      targetLab = LAB_CONFIGS[i];
+      break;
+    }
+  }
+
+  if (targetLab) {
+    renderLabSheet(ss, targetLab, studentsMap, sortedStudentKeys);
+  }
+
+  renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 }
 
 function doGet(e) {

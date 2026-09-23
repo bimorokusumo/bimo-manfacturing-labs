@@ -152,6 +152,75 @@ function doPost(e) {
       scoreCell.setFontColor("#dc2626");
     }
 
+    // 4. Catat juga secara otomatis ke Tab Sheet Khusus untuk Kuis ini
+    try {
+      var quizTabName = judulKuis.length > 50 ? judulKuis.substring(0, 47) + "..." : judulKuis;
+      quizTabName = quizTabName.replace(/[:\\/?*\[\]]/g, "-").trim();
+      
+      var quizSheet = ss.getSheetByName(quizTabName);
+      if (!quizSheet) {
+        quizSheet = ss.insertSheet(quizTabName);
+        var qHeaders = [
+          "Waktu & Tanggal",
+          "Nama Lengkap Siswa",
+          "No. Absen",
+          "Kelas / Jurusan",
+          "Sekolah / Instansi",
+          "Modul Laboratorium",
+          "Nama Kuis / Asesmen",
+          "Nilai (0 - 100)",
+          "Jawaban Benar",
+          "Total Soal",
+          "Status KKM",
+          "Rincian Jawaban Siswa"
+        ];
+        quizSheet.appendRow(qHeaders);
+        var qHRange = quizSheet.getRange(1, 1, 1, qHeaders.length);
+        qHRange.setBackground("#064e3b");
+        qHRange.setFontColor("#ffffff");
+        qHRange.setFontWeight("bold");
+        qHRange.setHorizontalAlignment("center");
+        quizSheet.setRowHeight(1, 35);
+        quizSheet.setFrozenRows(1);
+      }
+
+      quizSheet.appendRow([
+        nowStr,
+        namaSiswa,
+        nomorAbsen,
+        kelas,
+        sekolah,
+        modul,
+        judulKuis,
+        skor,
+        jawabanBenar,
+        totalSoal,
+        status,
+        detailJawaban
+      ]);
+
+      var qLastRow = quizSheet.getLastRow();
+      quizSheet.setRowHeight(qLastRow, 26);
+      var qScoreCell = quizSheet.getRange(qLastRow, 8);
+      var qStatusCell = quizSheet.getRange(qLastRow, 11);
+      qScoreCell.setFontWeight("bold");
+      qStatusCell.setFontWeight("bold");
+      qScoreCell.setHorizontalAlignment("center");
+      qStatusCell.setHorizontalAlignment("center");
+
+      if (skor >= 75) {
+        qStatusCell.setBackground("#dcfce7");
+        qStatusCell.setFontColor("#166534");
+        qScoreCell.setFontColor("#16a34a");
+      } else {
+        qStatusCell.setBackground("#fee2e2");
+        qStatusCell.setFontColor("#991b1b");
+        qScoreCell.setFontColor("#dc2626");
+      }
+    } catch (eQuiz) {
+      // Abaikan jika ada batasan penamaan tab
+    }
+
     // Kembalikan respons sukses
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
@@ -176,4 +245,105 @@ function doGet(e) {
     status: "active",
     message: "Google Apps Script BIMO Manufacturing Labs aktif & siap menerima data nilai siswa."
   })).setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * =============================================================================
+ * FUNGSI 1-KLIK UNTUK GURU: RAPIIKAN & PISAHKAN SEMUA KUIS KE TAB SENDIRI-SENDIRI
+ * =============================================================================
+ * Cara Pakai:
+ * 1. Di Google Sheets, buka menu: Ekstensi > Apps Script
+ * 2. Di bagian atas editor Apps Script, pilih fungsi: "rapikanDanPisahkanKuisOtomatis"
+ * 3. Klik tombol "Jalankan" (Run).
+ * 4. Selesai! Seluruh baris di lembar "1. Safety Lab K3" akan otomatis dipisahkan
+ *    ke dalam tab khusus masing-masing kuis (Inspeksi APD, JSA, dll) secara rapi!
+ * =============================================================================
+ */
+function rapikanDanPisahkanKuisOtomatis() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var masterSheet = ss.getSheetByName("1. Safety Lab K3") || ss.getActiveSheet();
+  var dataRange = masterSheet.getDataRange();
+  var values = dataRange.getValues();
+
+  if (values.length <= 1) {
+    SpreadsheetApp.getUi().alert("Data masih kosong atau hanya baris header.");
+    return;
+  }
+
+  var headers = values[0];
+  var rows = values.slice(1);
+
+  // Kelompokkan baris berdasarkan Nama Kuis (Kolom G / indeks 6)
+  var groups = {};
+  rows.forEach(function(row) {
+    var quizTitle = String(row[6] || "").trim();
+    if (!quizTitle) return;
+
+    var tabName = quizTitle.length > 50 ? quizTitle.substring(0, 47) + "..." : quizTitle;
+    tabName = tabName.replace(/[:\\/?*\[\]]/g, "-").trim();
+
+    if (!groups[tabName]) {
+      groups[tabName] = {
+        title: quizTitle,
+        rows: []
+      };
+    }
+    groups[tabName].rows.push(row);
+  });
+
+  // Buat Sheet untuk tiap kelompok kuis
+  Object.keys(groups).forEach(function(tabName) {
+    var sheet = ss.getSheetByName(tabName);
+    if (!sheet) {
+      sheet = ss.insertSheet(tabName);
+    } else {
+      sheet.clear();
+    }
+
+    // Pasang Header
+    sheet.appendRow(headers);
+    var hRange = sheet.getRange(1, 1, 1, headers.length);
+    hRange.setBackground("#064e3b");
+    hRange.setFontColor("#ffffff");
+    hRange.setFontWeight("bold");
+    hRange.setHorizontalAlignment("center");
+    sheet.setRowHeight(1, 35);
+    sheet.setFrozenRows(1);
+
+    // Urutkan siswa berdasarkan nama (Kolom B / indeks 1)
+    var items = groups[tabName].rows;
+    items.sort(function(a, b) {
+      return String(a[1]).localeCompare(String(b[1]));
+    });
+
+    items.forEach(function(r) {
+      sheet.appendRow(r);
+      var lr = sheet.getLastRow();
+      sheet.setRowHeight(lr, 26);
+
+      var score = Number(r[7]);
+      var scCell = sheet.getRange(lr, 8);
+      var stCell = sheet.getRange(lr, 11);
+      scCell.setFontWeight("bold");
+      stCell.setFontWeight("bold");
+      scCell.setHorizontalAlignment("center");
+      stCell.setHorizontalAlignment("center");
+
+      if (score >= 75) {
+        stCell.setBackground("#dcfce7");
+        stCell.setFontColor("#166534");
+        scCell.setFontColor("#16a34a");
+      } else {
+        stCell.setBackground("#fee2e2");
+        stCell.setFontColor("#991b1b");
+        scCell.setFontColor("#dc2626");
+      }
+    });
+
+    for (var col = 1; col <= Math.min(headers.length, 12); col++) {
+      try { sheet.autoResizeColumn(col); } catch (e) {}
+    }
+  });
+
+  SpreadsheetApp.getUi().alert("Berhasil! Seluruh data nilai sudah otomatis dipisahkan ke tab masing-masing kuis.");
 }

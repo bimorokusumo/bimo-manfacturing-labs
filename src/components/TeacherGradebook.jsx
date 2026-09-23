@@ -228,6 +228,9 @@ const TeacherGradebook = () => {
   const [webhookUrl, setWebhookUrl] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedQuizName, setSelectedQuizName] = useState('all');
+  const [isGroupedByQuiz, setIsGroupedByQuiz] = useState(true);
+  const [sortBy, setSortBy] = useState('quiz_name');
   
   // Tab Navigasi Sesuai Sidebar & Sub-Kuis
   const [activeTab, setActiveTab] = useState('safety'); // Default langsung ke Safety Lab K3 sesuai permintaan guru
@@ -317,15 +320,30 @@ const TeacherGradebook = () => {
     sound.playClick();
     setActiveTab(labId);
     setActiveSubTab('all'); // Reset sub-tab ke "Semua" di lab tersebut
+    setSelectedQuizName('all'); // Reset filter nama kuis
   };
 
   // Handle pergantian sub-kuis tab
   const handleSubTabChange = (subId) => {
     sound.playClick();
     setActiveSubTab(subId);
+    setSelectedQuizName('all'); // Reset filter nama kuis
   };
 
-  // Filter skor sesuai tab lab aktif, sub-kuis aktif, search query, dan status
+  // Daftar semua nama kuis / asesmen unik yang tersedia di modul aktif
+  const availableQuizNames = useMemo(() => {
+    const relevant = activeTab === 'all'
+      ? enrichedScores
+      : enrichedScores.filter(s => s.labId === activeTab);
+    const set = new Set();
+    relevant.forEach(item => {
+      const q = (item.judulKuis || '').trim();
+      if (q) set.add(q);
+    });
+    return Array.from(set).sort();
+  }, [enrichedScores, activeTab]);
+
+  // Filter skor sesuai tab lab aktif, sub-kuis aktif, nama kuis, search query, dan status
   const filteredScores = useMemo(() => {
     return enrichedScores.filter(item => {
       // 1. Filter Modul Utama (Sidebar)
@@ -334,7 +352,10 @@ const TeacherGradebook = () => {
       // 2. Filter Sub-Kuis Spesifik (Misal: Kuis Inspeksi APD sendiri)
       const matchSubQuiz = activeSubTab === 'all' || item.subId === activeSubTab;
 
-      // 3. Filter Pencarian Teks
+      // 3. Filter Nama Kuis / Asesmen Spesifik
+      const matchQuizName = selectedQuizName === 'all' || (item.judulKuis && item.judulKuis.trim() === selectedQuizName);
+
+      // 4. Filter Pencarian Teks
       const q = searchQuery.toLowerCase();
       const matchSearch =
         !searchQuery.trim() ||
@@ -345,12 +366,69 @@ const TeacherGradebook = () => {
         (item.judulKuis || '').toLowerCase().includes(q) ||
         (item.subLabel || '').toLowerCase().includes(q);
 
-      // 4. Filter Status Kelulusan
+      // 5. Filter Status Kelulusan
       const matchStatus = selectedStatus === 'all' || item.status === selectedStatus;
 
-      return matchMainLab && matchSubQuiz && matchSearch && matchStatus;
+      return matchMainLab && matchSubQuiz && matchQuizName && matchSearch && matchStatus;
     });
-  }, [enrichedScores, activeTab, activeSubTab, searchQuery, selectedStatus]);
+  }, [enrichedScores, activeTab, activeSubTab, selectedQuizName, searchQuery, selectedStatus]);
+
+  // Pengelompokan Data Nilai Menurut Nama Kuis / Asesmen (Klasifikasi Tegas & Rapi)
+  const groupedScoresByQuiz = useMemo(() => {
+    const groups = {};
+    filteredScores.forEach(item => {
+      const key = (item.judulKuis || 'Kuis Asesmen Terintegrasi').trim();
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(item);
+    });
+
+    Object.keys(groups).forEach(key => {
+      groups[key].sort((a, b) => {
+        if (sortBy === 'student_name') return (a.namaSiswa || '').localeCompare(b.namaSiswa || '');
+        if (sortBy === 'highest_score') return (Number(b.skor) || 0) - (Number(a.skor) || 0);
+        if (sortBy === 'newest_time') return new Date(b.timestamp || 0) - new Date(a.timestamp || 0);
+        return (a.namaSiswa || '').localeCompare(b.namaSiswa || '');
+      });
+    });
+
+    const sortedKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+    return sortedKeys.map(key => {
+      const items = groups[key];
+      const avgScore = items.length > 0 ? Math.round(items.reduce((acc, curr) => acc + (Number(curr.skor) || 0), 0) / items.length) : 0;
+      const maxScore = items.length > 0 ? Math.max(...items.map(curr => Number(curr.skor) || 0)) : 0;
+      const passedCount = items.filter(i => i.status === 'LULUS' || Number(i.skor) >= 75).length;
+      const passPct = items.length > 0 ? Math.round((passedCount / items.length) * 100) : 0;
+
+      return {
+        quizName: key,
+        items,
+        avgScore,
+        maxScore,
+        passedCount,
+        passPct,
+        totalCount: items.length
+      };
+    });
+  }, [filteredScores, sortBy]);
+
+  // Data Terurut untuk Mode Flat Table
+  const sortedFlatScores = useMemo(() => {
+    const sorted = [...filteredScores];
+    if (sortBy === 'quiz_name') {
+      sorted.sort((a, b) => {
+        const qCmp = (a.judulKuis || '').localeCompare(b.judulKuis || '');
+        if (qCmp !== 0) return qCmp;
+        return (a.namaSiswa || '').localeCompare(b.namaSiswa || '');
+      });
+    } else if (sortBy === 'student_name') {
+      sorted.sort((a, b) => (a.namaSiswa || '').localeCompare(b.namaSiswa || ''));
+    } else if (sortBy === 'highest_score') {
+      sorted.sort((a, b) => (Number(b.skor) || 0) - (Number(a.skor) || 0));
+    } else if (sortBy === 'newest_time') {
+      sorted.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+    }
+    return sorted;
+  }, [filteredScores, sortBy]);
 
   // Hitung Metrik & KPI Live untuk Lembar yang Sedang Aktif
   const totalSubmissions = filteredScores.length;
@@ -942,51 +1020,160 @@ const TeacherGradebook = () => {
       </div>
 
       {/* FILTER & SEARCH BAR */}
-      <div className="dashboard-card" style={{ padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: 1, minWidth: '280px' }}>
-          {/* SEARCH INPUT */}
-          <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
-            <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>🔍</span>
-            <input
-              type="text"
-              placeholder="Cari nama siswa, nomor absen, kuis..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+      <div className="dashboard-card" style={{ padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: 1, minWidth: '280px' }}>
+            {/* SEARCH INPUT */}
+            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>🔍</span>
+              <input
+                type="text"
+                placeholder="Cari nama siswa, nomor absen, kuis..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px 12px 8px 36px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-light, #cbd5e1)',
+                  fontSize: '0.84rem',
+                  outline: 'none',
+                  background: 'var(--bg-game, #f8fafc)',
+                  color: 'var(--text-main, #0f172a)'
+                }}
+              />
+            </div>
+
+            {/* DROPDOWN KLASIFIKASI NAMA KUIS / ASESMEN */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#065f46', whiteSpace: 'nowrap' }}>
+                📋 Nama Kuis:
+              </span>
+              <select
+                value={selectedQuizName}
+                onChange={(e) => { sound.playClick(); setSelectedQuizName(e.target.value); }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  border: '1.5px solid #10b981',
+                  fontSize: '0.82rem',
+                  background: '#ecfdf5',
+                  color: '#065f46',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  maxWidth: '300px'
+                }}
+                title="Saring tabel langsung berdasarkan satu Nama Kuis / Asesmen tertentu"
+              >
+                <option value="all">Semua Nama Kuis ({availableQuizNames.length} Kuis)</option>
+                {availableQuizNames.map(qName => {
+                  const countInLab = enrichedScores.filter(s => (s.judulKuis || '').trim() === qName && (activeTab === 'all' || s.labId === activeTab)).length;
+                  return (
+                    <option key={qName} value={qName}>
+                      {qName} ({countInLab} Siswa)
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {/* STATUS FILTER */}
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
               style={{
-                width: '100%',
-                padding: '8px 12px 8px 36px',
+                padding: '8px 12px',
                 borderRadius: '8px',
                 border: '1px solid var(--border-light, #cbd5e1)',
-                fontSize: '0.84rem',
-                outline: 'none',
+                fontSize: '0.82rem',
                 background: 'var(--bg-game, #f8fafc)',
-                color: 'var(--text-main, #0f172a)'
+                color: 'var(--text-main, #0f172a)',
+                cursor: 'pointer'
               }}
-            />
+            >
+              <option value="all">Semua Status</option>
+              <option value="LULUS">✓ LULUS (≥ 75)</option>
+              <option value="REMEDIAL">✗ REMEDIAL (&lt; 75)</option>
+            </select>
+
+            {/* SORT BY */}
+            <select
+              value={sortBy}
+              onChange={(e) => { sound.playClick(); setSortBy(e.target.value); }}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: '1px solid var(--border-light, #cbd5e1)',
+                fontSize: '0.82rem',
+                background: 'var(--bg-game, #f8fafc)',
+                color: 'var(--text-main, #0f172a)',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="quiz_name">Urutkan: Nama Kuis (A-Z)</option>
+              <option value="student_name">Urutkan: Nama Siswa (A-Z)</option>
+              <option value="highest_score">Urutkan: Skor Tertinggi (100 ➔ 0)</option>
+              <option value="newest_time">Urutkan: Waktu Terbaru</option>
+            </select>
           </div>
 
-          {/* STATUS FILTER */}
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '8px',
-              border: '1px solid var(--border-light, #cbd5e1)',
-              fontSize: '0.82rem',
-              background: 'var(--bg-game, #f8fafc)',
-              color: 'var(--text-main, #0f172a)',
-              cursor: 'pointer'
-            }}
-          >
-            <option value="all">Semua Status (Lulus & Remedial)</option>
-            <option value="LULUS">✓ LULUS (Skor ≥ 75)</option>
-            <option value="REMEDIAL">✗ REMEDIAL (Skor &lt; 75)</option>
-          </select>
+          {/* VIEW MODE TOGGLE */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f1f5f9', padding: '3px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+            <button
+              onClick={() => { sound.playClick(); setIsGroupedByQuiz(true); }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: isGroupedByQuiz ? '#064e3b' : 'transparent',
+                color: isGroupedByQuiz ? '#ffffff' : '#475569',
+                fontWeight: 800,
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+              title="Kelompokkan tabel rapi per Nama Kuis / Asesmen"
+            >
+              <span>📑</span>
+              <span>Dikelompokkan per Kuis</span>
+            </button>
+            <button
+              onClick={() => { sound.playClick(); setIsGroupedByQuiz(false); }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                border: 'none',
+                background: !isGroupedByQuiz ? '#064e3b' : 'transparent',
+                color: !isGroupedByQuiz ? '#ffffff' : '#475569',
+                fontWeight: 800,
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+              title="Tampilkan tabel baris datar"
+            >
+              <span>📋</span>
+              <span>Tabel Datar</span>
+            </button>
+          </div>
         </div>
 
-        <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-          Menampilkan <strong>{filteredScores.length}</strong> baris data pada lembar <strong>{currentLabTitle}</strong>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', fontSize: '0.78rem', color: '#64748b', borderTop: '1px solid #f1f5f9', paddingTop: '8px' }}>
+          <div>
+            Menampilkan <strong>{filteredScores.length}</strong> data nilai siswa pada <strong>{groupedScoresByQuiz.length}</strong> kelompok kuis di lembar <strong>{currentLabTitle}</strong>.
+          </div>
+          {selectedQuizName !== 'all' && (
+            <button
+              onClick={() => setSelectedQuizName('all')}
+              style={{ background: 'transparent', border: 'none', color: '#dc2626', fontWeight: 800, cursor: 'pointer', fontSize: '0.78rem' }}
+            >
+              ✕ Hapus Filter Kuis (Tampilkan Semua)
+            </button>
+          )}
         </div>
       </div>
 
@@ -1057,7 +1244,7 @@ const TeacherGradebook = () => {
                   Lembar / Sub-Kuis
                 </th>
                 <th style={{ padding: '12px 16px', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
-                  Rincian Pekerjaan / Asesmen
+                  Nama Kuis / Asesmen
                 </th>
                 <th style={{ padding: '12px 12px', textAlign: 'center', borderRight: '1px solid #047857', fontWeight: 800, whiteSpace: 'nowrap' }}>
                   Skor (0-100)
@@ -1081,14 +1268,14 @@ const TeacherGradebook = () => {
                   <td colSpan="13" style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
                     <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
                     <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
-                      Belum Ada Hasil Pengerjaan untuk Lembar Ini
+                      Belum Ada Hasil Pengerjaan untuk Kategori Ini
                     </div>
                     <p style={{ margin: '6px 0 16px 0', fontSize: '0.85rem' }}>
-                      Belum ada siswa yang menyelesaikan kuis pada kategori <strong>"{currentLabTitle}"</strong>.
+                      Belum ada siswa yang menyelesaikan kuis pada pilihan <strong>"{currentLabTitle}"</strong>.
                     </p>
                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                       <button
-                        onClick={() => setActiveSubTab('all')}
+                        onClick={() => { setActiveSubTab('all'); setSelectedQuizName('all'); }}
                         style={{
                           padding: '8px 16px',
                           borderRadius: '8px',
@@ -1105,8 +1292,208 @@ const TeacherGradebook = () => {
                     </div>
                   </td>
                 </tr>
+              ) : isGroupedByQuiz ? (
+                /* TAMPILAN TERKLASIFIKASI MENURUT NAMA KUIS / ASESMEN */
+                groupedScoresByQuiz.map((group, gIdx) => {
+                  return (
+                    <React.Fragment key={group.quizName}>
+                      {/* BANNER KLASIFIKASI KUIS / ASESMEN */}
+                      <tr style={{ background: 'linear-gradient(90deg, #064e3b 0%, #0f172a 100%)', color: '#ffffff' }}>
+                        <td colSpan="13" style={{ padding: '10px 16px', borderBottom: '2px solid #10b981', borderTop: gIdx > 0 ? '6px solid #e2e8f0' : 'none' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              <span style={{ background: '#10b981', color: '#064e3b', padding: '2px 8px', borderRadius: '6px', fontWeight: 900, fontSize: '0.72rem' }}>
+                                KLASIFIKASI KUIS
+                              </span>
+                              <strong style={{ fontSize: '0.98rem', letterSpacing: '0.3px', color: '#ffffff' }}>
+                                📋 {group.quizName}
+                              </strong>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '0.78rem' }}>
+                              <span>👥 <strong>{group.totalCount}</strong> Siswa</span>
+                              <span style={{ color: '#94a3b8' }}>|</span>
+                              <span>⭐ Rata-rata: <strong>{group.avgScore}</strong>/100</span>
+                              <span style={{ color: '#94a3b8' }}>|</span>
+                              <span>🏆 Tertinggi: <strong>{group.maxScore}</strong></span>
+                              <span style={{ color: '#94a3b8' }}>|</span>
+                              <span style={{ color: group.passPct >= 75 ? '#6ee7b7' : '#fca5a5' }}>
+                                ✅ Kelulusan KKM: <strong>{group.passedCount}/{group.totalCount} ({group.passPct}%)</strong>
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* DAFTAR SISWA DALAM KUIS INI */}
+                      {group.items.map((row, idx) => {
+                        const isPassed = row.status === 'LULUS';
+                        const isEven = idx % 2 === 0;
+
+                        return (
+                          <tr
+                            key={row.id || idx}
+                            onClick={() => setActiveCell(`I${idx + 2}`)}
+                            style={{
+                              background: isEven ? '#ffffff' : '#f8fafc',
+                              borderBottom: '1px solid #e2e8f0',
+                              transition: 'background 0.15s'
+                            }}
+                            onMouseEnter={(e) => e.currentTarget.style.background = '#f0fdf4'}
+                            onMouseLeave={(e) => e.currentTarget.style.background = isEven ? '#ffffff' : '#f8fafc'}
+                          >
+                            {/* NO URUT PER KUIS */}
+                            <td style={{
+                              padding: '10px 6px',
+                              textAlign: 'center',
+                              fontFamily: 'monospace',
+                              color: '#64748b',
+                              background: '#f1f5f9',
+                              borderRight: '1px solid #cbd5e1',
+                              fontWeight: 700,
+                              fontSize: '0.78rem'
+                            }}>
+                              {idx + 1}
+                            </td>
+
+                            {/* [A] WAKTU */}
+                            <td style={{ padding: '10px 14px', color: '#475569', fontSize: '0.78rem', whiteSpace: 'nowrap', borderRight: '1px solid #e2e8f0' }}>
+                              {row.waktu || row.timestamp?.slice(0, 10)}
+                            </td>
+
+                            {/* [B] NAMA SISWA */}
+                            <td style={{ padding: '10px 16px', fontWeight: 800, color: '#0f172a', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                              {row.namaSiswa}
+                            </td>
+
+                            {/* [C] NO. ABSEN */}
+                            <td style={{ padding: '10px 10px', textAlign: 'center', fontWeight: 800, borderRight: '1px solid #e2e8f0' }}>
+                              <span style={{ background: '#f1f5f9', padding: '2px 8px', borderRadius: '4px', border: '1px solid #e2e8f0' }}>
+                                {row.nomorAbsen || '-'}
+                              </span>
+                            </td>
+
+                            {/* [D] KELAS */}
+                            <td style={{ padding: '10px 12px', textAlign: 'center', color: '#334155', fontWeight: 600, borderRight: '1px solid #e2e8f0' }}>
+                              {row.kelas || '-'}
+                            </td>
+
+                            {/* [E] SEKOLAH */}
+                            <td style={{ padding: '10px 14px', color: '#475569', fontSize: '0.8rem', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                              {row.sekolah || 'SMKN 2 Depok'}
+                            </td>
+
+                            {/* [F] MODUL LAB (SIDEBAR) */}
+                            <td style={{ padding: '10px 14px', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                              <span style={{
+                                fontWeight: 800,
+                                color: '#065f46',
+                                background: 'rgba(16, 185, 129, 0.12)',
+                                padding: '3px 8px',
+                                borderRadius: '6px',
+                                border: '1px solid rgba(16, 185, 129, 0.25)',
+                                fontSize: '0.78rem'
+                              }}>
+                                {row.labIcon} {row.labLabel}
+                              </span>
+                            </td>
+
+                            {/* [G] LEMBAR / SUB-KUIS */}
+                            <td style={{ padding: '10px 14px', borderRight: '1px solid #e2e8f0', whiteSpace: 'nowrap' }}>
+                              <span style={{
+                                fontWeight: 700,
+                                color: '#1e293b',
+                                background: '#f1f5f9',
+                                padding: '3px 8px',
+                                borderRadius: '6px',
+                                fontSize: '0.78rem',
+                                border: '1px solid #e2e8f0'
+                              }}>
+                                {row.subLabel}
+                              </span>
+                            </td>
+
+                            {/* [H] DETAIL ASESMEN / PEKERJAAN */}
+                            <td style={{ padding: '10px 16px', borderRight: '1px solid #e2e8f0' }}>
+                              <div style={{ fontWeight: 800, color: '#065f46', fontSize: '0.84rem' }}>{row.judulKuis}</div>
+                            </td>
+
+                            {/* [I] SKOR (0-100) */}
+                            <td style={{
+                              padding: '10px 12px',
+                              textAlign: 'center',
+                              fontFamily: 'monospace',
+                              fontWeight: 900,
+                              fontSize: '1rem',
+                              color: isPassed ? '#166534' : '#991b1b',
+                              background: isPassed ? 'rgba(220, 252, 231, 0.4)' : 'rgba(254, 226, 226, 0.4)',
+                              borderRight: '1px solid #e2e8f0'
+                            }}>
+                              {row.skor}
+                            </td>
+
+                            {/* [J] BENAR / TOTAL */}
+                            <td style={{ padding: '10px 10px', textAlign: 'center', color: '#475569', fontWeight: 700, borderRight: '1px solid #e2e8f0' }}>
+                              {row.jawabanBenar} / {row.totalSoal}
+                            </td>
+
+                            {/* [K] STATUS KKM */}
+                            <td style={{ padding: '10px 12px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
+                              <span
+                                style={{
+                                  padding: '3px 10px',
+                                  borderRadius: '12px',
+                                  fontSize: '0.72rem',
+                                  fontWeight: 800,
+                                  background: isPassed ? '#dcfce7' : '#fee2e2',
+                                  color: isPassed ? '#166534' : '#991b1b',
+                                  border: `1px solid ${isPassed ? '#bbf7d0' : '#fecaca'}`,
+                                  display: 'inline-block'
+                                }}
+                              >
+                                {isPassed ? '✓ LULUS' : '✗ REMEDIAL'}
+                              </span>
+                            </td>
+
+                            {/* [L] AKSI */}
+                            <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                              <button
+                                onClick={() => { sound.playClick(); setSelectedDetailRecord(row); }}
+                                style={{
+                                  background: '#f8fafc',
+                                  border: '1px solid #cbd5e1',
+                                  padding: '4px 10px',
+                                  borderRadius: '6px',
+                                  fontSize: '0.74rem',
+                                  cursor: 'pointer',
+                                  color: '#0284c7',
+                                  fontWeight: 800
+                                }}
+                              >
+                                🔍 Rincian
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+
+                      {/* SUBTOTAL SUMMARY ROW PER KUIS */}
+                      <tr style={{ background: '#ecfdf5', fontWeight: 800, fontSize: '0.8rem', color: '#065f46', borderBottom: '2px solid #10b981' }}>
+                        <td colSpan="9" style={{ padding: '9px 16px', textAlign: 'right', borderRight: '1px solid #cbd5e1' }}>
+                          Subtotal Rata-rata Skor [<strong>{group.quizName}</strong>]:
+                        </td>
+                        <td style={{ padding: '9px 10px', textAlign: 'center', fontFamily: 'monospace', fontSize: '0.98rem', color: '#065f46', borderRight: '1px solid #cbd5e1' }}>
+                          {group.avgScore}
+                        </td>
+                        <td colSpan="3" style={{ padding: '9px 14px' }}>
+                          Kelulusan KKM: <strong>{group.passPct}%</strong> ({group.passedCount} dari {group.totalCount} Siswa)
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  );
+                })
               ) : (
-                filteredScores.map((row, idx) => {
+                /* TAMPILAN TABEL DATAR (FLAT TABLE) */
+                sortedFlatScores.map((row, idx) => {
                   const isPassed = row.status === 'LULUS';
                   const rowNum = idx + 2; // Row 1 is header
                   const isEven = idx % 2 === 0;
@@ -1123,7 +1510,7 @@ const TeacherGradebook = () => {
                       onMouseEnter={(e) => e.currentTarget.style.background = '#f0fdf4'}
                       onMouseLeave={(e) => e.currentTarget.style.background = isEven ? '#ffffff' : '#f8fafc'}
                     >
-                      {/* ROW NUMBER (SPREADSHEET COORDINATE) */}
+                      {/* ROW NUMBER */}
                       <td style={{
                         padding: '10px 6px',
                         textAlign: 'center',
@@ -1196,7 +1583,7 @@ const TeacherGradebook = () => {
 
                       {/* [H] DETAIL ASESMEN / PEKERJAAN */}
                       <td style={{ padding: '10px 16px', borderRight: '1px solid #e2e8f0' }}>
-                        <div style={{ fontWeight: 700, color: '#0f172a' }}>{row.judulKuis}</div>
+                        <div style={{ fontWeight: 800, color: '#065f46', fontSize: '0.84rem' }}>{row.judulKuis}</div>
                       </td>
 
                       {/* [I] SKOR (0-100) */}

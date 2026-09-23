@@ -414,13 +414,21 @@ export const syncPendingScores = async () => {
  * Mengunduh seluruh rekap nilai sebagai file CSV (Excel compatible)
  */
 export const exportScoresToCSV = (scores = null) => {
-  const data = scores || getAllStoredScores();
-  if (!data || data.length === 0) {
+  const rawData = scores || getAllStoredScores();
+  if (!rawData || rawData.length === 0) {
     alert('Belum ada data nilai yang tercatat untuk diekspor.');
     return;
   }
 
+  // Urutkan data berdasarkan Nama Kuis / Asesmen terlebih dahulu, lalu nama siswa
+  const data = [...rawData].sort((a, b) => {
+    const qComp = (a.judulKuis || '').localeCompare(b.judulKuis || '');
+    if (qComp !== 0) return qComp;
+    return (a.namaSiswa || '').localeCompare(b.namaSiswa || '');
+  });
+
   const headers = [
+    'Nama Kuis / Asesmen',
     'Waktu / Tanggal',
     'Nama Siswa',
     'No. Absen',
@@ -428,7 +436,6 @@ export const exportScoresToCSV = (scores = null) => {
     'Sekolah / Instansi',
     'Modul Lab (Sidebar)',
     'Sub-Kuis / Kategori',
-    'Nama Kuis / Asesmen',
     'Nilai (0-100)',
     'Jawaban Benar',
     'Total Soal',
@@ -446,6 +453,7 @@ export const exportScoresToCSV = (scores = null) => {
   const rows = data.map(item => {
     const det = detectLabAndSubQuiz(item);
     return [
+      escapeCSV(item.judulKuis),
       escapeCSV(item.waktu),
       escapeCSV(item.namaSiswa),
       escapeCSV(item.nomorAbsen),
@@ -453,7 +461,6 @@ export const exportScoresToCSV = (scores = null) => {
       escapeCSV(item.sekolah),
       escapeCSV(item.modul || det.labLabel),
       escapeCSV(item.subModul || item.jenisKuis || det.subLabel),
-      escapeCSV(item.judulKuis),
       escapeCSV(item.skor),
       escapeCSV(item.jawabanBenar),
       escapeCSV(item.totalSoal),
@@ -469,7 +476,7 @@ export const exportScoresToCSV = (scores = null) => {
   
   const link = document.createElement('a');
   link.href = url;
-  link.download = `Rekap_Nilai_Siswa_BIMO_Lab_${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = `Rekap_Nilai_PerKuis_BIMO_Lab_${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -478,15 +485,22 @@ export const exportScoresToCSV = (scores = null) => {
 
 /**
  * Menyalin data tabel ke Clipboard dalam format TSV (Tab Separated Values)
- * Guru bisa langsung tekan Ctrl+V (Paste) di Google Sheets atau Excel!
+ * Dikelompokkan rapi per Nama Kuis / Asesmen
  */
 export const copyScoresToClipboard = async (scores = null) => {
-  const data = scores || getAllStoredScores();
-  if (!data || data.length === 0) {
+  const rawData = scores || getAllStoredScores();
+  if (!rawData || rawData.length === 0) {
     return { success: false, message: 'Tidak ada data nilai untuk disalin.' };
   }
 
+  const data = [...rawData].sort((a, b) => {
+    const qComp = (a.judulKuis || '').localeCompare(b.judulKuis || '');
+    if (qComp !== 0) return qComp;
+    return (a.namaSiswa || '').localeCompare(b.namaSiswa || '');
+  });
+
   const headers = [
+    'Nama Kuis / Asesmen',
     'Waktu / Tanggal',
     'Nama Siswa',
     'No. Absen',
@@ -494,7 +508,6 @@ export const copyScoresToClipboard = async (scores = null) => {
     'Sekolah',
     'Modul Lab',
     'Sub-Kuis / Kategori',
-    'Nama Kuis / Asesmen',
     'Nilai (0-100)',
     'Jawaban Benar',
     'Total Soal',
@@ -505,6 +518,7 @@ export const copyScoresToClipboard = async (scores = null) => {
   const rows = data.map(item => {
     const det = detectLabAndSubQuiz(item);
     return [
+      item.judulKuis || '',
       item.waktu || '',
       item.namaSiswa || '',
       item.nomorAbsen || '',
@@ -512,7 +526,6 @@ export const copyScoresToClipboard = async (scores = null) => {
       item.sekolah || '',
       item.modul || det.labLabel,
       item.subModul || item.jenisKuis || det.subLabel,
-      item.judulKuis || '',
       item.skor ?? '',
       item.jawabanBenar ?? '',
       item.totalSoal ?? '',
@@ -525,7 +538,7 @@ export const copyScoresToClipboard = async (scores = null) => {
 
   try {
     await navigator.clipboard.writeText(tsvText);
-    return { success: true, message: 'Tabel berhasil disalin! Buka Google Sheets / Excel dan tekan Ctrl+V.' };
+    return { success: true, message: 'Tabel berhasil disalin (dikelompokkan per kuis)!' };
   } catch (err) {
     console.error('Clipboard copy failed:', err);
     return { success: false, message: 'Gagal menyalin otomatis. Silakan gunakan tombol unduh CSV.' };
@@ -533,7 +546,8 @@ export const copyScoresToClipboard = async (scores = null) => {
 };
 
 /**
- * Mengunduh file spreadsheet dengan ekstensi .xls terformat rapi (Excel & Google Sheets ready)
+ * Mengunduh file spreadsheet dengan ekstensi .xls terformat rapi
+ * Dikelompokkan dan diklasifikasikan secara tegas menurut Nama Kuis / Asesmen
  */
 export const exportScoresToExcelHTML = (scores = null) => {
   const data = scores || getAllStoredScores();
@@ -542,24 +556,70 @@ export const exportScoresToExcelHTML = (scores = null) => {
     return;
   }
 
-  const rowsHtml = data.map((item, idx) => {
-    const det = detectLabAndSubQuiz(item);
+  // 1. Kelompokkan data menurut Nama Kuis / Asesmen
+  const quizGroups = {};
+  data.forEach(item => {
+    const quizName = item.judulKuis || 'Kuis Asesmen Terintegrasi';
+    if (!quizGroups[quizName]) {
+      quizGroups[quizName] = [];
+    }
+    quizGroups[quizName].push(item);
+  });
+
+  const sortedQuizNames = Object.keys(quizGroups).sort();
+
+  // 2. Bangun tabel per kelompok kuis lengkap dengan Header Kuis & Subtotal Nilai
+  const sectionsHtml = sortedQuizNames.map((quizName) => {
+    const items = [...quizGroups[quizName]].sort((a, b) => (a.namaSiswa || '').localeCompare(b.namaSiswa || ''));
+    const avgScore = Math.round(items.reduce((acc, curr) => acc + (Number(curr.skor) || 0), 0) / items.length);
+    const passedCount = items.filter(i => i.status === 'LULUS' || Number(i.skor) >= 75).length;
+    const passPct = Math.round((passedCount / items.length) * 100);
+
+    const rowsHtml = items.map((item, idx) => {
+      const det = detectLabAndSubQuiz(item);
+      const isPassed = item.status === 'LULUS' || Number(item.skor) >= 75;
+      return `
+        <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; text-align: center;">${idx + 1}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; white-space: nowrap;">${item.waktu || ''}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10.5pt; font-weight: bold; color: #0f172a;">${item.namaSiswa || ''}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; text-align: center;">${item.nomorAbsen || '-'}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; text-align: center;">${item.kelas || 'X TPM 1'}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; color: #047857; font-weight: 600;">${item.modul || det.labLabel}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; font-weight: 700; color: #1e293b;">${quizName}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 11pt; text-align: center; font-weight: bold; color: ${isPassed ? '#16a34a' : '#dc2626'};">${item.skor ?? ''}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; text-align: center;">${item.jawabanBenar ?? ''} / ${item.totalSoal ?? ''}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 10pt; text-align: center; font-weight: bold; background-color: ${isPassed ? '#dcfce7' : '#fee2e2'}; color: ${isPassed ? '#166534' : '#991b1b'};">${isPassed ? 'LULUS' : 'REMEDIAL'}</td>
+          <td style="border: 1px solid #cbd5e1; padding: 7px 10px; font-size: 9.5pt; color: #475569;">${(item.detailJawaban || '').replace(/"/g, '&quot;')}</td>
+        </tr>
+      `;
+    }).join('');
+
     return `
-    <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.waktu || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; font-weight: bold;">${item.namaSiswa || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.nomorAbsen || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.kelas || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.sekolah || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; font-weight: bold; color: #065f46;">${item.modul || det.labLabel}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; background-color: #f1f5f9; font-weight: 600;">${item.subModul || item.jenisKuis || det.subLabel}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt;">${item.judulKuis || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center; font-weight: bold; color: ${item.skor >= 75 ? '#16a34a' : '#dc2626'};">${item.skor ?? ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center;">${item.jawabanBenar ?? ''} / ${item.totalSoal ?? ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 11pt; text-align: center; font-weight: bold; background-color: ${item.status === 'LULUS' ? '#dcfce7' : '#fee2e2'}; color: ${item.status === 'LULUS' ? '#166534' : '#991b1b'};">${item.status || ''}</td>
-      <td style="border: 1px solid #cbd5e1; padding: 8px; font-size: 10pt;">${(item.detailJawaban || '').replace(/"/g, '&quot;')}</td>
-    </tr>
-  `;
+      <!-- BANNER KLASIFIKASI KUIS -->
+      <tr style="background-color: #064e3b; color: #ffffff;">
+        <td colspan="11" style="padding: 10px 14px; font-size: 11pt; border: 2px solid #047857;">
+          <strong>📋 NAMA KUIS / ASESMEN:</strong> <span style="color: #6ee7b7; font-size: 11.5pt; font-weight: 800;">${quizName}</span>
+          <span style="font-weight: normal; margin-left: 20px; font-size: 10pt; color: #e2e8f0;">
+            | Total Siswa: <strong>${items.length}</strong> | Rata-rata Skor: <strong>${avgScore}/100</strong> | Kelulusan: <strong>${passPct}% (${passedCount}/${items.length})</strong>
+          </span>
+        </td>
+      </tr>
+      ${rowsHtml}
+      <!-- SUBTOTAL SUMMARY KUIS -->
+      <tr style="background-color: #ecfdf5; font-weight: bold; border-bottom: 2px solid #10b981;">
+        <td colspan="7" style="border: 1px solid #cbd5e1; padding: 8px 12px; text-align: right; color: #065f46; font-size: 10pt;">
+          Subtotal Rata-rata [${quizName}]:
+        </td>
+        <td style="border: 1px solid #cbd5e1; padding: 8px; text-align: center; font-size: 11pt; color: #065f46;">
+          ${avgScore}
+        </td>
+        <td colspan="3" style="border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 10pt; color: #065f46;">
+          Tingkat Kelulusan: ${passPct}% (${passedCount} dari ${items.length} siswa)
+        </td>
+      </tr>
+      <tr><td colspan="11" style="height: 14px; background-color: #f1f5f9; border: none;"></td></tr>
+    `;
   }).join('');
 
   const htmlContent = `
@@ -579,28 +639,29 @@ export const exportScoresToExcelHTML = (scores = null) => {
       <![endif]-->
       <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
     </head>
-    <body>
-      <h2 style="font-family: Arial, sans-serif; color: #0f172a;">LEMBAR REKAPITULASI NILAI SISWA - BIMO MANUFACTURING LABS</h2>
-      <p style="font-family: Arial, sans-serif; font-size: 10pt; color: #64748b;">Instansi: SMKN 2 Depok | Guru Pengampu: Bimoro Kusumo, S.Pd. | Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')}</p>
-      <table border="1" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+    <body style="font-family: Arial, sans-serif; padding: 20px;">
+      <h2 style="color: #064e3b; margin-bottom: 4px;">LEMBAR REKAPITULASI NILAI SISWA (DIKLASIFIKASIKAN PER KUIS)</h2>
+      <p style="font-size: 10pt; color: #475569; margin-top: 0;">
+        Instansi: SMKN 2 Depok | Guru Pengampu: Bimoro Kusumo, S.Pd. | Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')} | Total Kuis: ${sortedQuizNames.length} Kuis
+      </p>
+      <table border="1" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
         <thead>
-          <tr style="background-color: #064e3b; color: #ffffff; font-weight: bold; text-align: center;">
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[A] Waktu / Tanggal</th>
+          <tr style="background-color: #0f172a; color: #ffffff; font-weight: bold; text-align: center;">
+            <th style="padding: 10px; border: 1px solid #cbd5e1; width: 40px;">No</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[A] Waktu</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[B] Nama Siswa</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[C] No. Absen</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[C] Absen</th>
             <th style="padding: 10px; border: 1px solid #cbd5e1;">[D] Kelas</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[E] Sekolah</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[F] Modul Lab</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[G] Sub-Kuis / Lembar</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[H] Nama Kuis</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[I] Nilai (0-100)</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[J] Benar / Total</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[K] Status KKM</th>
-            <th style="padding: 10px; border: 1px solid #cbd5e1;">[L] Rincian Jawaban</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[E] Modul Lab</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[F] Nama Kuis / Asesmen</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[G] Nilai (0-100)</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[H] Benar / Total</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[I] Status KKM</th>
+            <th style="padding: 10px; border: 1px solid #cbd5e1;">[J] Rincian Jawaban</th>
           </tr>
         </thead>
         <tbody>
-          ${rowsHtml}
+          ${sectionsHtml}
         </tbody>
       </table>
     </body>
@@ -611,7 +672,7 @@ export const exportScoresToExcelHTML = (scores = null) => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `Rekap_Nilai_Spreadsheet_BIMO_Lab_${new Date().toISOString().slice(0, 10)}.xls`;
+  link.download = `Rekap_Nilai_PerKuis_BIMO_Lab_${new Date().toISOString().slice(0, 10)}.xls`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

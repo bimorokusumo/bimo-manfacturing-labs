@@ -222,7 +222,7 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
               title="Buka Lembar Rekap Spreadsheet Nilai Siswa"
             >
               <span>📊</span>
-              <span>Lihat Rekap Spreadsheet</span>
+              <span>Rekap Lab</span>
             </button>
           ) : (
             <button
@@ -244,9 +244,34 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
               title="Akses Lembar Rekap Spreadsheet Guru"
             >
               <span>📊</span>
-              <span>Lihat Rekap Spreadsheet</span>
+              <span>Rekap Lab</span>
             </button>
           )}
+
+          {/* LINK LANGSUNG KE GOOGLE SPREADSHEET ONLINE */}
+          <a
+            href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '9px 16px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              border: 'none',
+              color: '#ffffff',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+            }}
+            title="Buka Langsung Google Spreadsheet Nilai Siswa (SMKN 2 Depok) di Tab Baru"
+          >
+            <span>↗️</span>
+            <span>Buka Google Sheets</span>
+          </a>
         </div>
       </header>
 

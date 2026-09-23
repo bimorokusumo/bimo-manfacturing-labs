@@ -3,6 +3,9 @@ import {
   getAllStoredScores,
   getSpreadsheetWebhookUrl,
   setSpreadsheetWebhookUrl,
+  getSpreadsheetDocUrl,
+  setSpreadsheetDocUrl,
+  DEFAULT_SPREADSHEET_DOC_URL,
   exportScoresToCSV,
   clearAllStoredScores,
   syncPendingScores,
@@ -248,28 +251,13 @@ const TeacherGradebook = () => {
   const [testStatus, setTestStatus] = useState('');
   const [copyCodeSuccess, setCopyCodeSuccess] = useState(false);
 
-  // Direct Google Spreadsheet Document Link
-  const [sheetDocUrl, setSheetDocUrl] = useState(() => {
-    try {
-      return localStorage.getItem('bimo_sheets_doc_url') || '';
-    } catch {
-      return '';
-    }
-  });
+  // Direct Google Spreadsheet Document Link (Default to User's SMKN 2 Depok Spreadsheet)
+  const [sheetDocUrl, setSheetDocUrl] = useState(() => getSpreadsheetDocUrl());
   const [tempSheetUrl, setTempSheetUrl] = useState('');
 
   const saveSheetDocUrl = (url) => {
-    try {
-      if (url && typeof url === 'string') {
-        localStorage.setItem('bimo_sheets_doc_url', url.trim());
-        setSheetDocUrl(url.trim());
-      } else {
-        localStorage.removeItem('bimo_sheets_doc_url');
-        setSheetDocUrl('');
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    setSpreadsheetDocUrl(url);
+    setSheetDocUrl(getSpreadsheetDocUrl());
   };
 
   const showToast = (msg) => {
@@ -279,14 +267,9 @@ const TeacherGradebook = () => {
 
   const handleOpenSpreadsheet = () => {
     sound.playClick();
-    const saved = localStorage.getItem('bimo_sheets_doc_url');
-    if (saved && saved.trim().startsWith('http')) {
-      window.open(saved.trim(), '_blank');
-      showToast('🌐 Membuka Google Spreadsheet Anda...');
-    } else {
-      setTempSheetUrl(saved || '');
-      setIsOpenSheetModal(true);
-    }
+    const target = getSpreadsheetDocUrl();
+    window.open(target, '_blank', 'noopener,noreferrer');
+    showToast('🌐 Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok)...');
   };
 
   const handleOpenAndPasteGoogleSheets = async () => {
@@ -673,31 +656,36 @@ const TeacherGradebook = () => {
               <span>Segarkan Data</span>
             </button>
 
-            {/* BUKA GOOGLE SHEETS */}
-            <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)' }}>
-              <button
-                onClick={handleOpenSpreadsheet}
+            {/* BUKA GOOGLE SHEETS LANGSUNG KE LINK SPREADSHEET */}
+            <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.45)' }}>
+              <a
+                href={sheetDocUrl || DEFAULT_SPREADSHEET_DOC_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  sound.playClick();
+                  showToast('🌐 Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok) di tab baru...');
+                }}
                 style={{
                   background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                  border: 'none',
                   color: '#ffffff',
-                  padding: '9px 15px',
+                  textDecoration: 'none',
+                  padding: '9px 16px',
                   fontWeight: 800,
                   fontSize: '0.82rem',
-                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px'
                 }}
-                title={sheetDocUrl ? `Buka Google Spreadsheet: ${sheetDocUrl}` : "Buka Google Sheets di tab baru"}
+                title={`Buka langsung Google Spreadsheet: ${sheetDocUrl || DEFAULT_SPREADSHEET_DOC_URL}`}
               >
                 <span style={{ fontSize: '1rem' }}>↗️</span>
                 <span>Buka Google Sheets</span>
-              </button>
+              </a>
               <button
                 onClick={() => {
                   sound.playClick();
-                  setTempSheetUrl(localStorage.getItem('bimo_sheets_doc_url') || '');
+                  setTempSheetUrl(sheetDocUrl || DEFAULT_SPREADSHEET_DOC_URL);
                   setIsOpenSheetModal(true);
                 }}
                 style={{

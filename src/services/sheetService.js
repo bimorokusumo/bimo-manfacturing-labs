@@ -5,14 +5,47 @@
 
 const STORAGE_KEY_SCORES = 'bimo_quiz_scores';
 const STORAGE_KEY_WEBHOOK = 'bimo_sheets_webhook_url';
+const STORAGE_KEY_SHEET_DOC = 'bimo_sheets_doc_url';
 
 // Default / fallback Webhook URL (Bisa diganti oleh guru melalui Panel Monitoring Nilai)
 const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyK77i-GvCECETlbF2xJfOFSpAed6unfBlwNTDOeH7wBhJuPfpb8pJHkF1ExrYOzQe2lA/exec';
+
+// Tautan Langsung Dokumen Google Spreadsheet Nilai Siswa (SMKN 2 Depok)
+export const DEFAULT_SPREADSHEET_DOC_URL = 'https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706';
 
 /**
  * Data Nilai Siswa Awal (Kosong, murni menampung data riil siswa)
  */
 export const SAMPLE_STUDENT_SCORES = [];
+
+/**
+ * Mengambil URL Google Spreadsheet Dokumen yang tersimpan atau default
+ */
+export const getSpreadsheetDocUrl = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_SHEET_DOC);
+    return saved && saved.trim().startsWith('http') ? saved.trim() : DEFAULT_SPREADSHEET_DOC_URL;
+  } catch {
+    return DEFAULT_SPREADSHEET_DOC_URL;
+  }
+};
+
+/**
+ * Menyimpan URL Google Spreadsheet Dokumen baru
+ */
+export const setSpreadsheetDocUrl = (url) => {
+  try {
+    if (url && typeof url === 'string' && url.trim().startsWith('http')) {
+      localStorage.setItem(STORAGE_KEY_SHEET_DOC, url.trim());
+    } else {
+      localStorage.removeItem(STORAGE_KEY_SHEET_DOC);
+    }
+    return true;
+  } catch (err) {
+    console.error('Gagal menyimpan URL Dokumen Spreadsheet:', err);
+    return false;
+  }
+};
 
 /**
  * Mengambil URL Webhook Google Apps Script yang tersimpan

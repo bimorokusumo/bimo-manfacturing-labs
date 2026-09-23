@@ -123,6 +123,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
         {/* TOMBOL LIHAT REKAP SPREADSHEET DI HEADER */}
         {onOpenGradebook && (
           <button
+            className="app-header-spreadsheet-btn"
             onClick={onOpenGradebook}
             style={{
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -136,12 +137,13 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
               gap: '6px',
               fontSize: '0.78rem',
               fontWeight: 800,
-              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.35)'
+              boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)',
+              flexShrink: 0
             }}
-            title="Buka Lembar Rekap Spreadsheet Nilai Siswa"
+            title="Buka Lembar Rekap Spreadsheet Nilai Siswa (SMKN 2 Depok)"
           >
-            <span>📊</span>
-            <span className="app-header-class-text">Lihat Rekap Spreadsheet</span>
+            <span style={{ fontSize: '0.95rem' }}>📊</span>
+            <span className="app-header-spreadsheet-text">Rekap Spreadsheet</span>
           </button>
         )}
 

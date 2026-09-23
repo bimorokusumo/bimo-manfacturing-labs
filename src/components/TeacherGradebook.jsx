@@ -242,14 +242,51 @@ const TeacherGradebook = () => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isPasteGuideModalOpen, setIsPasteGuideModalOpen] = useState(false);
+  const [isOpenSheetModal, setIsOpenSheetModal] = useState(false);
   const [isWebhookAccordionOpen, setIsWebhookAccordionOpen] = useState(false);
   const [selectedDetailRecord, setSelectedDetailRecord] = useState(null);
   const [testStatus, setTestStatus] = useState('');
   const [copyCodeSuccess, setCopyCodeSuccess] = useState(false);
 
+  // Direct Google Spreadsheet Document Link
+  const [sheetDocUrl, setSheetDocUrl] = useState(() => {
+    try {
+      return localStorage.getItem('bimo_sheets_doc_url') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [tempSheetUrl, setTempSheetUrl] = useState('');
+
+  const saveSheetDocUrl = (url) => {
+    try {
+      if (url && typeof url === 'string') {
+        localStorage.setItem('bimo_sheets_doc_url', url.trim());
+        setSheetDocUrl(url.trim());
+      } else {
+        localStorage.removeItem('bimo_sheets_doc_url');
+        setSheetDocUrl('');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 3500);
+  };
+
+  const handleOpenSpreadsheet = () => {
+    sound.playClick();
+    const saved = localStorage.getItem('bimo_sheets_doc_url');
+    if (saved && saved.trim().startsWith('http')) {
+      window.open(saved.trim(), '_blank');
+      showToast('🌐 Membuka Google Spreadsheet Anda...');
+    } else {
+      setTempSheetUrl(saved || '');
+      setIsOpenSheetModal(true);
+    }
   };
 
   const handleOpenAndPasteGoogleSheets = async () => {
@@ -474,8 +511,11 @@ const TeacherGradebook = () => {
     e.preventDefault();
     sound.playClick();
     setSpreadsheetWebhookUrl(webhookUrl);
+    if (tempSheetUrl !== undefined) {
+      saveSheetDocUrl(tempSheetUrl);
+    }
     sound.playSuccess();
-    setTestStatus('URL Berhasil disimpan!');
+    setTestStatus('✅ Pengaturan berhasil disimpan!');
     setTimeout(() => {
       setTestStatus('');
       setIsConfigModalOpen(false);
@@ -633,27 +673,71 @@ const TeacherGradebook = () => {
               <span>Segarkan Data</span>
             </button>
 
+            {/* BUKA GOOGLE SHEETS */}
+            <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)' }}>
+              <button
+                onClick={handleOpenSpreadsheet}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  color: '#ffffff',
+                  padding: '9px 15px',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                title={sheetDocUrl ? `Buka Google Spreadsheet: ${sheetDocUrl}` : "Buka Google Sheets di tab baru"}
+              >
+                <span style={{ fontSize: '1rem' }}>↗️</span>
+                <span>Buka Google Sheets</span>
+              </button>
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  setTempSheetUrl(localStorage.getItem('bimo_sheets_doc_url') || '');
+                  setIsOpenSheetModal(true);
+                }}
+                style={{
+                  background: '#047857',
+                  border: 'none',
+                  borderLeft: '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#ffffff',
+                  padding: '9px 10px',
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Pilihan & Pengaturan Tautan Google Spreadsheet"
+              >
+                ⚙️
+              </button>
+            </div>
+
             {/* UNDUH EXCEL LEMBAR INI */}
             <button
               onClick={() => { sound.playClick(); exportScoresToExcelHTML(filteredScores); }}
               style={{
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
                 color: '#ffffff',
-                border: 'none',
-                padding: '9px 15px',
+                padding: '9px 14px',
                 borderRadius: '8px',
-                fontWeight: 800,
+                fontWeight: 700,
                 fontSize: '0.82rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+                gap: '6px'
               }}
               title="Unduh tabel yang sedang aktif ke format Excel (.xls)"
             >
               <span>📥</span>
-              <span>Unduh Excel Lembar Ini (.xls)</span>
+              <span>Unduh Excel (.xls)</span>
             </button>
 
             {/* UNDUH CSV */}
@@ -1915,13 +1999,83 @@ const TeacherGradebook = () => {
             </div>
 
             <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 14px 0' }}>
-              Tempelkan <strong>URL Aplikasi Web Google Apps Script</strong> dari Spreadsheet Anda di bawah ini agar nilai siswa otomatis terkirim.
+              Konfigurasikan integrasi Google Spreadsheet agar hasil kuis otomatis terkirim dan tombol <strong>Buka Google Sheets</strong> langsung membuka file Anda.
             </p>
+
+            {/* QUICK LINK BUTTONS */}
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 14px', marginBottom: '14px' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>📌</span>
+                <span>Tautan Cepat Membuka Google Sheets:</span>
+              </div>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <a
+                  href="https://sheets.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '7px 12px',
+                    background: '#0284c7',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>📂 Buka Daftar Sheets Anda (sheets.google.com) ↗</span>
+                </a>
+                <a
+                  href="https://sheets.new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '7px 12px',
+                    background: '#10b981',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>➕ Buat File Baru (sheets.new) ↗</span>
+                </a>
+              </div>
+            </div>
 
             <form onSubmit={handleSaveWebhook} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px', color: '#0f172a' }}>
-                  URL Web App Google Apps Script:
+                  🔗 Tautan Langsung Dokumen Spreadsheet Anda (Opsional):
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://docs.google.com/spreadsheets/d/.../edit"
+                  value={tempSheetUrl !== undefined && tempSheetUrl !== '' ? tempSheetUrl : sheetDocUrl}
+                  onChange={(e) => setTempSheetUrl(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '11px 13px',
+                    borderRadius: '8px',
+                    border: '1.5px solid #cbd5e1',
+                    fontSize: '0.84rem'
+                  }}
+                />
+                <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
+                  Saat diisi, tombol <strong>↗️ Buka Google Sheets</strong> di toolbar akan langsung membuka file ini.
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px', color: '#0f172a' }}>
+                  ⚡ URL Web App Google Apps Script (Webhook Pengirim Nilai):
                 </label>
                 <input
                   type="url"
@@ -2128,6 +2282,186 @@ const TeacherGradebook = () => {
                 }}
               >
                 Saya Mengerti, Tutup Panduan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL PILIHAN BUKA GOOGLE SHEETS */}
+      {isOpenSheetModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.75)',
+          zIndex: 999999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div className="dashboard-card" style={{
+            width: '100%',
+            maxWidth: '580px',
+            background: '#ffffff',
+            borderRadius: '16px',
+            padding: '26px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.35)',
+            color: '#0f172a'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.5rem' }}>📊</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+                  Akses Google Sheets (SMKN 2 Depok)
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsOpenSheetModal(false)}
+                style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, margin: '0 0 18px 0' }}>
+              Pilih cara membuka spreadsheet atau tautkan URL Google Spreadsheet yang biasa Anda gunakan agar tombol <strong>Buka Google Sheets</strong> langsung menuju dokumen nilai Anda.
+            </p>
+
+            {/* OPSI 1: TAUTKAN URL SPREADSHEET PRIBADI */}
+            <div style={{ background: '#f8fafc', border: '1.5px solid #cbd5e1', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontWeight: 800, fontSize: '0.86rem', color: '#0f172a', marginBottom: '6px' }}>
+                🔗 Tautan Langsung Google Spreadsheet Anda:
+              </label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="url"
+                  placeholder="https://docs.google.com/spreadsheets/d/.../edit"
+                  value={tempSheetUrl !== undefined && tempSheetUrl !== '' ? tempSheetUrl : sheetDocUrl}
+                  onChange={(e) => setTempSheetUrl(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: '9px 12px',
+                    borderRadius: '8px',
+                    border: '1.5px solid #94a3b8',
+                    fontSize: '0.84rem'
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    const urlToSave = tempSheetUrl !== undefined && tempSheetUrl !== '' ? tempSheetUrl : sheetDocUrl;
+                    saveSheetDocUrl(urlToSave);
+                    if (urlToSave && urlToSave.trim().startsWith('http')) {
+                      window.open(urlToSave.trim(), '_blank');
+                      setIsOpenSheetModal(false);
+                      showToast('✅ Tautan disimpan & Spreadsheet dibuka!');
+                    } else {
+                      showToast('✅ Pengaturan tautan diperbarui!');
+                    }
+                  }}
+                  style={{
+                    padding: '9px 16px',
+                    borderRadius: '8px',
+                    background: '#10b981',
+                    color: '#ffffff',
+                    border: 'none',
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  Simpan & Buka ↗
+                </button>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '6px' }}>
+                💡 Tempelkan link file Spreadsheet Anda di sini. Tombol di toolbar akan langsung membuka file ini setiap kali diklik.
+              </div>
+            </div>
+
+            {/* OPSI 2: TAUTAN CEPAT LAINNYA */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ fontWeight: 800, fontSize: '0.84rem', color: '#334155' }}>
+                Atau Buka Cepat:
+              </div>
+
+              {/* BUKA BERANDA SHEETS */}
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  window.open('https://docs.google.com/spreadsheets/u/0/', '_blank');
+                  setIsOpenSheetModal(false);
+                }}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  background: 'rgba(2, 132, 199, 0.08)',
+                  border: '1.5px solid #0284c7',
+                  color: '#0369a1',
+                  fontWeight: 800,
+                  fontSize: '0.86rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>📂</span>
+                  <span>Buka Beranda Google Sheets (docs.google.com)</span>
+                </div>
+                <span>↗</span>
+              </button>
+
+              {/* BUAT DOKUMEN BARU & SALIN DATA */}
+              <button
+                onClick={() => {
+                  setIsOpenSheetModal(false);
+                  handleOpenAndPasteGoogleSheets();
+                }}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  background: 'rgba(16, 185, 129, 0.08)',
+                  border: '1.5px solid #10b981',
+                  color: '#065f46',
+                  fontWeight: 800,
+                  fontSize: '0.86rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>➕</span>
+                  <span>Buat File Baru (sheets.new) & Salin Otomatis Tabel Ini</span>
+                </div>
+                <span>↗</span>
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+              <button
+                onClick={() => setIsOpenSheetModal(false)}
+                style={{
+                  padding: '8px 18px',
+                  borderRadius: '8px',
+                  background: '#e2e8f0',
+                  color: '#475569',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.84rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Tutup
               </button>
             </div>
           </div>

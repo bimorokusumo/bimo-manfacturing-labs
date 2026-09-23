@@ -607,6 +607,17 @@ html, body {
     display: none !important;
   }
 
+  .app-header-spreadsheet-btn {
+    padding: 5px 10px !important;
+    font-size: 0.72rem !important;
+    display: inline-flex !important;
+  }
+
+  .app-header-spreadsheet-text {
+    display: inline !important;
+    font-size: 0.72rem !important;
+  }
+
   .app-header-extra-tools {
     display: none !important;
   }
@@ -1066,5 +1077,23 @@ html.a11y-reduced-motion *::after {
   .a11y-widget-label {
     display: none;
   }
+}
+
+.app-header-spreadsheet-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.app-header-spreadsheet-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.45) !important;
+}
+
+.app-header-spreadsheet-text {
+  display: inline !important;
+  white-space: nowrap;
 }
 

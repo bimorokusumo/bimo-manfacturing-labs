@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-DlxXO8xo.js";var d=e(n(),1),f=t(),p=`/**
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-BINjS2ir.js";var d=e(n(),1),f=t(),p=`/**
  * =============================================================================
  * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
  * =============================================================================
@@ -554,8 +554,12 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
 
   // ISI ROW DATA SETIAP SISWA
   var noSiswa = 1;
-  var taskSubmissionCounts = new Array(tasks.length).fill(0);
-  var taskScoreSums = new Array(tasks.length).fill(0);
+  var taskSubmissionCounts = [];
+  var taskScoreSums = [];
+  for (var ti = 0; ti < tasks.length; ti++) {
+    taskSubmissionCounts.push(0);
+    taskScoreSums.push(0);
+  }
 
   sortedStudentKeys.forEach(function(k) {
     var s = studentsMap[k];

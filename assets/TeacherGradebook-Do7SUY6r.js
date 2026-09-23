@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-DsbRRVDd.js";var d=e(n(),1),f=t(),p=`/**
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-BhiTSpaz.js";var d=e(n(),1),f=t(),p=`/**
  * =============================================================================
  * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
  * =============================================================================
@@ -19,8 +19,9 @@ import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-r
  *    - 📊 Rekap Seluruh Lab (Master Summary)
  *    - 📥 Data Masuk (Raw Data)
  * 
- * 2. Nilai siswa otomatis dipastikan bernilai ASLI (skala 0 - 100, misal: 75, 80, 85, 90, 100)
- *    Bukan jumlah jawaban benar (1/2/3/4/5/6/7/8/9/10).
+ * 2. Seluruh nilai yang ditampilkan 100% adalah NILAI ASLI SISWA (Skala 0 - 100,
+ *    misal: 75, 80, 85, 90, 100). Tidak ada lagi pecahan/rasio (1/2/3/4/5/6/7/8/9)
+ *    maupun jumlah benar di kolom nilai.
  * =============================================================================
  */
 
@@ -138,7 +139,6 @@ function doPost(e) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var rawSheet = getOrCreateRawSheet(ss);
 
-    // Parse Data yang Dikirim dari Web
     var data = {};
     if (e && e.postData && e.postData.contents) {
       try {
@@ -159,11 +159,10 @@ function doPost(e) {
     var subModul = data.subModul || data.jenisKuis || "-";
     var judulKuis = data.judulKuis || "-";
 
-    // Pastikan Nilai Berupa Angka Asli 0 - 100
-    var rawSkor = Number(data.skor !== undefined ? data.skor : 0);
-    var skor = rawSkor;
+    // Pastikan Nilai Berupa Angka Asli (0 - 100)
+    var skor = Number(data.skor !== undefined ? data.skor : 0);
     if (skor > 0 && skor <= 10) {
-      // Jika terkirim skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100
+      // Jika terkirim skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100 asli
       skor = Math.round(skor * 10);
     }
 
@@ -187,7 +186,6 @@ function doPost(e) {
 
     var newRowData;
     if (hasSubModulCol) {
-      // Format 13 Kolom (ada Sub-Kuis): Skor di Kolom 9 (I)
       newRowData = [
         nowStr,
         namaSiswa,
@@ -204,7 +202,6 @@ function doPost(e) {
         detailJawaban
       ];
     } else {
-      // Format 12 Kolom Standar: Skor di Kolom 8 (H)
       newRowData = [
         nowStr,
         namaSiswa,
@@ -304,14 +301,14 @@ function tampilkanPanduan() {
     "   🛡️ Safety Lab, ⚙️ Machine Lab, 🔪 Alat Pemotong, 🌡️ Heat Treatment, dll.
 
 " +
-    "2. Nilai yang ditampilkan adalah Nilai Asli (Skala 0 - 100, misal: 80, 85, 90, 100).
+    "2. Nilai yang ditampilkan adalah NILAI ASLI SISWA (Skala 0 - 100, misal: 80, 85, 90, 100).
 " +
-    "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama yang sudah & belum).
+    "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama & nilai asli).
 " +
-    "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Abu-abu = Belum).
+    "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Merah = REMEDIAL, Abu-abu = Belum).
 
 " +
-    "3. Tab '📊 Rekap Seluruh Lab' memperlihatkan status penyelesaian seluruh siswa di semua lab.
+    "3. Tab '📊 Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.
 
 " +
     "Seluruh data nilai dijamin 100% aman dan tidak akan terhapus.";
@@ -366,7 +363,7 @@ function buatSemuaTabModulLab() {
 
     var quizTitle = parsed.judulKuis || "";
     var modulName = parsed.modul || "";
-    var score = parsed.skor; // Nilai asli 0 - 100
+    var score = parsed.skor; // Nilai Asli (0 - 100)
     var matched = identifyLabAndTask(modulName, quizTitle);
 
     var taskFullKey = matched.labId + "_" + matched.taskKey;
@@ -399,7 +396,7 @@ function buatSemuaTabModulLab() {
   try {
     SpreadsheetApp.getUi().alert("✅ Berhasil!
 
-Seluruh tab modul lab (Safety Lab, Machine Lab, Alat Pemotong, Heat Treatment, dll) dan lembar '📊 Rekap Seluruh Lab' telah berhasil dibuat dengan NILAI ASLI siswa.");
+Seluruh tab modul lab dan lembar '📊 Rekap Seluruh Lab' telah berhasil dibuat dengan 100% NILAI ASLI siswa.");
   } catch (e) {}
 }
 
@@ -519,7 +516,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
       t.name,
       t.category,
       ">= 75",
-      subCount + " / " + totalStudents + " Siswa",
+      subCount + " Siswa",
       passedCount + " Siswa",
       remCount + " Siswa",
       passPct,
@@ -577,7 +574,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   tasks.forEach(function(t) {
     matrixHeaders.push(t.name);
   });
-  matrixHeaders.push("Total Selesai");
+  matrixHeaders.push("Total Tugas Selesai");
   matrixHeaders.push("Rata-rata Nilai Asli");
   matrixHeaders.push("Status Kelengkapan");
 
@@ -615,7 +612,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
         studentScoreSum += rec.skor;
         taskSubmissionCounts[idx]++;
         taskScoreSums[idx] += rec.skor;
-        // Tampilkan Nilai Asli (misal: 85 (LULUS) atau 60 (REMEDIAL))
+        // Tampilkan Nilai Asli Siswa
         if (rec.skor >= 75) {
           row.push(rec.skor + " (LULUS)");
         } else {
@@ -627,7 +624,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
     });
 
     var studentAvg = finishedCount > 0 ? Math.round(studentScoreSum / finishedCount) : 0;
-    row.push(finishedCount + " / " + tasks.length + " Tugas");
+    row.push(finishedCount + " Tugas");
     row.push(studentAvg);
     row.push(finishedCount === tasks.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA"));
 
@@ -677,7 +674,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // BARIS FOOTER TOTAL PENGUMPULAN
   var footerRow = ["TOTAL SISWA MENGUMPULKAN:", "", "", ""];
   tasks.forEach(function(t, idx) {
-    footerRow.push(taskSubmissionCounts[idx] + " / " + totalStudents + " Siswa");
+    footerRow.push(taskSubmissionCounts[idx] + " Siswa");
   });
   footerRow.push("-");
   footerRow.push("-");
@@ -707,7 +704,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   for (var i = 0; i < tasks.length; i++) {
     sheet.setColumnWidth(5 + i, 190); // Kolom Tugas
   }
-  sheet.setColumnWidth(matrixHeaders.length - 2, 130); // Total Selesai
+  sheet.setColumnWidth(matrixHeaders.length - 2, 140); // Total Tugas Selesai
   sheet.setColumnWidth(matrixHeaders.length - 1, 130); // Rata-rata Nilai Asli
   sheet.setColumnWidth(matrixHeaders.length, 140);     // Status
 }
@@ -766,10 +763,6 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   sheet.setRowHeight(3, 34);
   sheet.setFrozenRows(3);
 
-  // Total semua tugas di website
-  var grandTotalTasks = 0;
-  labs.forEach(function(l) { grandTotalTasks += l.tasks.length; });
-
   var no = 1;
   sortedStudentKeys.forEach(function(k) {
     var s = studentsMap[k];
@@ -793,18 +786,23 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
         }
       });
 
+      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau ⏳ Belum)
       if (labFinished > 0) {
         var labAvg = Math.round(labScoreSum / labFinished);
-        row.push(labFinished + "/" + labTasks.length + " (" + labAvg + ")");
+        if (labAvg >= 75) {
+          row.push(labAvg + " (LULUS)");
+        } else {
+          row.push(labAvg + " (REMEDIAL)");
+        }
       } else {
-        row.push("⏳ 0/" + labTasks.length);
+        row.push("⏳ Belum");
       }
     });
 
     var overallAvg = overallFinished > 0 ? Math.round(overallScoreSum / overallFinished) : 0;
-    row.push(overallFinished + " / " + grandTotalTasks + " Tugas");
+    row.push(overallFinished + " Tugas Selesai");
     row.push(overallAvg);
-    row.push(overallFinished === grandTotalTasks ? "LENGKAP" : (overallFinished > 0 ? "SEBAGIAN" : "BELUM ADA"));
+    row.push(overallFinished > 0 ? (overallAvg >= 75 ? "LULUS" : "REMEDIAL") : "BELUM ADA");
 
     sheet.appendRow(row);
     var lr = sheet.getLastRow();
@@ -820,19 +818,23 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
       var cell = sheet.getRange(lr, 5 + c);
       cell.setHorizontalAlignment("center");
       var val = String(row[4 + c]);
-      if (val.indexOf("⏳") !== -1) {
+      if (val.indexOf("Belum") !== -1) {
         cell.setBackground("#f1f5f9");
         cell.setFontColor("#94a3b8");
-      } else {
+      } else if (val.indexOf("LULUS") !== -1) {
         cell.setBackground("#dcfce7");
         cell.setFontColor("#166534");
+        cell.setFontWeight("bold");
+      } else {
+        cell.setBackground("#fee2e2");
+        cell.setFontColor("#991b1b");
         cell.setFontWeight("bold");
       }
     }
 
     var compCell = sheet.getRange(lr, headers.length);
     compCell.setFontWeight("bold");
-    if (overallFinished === grandTotalTasks) {
+    if (overallFinished > 0 && overallAvg >= 75) {
       compCell.setBackground("#dcfce7");
       compCell.setFontColor("#166534");
     } else if (overallFinished > 0) {
@@ -848,8 +850,8 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   for (var i = 0; i < labs.length; i++) {
     sheet.setColumnWidth(5 + i, 160);
   }
-  sheet.setColumnWidth(headers.length - 2, 140);
-  sheet.setColumnWidth(headers.length - 1, 110);
+  sheet.setColumnWidth(headers.length - 2, 160);
+  sheet.setColumnWidth(headers.length - 1, 140);
   sheet.setColumnWidth(headers.length, 140);
 }
 
@@ -867,7 +869,6 @@ function identifyLabAndTask(modulStr, quizStr) {
   var q = String(quizStr || "").toLowerCase();
   var text = m + " " + q;
 
-  // 1. Cari kecocokan lab & task pada konfigurasi
   for (var i = 0; i < LAB_CONFIGS.length; i++) {
     var lab = LAB_CONFIGS[i];
     for (var j = 0; j < lab.tasks.length; j++) {
@@ -889,34 +890,15 @@ function identifyLabAndTask(modulStr, quizStr) {
     }
   }
 
-  // 2. Fallback berdasarkan modul
-  if (text.indexOf("safety") !== -1 || text.indexOf("k3") !== -1) {
-    return { labId: "safety", taskKey: "safety_gen", taskName: q || "Praktik Safety K3" };
-  }
-  if (text.indexOf("cutting") !== -1 || text.indexOf("potong") !== -1) {
-    return { labId: "cutting-tools", taskKey: "cutting_gen", taskName: q || "Praktik Alat Potong" };
-  }
-  if (text.indexOf("heat") !== -1 || text.indexOf("panas") !== -1) {
-    return { labId: "heat-treatment", taskKey: "heat_gen", taskName: q || "Praktik Heat Treatment" };
-  }
-  if (text.indexOf("mekanika") !== -1 || text.indexOf("mechanic") !== -1) {
-    return { labId: "mechanics", taskKey: "mech_gen", taskName: q || "Praktik Mekanika" };
-  }
-  if (text.indexOf("weld") !== -1 || text.indexOf("las") !== -1) {
-    return { labId: "welding", taskKey: "weld_gen", taskName: q || "Praktik Pengelasan" };
-  }
-  if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) {
-    return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
-  }
-  if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) {
-    return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
-  }
-  if (text.indexOf("bengkel") !== -1) {
-    return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
-  }
-  if (text.indexOf("evaluasi") !== -1) {
-    return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "🎓 Evaluasi Akhir Komprehensif" };
-  }
+  if (text.indexOf("safety") !== -1 || text.indexOf("k3") !== -1) return { labId: "safety", taskKey: "safety_gen", taskName: q || "Praktik Safety K3" };
+  if (text.indexOf("cutting") !== -1 || text.indexOf("potong") !== -1) return { labId: "cutting-tools", taskKey: "cutting_gen", taskName: q || "Praktik Alat Potong" };
+  if (text.indexOf("heat") !== -1 || text.indexOf("panas") !== -1) return { labId: "heat-treatment", taskKey: "heat_gen", taskName: q || "Praktik Heat Treatment" };
+  if (text.indexOf("mekanika") !== -1 || text.indexOf("mechanic") !== -1) return { labId: "mechanics", taskKey: "mech_gen", taskName: q || "Praktik Mekanika" };
+  if (text.indexOf("weld") !== -1 || text.indexOf("las") !== -1) return { labId: "welding", taskKey: "weld_gen", taskName: q || "Praktik Pengelasan" };
+  if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
+  if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
+  if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
+  if (text.indexOf("evaluasi") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "🎓 Evaluasi Akhir Komprehensif" };
 
   return { labId: "machine", taskKey: "machine_gen", taskName: q || "Praktik Machine Lab" };
 }
@@ -966,37 +948,42 @@ function parseRowData(row, headerMap) {
   }
 
   // DETEKSI NILAI ASLI SISWA (0 - 100):
-  // 1. Cek apakah di kolom nilai (indeks 7 atau 8) terdapat nilai asli (>= 15 s.d 100)
-  var foundScore = null;
+  // 1. Ambil nilai dari kolom nilai (indeks 7 atau 8)
   var val7 = Number(row[7]);
   var val8 = Number(row[8]);
+  var candidateScore = !isNaN(val7) ? val7 : (!isNaN(val8) ? val8 : skor);
 
-  if (!isNaN(val7) && val7 >= 15 && val7 <= 100) {
-    foundScore = val7;
-  } else if (!isNaN(val8) && val8 >= 15 && val8 <= 100) {
-    foundScore = val8;
+  // Jika nilai berada pada rentang 15 s.d 100, gunakan langsung
+  if (candidateScore >= 15 && candidateScore <= 100) {
+    skor = candidateScore;
+  } else if (candidateScore > 0 && candidateScore <= 10) {
+    // Jika nilai tersimpan dalam skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100
+    skor = Math.round(candidateScore * 10);
   } else {
-    // 2. Scan kolom lain untuk menemukan nilai riil 0 - 100
+    // Scan kolom lain untuk menemukan nilai riil 0 - 100
+    var found = false;
     for (var j = 6; j < Math.min(row.length, 11); j++) {
       var num = Number(row[j]);
       if (!isNaN(num) && num >= 15 && num <= 100) {
-        foundScore = num;
+        skor = num;
+        found = true;
         break;
+      }
+    }
+    if (!found) {
+      for (var k = 7; k < Math.min(row.length, 10); k++) {
+        var n = Number(row[k]);
+        if (!isNaN(n) && n > 0 && n <= 10) {
+          skor = Math.round(n * 10);
+          break;
+        }
       }
     }
   }
 
-  if (foundScore !== null) {
-    skor = foundScore;
-  } else {
-    // 3. Jika nilainya hanya tersimpan berupa jumlah benar (1 - 10), ubah ke skala 100
-    for (var k = 7; k < Math.min(row.length, 10); k++) {
-      var n = Number(row[k]);
-      if (!isNaN(n) && n > 0 && n <= 10) {
-        skor = Math.round(n * 10);
-        break;
-      }
-    }
+  // Jaminan 100%: Nilai tidak boleh bernilai 1 - 10, harus skala 100
+  if (skor > 0 && skor <= 10) {
+    skor = Math.round(skor * 10);
   }
 
   return {
@@ -1022,7 +1009,6 @@ function getAllDataRows(ss) {
 
   sheets.forEach(function(sheet) {
     var name = sheet.getName();
-    // Lewati sheet matriks atau sheet hasil render lab
     if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("⚙️") !== -1 || name.indexOf("🔪") !== -1 || name.indexOf("🌡️") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("⚡") !== -1 || name.indexOf("📏") !== -1 || name.indexOf("📐") !== -1 || name.indexOf("🏭") !== -1 || name.indexOf("🎓") !== -1 || name.indexOf("📋") !== -1) {
       return;
     }
@@ -1070,7 +1056,6 @@ function getAllDataRows(ss) {
 
   var result = Object.keys(bestRows).map(function(k) { return bestRows[k]; });
 
-  // Fallback: Jika belum ada di multi-sheet, ambil dari sheet pertama
   if (result.length === 0) {
     var firstSheet = ss.getSheets()[0];
     var curData = firstSheet.getDataRange().getValues();

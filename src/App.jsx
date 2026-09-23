@@ -191,6 +191,60 @@ function AppInner() {
       case 'evaluasi-c1':
         return <EvaluationView />;
       case 'gradebook':
+        if (!isTeacher) {
+          return (
+            <div style={{
+              maxWidth: '560px',
+              margin: '80px auto',
+              padding: '40px 32px',
+              background: '#ffffff',
+              borderRadius: '20px',
+              border: '1.5px solid #fecaca',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🔒</div>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#991b1b', marginBottom: '12px' }}>
+                Akses Terbatas: Khusus Pengajar
+              </h2>
+              <p style={{ fontSize: '0.92rem', color: '#64748b', lineHeight: 1.6, marginBottom: '24px' }}>
+                Fitur <strong>Rekap Nilai Spreadsheet</strong> hanya dapat diakses oleh Pengajar terverifikasi (<strong>Bimoro Kusumo - No. Absen 1</strong>).
+              </p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setActiveMenu('dashboard')}
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: '10px',
+                    background: '#0f172a',
+                    color: '#ffffff',
+                    border: 'none',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  Kembali ke Dashboard
+                </button>
+                <button
+                  onClick={() => openLoginModal()}
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  🔑 Login Akun Guru
+                </button>
+              </div>
+            </div>
+          );
+        }
         return <TeacherGradebook />;
       default:
         return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
@@ -209,8 +263,15 @@ function AppInner() {
             }
           }}
           onOpenGradebook={() => {
-            setIsStarted(true);
-            setActiveMenu('gradebook');
+            if (isTeacher) {
+              setIsStarted(true);
+              setActiveMenu('gradebook');
+            } else {
+              openLoginModal(() => {
+                setIsStarted(true);
+                setActiveMenu('gradebook');
+              });
+            }
           }}
           onOpenLogin={() => openLoginModal()}
         />

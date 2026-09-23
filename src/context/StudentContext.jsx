@@ -6,25 +6,17 @@ const STORAGE_KEY = 'bimo_student_session';
 
 /**
  * Validasi Hak Akses Guru:
- * Khusus login dengan format:
- * - Nama Lengkap: bimoro kusumo
- * - No. Absen: 1
- * - Kelas: X TPM 1
- * - Nama Sekolah: SMKN 2 Depok
+ * Khusus untuk Bimoro Kusumo No. Absen 1
  */
 export const isTeacherUser = (user) => {
   if (!user) return false;
   const name = (user.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
   const studentNum = (user.studentNumber || '').toString().trim();
-  const className = (user.className || '').toUpperCase().replace(/[\s-_]/g, '').trim();
-  const school = (user.school || '').toUpperCase().replace(/[\s\.]/g, '').trim();
 
   const isNameMatch = name === 'bimoro kusumo';
   const isNumberMatch = studentNum === '1' || studentNum === '01';
-  const isClassMatch = className === 'XTPM1';
-  const isSchoolMatch = school === 'SMKN2DEPOK' || school === 'SMKNEGERI2DEPOK';
 
-  return isNameMatch && isNumberMatch && isClassMatch && isSchoolMatch;
+  return isNameMatch && isNumberMatch;
 };
 
 export const StudentProvider = ({ children }) => {

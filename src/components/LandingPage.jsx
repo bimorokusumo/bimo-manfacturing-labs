@@ -199,79 +199,59 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
             </button>
           )}
 
-          {isTeacher ? (
-            <button
-              onClick={onOpenGradebook}
-              style={{ 
-                padding: '10px 22px', 
-                borderRadius: '8px', 
-                background: 'linear-gradient(135deg, #10b981, #059669)', 
-                border: 'none', 
-                color: '#fff', 
-                fontWeight: 800, 
-                fontSize: '0.88rem', 
-                cursor: 'pointer',
-                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.35)',
-                transition: 'transform 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
-              onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
-              title="Buka Lembar Rekap Spreadsheet Nilai Siswa"
-            >
-              <span>📊</span>
-              <span>Rekap Lab</span>
-            </button>
-          ) : (
-            <button
-              onClick={onOpenGradebook}
-              style={{ 
-                padding: '9px 18px', 
-                borderRadius: '8px', 
-                background: 'rgba(16, 185, 129, 0.12)', 
-                border: '1.5px solid #10b981', 
-                color: '#10b981', 
-                fontWeight: 800, 
-                fontSize: '0.85rem', 
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Akses Lembar Rekap Spreadsheet Guru"
-            >
-              <span>📊</span>
-              <span>Rekap Lab</span>
-            </button>
-          )}
+          {isTeacher && (
+            <>
+              <button
+                onClick={onOpenGradebook}
+                style={{ 
+                  padding: '10px 22px', 
+                  borderRadius: '8px', 
+                  background: 'linear-gradient(135deg, #10b981, #059669)', 
+                  border: 'none', 
+                  color: '#fff', 
+                  fontWeight: 800, 
+                  fontSize: '0.88rem', 
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.35)',
+                  transition: 'transform 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
+                onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
+                title="Buka Lembar Rekap Spreadsheet Nilai Siswa (Khusus Pengajar)"
+              >
+                <span>📊</span>
+                <span>Rekap Lab</span>
+              </button>
 
-          {/* LINK LANGSUNG KE GOOGLE SPREADSHEET ONLINE */}
-          <a
-            href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              padding: '9px 16px',
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #10b981, #059669)',
-              border: 'none',
-              color: '#ffffff',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
-            }}
-            title="Buka Langsung Google Spreadsheet Nilai Siswa (SMKN 2 Depok) di Tab Baru"
-          >
-            <span>↗️</span>
-            <span>Buka Google Sheets</span>
-          </a>
+              {/* LINK LANGSUNG KE GOOGLE SPREADSHEET ONLINE */}
+              <a
+                href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  padding: '9px 16px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #10b981, #059669)',
+                  border: 'none',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+                }}
+                title="Buka Langsung Google Spreadsheet Nilai Siswa di Tab Baru"
+              >
+                <span>↗️</span>
+                <span>Buka Google Sheets</span>
+              </a>
+            </>
+          )}
         </div>
       </header>
 

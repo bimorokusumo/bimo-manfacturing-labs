@@ -120,54 +120,56 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
           <span className="app-header-fullscreen-text">Layar Penuh</span>
         </button>
 
-        {/* TOMBOL REKAP SPREADSHEET DI HEADER */}
-        <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)', flexShrink: 0 }}>
-          {onOpenGradebook && (
-            <button
-              className="app-header-spreadsheet-btn"
-              onClick={onOpenGradebook}
+        {/* TOMBOL REKAP SPREADSHEET DI HEADER - HANYA UNTUK GURU */}
+        {isTeacher && (
+          <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)', flexShrink: 0 }}>
+            {onOpenGradebook && (
+              <button
+                className="app-header-spreadsheet-btn"
+                onClick={onOpenGradebook}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  color: '#ffffff',
+                  cursor: 'pointer',
+                  padding: '6px 12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  fontSize: '0.78rem',
+                  fontWeight: 800
+                }}
+                title="Buka Lembar Rekap Nilai Siswa di Aplikasi Labs"
+              >
+                <span style={{ fontSize: '0.95rem' }}>📊</span>
+                <span className="app-header-spreadsheet-text">Rekap Lab</span>
+              </button>
+            )}
+
+            {/* LINK LANGSUNG KE GOOGLE SPREADSHEET SMKN 2 DEPOK */}
+            <a
+              href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                border: 'none',
+                background: '#047857',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.25)',
                 color: '#ffffff',
-                cursor: 'pointer',
-                padding: '6px 12px',
+                textDecoration: 'none',
+                padding: '6px 11px',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '5px',
-                fontSize: '0.78rem',
+                gap: '4px',
+                fontSize: '0.76rem',
                 fontWeight: 800
               }}
-              title="Buka Lembar Rekap Nilai Siswa di Aplikasi Labs"
+              title="Buka Langsung Google Spreadsheet SMKN 2 Depok di Tab Baru"
             >
-              <span style={{ fontSize: '0.95rem' }}>📊</span>
-              <span className="app-header-spreadsheet-text">Rekap Lab</span>
-            </button>
-          )}
-
-          {/* LINK LANGSUNG KE GOOGLE SPREADSHEET SMKN 2 DEPOK */}
-          <a
-            href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: '#047857',
-              borderLeft: '1px solid rgba(255, 255, 255, 0.25)',
-              color: '#ffffff',
-              textDecoration: 'none',
-              padding: '6px 11px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.76rem',
-              fontWeight: 800
-            }}
-            title="Buka Langsung Google Spreadsheet SMKN 2 Depok di Tab Baru"
-          >
-            <span>↗️</span>
-            <span>Sheets</span>
-          </a>
-        </div>
+              <span>↗️</span>
+              <span>Sheets</span>
+            </a>
+          </div>
+        )}
 
         {/* IDENTITAS SISWA / LOGIN & LOGOUT ACTIONS */}
         {isLoggedIn ? (

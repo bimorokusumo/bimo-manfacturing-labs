@@ -713,16 +713,29 @@ const DashboardView = ({
             )}
           </div>
 
-          <button 
-            onClick={() => {
-              if (onSelectLab) {
-                onSelectLab('gradebook');
-              }
-            }}
-            style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)' }}
-          >
-            {isTeacher ? 'Buka Rekap Gradebook Guru' : 'Lihat Rekap Evaluasi'}
-          </button>
+          {isTeacher ? (
+            <button 
+              onClick={() => {
+                if (onSelectLab) {
+                  onSelectLab('gradebook');
+                }
+              }}
+              style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)' }}
+            >
+              📊 Buka Rekap Spreadsheet Guru
+            </button>
+          ) : (
+            <button 
+              onClick={() => {
+                if (onSelectLab) {
+                  onSelectLab('evaluasi');
+                }
+              }}
+              style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)' }}
+            >
+              📝 Mulai Ujian Evaluasi Siswa
+            </button>
+          )}
         </div>
 
       </div>

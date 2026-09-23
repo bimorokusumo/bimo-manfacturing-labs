@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-CF1pRU_Q.js";var d=e(n(),1),f=t(),p=`/**
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-react-CrESwwka.js";import{c as n}from"./vendor-libs-CzXoy4to.js";import{a as r,c as i,d as a,g as o,h as s,i as c,l as ee,m as te,n as l,o as ne,p as re,s as ie,u}from"./index-DsbRRVDd.js";var d=e(n(),1),f=t(),p=`/**
  * =============================================================================
  * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
  * =============================================================================
@@ -19,13 +19,8 @@ import{r as e}from"./rolldown-runtime-hePW80VL.js";import{s as t}from"./vendor-r
  *    - 📊 Rekap Seluruh Lab (Master Summary)
  *    - 📥 Data Masuk (Raw Data)
  * 
- * 2. Di dalam setiap tab Modul Lab, disediakan 2 BAGIAN UTAMA:
- *    - BAGIAN 1: REKAP TUGAS LAB (DAFTAR PER ROW / BARIS)
- *      Setiap baris adalah 1 tugas/kuis, menampilkan total siswa mengumpulkan,
- *      rata-rata nilai, daftar nama yang sudah selesai (dan skornya),
- *      serta daftar nama yang belum mengumpulkan.
- *    - BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (Tabel Siswa x Tugas)
- *      Memperlihatkan ceklis status kelulusan tiap siswa (Hijau = LULUS, Abu-abu = Belum).
+ * 2. Nilai siswa otomatis dipastikan bernilai ASLI (skala 0 - 100, misal: 75, 80, 85, 90, 100)
+ *    Bukan jumlah jawaban benar (1/2/3/4/5/6/7/8/9/10).
  * =============================================================================
  */
 
@@ -163,40 +158,86 @@ function doPost(e) {
     var modul = data.modul || "-";
     var subModul = data.subModul || data.jenisKuis || "-";
     var judulKuis = data.judulKuis || "-";
-    var skor = Number(data.skor !== undefined ? data.skor : 0);
+
+    // Pastikan Nilai Berupa Angka Asli 0 - 100
+    var rawSkor = Number(data.skor !== undefined ? data.skor : 0);
+    var skor = rawSkor;
+    if (skor > 0 && skor <= 10) {
+      // Jika terkirim skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100
+      skor = Math.round(skor * 10);
+    }
+
     var jawabanBenar = data.jawabanBenar !== undefined ? data.jawabanBenar : "-";
     var totalSoal = data.totalSoal !== undefined ? data.totalSoal : "-";
     var status = data.status || (skor >= 75 ? "LULUS" : "REMEDIAL");
     var detailJawaban = typeof data.detailJawaban === "object" ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
 
-    // Simpan baris baru ke sheet data masuk
-    rawSheet.appendRow([
-      nowStr,
-      namaSiswa,
-      nomorAbsen,
-      kelas,
-      sekolah,
-      modul,
-      subModul,
-      judulKuis,
-      skor,
-      jawabanBenar,
-      totalSoal,
-      status,
-      detailJawaban
-    ]);
+    // Periksa apakah format sheet raw menggunakan 12 kolom atau 13 kolom
+    var numCols = rawSheet.getLastColumn();
+    var hasSubModulCol = false;
+    if (rawSheet.getLastRow() > 0 && numCols > 0) {
+      var hRow = rawSheet.getRange(1, 1, 1, Math.min(numCols, 15)).getValues()[0];
+      for (var c = 0; c < hRow.length; c++) {
+        if (String(hRow[c] || "").toLowerCase().indexOf("sub") !== -1) {
+          hasSubModulCol = true;
+          break;
+        }
+      }
+    }
+
+    var newRowData;
+    if (hasSubModulCol) {
+      // Format 13 Kolom (ada Sub-Kuis): Skor di Kolom 9 (I)
+      newRowData = [
+        nowStr,
+        namaSiswa,
+        nomorAbsen,
+        kelas,
+        sekolah,
+        modul,
+        subModul,
+        judulKuis,
+        skor,
+        jawabanBenar,
+        totalSoal,
+        status,
+        detailJawaban
+      ];
+    } else {
+      // Format 12 Kolom Standar: Skor di Kolom 8 (H)
+      newRowData = [
+        nowStr,
+        namaSiswa,
+        nomorAbsen,
+        kelas,
+        sekolah,
+        modul,
+        judulKuis,
+        skor,
+        jawabanBenar,
+        totalSoal,
+        status,
+        detailJawaban
+      ];
+    }
+
+    rawSheet.appendRow(newRowData);
 
     var lastRow = rawSheet.getLastRow();
     rawSheet.setRowHeight(lastRow, 26);
     rawSheet.getRange(lastRow, 3).setHorizontalAlignment("center");
     rawSheet.getRange(lastRow, 4).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, 9).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, 10).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, 11).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, 12).setHorizontalAlignment("center");
 
-    var scoreCell = rawSheet.getRange(lastRow, 9);
-    var statusCell = rawSheet.getRange(lastRow, 12);
+    var scoreCol = hasSubModulCol ? 9 : 8;
+    var statusCol = hasSubModulCol ? 12 : 11;
+
+    rawSheet.getRange(lastRow, scoreCol).setHorizontalAlignment("center");
+    rawSheet.getRange(lastRow, scoreCol + 1).setHorizontalAlignment("center");
+    rawSheet.getRange(lastRow, scoreCol + 2).setHorizontalAlignment("center");
+    rawSheet.getRange(lastRow, statusCol).setHorizontalAlignment("center");
+
+    var scoreCell = rawSheet.getRange(lastRow, scoreCol);
+    var statusCell = rawSheet.getRange(lastRow, statusCol);
     scoreCell.setFontWeight("bold");
     statusCell.setFontWeight("bold");
 
@@ -212,7 +253,7 @@ function doPost(e) {
 
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
-      message: "Data nilai " + namaSiswa + " berhasil dicatat ke spreadsheet.",
+      message: "Data nilai " + namaSiswa + " (" + skor + ") berhasil dicatat ke spreadsheet.",
       row: lastRow
     })).setMimeType(ContentService.MimeType.JSON);
 
@@ -263,11 +304,11 @@ function tampilkanPanduan() {
     "   🛡️ Safety Lab, ⚙️ Machine Lab, 🔪 Alat Pemotong, 🌡️ Heat Treatment, dll.
 
 " +
-    "2. Di dalam tiap tab modul lab terdapat:
+    "2. Nilai yang ditampilkan adalah Nilai Asli (Skala 0 - 100, misal: 80, 85, 90, 100).
 " +
-    "   - Bagian 1: Daftar tugas-tugas lab dibuat per row/baris (lengkap dengan nama siswa yang sudah & belum mengumpulkan).
+    "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama yang sudah & belum).
 " +
-    "   - Bagian 2: Matriks ceklis nilai siswa (warna hijau untuk Lulus, abu-abu untuk Belum).
+    "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Abu-abu = Belum).
 
 " +
     "3. Tab '📊 Rekap Seluruh Lab' memperlihatkan status penyelesaian seluruh siswa di semua lab.
@@ -277,7 +318,7 @@ function tampilkanPanduan() {
   SpreadsheetApp.getUi().alert("Panduan Rekap Nilai BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
 }
 
-// ALIAS FUNGSI: Agar jika guru menekan tombol '▷ Jalankan' di toolbar Apps Script tetap berjalan sempurna
+// ALIAS: Jika guru menekan tombol '▷ Jalankan' di toolbar atas Apps Script
 function buatMatriksRekapPengumpulan() {
   buatSemuaTabModulLab();
 }
@@ -304,11 +345,11 @@ function buatSemuaTabModulLab() {
 
   // 1. Ekstrak data siswa unik (diurutkan berdasarkan No. Absen lalu Nama)
   var studentsMap = {};
-  allRows.forEach(function(r) {
-    var nama = String(r[1] || "").trim();
+  allRows.forEach(function(parsed) {
+    var nama = parsed.nama;
     if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
-    var absen = String(r[2] || "-");
-    var kelas = String(r[3] || "-");
+    var absen = parsed.absen || "-";
+    var kelas = parsed.kelas || "-";
     var key = nama.toLowerCase();
 
     if (!studentsMap[key]) {
@@ -323,16 +364,16 @@ function buatSemuaTabModulLab() {
       if (studentsMap[key].kelas === "-" && kelas !== "-") studentsMap[key].kelas = kelas;
     }
 
-    var quizTitle = String(r[7] || r[6] || "").trim();
-    var modulName = String(r[5] || "").trim();
-    var score = Number(r[8] !== undefined ? r[8] : (r[7] !== undefined ? r[7] : 0));
+    var quizTitle = parsed.judulKuis || "";
+    var modulName = parsed.modul || "";
+    var score = parsed.skor; // Nilai asli 0 - 100
     var matched = identifyLabAndTask(modulName, quizTitle);
 
     var taskFullKey = matched.labId + "_" + matched.taskKey;
     if (studentsMap[key].scoresByTask[taskFullKey] === undefined || score > studentsMap[key].scoresByTask[taskFullKey].skor) {
       studentsMap[key].scoresByTask[taskFullKey] = {
         skor: score,
-        waktu: String(r[0] || ""),
+        waktu: parsed.waktu || "",
         labId: matched.labId,
         taskKey: matched.taskKey,
         taskName: matched.taskName
@@ -358,7 +399,7 @@ function buatSemuaTabModulLab() {
   try {
     SpreadsheetApp.getUi().alert("✅ Berhasil!
 
-Seluruh tab modul lab (Safety Lab, Machine Lab, Alat Pemotong, Heat Treatment, dll) dan lembar '📊 Rekap Seluruh Lab' telah berhasil dibuat sesuai sidebar website.");
+Seluruh tab modul lab (Safety Lab, Machine Lab, Alat Pemotong, Heat Treatment, dll) dan lembar '📊 Rekap Seluruh Lab' telah berhasil dibuat dengan NILAI ASLI siswa.");
   } catch (e) {}
 }
 
@@ -429,8 +470,8 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
     "Lulus (>=75)",
     "Remedial (<75)",
     "% Kelulusan",
-    "Rata-rata Nilai",
-    "Daftar Siswa yang Sudah Mengumpulkan (Lengkap dg Nilai)",
+    "Rata-rata Nilai Asli",
+    "Daftar Siswa yang Sudah Mengumpulkan (Lengkap dg Nilai Asli)",
     "Daftar Siswa yang Belum Mengumpulkan"
   ];
   sheet.appendRow(taskHeaders);
@@ -444,7 +485,6 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   sheet.setRowHeight(5, 30);
 
   // ISI DATA ROW UNTUK SETIAP TUGAS LAB
-  var taskRowStart = 6;
   var noTask = 1;
 
   tasks.forEach(function(t) {
@@ -523,7 +563,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (STATUS PENGUMPULAN PER SISWA)
   // ---------------------------------------------------------------------------
   var sec2StartRow = curRow + 1;
-  sheet.appendRow(["📋 BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
+  sheet.appendRow(["📋 BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
   var sec2Title = sheet.getRange(sec2StartRow, 1, 1, 4 + tasks.length + 3);
   sec2Title.merge();
   sec2Title.setBackground("#1e293b");
@@ -538,7 +578,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
     matrixHeaders.push(t.name);
   });
   matrixHeaders.push("Total Selesai");
-  matrixHeaders.push("Rata-rata Nilai");
+  matrixHeaders.push("Rata-rata Nilai Asli");
   matrixHeaders.push("Status Kelengkapan");
 
   sheet.appendRow(matrixHeaders);
@@ -575,7 +615,12 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
         studentScoreSum += rec.skor;
         taskSubmissionCounts[idx]++;
         taskScoreSums[idx] += rec.skor;
-        row.push(rec.skor + " (LULUS)");
+        // Tampilkan Nilai Asli (misal: 85 (LULUS) atau 60 (REMEDIAL))
+        if (rec.skor >= 75) {
+          row.push(rec.skor + " (LULUS)");
+        } else {
+          row.push(rec.skor + " (REMEDIAL)");
+        }
       } else {
         row.push("⏳ Belum");
       }
@@ -604,9 +649,13 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
       if (val.indexOf("Belum") !== -1) {
         cell.setBackground("#f1f5f9");
         cell.setFontColor("#94a3b8");
-      } else {
+      } else if (val.indexOf("LULUS") !== -1) {
         cell.setBackground("#dcfce7");
         cell.setFontColor("#166534");
+        cell.setFontWeight("bold");
+      } else {
+        cell.setBackground("#fee2e2");
+        cell.setFontColor("#991b1b");
         cell.setFontWeight("bold");
       }
     }
@@ -659,7 +708,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
     sheet.setColumnWidth(5 + i, 190); // Kolom Tugas
   }
   sheet.setColumnWidth(matrixHeaders.length - 2, 130); // Total Selesai
-  sheet.setColumnWidth(matrixHeaders.length - 1, 110); // Rata-rata
+  sheet.setColumnWidth(matrixHeaders.length - 1, 130); // Rata-rata Nilai Asli
   sheet.setColumnWidth(matrixHeaders.length, 140);     // Status
 }
 
@@ -874,7 +923,97 @@ function identifyLabAndTask(modulStr, quizStr) {
 
 /**
  * =============================================================================
- * 7. HELPER: AMBIL SELURUH DATA BARIS DARI SPREADSHEET (TERTINGGI PER SISWA)
+ * 7. HELPER: PARSING DATA BARIS SECARA CERDAS & DETEKSI NILAI ASLI (0 - 100)
+ * =============================================================================
+ */
+function parseRowData(row, headerMap) {
+  var nama = "";
+  var absen = "-";
+  var kelas = "-";
+  var sekolah = "-";
+  var modul = "";
+  var judulKuis = "";
+  var skor = 0;
+  var waktu = "";
+
+  if (headerMap) {
+    if (headerMap.waktu !== undefined) waktu = String(row[headerMap.waktu] || "");
+    if (headerMap.nama !== undefined) nama = String(row[headerMap.nama] || "").trim();
+    if (headerMap.absen !== undefined) absen = String(row[headerMap.absen] !== undefined ? row[headerMap.absen] : "-").trim();
+    if (headerMap.kelas !== undefined) kelas = String(row[headerMap.kelas] || "-").trim();
+    if (headerMap.sekolah !== undefined) sekolah = String(row[headerMap.sekolah] || "-").trim();
+    if (headerMap.modul !== undefined) modul = String(row[headerMap.modul] || "").trim();
+    if (headerMap.kuis !== undefined) judulKuis = String(row[headerMap.kuis] || "").trim();
+    if (headerMap.nilai !== undefined) skor = Number(row[headerMap.nilai]);
+  }
+
+  if (!waktu) waktu = String(row[0] || "");
+  if (!nama) nama = String(row[1] || row[2] || "").trim();
+  if (absen === "-") absen = String(row[2] || "-").trim();
+  if (kelas === "-") kelas = String(row[3] || "-").trim();
+  if (!modul) modul = String(row[5] || "").trim();
+
+  if (!judulKuis) {
+    var candidate1 = String(row[7] || "").trim();
+    var candidate2 = String(row[6] || "").trim();
+    if (isNaN(Number(candidate1)) && candidate1.length > 3) {
+      judulKuis = candidate1;
+    } else if (isNaN(Number(candidate2)) && candidate2.length > 3) {
+      judulKuis = candidate2;
+    } else {
+      judulKuis = candidate2 || candidate1;
+    }
+  }
+
+  // DETEKSI NILAI ASLI SISWA (0 - 100):
+  // 1. Cek apakah di kolom nilai (indeks 7 atau 8) terdapat nilai asli (>= 15 s.d 100)
+  var foundScore = null;
+  var val7 = Number(row[7]);
+  var val8 = Number(row[8]);
+
+  if (!isNaN(val7) && val7 >= 15 && val7 <= 100) {
+    foundScore = val7;
+  } else if (!isNaN(val8) && val8 >= 15 && val8 <= 100) {
+    foundScore = val8;
+  } else {
+    // 2. Scan kolom lain untuk menemukan nilai riil 0 - 100
+    for (var j = 6; j < Math.min(row.length, 11); j++) {
+      var num = Number(row[j]);
+      if (!isNaN(num) && num >= 15 && num <= 100) {
+        foundScore = num;
+        break;
+      }
+    }
+  }
+
+  if (foundScore !== null) {
+    skor = foundScore;
+  } else {
+    // 3. Jika nilainya hanya tersimpan berupa jumlah benar (1 - 10), ubah ke skala 100
+    for (var k = 7; k < Math.min(row.length, 10); k++) {
+      var n = Number(row[k]);
+      if (!isNaN(n) && n > 0 && n <= 10) {
+        skor = Math.round(n * 10);
+        break;
+      }
+    }
+  }
+
+  return {
+    waktu: waktu,
+    nama: nama,
+    absen: absen,
+    kelas: kelas,
+    sekolah: sekolah,
+    modul: modul,
+    judulKuis: judulKuis,
+    skor: skor
+  };
+}
+
+/**
+ * =============================================================================
+ * 8. HELPER: AMBIL SELURUH DATA BARIS DARI SPREADSHEET (TERTINGGI PER SISWA)
  * =============================================================================
  */
 function getAllDataRows(ss) {
@@ -883,7 +1022,7 @@ function getAllDataRows(ss) {
 
   sheets.forEach(function(sheet) {
     var name = sheet.getName();
-    // Lewati sheet matriks atau sheet hasil render
+    // Lewati sheet matriks atau sheet hasil render lab
     if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("⚙️") !== -1 || name.indexOf("🔪") !== -1 || name.indexOf("🌡️") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("⚡") !== -1 || name.indexOf("📏") !== -1 || name.indexOf("📐") !== -1 || name.indexOf("🏭") !== -1 || name.indexOf("🎓") !== -1 || name.indexOf("📋") !== -1) {
       return;
     }
@@ -892,10 +1031,24 @@ function getAllDataRows(ss) {
     if (data.length <= 1) return;
 
     var headerRowIdx = -1;
+    var headerMap = {};
+
     for (var i = 0; i < Math.min(data.length, 5); i++) {
-      var rowStr = data[i].join(" ").toLowerCase();
+      var row = data[i];
+      var rowStr = row.join(" ").toLowerCase();
       if (rowStr.indexOf("nama") !== -1 && (rowStr.indexOf("nilai") !== -1 || rowStr.indexOf("kuis") !== -1 || rowStr.indexOf("skor") !== -1)) {
         headerRowIdx = i;
+        for (var c = 0; c < row.length; c++) {
+          var h = String(row[c] || "").toLowerCase().trim();
+          if (h.indexOf("waktu") !== -1 || h.indexOf("tanggal") !== -1) headerMap.waktu = c;
+          else if (h.indexOf("nama") !== -1 && h.indexOf("kuis") === -1) headerMap.nama = c;
+          else if (h.indexOf("absen") !== -1) headerMap.absen = c;
+          else if (h.indexOf("kelas") !== -1) headerMap.kelas = c;
+          else if (h.indexOf("sekolah") !== -1) headerMap.sekolah = c;
+          else if (h.indexOf("modul") !== -1 && h.indexOf("sub") === -1) headerMap.modul = c;
+          else if (h.indexOf("kuis") !== -1 || h.indexOf("asesmen") !== -1) headerMap.kuis = c;
+          else if (h.indexOf("nilai") !== -1 || h.indexOf("skor") !== -1) headerMap.nilai = c;
+        }
         break;
       }
     }
@@ -904,19 +1057,12 @@ function getAllDataRows(ss) {
 
     for (var r = headerRowIdx + 1; r < data.length; r++) {
       var row = data[r];
-      var studentName = String(row[1] || "").trim();
-      var quizTitle = String(row[7] || row[6] || "").trim();
-      var score = Number(row[8] !== undefined ? row[8] : (row[7] !== undefined ? row[7] : 0));
+      var parsed = parseRowData(row, headerMap);
 
-      if (typeof row[0] === "number" && isNaN(new Date(row[1]).getTime())) {
-        studentName = String(row[2] || "").trim();
-        quizTitle = String(row[7] || row[6] || "").trim();
-      }
-
-      if (studentName && quizTitle && studentName.toLowerCase().indexOf("percobaan") === -1) {
-        var studentKey = studentName.toLowerCase() + "_" + quizTitle.toLowerCase();
-        if (!bestRows[studentKey] || score > Number(bestRows[studentKey][8] || bestRows[studentKey][7] || 0)) {
-          bestRows[studentKey] = row;
+      if (parsed.nama && parsed.judulKuis && parsed.nama.toLowerCase().indexOf("percobaan") === -1) {
+        var studentKey = parsed.nama.toLowerCase() + "_" + parsed.judulKuis.toLowerCase();
+        if (!bestRows[studentKey] || parsed.skor > bestRows[studentKey].skor) {
+          bestRows[studentKey] = parsed;
         }
       }
     }
@@ -929,8 +1075,9 @@ function getAllDataRows(ss) {
     var firstSheet = ss.getSheets()[0];
     var curData = firstSheet.getDataRange().getValues();
     for (var i = 1; i < curData.length; i++) {
-      if (curData[i][1] && String(curData[i][1]).toLowerCase().indexOf("percobaan") === -1) {
-        result.push(curData[i]);
+      var parsedFallback = parseRowData(curData[i], null);
+      if (parsedFallback.nama && parsedFallback.nama.toLowerCase().indexOf("percobaan") === -1) {
+        result.push(parsedFallback);
       }
     }
   }
@@ -940,14 +1087,13 @@ function getAllDataRows(ss) {
 
 /**
  * =============================================================================
- * 8. HELPER: CARI ATAU BUAT SHEET RAW DATA MASUK
+ * 9. HELPER: CARI ATAU BUAT SHEET RAW DATA MASUK
  * =============================================================================
  */
 function getOrCreateRawSheet(ss) {
   var rawName = "📥 Data Masuk (Raw Data)";
   var sheet = ss.getSheetByName(rawName);
   if (!sheet) {
-    // Coba gunakan sheet pertama jika masih bernama Sheet1
     var firstSheet = ss.getSheets()[0];
     var firstSheetName = firstSheet.getName();
     if (firstSheetName === "Sheet1" || firstSheetName === "Halaman1" || firstSheetName === "Jawaban Formulir 1") {
@@ -965,8 +1111,7 @@ function getOrCreateRawSheet(ss) {
       "No. Absen",
       "Kelas / Jurusan",
       "Sekolah / Instansi",
-      "Modul Lab (Sidebar)",
-      "Sub-Kuis / Lembar",
+      "Modul Laboratorium",
       "Nama Kuis / Asesmen",
       "Nilai (0 - 100)",
       "Jawaban Benar",
@@ -987,14 +1132,13 @@ function getOrCreateRawSheet(ss) {
     sheet.setColumnWidth(3, 85);
     sheet.setColumnWidth(4, 120);
     sheet.setColumnWidth(5, 170);
-    sheet.setColumnWidth(6, 160);
-    sheet.setColumnWidth(7, 200);
-    sheet.setColumnWidth(8, 240);
+    sheet.setColumnWidth(6, 170);
+    sheet.setColumnWidth(7, 240);
+    sheet.setColumnWidth(8, 110);
     sheet.setColumnWidth(9, 110);
-    sheet.setColumnWidth(10, 110);
-    sheet.setColumnWidth(11, 100);
-    sheet.setColumnWidth(12, 110);
-    sheet.setColumnWidth(13, 280);
+    sheet.setColumnWidth(10, 100);
+    sheet.setColumnWidth(11, 110);
+    sheet.setColumnWidth(12, 280);
   }
 
   return sheet;

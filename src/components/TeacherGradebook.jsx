@@ -558,8 +558,12 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
 
   // ISI ROW DATA SETIAP SISWA
   var noSiswa = 1;
-  var taskSubmissionCounts = new Array(tasks.length).fill(0);
-  var taskScoreSums = new Array(tasks.length).fill(0);
+  var taskSubmissionCounts = [];
+  var taskScoreSums = [];
+  for (var ti = 0; ti < tasks.length; ti++) {
+    taskSubmissionCounts.push(0);
+    taskScoreSums.push(0);
+  }
 
   sortedStudentKeys.forEach(function(k) {
     var s = studentsMap[k];

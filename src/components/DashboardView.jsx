@@ -75,12 +75,12 @@ const LABS_CONFIG = [
     id: 'measuring',
     title: 'Alat Ukur Presisi',
     category: 'METROLOGI',
-    desc: 'Pelatihan membaca jangka sorong skala 0.05 & 0.02 mm, dial caliper, mikrometer sekrup 0.01 mm, dan height gauge.',
+    desc: 'Simulasi interaktif, diagram anatomi berlabel & foto fisik nyata jangka sorong, mikrometer, height gauge, dial indicator, feeler gauge, dan gauge block.',
     image: '/assets/images/labs/measuring_lab.jpg',
     badgeBg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     badgeColor: '#ffffff',
     accentColor: '#059669',
-    chips: ['Ketelitian 0.01 mm', 'Latihan Interaktif']
+    chips: ['Ketelitian 0.01 mm', '🔬 Anatomi & Komponen', 'Latihan Interaktif']
   },
   {
     id: 'design',

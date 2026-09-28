@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradFeeler" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081b24" />
+      <stop offset="50%" stop-color="#0f2b38" />
+      <stop offset="100%" stop-color="#040e14" />
+    </linearGradient>
+
+    <!-- Spring Steel Blade Gradient -->
+    <linearGradient id="bladeSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="30%" stop-color="#cbd5e1" />
+      <stop offset="70%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <!-- Holder Steel Casing -->
+    <linearGradient id="holderSteel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Brass Pivot Screw -->
+    <linearGradient id="pivotKnurl" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+
+    <filter id="shadowFeeler" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGradFeeler)" stroke="#0e7490" stroke-width="2"/>
+
+  <!-- Blueprint Subtle Grid -->
+  <pattern id="gridFeeler" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0e7490" stroke-width="0.7" stroke-opacity="0.4" />
+  </pattern>
+  <rect width="960" height="540" rx="16" fill="url(#gridFeeler)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(40, 28)">
+    <rect width="880" height="48" rx="8" fill="#0e3b4d" stroke="#0891b2" stroke-width="1.2"/>
+    <rect x="0" y="0" width="8" height="48" rx="4" fill="#06b6d4"/>
+    <text x="24" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#f8fafc" letter-spacing="0.5">
+      ANATOMI &amp; KOMPONEN FEELER GAUGE (KALIBER CELAH PRESISI)
+    </text>
+    <text x="24" y="41" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" fill="#a5f3fc">
+      Standar Metrologi Industri DIN 2275 • Bilah Baja Pegas 0,02 s.d. 1,00 mm • Pemeriksaan Celah Katup &amp; Ruang Bebas Mesin
+    </text>
+    <rect x="710" y="10" width="155" height="28" rx="6" fill="#0891b2" fill-opacity="0.3" stroke="#06b6d4" stroke-width="1"/>
+    <text x="787" y="28" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#22d3ee" text-anchor="middle">
+      TACTILE SLIGHT DRAG
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- FEELER GAUGE VECTOR ARTWORK (CENTERED X=500, Y=260) -->
+  <!-- ============================================================== -->
+  <g id="feelerVector" transform="translate(470, 250)" filter="url(#shadowFeeler)">
+    
+    <!-- Fanned out Blades (Bilah Mengembang) -->
+    <!-- Blade 1: 0.05 mm (top-most fan) -->
+    <g transform="rotate(-55, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.05 mm</text>
+    </g>
+
+    <!-- Blade 2: 0.10 mm -->
+    <g transform="rotate(-40, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.10 mm</text>
+    </g>
+
+    <!-- Blade 3: 0.15 mm -->
+    <g transform="rotate(-25, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.15 mm</text>
+    </g>
+
+    <!-- Blade 4: 0.20 mm (Active/Highlighted blade in green) -->
+    <g transform="rotate(-10, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 205,10 Q 230,0 205,-10 Z" fill="#f1f5f9" stroke="#10b981" stroke-width="1.8"/>
+      <text x="120" y="4" font-size="10" font-weight="900" fill="#047857" text-anchor="middle">0.20 mm / .008"</text>
+      <!-- Inspection gap insertion simulation -->
+      <line x1="205" y1="-10" x2="205" y2="10" stroke="#10b981" stroke-width="2"/>
+    </g>
+
+    <!-- Blade 5: 0.25 mm -->
+    <g transform="rotate(5, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.25 mm</text>
+    </g>
+
+    <!-- Blade 6: 0.30 mm -->
+    <g transform="rotate(20, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.30 mm</text>
+    </g>
+
+    <!-- Blade 7: 0.50 mm (lower stack) -->
+    <g transform="rotate(35, -80, 0)">
+      <path d="M -80,-12 L -80,12 L 200,9 Q 225,0 200,-9 Z" fill="url(#bladeSteel)" stroke="#475569" stroke-width="1"/>
+      <text x="120" y="4" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">0.50 mm</text>
+    </g>
+
+    <!-- Protective Steel Shell / Case (Cangkang Dudukan Baja) pointing to left -->
+    <g transform="translate(-80, 0)">
+      <!-- Main Handle Body -->
+      <path d="M -20,-24 
+               L -180,-24 
+               Q -210,0 -180,24 
+               L -20,24 
+               Q 15,24 20,0 
+               Q 15,-24 -20,-24 Z" 
+            fill="url(#holderSteel)" stroke="#64748b" stroke-width="2"/>
+      
+      <!-- Engraved brand / standard label on handle -->
+      <text x="-105" y="-3" font-size="10" font-weight="900" fill="#f8fafc" text-anchor="middle" letter-spacing="1">FEELER GAUGE</text>
+      <text x="-105" y="12" font-size="8" font-weight="700" fill="#38bdf8" text-anchor="middle">DIN 2275 • 0.02 - 1.00 mm</text>
+
+      <!-- Thumb cutout notch on case for easy blade fanning -->
+      <path d="M -25,-24 Q -10,-10 5,-24 Z" fill="#081b24" stroke="#64748b"/>
+
+      <!-- Knurled Locking Nut & Pivot Screw (Baut Poros Pengunci Kuningan) -->
+      <circle cx="0" cy="0" r="16" fill="url(#pivotKnurl)" stroke="#78350f" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="12" fill="none" stroke="#78350f" stroke-width="1" stroke-dasharray="3,2"/>
+      <circle cx="0" cy="0" r="5" fill="#451a03"/>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALLOUT LABELS & LEADER LINES -->
+  <!-- ============================================================== -->
+  
+  <!-- 1. Bilah Baja Pegas Presisi -->
+  <g transform="translate(710, 110)">
+    <line x1="-15" y1="20" x2="-140" y2="40" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-140" cy="40" r="4" fill="#06b6d4"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#06b6d4" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#06b6d4"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">1</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Bilah Baja Pegas (Blades)</text>
+    <text x="40" y="38" font-size="9.5" fill="#a5f3fc">Hardened spring steel lentur</text>
+  </g>
+
+  <!-- 2. Cangkang Rangka Pelindung (Handle) -->
+  <g transform="translate(40, 220)">
+    <line x1="220" y1="25" x2="290" y2="250" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="290" cy="250" r="4" fill="#38bdf8"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#38bdf8"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">2</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Cangkang Pelindung (Case)</text>
+    <text x="40" y="38" font-size="9.5" fill="#7dd3fc">Gagang penahan bilah saat disimpan</text>
+  </g>
+
+  <!-- 3. Baut Poros Pengunci (Knurled Nut) -->
+  <g transform="translate(40, 345)">
+    <line x1="220" y1="15" x2="390" y2="250" stroke="#eab308" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="390" cy="250" r="4" fill="#eab308"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#eab308" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#eab308"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">3</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Mur Poros (Knurled Nut)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fde68a">Atur kekencangan ayunan bilah</text>
+  </g>
+
+  <!-- 4. Grafir Ukuran Tebal (Etched Markings) -->
+  <g transform="translate(710, 230)">
+    <line x1="-15" y1="20" x2="-120" y2="20" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-120" cy="20" r="4" fill="#10b981"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#10b981"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">4</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Grafir Ukuran Tebal</text>
+    <text x="40" y="38" font-size="9.5" fill="#6ee7b7">Tertulis jelas dalam mm &amp; inch</text>
+  </g>
+
+  <!-- 5. Ujung Bilah Membulat (Rounded Tip) -->
+  <g transform="translate(710, 350)">
+    <line x1="-15" y1="20" x2="-40" y2="-65" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-40" cy="-65" r="4" fill="#f59e0b"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f59e0b"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">5</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Ujung Membulat (Radius Tip)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fcd34d">Mudah diselipkan tanpa mencakar</text>
+  </g>
+
+  <!-- 6. Sensasi Uji Celah (Tactile Drag) -->
+  <g transform="translate(40, 95)">
+    <line x1="220" y1="40" x2="600" y2="200" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="600" cy="200" r="4" fill="#ec4899"/>
+    <rect width="210" height="52" rx="8" fill="#0e3b4d" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ec4899"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">6</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Sensasi Luncur (Slight Drag)</text>
+    <text x="40" y="38" font-size="9.5" fill="#f472b6">Pas dan tidak boleh dipaksa tekuk</text>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <rect x="40" y="492" width="880" height="30" rx="6" fill="#040e14" stroke="#0891b2"/>
+  <text x="55" y="512" font-size="10" font-weight="700" fill="#22d3ee">KOMBINASI BILAH:</text>
+  <text x="175" y="512" font-size="9.5" fill="#a5f3fc">
+    Untuk mengukur celah 0,35 mm, Anda dapat menggabungkan bilah 0,15 mm + 0,20 mm yang dibersihkan dari debu sebelum diselipkan.
+  </text>
+</svg>

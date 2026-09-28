@@ -63,6 +63,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
     ],
     measuring: [
       { id: 'measuring', label: 'Simulator Kaliper & Mikrometer', icon: '📏' },
+      { id: 'measuring-anatomy', label: 'Anatomi & Komponen Alat Ukur', icon: '🔬' },
       { id: 'measuring-diagnostic', label: 'Tes Diagnostik Alat Ukur', icon: '📋', isDiag: true }
     ],
     design: [
@@ -82,6 +83,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const isLabActive = (menuId) => {
     if (activeMenu === menuId) return true;
     if (activeMenu === `${menuId}-diagnostic`) return true;
+    if (menuId === 'measuring' && (activeMenu === 'measuring' || activeMenu === 'measuring-anatomy' || activeMenu === 'measuring-diagnostic')) return true;
     if (menuId === 'heat-treatment' && activeMenu.startsWith('heat-treatment-')) return true;
     if (menuId === 'mechanics' && activeMenu.startsWith('mechanics-')) return true;
     return false;

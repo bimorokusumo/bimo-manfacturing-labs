@@ -1,0 +1,285 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradDial" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140e05" />
+      <stop offset="50%" stop-color="#241708" />
+      <stop offset="100%" stop-color="#0b0702" />
+    </linearGradient>
+
+    <!-- Chrome Casing -->
+    <linearGradient id="chromeBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="30%" stop-color="#cbd5e1" />
+      <stop offset="70%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <!-- Dial Face (Crisp Enamel Off-White) -->
+    <radialGradient id="dialEnamel" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="85%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </radialGradient>
+
+    <!-- Brass Stem & Gears -->
+    <linearGradient id="brassPart" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ca8a04" />
+      <stop offset="50%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </linearGradient>
+
+    <filter id="shadowDial" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGradDial)" stroke="#78350f" stroke-width="2"/>
+
+  <!-- Blueprint Subtle Grid -->
+  <pattern id="gridDial" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#78350f" stroke-width="0.7" stroke-opacity="0.4" />
+  </pattern>
+  <rect width="960" height="540" rx="16" fill="url(#gridDial)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(40, 28)">
+    <rect width="880" height="48" rx="8" fill="#382109" stroke="#92400e" stroke-width="1.2"/>
+    <rect x="0" y="0" width="8" height="48" rx="4" fill="#f59e0b"/>
+    <text x="24" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#f8fafc" letter-spacing="0.5">
+      ANATOMI &amp; KOMPONEN DIAL INDIKATOR (JAM UKUR PRESISI)
+    </text>
+    <text x="24" y="41" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" fill="#fde68a">
+      Standar Metrologi Industri DIN 878 / ISO 463 • Rentang 0 - 10 mm • Resolusi Ketelitian 0,01 mm (1 Putaran = 1,00 mm)
+    </text>
+    <rect x="710" y="10" width="155" height="28" rx="6" fill="#b45309" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1"/>
+    <text x="787" y="28" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#fbbf24" text-anchor="middle">
+      GEAR TRAIN 300x
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- DIAL INDICATOR VECTOR (CENTERED X=480, Y=260) -->
+  <!-- ============================================================== -->
+  <g id="dialIndicatorVector" transform="translate(480, 250)" filter="url(#shadowDial)">
+    
+    <!-- Top Cap / Dust Dust Cap (Top Spindle Extension) -->
+    <rect x="-8" y="-195" width="16" height="35" rx="3" fill="#64748b" stroke="#334155"/>
+    <circle cx="0" cy="-195" r="7" fill="#475569"/>
+
+    <!-- Bottom Stem (Batang Leher Penjepit Ø8 mm) -->
+    <rect x="-10" y="130" width="20" height="60" fill="url(#chromeBezel)" stroke="#334155" stroke-width="1.2"/>
+    
+    <!-- Spindle Plunger Rod (Poros Geser) -->
+    <rect x="-5" y="190" width="10" height="55" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+    
+    <!-- Contact Point / Stylus Ball (Ujung Sensor Karbida) -->
+    <path d="M -6,245 L 6,245 L 4,260 L -4,260 Z" fill="#94a3b8" stroke="#334155"/>
+    <circle cx="0" cy="265" r="5" fill="#e2e8f0" stroke="#475569" stroke-width="1.2"/>
+    <ellipse cx="-1" cy="263" rx="2" ry="1.2" fill="#ffffff"/>
+
+    <!-- Lug Back Plate (Dudukan Kupingan Belakang) -->
+    <g transform="translate(130, -20)">
+      <path d="M 0,0 L 40,-15 L 40,25 L 0,10 Z" fill="#334155" stroke="#1e293b"/>
+      <circle cx="30" cy="5" r="7" fill="#0f172a" stroke="#64748b" stroke-width="1.5"/>
+    </g>
+
+    <!-- Outer Casing & Bezel Ring (Cincin Putar Luar) -->
+    <circle cx="0" cy="0" r="142" fill="url(#chromeBezel)" stroke="#1e293b" stroke-width="3"/>
+    
+    <!-- Knurled Texture on Bezel Rim -->
+    <circle cx="0" cy="0" r="136" fill="none" stroke="#475569" stroke-width="6" stroke-dasharray="4,3"/>
+
+    <!-- Bezel Clamp Screw (Baut Pengunci Bezel di sudut kanan atas) -->
+    <g transform="translate(95, -100) rotate(45)">
+      <rect x="-8" y="-12" width="16" height="12" rx="2" fill="#eab308" stroke="#78350f"/>
+      <circle cx="0" cy="-6" r="4" fill="#a16207"/>
+    </g>
+
+    <!-- Dial Face (Piringan Jam Putih Bersih) -->
+    <circle cx="0" cy="0" r="126" fill="url(#dialEnamel)" stroke="#94a3b8" stroke-width="1.5"/>
+
+    <!-- Dial Graduations (100 divisions: 0 to 90) -->
+    <!-- Major ticks every 10, intermediate every 5, small every 1 -->
+    <g stroke="#0f172a">
+      <!-- 0 / 100 at 12 o'clock -->
+      <line x1="0" y1="-124" x2="0" y2="-106" stroke-width="2.5"/>
+      <text x="0" y="-93" font-size="13" font-weight="900" fill="#b45309" text-anchor="middle">0</text>
+      
+      <!-- 10 at ~36 deg -->
+      <line x1="72" y1="-100" x2="62" y2="-86" stroke-width="2"/>
+      <text x="56" y="-76" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">10</text>
+
+      <!-- 20 at ~72 deg -->
+      <line x1="117" y1="-38" x2="101" y2="-33" stroke-width="2"/>
+      <text x="90" y="-30" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">20</text>
+
+      <!-- 30 at ~108 deg -->
+      <line x1="117" y1="38" x2="101" y2="33" stroke-width="2"/>
+      <text x="90" y="38" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">30</text>
+
+      <!-- 40 at ~144 deg -->
+      <line x1="72" y1="100" x2="62" y2="86" stroke-width="2"/>
+      <text x="56" y="82" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">40</text>
+
+      <!-- 50 at 6 o'clock (180 deg) -->
+      <line x1="0" y1="124" x2="0" y2="106" stroke-width="2.5"/>
+      <text x="0" y="100" font-size="12" font-weight="900" fill="#0f172a" text-anchor="middle">50</text>
+
+      <!-- 60 at ~216 deg -->
+      <line x1="-72" y1="100" x2="-62" y2="86" stroke-width="2"/>
+      <text x="-56" y="82" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">60</text>
+
+      <!-- 70 at ~252 deg -->
+      <line x1="-117" y1="38" x2="-101" y2="33" stroke-width="2"/>
+      <text x="-90" y="38" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">70</text>
+
+      <!-- 80 at ~288 deg -->
+      <line x1="-117" y1="-38" x2="-101" y2="-33" stroke-width="2"/>
+      <text x="-90" y="-30" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">80</text>
+
+      <!-- 90 at ~324 deg -->
+      <line x1="-72" y1="-100" x2="-62" y2="-86" stroke-width="2"/>
+      <text x="-56" y="-76" font-size="11" font-weight="800" fill="#0f172a" text-anchor="middle">90</text>
+    </g>
+
+    <!-- Sub-Dial (Revolution Counter 0 - 10 mm) at upper quadrant -->
+    <g transform="translate(0, -45)">
+      <circle cx="0" cy="0" r="28" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+      <circle cx="0" cy="0" r="2" fill="#0f172a"/>
+      <!-- Sub-dial ticks -->
+      <line x1="0" y1="-26" x2="0" y2="-21" stroke="#0f172a" stroke-width="1.5"/>
+      <text x="0" y="-14" font-size="7" font-weight="900" fill="#0f172a" text-anchor="middle">0</text>
+      <text x="14" y="2" font-size="6.5" font-weight="700" fill="#0f172a" text-anchor="middle">2</text>
+      <text x="9" y="17" font-size="6.5" font-weight="700" fill="#0f172a" text-anchor="middle">5</text>
+      <text x="-12" y="5" font-size="6.5" font-weight="700" fill="#0f172a" text-anchor="middle">8</text>
+      <!-- Small Hand pointing at 1 mm -->
+      <line x1="0" y1="0" x2="8" y2="-15" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Inscription Text on Dial -->
+    <text x="0" y="24" font-size="8.5" font-weight="900" fill="#047857" text-anchor="middle">0.01 mm</text>
+    <text x="0" y="36" font-size="7" font-weight="700" fill="#64748b" text-anchor="middle">JEWELED 0 - 10 mm</text>
+
+    <!-- Tolerance Limit Markers (Penanda Batas Toleransi Merah di tepi) -->
+    <!-- Lower Limit at -15 (near 85) -->
+    <g transform="rotate(-54)">
+      <polygon points="0,-136 -6,-124 6,-124" fill="#ef4444"/>
+    </g>
+    <!-- Upper Limit at +15 (near 15) -->
+    <g transform="rotate(54)">
+      <polygon points="0,-136 -6,-124 6,-124" fill="#ef4444"/>
+    </g>
+
+    <!-- Main Long Hand (Jarum Penunjuk Panjang Utama) pointing at 25 (90 deg) -->
+    <g transform="rotate(85)">
+      <polygon points="0,-115 -3.5,0 3.5,0" fill="#0f172a"/>
+      <line x1="0" y1="0" x2="0" y2="25" stroke="#0f172a" stroke-width="3"/>
+      <!-- Counter balance circle -->
+      <circle cx="0" cy="18" r="6" fill="#0f172a"/>
+      <!-- Pivot Brass Cap -->
+      <circle cx="0" cy="0" r="7" fill="url(#brassPart)" stroke="#475569" stroke-width="1.2"/>
+      <circle cx="0" cy="0" r="2.5" fill="#f8fafc"/>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALLOUT LABELS & LEADER LINES -->
+  <!-- ============================================================== -->
+  
+  <!-- 1. Cincin Putar Luar (Bezel) -->
+  <g transform="translate(40, 95)">
+    <line x1="220" y1="20" x2="355" y2="170" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="355" cy="170" r="4" fill="#f59e0b"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f59e0b"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">1</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Cincin Bezel (Rotatable Bezel)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fde68a">Diputar untuk kalibrasi titik nol</text>
+  </g>
+
+  <!-- 2. Piringan Skala Utama (Dial Face) -->
+  <g transform="translate(40, 220)">
+    <line x1="220" y1="20" x2="390" y2="280" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="390" cy="280" r="4" fill="#10b981"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#10b981"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">2</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Skala Dial (0 - 100)</text>
+    <text x="40" y="38" font-size="9.5" fill="#a7f3d0">Resolusi 0,01 mm per garis</text>
+  </g>
+
+  <!-- 3. Jarum Penunjuk Utama (Long Pointer) -->
+  <g transform="translate(40, 345)">
+    <line x1="220" y1="20" x2="550" y2="340" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="550" cy="340" r="4" fill="#38bdf8"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#38bdf8"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">3</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Jarum Utama (Long Hand)</text>
+    <text x="40" y="38" font-size="9.5" fill="#7dd3fc">Putar 360° = pergeseran 1 mm</text>
+  </g>
+
+  <!-- 4. Jarum Penghitung Putaran (Revolution Counter) -->
+  <g transform="translate(710, 95)">
+    <line x1="-15" y1="30" x2="-220" y2="110" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-220" cy="110" r="4" fill="#ef4444"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ef4444"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">4</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Penghitung Putaran (Counter)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fca5a5">Menghitung total mm (0-10 mm)</text>
+  </g>
+
+  <!-- 5. Batang Luncur / Leher (Stem Ø8 mm) -->
+  <g transform="translate(710, 220)">
+    <line x1="-15" y1="20" x2="-220" y2="190" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-220" cy="190" r="4" fill="#a855f7"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#a855f7"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">5</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Batang Leher (Stem Ø8 mm)</text>
+    <text x="40" y="38" font-size="9.5" fill="#d8b4fe">Dijepit ke klem magnet stand</text>
+  </g>
+
+  <!-- 6. Poros Geser & Ujung Sensor (Spindle & Stylus) -->
+  <g transform="translate(710, 345)">
+    <line x1="-15" y1="25" x2="-225" y2="160" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-225" cy="160" r="4" fill="#06b6d4"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#06b6d4" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#06b6d4"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">6</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Ujung Sensor Bola (Stylus)</text>
+    <text x="40" y="38" font-size="9.5" fill="#67e8f9">Kontak karbida ke benda kerja</text>
+  </g>
+
+  <!-- 7. Batas Toleransi (Limit Markers) -->
+  <g transform="translate(40, 420)">
+    <line x1="220" y1="10" x2="380" y2="-120" stroke="#f97316" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="380" cy="-120" r="4" fill="#f97316"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f97316"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">7</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Batas Toleransi (Limit Marks)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fdba74">Indikator batas OK/Reject visual</text>
+  </g>
+
+  <!-- 8. Dudukan Kupingan Belakang (Lug Back) -->
+  <g transform="translate(710, 420)">
+    <line x1="-15" y1="10" x2="-90" y2="-160" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-90" cy="-160" r="4" fill="#ec4899"/>
+    <rect width="210" height="52" rx="8" fill="#382109" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ec4899"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">8</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Kupingan Baut (Lug Back)</text>
+    <text x="40" y="38" font-size="9.5" fill="#f472b6">Pengikat belakang ke batang stand</text>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <rect x="40" y="492" width="880" height="30" rx="6" fill="#0b0702" stroke="#92400e"/>
+  <text x="55" y="512" font-size="10" font-weight="700" fill="#fbbf24">PENGUJIAN TIR:</text>
+  <text x="160" y="512" font-size="9.5" fill="#fde68a">
+    Nilai Total Indicator Reading (TIR) didapat dari selisih simpangan jarum tertinggi dikurangi jarum terendah selama 1 putaran 360°.
+  </text>
+</svg>

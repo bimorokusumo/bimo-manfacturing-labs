@@ -161,7 +161,15 @@ function AppInner() {
       case 'welding':
         return <WeldingSimulator onOpenDiagnostic={() => setActiveMenu('welding-diagnostic')} />;
       case 'measuring':
-        return <MeasuringToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('measuring-diagnostic')} />;
+      case 'measuring-anatomy':
+        return (
+          <MeasuringToolsLab
+            initialTab={activeMenu === 'measuring-anatomy' ? 'theory' : 'simulator'}
+            addXP={addXP}
+            addMissionCompleted={addMissionCompleted}
+            onOpenDiagnostic={() => setActiveMenu('measuring-diagnostic')}
+          />
+        );
       case 'safety':
         return <SafetyK3Game onOpenDiagnostic={() => setActiveMenu('safety-diagnostic')} />;
       case 'virtual-bengkel':

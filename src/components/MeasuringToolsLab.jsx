@@ -2,11 +2,681 @@ import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
+import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 
-const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic }) => {
+// =========================================================================
+// DATA ANATOMI & KOMPONEN ALAT UKUR (STANDAR METROLOGI INDUSTRI & KURIKULUM MESIN)
+// =========================================================================
+const TOOL_ANATOMY_DATA = {
+  vernier: {
+    title: 'Jangka Sorong (Vernier Caliper)',
+    standard: 'DIN 862 / ISO 13385-1',
+    resolution: '0.05 mm & 0.02 mm',
+    diagramImg: 'assets/images/measuring_tools/vernier_caliper_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/vernier_caliper_real.jpg',
+    photoCaption: 'Jangka Sorong Vernier Baja Tahan Karat Presisi dengan Rahang Pengukur Luar & Dalam',
+    components: [
+      {
+        num: 1,
+        name: 'Rahang Ukur Luar (External Jaws)',
+        sub: 'Rahang Tetap & Rahang Geser Luar',
+        desc: 'Digunakan untuk mengukur dimensi luar benda kerja seperti diameter luar silinder poros bubut, ketebalan pelat baja, lebar balok, dan dimensi panjang komponen.',
+        tip: 'Rapatkan rahang tanpa menekan berlebihan untuk menghindari kesalahan lentur (Abbe error).'
+      },
+      {
+        num: 2,
+        name: 'Rahang Ukur Dalam (Internal Jaws)',
+        sub: 'Rahang Atas Cakar Tirus',
+        desc: 'Digunakan untuk mengukur diameter lubang dalam silinder poros, rongga tabung, celah alur pasak, atau lebar rongga internal dengan tingkat ketepatan tinggi.',
+        tip: 'Pastikan sumbu cakar rahang tegak lurus sempurna terhadap diameter maksimum lubang silinder.'
+      },
+      {
+        num: 3,
+        name: 'Baut Pengunci (Locking Screw)',
+        sub: 'Knurled Clamp Thumb Screw',
+        desc: 'Berfungsi mengunci rahang geser pada posisinya setelah benda kerja dijepit, sehingga nilai ukuran tidak bergeser saat caliper diangkat untuk dibaca.',
+        tip: 'Kencangkan secukupnya dengan jempol sebelum membaca skala di bawah penerangan lampu yang cukup.'
+      },
+      {
+        num: 4,
+        name: 'Skala Utama (Main Scale Beam)',
+        sub: 'Batang Baja Berskala Milimeter & Inchi',
+        desc: 'Batang utama kaku dengan penandaan garis skala milimeter (0 - 150 mm) pada bagian bawah dan inchi pada bagian atas. Menentukan nilai bilangan bulat.',
+        tip: 'Garis nol skala nonius yang berada di sebelah kanan garis utama menentukan nilai milimeter utuh.'
+      },
+      {
+        num: 5,
+        name: 'Skala Nonius (Vernier Scale)',
+        sub: 'Skala Pembagi Fraksi Ketelitian',
+        desc: 'Skala tambahan pada rahang geser (20 pembagian untuk ketelitian 0.05 mm, atau 50 pembagian untuk ketelitian 0.02 mm) ciptaan Pierre Vernier.',
+        tip: 'Cari satu garis nonius yang berimpit lurus sempurna dengan salah satu garis di skala utama.'
+      },
+      {
+        num: 6,
+        name: 'Tumpuan Jempol (Thumb Rest / Roller)',
+        sub: 'Penahan Luncur Ergonomis',
+        desc: 'Tonjolan bergerigi di bawah rahang geser untuk memudahkan ibu jari operator mendorong dan menarik rahang geser dengan gaya yang terkontrol halus.',
+        tip: 'Gunakan dorongan konstan halus saat mendekati permukaan benda ukur.'
+      },
+      {
+        num: 7,
+        name: 'Tangkai Kedalaman (Depth Measuring Blade)',
+        sub: 'Bilah Tipis Peluncur Belakang',
+        desc: 'Bilah baja pipih di ujung ekor batang utama yang keluar secara proporsional sesuai bukaan rahang luar, khusus mengukur kedalaman lubang buta.',
+        tip: 'Pastikan dasar bidang caliper menempel rata pada bibir lubang referensi.'
+      },
+      {
+        num: 8,
+        name: 'Bidang Bertingkat (Step Measuring Faces)',
+        sub: 'Datum Muka Belakang Rahang',
+        desc: 'Bidang ukur di kepala rahang geser dan rahang tetap untuk mengukur selisih ketinggian atau jarak undakan (step) antar permukaan bertingkat.',
+        tip: 'Letakkan bidang referensi bawah menempel kokoh pada undakan pertama benda kerja.'
+      }
+    ]
+  },
+  micrometer: {
+    title: 'Mikrometer Sekrup Luar (Outside Micrometer)',
+    standard: 'DIN 863 / ISO 3611',
+    resolution: '0.01 mm (Rentang 0 - 25 mm)',
+    diagramImg: 'assets/images/measuring_tools/micrometer_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/micrometer_real.jpg',
+    photoCaption: 'Mikrometer Luar Baja Tempa dengan Landasan Karbida dan Raset Ratchet Stop Presisi',
+    components: [
+      {
+        num: 1,
+        name: 'Landasan Tetap (Anvil)',
+        sub: 'Fixed Anvil with Carbide Tip',
+        desc: 'Landasan diam yang menyatu dengan rangka busur U sebagai bidang datum referensi kontak pertama. Dilengkapi tip tungsten karbida tahan aus.',
+        tip: 'Bersihkan selalu permukaan anvil dengan kertas halus sebelum kalibrasi nol.'
+      },
+      {
+        num: 2,
+        name: 'Poros Ukur Geser (Spindle)',
+        sub: 'Precision Ground Spindle',
+        desc: 'Silinder poros presisi yang bergerak maju-mundur digerakkan oleh ulir transmisi mikro berpresisi tinggi dengan kisar (pitch) tepat 0.50 mm.',
+        tip: 'Jangan pernah memutar spindle hingga menabrak keras anvil tanpa mekanisme ratchet.'
+      },
+      {
+        num: 3,
+        name: 'Tuas Pengunci (Locking Lever / Nut)',
+        sub: 'Spindle Lock Mechanism',
+        desc: 'Tuas mekanis untuk mengunci gerakan spindel secara kokoh agar nilai posisi ukuran tidak bergeser saat mikrometer dilepaskan dari benda kerja.',
+        tip: 'Kunci tuas hanya setelah ratchet berbunyi klik 2-3 kali.'
+      },
+      {
+        num: 4,
+        name: 'Silinder Tetap / Laras (Sleeve / Barrel)',
+        sub: 'Inner Sleeve with Datum Line',
+        desc: 'Silinder tabung tetap yang memuat garis datum acuan horizontal, skala milimeter bulat di sisi atas, dan skala setengah milimeter (0.50 mm) di sisi bawah.',
+        tip: 'Perhatikan apakah garis 0.5 mm di bawah garis datum sudah tampak terbuka atau belum.'
+      },
+      {
+        num: 5,
+        name: 'Bidal / Tabung Putar (Thimble)',
+        sub: 'Rotating Thimble with Vernier Scale',
+        desc: 'Silinder putar keliling yang memuat 50 garis pembagian skala nonius. 1 putaran penuh memajukan spindle sejauh 0.5 mm, sehingga 1 garis bernilai 0.01 mm.',
+        tip: 'Baca garis thimble yang tepat berimpit dengan garis horizontal tengah sleeve.'
+      },
+      {
+        num: 6,
+        name: 'Gigi Gelincir / Raset (Ratchet Stop)',
+        sub: 'Constant Measuring Force Mechanism',
+        desc: 'Mekanisme gesek pegas di ujung bidal yang selip saat tekanan penjepitan mencapai 5 s.d. 10 Newton untuk menjamin gaya ukur konstan seragam.',
+        tip: 'WAJIB diputar 2-3 kali klik saat mendekati kontak benda ukur untuk hasil sahih.'
+      },
+      {
+        num: 7,
+        name: 'Rangka Busur U (Bow Frame)',
+        sub: 'Drop Forged Rigid Steel Frame',
+        desc: 'Rangka baja tempa kaku berkekuatan tinggi yang menahan deformasi lentur elastis saat poros spindel menjepit benda kerja.',
+        tip: 'Gunakan stand mikrometer jika mengukur benda lepas untuk kestabilan maksimum.'
+      },
+      {
+        num: 8,
+        name: 'Pelat Isolator Panas (Thermal Insulator Pad)',
+        sub: 'Heat Protection Grip',
+        desc: 'Pelat plastik isolator termal pada lengkungan rangka U untuk mencegah perpindahan panas tubuh dari jari operator yang dapat memuai rangka mikron.',
+        tip: 'Pegang mikrometer hanya pada bagian isolator ini saat pengukuran berlangsung.'
+      }
+    ]
+  },
+  height: {
+    title: 'Vernier Height Gauge (Pengukur Ketinggian Presisi)',
+    standard: 'DIN 862 / ISO 13225',
+    resolution: '0.02 mm (Rentang 0 - 300 mm)',
+    diagramImg: 'assets/images/measuring_tools/height_gauge_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/height_gauge_real.jpg',
+    photoCaption: 'Vernier Height Gauge Tegak di Atas Meja Perata Granit Hitam Presisi',
+    components: [
+      {
+        num: 1,
+        name: 'Landasan Basis Berat (Heavy Cast Base)',
+        sub: 'Ground Flat Reference Base',
+        desc: 'Basis logam cor masif dengan permukaan bawah yang di-lap super rata agar meluncur mulus dan stabil di atas meja perata granit tanpa goyangan.',
+        tip: 'Jaga kebersihan dasar landasan dan meja granit dari butiran gram/tatal bubut.'
+      },
+      {
+        num: 2,
+        name: 'Tiang Batang Kolom (Main Vertical Beam)',
+        sub: 'Rigid Column with Main Scale',
+        desc: 'Kolom vertikal baja tegak lurus sempurna 90° terhadap basis, memuat skala utama milimeter dengan ketepatan garis tinggi.',
+        tip: 'Pastikan kolom tiang tidak mengalami benturan yang dapat merusak ketegaklurusan.'
+      },
+      {
+        num: 3,
+        name: 'Peluncur Skala Nonius (Vernier Slider / Carriage)',
+        sub: 'Movable Measuring Carriage',
+        desc: 'Rumah blok geser yang meluncur naik-turun sepanjang kolom tiang membawa skala nonius pembacaan beresolusi 0.02 mm.',
+        tip: 'Ketinggian dibaca dari perpaduan garis nol nonius dan skala tiang utama.'
+      },
+      {
+        num: 4,
+        name: 'Cakar Penggores Karbida (Carbide Scriber)',
+        sub: 'Carbide-Tipped Measuring & Marking Jaw',
+        desc: 'Rahang pengukur dengan ujung mata karbida tajam untuk mengukur ketinggian permukaan sekaligus melukis garis acuan tata letak (marking out).',
+        tip: 'Gunakan permukaan bawah scriber untuk pengukuran datum tinggi ke meja.'
+      },
+      {
+        num: 5,
+        name: 'Baut Pengunci Utama (Main Slider Lock Screw)',
+        sub: 'Coarse Lock Clamp',
+        desc: 'Baut penjepit untuk mengunci posisi peluncur setelah didekatkan secara kasar ke posisi ketinggian benda kerja.',
+        tip: 'Kunci baut penyetel halus terlebih dahulu sebelum mengunci baut utama.'
+      },
+      {
+        num: 6,
+        name: 'Sekrup Penyetel Halus (Fine Adjustment Feed Screw)',
+        sub: 'Micrometer Feed Wheel & Screw',
+        desc: 'Roda ulir transmisi mikro untuk menggeser scriber naik atau turun secara sangat lambat dan presisi hingga garis skala berimpit sempurna.',
+        tip: 'Sangat vital untuk menyetel titik sentuh scriber pada permukaan toleransi ketat.'
+      },
+      {
+        num: 7,
+        name: 'Meja Rata Granit (Granite Surface Plate)',
+        sub: 'Primary Datum Reference Plane',
+        desc: 'Meja batu granit alam hitam berkerataan Grade 00 yang menjadi datum referensi nol mutlak untuk seluruh pengukuran height gauge.',
+        tip: 'Height gauge tidak dapat difungsikan tanpa meja perata granit terstandardisasi.'
+      }
+    ]
+  },
+  dial: {
+    title: 'Dial Indikator (Jam Ukur Presisi)',
+    standard: 'DIN 878 / ISO 463',
+    resolution: '0.01 mm (Rentang 0 - 10 mm)',
+    diagramImg: 'assets/images/measuring_tools/dial_indicator_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/dial_indicator_real.jpg',
+    photoCaption: 'Pengujian Kebulatan dan Run-Out Poros Silinder Menggunakan Dial Indicator',
+    components: [
+      {
+        num: 1,
+        name: 'Cincin Putar Luar (Rotatable Bezel)',
+        sub: 'Outer Bezel with Clamping Screw',
+        desc: 'Cincin luar piringan dial yang dapat diputar 360° bersama kaca pelindung untuk menyejajarkan angka 0 tepat pada posisi awal jarum penunjuk (zeroing).',
+        tip: 'Kencangkan baut pengunci bezel setelah jarum nol diposisikan.'
+      },
+      {
+        num: 2,
+        name: 'Piringan Skala Dial (Dial Face 0 - 100)',
+        sub: 'Graduated Dial Plate (100 Divisions)',
+        desc: 'Piringan jam berskala 0 hingga 100 dengan pembagian 0.01 mm per garis. Satu putaran penuh jarum utama (360°) mewakili pergeseran linier 1.00 mm.',
+        tip: 'Skala dibuat dua arah (searah dan berlawanan jarum jam) untuk kemudahan komparasi.'
+      },
+      {
+        num: 3,
+        name: 'Jarum Penunjuk Utama (Main Long Pointer)',
+        sub: 'High Ratio Amplified Needle',
+        desc: 'Jarum penunjuk panjang yang digerakkan oleh mekanisme roda gigi presisi (gear train) dengan rasio pembesaran hingga ~300 kali gerak spindel.',
+        tip: 'Amati arah putaran jarum untuk mengetahui penyimpangan cembung (+) atau cekung (-).'
+      },
+      {
+        num: 4,
+        name: 'Jarum Penghitung Putaran (Revolution Counter)',
+        sub: 'Small Sub-Dial Hand (0 - 10 mm)',
+        desc: 'Jarum kecil pada sub-dial yang mencatat berapa putaran penuh jarum besar telah berputar, menunjukkan total jarak pergeseran dalam milimeter utuh.',
+        tip: 'Cegah kesalahan hitung kelipatan 1 mm saat jarum besar berputar berkali-kali.'
+      },
+      {
+        num: 5,
+        name: 'Batang Leher Penjepit (Stem Ø8 mm)',
+        sub: 'Precision Clamping Sleeve',
+        desc: 'Silinder baja tahan karat berdiameter luar standar Ø8 mm h6 untuk dipasang pada lubang klem magnetic base stand atau pemegang perkakas mesin.',
+        tip: 'Jepit pada bagian stem dengan kencang merata, hindari menjepit poros spindle bergerak.'
+      },
+      {
+        num: 6,
+        name: 'Ujung Sensor Sentuh / Stylus (Contact Point)',
+        sub: 'Replaceable Carbide Ball Tip',
+        desc: 'Ujung kontak sensor berupa bola karbida halus yang bersentuhan langsung dengan permukaan benda kerja. Dapat diganti dengan model rol/pipih.',
+        tip: 'Posisikan spindle sedapat mungkin tegak lurus (90°) dengan permukaan benda ukur.'
+      },
+      {
+        num: 7,
+        name: 'Penanda Batas Toleransi (Limit Markers)',
+        sub: 'Adjustable Red Tolerance Pointers',
+        desc: 'Dua jarum penanda merah yang dapat digeser di sekeliling bezel untuk menandai batas atas (Upper Limit) dan batas bawah (Lower Limit) toleransi produk.',
+        tip: 'Memudahkan inspeksi Quality Control (QC) massal secara visual lulus/gagal (Go / No-Go).'
+      },
+      {
+        num: 8,
+        name: 'Dudukan Kupingan Belakang (Lug Back)',
+        sub: 'Rear Mounting Bracket',
+        desc: 'Plat tutup belakang dengan lubang baut kupingan sebagai opsi pemasangan alternatif ke batang articulated arm magnetic stand.',
+        tip: 'Gunakan lug back jika ruang penjepitan leher stem terbatas di area mesin.'
+      }
+    ]
+  },
+  feeler: {
+    title: 'Feeler Gauge (Kaliber Celah Presisi)',
+    standard: 'DIN 2275 / ISO 3932',
+    resolution: 'Bilah 0.02 mm s.d. 1.00 mm',
+    diagramImg: 'assets/images/measuring_tools/feeler_gauge_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/feeler_gauge_real.jpg',
+    photoCaption: 'Bilah Baja Pegas Feeler Gauge Mengembang Rapi dengan Markings Laser Etched',
+    components: [
+      {
+        num: 1,
+        name: 'Bilah Baja Pegas Presisi (Steel Leaves / Blades)',
+        sub: 'Hardened & Tempered Carbon Spring Steel',
+        desc: 'Lembaran baja tipis berkualitas tinggi yang dikeraskan dan ditemper dengan toleransi ketebalan sangat ketat. Memiliki elastisitas tinggi anti-patah.',
+        tip: 'Jangan pernah menekuk bilah dengan sudut tajam atau memaksanya masuk ke celah sempit.'
+      },
+      {
+        num: 2,
+        name: 'Cangkang / Rangka Pelindung (Protective Steel Shell)',
+        sub: 'Foldable Protective Casing',
+        desc: 'Gagang penutup baja berprofil U yang melindungi bilah-bilah tipis dari tekukan, debu kasar, dan benturan saat disimpan di kotak perkakas.',
+        tip: 'Lipat kembali seluruh bilah ke dalam rangka setelah selesai digunakan.'
+      },
+      {
+        num: 3,
+        name: 'Mur / Baut Poros Pengunci (Knurled Locking Nut)',
+        sub: 'Adjustable Pivot Screw',
+        desc: 'Baut pengencang berulir halus di titik engsel bilah untuk mengatur kelonggaran ayunan bilah atau mengunci bilah tertentu agar tetap terbuka.',
+        tip: 'Longgarkan sedikit mur saat memilah bilah, kencangkan kembali saat inspeksi.'
+      },
+      {
+        num: 4,
+        name: 'Grafir Ukuran Tebal (Laser-Etched Markings)',
+        sub: 'Metric & Inch Nominal Markings',
+        desc: 'Penulisan nominal ketebalan bilah dengan grafir permanen tahan luntur dalam satuan milimeter (mm) dan seperseribu inchi (inch).',
+        tip: 'Jika tulisan grafir aus atau terhapus karat, ukur ulang tebal bilah dengan mikrometer.'
+      },
+      {
+        num: 5,
+        name: 'Ujung Bilah Membulat (Rounded Inspection Tip)',
+        sub: 'Smooth Radius Leading Edge',
+        desc: 'Ujung daun bilah dibentuk radius tumpul halus agar dapat diselipkan ke celah sempit tanpa mencakar atau merusak permukaan komponen mesin.',
+        tip: 'Masukkan bilah secara sejajar searah bidang celah celah.'
+      },
+      {
+        num: 6,
+        name: 'Sensasi Luncur (Tactile Slight Drag / Snug Fit)',
+        sub: 'Standard Inspection Technique',
+        desc: 'Sensasi sentuhan baku metrologi: bilah harus masuk dengan hambatan luncur halus (seperti menarik lembar kertas dari sela buku tebal).',
+        tip: 'Jika bilah longgar tanpa hambatan = celah lebih besar; jika harus ditekan keras = celah terlalu sempit.'
+      }
+    ]
+  },
+  block: {
+    title: 'Gauge Block (Blok Ukur Presisi Johansson)',
+    standard: 'ISO 3650 (Grade 0, 1, 2)',
+    resolution: 'Akurasi Sub-Mikron (±0.0001 mm)',
+    diagramImg: 'assets/images/measuring_tools/gauge_block_anatomy.svg',
+    photoImg: 'assets/images/measuring_tools/gauge_blocks_real.jpg',
+    photoCaption: 'Set Blok Ukur Baja Presisi dalam Kotak Kayu Bersama Dua Blok Wrung Seamless',
+    components: [
+      {
+        num: 1,
+        name: 'Muka Ukur Optik Cermin (Mirror Measuring Faces)',
+        sub: 'Ultra-Flat Lapped Faces (Ra < 0.01 µm)',
+        desc: 'Dua permukaan berlawanan yang dihaluskan dengan proses lapping super presisi hingga mencapai kerataan optik sub-mikron bebas gelombang.',
+        tip: 'Dilarang keras menyentuh muka ukur cermin dengan jari telanjang (keringat asam memicu karat pitting).'
+      },
+      {
+        num: 2,
+        name: 'Grafir Dimensi Nominal (Nominal Dimension Engraving)',
+        sub: 'Laser Etched Size Standard @ 20°C',
+        desc: 'Angka nominal ukuran panjang balok yang terkalibrasi tepat pada suhu standar internasional 20°C (68°F), misalnya 20.000 mm atau 1.005 mm.',
+        tip: 'Selalu lakukan perhitungan kombinasi balok dari digit desimal terkecil.'
+      },
+      {
+        num: 3,
+        name: 'Bidang Samping Non-Ukur (Side Datum Faces)',
+        sub: 'Side Handling & Identification Faces',
+        desc: 'Permukaan sisi samping balok tempat memegang balok dengan sarung tangan katun, memuat nomor seri pabrikan dan tanda grade akurasi.',
+        tip: 'Pegang blok hanya pada bidang samping non-ukur ini.'
+      },
+      {
+        num: 4,
+        name: 'Lapisan Film Wringing (Molecular Adhesion Interface)',
+        sub: 'Van der Waals Molecular Force Binding',
+        desc: 'Bidang kontak antar dua blok yang saling melekat sangat kuat akibat gaya tarik molekuler Van der Waals dan lapisan film minyak ultra-tipis.',
+        tip: 'Lakukan teknik pelengketan: silang 90°, tekan perlahan, putar searah hingga sejajar.'
+      },
+      {
+        num: 5,
+        name: 'Tepi Bevel Pengaman (Safety Chamfered Edges)',
+        sub: 'Micro-Chamfered Corner Protection',
+        desc: 'Sudut-sudut tepi balok dibuat tirus halus (chamfer) untuk mencegah timbulnya tonjolan tajam (burr) yang dapat merusak kerataan saat wringing.',
+        tip: 'Periksa tepi balok terhadap goresan sebelum menggabungkan dua blok.'
+      },
+      {
+        num: 6,
+        name: 'Grade Presisi ISO 3650 (Accuracy Classification)',
+        sub: 'Grade 00, Grade 0, Grade 1, Grade 2',
+        desc: 'Tingkat akurasi internasional: Grade 0 (standar kalibrasi mikrometer/caliper), Grade 1 (toolroom bengkel), Grade 2 (lantai produksi mesin).',
+        tip: 'Blok ukur Grade 0 wajib dikalibrasi ulang berkala oleh laboratorium metrologi terakreditasi.'
+      }
+    ]
+  }
+};
+
+// =========================================================================
+// KOMPONEN TAMPILAN ANATOMI & KOMPONEN ALAT UKUR (INTERAKTIF & RESPONSIF)
+// =========================================================================
+const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
+  const data = TOOL_ANATOMY_DATA[toolKey];
+  const [viewMode, setViewMode] = useState('diagram'); // 'diagram' or 'photo'
+  const [activeCompNum, setActiveCompNum] = useState(1);
+
+  if (!data) return null;
+
+  const currentImage = viewMode === 'diagram' ? data.diagramImg : data.photoImg;
+  const currentTitle = viewMode === 'diagram' ? `Diagram Anatomi & Komponen: ${data.title}` : `Foto Fisik & Kalibrasi: ${data.title}`;
+  const currentCaption = viewMode === 'diagram'
+    ? 'Diagram Teknik Skematik Vektor dengan Penomoran Komponen Anatomi Standar Industri'
+    : data.photoCaption;
+
+  const activeComponent = data.components.find(c => c.num === activeCompNum) || data.components[0];
+
+  return (
+    <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* SECTION HEADER & VIEW CONTROLS */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', borderBottom: '1px solid var(--border-light)', paddingBottom: '16px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '1.3rem' }}>🔬</span>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: 'var(--text-main)' }}>
+              Anatomi &amp; Komponen: {data.title}
+            </h3>
+            <span style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.15)', color: '#047857', fontSize: '0.72rem', fontWeight: 800 }}>
+              {data.standard}
+            </span>
+            <span style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.15)', color: '#0284c7', fontSize: '0.72rem', fontWeight: 800 }}>
+              {data.resolution}
+            </span>
+          </div>
+          <p style={{ margin: '6px 0 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            Pelajari setiap komponen struktural instrumen pengukuran melalui diagram skematik berlabel dan foto fisik asli.
+          </p>
+        </div>
+
+        {/* TOGGLE BUTTONS */}
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => {
+              sound.playClick();
+              setViewMode('diagram');
+            }}
+            style={{
+              padding: '7px 14px',
+              borderRadius: '8px',
+              border: viewMode === 'diagram' ? '1.5px solid #10b981' : '1px solid var(--border-light)',
+              background: viewMode === 'diagram' ? '#10b981' : 'var(--bg-card)',
+              color: viewMode === 'diagram' ? '#000000' : 'var(--text-main)',
+              fontWeight: 800,
+              fontSize: '0.78rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+          >
+            <span>📐</span>
+            <span>Diagram Anatomi Berlabel</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sound.playClick();
+              setViewMode('photo');
+            }}
+            style={{
+              padding: '7px 14px',
+              borderRadius: '8px',
+              border: viewMode === 'photo' ? '1.5px solid #0284c7' : '1px solid var(--border-light)',
+              background: viewMode === 'photo' ? '#0284c7' : 'var(--bg-card)',
+              color: viewMode === 'photo' ? '#ffffff' : 'var(--text-main)',
+              fontWeight: 800,
+              fontSize: '0.78rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+          >
+            <span>📸</span>
+            <span>Foto Fisik Nyata (HD)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sound.playClick();
+              if (onOpenModal) {
+                onOpenModal({
+                  src: currentImage,
+                  title: currentTitle,
+                  caption: currentCaption
+                });
+              }
+            }}
+            style={{
+              padding: '7px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-light)',
+              background: 'rgba(255, 255, 255, 0.05)',
+              color: 'var(--text-main)',
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+            title="Perbesar gambar ke layar penuh"
+          >
+            <span>🔍</span>
+            <span>Perbesar HD</span>
+          </button>
+        </div>
+      </div>
+
+      {/* IMAGE DISPLAY CONTAINER */}
+      <div 
+        onClick={() => {
+          sound.playClick();
+          if (onOpenModal) {
+            onOpenModal({
+              src: currentImage,
+              title: currentTitle,
+              caption: currentCaption
+            });
+          }
+        }}
+        title="Klik gambar untuk memperbesar ke layar penuh"
+        style={{
+          position: 'relative',
+          background: '#070f1e',
+          borderRadius: '12px',
+          border: '1.5px solid #1e293b',
+          padding: '12px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'zoom-in',
+          overflow: 'hidden',
+          boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
+        }}
+      >
+        <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(4px)', padding: '5px 10px', borderRadius: '6px', border: '1px solid #334155', fontSize: '0.72rem', color: '#94a3b8', pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <span>🔍</span>
+          <span>Klik untuk Perbesar</span>
+        </div>
+
+        <img
+          src={getAssetUrl(currentImage)}
+          alt={currentTitle}
+          style={{
+            maxWidth: '100%',
+            height: 'auto',
+            maxHeight: '440px',
+            objectFit: 'contain',
+            borderRadius: '8px',
+            transition: 'transform 0.25s ease'
+          }}
+        />
+
+        <div style={{ marginTop: '10px', fontSize: '0.78rem', color: '#94a3b8', textAlign: 'center', fontWeight: 600 }}>
+          {currentCaption}
+        </div>
+      </div>
+
+      {/* INTERACTIVE COMPONENT SELECTOR BUTTONS */}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+          <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>⚙️</span>
+            <span>Rincian Komponen &amp; Fungsinya (Pilih Nomor Komponen):</span>
+          </h4>
+          <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Nomor pada tombol sesuai dengan penomoran pada diagram di atas</span>
+        </div>
+
+        {/* Component Badges Row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
+          {data.components.map(c => {
+            const isSelected = activeCompNum === c.num;
+            return (
+              <button
+                key={c.num}
+                onClick={() => {
+                  sound.playClick();
+                  setActiveCompNum(c.num);
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  border: isSelected ? '1.5px solid #10b981' : '1px solid var(--border-light)',
+                  background: isSelected ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-card)',
+                  color: isSelected ? '#047857' : 'var(--text-main)',
+                  fontWeight: isSelected ? 800 : 600,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  background: isSelected ? '#10b981' : '#334155',
+                  color: isSelected ? '#000000' : '#ffffff',
+                  fontSize: '0.72rem',
+                  fontWeight: 900
+                }}>
+                  {c.num}
+                </span>
+                <span>{c.name.split(' (')[0]}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Selected Component Detailed Spotlight Card */}
+        {activeComponent && (
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1.5px solid #10b981',
+            borderRadius: '10px',
+            padding: '16px 20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            boxShadow: '0 4px 15px rgba(16, 185, 129, 0.08)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: '#10b981',
+                    color: '#000000',
+                    fontSize: '0.8rem',
+                    fontWeight: 900
+                  }}>
+                    {activeComponent.num}
+                  </span>
+                  <strong style={{ fontSize: '1rem', color: 'var(--text-main)', fontWeight: 800 }}>
+                    {activeComponent.name}
+                  </strong>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#047857', fontWeight: 700, marginLeft: '32px', marginTop: '2px' }}>
+                  Istilah Teknis: {activeComponent.sub}
+                </div>
+              </div>
+
+              <span style={{ fontSize: '0.72rem', background: 'rgba(16, 185, 129, 0.1)', color: '#047857', padding: '3px 8px', borderRadius: '4px', fontWeight: 700 }}>
+                Komponen Aktif #{activeComponent.num}
+              </span>
+            </div>
+
+            <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--text-main)', lineHeight: 1.55 }}>
+              {activeComponent.desc}
+            </p>
+
+            <div style={{
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderLeft: '4px solid #f59e0b',
+              padding: '10px 14px',
+              borderRadius: '6px',
+              fontSize: '0.8rem',
+              color: '#334155'
+            }}>
+              <strong style={{ color: '#b45309' }}>💡 Kaidah Presisi &amp; Perawatan:</strong> {activeComponent.tip}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic, initialTab = 'simulator' }) => {
   const [activeTool, setActiveTool] = useState('vernier'); // vernier, micrometer, height, dial, feeler, block, quiz
-  const [activeTab, setActiveTab] = useState('simulator'); // simulator, theory, sop
+  const [activeTab, setActiveTab] = useState(initialTab); // simulator, theory, sop
+  const [modalImage, setModalImage] = useState(null);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
   
   // ==========================================
   // 1. JANGKA SORONG STATE (VERNIER CALIPER)
@@ -150,10 +820,27 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
+  // Escape key listener to close modalImage
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && modalImage) {
+        setModalImage(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [modalImage]);
+
   // Audio Narator Aksesibilitas & Inklusi
   const { speakText, stopSpeech, isSpeaking, currentNarrativeTitle } = useAccessibility();
 
   const getMeasuringNarration = () => {
+    if (activeTab === 'theory') {
+      const data = TOOL_ANATOMY_DATA[activeTool];
+      if (data) {
+        return `Anda sedang berada pada tab Anatomi dan Teori Metrologi untuk ${data.title}. Standar acuan instrumen ini adalah ${data.standard} dengan resolusi ketelitian ${data.resolution}. Di layar tersedia diagram teknik skematik berlabel penomoran komponen, serta foto fisik asli beresolusi tinggi. Anda dapat mengklik tombol nomor komponen untuk mempelajari fungsi detail serta kaidah perawatannya.`;
+      }
+    }
     switch (activeTool) {
       case 'vernier':
         return `Anda sedang menggunakan simulator Jangka Sorong atau Vernier Caliper dengan ketelitian ${caliperResolution} milimeter. Posisi pengukuran saat ini adalah ${caliperValue.toFixed(2)} milimeter. Rahang bawah mengukur diameter luar atau ketebalan pelat, rahang atas mengukur diameter dalam rongga pipa, dan batang ukur kedalaman di bagian ekor mengukur kedalaman lubang. Geser slider untuk mengubah ukuran.`;
@@ -408,7 +1095,7 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
               { id: 'simulator', label: '🧪 Simulasi Interaktif Bergerak' },
-              { id: 'theory', label: '📖 Anatomi & Teori Metrologi' },
+              { id: 'theory', label: '🔬 Anatomi & Komponen (Diagram & Foto HD)' },
               { id: 'sop', label: '📋 SOP & Cara Penggunaan Standar Industri' }
             ].map(tab => (
               <button
@@ -480,6 +1167,29 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveTab('theory');
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid #10b981',
+                        color: '#047857',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Buka diagram anatomi dan komponen jangka sorong"
+                    >
+                      <span>📖</span>
+                      <span>Gambar Anatomi</span>
+                    </button>
                     <button
                       onClick={() => {
                         sound.playClick();
@@ -1159,53 +1869,51 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
 
           {/* TEORI JANGKA SORONG */}
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Anatomi & Komponen Jangka Sorong
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
-                    <strong style={{ color: '#0f172a' }}>1. Rahang Tetap (Fixed Jaw):</strong> Landasan datum referensi pengukuran yang menyatu dengan batang skala utama.
-                  </div>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
-                    <strong style={{ color: '#0f172a' }}>2. Rahang Geser (Movable Jaw):</strong> Bagian yang bergeser sepanjang batang utama membawa skala nonius untuk menjepit benda.
-                  </div>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
-                    <strong style={{ color: '#0f172a' }}>3. Baut Pengunci (Locking Screw):</strong> Mengunci posisi rahang geser agar skala tidak bergeser saat caliper dilepas dari benda kerja.
-                  </div>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
-                    <strong style={{ color: '#0f172a' }}>4. Skala Nonius (Vernier Scale):</strong> Skala tambahan ciptaan Pierre Vernier (1631) yang memperbesar resolusi pembacaan hingga 0.05 mm atau 0.02 mm.
-                  </div>
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
-                    <strong style={{ color: '#0f172a' }}>5. Batang Kedalaman (Depth Probe):</strong> Bilah tipis di ujung belakang yang keluar proporsional dengan bukaan rahang luar.
-                  </div>
-                </div>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="vernier" onOpenModal={setModalImage} />
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Prinsip Ketelitian Skala Nonius
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.85rem', color: '#334155' }}>
-                  <p style={{ margin: 0, fontWeight: 500 }}>
-                    Prinsip kerja vernier memanfaatkan perbedaan kecil antara panjang pembagian pada skala utama dan skala nonius:
-                  </p>
-                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b' }}>
-                    <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>Ketelitian 0.05 mm (1/20):</div>
-                    <div style={{ color: '#334155' }}>Panjang 39 mm pada skala utama dibagi menjadi 20 bagian sama panjang pada skala nonius.</div>
-                    <div style={{ fontFamily: 'monospace', color: '#b45309', marginTop: '6px', fontWeight: 600 }}>
-                      1 strip nonius = 39 / 20 = 1.95 mm.<br/>
-                      Selisih per strip = 2.00 mm - 1.95 mm = 0.05 mm.
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    3 Fungsi Pengukuran Utama Jangka Sorong
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem' }}>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
+                      <strong style={{ color: '#0f172a' }}>1. Pengukuran Dimensi Luar (External):</strong> Menggunakan rahang ukur bawah untuk mengukur diameter luar silinder poros bubut, ketebalan pelat baja, dan panjang benda.
+                    </div>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
+                      <strong style={{ color: '#0f172a' }}>2. Pengukuran Dimensi Dalam (Internal):</strong> Menggunakan rahang ukur atas untuk mengukur diameter lubang bor, ceruk alur pasak, atau rongga silinder.
+                    </div>
+                    <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '12px 14px', borderRadius: '8px', color: '#334155' }}>
+                      <strong style={{ color: '#0f172a' }}>3. Pengukuran Kedalaman (Depth):</strong> Menggunakan bilah batang kedalaman di ujung ekor untuk mengukur kedalaman lubang buta atau ceruk bertingkat.
                     </div>
                   </div>
+                </div>
 
-                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #10b981' }}>
-                    <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>Ketelitian 0.02 mm (1/50):</div>
-                    <div style={{ color: '#334155' }}>Panjang 49 mm pada skala utama dibagi menjadi 50 bagian sama panjang pada skala nonius.</div>
-                    <div style={{ fontFamily: 'monospace', color: '#047857', marginTop: '6px', fontWeight: 600 }}>
-                      1 strip nonius = 49 / 50 = 0.98 mm.<br/>
-                      Selisih per strip = 1.00 mm - 0.98 mm = 0.02 mm.
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Prinsip Ketelitian Skala Nonius
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.85rem', color: '#334155' }}>
+                    <p style={{ margin: 0, fontWeight: 500 }}>
+                      Prinsip kerja vernier memanfaatkan perbedaan kecil antara panjang pembagian pada skala utama dan skala nonius:
+                    </p>
+                    <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b' }}>
+                      <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>Ketelitian 0.05 mm (1/20):</div>
+                      <div style={{ color: '#334155' }}>Panjang 39 mm pada skala utama dibagi menjadi 20 bagian sama panjang pada skala nonius.</div>
+                      <div style={{ fontFamily: 'monospace', color: '#b45309', marginTop: '6px', fontWeight: 600 }}>
+                        1 strip nonius = 39 / 20 = 1.95 mm.<br/>
+                        Selisih per strip = 2.00 mm - 1.95 mm = 0.05 mm.
+                      </div>
+                    </div>
+
+                    <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #10b981' }}>
+                      <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>Ketelitian 0.02 mm (1/50):</div>
+                      <div style={{ color: '#334155' }}>Panjang 49 mm pada skala utama dibagi menjadi 50 bagian sama panjang pada skala nonius.</div>
+                      <div style={{ fontFamily: 'monospace', color: '#047857', marginTop: '6px', fontWeight: 600 }}>
+                        1 strip nonius = 49 / 50 = 0.98 mm.<br/>
+                        Selisih per strip = 1.00 mm - 0.98 mm = 0.02 mm.
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1276,6 +1984,30 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
                   </div>
 
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveTab('theory');
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(2, 132, 199, 0.12)',
+                        border: '1px solid #0284c7',
+                        color: '#0284c7',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Buka diagram anatomi dan komponen mikrometer sekrup"
+                    >
+                      <span>📖</span>
+                      <span>Gambar Anatomi</span>
+                    </button>
+
                     {/* MODE TOGGLE: STANDARD VS SIMPLE */}
                     <button
                       onClick={() => {
@@ -1760,40 +2492,44 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
           )}
 
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#0284c7', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Fungsi Skala Nonius pada Mikrometer
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Pada mikrometer sekrup, skala yang terdapat pada silinder putar (thimble) berfungsi sebagai <strong style={{ color: '#0f172a' }}>Skala Nonius</strong>:
-                </p>
-                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #0284c7', marginTop: '10px' }}>
-                  <div style={{ fontWeight: 800, color: '#0f172a' }}>Kisar Ulir (Pitch) = 0.5 mm</div>
-                  <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
-                    Setiap 1 putaran penuh thimble (360°), poros bergerak sejauh <strong style={{ color: '#0f172a' }}>0.50 mm</strong>.
-                  </div>
-                  <div style={{ fontWeight: 800, color: '#0f172a', marginTop: '10px' }}>Skala Nonius = 50 Bagian</div>
-                  <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
-                    Keliling bidal dibagi menjadi 50 garis setara.
-                    <br/>
-                    Ketelitian Skala Nonius = 0.5 mm / 50 = <strong style={{ color: '#0284c7' }}>0.01 mm</strong> per garis.
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="micrometer" onOpenModal={setModalImage} />
+
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#0284c7', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Fungsi Skala Nonius pada Mikrometer
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Pada mikrometer sekrup, skala yang terdapat pada silinder putar (thimble) berfungsi sebagai <strong style={{ color: '#0f172a' }}>Skala Nonius</strong>:
+                  </p>
+                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #0284c7', marginTop: '10px' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a' }}>Kisar Ulir (Pitch) = 0.5 mm</div>
+                    <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
+                      Setiap 1 putaran penuh thimble (360°), poros bergerak sejauh <strong style={{ color: '#0f172a' }}>0.50 mm</strong>.
+                    </div>
+                    <div style={{ fontWeight: 800, color: '#0f172a', marginTop: '10px' }}>Skala Nonius = 50 Bagian</div>
+                    <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
+                      Keliling bidal dibagi menjadi 50 garis setara.
+                      <br/>
+                      Ketelitian Skala Nonius = 0.5 mm / 50 = <strong style={{ color: '#0284c7' }}>0.01 mm</strong> per garis.
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Fungsi Ratchet Stop (Gigi Gelincir)
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Mengapa pengukuran akhir <strong style={{ color: '#0f172a' }}>WAJIB</strong> menggunakan ratchet stop dan bukan memutar thimble secara langsung?
-                </p>
-                <ul style={{ fontSize: '0.82rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
-                  <li><strong style={{ color: '#0f172a' }}>Gaya Tekan Standar:</strong> Ratchet dirancang selip pada tekanan ~5 sampai 10 Newton untuk memastikan gaya jepit konstan setiap pengukuran.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Mencegah Deformasi:</strong> Tekanan tangan berlebih dapat meremukkan benda kerja tipis (elastisitas/deformasi).</li>
-                  <li><strong style={{ color: '#0f172a' }}>Melindungi Ulir Presisi:</strong> Mencegah keausan dan pemaksaan pada ulir mikron mikrometer.</li>
-                </ul>
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Fungsi Ratchet Stop (Gigi Gelincir)
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Mengapa pengukuran akhir <strong style={{ color: '#0f172a' }}>WAJIB</strong> menggunakan ratchet stop dan bukan memutar thimble secara langsung?
+                  </p>
+                  <ul style={{ fontSize: '0.82rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                    <li><strong style={{ color: '#0f172a' }}>Gaya Tekan Standar:</strong> Ratchet dirancang selip pada tekanan ~5 sampai 10 Newton untuk memastikan gaya jepit konstan setiap pengukuran.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Mencegah Deformasi:</strong> Tekanan tangan berlebih dapat meremukkan benda kerja tipis (elastisitas/deformasi).</li>
+                    <li><strong style={{ color: '#0f172a' }}>Melindungi Ulir Presisi:</strong> Mencegah keausan dan pemaksaan pada ulir mikron mikrometer.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
@@ -1836,6 +2572,29 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
                     Simulasi: Vernier Height Gauge & Meja Perata Granit
                   </h3>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveTab('theory');
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid #10b981',
+                        color: '#047857',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Buka diagram anatomi dan komponen vernier height gauge"
+                    >
+                      <span>📖</span>
+                      <span>Gambar Anatomi</span>
+                    </button>
                     <button
                       onClick={() => setShowHeightReadout(!showHeightReadout)}
                       style={{
@@ -2104,33 +2863,37 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
           )}
 
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Fungsi Utama Height Gauge di Bengkel Perkakas (Toolroom)
-                </h3>
-                <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li><strong style={{ color: '#0f172a' }}>Mengukur Ketinggian Bertingkat:</strong> Memeriksa tinggi step kontur benda kerja dengan ketelitian 0.02 mm.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Melukis Garis Tata Letak (Marking Out):</strong> Menggores garis acuan pemesinan pada benda kerja mentah sebelum dibubut/difrais.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Mengukur Jarak Pusat Sumbu (Center Distance):</strong> Menentukan titik pusat lubang bor terhadap bidang datum dasar.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Inspeksi Kesejajaran (Parallelism):</strong> Mengganti scriber dengan dial indicator untuk menguji kemiringan permukaan.</li>
-                </ul>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="height" onOpenModal={setModalImage} />
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Peran Vital Meja Perata Granit (Surface Plate)
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Height gauge tidak dapat bekerja sendiri tanpa meja perata granit sebagai <strong style={{ color: '#0f172a' }}>Primary Datum Plane</strong>:
-                </p>
-                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b', marginTop: '10px' }}>
-                  <div style={{ fontWeight: 800, color: '#0f172a' }}>Mengapa Memilih Granit Hitam?</div>
-                  <ul style={{ fontSize: '0.8rem', color: '#334155', paddingLeft: '16px', marginTop: '6px' }}>
-                    <li>Tidak berkarat jika terkena kelembapan udara.</li>
-                    <li>Koefisien muai panas sangat rendah dibandingkan besi cor.</li>
-                    <li>Jika tergores, tidak timbul tonjolan tajam (burr) yang merusak kerataan.</li>
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Fungsi Utama Height Gauge di Bengkel Perkakas (Toolroom)
+                  </h3>
+                  <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <li><strong style={{ color: '#0f172a' }}>Mengukur Ketinggian Bertingkat:</strong> Memeriksa tinggi step kontur benda kerja dengan ketelitian 0.02 mm.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Melukis Garis Tata Letak (Marking Out):</strong> Menggores garis acuan pemesinan pada benda kerja mentah sebelum dibubut/difrais.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Mengukur Jarak Pusat Sumbu (Center Distance):</strong> Menentukan titik pusat lubang bor terhadap bidang datum dasar.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Inspeksi Kesejajaran (Parallelism):</strong> Mengganti scriber dengan dial indicator untuk menguji kemiringan permukaan.</li>
                   </ul>
+                </div>
+
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Peran Vital Meja Perata Granit (Surface Plate)
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Height gauge tidak dapat bekerja sendiri tanpa meja perata granit sebagai <strong style={{ color: '#0f172a' }}>Primary Datum Plane</strong>:
+                  </p>
+                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b', marginTop: '10px' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a' }}>Mengapa Memilih Granit Hitam?</div>
+                    <ul style={{ fontSize: '0.8rem', color: '#334155', paddingLeft: '16px', marginTop: '6px' }}>
+                      <li>Tidak berkarat jika terkena kelembapan udara.</li>
+                      <li>Koefisien muai panas sangat rendah dibandingkan besi cor.</li>
+                      <li>Jika tergores, tidak timbul tonjolan tajam (burr) yang merusak kerataan.</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2174,6 +2937,29 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
                     Simulasi: Dial Indicator & Uji Keolengan Poros (Runout / TIR)
                   </h3>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveTab('theory');
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(245, 158, 11, 0.12)',
+                        border: '1px solid #f59e0b',
+                        color: '#b45309',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Buka diagram anatomi dan komponen dial indicator"
+                    >
+                      <span>📖</span>
+                      <span>Gambar Anatomi</span>
+                    </button>
                     <button
                       onClick={() => setShowDialReadout(!showDialReadout)}
                       style={{
@@ -2503,32 +3289,36 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
           )}
 
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Mekanisme Roda Gigi Presisi (Gear Train)
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Dial indicator tidak mengukur panjang absolut benda, melainkan <strong style={{ color: '#0f172a' }}>penyimpangan relatif (komparasi)</strong> terhadap bidang acuan:
-                </p>
-                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b', marginTop: '10px' }}>
-                  <div style={{ fontWeight: 800, color: '#0f172a' }}>Konversi Gerak Spindle:</div>
-                  <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
-                    Batang spindle memiliki gerigi rack mikro yang menggerakkan roda gigi pinion presisi. Gerakan linear 1 mm diperbesar menjadi 1 putaran 360° jarum penunjuk (rasio pembesaran ~300x).
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="dial" onOpenModal={setModalImage} />
+
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Mekanisme Roda Gigi Presisi (Gear Train)
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Dial indicator tidak mengukur panjang absolut benda, melainkan <strong style={{ color: '#0f172a' }}>penyimpangan relatif (komparasi)</strong> terhadap bidang acuan:
+                  </p>
+                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #f59e0b', marginTop: '10px' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a' }}>Konversi Gerak Spindle:</div>
+                    <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
+                      Batang spindle memiliki gerigi rack mikro yang menggerakkan roda gigi pinion presisi. Gerakan linear 1 mm diperbesar menjadi 1 putaran 360° jarum penunjuk (rasio pembesaran ~300x).
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Aplikasi Uji Geometri di Industri
-                </h3>
-                <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li><strong style={{ color: '#0f172a' }}>Keolengan Poros (Runout TIR):</strong> Menguji kelurusan poros bubut atau spindel mesin frais saat berputar.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Kesejajaran (Parallelism):</strong> Menguji apakah permukaan bidang sejajar dengan meja mesin.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Kerataan (Flatness):</strong> Menguji kelendutan blok silinder mesin motor/mobil.</li>
-                  <li><strong style={{ color: '#0f172a' }}>Centering Benda Kerja:</strong> Menentukan titik tengah benda kerja bulat pada chuck mesin bubut 4 rahang independen.</li>
-                </ul>
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Aplikasi Uji Geometri di Industri
+                  </h3>
+                  <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <li><strong style={{ color: '#0f172a' }}>Keolengan Poros (Runout TIR):</strong> Menguji kelurusan poros bubut atau spindel mesin frais saat berputar.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Kesejajaran (Parallelism):</strong> Menguji apakah permukaan bidang sejajar dengan meja mesin.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Kerataan (Flatness):</strong> Menguji kelendutan blok silinder mesin motor/mobil.</li>
+                    <li><strong style={{ color: '#0f172a' }}>Centering Benda Kerja:</strong> Menentukan titik tengah benda kerja bulat pada chuck mesin bubut 4 rahang independen.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
@@ -2566,11 +3356,34 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
             <div className="metrology-lab-grid">
               
               <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                     Simulasi: Pemeriksaan Celah Presisi dengan Feeler Gauge
                   </h3>
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => {
+                        sound.playClick();
+                        setActiveTab('theory');
+                      }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(6, 182, 212, 0.12)',
+                        border: '1px solid #06b6d4',
+                        color: '#0891b2',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Buka diagram anatomi dan komponen feeler gauge"
+                    >
+                      <span>📖</span>
+                      <span>Gambar Anatomi</span>
+                    </button>
                     {[
                       { id: 'valve', label: 'Celah Katup Mesin (0.20 mm)', gap: 0.20 },
                       { id: 'sparkplug', label: 'Celah Busi (0.75 mm)', gap: 0.75 },
@@ -2798,32 +3611,36 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
           )}
 
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#0284c7', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Material & Standar Mutu Feeler Gauge
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Bilah feeler gauge dibuat dari baja pegas karbon tinggi (hardened and tempered spring steel):
-                </p>
-                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #0284c7', marginTop: '10px' }}>
-                  <div style={{ fontWeight: 800, color: 'var(--text-main)' }}>Standar DIN 2275:</div>
-                  <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
-                    Bilah memiliki elastisitas tinggi dan batas lentur yang kuat sehingga dapat kembali lurus setelah melengkung saat dimasukkan ke celah sempit.
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="feeler" onOpenModal={setModalImage} />
+
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#0284c7', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Material &amp; Standar Mutu Feeler Gauge
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Bilah feeler gauge dibuat dari baja pegas karbon tinggi (hardened and tempered spring steel):
+                  </p>
+                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #0284c7', marginTop: '10px' }}>
+                    <div style={{ fontWeight: 800, color: 'var(--text-main)' }}>Standar DIN 2275:</div>
+                    <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
+                      Bilah memiliki elastisitas tinggi dan batas lentur yang kuat sehingga dapat kembali lurus setelah melengkung saat dimasukkan ke celah sempit.
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Aplikasi Kritis pada Otomotif & Mesin
-                </h3>
-                <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <li><strong>Celah Katup (Valve Clearance):</strong> Mencegah katup bocor saat panas atau floating saat rpm tinggi.</li>
-                  <li><strong>Celah Busi (Spark Plug Gap):</strong> Memastikan loncatan bunga api koil pengapian optimal.</li>
-                  <li><strong>Celah Ujung Ring Piston (Ring End Gap):</strong> Mencegah ring piston mengunci dinding silinder saat memuai panas.</li>
-                  <li><strong>Kerataan Kepala Silinder:</strong> Dipadukan dengan penggaris perata (Precision Straight Edge) untuk mengecek kelendutan kepala silinder.</li>
-                </ul>
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Aplikasi Kritis pada Otomotif &amp; Mesin
+                  </h3>
+                  <ul style={{ fontSize: '0.85rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <li><strong>Celah Katup (Valve Clearance):</strong> Mencegah katup bocor saat panas atau floating saat rpm tinggi.</li>
+                    <li><strong>Celah Busi (Spark Plug Gap):</strong> Memastikan loncatan bunga api koil pengapian optimal.</li>
+                    <li><strong>Celah Ujung Ring Piston (Ring End Gap):</strong> Mencegah ring piston mengunci dinding silinder saat memuai panas.</li>
+                    <li><strong>Kerataan Kepala Silinder:</strong> Dipadukan dengan penggaris perata (Precision Straight Edge) untuk mengecek kelendutan kepala silinder.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
@@ -2864,13 +3681,38 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
                 
                 {/* WIZARD 4 TAHAP WRINGING */}
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                       Simulasi: Proses Pelengketan Blok Ukur (Wringing Process)
                     </h3>
-                    <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>
-                      Tahap {wringStep + 1} dari 4
-                    </span>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <button
+                        onClick={() => {
+                          sound.playClick();
+                          setActiveTab('theory');
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          background: 'rgba(16, 185, 129, 0.12)',
+                          border: '1px solid #10b981',
+                          color: '#047857',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                        title="Buka diagram anatomi dan komponen gauge block"
+                      >
+                        <span>📖</span>
+                        <span>Gambar Anatomi</span>
+                      </button>
+                      <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>
+                        Tahap {wringStep + 1} dari 4
+                      </span>
+                    </div>
                   </div>
 
                   {/* STEP TABS */}
@@ -3093,32 +3935,36 @@ ightarrow$ pilih balok 30.0 mm.</li>
           )}
 
           {activeTab === 'theory' && (
-            <div className="metrology-cards-grid-2">
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Fisika di Balik Fenomena Wringing
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                  Mengapa dua blok ukur baja bisa saling melekat kuat tanpa perekat ataupun magnet?
-                </p>
-                <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #10b981', marginTop: '10px' }}>
-                  <div style={{ fontWeight: 800, color: 'var(--text-main)' }}>Gaya Van der Waals & Tegangan Permukaan:</div>
-                  <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
-                    Permukaan blok ukur dihaluskan dengan proses lapping hingga toleransi kerataan optik (0.05 mikron). Saat di-wring, jarak antar molekul baja menjadi begitu rapat sehingga gaya tarik molekuler Van der Waals aktif mengikat kedua balok, dibantu oleh lapisan film minyak ultra tipis.
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <ToolAnatomySection toolKey="block" onOpenModal={setModalImage} />
+
+              <div className="metrology-cards-grid-2">
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#047857', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Fisika di Balik Fenomena Wringing
+                  </h3>
+                  <p style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
+                    Mengapa dua blok ukur baja bisa saling melekat kuat tanpa perekat ataupun magnet?
+                  </p>
+                  <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #10b981', marginTop: '10px' }}>
+                    <div style={{ fontWeight: 800, color: 'var(--text-main)' }}>Gaya Van der Waals &amp; Tegangan Permukaan:</div>
+                    <div style={{ fontSize: '0.82rem', color: '#334155', marginTop: '4px' }}>
+                      Permukaan blok ukur dihaluskan dengan proses lapping hingga toleransi kerataan optik (0.05 mikron). Saat di-wring, jarak antar molekul baja menjadi begitu rapat sehingga gaya tarik molekuler Van der Waals aktif mengikat kedua balok, dibantu oleh lapisan film minyak ultra tipis.
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="dashboard-card" style={{ padding: '24px' }}>
-                <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
-                  Tingkat Akurasi (Grade ISO 3650)
-                </h3>
-                <ul style={{ fontSize: '0.82rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <li><strong>Grade 00 (Reference Master):</strong> Standar acuan tertinggi di laboratorium metrologi nasional.</li>
-                  <li><strong>Grade 0 (Calibration Standard):</strong> Untuk mengkalibrasi alat ukur presisi tinggi (micrometer, height gauge).</li>
-                  <li><strong>Grade 1 (Toolroom):</strong> Untuk penyetelan mesin perkakas dan pemeriksaan mal potong.</li>
-                  <li><strong>Grade 2 (Workshop):</strong> Untuk pengukuran benda kerja presisi langsung di lantai bengkel bubut/milling.</li>
-                </ul>
+                <div className="dashboard-card" style={{ padding: '24px' }}>
+                  <h3 style={{ color: '#b45309', fontSize: '1.1rem', fontWeight: 800, marginBottom: '14px' }}>
+                    Tingkat Akurasi (Grade ISO 3650)
+                  </h3>
+                  <ul style={{ fontSize: '0.82rem', color: '#334155', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <li><strong>Grade 00 (Reference Master):</strong> Standar acuan tertinggi di laboratorium metrologi nasional.</li>
+                    <li><strong>Grade 0 (Calibration Standard):</strong> Untuk mengkalibrasi alat ukur presisi tinggi (micrometer, height gauge).</li>
+                    <li><strong>Grade 1 (Toolroom):</strong> Untuk penyetelan mesin perkakas dan pemeriksaan mal potong.</li>
+                    <li><strong>Grade 2 (Workshop):</strong> Untuk pengukuran benda kerja presisi langsung di lantai bengkel bubut/milling.</li>
+                  </ul>
+                </div>
               </div>
             </div>
           )}
@@ -3390,6 +4236,72 @@ ightarrow$ pilih balok 30.0 mm.</li>
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* MODAL LIGHTBOX UNTUK PERBESAR GAMBAR ANATOMI & FOTO */}
+      {modalImage && (
+        <div 
+          onClick={() => setModalImage(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.88)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '20px'
+          }}
+        >
+          <div 
+            onClick={e => e.stopPropagation()}
+            style={{
+              maxWidth: '1100px',
+              width: '100%',
+              maxHeight: '92vh',
+              background: '#0f172a',
+              borderRadius: '16px',
+              border: '1.5px solid #334155',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid #1e293b' }}>
+              <div>
+                <h3 style={{ margin: 0, color: '#f8fafc', fontSize: '1.1rem', fontWeight: 800 }}>{modalImage.title}</h3>
+                <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{modalImage.caption}</span>
+              </div>
+              <button 
+                onClick={() => setModalImage(null)}
+                style={{
+                  background: 'rgba(255,255,255,0.12)',
+                  border: 'none',
+                  color: '#fff',
+                  fontSize: '0.9rem',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 800
+                }}
+              >
+                ✕ Tutup (Esc)
+              </button>
+            </div>
+            <div style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'auto', background: '#020617' }}>
+              <img 
+                src={getAssetUrl(modalImage.src)} 
+                alt={modalImage.title}
+                style={{ maxWidth: '100%', maxHeight: '72vh', objectFit: 'contain', borderRadius: '8px' }} 
+              />
+            </div>
+          </div>
         </div>
       )}
 

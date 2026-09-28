@@ -1,0 +1,282 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradHeight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#091410" />
+      <stop offset="50%" stop-color="#0f231d" />
+      <stop offset="100%" stop-color="#040b08" />
+    </linearGradient>
+
+    <!-- Chrome & Steel Column -->
+    <linearGradient id="steelColumn" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="20%" stop-color="#f1f5f9" />
+      <stop offset="60%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <!-- Heavy Cast Base -->
+    <linearGradient id="castBase" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Granite Surface Plate Texture -->
+    <linearGradient id="graniteGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="30%" stop-color="#0f172a" />
+      <stop offset="70%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0b1320" />
+    </linearGradient>
+
+    <!-- Carbide Scriber Tip -->
+    <linearGradient id="carbideTip" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0" />
+      <stop offset="40%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+
+    <filter id="shadowHeight" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGradHeight)" stroke="#134e4a" stroke-width="2"/>
+
+  <!-- Blueprint Subtle Grid -->
+  <pattern id="gridHeight" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#134e4a" stroke-width="0.7" stroke-opacity="0.5" />
+  </pattern>
+  <rect width="960" height="540" rx="16" fill="url(#gridHeight)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(40, 28)">
+    <rect width="880" height="48" rx="8" fill="#0f2e28" stroke="#115e59" stroke-width="1.2"/>
+    <rect x="0" y="0" width="8" height="48" rx="4" fill="#10b981"/>
+    <text x="24" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#f8fafc" letter-spacing="0.5">
+      ANATOMI &amp; KOMPONEN VERNIER HEIGHT GAUGE (PENGUKUR KETINGGIAN)
+    </text>
+    <text x="24" y="41" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" fill="#6ee7b7">
+      Standar Metrologi Industri DIN 862 • Resolusi Ketelitian 0,02 mm • Aplikasi Marking Out &amp; Datum Height Inspection
+    </text>
+    <rect x="710" y="10" width="155" height="28" rx="6" fill="#047857" fill-opacity="0.3" stroke="#10b981" stroke-width="1"/>
+    <text x="787" y="28" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#34d399" text-anchor="middle">
+      SURFACE PLATE DATUM
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- HEIGHT GAUGE VECTOR ARTWORK (CENTERED) -->
+  <!-- ============================================================== -->
+  <g id="heightGaugeVector" transform="translate(430, 95)" filter="url(#shadowHeight)">
+    
+    <!-- Granite Surface Plate (Meja Rata Granit di Bawah) -->
+    <g transform="translate(-160, 360)">
+      <polygon points="0,20 300,20 340,55 -40,55" fill="url(#graniteGrad)" stroke="#334155" stroke-width="1.5"/>
+      <polygon points="-40,55 340,55 340,75 -40,75" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+      <line x1="-35" y1="57" x2="335" y2="57" stroke="#475569" stroke-width="1" stroke-dasharray="8,4"/>
+      <text x="150" y="70" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle">BIDANG DATUM REFERENSI GRANIT TINGKAT 00</text>
+    </g>
+
+    <!-- Heavy Cast Base (Landasan Basis) -->
+    <path d="M -50,380 
+             L 90,380 
+             L 80,340 
+             L 45,340 
+             L 45,320 
+             L -30,320 
+             L -30,340 
+             L -50,380 Z" 
+          fill="url(#castBase)" stroke="#475569" stroke-width="1.5"/>
+    <ellipse cx="20" cy="377" rx="60" ry="4" fill="#020617" opacity="0.6"/>
+
+    <!-- Main Vertical Column Beam (Tiang Kolom Skala Utama) -->
+    <rect x="-10" y="20" width="36" height="305" fill="url(#steelColumn)" stroke="#475569" stroke-width="1.5"/>
+
+    <!-- Main Scale Millimeter Graduations on Column -->
+    <g stroke="#0f172a" stroke-width="0.8">
+      <!-- 0 to 250 mm lines -->
+      <line x1="8" y1="310" x2="26" y2="310" stroke-width="1.5"/>
+      <line x1="14" y1="290" x2="26" y2="290"/>
+      <line x1="8" y1="270" x2="26" y2="270" stroke-width="1.5"/>
+      <line x1="14" y1="250" x2="26" y2="250"/>
+      <line x1="8" y1="230" x2="26" y2="230" stroke-width="1.5"/>
+      <line x1="14" y1="210" x2="26" y2="210"/>
+      <line x1="8" y1="190" x2="26" y2="190" stroke-width="1.5"/>
+      <line x1="14" y1="170" x2="26" y2="170"/>
+      <line x1="8" y1="150" x2="26" y2="150" stroke-width="1.5"/>
+      <line x1="14" y1="130" x2="26" y2="130"/>
+      <line x1="8" y1="110" x2="26" y2="110" stroke-width="1.5"/>
+      <line x1="14" y1="90" x2="26" y2="90"/>
+      <line x1="8" y1="70" x2="26" y2="70" stroke-width="1.5"/>
+      <line x1="14" y1="50" x2="26" y2="50"/>
+      <line x1="8" y1="30" x2="26" y2="30" stroke-width="1.5"/>
+    </g>
+    <text x="3" y="312" font-size="6.5" font-weight="800" fill="#0f172a">0</text>
+    <text x="0" y="272" font-size="6.5" font-weight="800" fill="#0f172a">20</text>
+    <text x="0" y="232" font-size="6.5" font-weight="800" fill="#0f172a">40</text>
+    <text x="0" y="192" font-size="6.5" font-weight="800" fill="#0f172a">60</text>
+    <text x="0" y="152" font-size="6.5" font-weight="800" fill="#0f172a">80</text>
+    <text x="-4" y="112" font-size="6.5" font-weight="800" fill="#0f172a">100</text>
+
+    <!-- Column Top Cap -->
+    <rect x="-12" y="14" width="40" height="8" rx="2" fill="#334155" stroke="#475569"/>
+
+    <!-- ============================================== -->
+    <!-- SLIDER CARRIAGE (PELUNCUR NONIUS) - At Height Y = 170 -->
+    <!-- ============================================== -->
+    <g transform="translate(0, 160)">
+      <!-- Main Carriage Body -->
+      <path d="M -16,0 
+               L 42,0 
+               L 42,75 
+               L -16,75 
+               L -16,45 
+               L -70,45 
+               L -70,25 
+               L -16,25 Z" 
+            fill="url(#steelColumn)" stroke="#334155" stroke-width="1.5"/>
+
+      <!-- Vernier Scale Window -->
+      <rect x="2" y="18" width="30" height="40" rx="2" fill="#f8fafc" stroke="#94a3b8"/>
+      <!-- Nonius tick marks (0.02 mm) -->
+      <g stroke="#047857" stroke-width="0.8">
+        <line x1="8" y1="22" x2="22" y2="22"/>
+        <line x1="8" y1="28" x2="16" y2="28"/>
+        <line x1="8" y1="34" x2="22" y2="34"/>
+        <line x1="8" y1="40" x2="16" y2="40"/>
+        <line x1="8" y1="46" x2="22" y2="46"/>
+        <line x1="8" y1="52" x2="16" y2="52"/>
+      </g>
+      <text x="24" y="24" font-size="5" font-weight="800" fill="#047857">0</text>
+      <text x="24" y="36" font-size="5" font-weight="800" fill="#047857">5</text>
+      <text x="24" y="48" font-size="5" font-weight="800" fill="#047857">10</text>
+
+      <!-- Main Carriage Lock Screw (Baut Pengunci Utama) -->
+      <g transform="translate(42, 12)">
+        <rect x="0" y="0" width="16" height="12" rx="2" fill="#eab308" stroke="#78350f" stroke-width="1"/>
+        <line x1="4" y1="2" x2="4" y2="10" stroke="#78350f"/>
+        <line x1="8" y1="2" x2="8" y2="10" stroke="#78350f"/>
+        <line x1="12" y1="2" x2="12" y2="10" stroke="#78350f"/>
+      </g>
+
+      <!-- Scriber Clamp Bracket & Carbide Scriber -->
+      <g transform="translate(-70, 25)">
+        <!-- Clamp block -->
+        <rect x="-10" y="0" width="16" height="24" rx="2" fill="#475569" stroke="#334155"/>
+        <circle cx="-2" cy="12" r="3" fill="#cbd5e1"/>
+        <!-- Scriber Blade extending to left -->
+        <path d="M -10,6 L -90,6 L -115,22 L -90,22 L -10,22 Z" fill="url(#carbideTip)" stroke="#334155" stroke-width="1.2"/>
+        <!-- Ultra-sharp Carbide Tip Point -->
+        <polygon points="-115,22 -118,22 -115,19" fill="#10b981"/>
+        <!-- Measuring underside datum -->
+        <line x1="-115" y1="22" x2="-10" y2="22" stroke="#10b981" stroke-width="1.5"/>
+      </g>
+
+      <!-- Fine Adjustment Connecting Rod & Feed Screw (Sekrup Penyetel Halus) -->
+      <g transform="translate(25, -55)">
+        <!-- Threaded Rod -->
+        <rect x="0" y="10" width="6" height="45" fill="#cbd5e1" stroke="#475569"/>
+        <!-- Fine adjustment block -->
+        <rect x="-10" y="-10" width="26" height="20" rx="3" fill="url(#steelColumn)" stroke="#334155" stroke-width="1.2"/>
+        <!-- Fine Adjustment Clamp Screw -->
+        <rect x="16" y="-6" width="14" height="12" rx="2" fill="#eab308" stroke="#78350f" stroke-width="1"/>
+        <!-- Fine Adjustment Nut Wheel (Roda Putar Mikro) -->
+        <rect x="-4" y="20" width="14" height="10" rx="2" fill="#94a3b8" stroke="#334155" stroke-width="1"/>
+        <line x1="-2" y1="20" x2="-2" y2="30" stroke="#475569"/>
+        <line x1="2" y1="20" x2="2" y2="30" stroke="#475569"/>
+        <line x1="6" y1="20" x2="6" y2="30" stroke="#475569"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALLOUT LABELS & LEADER LINES -->
+  <!-- ============================================================== -->
+  
+  <!-- 1. Landasan Basis Berat (Heavy Base) -->
+  <g transform="translate(40, 420)">
+    <line x1="240" y1="20" x2="380" y2="30" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="380" cy="30" r="4" fill="#10b981"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#10b981"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">1</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Landasan Berat (Heavy Base)</text>
+    <text x="40" y="38" font-size="9.5" fill="#6ee7b7">Tumpuan stabil presisi di meja rata</text>
+  </g>
+
+  <!-- 2. Tiang Kolom Utama (Main Beam) -->
+  <g transform="translate(710, 95)">
+    <line x1="-15" y1="25" x2="-250" y2="60" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-250" cy="60" r="4" fill="#38bdf8"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#38bdf8"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">2</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Tiang Batang (Main Beam)</text>
+    <text x="40" y="38" font-size="9.5" fill="#7dd3fc">Skala utama mm vertikal</text>
+  </g>
+
+  <!-- 3. Peluncur Nonius (Vernier Carriage) -->
+  <g transform="translate(710, 240)">
+    <line x1="-15" y1="25" x2="-240" y2="25" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-240" cy="25" r="4" fill="#ec4899"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ec4899"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">3</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Peluncur (Vernier Slider)</text>
+    <text x="40" y="38" font-size="9.5" fill="#f472b6">Skala nonius ketelitian 0,02 mm</text>
+  </g>
+
+  <!-- 4. Mata Penggores Karbida (Carbide Scriber) -->
+  <g transform="translate(40, 230)">
+    <line x1="220" y1="25" x2="275" y2="25" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="275" cy="25" r="4" fill="#f59e0b"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f59e0b"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">4</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Cakar Penggores (Scriber)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fcd34d">Ujung karbida marking &amp; tinggi</text>
+  </g>
+
+  <!-- 5. Baut Pengunci Utama (Main Clamp Screw) -->
+  <g transform="translate(710, 340)">
+    <line x1="-15" y1="20" x2="-220" y2="-80" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-220" cy="-80" r="4" fill="#a855f7"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#a855f7"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">5</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Pengunci Utama (Clamp)</text>
+    <text x="40" y="38" font-size="9.5" fill="#c084fc">Kunci posisi kasar peluncur</text>
+  </g>
+
+  <!-- 6. Sekrup Penyetel Halus (Fine Adjustment) -->
+  <g transform="translate(710, 160)">
+    <line x1="-15" y1="20" x2="-240" y2="-40" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-240" cy="-40" r="4" fill="#06b6d4"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#06b6d4" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#06b6d4"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">6</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Penyetel Halus (Fine Adjust)</text>
+    <text x="40" y="38" font-size="9.5" fill="#67e8f9">Roda ulir pergeseran mikro</text>
+  </g>
+
+  <!-- 7. Meja Rata Granit (Surface Plate Datum) -->
+  <g transform="translate(40, 110)">
+    <line x1="140" y1="52" x2="250" y2="330" stroke="#f97316" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="250" cy="330" r="4" fill="#f97316"/>
+    <rect width="210" height="52" rx="8" fill="#0f2e28" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f97316"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">7</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Meja Rata Granit (Datum)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fdba74">Datum nol mutlak metrologi</text>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <rect x="40" y="492" width="880" height="30" rx="6" fill="#040b08" stroke="#115e59"/>
+  <text x="55" y="512" font-size="10" font-weight="700" fill="#34d399">PROSEDUR NOL:</text>
+  <text x="160" y="512" font-size="9.5" fill="#6ee7b7">
+    Turunkan scriber hingga menyentuh permukaan meja perata granit. Garis nol nonius harus sejajar tepat dengan garis nol tiang skala.
+  </text>
+</svg>

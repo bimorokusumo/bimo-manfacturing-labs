@@ -230,35 +230,61 @@ const ToolAssembly = ({
   }, []);
 
   // 2. Grooving blade insert 3mm (Pahat Alur, T0202):
-  // 3mm wide blade at Z = 0, nose at [0,0,0], blade width 0.018 in +X.
+  // Slender flat-front rectangular blade: width 3mm (0.018 in X) at Z=0.
+  // Deep neck reach extending back to Z = 0.058 with side relief.
   const groovingInsertGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const vertices = new Float32Array([
-      // Top face
-      0, 0, 0,       0.018, 0, 0,       0.016, 0, 0.045,
-      0, 0, 0,       0.016, 0, 0.045,   0.002, 0, 0.045,
-      // Bottom face
-      0.002, -0.024, 0.002,   0.015, -0.024, 0.045,   0.016, -0.024, 0.002,
-      0.002, -0.024, 0.002,   0.003, -0.024, 0.045,   0.015, -0.024, 0.045,
-      // Front cutting face (contacts groove at Z = 0)
-      0, 0, 0,       0.002, -0.024, 0.002,   0.016, -0.024, 0.002,
-      0, 0, 0,       0.016, -0.024, 0.002,   0.018, 0, 0,
-      // Left side flank (faces LEFT / -X)
-      0, 0, 0,       0.002, 0, 0.045,        0.003, -0.024, 0.045,
-      0, 0, 0,       0.003, -0.024, 0.045,   0.002, -0.024, 0.002,
-      // Right side flank
-      0.018, 0, 0,   0.016, -0.024, 0.002,   0.015, -0.024, 0.045,
-      0.018, 0, 0,   0.015, -0.024, 0.045,   0.016, 0, 0.045,
-      // Back
-      0.002, 0, 0.045,   0.016, 0, 0.045,    0.015, -0.024, 0.045,
-      0.002, 0, 0.045,   0.015, -0.024, 0.045, 0.003, -0.024, 0.045,
+      // Top face (flat horizontal blade top at Y = 0)
+      -0.009, 0, 0,       0.009, 0, 0,        0.007, 0, 0.058,
+      -0.009, 0, 0,       0.007, 0, 0.058,   -0.007, 0, 0.058,
+      // Bottom face (at Y = -0.032, narrower for clearance)
+      -0.008, -0.032, 0.002,   0.006, -0.032, 0.056,   0.008, -0.032, 0.002,
+      -0.008, -0.032, 0.002,  -0.006, -0.032, 0.056,   0.006, -0.032, 0.056,
+      // Front cutting face (contacts groove at Z = 0, flat 3mm width)
+      -0.009, 0, 0,      -0.008, -0.032, 0.002,   0.008, -0.032, 0.002,
+      -0.009, 0, 0,       0.008, -0.032, 0.002,   0.009, 0, 0,
+      // Left side flank (relief angle)
+      -0.009, 0, 0,      -0.007, 0, 0.058,       -0.006, -0.032, 0.056,
+      -0.009, 0, 0,      -0.006, -0.032, 0.056,  -0.008, -0.032, 0.002,
+      // Right side flank (relief angle)
+      0.009, 0, 0,        0.008, -0.032, 0.002,   0.006, -0.032, 0.056,
+      0.009, 0, 0,        0.006, -0.032, 0.056,   0.007, 0, 0.058,
+      // Back face (held in clamp)
+      -0.007, 0, 0.058,   0.007, 0, 0.058,        0.006, -0.032, 0.056,
+      -0.007, 0, 0.058,   0.006, -0.032, 0.056,  -0.006, -0.032, 0.056,
     ]);
     geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
     geo.computeVertexNormals();
     return geo;
   }, []);
 
-  // 3. Facing insert (Pahat Facing, T0303):
+  // 3. Threading 60° Laydown Insert (Pahat Ulir Luar 60°, T0404 / ISO 16ER):
+  // Equilateral 60° triangle with sharp 60° V-crest apex at [0, 0, 0] plunging radially along -Z.
+  // Left flank at -30°, right flank at +30°.
+  const threadingInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face (Y = 0)
+      0, 0, 0,        0.024, 0, 0.042,     -0.024, 0, 0.042,
+      // Bottom face (relieved at Y = -0.022)
+      0, -0.022, 0.003,   -0.021, -0.022, 0.040,   0.021, -0.022, 0.040,
+      // Left 60° thread cutting flank
+      0, 0, 0,        -0.024, 0, 0.042,    -0.021, -0.022, 0.040,
+      0, 0, 0,        -0.021, -0.022, 0.040, 0, -0.022, 0.003,
+      // Right 60° thread cutting flank
+      0, 0, 0,        0, -0.022, 0.003,     0.021, -0.022, 0.040,
+      0, 0, 0,        0.021, -0.022, 0.040, 0.024, 0, 0.042,
+      // Back face
+      -0.024, 0, 0.042, 0.024, 0, 0.042,   0.021, -0.022, 0.040,
+      -0.024, 0, 0.042, 0.021, -0.022, 0.040, -0.021, -0.022, 0.040,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  // 4. Facing insert (Pahat Facing, T0303):
   // Triangular insert, sharp nose at [0,0,0] points directly LEFT (-X) into end face.
   const facingInsertGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
@@ -313,10 +339,16 @@ const ToolAssembly = ({
               <cylinderGeometry args={[0.18, 0.18, 0.20, 24]} />
               <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
             </mesh>
-            {/* Turret Station Badge */}
+            {/* Turret Station Badge Indicator */}
             <mesh position={[0, 0.11, 0]}>
               <cylinderGeometry args={[0.07, 0.07, 0.02, 16]} />
-              <meshStandardMaterial color="#38bdf8" />
+              <meshStandardMaterial
+                color={
+                  toolType === 'rata' ? '#38bdf8' :
+                  toolType === 'alur' ? '#fbbf24' :
+                  toolType === 'ulir' ? '#c084fc' : '#34d399'
+                }
+              />
             </mesh>
           </group>
 
@@ -362,36 +394,70 @@ const ToolAssembly = ({
             )}
 
             {toolType === 'alur' && (
-              /* 2. PAHAT ALUR (Flat 3mm Grooving Blade Insert - Hadap KIRI/Muka) */
+              /* 2. PAHAT ALUR (Slender 3mm Grooving / Parting Blade) */
               <group>
                 <mesh geometry={groovingInsertGeo} castShadow>
                   <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#fbbf24"}
+                    color={isCutting ? "#f59e0b" : "#d97706"}
                     metalness={0.95}
                     roughness={0.15}
                     emissive={isCutting ? "#b45309" : "#000000"}
                     emissiveIntensity={isCutting ? 0.8 : 0}
                   />
                 </mesh>
+                {/* Blade Holder Clamp Head */}
+                <mesh position={[0, 0.015, 0.048]}>
+                  <boxGeometry args={[0.024, 0.020, 0.025]} />
+                  <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.3} />
+                </mesh>
+                <mesh position={[0, 0.028, 0.048]}>
+                  <cylinderGeometry args={[0.006, 0.006, 0.008, 10]} />
+                  <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+                </mesh>
+              </group>
+            )}
+
+            {toolType === 'ulir' && (
+              /* 3. PAHAT ULIR (Equilateral 60° Triangular Laydown Insert 16ER) */
+              <group>
+                <mesh geometry={threadingInsertGeo} castShadow>
+                  <meshStandardMaterial
+                    color={isCutting ? "#f59e0b" : "#a855f7"}
+                    metalness={0.95}
+                    roughness={0.15}
+                    emissive={isCutting ? "#7e22ce" : "#000000"}
+                    emissiveIntensity={isCutting ? 0.85 : 0}
+                  />
+                </mesh>
+                {/* Anvil Shim underneath */}
+                <mesh position={[0, -0.028, 0.028]}>
+                  <boxGeometry args={[0.046, 0.008, 0.038]} />
+                  <meshStandardMaterial color="#1e293b" metalness={0.8} />
+                </mesh>
+                {/* Central Torx Screw */}
+                <mesh position={[0, 0.001, 0.026]}>
+                  <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
+                  <meshStandardMaterial color="#581c87" metalness={0.9} />
+                </mesh>
               </group>
             )}
 
             {toolType === 'facing' && (
-              /* 3. PAHAT FACING (Sharp Wedge Triangular Facing Insert - Hadap KIRI ke Muka) */
+              /* 4. PAHAT FACING (Sharp Wedge Triangular Facing Insert - Hadap KIRI ke Muka) */
               <group>
                 <mesh geometry={facingInsertGeo} castShadow>
                   <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#eab308"}
+                    color={isCutting ? "#f59e0b" : "#10b981"}
                     metalness={0.95}
                     roughness={0.15}
-                    emissive={isCutting ? "#b45309" : "#000000"}
+                    emissive={isCutting ? "#047857" : "#000000"}
                     emissiveIntensity={isCutting ? 0.8 : 0}
                   />
                 </mesh>
                 {/* Torx Screw */}
                 <mesh position={[0.022, 0.001, 0.022]}>
                   <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
-                  <meshStandardMaterial color="#713f12" metalness={0.9} />
+                  <meshStandardMaterial color="#064e3b" metalness={0.9} />
                 </mesh>
               </group>
             )}

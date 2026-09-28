@@ -28,13 +28,27 @@ const TOOLS_CONFIG = {
     name: 'Pahat Alur (Grooving)',
     enName: 'Grooving / Parting Off Tool',
     icon: '🪚',
-    insert: 'Q-Cut / Top-Notch Blade 3.0 mm (Flat Edge TiN)',
-    leadAngle: '90° Tegak Lurus Poros',
+    insert: 'CoroCut / Iscar Blade 3.0 mm (Slender Flat-Edge TiAlN)',
+    leadAngle: '90° Tegak Lurus Poros (Plunging Blade)',
     orientation: 'Vertikal (CNC Turret)',
     color: '#fbbf24',
     bg: 'rgba(251, 191, 36, 0.12)',
     border: '#d97706',
-    desc: 'Untuk menyayat alur celah (groove), snap ring, alur oli, dan pemotongan benda kerja (parting off) secara melintang ke X.'
+    desc: 'Bilah ramping khusus alur celah (groove), snap ring, alur oli, dan pemotongan benda kerja (parting off) secara melintang ke X.'
+  },
+  ulir: {
+    id: 'ulir',
+    code: 'T0404',
+    name: 'Pahat Ulir Luar (Threading)',
+    enName: 'External Threading Tool (60° ISO Metric)',
+    icon: '🔩',
+    insert: 'ISO 16ER AG60 (Equilateral 60° Laydown Carbide TiAlN)',
+    leadAngle: '60° Profil Gigi Ulir Metris (ISO 16ER)',
+    orientation: 'Vertikal (CNC Turret)',
+    color: '#c084fc',
+    bg: 'rgba(192, 132, 252, 0.12)',
+    border: '#9333ea',
+    desc: 'Insert segitiga sama sisi 60° khusus pembuatan ulir luar (external thread) metris standar dengan siklus G92/G76 pada permukaan poros.'
   },
   facing: {
     id: 'facing',
@@ -83,6 +97,26 @@ G00 X${(dia + 2).toFixed(1)} Z${z2}
 G01 X${d2} Z${z2} F0.08 (SAYAT ALUR 2)
 G04 P500
 G00 X${(dia + 2).toFixed(1)} Z${z2}
+G00 X${(dia + 10).toFixed(1)} Z10.0
+M05
+M30`;
+  }
+
+  if (tool === 'ulir') {
+    const threadZ = -(len * 0.50).toFixed(1);
+    const pitch = 2.0;
+    const coreDia = (dia - 2.4).toFixed(1);
+    return `(PROGRAM BUBUT ULIR METRIS M${dia}x${pitch} - T0404)
+G21 G90 G54
+T0404 M06 (PAHAT ULIR LUAR 60 DERAJAT 16ER)
+M03 S600 (RPM RENDAH UNTUK SIKLUS ULIR)
+G00 X${(dia + 4).toFixed(1)} Z4.0
+(SIKLUS PEMBUATAN ULIR DENGAN G92)
+G92 X${(dia - 0.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 1 KEDALAMAN 0.25MM)
+G92 X${(dia - 1.0).toFixed(1)} Z${threadZ} F${pitch} (PASS 2 KEDALAMAN 0.50MM)
+G92 X${(dia - 1.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 3 KEDALAMAN 0.75MM)
+G92 X${(dia - 2.0).toFixed(1)} Z${threadZ} F${pitch} (PASS 4 KEDALAMAN 1.00MM)
+G92 X${coreDia} Z${threadZ} F${pitch} (PASS 5 FINISHING DIAMETER INTI)
 G00 X${(dia + 10).toFixed(1)} Z10.0
 M05
 M30`;
@@ -227,6 +261,11 @@ const CNCLatheModule = ({ addXP }) => {
             }
           }
         }
+      } else if (toolType === 'ulir') {
+        // Pahat ulir menyayat ulir metris 60 derajat
+        if (cutDiameter < profileRef.current[index]) {
+          profileRef.current[index] = cutDiameter;
+        }
       } else if (toolType === 'facing') {
         // Pahat facing memotong muka Z0
         if (Math.abs(newZ) <= 1.5) {
@@ -290,9 +329,10 @@ const CNCLatheModule = ({ addXP }) => {
       
       const line = lines[currentLine].trim().toUpperCase();
       
-      // Deteksi Tool Change di dalam G-Code (T0101, T0202, T0303)
+      // Deteksi Tool Change di dalam G-Code (T0101, T0202, T0303, T0404)
       if (line.includes('T0101') || line.includes('T01')) setToolType('rata');
       else if (line.includes('T0202') || line.includes('T02')) setToolType('alur');
+      else if (line.includes('T0404') || line.includes('T04') || line.includes('G92') || line.includes('G76')) setToolType('ulir');
       else if (line.includes('T0303') || line.includes('T03')) setToolType('facing');
 
       if (!line || line.startsWith('(') || line.startsWith('O') || line.includes('M03') || line.includes('M05') || line.includes('M30') || line.includes('G21') || line.includes('G90') || line.includes('G54') || line.includes('G28')) {
@@ -845,6 +885,12 @@ const CNCLatheModule = ({ addXP }) => {
                       style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'alur' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255,255,255,0.06)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
                       📄 Prog. Alur
+                    </button>
+                    <button
+                      onClick={() => handleSelectTool('ulir')}
+                      style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'ulir' ? 'rgba(192, 132, 252, 0.2)' : 'rgba(255,255,255,0.06)', color: '#c084fc', border: '1px solid rgba(192, 132, 252, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
+                    >
+                      📄 Prog. Ulir
                     </button>
                     <button
                       onClick={() => handleSelectTool('facing')}

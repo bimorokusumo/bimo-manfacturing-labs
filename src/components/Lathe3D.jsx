@@ -143,29 +143,70 @@ const Lathe2D = ({
               )}
 
               {toolType === 'alur' && (
-                /* 2. Pahat Alur (Flat Grooving Blade Insert 3mm) */
+                /* 2. Pahat Alur (Slender 3mm Grooving / Parting Blade) */
                 <g>
-                  {/* Vertical Tool Shank set back */}
-                  <rect x="-2" y="24" width="20" height="95" rx="3" fill="#18181b" stroke="#fbbf24" strokeWidth="1.5" />
-                  <rect x="-6" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
-                  <circle cx="8" cy="70" r="3" fill="#cbd5e1" />
-                  <circle cx="8" cy="90" r="3" fill="#cbd5e1" />
+                  {/* Heavy-duty vertical toolholder with CoroCut blade clamp */}
+                  <rect x="-8" y="28" width="22" height="92" rx="3" fill="#18181b" stroke="#f59e0b" strokeWidth="1.5" />
+                  
+                  {/* Blade clamping jaw */}
+                  <polygon points="-10,26 8,26 6,36 -8,36" fill="#334155" stroke="#64748b" strokeWidth="1" />
+                  <circle cx="-1" cy="46" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
+                  <circle cx="-1" cy="70" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
 
-                  {/* Narrow Grooving Blade: width 6px (~3mm). Only edge from (0, 0) to (6, 0) touches! */}
+                  {/* Slender Grooving Blade: flat 3mm edge at (0,0) to (6,0) with deep neck */}
                   <polygon
-                    points="0,0 6,0 5,24 1,24"
-                    fill={isCutting ? "#f59e0b" : "#fbbf24"}
+                    points="0,0 6,0 5.2,30 0.8,30"
+                    fill={isCutting ? "#f59e0b" : "#d97706"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  <line x1="0" y1="0" x2="6" y2="0" stroke="#ffffff" strokeWidth="2" />
-                  <circle cx="3" cy="12" r="2.2" fill="#713f12" />
-                  <text x="14" y="18" fill="#f59e0b" fontSize="9" fontWeight="800">T02 ALUR 3mm</text>
+                  {/* Flat cutting edge highlight */}
+                  <line x1="0" y1="0" x2="6" y2="0" stroke="#ffffff" strokeWidth="2.5" />
+                  {/* Chip curling concave notch */}
+                  <path d="M 0.8,2 Q 3,4.5 5.2,2 L 4.8,8 Q 3,10 1.2,8 Z" fill="rgba(0,0,0,0.3)" />
+                  <circle cx="3" cy="18" r="1.8" fill="#78350f" />
+
+                  {/* Label & Indicator */}
+                  <text x="14" y="16" fill="#fbbf24" fontSize="9" fontWeight="800">T02 ALUR 3mm (BILAH)</text>
+                </g>
+              )}
+
+              {toolType === 'ulir' && (
+                /* 3. Pahat Ulir Luar 60° (Equilateral 60° Triangular Laydown Insert 16ER) */
+                <g>
+                  {/* Vertical SER Toolholder Shank */}
+                  <rect x="-10" y="24" width="22" height="96" rx="3" fill="#18181b" stroke="#a855f7" strokeWidth="1.5" />
+                  <circle cx="1" cy="55" r="3" fill="#cbd5e1" />
+                  <circle cx="1" cy="80" r="3" fill="#cbd5e1" />
+
+                  {/* Anvil shim seat */}
+                  <polygon points="-12,20 12,20 10,25 -10,25" fill="#334155" />
+
+                  {/* 60° Equilateral Triangle 16ER Threading Insert */}
+                  {/* Apex is at (0,0), flanks at -30 deg and +30 deg creating exact 60 deg V-thread tooth */}
+                  <polygon
+                    points="0,0 -12,21 12,21"
+                    fill={isCutting ? "#f59e0b" : "#a855f7"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  {/* Chipbreaker triangular groove */}
+                  <polygon
+                    points="0,3 -8,19 8,19"
+                    fill="rgba(0,0,0,0.28)"
+                  />
+                  {/* Central Torx Countersunk Screw */}
+                  <circle cx="0" cy="14" r="2.8" fill="#581c87" stroke="#e9d5ff" strokeWidth="0.8" />
+                  {/* Sharp 60° V-crest highlight */}
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+
+                  {/* Label */}
+                  <text x="18" y="16" fill="#c084fc" fontSize="9" fontWeight="800">T04 ◄ ULIR 60° (16ER)</text>
                 </g>
               )}
 
               {toolType === 'facing' && (
-                /* 3. Pahat Facing (Wedge Facing Insert Angled to Face) */
+                /* 4. Pahat Facing (Wedge Facing Insert Angled to Face) */
                 <g>
                   <rect x="8" y="26" width="20" height="95" rx="3" fill="#18181b" stroke="#34d399" strokeWidth="1.5" />
                   <rect x="4" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
@@ -174,11 +215,11 @@ const Lathe2D = ({
                   {/* Sharp triangular facing insert pointing left towards face */}
                   <polygon
                     points="0,0 2,22 18,26 16,8"
-                    fill={isCutting ? "#f59e0b" : "#eab308"}
+                    fill={isCutting ? "#f59e0b" : "#10b981"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  <circle cx="9" cy="14" r="2.2" fill="#713f12" />
+                  <circle cx="9" cy="14" r="2.2" fill="#064e3b" />
                   <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
                   <text x="26" y="18" fill="#34d399" fontSize="9" fontWeight="800">T03 ◄ FACING</text>
                 </g>

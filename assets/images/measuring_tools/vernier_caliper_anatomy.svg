@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Metal Gradients -->
+    <linearGradient id="steelBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1" />
+      <stop offset="15%" stop-color="#f1f5f9" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="85%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <linearGradient id="sliderSteel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0" />
+      <stop offset="25%" stop-color="#ffffff" />
+      <stop offset="60%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <linearGradient id="brassScrew" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+
+    <filter id="glowGreen" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#10b981" flood-opacity="0.4" />
+    </filter>
+    <filter id="shadowBox" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Blueprint Subtle Grid -->
+  <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.7" stroke-opacity="0.6" />
+  </pattern>
+  <rect width="960" height="540" rx="16" fill="url(#gridPattern)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(40, 28)">
+    <rect width="880" height="48" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.2"/>
+    <rect x="0" y="0" width="8" height="48" rx="4" fill="#10b981"/>
+    <text x="24" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#f8fafc" letter-spacing="0.5">
+      ANATOMI &amp; KOMPONEN JANGKA SORONG (VERNIER CALIPER)
+    </text>
+    <text x="24" y="41" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" fill="#94a3b8">
+      Standar Metrologi Industri DIN 862 / ISO 13385-1 • Resolusi Ketelitian 0,05 mm &amp; 0,02 mm
+    </text>
+    <rect x="740" y="10" width="125" height="28" rx="6" fill="#047857" fill-opacity="0.3" stroke="#10b981" stroke-width="1"/>
+    <text x="802" y="28" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#34d399" text-anchor="middle">
+      3 FUNGSI UKUR
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALIPER DRAWING (X: 130 to 860, Y: 140 to 330) -->
+  <!-- ============================================================== -->
+  <g id="caliperVector" transform="translate(140, 150)" filter="url(#shadowBox)">
+    <!-- Depth Probe (Eksitasi keluar ke kanan) -->
+    <path d="M 320,53 L 720,53 L 720,58 L 320,58 Z" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+
+    <!-- Main Scale Beam (Batang Utama Skala) -->
+    <!-- Fixed Jaw Base + Beam Body -->
+    <path d="M 0,20 L 70,20 L 70,42 L 580,42 L 580,72 L 70,72 L 70,185 L 35,185 L 0,140 Z" 
+          fill="url(#steelBeam)" stroke="#475569" stroke-width="1.5"/>
+
+    <!-- Inside Fixed Jaw (Rahang Dalam Tetap Atas) -->
+    <path d="M 0,20 L 25,-45 L 45,-45 L 70,20 Z" 
+          fill="url(#steelBeam)" stroke="#475569" stroke-width="1.5"/>
+
+    <!-- Step Measuring Face (Bidang Tingkat) -->
+    <rect x="0" y="20" width="12" height="22" fill="#64748b"/>
+
+    <!-- Millimeter graduations on Main Beam -->
+    <g stroke="#334155" stroke-width="1" opacity="0.85">
+      <!-- 0 to 150 mm ticks -->
+      <line x1="80" y1="42" x2="80" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="110" y1="42" x2="110" y2="54"/>
+      <line x1="140" y1="42" x2="140" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="170" y1="42" x2="170" y2="54"/>
+      <line x1="200" y1="42" x2="200" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="230" y1="42" x2="230" y2="54"/>
+      <line x1="260" y1="42" x2="260" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="290" y1="42" x2="290" y2="54"/>
+      <line x1="320" y1="42" x2="320" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="350" y1="42" x2="350" y2="54"/>
+      <line x1="380" y1="42" x2="380" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="410" y1="42" x2="410" y2="54"/>
+      <line x1="440" y1="42" x2="440" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="470" y1="42" x2="470" y2="54"/>
+      <line x1="500" y1="42" x2="500" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="530" y1="42" x2="530" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+      <line x1="560" y1="42" x2="560" y2="58" stroke="#0f172a" stroke-width="1.5"/>
+    </g>
+    <!-- Numbers on Main Beam -->
+    <text x="80" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">0</text>
+    <text x="140" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">10</text>
+    <text x="200" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">20</text>
+    <text x="260" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">30</text>
+    <text x="320" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">40</text>
+    <text x="380" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">50</text>
+    <text x="440" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">60</text>
+    <text x="500" y="68" font-size="8" font-weight="700" fill="#1e293b" text-anchor="middle">70</text>
+
+    <!-- MOVABLE SLIDER (Rahang Geser & Skala Nonius) - Positioned at X = 160 (Terbuka) -->
+    <g transform="translate(120, 0)">
+      <!-- Upper Movable Jaw (Rahang Dalam Geser) -->
+      <path d="M 0,20 L -25,-45 L -45,-45 L 0,20 Z" fill="url(#sliderSteel)" stroke="#334155" stroke-width="1.5"/>
+      
+      <!-- Locking Screw (Baut Pengunci Atas) -->
+      <rect x="50" y="10" width="18" height="15" rx="3" fill="url(#brassScrew)" stroke="#78350f" stroke-width="1"/>
+      <line x1="53" y1="12" x2="53" y2="23" stroke="#78350f"/>
+      <line x1="59" y1="12" x2="59" y2="23" stroke="#78350f"/>
+      <line x1="65" y1="12" x2="65" y2="23" stroke="#78350f"/>
+
+      <!-- Slider Body (Rumah Rahang Geser) -->
+      <path d="M 0,25 L 120,25 L 120,95 L 45,95 L 0,185 L -35,185 L 0,140 Z" 
+            fill="url(#sliderSteel)" stroke="#334155" stroke-width="1.5"/>
+
+      <!-- Vernier Scale Cutout Window -->
+      <rect x="15" y="44" width="90" height="26" rx="3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+      <!-- Vernier Graduations (0.05 mm lines) -->
+      <g stroke="#047857" stroke-width="1.2">
+        <line x1="22" y1="44" x2="22" y2="56"/>
+        <line x1="30" y1="44" x2="30" y2="52"/>
+        <line x1="38" y1="44" x2="38" y2="56"/>
+        <line x1="46" y1="44" x2="46" y2="52"/>
+        <line x1="54" y1="44" x2="54" y2="56"/>
+        <line x1="62" y1="44" x2="62" y2="52"/>
+        <line x1="70" y1="44" x2="70" y2="56"/>
+        <line x1="78" y1="44" x2="78" y2="52"/>
+        <line x1="86" y1="44" x2="86" y2="56"/>
+        <line x1="94" y1="44" x2="94" y2="52"/>
+      </g>
+      <text x="22" y="66" font-size="7" font-weight="800" fill="#047857" text-anchor="middle">0</text>
+      <text x="54" y="66" font-size="7" font-weight="800" fill="#047857" text-anchor="middle">5</text>
+      <text x="86" y="66" font-size="7" font-weight="800" fill="#047857" text-anchor="middle">10</text>
+
+      <!-- Thumb Rest / Roller (Tumpuan Jempol Gerak Halus) -->
+      <path d="M 120,70 Q 135,80 120,95 Z" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+      <line x1="123" y1="74" x2="128" y2="78" stroke="#334155"/>
+      <line x1="124" y1="80" x2="131" y2="83" stroke="#334155"/>
+      <line x1="123" y1="88" x2="128" y2="91" stroke="#334155"/>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALLOUT LABELS & LEADER LINES -->
+  <!-- ============================================================== -->
+  
+  <!-- 1. Rahang Ukur Luar (Tetap & Geser) -->
+  <g transform="translate(50, 410)">
+    <line x1="100" y1="-80" x2="120" y2="-20" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="100" cy="-80" r="4" fill="#10b981" filter="url(#glowGreen)"/>
+    <rect width="210" height="52" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#10b981"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">1</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Rahang Luar (External Jaws)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Mengukur diameter luar &amp; tebal</text>
+  </g>
+
+  <!-- 2. Rahang Ukur Dalam (Internal Jaws) -->
+  <g transform="translate(50, 85)">
+    <line x1="185" y1="40" x2="170" y2="10" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="185" cy="40" r="4" fill="#38bdf8"/>
+    <rect width="210" height="52" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#38bdf8"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">2</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Rahang Dalam (Internal Jaws)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Mengukur lubang silinder &amp; alur</text>
+  </g>
+
+  <!-- 3. Baut Pengunci (Locking Screw) -->
+  <g transform="translate(300, 85)">
+    <line x1="10" y1="15" x2="10" y2="65" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="10" cy="65" r="4" fill="#f59e0b"/>
+    <rect width="200" height="52" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f59e0b"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">3</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Baut Pengunci (Lock Screw)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Mengunci posisi saat membaca</text>
+  </g>
+
+  <!-- 4. Skala Utama Batang (Main Scale) -->
+  <g transform="translate(530, 85)">
+    <line x1="50" y1="15" x2="30" y2="85" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="30" cy="85" r="4" fill="#a855f7"/>
+    <rect width="200" height="52" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#a855f7"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">4</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Skala Utama (Main Scale)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Nilai bilangan bulat (mm / inch)</text>
+  </g>
+
+  <!-- 5. Skala Nonius / Vernier (Vernier Scale) -->
+  <g transform="translate(290, 410)">
+    <line x1="50" y1="-120" x2="40" y2="-20" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="50" cy="-120" r="4" fill="#ec4899"/>
+    <rect width="210" height="52" rx="8" fill="#1e293b" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ec4899"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">5</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Skala Nonius (Vernier)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Fraksi desimal 0,05 / 0,02 mm</text>
+  </g>
+
+  <!-- 6. Penggeser Jempol (Thumb Rest) -->
+  <g transform="translate(530, 410)">
+    <line x1="-30" y1="-170" x2="30" y2="-20" stroke="#eab308" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-30" cy="-170" r="4" fill="#eab308"/>
+    <rect width="190" height="52" rx="8" fill="#1e293b" stroke="#eab308" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#eab308"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">6</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Tumpuan Jempol (Thumb Rest)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Mendorong rahang geser halus</text>
+  </g>
+
+  <!-- 7. Batang Kedalaman (Depth Probe) -->
+  <g transform="translate(740, 310)">
+    <line x1="40" y1="-90" x2="20" y2="-10" stroke="#06b6d4" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="40" cy="-90" r="4" fill="#06b6d4"/>
+    <rect width="180" height="52" rx="8" fill="#1e293b" stroke="#06b6d4" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#06b6d4"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">7</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Tangkai Kedalaman</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Ukur kedalaman lubang buta</text>
+  </g>
+
+  <!-- 8. Bidang Ketinggian Bertingkat (Step Measure) -->
+  <g transform="translate(750, 85)">
+    <line x1="-590" y1="80" x2="30" y2="10" stroke="#f97316" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-590" cy="80" r="4" fill="#f97316"/>
+    <rect width="170" height="52" rx="8" fill="#1e293b" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f97316"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">8</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Bidang Tingkat (Step)</text>
+    <text x="40" y="38" font-size="9.5" fill="#94a3b8">Ukur beda tinggi permukaan</text>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <rect x="40" y="492" width="880" height="30" rx="6" fill="#020617" stroke="#1e293b"/>
+  <text x="55" y="512" font-size="10" font-weight="700" fill="#10b981">TIPS METROLOGI:</text>
+  <text x="160" y="512" font-size="9.5" fill="#94a3b8">
+    Hindari menekan rahang terlalu kuat (maksimal sentuhan geser halus). Selalu cek titik nol (zero error) sebelum mengukur.
+  </text>
+</svg>

@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGradBlock" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a131a" />
+      <stop offset="50%" stop-color="#11222c" />
+      <stop offset="100%" stop-color="#050a0e" />
+    </linearGradient>
+
+    <!-- Mirror Steel Faces -->
+    <linearGradient id="mirrorTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#f1f5f9" />
+      <stop offset="70%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+
+    <linearGradient id="steelSide" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#cbd5e1" />
+      <stop offset="50%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <linearGradient id="steelFront" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#94a3b8" />
+      <stop offset="30%" stop-color="#e2e8f0" />
+      <stop offset="70%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <!-- Wringing Film Glow -->
+    <filter id="glowWring" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#10b981" flood-opacity="0.8" />
+    </filter>
+
+    <filter id="shadowBlock" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="960" height="540" rx="16" fill="url(#bgGradBlock)" stroke="#155e75" stroke-width="2"/>
+
+  <!-- Blueprint Subtle Grid -->
+  <pattern id="gridBlock" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#155e75" stroke-width="0.7" stroke-opacity="0.4" />
+  </pattern>
+  <rect width="960" height="540" rx="16" fill="url(#gridBlock)"/>
+
+  <!-- Header Banner -->
+  <g transform="translate(40, 28)">
+    <rect width="880" height="48" rx="8" fill="#133644" stroke="#0e7490" stroke-width="1.2"/>
+    <rect x="0" y="0" width="8" height="48" rx="4" fill="#10b981"/>
+    <text x="24" y="26" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="900" fill="#f8fafc" letter-spacing="0.5">
+      ANATOMI &amp; KOMPONEN GAUGE BLOCK (BLOK UKUR PRESISI JOHANSSON)
+    </text>
+    <text x="24" y="41" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="600" fill="#67e8f9">
+      Standar Metrologi ISO 3650 • Akurasi Sub-Mikron (±0,0001 mm) • Master Kalibrasi Nasional &amp; Industri Mesin
+    </text>
+    <rect x="710" y="10" width="155" height="28" rx="6" fill="#0e7490" fill-opacity="0.3" stroke="#22d3ee" stroke-width="1"/>
+    <text x="787" y="28" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#38bdf8" text-anchor="middle">
+      WRINGING FORCE
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- 3D ISOMETRIC GAUGE BLOCKS VECTOR ARTWORK -->
+  <!-- Two precision blocks wrung together (Block A: 30 mm, Block B: 20 mm) -->
+  <!-- ============================================================== -->
+  <g id="gaugeBlocksVector" transform="translate(430, 220)" filter="url(#shadowBlock)">
+    
+    <!-- Granite datum reflection shadow underneath -->
+    <ellipse cx="60" cy="170" rx="180" ry="20" fill="#000000" opacity="0.6"/>
+
+    <!-- ============================================== -->
+    <!-- LOWER BLOCK A (30.000 mm Base Block) -->
+    <!-- ============================================== -->
+    <g transform="translate(0, 40)">
+      <!-- Top Face of Block A -->
+      <polygon points="0,0 160,-60 280,-20 120,40" fill="url(#mirrorTop)" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Front Face of Block A (Length side with laser inscription) -->
+      <polygon points="0,0 120,40 120,110 0,70" fill="url(#steelFront)" stroke="#475569" stroke-width="1.2"/>
+      
+      <!-- Right Side Face of Block A -->
+      <polygon points="120,40 280,-20 280,50 120,110" fill="url(#steelSide)" stroke="#334155" stroke-width="1.2"/>
+
+      <!-- Engraving on Front Face -->
+      <!-- Incline text along 30 deg slant -->
+      <g transform="translate(20, 20) skewY(18.5)">
+        <text x="0" y="18" font-size="14" font-weight="900" fill="#0f172a" letter-spacing="1">30.000 mm</text>
+        <text x="0" y="32" font-size="8.5" font-weight="800" fill="#334155">MITUTOYO  GRADE 0</text>
+        <text x="0" y="44" font-size="7.5" font-weight="700" fill="#475569">SN: 8904122 • ISO 3650</text>
+      </g>
+    </g>
+
+    <!-- ============================================== -->
+    <!-- UPPER BLOCK B (20.000 mm Wrung Block on top) -->
+    <!-- Positioned overlapping (wringing offset) -->
+    <!-- ============================================== -->
+    <g transform="translate(60, -35)">
+      <!-- Wringing Interface Glowing Line between Block A and Block B -->
+      <path d="M 0,75 L 120,115" stroke="#10b981" stroke-width="3" filter="url(#glowWring)"/>
+      <circle cx="60" cy="95" r="4" fill="#34d399"/>
+
+      <!-- Top Face of Block B (Super mirror reflection) -->
+      <polygon points="0,0 160,-60 280,-20 120,40" fill="url(#mirrorTop)" stroke="#94a3b8" stroke-width="1.2"/>
+      <!-- Mirror sheen ray -->
+      <line x1="80" y1="-15" x2="200" y2="-45" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+
+      <!-- Front Face of Block B -->
+      <polygon points="0,0 120,40 120,95 0,55" fill="url(#steelFront)" stroke="#475569" stroke-width="1.2"/>
+
+      <!-- Right Side Face of Block B -->
+      <polygon points="120,40 280,-20 280,35 120,95" fill="url(#steelSide)" stroke="#334155" stroke-width="1.2"/>
+
+      <!-- Engraving on Upper Block B -->
+      <g transform="translate(20, 16) skewY(18.5)">
+        <text x="0" y="16" font-size="13" font-weight="900" fill="#0f172a" letter-spacing="1">20.000 mm</text>
+        <text x="0" y="28" font-size="8" font-weight="800" fill="#334155">GRADE 0 • 20°C</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- CALLOUT LABELS & LEADER LINES -->
+  <!-- ============================================================== -->
+  
+  <!-- 1. Muka Ukur Optik Cermin (Mirror Measuring Faces) -->
+  <g transform="translate(40, 95)">
+    <line x1="220" y1="20" x2="550" y2="180" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="550" cy="180" r="4" fill="#38bdf8"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#38bdf8"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">1</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Muka Ukur Cermin (Faces)</text>
+    <text x="40" y="38" font-size="9.5" fill="#a5f3fc">Lapped optic mirror (Ra &lt; 0.01 µm)</text>
+  </g>
+
+  <!-- 2. Grafir Dimensi Nominal (Nominal Size) -->
+  <g transform="translate(40, 220)">
+    <line x1="220" y1="20" x2="480" y2="300" stroke="#f59e0b" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="480" cy="300" r="4" fill="#f59e0b"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f59e0b"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">2</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Grafir Nominal (Size)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fde68a">Tanda ukuran laser presisi 20°C</text>
+  </g>
+
+  <!-- 3. Bidang Samping Non-Ukur (Side Datum) -->
+  <g transform="translate(710, 95)">
+    <line x1="-15" y1="20" x2="-80" y2="280" stroke="#a855f7" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-80" cy="280" r="4" fill="#a855f7"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#a855f7"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">3</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Bidang Samping (Side Face)</text>
+    <text x="40" y="38" font-size="9.5" fill="#d8b4fe">Permukaan pegangan bebas ukur</text>
+  </g>
+
+  <!-- 4. Fenomena Wringing (Molecular Adhesion) -->
+  <g transform="translate(710, 220)">
+    <line x1="-15" y1="25" x2="-220" y2="280" stroke="#10b981" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-220" cy="280" r="4" fill="#10b981"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#10b981"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#000" text-anchor="middle">4</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Lapisan Wringing (Film)</text>
+    <text x="40" y="38" font-size="9.5" fill="#6ee7b7">Gaya Van der Waals merekat kuat</text>
+  </g>
+
+  <!-- 5. Tepi Bevel Pengaman (Safety Chamfer) -->
+  <g transform="translate(40, 345)">
+    <line x1="220" y1="20" x2="430" y2="280" stroke="#ec4899" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="430" cy="280" r="4" fill="#ec4899"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#ec4899" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#ec4899"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">5</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Tepi Bevel (Chamfer)</text>
+    <text x="40" y="38" font-size="9.5" fill="#f472b6">Mencegah burr cacat gores</text>
+  </g>
+
+  <!-- 6. Grade Standar ISO 3650 (Calibration Grade) -->
+  <g transform="translate(710, 345)">
+    <line x1="-15" y1="20" x2="-180" y2="310" stroke="#f97316" stroke-width="1.8" stroke-dasharray="3,3"/>
+    <circle cx="-180" cy="310" r="4" fill="#f97316"/>
+    <rect width="210" height="52" rx="8" fill="#133644" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="20" cy="26" r="12" fill="#f97316"/>
+    <text x="20" y="31" font-size="12" font-weight="900" fill="#fff" text-anchor="middle">6</text>
+    <text x="40" y="21" font-size="11" font-weight="800" fill="#f8fafc">Grade Presisi (ISO 3650)</text>
+    <text x="40" y="38" font-size="9.5" fill="#fdba74">Grade 00 / 0 / 1 / 2 terverifikasi</text>
+  </g>
+
+  <!-- Footer Info Bar -->
+  <rect x="40" y="492" width="880" height="30" rx="6" fill="#050a0e" stroke="#0e7490"/>
+  <text x="55" y="512" font-size="10" font-weight="700" fill="#38bdf8">STANDAR SUHU:</text>
+  <text x="165" y="512" font-size="9.5" fill="#67e8f9">
+    Ukuran nominal terkalibrasi tepat pada suhu standar metrologi internasional 20°C (68°F). Pegang hanya pada sarung tangan katun.
+  </text>
+</svg>

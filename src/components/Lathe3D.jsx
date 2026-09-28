@@ -5,6 +5,10 @@ const Lathe2D = ({
   isRunning = false,
   toolPosition = { z: 0, d: 50 },
   profile = null,
+  rawDiameter = 50,
+  rawLength = 100,
+  toolType = 'rata', // 'rata', 'alur', 'facing'
+  toolOrientation = 'vertical', // 'vertical' (sesuai permintaan user)
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false
@@ -14,7 +18,11 @@ const Lathe2D = ({
   const CENTER_Y = 200;
 
   const toolZ = toolPosition && toolPosition.z !== undefined ? toolPosition.z : 0;
-  const toolD = toolPosition && toolPosition.d !== undefined ? toolPosition.d : 50;
+  const toolD = toolPosition && toolPosition.d !== undefined ? (toolPosition.d ?? toolPosition.x) : rawDiameter;
+
+  const workpieceWidthPx = (rawLength / 100) * 400;
+  const chuckFaceX = 600 - workpieceWidthPx;
+  const chuckBodyX = Math.max(20, chuckFaceX - 130);
 
   // Convert profile array to SVG polygon points
   const workpiecePoints = useMemo(() => {
@@ -23,11 +31,11 @@ const Lathe2D = ({
     const topPoints = [];
     const bottomPoints = [];
 
-    // index 0 is right/tailstock (X=600), index 29 is left/chuck (X=200)
+    // index 0 is right/tailstock (X=600), index 29 is left/chuck (X=chuckFaceX)
     for (let i = 0; i < profile.length; i++) {
-      const x = 600 - (i / 29) * 400;
-      const diaMm = profile[i] !== undefined ? profile[i] : 50;
-      const radiusPx = (diaMm / 2) * 3.5; // 25mm => 87.5px
+      const x = 600 - (i / 29) * workpieceWidthPx;
+      const diaMm = profile[i] !== undefined ? profile[i] : rawDiameter;
+      const radiusPx = (diaMm / 2) * (175 / 50); // 25mm => 87.5px
 
       topPoints.push(`${x},${CENTER_Y - radiusPx}`);
       bottomPoints.push(`${x},${CENTER_Y + radiusPx}`);
@@ -35,11 +43,11 @@ const Lathe2D = ({
 
     bottomPoints.reverse();
     return [...topPoints, ...bottomPoints].join(' ');
-  }, [profile]);
+  }, [profile, rawDiameter, rawLength, workpieceWidthPx]);
 
   // Exact Tool Tip Position in 2D
-  const toolTipX = 600 + (toolZ / 100) * 400;
-  const toolTipY = 200 + (toolD / 2) * 3.5;
+  const toolTipX = 600 + (toolZ / rawLength) * workpieceWidthPx;
+  const toolTipY = 200 + (toolD / 2) * (175 / 50);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#f8fafc' }}>
@@ -62,10 +70,10 @@ const Lathe2D = ({
         <rect x="50" y="340" width="700" height="35" fill="#475569" stroke="#334155" strokeWidth="2" />
         <line x1="50" y1="355" x2="750" y2="355" stroke="#94a3b8" strokeWidth="4" strokeDasharray="8 4" />
 
-        {/* CHUCK (Kepala Tetap) */}
-        <rect x="50" y="80" width="150" height="240" fill="#0284c7" stroke="#0369a1" strokeWidth="3" rx="8" />
-        <rect x="180" y="105" width="22" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
-        <rect x="180" y="255" width="22" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+        {/* CHUCK (Kepala Tetap - Dinamis Mengikuti Panjang Benda Kerja) */}
+        <rect x={chuckBodyX} y="80" width={chuckFaceX - chuckBodyX} height="240" fill="#0284c7" stroke="#0369a1" strokeWidth="3" rx="8" />
+        <rect x={chuckFaceX - 12} y="105" width="16" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+        <rect x={chuckFaceX - 12} y="255" width="16" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
 
         {/* WORKPIECE */}
         {workpiecePoints && (
@@ -83,29 +91,98 @@ const Lathe2D = ({
         <rect x="580" y="180" width="45" height="40" fill="#cbd5e1" />
         <polygon points="580,180 550,200 580,220" fill="#e2e8f0" />
 
-        {/* CUTTING TOOL - Tip is placed exactly at (toolTipX, toolTipY) */}
+        {/* CUTTING TOOL - POSISI VERTIKAL SESUAI PERMINTAAN USER */}
         <g transform={`translate(${toolTipX}, ${toolTipY})`} style={{ transition: isRunning ? 'none' : 'all 0.05s linear' }}>
-          {/* Tool Shank extending to the right and bottom */}
-          <rect x="12" y="8" width="80" height="24" fill="#18181b" stroke="#3f3f46" strokeWidth="1" />
-          {/* Gold Carbide Insert with sharp tip at (0,0) */}
-          <polygon
-            points="0,0 24,10 24,28 8,28"
-            fill={isCutting ? "#f59e0b" : "#eab308"}
-            stroke="#fff"
-            strokeWidth="1.5"
-          />
+          {toolOrientation === 'vertical' ? (
+            /* VERTICAL TOOL HOLDER & TURRET CLAMP */
+            <g>
+              {/* Vertical Tool Shank (Menjulur ke Bawah Vertikal) */}
+              <rect x="-11" y="8" width="22" height="95" rx="3" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5" />
+              
+              {/* Tool Clamping Block */}
+              <rect x="-16" y="55" width="32" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
+              <circle cx="-6" cy="70" r="3" fill="#cbd5e1" />
+              <circle cx="6" cy="70" r="3" fill="#cbd5e1" />
+              <circle cx="0" cy="90" r="3" fill="#cbd5e1" />
+
+              {/* Vertical Orientation Indicator */}
+              <rect x="-24" y="112" width="48" height="16" rx="4" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" strokeWidth="0.8" />
+              <text x="0" y="124" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">VERTIKAL</text>
+
+              {/* CUTTING INSERT AT TIP (0, 0) SESUAI TOOL TYPE */}
+              {toolType === 'rata' && (
+                /* 1. Pahat Rata Kanan (Rhombic 80° Insert) */
+                <g>
+                  <polygon
+                    points="0,0 16,8 14,24 -4,18"
+                    fill={isCutting ? "#f59e0b" : "#eab308"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <circle cx="6" cy="12" r="2.5" fill="#713f12" />
+                  <text x="18" y="24" fill="#38bdf8" fontSize="9" fontWeight="800">T01 RATA</text>
+                </g>
+              )}
+
+              {toolType === 'alur' && (
+                /* 2. Pahat Alur (Flat Grooving Blade Insert 3mm) */
+                <g>
+                  <rect
+                    x="-5"
+                    y="0"
+                    width="10"
+                    height="20"
+                    fill={isCutting ? "#f59e0b" : "#fbbf24"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                    rx="1"
+                  />
+                  <line x1="-5" y1="0" x2="5" y2="0" stroke="#f59e0b" strokeWidth="2.5" />
+                  <circle cx="0" cy="10" r="2.5" fill="#713f12" />
+                  <text x="14" y="24" fill="#f59e0b" fontSize="9" fontWeight="800">T02 ALUR 3mm</text>
+                </g>
+              )}
+
+              {toolType === 'facing' && (
+                /* 3. Pahat Facing (Wedge Facing Insert Angled to Face) */
+                <g>
+                  <polygon
+                    points="0,0 20,4 12,22 -3,17"
+                    fill={isCutting ? "#f59e0b" : "#eab308"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <circle cx="8" cy="10" r="2.5" fill="#713f12" />
+                  <text x="18" y="24" fill="#10b981" fontSize="9" fontWeight="800">T03 FACING</text>
+                </g>
+              )}
+            </g>
+          ) : (
+            /* Horizontal fallback */
+            <g>
+              <rect x="12" y="8" width="80" height="24" fill="#18181b" stroke="#3f3f46" strokeWidth="1" />
+              <polygon
+                points="0,0 24,10 24,28 8,28"
+                fill={isCutting ? "#f59e0b" : "#eab308"}
+                stroke="#fff"
+                strokeWidth="1.5"
+              />
+            </g>
+          )}
+
           {/* Sparks when cutting */}
           {isCutting && (
             <g>
               <circle cx="-4" cy="-4" r="4" fill="#fbbf24" opacity="0.9" />
               <circle cx="-10" cy="-2" r="2.5" fill="#f97316" opacity="0.8" />
               <circle cx="-6" cy="-10" r="2" fill="#ef4444" opacity="0.7" />
+              <circle cx="2" cy="-6" r="3" fill="#fbbf24" opacity="0.8" />
             </g>
           )}
         </g>
 
         {/* CENTERLINE */}
-        <line x1="180" y1="200" x2="620" y2="200" stroke="rgba(56, 189, 248, 0.4)" strokeDasharray="12 6" strokeWidth="1" />
+        <line x1={chuckFaceX} y1="200" x2="620" y2="200" stroke="rgba(56, 189, 248, 0.4)" strokeDasharray="12 6" strokeWidth="1" />
 
         {/* DIMENSION SCALES */}
         <g stroke="rgba(255,255,255,0.2)" strokeWidth="1">
@@ -122,6 +199,10 @@ const Lathe3D = ({
   isRunning = false,
   toolPosition = { z: 0, d: 50 },
   profile = null,
+  rawDiameter = 50,
+  rawLength = 100,
+  toolType = 'rata',
+  toolOrientation = 'vertical',
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
@@ -143,6 +224,10 @@ const Lathe3D = ({
             isRunning={isRunning}
             toolPosition={toolPosition}
             profile={profile}
+            rawDiameter={rawDiameter}
+            rawLength={rawLength}
+            toolType={toolType}
+            toolOrientation={toolOrientation}
             rpm={rpm}
             isCutting={isCutting}
             coolant={coolant}
@@ -153,6 +238,10 @@ const Lathe3D = ({
           isRunning={isRunning}
           toolPosition={toolPosition}
           profile={profile}
+          rawDiameter={rawDiameter}
+          rawLength={rawLength}
+          toolType={toolType}
+          toolOrientation={toolOrientation}
           machineMode={machineMode}
           rpm={rpm}
           isCutting={isCutting}

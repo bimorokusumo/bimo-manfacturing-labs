@@ -71,31 +71,34 @@ const CuttingChips = ({ isCutting, position }) => {
 // Workpiece rendered with dynamic revolved profile
 // 100mm length = 2.4 world units (X: -1.2 to +1.2)
 // 50mm diameter = 0.60 world diameter (0.30 radius) -> scale = 0.006 per mm
-const RevolvedWorkpiece = ({ profile, isRunning, rpm = 800 }) => {
+// Workpiece rendered with dynamic revolved profile
+// 100mm length = 2.4 world units (X: -1.2 to +1.2)
+// 50mm diameter = 0.60 world diameter (0.30 radius) -> scale = 0.006 per mm
+const RevolvedWorkpiece = ({ profile, isRunning, rpm = 800, rawDiameter = 50, rawLength = 100 }) => {
   const meshRef = useRef();
 
   // Create Lathe Geometry from mm profile
   const geometry = useMemo(() => {
     const pts = [];
     const segments = profile ? profile.length : 30;
+    const halfLen = (rawLength / 100) * 1.2;
 
-    // Base cap at chuck face (world X = -1.2, local y = -1.2)
-    pts.push(new THREE.Vector2(0, -1.205));
+    // Base cap at chuck face (world X = -halfLen, local y = -halfLen)
+    pts.push(new THREE.Vector2(0, -halfLen - 0.005));
 
-    // Order points strictly from local y = -1.2 (chuck) to +1.2 (tailstock)
-    // profile[29] is near chuck, profile[0] is at tailstock end
+    // Order points strictly from local y = -halfLen (chuck) to +halfLen (tailstock)
     for (let i = segments - 1; i >= 0; i--) {
-      const y = -1.2 + ((segments - 1 - i) / (segments - 1)) * 2.4;
-      const diaMm = profile && profile[i] !== undefined ? profile[i] : 50;
-      const radius = Math.max(0.04, (diaMm / 2) * (0.30 / 25)); // diaMm * 0.006
+      const y = -halfLen + ((segments - 1 - i) / (segments - 1)) * (halfLen * 2);
+      const diaMm = profile && profile[i] !== undefined ? profile[i] : rawDiameter;
+      const radius = Math.max(0.03, (diaMm / 2) * (0.30 / 25)); // diaMm * 0.006
       pts.push(new THREE.Vector2(radius, y));
     }
 
-    // Tip cap at tailstock (world X = +1.2, local y = +1.2)
-    pts.push(new THREE.Vector2(0, 1.205));
+    // Tip cap at tailstock (world X = +halfLen, local y = +halfLen)
+    pts.push(new THREE.Vector2(0, halfLen + 0.005));
 
     return new THREE.LatheGeometry(pts, 32);
-  }, [profile]);
+  }, [profile, rawDiameter, rawLength]);
 
   useFrame((_, delta) => {
     if (isRunning && meshRef.current) {
@@ -119,8 +122,9 @@ const RevolvedWorkpiece = ({ profile, isRunning, rpm = 800 }) => {
 };
 
 // 3-Jaw Chuck with Rotating Jaws
-const ChuckSpindle = ({ isRunning, rpm = 800 }) => {
+const ChuckSpindle = ({ isRunning, rpm = 800, rawLength = 100 }) => {
   const chuckRef = useRef();
+  const chuckX = -((rawLength / 100) * 1.2 + 0.25);
 
   useFrame((_, delta) => {
     if (isRunning && chuckRef.current) {
@@ -130,7 +134,7 @@ const ChuckSpindle = ({ isRunning, rpm = 800 }) => {
   });
 
   return (
-    <group position={[-1.45, 1.2, 0]}>
+    <group position={[chuckX, 1.2, 0]}>
       {/* Chuck Assembly rotating around X axis */}
       <group ref={chuckRef} rotation={[0, 0, -Math.PI / 2]}>
         {/* Main Chuck Body */}
@@ -162,90 +166,161 @@ const ChuckSpindle = ({ isRunning, rpm = 800 }) => {
 };
 
 // Carriage & Tool Post with EXACT Tip Alignment
-// toolPosition: { z: mm (0 to -100), d: mm (diameter, 50 = raw surface) }
-const ToolAssembly = ({ toolPosition, isCutting, coolant }) => {
+// toolPosition: { z: mm (0 to -rawLength), d: mm (diameter) }
+const ToolAssembly = ({
+  toolPosition,
+  isCutting,
+  coolant,
+  rawDiameter = 50,
+  rawLength = 100,
+  toolType = 'rata', // 'rata', 'alur', 'facing'
+  toolOrientation = 'vertical' // 'vertical' (posisi vertikal sesuai request)
+}) => {
   const toolZ = toolPosition && toolPosition.z !== undefined ? toolPosition.z : 0;
-  const toolD = toolPosition && toolPosition.d !== undefined ? toolPosition.d : 50;
+  const toolD = toolPosition && toolPosition.d !== undefined ? (toolPosition.d ?? toolPosition.x) : rawDiameter;
 
   // Exact World Tip Position:
-  // Z=0 mm -> X = +1.2 (tailstock edge)
-  // Z=-100 mm -> X = -1.2 (chuck face)
-  const tipX = 1.2 + (toolZ / 100) * 2.4;
+  // Z=0 mm -> front face (tailstock edge of workpiece)
+  // Z=-rawLength mm -> chuck face
+  const halfLen = (rawLength / 100) * 1.2;
+  const tipX = halfLen + (toolZ / rawLength) * (halfLen * 2);
 
   // Centerline is at Y = 1.2
   const tipY = 1.2;
 
   // Workpiece front surface at diameter D is at radius = D * 0.006
-  const tipZ = (toolD / 2) * (0.30 / 25); // exactly toolD * 0.006
+  const tipZ = (toolD / 2) * (0.30 / 25);
 
   const cuttingContactPos = [tipX, tipY, tipZ];
 
+  const isVertical = toolOrientation === 'vertical';
+
   return (
     <group>
-      {/* SADDLE (Eretan Alas) on the Bedways - slides along X with tipX */}
+      {/* SADDLE / CNC SLIDE BASE on the Bedways - slides along X with tipX */}
       <mesh position={[tipX, 0.65, 0.38]} castShadow>
         <boxGeometry args={[0.65, 0.32, 1.2]} />
         <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.4} />
       </mesh>
 
-      {/* CROSS SLIDE (Eretan Melintang) - slides in Z with tipZ */}
+      {/* CROSS SLIDE (Eretan Melintang CNC) - slides in Z with tipZ */}
       <mesh position={[tipX, 0.88, tipZ + 0.32]} castShadow>
         <boxGeometry args={[0.42, 0.16, 0.55]} />
         <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.35} />
       </mesh>
 
-      {/* Handwheel for Cross Slide */}
-      <group position={[tipX, 0.88, tipZ + 0.62]} rotation={[Math.PI / 2, 0, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.11, 0.11, 0.03, 20]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} />
-        </mesh>
-        <mesh position={[0, 0.04, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, 0.06, 12]} />
-          <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.2} />
-        </mesh>
-      </group>
-
-      {/* TOOL POST (Rumah Pahat) on Cross Slide */}
-      <mesh position={[tipX, 1.05, tipZ + 0.22]} castShadow>
-        <boxGeometry args={[0.22, 0.18, 0.22]} />
-        <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
-      </mesh>
-      {/* Tool Post Clamp Lever */}
-      <mesh position={[tipX, 1.18, tipZ + 0.22]}>
-        <cylinderGeometry args={[0.015, 0.015, 0.12, 12]} />
-        <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
-      </mesh>
-
-      {/* TOOL SHANK & CARBIDE INSERT */}
-      {/* Black Oxide Steel Tool Shank */}
-      <mesh position={[tipX + 0.035, 1.18, tipZ + 0.11]} castShadow>
-        <boxGeometry args={[0.06, 0.06, 0.2]} />
-        <meshStandardMaterial color="#18181b" metalness={0.85} roughness={0.2} />
-      </mesh>
-
-      {/* GOLD CARBIDE INSERT - Tip is positioned EXACTLY at [tipX, tipY, tipZ] */}
-      {/* Diamond shape rotated 45 deg around Y. Front sharp corner reaches [tipX, tipY, tipZ] */}
-      <group position={[tipX, tipY, tipZ]}>
-        <mesh position={[0, 0, 0.0424]} rotation={[0, Math.PI / 4, 0]} castShadow>
-          <boxGeometry args={[0.06, 0.03, 0.06]} />
-          <meshStandardMaterial
-            color={isCutting ? "#f59e0b" : "#eab308"}
-            metalness={0.92}
-            roughness={0.15}
-            emissive={isCutting ? "#b45309" : "#000000"}
-            emissiveIntensity={isCutting ? 0.7 : 0}
-          />
-        </mesh>
-
-        {/* Small glowing spot at the very cutting edge when cutting */}
-        {isCutting && (
-          <mesh position={[0, 0, 0.005]}>
-            <sphereGeometry args={[0.012, 8, 8]} />
-            <meshBasicMaterial color="#fbbf24" />
+      {isVertical ? (
+        /* ========================================================================= */
+        /* VERTICAL CNC TURRET & TOOL HOLDER (POSISI VERTIKAL SESUAI PERMINTAAN)    */
+        /* ========================================================================= */
+        <group>
+          {/* Vertical Turret Column / Support Bracket */}
+          <mesh position={[tipX, 1.35, tipZ + 0.16]} castShadow>
+            <boxGeometry args={[0.34, 0.55, 0.28]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.85} roughness={0.25} />
           </mesh>
-        )}
-      </group>
+
+          {/* CNC Indexing Turret Disc (Vertical Axis) */}
+          <group position={[tipX, 1.58, tipZ + 0.16]} rotation={[0, 0, Math.PI / 2]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[0.18, 0.18, 0.22, 24]} />
+              <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
+            </mesh>
+            {/* Turret Station Number Indicator */}
+            <mesh position={[0, 0.12, 0]}>
+              <cylinderGeometry args={[0.07, 0.07, 0.02, 16]} />
+              <meshStandardMaterial color="#38bdf8" />
+            </mesh>
+          </group>
+
+          {/* VERTICAL TOOL SHANK (Batang Pahat Menjulur Vertikal ke Arah Titik Kontak) */}
+          <mesh position={[tipX + (toolType === 'facing' ? 0.02 : 0), tipY + 0.16, tipZ + 0.03]} castShadow>
+            <boxGeometry args={[0.055, 0.28, 0.055]} />
+            <meshStandardMaterial color="#18181b" metalness={0.9} roughness={0.2} />
+          </mesh>
+
+          {/* Tool Clamping Wedge Screws */}
+          <mesh position={[tipX, tipY + 0.22, tipZ + 0.065]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.02, 10]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+
+          {/* INSERT SELECTION AT CUTTING TIP (tipX, tipY, tipZ) */}
+          <group position={[tipX, tipY, tipZ]}>
+            {toolType === 'rata' && (
+              /* 1. PAHAT RATA KANAN (Rhombic 80 deg Insert - Turning / Roughing) */
+              <mesh position={[0, 0.015, 0.02]} rotation={[0, Math.PI / 4, 0]} castShadow>
+                <boxGeometry args={[0.055, 0.03, 0.055]} />
+                <meshStandardMaterial
+                  color={isCutting ? "#f59e0b" : "#eab308"}
+                  metalness={0.92}
+                  roughness={0.15}
+                  emissive={isCutting ? "#b45309" : "#000000"}
+                  emissiveIntensity={isCutting ? 0.7 : 0}
+                />
+              </mesh>
+            )}
+
+            {toolType === 'alur' && (
+              /* 2. PAHAT ALUR (Flat 3mm Grooving Blade Insert) */
+              <mesh position={[0, 0.018, 0.015]} castShadow>
+                <boxGeometry args={[0.03, 0.038, 0.032]} />
+                <meshStandardMaterial
+                  color={isCutting ? "#f59e0b" : "#fbbf24"}
+                  metalness={0.92}
+                  roughness={0.15}
+                  emissive={isCutting ? "#b45309" : "#000000"}
+                  emissiveIntensity={isCutting ? 0.8 : 0}
+                />
+              </mesh>
+            )}
+
+            {toolType === 'facing' && (
+              /* 3. PAHAT FACING (Sharp Wedge Triangular Facing Insert) */
+              <mesh position={[-0.015, 0.015, 0.015]} rotation={[0, -Math.PI / 6, 0]} castShadow>
+                <boxGeometry args={[0.05, 0.03, 0.045]} />
+                <meshStandardMaterial
+                  color={isCutting ? "#f59e0b" : "#eab308"}
+                  metalness={0.92}
+                  roughness={0.15}
+                  emissive={isCutting ? "#b45309" : "#000000"}
+                  emissiveIntensity={isCutting ? 0.7 : 0}
+                />
+              </mesh>
+            )}
+
+            {/* Glowing Spark Point when cutting */}
+            {isCutting && (
+              <mesh position={[0, 0, 0.005]}>
+                <sphereGeometry args={[0.015, 8, 8]} />
+                <meshBasicMaterial color="#fbbf24" />
+              </mesh>
+            )}
+          </group>
+        </group>
+      ) : (
+        /* HORIZONTAL FALLBACK (jika mode manual) */
+        <group>
+          <mesh position={[tipX, 1.05, tipZ + 0.22]} castShadow>
+            <boxGeometry args={[0.22, 0.18, 0.22]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
+          </mesh>
+          <mesh position={[tipX + 0.035, 1.18, tipZ + 0.11]} castShadow>
+            <boxGeometry args={[0.06, 0.06, 0.2]} />
+            <meshStandardMaterial color="#18181b" metalness={0.85} roughness={0.2} />
+          </mesh>
+          <group position={[tipX, tipY, tipZ]}>
+            <mesh position={[0, 0, 0.0424]} rotation={[0, Math.PI / 4, 0]} castShadow>
+              <boxGeometry args={[0.06, 0.03, 0.06]} />
+              <meshStandardMaterial
+                color={isCutting ? "#f59e0b" : "#eab308"}
+                metalness={0.92}
+                roughness={0.15}
+              />
+            </mesh>
+          </group>
+        </group>
+      )}
 
       {/* Chips Particle Stream flying directly from the cutting contact point */}
       <CuttingChips isCutting={isCutting} position={cuttingContactPos} />
@@ -269,9 +344,10 @@ const ToolAssembly = ({ toolPosition, isCutting, coolant }) => {
 };
 
 // Tailstock (Kepala Lepas)
-const Tailstock = () => {
+const Tailstock = ({ rawLength = 100 }) => {
+  const tailstockX = (rawLength / 100) * 1.2 + 0.45;
   return (
-    <group position={[1.65, 1.2, 0]}>
+    <group position={[tailstockX, 1.2, 0]}>
       {/* Base & Body */}
       <mesh position={[0, -0.4, 0]} castShadow>
         <boxGeometry args={[0.65, 0.65, 0.65]} />
@@ -361,6 +437,10 @@ const Lathe3D_Engine = ({
   isRunning = false,
   toolPosition = { z: 0, d: 50 },
   profile = null,
+  rawDiameter = 50,
+  rawLength = 100,
+  toolType = 'rata',
+  toolOrientation = 'vertical',
   rpm = 800,
   isCutting = false,
   coolant = false
@@ -391,10 +471,18 @@ const Lathe3D_Engine = ({
       {/* Lathe Scene Components */}
       <group position={[0, -0.2, 0]}>
         <LatheStructure />
-        <ChuckSpindle isRunning={isRunning} rpm={rpm} />
-        <RevolvedWorkpiece profile={profile} isRunning={isRunning} rpm={rpm} />
-        <ToolAssembly toolPosition={toolPosition} isCutting={isCutting} coolant={coolant} />
-        <Tailstock />
+        <ChuckSpindle isRunning={isRunning} rpm={rpm} rawLength={rawLength} />
+        <RevolvedWorkpiece profile={profile} isRunning={isRunning} rpm={rpm} rawDiameter={rawDiameter} rawLength={rawLength} />
+        <ToolAssembly
+          toolPosition={toolPosition}
+          isCutting={isCutting}
+          coolant={coolant}
+          rawDiameter={rawDiameter}
+          rawLength={rawLength}
+          toolType={toolType}
+          toolOrientation={toolOrientation}
+        />
+        <Tailstock rawLength={rawLength} />
       </group>
 
       <ContactShadows

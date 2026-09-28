@@ -571,6 +571,7 @@ const CNCLatheModule = ({ addXP }) => {
                 rpm={spindleRpm}
                 isCutting={isMachining && currentLine >= 0}
                 coolant={coolant}
+                showTailstock={false}
               />
             </Suspense>
           </div>

@@ -409,6 +409,7 @@ const LatheModule = ({ addXP }) => {
           rpm={rpm}
           isCutting={isCutting}
           coolant={coolant}
+          showTailstock={true}
         />
       </div>
 

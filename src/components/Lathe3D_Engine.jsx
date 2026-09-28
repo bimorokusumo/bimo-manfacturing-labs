@@ -192,19 +192,106 @@ const ToolAssembly = ({
   const tipZ = (toolD / 2) * (0.30 / 25);
 
   const cuttingContactPos = [tipX, tipY, tipZ];
-
   const isVertical = toolOrientation === 'vertical';
+
+  // 1. Rhombic 80° turning insert (Pahat Rata Kanan, T0101):
+  // Nose at [0, 0, 0] points strictly LEFT (-X) and into cut (-Z).
+  // ALL other vertices are at +X and +Z with negative Y for clearance.
+  const rhombicInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face (Rake face at Y = 0)
+      0, 0, 0,    0.010, 0, 0.055,    0.065, 0, 0.065,
+      0, 0, 0,    0.065, 0, 0.065,    0.055, 0, 0.010,
+
+      // Bottom face (relieved at Y = -0.024)
+      0.003, -0.024, 0.003,   0.062, -0.024, 0.062,   0.012, -0.024, 0.052,
+      0.003, -0.024, 0.003,   0.052, -0.024, 0.012,   0.062, -0.024, 0.062,
+
+      // Leading cutting edge (faces LEFT / -X towards chuck & cut shoulder)
+      0, 0, 0,    0.003, -0.024, 0.003,   0.012, -0.024, 0.052,
+      0, 0, 0,    0.012, -0.024, 0.052,   0.010, 0, 0.055,
+
+      // Trailing clearance edge (faces -Z towards turned cylinder)
+      0, 0, 0,    0.055, 0, 0.010,        0.052, -0.024, 0.012,
+      0, 0, 0,    0.052, -0.024, 0.012,   0.003, -0.024, 0.003,
+
+      // Back outer flank
+      0.010, 0, 0.055,    0.012, -0.024, 0.052,   0.062, -0.024, 0.062,
+      0.010, 0, 0.055,    0.062, -0.024, 0.062,   0.065, 0, 0.065,
+
+      // Back rear flank
+      0.055, 0, 0.010,    0.065, 0, 0.065,        0.062, -0.024, 0.062,
+      0.055, 0, 0.010,    0.062, -0.024, 0.062,   0.052, -0.024, 0.012,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  // 2. Grooving blade insert 3mm (Pahat Alur, T0202):
+  // 3mm wide blade at Z = 0, nose at [0,0,0], blade width 0.018 in +X.
+  const groovingInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face
+      0, 0, 0,       0.018, 0, 0,       0.016, 0, 0.045,
+      0, 0, 0,       0.016, 0, 0.045,   0.002, 0, 0.045,
+      // Bottom face
+      0.002, -0.024, 0.002,   0.015, -0.024, 0.045,   0.016, -0.024, 0.002,
+      0.002, -0.024, 0.002,   0.003, -0.024, 0.045,   0.015, -0.024, 0.045,
+      // Front cutting face (contacts groove at Z = 0)
+      0, 0, 0,       0.002, -0.024, 0.002,   0.016, -0.024, 0.002,
+      0, 0, 0,       0.016, -0.024, 0.002,   0.018, 0, 0,
+      // Left side flank (faces LEFT / -X)
+      0, 0, 0,       0.002, 0, 0.045,        0.003, -0.024, 0.045,
+      0, 0, 0,       0.003, -0.024, 0.045,   0.002, -0.024, 0.002,
+      // Right side flank
+      0.018, 0, 0,   0.016, -0.024, 0.002,   0.015, -0.024, 0.045,
+      0.018, 0, 0,   0.015, -0.024, 0.045,   0.016, 0, 0.045,
+      // Back
+      0.002, 0, 0.045,   0.016, 0, 0.045,    0.015, -0.024, 0.045,
+      0.002, 0, 0.045,   0.015, -0.024, 0.045, 0.003, -0.024, 0.045,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  // 3. Facing insert (Pahat Facing, T0303):
+  // Triangular insert, sharp nose at [0,0,0] points directly LEFT (-X) into end face.
+  const facingInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face
+      0, 0, 0,    0.005, 0, 0.055,    0.050, 0, 0.012,
+      // Bottom face
+      0.003, -0.024, 0.003,   0.047, -0.024, 0.014,   0.008, -0.024, 0.052,
+      // Face cutting edge (contacts end face along Z, faces -X)
+      0, 0, 0,    0.003, -0.024, 0.003,   0.008, -0.024, 0.052,
+      0, 0, 0,    0.008, -0.024, 0.052,   0.005, 0, 0.055,
+      // Trailing clearance edge
+      0, 0, 0,    0.050, 0, 0.012,        0.047, -0.024, 0.014,
+      0, 0, 0,    0.047, -0.024, 0.014,   0.003, -0.024, 0.003,
+      // Back edge
+      0.005, 0, 0.055,   0.008, -0.024, 0.052,   0.047, -0.024, 0.014,
+      0.005, 0, 0.055,   0.047, -0.024, 0.014,   0.050, 0, 0.012,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
 
   return (
     <group>
       {/* SADDLE / CNC SLIDE BASE on the Bedways - slides along X with tipX */}
-      <mesh position={[tipX, 0.65, 0.38]} castShadow>
+      <mesh position={[tipX + 0.12, 0.65, 0.45]} castShadow>
         <boxGeometry args={[0.65, 0.32, 1.2]} />
         <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.4} />
       </mesh>
 
       {/* CROSS SLIDE (Eretan Melintang CNC) - slides in Z with tipZ */}
-      <mesh position={[tipX, 0.88, tipZ + 0.32]} castShadow>
+      <mesh position={[tipX + 0.10, 0.88, tipZ + 0.38]} castShadow>
         <boxGeometry args={[0.42, 0.16, 0.55]} />
         <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.35} />
       </mesh>
@@ -215,84 +302,104 @@ const ToolAssembly = ({
         /* ========================================================================= */
         <group>
           {/* Vertical Turret Column / Support Bracket */}
-          <mesh position={[tipX, 1.35, tipZ + 0.16]} castShadow>
-            <boxGeometry args={[0.34, 0.55, 0.28]} />
+          <mesh position={[tipX + 0.065, 1.38, tipZ + 0.18]} castShadow>
+            <boxGeometry args={[0.26, 0.48, 0.24]} />
             <meshStandardMaterial color="#0f172a" metalness={0.85} roughness={0.25} />
           </mesh>
 
           {/* CNC Indexing Turret Disc (Vertical Axis) */}
-          <group position={[tipX, 1.58, tipZ + 0.16]} rotation={[0, 0, Math.PI / 2]}>
+          <group position={[tipX + 0.065, 1.62, tipZ + 0.18]} rotation={[0, 0, Math.PI / 2]}>
             <mesh castShadow>
-              <cylinderGeometry args={[0.18, 0.18, 0.22, 24]} />
+              <cylinderGeometry args={[0.18, 0.18, 0.20, 24]} />
               <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
             </mesh>
-            {/* Turret Station Number Indicator */}
-            <mesh position={[0, 0.12, 0]}>
+            {/* Turret Station Badge */}
+            <mesh position={[0, 0.11, 0]}>
               <cylinderGeometry args={[0.07, 0.07, 0.02, 16]} />
               <meshStandardMaterial color="#38bdf8" />
             </mesh>
           </group>
 
-          {/* VERTICAL TOOL SHANK (Batang Pahat Menjulur Vertikal ke Arah Titik Kontak) */}
-          <mesh position={[tipX + (toolType === 'facing' ? 0.02 : 0), tipY + 0.16, tipZ + 0.03]} castShadow>
-            <boxGeometry args={[0.055, 0.28, 0.055]} />
+          {/* VERTICAL TOOL SHANK (Batang Pahat Menjulur Vertikal di Belakang Pahat) */}
+          {/* Positioned safely at +X and +Z so ONLY the insert tip touches the workpiece! */}
+          <mesh position={[tipX + 0.048, tipY + 0.14, tipZ + 0.055]} castShadow>
+            <boxGeometry args={[0.045, 0.28, 0.045]} />
             <meshStandardMaterial color="#18181b" metalness={0.9} roughness={0.2} />
           </mesh>
 
+          {/* Steel shim / insert seat underneath insert */}
+          <mesh position={[tipX + 0.038, tipY - 0.030, tipZ + 0.038]}>
+            <boxGeometry args={[0.048, 0.012, 0.048]} />
+            <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.25} />
+          </mesh>
+
           {/* Tool Clamping Wedge Screws */}
-          <mesh position={[tipX, tipY + 0.22, tipZ + 0.065]}>
-            <cylinderGeometry args={[0.012, 0.012, 0.02, 10]} />
+          <mesh position={[tipX + 0.048, tipY + 0.20, tipZ + 0.082]}>
+            <cylinderGeometry args={[0.010, 0.010, 0.018, 12]} />
             <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
           </mesh>
 
-          {/* INSERT SELECTION AT CUTTING TIP (tipX, tipY, tipZ) */}
+          {/* INSERT SELECTION AT CUTTING TIP (tipX, tipY, tipZ) - HADAP KIRI */}
           <group position={[tipX, tipY, tipZ]}>
             {toolType === 'rata' && (
-              /* 1. PAHAT RATA KANAN (Rhombic 80 deg Insert - Turning / Roughing) */
-              <mesh position={[0, 0.015, 0.02]} rotation={[0, Math.PI / 4, 0]} castShadow>
-                <boxGeometry args={[0.055, 0.03, 0.055]} />
-                <meshStandardMaterial
-                  color={isCutting ? "#f59e0b" : "#eab308"}
-                  metalness={0.92}
-                  roughness={0.15}
-                  emissive={isCutting ? "#b45309" : "#000000"}
-                  emissiveIntensity={isCutting ? 0.7 : 0}
-                />
-              </mesh>
+              /* 1. PAHAT RATA KANAN (Rhombic 80 deg Insert - Hadap KIRI, HANYA Ujung Lancip Menyentuh) */
+              <group>
+                <mesh geometry={rhombicInsertGeo} castShadow>
+                  <meshStandardMaterial
+                    color={isCutting ? "#f59e0b" : "#eab308"}
+                    metalness={0.95}
+                    roughness={0.15}
+                    emissive={isCutting ? "#b45309" : "#000000"}
+                    emissiveIntensity={isCutting ? 0.8 : 0}
+                  />
+                </mesh>
+                {/* Torx Clamping Screw in Center of Insert */}
+                <mesh position={[0.032, 0.001, 0.032]}>
+                  <cylinderGeometry args={[0.008, 0.008, 0.004, 12]} />
+                  <meshStandardMaterial color="#713f12" metalness={0.9} />
+                </mesh>
+              </group>
             )}
 
             {toolType === 'alur' && (
-              /* 2. PAHAT ALUR (Flat 3mm Grooving Blade Insert) */
-              <mesh position={[0, 0.018, 0.015]} castShadow>
-                <boxGeometry args={[0.03, 0.038, 0.032]} />
-                <meshStandardMaterial
-                  color={isCutting ? "#f59e0b" : "#fbbf24"}
-                  metalness={0.92}
-                  roughness={0.15}
-                  emissive={isCutting ? "#b45309" : "#000000"}
-                  emissiveIntensity={isCutting ? 0.8 : 0}
-                />
-              </mesh>
+              /* 2. PAHAT ALUR (Flat 3mm Grooving Blade Insert - Hadap KIRI/Muka) */
+              <group>
+                <mesh geometry={groovingInsertGeo} castShadow>
+                  <meshStandardMaterial
+                    color={isCutting ? "#f59e0b" : "#fbbf24"}
+                    metalness={0.95}
+                    roughness={0.15}
+                    emissive={isCutting ? "#b45309" : "#000000"}
+                    emissiveIntensity={isCutting ? 0.8 : 0}
+                  />
+                </mesh>
+              </group>
             )}
 
             {toolType === 'facing' && (
-              /* 3. PAHAT FACING (Sharp Wedge Triangular Facing Insert) */
-              <mesh position={[-0.015, 0.015, 0.015]} rotation={[0, -Math.PI / 6, 0]} castShadow>
-                <boxGeometry args={[0.05, 0.03, 0.045]} />
-                <meshStandardMaterial
-                  color={isCutting ? "#f59e0b" : "#eab308"}
-                  metalness={0.92}
-                  roughness={0.15}
-                  emissive={isCutting ? "#b45309" : "#000000"}
-                  emissiveIntensity={isCutting ? 0.7 : 0}
-                />
-              </mesh>
+              /* 3. PAHAT FACING (Sharp Wedge Triangular Facing Insert - Hadap KIRI ke Muka) */
+              <group>
+                <mesh geometry={facingInsertGeo} castShadow>
+                  <meshStandardMaterial
+                    color={isCutting ? "#f59e0b" : "#eab308"}
+                    metalness={0.95}
+                    roughness={0.15}
+                    emissive={isCutting ? "#b45309" : "#000000"}
+                    emissiveIntensity={isCutting ? 0.8 : 0}
+                  />
+                </mesh>
+                {/* Torx Screw */}
+                <mesh position={[0.022, 0.001, 0.022]}>
+                  <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
+                  <meshStandardMaterial color="#713f12" metalness={0.9} />
+                </mesh>
+              </group>
             )}
 
-            {/* Glowing Spark Point when cutting */}
+            {/* Glowing Spark Point when cutting - EXACTLY at sharp tip [0,0,0] */}
             {isCutting && (
-              <mesh position={[0, 0, 0.005]}>
-                <sphereGeometry args={[0.015, 8, 8]} />
+              <mesh position={[0, 0, 0]}>
+                <sphereGeometry args={[0.010, 8, 8]} />
                 <meshBasicMaterial color="#fbbf24" />
               </mesh>
             )}
@@ -301,17 +408,16 @@ const ToolAssembly = ({
       ) : (
         /* HORIZONTAL FALLBACK (jika mode manual) */
         <group>
-          <mesh position={[tipX, 1.05, tipZ + 0.22]} castShadow>
+          <mesh position={[tipX + 0.05, 1.05, tipZ + 0.22]} castShadow>
             <boxGeometry args={[0.22, 0.18, 0.22]} />
             <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
           </mesh>
-          <mesh position={[tipX + 0.035, 1.18, tipZ + 0.11]} castShadow>
-            <boxGeometry args={[0.06, 0.06, 0.2]} />
+          <mesh position={[tipX + 0.045, 1.18, tipZ + 0.06]} castShadow>
+            <boxGeometry args={[0.05, 0.05, 0.12]} />
             <meshStandardMaterial color="#18181b" metalness={0.85} roughness={0.2} />
           </mesh>
           <group position={[tipX, tipY, tipZ]}>
-            <mesh position={[0, 0, 0.0424]} rotation={[0, Math.PI / 4, 0]} castShadow>
-              <boxGeometry args={[0.06, 0.03, 0.06]} />
+            <mesh geometry={rhombicInsertGeo} castShadow>
               <meshStandardMaterial
                 color={isCutting ? "#f59e0b" : "#eab308"}
                 metalness={0.92}
@@ -443,7 +549,8 @@ const Lathe3D_Engine = ({
   toolOrientation = 'vertical',
   rpm = 800,
   isCutting = false,
-  coolant = false
+  coolant = false,
+  showTailstock = false
 }) => {
   const controlsRef = useRef();
 
@@ -482,7 +589,7 @@ const Lathe3D_Engine = ({
           toolType={toolType}
           toolOrientation={toolOrientation}
         />
-        <Tailstock rawLength={rawLength} />
+        {showTailstock && <Tailstock rawLength={rawLength} />}
       </group>
 
       <ContactShadows

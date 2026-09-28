@@ -11,7 +11,8 @@ const Lathe2D = ({
   toolOrientation = 'vertical', // 'vertical' (sesuai permintaan user)
   machineMode = 'rata',
   rpm = 1200,
-  isCutting = false
+  isCutting = false,
+  showTailstock = false
 }) => {
   const SVG_WIDTH = 800;
   const SVG_HEIGHT = 400;
@@ -86,74 +87,100 @@ const Lathe2D = ({
           />
         )}
 
-        {/* TAILSTOCK (Kepala Lepas) */}
-        <rect x="620" y="110" width="120" height="180" fill="#1e293b" stroke="#0284c7" strokeWidth="2" rx="6" />
-        <rect x="580" y="180" width="45" height="40" fill="#cbd5e1" />
-        <polygon points="580,180 550,200 580,220" fill="#e2e8f0" />
+        {/* TAILSTOCK (Kepala Lepas - Disembunyikan pada Mode CNC Sesuai Permintaan) */}
+        {showTailstock && (
+          <g>
+            <rect x="620" y="110" width="120" height="180" fill="#1e293b" stroke="#0284c7" strokeWidth="2" rx="6" />
+            <rect x="580" y="180" width="45" height="40" fill="#cbd5e1" />
+            <polygon points="580,180 550,200 580,220" fill="#e2e8f0" />
+          </g>
+        )}
 
-        {/* CUTTING TOOL - POSISI VERTIKAL SESUAI PERMINTAAN USER */}
+        {/* CUTTING TOOL - VERTIKAL, HADAP KIRI, HANYA UJUNG LANCIP MENGENAI BENDA KERJA */}
         <g transform={`translate(${toolTipX}, ${toolTipY})`} style={{ transition: isRunning ? 'none' : 'all 0.05s linear' }}>
           {toolOrientation === 'vertical' ? (
-            /* VERTICAL TOOL HOLDER & TURRET CLAMP */
+            /* VERTICAL TOOL HOLDER & TURRET CLAMP (HADAP KIRI) */
             <g>
-              {/* Vertical Tool Shank (Menjulur ke Bawah Vertikal) */}
-              <rect x="-11" y="8" width="22" height="95" rx="3" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5" />
-              
-              {/* Tool Clamping Block */}
-              <rect x="-16" y="55" width="32" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
-              <circle cx="-6" cy="70" r="3" fill="#cbd5e1" />
-              <circle cx="6" cy="70" r="3" fill="#cbd5e1" />
-              <circle cx="0" cy="90" r="3" fill="#cbd5e1" />
-
-              {/* Vertical Orientation Indicator */}
-              <rect x="-24" y="112" width="48" height="16" rx="4" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" strokeWidth="0.8" />
-              <text x="0" y="124" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">VERTIKAL</text>
-
-              {/* CUTTING INSERT AT TIP (0, 0) SESUAI TOOL TYPE */}
+              {/* CUTTING INSERT AT TIP (0, 0) - HANYA UJUNG LANCIP INI YANG MENYENTUH BENDA KERJA */}
               {toolType === 'rata' && (
-                /* 1. Pahat Rata Kanan (Rhombic 80° Insert) */
+                /* 1. Pahat Rata Kanan - Hadap KIRI (ke arah cekam/spindel Z-) */
                 <g>
+                  {/* Vertical Tool Shank set back to the right (x: 8 to 28) and below (y: 24 to 120) */}
+                  <rect x="8" y="24" width="20" height="95" rx="3" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5" />
+                  
+                  {/* Tool Clamping Block */}
+                  <rect x="4" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
+                  <circle cx="14" cy="70" r="3" fill="#cbd5e1" />
+                  <circle cx="22" cy="70" r="3" fill="#cbd5e1" />
+                  <circle cx="18" cy="90" r="3" fill="#cbd5e1" />
+
+                  {/* Vertical Orientation Indicator */}
+                  <rect x="-6" y="112" width="48" height="16" rx="4" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" strokeWidth="0.8" />
+                  <text x="18" y="124" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">VERTIKAL</text>
+
+                  {/* Gold Carbide Rhombic 80 deg Insert - Pointing LEFT at (0, 0) */}
+                  {/* Apex nose is EXACTLY at (0,0). Trailing edge slopes to (18, 6) giving wide clearance.
+                      Leading edge slopes to (3, 18) clear of the uncut shoulder. Only (0,0) touches! */}
                   <polygon
-                    points="0,0 16,8 14,24 -4,18"
+                    points="0,0 3,18 21,24 18,6"
                     fill={isCutting ? "#f59e0b" : "#eab308"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  <circle cx="6" cy="12" r="2.5" fill="#713f12" />
-                  <text x="18" y="24" fill="#38bdf8" fontSize="9" fontWeight="800">T01 RATA</text>
+                  {/* Chipbreaker groove */}
+                  <polygon
+                    points="2,3 4,15 17,20 15,8"
+                    fill="rgba(0,0,0,0.22)"
+                  />
+                  <circle cx="10" cy="12" r="2.5" fill="#713f12" stroke="#451a03" strokeWidth="0.8" />
+
+                  {/* Nose radius shiny sharp tip highlight */}
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+
+                  {/* Direction arrow & label: HADAP KIRI */}
+                  <text x="28" y="18" fill="#38bdf8" fontSize="9" fontWeight="800">T01 ◄ HADAP KIRI</text>
                 </g>
               )}
 
               {toolType === 'alur' && (
                 /* 2. Pahat Alur (Flat Grooving Blade Insert 3mm) */
                 <g>
-                  <rect
-                    x="-5"
-                    y="0"
-                    width="10"
-                    height="20"
+                  {/* Vertical Tool Shank set back */}
+                  <rect x="-2" y="24" width="20" height="95" rx="3" fill="#18181b" stroke="#fbbf24" strokeWidth="1.5" />
+                  <rect x="-6" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
+                  <circle cx="8" cy="70" r="3" fill="#cbd5e1" />
+                  <circle cx="8" cy="90" r="3" fill="#cbd5e1" />
+
+                  {/* Narrow Grooving Blade: width 6px (~3mm). Only edge from (0, 0) to (6, 0) touches! */}
+                  <polygon
+                    points="0,0 6,0 5,24 1,24"
                     fill={isCutting ? "#f59e0b" : "#fbbf24"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
-                    rx="1"
                   />
-                  <line x1="-5" y1="0" x2="5" y2="0" stroke="#f59e0b" strokeWidth="2.5" />
-                  <circle cx="0" cy="10" r="2.5" fill="#713f12" />
-                  <text x="14" y="24" fill="#f59e0b" fontSize="9" fontWeight="800">T02 ALUR 3mm</text>
+                  <line x1="0" y1="0" x2="6" y2="0" stroke="#ffffff" strokeWidth="2" />
+                  <circle cx="3" cy="12" r="2.2" fill="#713f12" />
+                  <text x="14" y="18" fill="#f59e0b" fontSize="9" fontWeight="800">T02 ALUR 3mm</text>
                 </g>
               )}
 
               {toolType === 'facing' && (
                 /* 3. Pahat Facing (Wedge Facing Insert Angled to Face) */
                 <g>
+                  <rect x="8" y="26" width="20" height="95" rx="3" fill="#18181b" stroke="#34d399" strokeWidth="1.5" />
+                  <rect x="4" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
+                  <circle cx="18" cy="70" r="3" fill="#cbd5e1" />
+
+                  {/* Sharp triangular facing insert pointing left towards face */}
                   <polygon
-                    points="0,0 20,4 12,22 -3,17"
+                    points="0,0 2,22 18,26 16,8"
                     fill={isCutting ? "#f59e0b" : "#eab308"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  <circle cx="8" cy="10" r="2.5" fill="#713f12" />
-                  <text x="18" y="24" fill="#10b981" fontSize="9" fontWeight="800">T03 FACING</text>
+                  <circle cx="9" cy="14" r="2.2" fill="#713f12" />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+                  <text x="26" y="18" fill="#34d399" fontSize="9" fontWeight="800">T03 ◄ FACING</text>
                 </g>
               )}
             </g>
@@ -206,7 +233,8 @@ const Lathe3D = ({
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
-  coolant = false
+  coolant = false,
+  showTailstock = false
 }) => {
   const [viewMode, setViewMode] = useState('3d'); // '3d' or '2d'
 
@@ -231,6 +259,7 @@ const Lathe3D = ({
             rpm={rpm}
             isCutting={isCutting}
             coolant={coolant}
+            showTailstock={showTailstock}
           />
         </Suspense>
       ) : (
@@ -245,6 +274,7 @@ const Lathe3D = ({
           machineMode={machineMode}
           rpm={rpm}
           isCutting={isCutting}
+          showTailstock={showTailstock}
         />
       )}
 

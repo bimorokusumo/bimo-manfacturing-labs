@@ -667,9 +667,115 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
   );
 };
 
-const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic, initialTab = 'simulator' }) => {
-  const [activeTool, setActiveTool] = useState('vernier'); // vernier, micrometer, height, dial, feeler, block, quiz
-  const [activeTab, setActiveTab] = useState(initialTab); // simulator, theory, sop
+// =========================================================================
+// DATA METROLOGI: KLASIFIKASI ALAT UKUR LANGSUNG VS PEMBANDING
+// =========================================================================
+const METROLOGY_TOOLS = [
+  {
+    id: 'vernier',
+    name: 'Jangka Sorong',
+    enName: 'Vernier Caliper',
+    icon: '📏',
+    res: '0.05 / 0.02 mm',
+    category: 'direct',
+    categoryLabel: 'Ukur Langsung',
+    badgeColor: '#047857',
+    badgeBg: '#ecfdf5',
+    borderBadge: '#10b981',
+    desc: 'Membaca langsung dimensi luar, dalam, dan kedalaman dari nol.'
+  },
+  {
+    id: 'micrometer',
+    name: 'Mikrometer Sekrup',
+    enName: 'Outside Micrometer',
+    icon: '🔬',
+    res: '0.01 mm',
+    category: 'direct',
+    categoryLabel: 'Ukur Langsung',
+    badgeColor: '#047857',
+    badgeBg: '#ecfdf5',
+    borderBadge: '#10b981',
+    desc: 'Membaca langsung ketebalan presisi tinggi dengan ulir transmisi mikro.'
+  },
+  {
+    id: 'height',
+    name: 'Vernier Height Gauge',
+    enName: 'Height Gauge',
+    icon: '📐',
+    res: '0.02 mm',
+    category: 'direct',
+    categoryLabel: 'Ukur Langsung',
+    badgeColor: '#047857',
+    badgeBg: '#ecfdf5',
+    borderBadge: '#10b981',
+    desc: 'Membaca langsung ketinggian benda ukur di atas meja perata granit.'
+  },
+  {
+    id: 'dial',
+    name: 'Dial Indikator',
+    enName: 'Dial Gauge / Runout',
+    icon: '⏱️',
+    res: '0.01 mm / TIR',
+    category: 'comparator',
+    categoryLabel: 'Alat Pembanding',
+    badgeColor: '#b45309',
+    badgeBg: '#fef3c7',
+    borderBadge: '#f59e0b',
+    desc: 'Mengukur deviasi/penyimpangan, keolengan (TIR), dan kerataan permukaan.'
+  },
+  {
+    id: 'feeler',
+    name: 'Feeler Gauge',
+    enName: 'Thickness Clearance Gauge',
+    icon: '🪒',
+    res: 'Celah Presisi',
+    category: 'reference',
+    categoryLabel: 'Kaliber Celah',
+    badgeColor: '#6d28d9',
+    badgeBg: '#f5f3ff',
+    borderBadge: '#8b5cf6',
+    desc: 'Memeriksa celah celah presisi (valve clearance, gap ring piston).'
+  },
+  {
+    id: 'block',
+    name: 'Gauge Block',
+    enName: 'Johansson Gauge Block',
+    icon: '🧱',
+    res: 'Master Kalibrasi',
+    category: 'reference',
+    categoryLabel: 'Standar Acuan Master',
+    badgeColor: '#0369a1',
+    badgeBg: '#e0f2fe',
+    borderBadge: '#0ea5e9',
+    desc: 'Blok standar acuan presisi tertinggi untuk kalibrasi dan setting alat pembanding.'
+  },
+  {
+    id: 'quiz',
+    name: 'Kuis Asesmen Membaca',
+    enName: 'Metrology Quiz & Evaluation',
+    icon: '🏆',
+    res: 'XP & Evaluasi',
+    category: 'evaluation',
+    categoryLabel: 'Uji Kompetensi',
+    badgeColor: '#be123c',
+    badgeBg: '#ffe4e6',
+    borderBadge: '#f43f5e',
+    desc: 'Uji kemampuan membaca skala vernier, mikrometer, dan dial gauge.'
+  }
+];
+
+const MeasuringToolsLab = ({
+  addXP = () => {},
+  addMissionCompleted = () => {},
+  onOpenDiagnostic,
+  initialTab = 'simulator',
+  initialTool = 'vernier',
+  initialCategoryFilter = 'all'
+}) => {
+  const [activeTool, setActiveTool] = useState(initialTool || 'vernier');
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [categoryFilter, setCategoryFilter] = useState(initialCategoryFilter); // 'all', 'direct', 'comparator', 'reference', 'evaluation'
+  const [showComparisonGuide, setShowComparisonGuide] = useState(false);
   const [modalImage, setModalImage] = useState(null);
 
   useEffect(() => {
@@ -677,6 +783,18 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  useEffect(() => {
+    if (initialTool) {
+      setActiveTool(initialTool);
+    }
+  }, [initialTool]);
+
+  useEffect(() => {
+    if (initialCategoryFilter) {
+      setCategoryFilter(initialCategoryFilter);
+    }
+  }, [initialCategoryFilter]);
   
   // ==========================================
   // 1. JANGKA SORONG STATE (VERNIER CALIPER)
@@ -1039,7 +1157,286 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
         </div>
       </div>
 
-      {/* INSTRUMENT NAVIGATION TABS */}
+      {/* FILTER KATEGORI: ALAT UKUR LANGSUNG VS PEMBANDING */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-light)',
+        padding: '12px 18px',
+        borderRadius: '12px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            🏷️ Kategori Metrologi:
+          </span>
+          {[
+            { id: 'all', label: '🌐 Semua Alat (6+1)' },
+            { id: 'direct', label: '📏 Alat Ukur Langsung Presisi (3)' },
+            { id: 'comparator', label: '⏱️ Alat Ukur Pembanding & Acuan (3)' },
+            { id: 'evaluation', label: '🏆 Kuis Asesmen (1)' }
+          ].map(f => (
+            <button
+              key={f.id}
+              onClick={() => {
+                sound.playClick();
+                setCategoryFilter(f.id);
+                if (f.id === 'direct' && (activeTool === 'dial' || activeTool === 'feeler' || activeTool === 'block' || activeTool === 'quiz')) {
+                  setActiveTool('vernier');
+                } else if (f.id === 'comparator' && (activeTool === 'vernier' || activeTool === 'micrometer' || activeTool === 'height' || activeTool === 'quiz')) {
+                  setActiveTool('dial');
+                } else if (f.id === 'evaluation') {
+                  setActiveTool('quiz');
+                }
+              }}
+              style={{
+                padding: '7px 14px',
+                borderRadius: '8px',
+                border: categoryFilter === f.id ? '1.5px solid #10b981' : '1px solid var(--border-light)',
+                background: categoryFilter === f.id ? '#10b981' : 'transparent',
+                color: categoryFilter === f.id ? '#000000' : 'var(--text-main)',
+                fontSize: '0.78rem',
+                fontWeight: categoryFilter === f.id ? 800 : 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* TOMBOL PANDUAN PERBEDAAN ALAT UKUR LANGSUNG VS PEMBANDING */}
+        <button
+          onClick={() => {
+            sound.playClick();
+            setShowComparisonGuide(!showComparisonGuide);
+          }}
+          style={{
+            padding: '8px 16px',
+            borderRadius: '8px',
+            border: showComparisonGuide ? '1.5px solid #f59e0b' : '1.5px solid #cbd5e1',
+            background: showComparisonGuide ? '#fef3c7' : 'rgba(245, 158, 11, 0.1)',
+            color: showComparisonGuide ? '#92400e' : '#b45309',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px',
+            boxShadow: showComparisonGuide ? '0 4px 12px rgba(245, 158, 11, 0.25)' : 'none',
+            transition: 'all 0.2s'
+          }}
+        >
+          <span>⚖️</span>
+          <span>{showComparisonGuide ? 'Tutup Perbandingan' : 'Pahami Perbedaan: Langsung vs Pembanding'}</span>
+        </button>
+      </div>
+
+      {/* PANDUAN EDUKASI INTERAKTIF: PERBEDAAN ALAT UKUR LANGSUNG VS PEMBANDING */}
+      {showComparisonGuide && (
+        <div className="dashboard-card" style={{
+          padding: '24px',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
+          border: '2px solid #f59e0b',
+          borderRadius: '16px',
+          boxShadow: '0 10px 30px rgba(245, 158, 11, 0.15)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px'
+        }}>
+          {/* HEADER */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.4rem' }}>⚖️</span>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
+                  Klasifikasi Metrologi: Alat Ukur Langsung Presisi vs. Alat Ukur Pembanding
+                </h3>
+              </div>
+              <p style={{ margin: '6px 0 0 0', fontSize: '0.85rem', color: '#475569' }}>
+                Dalam metrologi industri dan teknik pemesinan, instrumen pengukuran diklasifikasikan berdasarkan <strong>metode pengukuran</strong> dan <strong>titik acuan (datum)</strong> yang digunakan.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowComparisonGuide(false)}
+              style={{
+                background: '#f1f5f9',
+                border: '1px solid #cbd5e1',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                color: '#475569',
+                cursor: 'pointer'
+              }}
+            >
+              ✕ Tutup
+            </button>
+          </div>
+
+          {/* 3 PILAR PERBEDAAN */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+            {/* 1. ALAT UKUR LANGSUNG */}
+            <div style={{
+              background: '#ecfdf5',
+              border: '1.5px solid #10b981',
+              borderRadius: '12px',
+              padding: '18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.4rem' }}>📏</span>
+                <div>
+                  <h4 style={{ margin: 0, color: '#065f46', fontSize: '1rem', fontWeight: 900 }}>1. Alat Ukur Langsung Presisi</h4>
+                  <div style={{ fontSize: '0.72rem', color: '#047857', fontWeight: 700 }}>DIRECT MEASURING INSTRUMENTS</div>
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: '#1f2937', lineHeight: 1.5 }}>
+                Instrumen yang <strong>memiliki skala ukur sendiri</strong> dan langsung memberikan nilai ukuran fisik benda kerja dari titik nol tanpa memerlukan benda standar referensi.
+              </p>
+              <div style={{ fontSize: '0.78rem', color: '#065f46', background: '#ffffff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #a7f3d0' }}>
+                <strong>Contoh Alat:</strong>
+                <ul style={{ margin: '4px 0 0 0', paddingLeft: '18px' }}>
+                  <li><strong>Jangka Sorong (Vernier Caliper):</strong> 0.05 / 0.02 mm</li>
+                  <li><strong>Mikrometer Sekrup (Micrometer):</strong> 0.01 mm</li>
+                  <li><strong>Vernier Height Gauge:</strong> 0.02 mm</li>
+                </ul>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: '#047857', fontWeight: 600 }}>
+                🎯 <strong>Ciri:</strong> Jangkauan ukur panjang (0-150 mm), hasil berupa nilai nominal absolut (misal: 25.42 mm).
+              </div>
+            </div>
+
+            {/* 2. ALAT UKUR PEMBANDING */}
+            <div style={{
+              background: '#fffbeb',
+              border: '1.5px solid #f59e0b',
+              borderRadius: '12px',
+              padding: '18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.4rem' }}>⏱️</span>
+                <div>
+                  <h4 style={{ margin: 0, color: '#92400e', fontSize: '1rem', fontWeight: 900 }}>2. Alat Ukur Pembanding</h4>
+                  <div style={{ fontSize: '0.72rem', color: '#b45309', fontWeight: 700 }}>COMPARATIVE INSTRUMENTS (COMPARATOR)</div>
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: '#1f2937', lineHeight: 1.5 }}>
+                Instrumen yang <strong>tidak membaca ukuran absolut dari nol</strong>, melainkan mengukur perbedaan atau penyimpangan (deviasi $\Delta L$) terhadap suatu ukuran standar datum.
+              </p>
+              <div style={{ fontSize: '0.78rem', color: '#92400e', background: '#ffffff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                <strong>Contoh Alat:</strong>
+                <ul style={{ margin: '4px 0 0 0', paddingLeft: '18px' }}>
+                  <li><strong>Dial Indikator (Jam Ukur):</strong> 0.01 mm / TIR</li>
+                  <li><strong>Pupitas (Dial Test Indicator):</strong> 0.01 / 0.002 mm</li>
+                  <li><strong>Cylinder Bore Gauge:</strong> Perbandingan diameter lubang</li>
+                </ul>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: '#b45309', fontWeight: 600 }}>
+                🎯 <strong>Ciri:</strong> Peka terhadap mikron, jangkauan gerak pendek (0-10 mm), menguji keolengan/TIR, kerataan, dan kebulatan.
+              </div>
+            </div>
+
+            {/* 3. STANDAR ACUAN MASTER */}
+            <div style={{
+              background: '#f0f9ff',
+              border: '1.5px solid #0284c7',
+              borderRadius: '12px',
+              padding: '18px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.4rem' }}>🧱</span>
+                <div>
+                  <h4 style={{ margin: 0, color: '#075985', fontSize: '1rem', fontWeight: 900 }}>3. Standar Acuan Master &amp; Celah</h4>
+                  <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700 }}>REFERENCE STANDARD &amp; CLEARANCE GAUGES</div>
+                </div>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: '#1f2937', lineHeight: 1.5 }}>
+                Standar fisik material terkalibrasi dengan ketelitian tertinggi untuk <strong>menyetel titik nol alat pembanding</strong> dan mengkalibrasi alat ukur langsung.
+              </p>
+              <div style={{ fontSize: '0.78rem', color: '#075985', background: '#ffffff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+                <strong>Contoh Alat:</strong>
+                <ul style={{ margin: '4px 0 0 0', paddingLeft: '18px' }}>
+                  <li><strong>Gauge Block (Blok Ukur Johansson):</strong> Standar ISO 3650</li>
+                  <li><strong>Feeler Gauge (Kaliber Celah):</strong> Bilah celah presisi</li>
+                  <li><strong>Master Ring / Plug Gauge:</strong> Standar datum silinder</li>
+                </ul>
+              </div>
+              <div style={{ fontSize: '0.76rem', color: '#0369a1', fontWeight: 600 }}>
+                🎯 <strong>Ciri:</strong> Akurasi sub-mikron, menjadi "jantung" kalibrasi seluruh instrumen di bengkel industri.
+              </div>
+            </div>
+          </div>
+
+          {/* TABEL KOMPARASI LENGKAP */}
+          <div style={{ overflowX: 'auto', background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                  <th style={{ padding: '12px 16px', color: '#0f172a', fontWeight: 800 }}>Parameter Metrologi</th>
+                  <th style={{ padding: '12px 16px', color: '#047857', fontWeight: 800 }}>Alat Ukur Langsung Presisi</th>
+                  <th style={{ padding: '12px 16px', color: '#b45309', fontWeight: 800 }}>Alat Ukur Pembanding (Comparator)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Prinsip Pengukuran</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Mengukur besaran dimensi langsung dari titik 0 ke batas benda</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Mengukur selisih/deviasi relatif terhadap datum master</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fcfcfc' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Hasil Pembacaan</td>
+                  <td style={{ padding: '10px 16px', color: '#047857', fontWeight: 700 }}>Nilai absolut nominal (Contoh: 18.45 mm, 25.00 mm)</td>
+                  <td style={{ padding: '10px 16px', color: '#b45309', fontWeight: 700 }}>Nilai penyimpangan &plusmn; (Contoh: +0.03 mm, TIR 0.02 mm)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Kebutuhan Master Datum</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Mandiri (cukup kalibrasi nol saat rahang tertutup)</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Wajib disetel pada blok ukur master / datum sebelum ukur</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9', background: '#fcfcfc' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Jangkauan Ukur (Range)</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Panjang (0 - 150 mm untuk caliper, 0 - 25 mm micrometer)</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Pendek (biasanya 0 - 10 mm atau 0 - 1 mm)</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Ketelitian &amp; Kepekaan</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>0.05 mm, 0.02 mm, hingga 0.01 mm</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Sangat peka (0.01 mm, 0.002 mm, hingga 0.001 mm / 1 mikron)</td>
+                </tr>
+                <tr style={{ background: '#fcfcfc' }}>
+                  <td style={{ padding: '10px 16px', fontWeight: 700, color: '#334155' }}>Aplikasi Utama di Bengkel</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Membubut poros, memfrais tebal balok, mengebor lubang komponen</td>
+                  <td style={{ padding: '10px 16px', color: '#1e293b' }}>Memeriksa keolengan spindel (Runout), kelurusan meja mesin, QC massal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* TIPS PRAKTIS DI INDUSTRI */}
+          <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '10px', padding: '12px 16px', fontSize: '0.8rem', color: '#78350f', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.2rem' }}>💡</span>
+            <div>
+              <strong>Kaidah Pemilihan di Industri:</strong> Gunakan <em>Alat Ukur Langsung</em> saat Anda membuat benda kerja dari nol untuk mengetahui dimensinya. Gunakan <em>Alat Ukur Pembanding</em> saat Anda ingin menguji kualitas kesimetrisan bentuk (kebulatan, kesejajaran, kerataan) atau saat memeriksa ribuan komponen secara cepat apakah berada dalam toleransi &plusmn;0.02 mm.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* INSTRUMENT NAVIGATION TABS (TERKATEGORISASI & BERLABEL) */}
       <div style={{
         display: 'flex',
         gap: '8px',
@@ -1049,44 +1446,60 @@ const MeasuringToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, o
         border: '1px solid var(--border-light)',
         overflowX: 'auto'
       }}>
-        {[
-          { id: 'vernier', name: 'Jangka Sorong', icon: '📏', res: '0.05 / 0.02 mm' },
-          { id: 'micrometer', name: 'Mikrometer Sekrup', icon: '🔬', res: '0.01 mm' },
-          { id: 'height', name: 'Vernier Height Gauge', icon: '📐', res: '0.02 mm' },
-          { id: 'dial', name: 'Dial Indikator', icon: '⏱️', res: '0.01 mm / TIR' },
-          { id: 'feeler', name: 'Feeler Gauge', icon: '🪒', res: 'Celah Presisi' },
-          { id: 'block', name: 'Gauge Block', icon: '🧱', res: 'Master Kalibrasi' },
-          { id: 'quiz', name: 'Kuis Asesmen Membaca', icon: '🏆', res: 'XP & Evaluasi' }
-        ].map(tool => (
-          <button
-            key={tool.id}
-            onClick={() => {
-              sound.playClick();
-              setActiveTool(tool.id);
-            }}
-            style={{
-              flex: '1 0 auto',
-              padding: '12px 16px',
-              borderRadius: '8px',
-              border: activeTool === tool.id ? '1.5px solid #10b981' : '1px solid transparent',
-              background: activeTool === tool.id ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
-              color: activeTool === tool.id ? '#047857' : '#334155',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              fontWeight: activeTool === tool.id ? 800 : 600,
-              fontSize: '0.85rem',
-              transition: 'all 0.2s',
-              minWidth: '120px'
-            }}
-          >
-            <div style={{ fontSize: '1.2rem' }}>{tool.icon}</div>
-            <div>{tool.name}</div>
-            <div style={{ fontSize: '0.68rem', color: activeTool === tool.id ? '#047857' : '#64748b', fontWeight: 600 }}>{tool.res}</div>
-          </button>
-        ))}
+        {METROLOGY_TOOLS
+          .filter(tool => {
+            if (categoryFilter === 'all') return true;
+            if (categoryFilter === 'direct') return tool.category === 'direct';
+            if (categoryFilter === 'comparator') return tool.category === 'comparator' || tool.category === 'reference';
+            if (categoryFilter === 'evaluation') return tool.category === 'evaluation';
+            return true;
+          })
+          .map(tool => (
+            <button
+              key={tool.id}
+              onClick={() => {
+                sound.playClick();
+                setActiveTool(tool.id);
+              }}
+              style={{
+                flex: '1 0 auto',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                border: activeTool === tool.id ? `1.5px solid ${tool.borderBadge}` : '1px solid transparent',
+                background: activeTool === tool.id ? tool.badgeBg : 'transparent',
+                color: activeTool === tool.id ? tool.badgeColor : '#334155',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '4px',
+                fontWeight: activeTool === tool.id ? 800 : 600,
+                fontSize: '0.82rem',
+                transition: 'all 0.2s',
+                minWidth: '125px'
+              }}
+            >
+              <div style={{ fontSize: '1.2rem' }}>{tool.icon}</div>
+              <div style={{ fontWeight: 800 }}>{tool.name}</div>
+              
+              {/* BADGE KATEGORI ALAT */}
+              <div style={{
+                fontSize: '0.62rem',
+                fontWeight: 800,
+                padding: '2px 6px',
+                borderRadius: '4px',
+                background: activeTool === tool.id ? tool.badgeColor : 'rgba(0,0,0,0.06)',
+                color: activeTool === tool.id ? '#ffffff' : '#64748b',
+                marginTop: '2px'
+              }}>
+                {tool.categoryLabel}
+              </div>
+
+              <div style={{ fontSize: '0.66rem', color: activeTool === tool.id ? tool.badgeColor : '#64748b', fontWeight: 600, marginTop: '1px' }}>
+                {tool.res}
+              </div>
+            </button>
+          ))}
       </div>
 
       {/* SUB-TAB SELECTOR (SIMULATOR / TEORI / SOP) & AUDIO NARRATOR - ONLY FOR TOOLS 1 TO 6 */}

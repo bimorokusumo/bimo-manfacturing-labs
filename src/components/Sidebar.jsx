@@ -62,7 +62,9 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
       { id: 'welding-diagnostic', label: 'Tes Diagnostik Welding Lab', icon: '📋', isDiag: true }
     ],
     measuring: [
-      { id: 'measuring', label: 'Simulator Kaliper & Mikrometer', icon: '📏' },
+      { id: 'measuring', label: 'Semua Instrumen Metrologi', icon: '🌐' },
+      { id: 'measuring-direct', label: 'Alat Ukur Langsung Presisi', icon: '📏' },
+      { id: 'measuring-comparator', label: 'Alat Ukur Pembanding (Dial & TIR)', icon: '⏱️' },
       { id: 'measuring-anatomy', label: 'Anatomi & Komponen Alat Ukur', icon: '🔬' },
       { id: 'measuring-diagnostic', label: 'Tes Diagnostik Alat Ukur', icon: '📋', isDiag: true }
     ],

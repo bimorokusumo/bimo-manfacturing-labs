@@ -161,9 +161,21 @@ function AppInner() {
       case 'welding':
         return <WeldingSimulator onOpenDiagnostic={() => setActiveMenu('welding-diagnostic')} />;
       case 'measuring':
+      case 'measuring-direct':
+      case 'measuring-comparator':
       case 'measuring-anatomy':
         return (
           <MeasuringToolsLab
+            initialTool={
+              activeMenu === 'measuring-comparator' ? 'dial' :
+              activeMenu === 'measuring-direct' ? 'vernier' :
+              'vernier'
+            }
+            initialCategoryFilter={
+              activeMenu === 'measuring-comparator' ? 'comparator' :
+              activeMenu === 'measuring-direct' ? 'direct' :
+              'all'
+            }
             initialTab={activeMenu === 'measuring-anatomy' ? 'theory' : 'simulator'}
             addXP={addXP}
             addMissionCompleted={addMissionCompleted}

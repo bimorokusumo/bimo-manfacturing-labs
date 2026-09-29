@@ -1,5 +1,10 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import Lathe3D_Engine from './Lathe3D_Engine';
+import {
+  generateSteppedProfilePoints2D,
+  parseGcodeToolpath,
+  extractToolpathWaypoints
+} from '../utils/latheToolpath';
 
 const Lathe2D = ({
   isRunning = false,
@@ -12,7 +17,10 @@ const Lathe2D = ({
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
-  showTailstock = false
+  showTailstock = false,
+  gcodeText = '',
+  currentLine = -1,
+  showToolpath = true
 }) => {
   const SVG_WIDTH = 800;
   const SVG_HEIGHT = 400;
@@ -25,26 +33,20 @@ const Lathe2D = ({
   const chuckFaceX = 600 - workpieceWidthPx;
   const chuckBodyX = Math.max(20, chuckFaceX - 130);
 
-  // Convert profile array to SVG polygon points
+  // Convert profile array to stepped SVG polygon points (EXACT 90-DEGREE STEPS, NO TAPER)
   const workpiecePoints = useMemo(() => {
-    if (!profile || profile.length !== 30) return '';
-
-    const topPoints = [];
-    const bottomPoints = [];
-
-    // index 0 is right/tailstock (X=600), index 29 is left/chuck (X=chuckFaceX)
-    for (let i = 0; i < profile.length; i++) {
-      const x = 600 - (i / 29) * workpieceWidthPx;
-      const diaMm = profile[i] !== undefined ? profile[i] : rawDiameter;
-      const radiusPx = (diaMm / 2) * (175 / 50); // 25mm => 87.5px
-
-      topPoints.push(`${x},${CENTER_Y - radiusPx}`);
-      bottomPoints.push(`${x},${CENTER_Y + radiusPx}`);
-    }
-
-    bottomPoints.reverse();
-    return [...topPoints, ...bottomPoints].join(' ');
+    return generateSteppedProfilePoints2D(profile, rawDiameter, rawLength, workpieceWidthPx, CENTER_Y);
   }, [profile, rawDiameter, rawLength, workpieceWidthPx]);
+
+  // Parse G-Code toolpath trajectory (G00 Rapid & G01/G92 Cutting)
+  const toolpathSegments = useMemo(() => {
+    return parseGcodeToolpath(gcodeText, rawDiameter, rawLength);
+  }, [gcodeText, rawDiameter, rawLength]);
+
+  // Extract unique waypoints for coordinate markers
+  const waypoints = useMemo(() => {
+    return extractToolpathWaypoints(toolpathSegments);
+  }, [toolpathSegments]);
 
   // Exact Tool Tip Position in 2D
   const toolTipX = 600 + (toolZ / rawLength) * workpieceWidthPx;
@@ -59,11 +61,23 @@ const Lathe2D = ({
         preserveAspectRatio="xMidYMid meet"
         style={{ position: 'absolute', top: 0, left: 0 }}
       >
-        {/* LIGHT TECHNICAL GRAPH GRID */}
+        {/* LIGHT TECHNICAL GRAPH GRID & TOOLPATH MARKERS */}
         <defs>
           <pattern id="latheGrid" width="20" height="20" patternUnits="userSpaceOnUse">
             <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" strokeWidth="0.8" />
           </pattern>
+          {/* Arrow markers for Rapid (G00) - Yellow */}
+          <marker id="arrowRapid" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#facc15" />
+          </marker>
+          {/* Arrow markers for Cut (G01) - Cyan */}
+          <marker id="arrowCut" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#06b6d4" />
+          </marker>
+          {/* Active Highlight Arrow - Bright Green */}
+          <marker id="arrowActive" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#22c55e" />
+          </marker>
         </defs>
         <rect width="100%" height="100%" fill="url(#latheGrid)" />
 
@@ -76,7 +90,7 @@ const Lathe2D = ({
         <rect x={chuckFaceX - 12} y="105" width="16" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
         <rect x={chuckFaceX - 12} y="255" width="16" height="40" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
 
-        {/* WORKPIECE */}
+        {/* WORKPIECE (SUDUT 90 DERAJAT BERSIH TANPA TIRUS) */}
         {workpiecePoints && (
           <polygon
             points={workpiecePoints}
@@ -85,6 +99,72 @@ const Lathe2D = ({
             strokeWidth="2"
             style={{ transition: isRunning ? 'none' : 'all 0.05s linear' }}
           />
+        )}
+
+        {/* ========================================================================= */}
+        {/* PREVIEW ALUR GERAKAN PAHAT (TOOLPATH TRAJECTORY DARI PROGRAM G-CODE)      */}
+        {/* ========================================================================= */}
+        {showToolpath && toolpathSegments.length > 0 && (
+          <g className="toolpath-layer">
+            {/* 1. Trajectory lines (G00 Rapid & G01/G92 Cut) */}
+            {toolpathSegments.map((seg, idx) => {
+              const x1 = 600 + (seg.from.z / rawLength) * workpieceWidthPx;
+              const y1 = CENTER_Y + (seg.from.x / 2) * (175 / 50);
+              const x2 = 600 + (seg.to.z / rawLength) * workpieceWidthPx;
+              const y2 = CENTER_Y + (seg.to.x / 2) * (175 / 50);
+
+              const isCurrentActive = isRunning && currentLine === seg.lineIndex;
+              const isCut = seg.type === 'cut';
+
+              return (
+                <g key={`tp-${idx}`}>
+                  {/* Subtle contrast halo */}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke={isCurrentActive ? '#22c55e' : (isCut ? 'rgba(6, 182, 212, 0.4)' : 'rgba(250, 204, 21, 0.35)')}
+                    strokeWidth={isCurrentActive ? 6 : (isCut ? 4 : 3)}
+                    strokeLinecap="round"
+                  />
+                  {/* Foreground line with direction arrows */}
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke={isCurrentActive ? '#ffffff' : (isCut ? '#06b6d4' : '#eab308')}
+                    strokeWidth={isCurrentActive ? 3.5 : (isCut ? 2.5 : 1.8)}
+                    strokeDasharray={isCut ? 'none' : '6 4'}
+                    strokeLinecap="round"
+                    markerEnd={isCurrentActive ? 'url(#arrowActive)' : (isCut ? 'url(#arrowCut)' : 'url(#arrowRapid)')}
+                  />
+                </g>
+              );
+            })}
+
+            {/* 2. Waypoints (Titik-titik Koordinat Balik/Tujuan Pahat) */}
+            {waypoints.map((wp, wIdx) => {
+              const wx = 600 + (wp.z / rawLength) * workpieceWidthPx;
+              const wy = CENTER_Y + (wp.x / 2) * (175 / 50);
+              const isKeyPoint = (wIdx === 0 || wIdx === waypoints.length - 1 || wp.x < rawDiameter);
+              return (
+                <g key={`wp-${wIdx}`}>
+                  <circle cx={wx} cy={wy} r={3} fill="#0f172a" stroke="#38bdf8" strokeWidth={1.5} />
+                  <circle cx={wx} cy={wy} r={1.2} fill="#ffffff" />
+                  {isKeyPoint && (
+                    <g transform={`translate(${wx + 6}, ${wy + 13})`}>
+                      <rect x="-3" y="-9" width="56" height="13" rx="3" fill="rgba(15, 23, 42, 0.90)" stroke="#0284c7" strokeWidth="0.8" />
+                      <text x="2" y="1" fill="#38bdf8" fontSize="8" fontWeight="bold" fontFamily="monospace">
+                        X{wp.x.toFixed(0)} Z{wp.z.toFixed(0)}
+                      </text>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+          </g>
         )}
 
         {/* TAILSTOCK (Kepala Lepas - Disembunyikan pada Mode CNC Sesuai Permintaan) */}
@@ -258,6 +338,33 @@ const Lathe2D = ({
             <line key={i} x1={200 + i * 50} y1="365" x2={200 + i * 50} y2="375" />
           ))}
         </g>
+
+        {/* PETUNJUK LEGENDA ALUR GERAKAN PAHAT (TOOLPATH) */}
+        {showToolpath && (
+          <g transform="translate(16, 20)">
+            <rect x="0" y="0" width="224" height="74" rx="8" fill="rgba(15, 23, 42, 0.90)" stroke="#38bdf8" strokeWidth="1" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
+            <text x="12" y="18" fill="#f8fafc" fontSize="10" fontWeight="900" letterSpacing="0.5">
+              📐 ALUR GERAKAN PAHAT (TOOLPATH)
+            </text>
+            {/* Rapid line G00 */}
+            <line x1="14" y1="34" x2="42" y2="34" stroke="#eab308" strokeWidth="2" strokeDasharray="5 3" />
+            <circle cx="28" cy="34" r="2.2" fill="#facc15" />
+            <text x="48" y="37" fill="#fde047" fontSize="9" fontWeight="700">
+              G00 : Gerak Cepat (Rapid Approach)
+            </text>
+            {/* Cut line G01/G92 */}
+            <line x1="14" y1="52" x2="42" y2="52" stroke="#06b6d4" strokeWidth="3" />
+            <circle cx="28" cy="52" r="2.2" fill="#06b6d4" />
+            <text x="48" y="55" fill="#38bdf8" fontSize="9" fontWeight="700">
+              G01/G92 : Gerak Sayat (Cutting Pass)
+            </text>
+            {/* Active status */}
+            <circle cx="20" cy="65" r="3" fill={isRunning ? "#22c55e" : "#94a3b8"} />
+            <text x="30" y="68" fill={isRunning ? "#4ade80" : "#94a3b8"} fontSize="8.5" fontWeight="600">
+              {isRunning ? 'Pahat sedang aktif menyayat program' : 'Preview alur siap dieksekusi'}
+            </text>
+          </g>
+        )}
       </svg>
     </div>
   );
@@ -275,9 +382,16 @@ const Lathe3D = ({
   rpm = 1200,
   isCutting = false,
   coolant = false,
-  showTailstock = false
+  showTailstock = false,
+  gcodeText = '',
+  currentLine = -1,
+  showToolpath = true,
+  onToggleToolpath = null
 }) => {
   const [viewMode, setViewMode] = useState('3d'); // '3d' or '2d'
+  const [localShowToolpath, setLocalShowToolpath] = useState(true);
+  const effectiveShowToolpath = onToggleToolpath ? showToolpath : localShowToolpath;
+  const toggleToolpathHandler = onToggleToolpath || (() => setLocalShowToolpath(v => !v));
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -301,6 +415,9 @@ const Lathe3D = ({
             isCutting={isCutting}
             coolant={coolant}
             showTailstock={showTailstock}
+            gcodeText={gcodeText}
+            currentLine={currentLine}
+            showToolpath={effectiveShowToolpath}
           />
         </Suspense>
       ) : (
@@ -316,10 +433,13 @@ const Lathe3D = ({
           rpm={rpm}
           isCutting={isCutting}
           showTailstock={showTailstock}
+          gcodeText={gcodeText}
+          currentLine={currentLine}
+          showToolpath={effectiveShowToolpath}
         />
       )}
 
-      {/* VIEW TOGGLE BUTTON */}
+      {/* VIEW & TOOLPATH TOGGLE BUTTONS */}
       <div style={{ position: 'absolute', top: '14px', left: '16px', display: 'flex', gap: '8px', zIndex: 10 }}>
         <button
           onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
@@ -340,6 +460,30 @@ const Lathe3D = ({
           }}
         >
           {viewMode === '3d' ? '📐 TAMPILAN 2D TEKNIK' : '🎮 TAMPILAN 3D STUDIO'}
+        </button>
+
+        {/* ALUR PAHAT (TOOLPATH) TOGGLE BUTTON */}
+        <button
+          onClick={toggleToolpathHandler}
+          style={{
+            padding: '6px 12px',
+            background: effectiveShowToolpath ? 'rgba(6, 182, 212, 0.22)' : 'rgba(15, 23, 42, 0.85)',
+            border: `1px solid ${effectiveShowToolpath ? '#06b6d4' : 'rgba(148, 163, 184, 0.4)'}`,
+            color: effectiveShowToolpath ? '#22d3ee' : '#94a3b8',
+            borderRadius: '6px',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'all 0.2s'
+          }}
+          title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
+        >
+          <span>{effectiveShowToolpath ? '👁️' : '🙈'}</span>
+          <span>ALUR PAHAT: {effectiveShowToolpath ? 'ON' : 'OFF'}</span>
         </button>
       </div>
 

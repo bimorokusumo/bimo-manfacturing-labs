@@ -3,6 +3,7 @@ import { sound } from '../utils/audio';
 import Lathe3D from './Lathe3D';
 import PreparationModal from './PreparationModal';
 import LatheFormulaCalculatorModal from './LatheFormulaCalculatorModal';
+import { PROFILE_RESOLUTION } from '../utils/latheToolpath';
 
 // =========================================================================
 // DATA KONFIGURASI TOOLING PAHAT CNC (STANDAR INDUSTRI & ISO)
@@ -198,11 +199,14 @@ const CNCLatheModule = ({ addXP }) => {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
 
-  // Profile points for Lathe (30 segments in exact mm diameter)
-  const initialProfile = Array(30).fill(workpieceDiameter);
+  // Profile points for Lathe (100 segments in exact mm diameter for crisp 90-degree steps)
+  const initialProfile = Array(PROFILE_RESOLUTION).fill(workpieceDiameter);
   const profileRef = useRef([...initialProfile]);
   const [profileForRender, setProfileForRender] = useState([...initialProfile]);
   
+  // Toolpath trajectory visibility state
+  const [showToolpath, setShowToolpath] = useState(true);
+
   // Tool Position Refs (z in mm, d in mm diameter)
   const toolPosRef = useRef({ z: 2.0, d: workpieceDiameter + 2.0, x: workpieceDiameter + 2.0 });
   const [toolPosForRender, setToolPosForRender] = useState({ z: 2.0, d: workpieceDiameter + 2.0, x: workpieceDiameter + 2.0 });
@@ -219,7 +223,7 @@ const CNCLatheModule = ({ addXP }) => {
     if (newMat) setWorkpieceMaterial(newMat);
 
     // Reset profile & tool position to new stock dimensions
-    const newProfile = Array(30).fill(clampedDia);
+    const newProfile = Array(PROFILE_RESOLUTION).fill(clampedDia);
     profileRef.current = [...newProfile];
     setProfileForRender([...newProfile]);
 
@@ -239,45 +243,53 @@ const CNCLatheModule = ({ addXP }) => {
     setGcodeText(getGcodeTemplate(newToolId, workpieceDiameter, workpieceLength));
   };
 
-  // Cutting Calculation Engine
+  // Cutting Calculation Engine (Penyayatan Presisi Sudut 90 Derajat Tanpa Tirus)
   const applyToolMove = (newD, newZ) => {
     toolPosRef.current = { z: newZ, d: newD, x: newD };
     
     // Check cutting contact inside workpiece boundary
-    if (newZ <= 1.0 && newZ >= -workpieceLength - 5) {
+    if (newZ <= 0.5 && newZ >= -workpieceLength - 5) {
       const clampedZ = Math.max(-workpieceLength, Math.min(0, newZ));
       const progress = Math.abs(clampedZ) / workpieceLength;
-      const index = Math.min(29, Math.max(0, Math.floor(progress * 29)));
+      const index = Math.min(PROFILE_RESOLUTION - 1, Math.max(0, Math.floor(progress * (PROFILE_RESOLUTION - 1))));
       const cutDiameter = Math.max(0, newD);
 
       if (toolType === 'alur') {
-        // Pahat alur lebar 3mm mencakup ~2-3 segmen
-        const span = Math.max(1, Math.round((3.0 / workpieceLength) * 29));
-        for (let s = -span; s <= span; s++) {
-          const idx = index + s;
-          if (idx >= 0 && idx < 30) {
+        // Pahat alur lebar 3mm: menyayat slot celah dengan dinding tegak 90 derajat
+        const halfSpan = Math.max(1, Math.round((1.5 / workpieceLength) * (PROFILE_RESOLUTION - 1)));
+        const startIdx = Math.max(0, index - halfSpan);
+        const endIdx = Math.min(PROFILE_RESOLUTION - 1, index + halfSpan);
+        for (let idx = startIdx; idx <= endIdx; idx++) {
+          if (cutDiameter < profileRef.current[idx]) {
+            profileRef.current[idx] = cutDiameter;
+          }
+        }
+      } else if (toolType === 'ulir') {
+        // Pahat ulir menyayat ulir metris dari Z0 sampai posisi pahat index
+        for (let idx = 0; idx <= index; idx++) {
+          if (cutDiameter < profileRef.current[idx]) {
+            profileRef.current[idx] = cutDiameter;
+          }
+        }
+      } else if (toolType === 'facing') {
+        // Pahat facing memotong muka Z0
+        if (Math.abs(newZ) <= 1.5) {
+          const faceIndices = Math.max(1, Math.round((2.0 / workpieceLength) * (PROFILE_RESOLUTION - 1)));
+          for (let idx = 0; idx <= faceIndices; idx++) {
             if (cutDiameter < profileRef.current[idx]) {
               profileRef.current[idx] = cutDiameter;
             }
           }
         }
-      } else if (toolType === 'ulir') {
-        // Pahat ulir menyayat ulir metris 60 derajat
-        if (cutDiameter < profileRef.current[index]) {
-          profileRef.current[index] = cutDiameter;
-        }
-      } else if (toolType === 'facing') {
-        // Pahat facing memotong muka Z0
-        if (Math.abs(newZ) <= 1.5) {
-          if (cutDiameter < profileRef.current[0]) profileRef.current[0] = cutDiameter;
-          if (cutDiameter < profileRef.current[1]) profileRef.current[1] = cutDiameter;
-        }
       } else {
-        // Pahat rata memanjang
-        if (cutDiameter < profileRef.current[index]) {
-          profileRef.current[index] = cutDiameter;
-          if (index > 0 && cutDiameter < profileRef.current[index - 1]) profileRef.current[index - 1] = cutDiameter;
-          if (index < 29 && cutDiameter < profileRef.current[index + 1]) profileRef.current[index + 1] = cutDiameter;
+        // Pahat rata memanjang:
+        // Menyayat material dari Z0 (muka index 0) hingga posisi ujung pahat (index).
+        // Bidang silinder yang dilalui disayat rata sempurna, dan ujung penyayatan di index
+        // membentuk sudut siku tegak lurus 90 DERAJAT tanpa merembet (tirus) ke index berikutnya!
+        for (let idx = 0; idx <= index; idx++) {
+          if (cutDiameter < profileRef.current[idx]) {
+            profileRef.current[idx] = cutDiameter;
+          }
         }
       }
     }
@@ -295,7 +307,7 @@ const CNCLatheModule = ({ addXP }) => {
     sound.playClick();
     setIsMachining(false);
     setShowResult(false);
-    const freshProfile = Array(30).fill(workpieceDiameter);
+    const freshProfile = Array(PROFILE_RESOLUTION).fill(workpieceDiameter);
     profileRef.current = [...freshProfile];
     setProfileForRender([...freshProfile]);
     
@@ -524,6 +536,30 @@ const CNCLatheModule = ({ addXP }) => {
           ))}
         </div>
 
+        {/* TOGGLE ALUR GERAKAN PAHAT (TOOLPATH) */}
+        <button
+          onClick={() => { sound.playClick(); setShowToolpath(prev => !prev); }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: showToolpath ? 'rgba(6, 182, 212, 0.16)' : 'rgba(255, 255, 255, 0.05)',
+            border: `1.5px solid ${showToolpath ? '#06b6d4' : 'var(--border-light)'}`,
+            padding: '5px 12px',
+            borderRadius: '6px',
+            fontSize: '0.72rem',
+            fontWeight: 800,
+            color: showToolpath ? '#06b6d4' : 'var(--text-muted)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            boxShadow: showToolpath ? '0 0 10px rgba(6, 182, 212, 0.25)' : 'none'
+          }}
+          title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
+        >
+          <span>{showToolpath ? '👁️' : '🙈'}</span>
+          <span>JALUR PAHAT: {showToolpath ? 'AKTIF (ON)' : 'NONAKTIF'}</span>
+        </button>
+
         {/* BADGE ORIENTASI VERTIKAL */}
         <div style={{
           display: 'flex',
@@ -612,6 +648,10 @@ const CNCLatheModule = ({ addXP }) => {
                 isCutting={isMachining && currentLine >= 0}
                 coolant={coolant}
                 showTailstock={false}
+                gcodeText={gcodeText}
+                currentLine={currentLine}
+                showToolpath={showToolpath}
+                onToggleToolpath={() => setShowToolpath(v => !v)}
               />
             </Suspense>
           </div>

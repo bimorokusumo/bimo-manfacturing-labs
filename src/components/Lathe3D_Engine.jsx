@@ -2,6 +2,7 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
+import { generateSteppedProfileSegments, parseGcodeToolpath } from '../utils/latheToolpath';
 
 // Swarf / Metal Chips Particle System - sprays from exact contact point
 const CuttingChips = ({ isCutting, position }) => {
@@ -68,36 +69,47 @@ const CuttingChips = ({ isCutting, position }) => {
   );
 };
 
-// Workpiece rendered with dynamic revolved profile
-// 100mm length = 2.4 world units (X: -1.2 to +1.2)
-// 50mm diameter = 0.60 world diameter (0.30 radius) -> scale = 0.006 per mm
-// Workpiece rendered with dynamic revolved profile
+// Workpiece rendered with dynamic stepped revolved profile (SUDUT 90 DERAJAT BERSIH, BEBAS TIRUS)
 // 100mm length = 2.4 world units (X: -1.2 to +1.2)
 // 50mm diameter = 0.60 world diameter (0.30 radius) -> scale = 0.006 per mm
 const RevolvedWorkpiece = ({ profile, isRunning, rpm = 800, rawDiameter = 50, rawLength = 100 }) => {
   const meshRef = useRef();
 
-  // Create Lathe Geometry from mm profile
+  // Create Lathe Geometry with strictly perpendicular 90-degree step faces
   const geometry = useMemo(() => {
     const pts = [];
-    const segments = profile ? profile.length : 30;
+    const segmentsCount = profile ? profile.length : 100;
     const halfLen = (rawLength / 100) * 1.2;
+    const radScale = 0.30 / 25; // 0.006 per mm
 
-    // Base cap at chuck face (world X = -halfLen, local y = -halfLen)
+    const stepSegments = generateSteppedProfileSegments(profile, rawDiameter);
+
+    // Base center cap at chuck face (local y = -halfLen)
     pts.push(new THREE.Vector2(0, -halfLen - 0.005));
 
-    // Order points strictly from local y = -halfLen (chuck) to +halfLen (tailstock)
-    for (let i = segments - 1; i >= 0; i--) {
-      const y = -halfLen + ((segments - 1 - i) / (segments - 1)) * (halfLen * 2);
-      const diaMm = profile && profile[i] !== undefined ? profile[i] : rawDiameter;
-      const radius = Math.max(0.03, (diaMm / 2) * (0.30 / 25)); // diaMm * 0.006
-      pts.push(new THREE.Vector2(radius, y));
+    // Traverse segments from chuck (y = -halfLen) to front face (y = +halfLen)
+    // Index 0 in profile is front face, Index N-1 is chuck face.
+    // So we iterate through stepSegments in reverse (from chuck segment to face segment)
+    for (let s = stepSegments.length - 1; s >= 0; s--) {
+      const seg = stepSegments[s];
+      const yChuck = -halfLen + ((segmentsCount - 1 - seg.endIndex) / (segmentsCount - 1)) * (halfLen * 2);
+      const yFace = -halfLen + ((segmentsCount - 1 - seg.startIndex) / (segmentsCount - 1)) * (halfLen * 2);
+      const radius = Math.max(0.02, (seg.diameter / 2) * radScale);
+
+      // Chuck-side point
+      pts.push(new THREE.Vector2(radius, yChuck));
+      // Face-side point
+      pts.push(new THREE.Vector2(radius, yFace));
+
+      // When the next segment closer to the front face has a different radius,
+      // it will push (nextRadius, yFace) at the EXACT SAME yFace!
+      // Revolving this Delta y = 0 radial segment creates an EXACT 90-DEGREE PLANAR DISC SHOULDER!
     }
 
-    // Tip cap at tailstock (world X = +halfLen, local y = +halfLen)
+    // Tip center cap at front face (local y = +halfLen)
     pts.push(new THREE.Vector2(0, halfLen + 0.005));
 
-    return new THREE.LatheGeometry(pts, 32);
+    return new THREE.LatheGeometry(pts, 36);
   }, [profile, rawDiameter, rawLength]);
 
   useFrame((_, delta) => {
@@ -605,6 +617,68 @@ const LatheStructure = () => {
   );
 };
 
+// 3D Toolpath Overlay Component (G00 Rapid Yellow Lines & G01/G92 Cutting Cyan Lines)
+const Toolpath3D = ({ gcodeText, rawDiameter = 50, rawLength = 100, currentLine = -1, isRunning = false }) => {
+  const segments = useMemo(() => {
+    return parseGcodeToolpath(gcodeText, rawDiameter, rawLength);
+  }, [gcodeText, rawDiameter, rawLength]);
+
+  const halfLen = (rawLength / 100) * 1.2;
+  const radScale = 0.30 / 25;
+
+  const { rapidLines, cutLines, activeLine } = useMemo(() => {
+    const rapids = [];
+    const cuts = [];
+    let active = null;
+
+    segments.forEach(seg => {
+      const x1 = halfLen + (seg.from.z / rawLength) * (halfLen * 2);
+      const y1 = 1.2;
+      const z1 = (seg.from.x / 2) * radScale + 0.006;
+
+      const x2 = halfLen + (seg.to.z / rawLength) * (halfLen * 2);
+      const y2 = 1.2;
+      const z2 = (seg.to.x / 2) * radScale + 0.006;
+
+      const pts = [new THREE.Vector3(x1, y1, z1), new THREE.Vector3(x2, y2, z2)];
+
+      if (isRunning && currentLine === seg.lineIndex) {
+        active = pts;
+      } else if (seg.type === 'cut') {
+        cuts.push(pts);
+      } else {
+        rapids.push(pts);
+      }
+    });
+
+    return { rapidLines: rapids, cutLines: cuts, activeLine: active };
+  }, [segments, rawLength, currentLine, isRunning, halfLen, radScale]);
+
+  if (!segments || segments.length === 0) return null;
+
+  return (
+    <group>
+      {rapidLines.map((pts, i) => (
+        <line key={`r3d-${i}`} geometry={new THREE.BufferGeometry().setFromPoints(pts)}>
+          <lineBasicMaterial color="#facc15" linewidth={2} transparent opacity={0.8} />
+        </line>
+      ))}
+
+      {cutLines.map((pts, i) => (
+        <line key={`c3d-${i}`} geometry={new THREE.BufferGeometry().setFromPoints(pts)}>
+          <lineBasicMaterial color="#06b6d4" linewidth={3} />
+        </line>
+      ))}
+
+      {activeLine && (
+        <line geometry={new THREE.BufferGeometry().setFromPoints(activeLine)}>
+          <lineBasicMaterial color="#22c55e" linewidth={4} />
+        </line>
+      )}
+    </group>
+  );
+};
+
 const Lathe3D_Engine = ({
   isRunning = false,
   toolPosition = { z: 0, d: 50 },
@@ -616,7 +690,10 @@ const Lathe3D_Engine = ({
   rpm = 800,
   isCutting = false,
   coolant = false,
-  showTailstock = false
+  showTailstock = false,
+  gcodeText = '',
+  currentLine = -1,
+  showToolpath = true
 }) => {
   const controlsRef = useRef();
 
@@ -646,6 +723,15 @@ const Lathe3D_Engine = ({
         <LatheStructure />
         <ChuckSpindle isRunning={isRunning} rpm={rpm} rawLength={rawLength} />
         <RevolvedWorkpiece profile={profile} isRunning={isRunning} rpm={rpm} rawDiameter={rawDiameter} rawLength={rawLength} />
+        {showToolpath && (
+          <Toolpath3D
+            gcodeText={gcodeText}
+            rawDiameter={rawDiameter}
+            rawLength={rawLength}
+            currentLine={currentLine}
+            isRunning={isRunning}
+          />
+        )}
         <ToolAssembly
           toolPosition={toolPosition}
           isCutting={isCutting}

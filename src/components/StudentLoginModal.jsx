@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStudent } from '../context/StudentContext';
 import { sound } from '../utils/audio';
+import { MASTER_STUDENTS_LIST } from '../data/studentsData';
 
 const CLASS_OPTIONS = [
   'X TPM 1',
@@ -28,6 +29,38 @@ const StudentLoginModal = () => {
   });
 
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSelectFromRoster = (e) => {
+    const val = e.target.value;
+    if (!val) return;
+    const found = MASTER_STUDENTS_LIST.find((s) => s.name === val);
+    if (found) {
+      setFormData({
+        name: found.name,
+        studentNumber: String(found.absen),
+        className: 'X TPM 1',
+        customClass: '',
+        school: 'SMKN 2 DEPOK'
+      });
+      setErrorMsg('');
+    }
+  };
+
+  const handleNameInputChange = (val) => {
+    const found = MASTER_STUDENTS_LIST.find((s) => s.name.toLowerCase() === val.trim().toLowerCase());
+    if (found) {
+      setFormData({
+        name: found.name,
+        studentNumber: String(found.absen),
+        className: 'X TPM 1',
+        customClass: '',
+        school: 'SMKN 2 DEPOK'
+      });
+      setErrorMsg('');
+    } else {
+      setFormData((prev) => ({ ...prev, name: val }));
+    }
+  };
 
   // Form bersih saat modal dibuka jika belum login
   useEffect(() => {
@@ -215,6 +248,38 @@ const StudentLoginModal = () => {
             </div>
           )}
 
+          {/* PILIH CEPAT DARI DAFTAR SISWA RESMI KELAS X-TP.A */}
+          <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '12px', border: '1.5px dashed #cbd5e1' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#334155', marginBottom: '6px' }}>
+              📋 Pilih Cepat Nama Siswa (Kelas X-TP.A SMKN 2 Depok):
+            </label>
+            <select
+              onChange={handleSelectFromRoster}
+              defaultValue=""
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                borderRadius: '8px',
+                border: '1.5px solid #94a3b8',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                color: '#0f172a',
+                background: '#ffffff',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="">-- Klik untuk Pilih Nama Anda (Absen 01 s/d 36) --</option>
+              {MASTER_STUDENTS_LIST.map((s) => (
+                <option key={s.absen} value={s.name}>
+                  No. {String(s.absen).padStart(2, '0')} - {s.name} (NIS: {s.nis})
+                </option>
+              ))}
+            </select>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px' }}>
+              💡 Memilih nama otomatis mengisi Nomor Absen, Kelas X-TP.A, dan Sekolah SMKN 2 Depok.
+            </div>
+          </div>
+
           {/* INPUT NAMA LENGKAP */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
@@ -222,10 +287,11 @@ const StudentLoginModal = () => {
             </label>
             <input
               type="text"
+              list="roster-students"
               required
-              placeholder="Masukkan nama lengkap siswa..."
+              placeholder="Masukkan atau pilih nama lengkap siswa..."
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleNameInputChange(e.target.value)}
               style={{
                 width: '100%',
                 padding: '12px 14px',
@@ -241,6 +307,13 @@ const StudentLoginModal = () => {
               onFocus={(e) => (e.target.style.borderColor = '#f59e0b')}
               onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
             />
+            <datalist id="roster-students">
+              {MASTER_STUDENTS_LIST.map((s) => (
+                <option key={s.absen} value={s.name}>
+                  No. {String(s.absen).padStart(2, '0')} - NIS: {s.nis}
+                </option>
+              ))}
+            </datalist>
           </div>
 
           {/* ROW: NOMOR ABSEN & KELAS */}

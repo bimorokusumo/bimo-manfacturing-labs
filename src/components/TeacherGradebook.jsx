@@ -43,6 +43,50 @@ const GOOGLE_APPS_SCRIPT_CODE = `/**
  * =============================================================================
  */
 
+// =============================================================================
+// DAFTAR MASTER RESMI 36 SISWA KELAS X-TP.A (SMKN 2 DEPOK)
+// Sumber: Dokumen Daftar Hadir Siswa SMK Negeri 2 Depok (NAMA SISWA.docx)
+// Konsentrasi Keahlian: Teknik Pemesinan A (X-TP.A)
+// =============================================================================
+var MASTER_STUDENTS_LIST = [
+  { absen: 1, nis: "22946", nama: "ADITYA MIRZA SUSANTO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 2, nis: "22947", nama: "ADITYA SAPUTRA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 3, nis: "22948", nama: "AHMAD MAULANA ASYAM NUR IHSAN", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 4, nis: "22949", nama: "AHMAD YUSRIL KHAIRIL AZAM", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 5, nis: "22950", nama: "ALAN HAFID ELVANO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 6, nis: "22951", nama: "ALFONSUS SEBASTIAN DANADYAKSA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 7, nis: "22952", nama: "ARDIKA RINANDRA SAPUTRA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 8, nis: "22953", nama: "ARIF NOVIANTO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 9, nis: "22954", nama: "ARIF NUR HARTANTO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 10, nis: "22955", nama: "ARKAN SAI'D RAMADAN", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 11, nis: "22956", nama: "ATHA REVA ADITYA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 12, nis: "22957", nama: "AUFA RIJAL ASYAM", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 13, nis: "22958", nama: "AXCEL PASA FIANSHA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 14, nis: "22959", nama: "AXEL VISCIDA PRASETYO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 15, nis: "22960", nama: "BALKIS SYAHDINO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 16, nis: "22961", nama: "BIAS GEMILANG PRASETYA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 17, nis: "22962", nama: "CHARLY DWI FENDYANSAH", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 18, nis: "22963", nama: "DANU ARJUNSWASITA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 19, nis: "22964", nama: "DEO SAKA RAMADITYA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 20, nis: "22965", nama: "DEWATA PURNAMA WIRABHAYU", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 21, nis: "22966", nama: "DZAKI ADITYA DAMAR JATI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 22, nis: "22967", nama: "DZAKWAN RIZQIRAMADANI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 23, nis: "22968", nama: "EVAN ADITYA PUTRA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 24, nis: "22969", nama: "FADHIL BUDI KURNIAWAN", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 25, nis: "22970", nama: "FADHILA KARTIKA WARDANA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 26, nis: "22971", nama: "FAQIH BISMA NUGRAHA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 27, nis: "22972", nama: "FATA NOOR AZAM", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 28, nis: "22973", nama: "FAUZAN NUR KUSUMA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 29, nis: "22974", nama: "FERDY ISNANTO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 30, nis: "22975", nama: "GALANG ARJUNA MUKTI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 31, nis: "22976", nama: "GALANG MAHARDIKA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 32, nis: "22977", nama: "GALIH AJI YUDO WICAKSONO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 33, nis: "22978", nama: "GALIH GIRANTI KUSUMO WICAKSONO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 34, nis: "22979", nama: "HAIDAR NAUFAL ZAKI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 35, nis: "22980", nama: "HAIKAL RIFFAT DANISWARA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
+  { absen: 36, nis: "22981", nama: "MUHAMMAD RAFAEL AL-HABSI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" }
+];
+
 // DEFINISI MODUL LAB & TUGAS-TUGASNYA SESUAI SIDEBAR
 var LAB_CONFIGS = [
   {
@@ -291,41 +335,74 @@ function doPost(e) {
 }
 
 /**
- * Otomatis memperbarui tab modul lab terkait dan tab matriks rekap
- * setiap kali ada siswa yang mengirim nilai kuis secara real-time.
+ * Olah dan cocokkan data baris nilai terhadap 36 Siswa Resmi Master Kelas X-TP.A
  */
-function autoUpdateLabSheetOnPost(ss, modulStr, quizStr) {
-  var allRows = getAllDataRows(ss);
-  if (!allRows || allRows.length === 0) return;
-
+function buildStudentMapFromRows(allRows) {
   var studentsMap = {};
-  allRows.forEach(function(parsed) {
-    var nama = parsed.nama;
-    if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
-    var absen = parsed.absen || "-";
-    var kelas = parsed.kelas || "-";
-    var key = nama.toLowerCase();
 
-    if (!studentsMap[key]) {
-      studentsMap[key] = {
-        nama: nama,
-        absen: absen,
-        kelas: kelas,
-        scoresByTask: {}
-      };
+  // 1. Inisialisasi awal dengan 36 siswa master kelas X-TP.A (SMKN 2 Depok)
+  MASTER_STUDENTS_LIST.forEach(function(s) {
+    var key = "absen_" + String(s.absen);
+    studentsMap[key] = {
+      nama: s.nama,
+      absen: String(s.absen),
+      nis: s.nis,
+      kelas: s.kelas,
+      sekolah: s.sekolah,
+      isMaster: true,
+      scoresByTask: {}
+    };
+  });
+
+  // 2. Olah semua row nilai yang masuk dari raw data
+  (allRows || []).forEach(function(parsed) {
+    var rawNama = (parsed.nama || "").trim();
+    if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1) return;
+    var rawAbsen = String(parsed.absen !== undefined ? parsed.absen : "-").trim();
+    var parsedAbsenNum = parseInt(rawAbsen, 10);
+
+    // Cari kecocokan di master 36 siswa:
+    var targetKey = null;
+
+    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36
+    if (!isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
+      targetKey = "absen_" + parsedAbsenNum;
     } else {
-      if (studentsMap[key].absen === "-" && absen !== "-") studentsMap[key].absen = absen;
-      if (studentsMap[key].kelas === "-" && kelas !== "-") studentsMap[key].kelas = kelas;
+      // Prioritas 2: Cocokkan nama (case-insensitive & pembersihan karakter khusus)
+      var cleanRaw = rawNama.toLowerCase().replace(/[^a-z0-9]/g, "");
+      for (var m = 0; m < MASTER_STUDENTS_LIST.length; m++) {
+        var cleanMaster = MASTER_STUDENTS_LIST[m].nama.toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (cleanRaw === cleanMaster || (cleanRaw.length > 5 && cleanMaster.indexOf(cleanRaw) !== -1) || (cleanMaster.length > 5 && cleanRaw.indexOf(cleanMaster) !== -1)) {
+          targetKey = "absen_" + MASTER_STUDENTS_LIST[m].absen;
+          break;
+        }
+      }
     }
 
-    var qTitle = parsed.judulKuis || "";
-    var mName = parsed.modul || "";
+    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo atau siswa tamu)
+    if (!targetKey) {
+      targetKey = "custom_" + rawNama.toLowerCase();
+      if (!studentsMap[targetKey]) {
+        studentsMap[targetKey] = {
+          nama: rawNama,
+          absen: rawAbsen,
+          nis: "-",
+          kelas: parsed.kelas || "-",
+          sekolah: parsed.sekolah || "-",
+          isMaster: false,
+          scoresByTask: {}
+        };
+      }
+    }
+
+    var quizTitle = parsed.judulKuis || "";
+    var modulName = parsed.modul || "";
     var score = parsed.skor;
-    var matched = identifyLabAndTask(mName, qTitle);
+    var matched = identifyLabAndTask(modulName, quizTitle);
 
     var taskFullKey = matched.labId + "_" + matched.taskKey;
-    if (studentsMap[key].scoresByTask[taskFullKey] === undefined || score > studentsMap[key].scoresByTask[taskFullKey].skor) {
-      studentsMap[key].scoresByTask[taskFullKey] = {
+    if (studentsMap[targetKey].scoresByTask[taskFullKey] === undefined || score > studentsMap[targetKey].scoresByTask[taskFullKey].skor) {
+      studentsMap[targetKey].scoresByTask[taskFullKey] = {
         skor: score,
         waktu: parsed.waktu || "",
         labId: matched.labId,
@@ -335,12 +412,33 @@ function autoUpdateLabSheetOnPost(ss, modulStr, quizStr) {
     }
   });
 
+  // Urutkan siswa: 36 Siswa Master (Absen 1 - 36) terlebih dahulu, lalu akun testing/tamu
   var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
+    var isMasterA = studentsMap[a].isMaster ? 1 : 0;
+    var isMasterB = studentsMap[b].isMaster ? 1 : 0;
+    if (isMasterA !== isMasterB) return isMasterB - isMasterA;
+
     var numA = parseInt(studentsMap[a].absen, 10);
     var numB = parseInt(studentsMap[b].absen, 10);
-    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    if (!isNaN(numA) && !isNaN(numB) && numA !== numB) return numA - numB;
     return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
   });
+
+  return {
+    studentsMap: studentsMap,
+    sortedStudentKeys: sortedStudentKeys
+  };
+}
+
+/**
+ * Otomatis memperbarui tab modul lab terkait dan tab matriks rekap
+ * setiap kali ada siswa yang mengirim nilai kuis secara real-time.
+ */
+function autoUpdateLabSheetOnPost(ss, modulStr, quizStr) {
+  var allRows = getAllDataRows(ss);
+  var parsedData = buildStudentMapFromRows(allRows);
+  var studentsMap = parsedData.studentsMap;
+  var sortedStudentKeys = parsedData.sortedStudentKeys;
 
   var currentMatched = identifyLabAndTask(modulStr, quizStr);
   var targetLab = null;
@@ -414,57 +512,9 @@ function buatSemuaTabModulLab() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var allRows = getAllDataRows(ss);
 
-  if (allRows.length === 0) {
-    try {
-      SpreadsheetApp.getUi().alert("Belum ada data nilai siswa yang tersimpan di spreadsheet.");
-    } catch (e) {}
-    return;
-  }
-
-  // 1. Ekstrak data siswa unik (diurutkan berdasarkan No. Absen lalu Nama)
-  var studentsMap = {};
-  allRows.forEach(function(parsed) {
-    var nama = parsed.nama;
-    if (!nama || nama.toLowerCase().indexOf("percobaan") !== -1) return;
-    var absen = parsed.absen || "-";
-    var kelas = parsed.kelas || "-";
-    var key = nama.toLowerCase();
-
-    if (!studentsMap[key]) {
-      studentsMap[key] = {
-        nama: nama,
-        absen: absen,
-        kelas: kelas,
-        scoresByTask: {}
-      };
-    } else {
-      if (studentsMap[key].absen === "-" && absen !== "-") studentsMap[key].absen = absen;
-      if (studentsMap[key].kelas === "-" && kelas !== "-") studentsMap[key].kelas = kelas;
-    }
-
-    var quizTitle = parsed.judulKuis || "";
-    var modulName = parsed.modul || "";
-    var score = parsed.skor; // Nilai Asli (0 - 100)
-    var matched = identifyLabAndTask(modulName, quizTitle);
-
-    var taskFullKey = matched.labId + "_" + matched.taskKey;
-    if (studentsMap[key].scoresByTask[taskFullKey] === undefined || score > studentsMap[key].scoresByTask[taskFullKey].skor) {
-      studentsMap[key].scoresByTask[taskFullKey] = {
-        skor: score,
-        waktu: parsed.waktu || "",
-        labId: matched.labId,
-        taskKey: matched.taskKey,
-        taskName: matched.taskName
-      };
-    }
-  });
-
-  var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
-    var numA = parseInt(studentsMap[a].absen, 10);
-    var numB = parseInt(studentsMap[b].absen, 10);
-    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-    return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
-  });
+  var parsedData = buildStudentMapFromRows(allRows);
+  var studentsMap = parsedData.studentsMap;
+  var sortedStudentKeys = parsedData.sortedStudentKeys;
 
   // 2. Bangun masing-masing Tab Modul Lab sesuai urutan Sidebar
   LAB_CONFIGS.forEach(function(lab) {
@@ -475,7 +525,7 @@ function buatSemuaTabModulLab() {
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 
   try {
-    SpreadsheetApp.getUi().alert("✅ Berhasil!\n\nSeluruh tab modul lab dan lembar '📊 Rekap Seluruh Lab' telah berhasil dibuat dengan 100% NILAI ASLI siswa.");
+    SpreadsheetApp.getUi().alert("✅ Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
   } catch (e) {}
 }
 

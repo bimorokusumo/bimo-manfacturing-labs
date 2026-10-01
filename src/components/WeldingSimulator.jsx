@@ -6,6 +6,12 @@ import ErrorBoundary from './ErrorBoundary';
 import WeldingTheoryGuide from './WeldingTheoryGuide';
 import WeldingQuiz from './WeldingQuiz';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import {
+  SMAWMachinePanel,
+  MIGMachinePanel,
+  OAWMachinePanel,
+  WELDING_WPS_DATABASE
+} from './WeldingMachinePanel';
 
 const DEFECT_TYPES = [
   { 
@@ -607,19 +613,86 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
   const [interactionMode, setInteractionMode] = useState('camera'); // 'weld' | 'camera'
   
   const [weldingProcess, setWeldingProcess] = useState('SMAW'); // 'SMAW' | 'MIG' | 'OAW'
-  const [smawElectrode, setSmawElectrode] = useState('E7018'); // 'E6010', 'E6013', 'E7018'
-  
-  const [oxygenLevel, setOxygenLevel] = useState(50);
-  const [acetyleneLevel, setAcetyleneLevel] = useState(50);
+  const [plateThickness, setPlateThickness] = useState('6mm'); // '2mm', '4mm', '6mm', '8mm', '10mm', '12mm'
+  const [showMachinePanel, setShowMachinePanel] = useState(true);
+
+  // 1. SMAW / MMA PARAMETERS
+  const [amperage, setAmperage] = useState(115);
+  const [arcForce, setArcForce] = useState(60);
+  const [hotStart, setHotStart] = useState(60);
+  const [smawElectrode, setSmawElectrode] = useState('E7016-LB');
+  const [electrodeDiameter, setElectrodeDiameter] = useState(3.2);
+  const [polarity, setPolarity] = useState('DCEP');
+  const [vrd, setVrd] = useState(true);
+
+  // 2. MIG / MAG (GMAW) PARAMETERS
+  const [voltage, setVoltage] = useState(22.0);
+  const [wireFeedSpeed, setWireFeedSpeed] = useState(7.8);
+  const [wireDiameter, setWireDiameter] = useState(1.0);
+  const [shieldingGas, setShieldingGas] = useState('Ar + 20% CO2');
+  const [gasFlow, setGasFlow] = useState(15);
+  const [inductance, setInductance] = useState(5);
+  const [triggerMode, setTriggerMode] = useState('2T');
+
+  // 3. OAW (OXY-ACETYLENE) PARAMETERS
+  const [oxygenPressure, setOxygenPressure] = useState(2.5);
+  const [acetylenePressure, setAcetylenePressure] = useState(0.5);
+  const [oxygenValve, setOxygenValve] = useState(50);
+  const [acetyleneValve, setAcetyleneValve] = useState(50);
+  const [nozzleSize, setNozzleSize] = useState('#3');
+  const [fillerDiameter, setFillerDiameter] = useState(3.2);
   
   let oawFlame = 'neutral';
-  if (acetyleneLevel > oxygenLevel + 10) oawFlame = 'carburizing';
-  else if (oxygenLevel > acetyleneLevel + 10) oawFlame = 'oxidizing';
+  if (acetyleneValve > oxygenValve + 10) oawFlame = 'carburizing';
+  else if (oxygenValve > acetyleneValve + 10) oawFlame = 'oxidizing';
   
   const [defects, setDefects] = useState([]);
   const [selectedDefect, setSelectedDefect] = useState(null);
   const [visitedDefectIds, setVisitedDefectIds] = useState(new Set());
   const [hideEvalOverlay, setHideEvalOverlay] = useState(false);
+
+  // Auto-apply standard WPS parameters for chosen plate thickness & process
+  const handleApplyWpsPreset = (procOverride = null, thickOverride = null) => {
+    const proc = procOverride || weldingProcess;
+    const thick = thickOverride || plateThickness;
+    sound.playSuccess();
+
+    if (proc === 'SMAW') {
+      const data = WELDING_WPS_DATABASE.SMAW[thick] || WELDING_WPS_DATABASE.SMAW['6mm'];
+      setAmperage(data.optimalCurrent);
+      setArcForce(data.optimalArcForce);
+      setHotStart(data.optimalHotStart);
+      setSmawElectrode(data.recommendedElectrode);
+      setElectrodeDiameter(data.recommendedDiameter);
+      setPolarity(data.polarity);
+    } else if (proc === 'MIG') {
+      const data = WELDING_WPS_DATABASE.MIG[thick] || WELDING_WPS_DATABASE.MIG['6mm'];
+      setVoltage(data.optimalVoltage);
+      setWireFeedSpeed(data.optimalWfs);
+      setWireDiameter(data.wireDiameter);
+      setGasFlow(data.optimalGasFlow);
+      setInductance(data.optimalInductance);
+      setShieldingGas(data.recommendedGas);
+    } else if (proc === 'OAW') {
+      const data = WELDING_WPS_DATABASE.OAW[thick] || WELDING_WPS_DATABASE.OAW['4mm'];
+      setOxygenPressure(data.oxygenPressure);
+      setAcetylenePressure(data.acetylenePressure);
+      setNozzleSize(data.nozzleSize.split(' ')[0]);
+      setFillerDiameter(data.fillerDiameter);
+      setOxygenValve(50);
+      setAcetyleneValve(50);
+    }
+  };
+
+  const handleSelectThickness = (newThick) => {
+    setPlateThickness(newThick);
+    handleApplyWpsPreset(weldingProcess, newThick);
+  };
+
+  const handleSelectProcess = (newProc) => {
+    setWeldingProcess(newProc);
+    handleApplyWpsPreset(newProc, plateThickness);
+  };
 
   const handleSelectDefect = (defect) => {
     if (defect?.uid) {
@@ -669,17 +742,63 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
           setStep(7); // Go to evaluation
           sound.playSuccess();
           
-          const numDefects = Math.floor(Math.random() * 3) + 1;
+          // GENERATE DEFECTS BERDASARKAN KESESUAIAN PARAMETER FISIK MESIN
           const generatedDefects = [];
-          for (let i = 0; i < numDefects; i++) {
-            const randType = DEFECT_TYPES[Math.floor(Math.random() * DEFECT_TYPES.length)];
-            const randPos = 20 + Math.random() * 60;
-            generatedDefects.push({
-              uid: `defect-${i}-${Date.now()}`,
-              pos: randPos,
-              ...randType
-            });
+
+          if (weldingProcess === 'SMAW') {
+            const wps = WELDING_WPS_DATABASE.SMAW[plateThickness] || WELDING_WPS_DATABASE.SMAW['6mm'];
+            if (amperage > wps.currentRange[1] + 15) {
+              if (plateThickness === '2mm') {
+                const dt = DEFECT_TYPES.find(d => d.id === 'burn_through') || DEFECT_TYPES[6];
+                generatedDefects.push({ uid: `bt-${Date.now()}`, pos: 45, ...dt });
+              } else {
+                const dt = DEFECT_TYPES.find(d => d.id === 'undercut') || DEFECT_TYPES[1];
+                generatedDefects.push({ uid: `uc-${Date.now()}`, pos: 50, ...dt });
+              }
+              const sp = DEFECT_TYPES.find(d => d.id === 'spatter') || DEFECT_TYPES[2];
+              generatedDefects.push({ uid: `sp-${Date.now()}`, pos: 75, ...sp });
+            } else if (amperage < wps.currentRange[0] - 12) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'incomplete_penetration') || DEFECT_TYPES[5];
+              generatedDefects.push({ uid: `ip-${Date.now()}`, pos: 40, ...dt });
+            }
+            if (arcForce < 25 && plateThickness !== '2mm') {
+              const dt = DEFECT_TYPES.find(d => d.id === 'slag') || DEFECT_TYPES[3];
+              generatedDefects.push({ uid: `sl-${Date.now()}`, pos: 65, ...dt });
+            }
+          } else if (weldingProcess === 'MIG') {
+            const wps = WELDING_WPS_DATABASE.MIG[plateThickness] || WELDING_WPS_DATABASE.MIG['6mm'];
+            if (gasFlow < 10 || gasFlow > 22) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'porosity') || DEFECT_TYPES[0];
+              generatedDefects.push({ uid: `po-${Date.now()}`, pos: 40, ...dt });
+            }
+            if (voltage > wps.voltageRange[1] + 2.0) {
+              const dt = DEFECT_TYPES.find(d => d.id === (plateThickness === '2mm' ? 'burn_through' : 'undercut')) || DEFECT_TYPES[1];
+              generatedDefects.push({ uid: `ov-${Date.now()}`, pos: 55, ...dt });
+            } else if (voltage < wps.voltageRange[0] - 2.0) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'incomplete_penetration') || DEFECT_TYPES[5];
+              generatedDefects.push({ uid: `uv-${Date.now()}`, pos: 60, ...dt });
+            }
+            if (inductance < -4 || shieldingGas === '100% CO2') {
+              const dt = DEFECT_TYPES.find(d => d.id === 'spatter') || DEFECT_TYPES[2];
+              generatedDefects.push({ uid: `sp-${Date.now()}`, pos: 70, ...dt });
+            }
+          } else if (weldingProcess === 'OAW') {
+            if (oawFlame === 'oxidizing') {
+              const dt1 = DEFECT_TYPES.find(d => d.id === 'porosity') || DEFECT_TYPES[0];
+              const dt2 = DEFECT_TYPES.find(d => d.id === 'crack') || DEFECT_TYPES[4];
+              generatedDefects.push({ uid: `ox1-${Date.now()}`, pos: 35, ...dt1 });
+              generatedDefects.push({ uid: `ox2-${Date.now()}`, pos: 65, ...dt2 });
+            } else if (oawFlame === 'carburizing') {
+              const dt1 = DEFECT_TYPES.find(d => d.id === 'crack') || DEFECT_TYPES[4];
+              const dt2 = DEFECT_TYPES.find(d => d.id === 'slag') || DEFECT_TYPES[3];
+              generatedDefects.push({ uid: `cb1-${Date.now()}`, pos: 45, ...dt1 });
+              generatedDefects.push({ uid: `cb2-${Date.now()}`, pos: 70, ...dt2 });
+            } else if (oxygenPressure < 1.2 || acetylenePressure < 0.25) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'incomplete_penetration') || DEFECT_TYPES[5];
+              generatedDefects.push({ uid: `oaw-ip-${Date.now()}`, pos: 50, ...dt });
+            }
           }
+
           setDefects(generatedDefects);
           setVisitedDefectIds(new Set());
           setHideEvalOverlay(false);
@@ -897,75 +1016,144 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
 
         <div style={{ height: '1px', background: 'var(--border-light)' }}></div>
 
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <div style={{ flex: 1.5 }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>PROSES PENGELASAN</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button className={`btn-game ${weldingProcess === 'SMAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setWeldingProcess('SMAW')}>SMAW</button>
-              <button className={`btn-game ${weldingProcess === 'MIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setWeldingProcess('MIG')}>MIG</button>
-              <button className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setWeldingProcess('OAW')}>OAW</button>
+        {/* PROSES MESIN & KETEBALAN PLAT BAR */}
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>PROSES PENGELASAN</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <button 
+                  className={`btn-game ${weldingProcess === 'SMAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                  onClick={() => handleSelectProcess('SMAW')}
+                >
+                  ⚡ SMAW / MMA
+                </button>
+                <button 
+                  className={`btn-game ${weldingProcess === 'MIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                  onClick={() => handleSelectProcess('MIG')}
+                >
+                  🌀 MIG / MAG (GMAW)
+                </button>
+                <button 
+                  className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                  onClick={() => handleSelectProcess('OAW')}
+                >
+                  🔥 OAW (OKSIGEN-ASETILIN)
+                </button>
+              </div>
+            </div>
+
+            <div style={{ borderLeft: '1px solid var(--border-light)', paddingLeft: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>TEBAL PLAT BENDA KERJA</label>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {['2mm', '4mm', '6mm', '8mm', '10mm', '12mm'].map(th => (
+                  <button
+                    key={th}
+                    className={`btn-game ${plateThickness === th ? 'btn-game-success' : 'btn-game-neutral'}`}
+                    style={{ padding: '8px 12px', fontSize: '0.82rem', fontWeight: 800 }}
+                    onClick={() => handleSelectThickness(th)}
+                  >
+                    {th} {th === '6mm' ? '(STD)' : ''}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-          
-          <div style={{ flex: 3 }}>
-            {weldingProcess === 'SMAW' && (
-              <>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>JENIS ELEKTRODA</label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button className={`btn-game ${smawElectrode === 'E6013-RB' ? 'btn-game-success' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setSmawElectrode('E6013-RB')} title="RB (E6013): High Titania. Penetrasi dangkal, manik rapi, cocok plat tipis">RB-26 (E6013)</button>
-                  <button className={`btn-game ${smawElectrode === 'E6013-RD' ? 'btn-game-success' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setSmawElectrode('E6013-RD')} title="RD (E6013): Rutil Titanium. Busur stabil, serbaguna untuk konstruksi ringan">RD-460 (E6013)</button>
-                  <button className={`btn-game ${smawElectrode === 'E7016-LB' ? 'btn-game-success' : 'btn-game-neutral'}`} style={{ flex: 1, padding: '8px', fontSize: '0.8rem' }} onClick={() => setSmawElectrode('E7016-LB')} title="LB (E7016/E7018): Low Hydrogen. Sangat kuat, untuk konstruksi berat dan root pass">LB-52 (E7016)</button>
-                </div>
-              </>
-            )}
-            {weldingProcess === 'OAW' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)' }}>SETTING KATUP TORCH (OAW)</label>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                      <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Oksigen (O₂)</span>
-                      <span>{oxygenLevel}%</span>
-                    </div>
-                    <input type="range" min="0" max="100" value={oxygenLevel} onChange={(e) => setOxygenLevel(Number(e.target.value))} style={{ width: '100%', accentColor: '#22c55e' }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                      <span style={{ color: '#ef4444', fontWeight: 'bold' }}>Asetilin (C₂H₂)</span>
-                      <span>{acetyleneLevel}%</span>
-                    </div>
-                    <input type="range" min="0" max="100" value={acetyleneLevel} onChange={(e) => setAcetyleneLevel(Number(e.target.value))} style={{ width: '100%', accentColor: '#ef4444' }} />
-                  </div>
-                  <div style={{ flex: 1, textAlign: 'center', background: 'var(--bg-game)', padding: '6px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block' }}>Hasil Nyala Api</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: oawFlame === 'neutral' ? '#3b82f6' : oawFlame === 'carburizing' ? '#d946ef' : '#f43f5e', textTransform: 'uppercase' }}>
-                      {oawFlame === 'neutral' ? 'Netral' : oawFlame === 'carburizing' ? 'Karburasi' : 'Oksidasi'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-            {weldingProcess === 'MIG' && (
-              <div style={{ display: 'flex', alignItems: 'center', height: '100%', color: 'var(--text-muted)', fontSize: '0.85rem', padding: '0 8px' }}>
-                MIG (GMAW) menggunakan elektroda kawat gulung kontinu dan gas pelindung.
-              </div>
-            )}
-          </div>
-          
-          <div style={{ flex: 1.5, borderLeft: '1px solid var(--border-light)', paddingLeft: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button 
+              className={`btn-game ${showMachinePanel ? 'btn-game-tflm' : 'btn-game-neutral'}`}
+              style={{
+                padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', gap: '6px'
+              }}
+              onClick={() => setShowMachinePanel(!showMachinePanel)}
+            >
+              <span>🎛️</span> {showMachinePanel ? 'SEMBUNYIKAN PANEL MESIN' : 'BUKA PANEL MESIN LAS'}
+            </button>
             <button 
               className="btn-game"
               style={{
                 background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: '#fca5a5', padding: '8px', fontSize: '0.8rem', fontWeight: 'bold',
+                color: '#fca5a5', padding: '8px 14px', fontSize: '0.82rem', fontWeight: 'bold',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
               }}
               onClick={() => setSelectedDefect(DEFECT_TYPES[0])}
             >
-              🖼️ ENSIKLOPEDIA GAMBAR CACAT
+              🖼️ ENSIKLOPEDIA CACAT LAS
             </button>
           </div>
         </div>
+
+        {/* ACTIVE MACHINE SETTINGS PANEL */}
+        {showMachinePanel && (
+          <div style={{ marginTop: '8px' }}>
+            {weldingProcess === 'SMAW' && (
+              <SMAWMachinePanel
+                plateThickness={plateThickness}
+                onSelectThickness={handleSelectThickness}
+                amperage={amperage}
+                onChangeAmperage={setAmperage}
+                arcForce={arcForce}
+                onChangeArcForce={setArcForce}
+                hotStart={hotStart}
+                onChangeHotStart={setHotStart}
+                electrode={smawElectrode}
+                onChangeElectrode={setSmawElectrode}
+                electrodeDiameter={electrodeDiameter}
+                onChangeElectrodeDiameter={setElectrodeDiameter}
+                polarity={polarity}
+                onChangePolarity={setPolarity}
+                vrd={vrd}
+                onToggleVrd={() => setVrd(!vrd)}
+                onApplyWpsPreset={() => handleApplyWpsPreset('SMAW', plateThickness)}
+              />
+            )}
+            {weldingProcess === 'MIG' && (
+              <MIGMachinePanel
+                plateThickness={plateThickness}
+                onSelectThickness={handleSelectThickness}
+                voltage={voltage}
+                onChangeVoltage={setVoltage}
+                wireFeedSpeed={wireFeedSpeed}
+                onChangeWfs={setWireFeedSpeed}
+                wireDiameter={wireDiameter}
+                onChangeWireDiameter={setWireDiameter}
+                shieldingGas={shieldingGas}
+                onChangeShieldingGas={setShieldingGas}
+                gasFlow={gasFlow}
+                onChangeGasFlow={setGasFlow}
+                inductance={inductance}
+                onChangeInductance={setInductance}
+                triggerMode={triggerMode}
+                onChangeTriggerMode={setTriggerMode}
+                onApplyWpsPreset={() => handleApplyWpsPreset('MIG', plateThickness)}
+              />
+            )}
+            {weldingProcess === 'OAW' && (
+              <OAWMachinePanel
+                plateThickness={plateThickness}
+                onSelectThickness={handleSelectThickness}
+                oxygenPressure={oxygenPressure}
+                onChangeOxygenPressure={setOxygenPressure}
+                acetylenePressure={acetylenePressure}
+                onChangeAcetylenePressure={setAcetylenePressure}
+                oxygenValve={oxygenValve}
+                onChangeOxygenValve={setOxygenValve}
+                acetyleneValve={acetyleneValve}
+                onChangeAcetyleneValve={setAcetyleneValve}
+                nozzleSize={nozzleSize}
+                onChangeNozzleSize={setNozzleSize}
+                fillerDiameter={fillerDiameter}
+                onChangeFillerDiameter={setFillerDiameter}
+                onApplyWpsPreset={() => handleApplyWpsPreset('OAW', plateThickness)}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {/* 3D WELDING CANVAS */}
@@ -1056,6 +1244,14 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                 weldingProcess={weldingProcess} 
                 smawElectrode={smawElectrode} 
                 oawFlame={oawFlame} 
+                plateThickness={plateThickness}
+                amperage={amperage}
+                voltage={voltage}
+                wireFeedSpeed={wireFeedSpeed}
+                gasFlow={gasFlow}
+                oxygenPressure={oxygenPressure}
+                acetylenePressure={acetylenePressure}
+                polarity={polarity}
                 onTorchUpdate={handleTorchUpdate}
                 onTorchDown={handleMouseDown}
                 onTorchUp={handleMouseUp}

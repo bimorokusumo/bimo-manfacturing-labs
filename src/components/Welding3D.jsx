@@ -243,10 +243,15 @@ const WeldBead = ({ weldProgress, weldType, isPipe }) => {
   );
 };
 
-const MetalPlate = ({ weldProgress, weldType, isPipe, defects = [], onDefectClick }) => {
+const MetalPlate = ({ weldProgress, weldType, isPipe, defects = [], onDefectClick, plateThickness = '6mm' }) => {
+  const thickVal = parseInt(plateThickness) || 6;
+  // Normalized visual thickness: 2mm -> 0.08, 6mm -> 0.22, 12mm -> 0.44
+  const plateH = Math.max(0.08, (thickVal / 6) * 0.22);
+  const plateY = -plateH / 2;
+
   return (
     <group>
-      {/* BASE PLATES */}
+      {/* BASE PLATES WITH DYNAMIC THICKNESS */}
       {isPipe ? (
         <>
           <mesh position={[-1.55, 0, 0]} rotation={[0, 0, Math.PI / 2]} receiveShadow>
@@ -260,23 +265,23 @@ const MetalPlate = ({ weldProgress, weldType, isPipe, defects = [], onDefectClic
         </>
       ) : weldType === 'fillet' ? (
         <>
-          <mesh position={[0, -0.1, 0]} receiveShadow>
-            <boxGeometry args={[6, 0.2, 2]} />
+          <mesh position={[0, plateY, 0]} receiveShadow>
+            <boxGeometry args={[6, plateH, 2]} />
             <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
           </mesh>
-          <mesh position={[0, 0.9, -0.1]} receiveShadow>
-            <boxGeometry args={[6, 2, 0.2]} />
+          <mesh position={[0, 0.9, -plateH / 2]} receiveShadow>
+            <boxGeometry args={[6, 2, plateH]} />
             <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
           </mesh>
         </>
       ) : (
         <>
-          <mesh position={[0, -0.1, 1.05]} receiveShadow>
-            <boxGeometry args={[6, 0.2, 2]} />
+          <mesh position={[0, plateY, 1.05]} receiveShadow>
+            <boxGeometry args={[6, plateH, 2]} />
             <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
           </mesh>
-          <mesh position={[0, -0.1, -1.05]} receiveShadow>
-            <boxGeometry args={[6, 0.2, 2]} />
+          <mesh position={[0, plateY, -1.05]} receiveShadow>
+            <boxGeometry args={[6, plateH, 2]} />
             <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
           </mesh>
         </>
@@ -367,10 +372,317 @@ const InteractionPlane = ({ onUpdate, onDown, onUp, isPipe, interactionMode }) =
   );
 };
 
+// =========================================================================
+// 3D WELDING MACHINE MODELS & WORKSHOP APPARATUS
+// =========================================================================
+
+// Ground Clamp (Klem Massa) clamped onto plate
+const GroundClamp = ({ position = [-2.8, 0, 1.8], isPipe = false }) => {
+  if (isPipe) return null;
+  return (
+    <group position={position}>
+      {/* Heavy-duty brass/copper clamp jaw */}
+      <mesh position={[0, 0.04, 0]}>
+        <boxGeometry args={[0.22, 0.08, 0.24]} />
+        <meshStandardMaterial color="#d97706" metalness={0.85} roughness={0.25} />
+      </mesh>
+      {/* Clamp Lever Handle */}
+      <mesh position={[-0.14, 0.12, 0]} rotation={[0, 0, Math.PI / 4]}>
+        <cylinderGeometry args={[0.03, 0.03, 0.28, 12]} />
+        <meshStandardMaterial color="#1e293b" />
+      </mesh>
+      {/* Heavy copper lug connector & strain relief */}
+      <mesh position={[-0.08, 0.02, 0]}>
+        <cylinderGeometry args={[0.035, 0.035, 0.07, 12]} />
+        <meshStandardMaterial color="#b45309" metalness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+// 1. SMAW / MMA Inverter 3D Model
+const SMAWMachine3D = ({ amperage = 115, polarity = 'DCEP', position = [-3.8, 0.4, -2.0] }) => {
+  return (
+    <group position={position}>
+      {/* Workshop Mobile Cart Shelf */}
+      <mesh position={[0, -0.65, 0]} receiveShadow>
+        <boxGeometry args={[1.5, 0.08, 1.3]} />
+        <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.3} />
+      </mesh>
+      {/* Cart Wheels */}
+      {[-0.6, 0.6].map((wx, i) =>
+        [-0.5, 0.5].map((wz, j) => (
+          <mesh key={`${i}-${j}`} position={[wx, -0.82, wz]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.11, 0.11, 0.07, 16]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+        ))
+      )}
+
+      {/* Main Industrial Orange Inverter Chassis */}
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.2, 0.85, 0.75]} />
+        <meshStandardMaterial color="#ea580c" metalness={0.35} roughness={0.35} />
+      </mesh>
+
+      {/* Top Heavy-Duty Carrying Handle */}
+      <mesh position={[0, 0.48, 0]} castShadow>
+        <boxGeometry args={[0.65, 0.08, 0.12]} />
+        <meshStandardMaterial color="#18181b" roughness={0.6} />
+      </mesh>
+
+      {/* Front Faceplate (Black inset) */}
+      <mesh position={[0.61, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[0.70, 0.78]} />
+        <meshStandardMaterial color="#09090b" roughness={0.5} />
+      </mesh>
+
+      {/* Digital LED Display (Glowing Red Amps readout) */}
+      <mesh position={[0.62, 0.20, 0]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[0.32, 0.15]} />
+        <meshBasicMaterial color="#ef4444" />
+      </mesh>
+
+      {/* Heavy Rotary Dial Knob */}
+      <mesh position={[0.63, -0.04, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.07, 0.07, 0.04, 20]} />
+        <meshStandardMaterial color="#ea580c" metalness={0.8} />
+      </mesh>
+
+      {/* Positive Dinse Socket (Red +) */}
+      <mesh position={[0.62, -0.24, 0.16]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.04, 16]} />
+        <meshStandardMaterial color="#ef4444" />
+      </mesh>
+      {/* Negative Dinse Socket (Black -) */}
+      <mesh position={[0.62, -0.24, -0.16]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.04, 16]} />
+        <meshStandardMaterial color="#18181b" />
+      </mesh>
+
+      {/* Ground Cable Running Across Table towards Workpiece */}
+      <mesh position={[1.1, -0.35, 0.7]} rotation={[0.3, 0.4, -0.2]}>
+        <cylinderGeometry args={[0.02, 0.02, 2.5, 12]} />
+        <meshStandardMaterial color="#18181b" roughness={0.8} />
+      </mesh>
+
+      {/* Floating 3D Machine Label */}
+      <Html position={[0, 0.75, 0]} center distanceFactor={9}>
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.90)',
+          padding: '4px 10px',
+          borderRadius: '6px',
+          border: '1px solid #ea580c',
+          color: '#ffffff',
+          fontSize: '11px',
+          fontWeight: 800,
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          pointerEvents: 'none'
+        }}>
+          ⚡ INVERTER SMAW ({amperage}A • {polarity})
+        </div>
+      </Html>
+    </group>
+  );
+};
+
+// 2. MIG / MAG (GMAW) 3D Model with Wire Feeder & Gas Cylinder
+const MIGMachine3D = ({ voltage = 22, wireFeedSpeed = 7.8, gasFlow = 15, position = [-3.8, 0.4, -2.0] }) => {
+  return (
+    <group position={position}>
+      {/* Heavy Mobile Trolley Base */}
+      <mesh position={[0, -0.65, 0]} receiveShadow>
+        <boxGeometry args={[1.7, 0.08, 1.3]} />
+        <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Trolley Wheels */}
+      {[-0.7, 0.7].map((wx, i) =>
+        [-0.5, 0.5].map((wz, j) => (
+          <mesh key={`${i}-${j}`} position={[wx, -0.82, wz]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.12, 0.12, 0.08, 16]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+        ))
+      )}
+
+      {/* Main MIG Power Source Base (Blue) */}
+      <mesh position={[-0.1, -0.15, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.1, 0.7, 0.75]} />
+        <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.3} />
+      </mesh>
+
+      {/* Top Wire Feeder Unit */}
+      <mesh position={[-0.1, 0.40, 0]} castShadow>
+        <boxGeometry args={[0.95, 0.42, 0.70]} />
+        <meshStandardMaterial color="#0369a1" metalness={0.6} roughness={0.3} />
+      </mesh>
+
+      {/* Wire Spool Inspection Window (Clear Acrylic) */}
+      <mesh position={[-0.1, 0.40, 0.36]}>
+        <planeGeometry args={[0.55, 0.30]} />
+        <meshPhysicalMaterial color="#ffffff" transparent opacity={0.4} roughness={0.1} transmission={0.9} />
+      </mesh>
+
+      {/* Copper Wire Spool inside window */}
+      <mesh position={[-0.1, 0.40, 0.14]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.13, 0.13, 0.15, 24]} />
+        <meshStandardMaterial color="#b45309" metalness={0.8} roughness={0.2} />
+      </mesh>
+
+      {/* Gas Cylinder (CO2 / Argon Bottle) mounted at back of trolley */}
+      <group position={[-0.65, 0.30, -0.15]}>
+        {/* Dark Grey Tank Body */}
+        <mesh position={[0, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.20, 0.20, 1.6, 24]} />
+          <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+        </mesh>
+        {/* Neck */}
+        <mesh position={[0, 0.85, 0]}>
+          <cylinderGeometry args={[0.07, 0.16, 0.14, 20]} />
+          <meshStandardMaterial color="#475569" metalness={0.8} />
+        </mesh>
+        {/* Brass Valve */}
+        <mesh position={[0, 0.98, 0]}>
+          <boxGeometry args={[0.09, 0.12, 0.09]} />
+          <meshStandardMaterial color="#d97706" metalness={0.9} />
+        </mesh>
+        {/* Flowmeter Tube with Ball */}
+        <mesh position={[0.10, 1.08, 0]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.20, 12]} />
+          <meshPhysicalMaterial color="#38bdf8" transparent opacity={0.6} transmission={0.8} />
+        </mesh>
+      </group>
+
+      {/* Euro Connector Socket on front */}
+      <mesh position={[0.46, -0.1, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.07, 0.07, 0.05, 20]} />
+        <meshStandardMaterial color="#18181b" metalness={0.8} />
+      </mesh>
+
+      {/* Ground Cable to Plate */}
+      <mesh position={[1.1, -0.35, 0.7]} rotation={[0.3, 0.4, -0.2]}>
+        <cylinderGeometry args={[0.022, 0.022, 2.5, 12]} />
+        <meshStandardMaterial color="#18181b" roughness={0.8} />
+      </mesh>
+
+      {/* Machine Label HUD */}
+      <Html position={[0, 0.82, 0]} center distanceFactor={9}>
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.90)',
+          padding: '4px 10px',
+          borderRadius: '6px',
+          border: '1px solid #38bdf8',
+          color: '#ffffff',
+          fontSize: '11px',
+          fontWeight: 800,
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          pointerEvents: 'none'
+        }}>
+          🌀 MIG/MAG ({voltage}V • {wireFeedSpeed} m/m • {gasFlow} L/m)
+        </div>
+      </Html>
+    </group>
+  );
+};
+
+// 3. OAW Dual Cylinder Cart Model
+const OAWMachine3D = ({ oawFlame = 'neutral', oxygenPressure = 2.0, acetylenePressure = 0.4, position = [-3.8, 0.4, -2.0] }) => {
+  return (
+    <group position={position}>
+      {/* 2-Wheel Cylinder Hand Trolley */}
+      <mesh position={[0, -0.65, 0]} receiveShadow>
+        <boxGeometry args={[1.4, 0.07, 0.85]} />
+        <meshStandardMaterial color="#dc2626" metalness={0.6} roughness={0.4} />
+      </mesh>
+      {/* Large Trolley Wheels */}
+      {[-0.6, 0.6].map((wx, i) => (
+        <mesh key={i} position={[wx, -0.65, -0.42]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.20, 0.20, 0.07, 20]} />
+          <meshStandardMaterial color="#0f172a" />
+        </mesh>
+      ))}
+
+      {/* 1. OXYGEN CYLINDER (Tall Royal Blue Tank - O2) */}
+      <group position={[-0.30, 0.32, 0]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.19, 0.19, 1.8, 24]} />
+          <meshStandardMaterial color="#0284c7" metalness={0.7} roughness={0.25} />
+        </mesh>
+        {/* Neck */}
+        <mesh position={[0, 0.95, 0]}>
+          <cylinderGeometry args={[0.06, 0.16, 0.14, 20]} />
+          <meshStandardMaterial color="#0369a1" metalness={0.8} />
+        </mesh>
+        {/* Dual Dial Manometer (Blue Ring) */}
+        <mesh position={[0.09, 1.15, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.08, 0.08, 0.04, 20]} />
+          <meshStandardMaterial color="#0284c7" />
+        </mesh>
+      </group>
+
+      {/* 2. ACETYLENE CYLINDER (Shorter Maroon/Red Tank - C2H2) */}
+      <group position={[0.30, 0.08, 0]}>
+        <mesh castShadow receiveShadow>
+          <cylinderGeometry args={[0.22, 0.22, 1.4, 24]} />
+          <meshStandardMaterial color="#991b1b" metalness={0.65} roughness={0.3} />
+        </mesh>
+        {/* Neck */}
+        <mesh position={[0, 0.75, 0]}>
+          <cylinderGeometry args={[0.07, 0.18, 0.14, 20]} />
+          <meshStandardMaterial color="#7f1d1d" metalness={0.8} />
+        </mesh>
+        {/* Dual Dial Manometer (Red Ring) */}
+        <mesh position={[-0.09, 0.98, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.08, 0.08, 0.04, 20]} />
+          <meshStandardMaterial color="#dc2626" />
+        </mesh>
+      </group>
+
+      {/* Twin Rubber Hoses (Blue for Oxygen, Red for Acetylene) */}
+      <mesh position={[1.0, -0.35, 0.55]} rotation={[0.3, 0.4, -0.2]}>
+        <cylinderGeometry args={[0.015, 0.015, 2.4, 12]} />
+        <meshStandardMaterial color="#0284c7" roughness={0.8} />
+      </mesh>
+      <mesh position={[1.0, -0.35, 0.60]} rotation={[0.3, 0.4, -0.2]}>
+        <cylinderGeometry args={[0.015, 0.015, 2.4, 12]} />
+        <meshStandardMaterial color="#dc2626" roughness={0.8} />
+      </mesh>
+
+      {/* Machine Label HUD */}
+      <Html position={[0, 1.4, 0]} center distanceFactor={9}>
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.90)',
+          padding: '4px 10px',
+          borderRadius: '6px',
+          border: '1px solid #ef4444',
+          color: '#ffffff',
+          fontSize: '11px',
+          fontWeight: 800,
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          pointerEvents: 'none'
+        }}>
+          🔥 STASIUN OAW (O₂: {oxygenPressure} bar • C₂H₂: {acetylenePressure} bar • {oawFlame.toUpperCase()})
+        </div>
+      </Html>
+    </group>
+  );
+};
+
 const Welding3D = ({ 
   isWelding, torchPos, weldProgress, weldType = 'groove', weldPosition = '1G', 
   defects = [], onDefectClick, interactionMode = 'camera', 
   weldingProcess = 'SMAW', smawElectrode = 'E7018', oawFlame = 'neutral',
+  plateThickness = '6mm',
+  amperage = 115,
+  voltage = 22,
+  wireFeedSpeed = 7.8,
+  gasFlow = 15,
+  oxygenPressure = 2.0,
+  acetylenePressure = 0.4,
+  polarity = 'DCEP',
   onTorchUpdate, onTorchDown, onTorchUp
 }) => {
   // Determine overall rotation based on position
@@ -426,6 +738,22 @@ const Welding3D = ({
         <pointLight position={[-5, 5, -5]} intensity={1.0} />
         <pointLight position={[0, 5, 5]} intensity={0.8} />
 
+        {/* WORKSHOP WELDING MACHINE APPARATUS */}
+        {weldingProcess === 'SMAW' && (
+          <SMAWMachine3D amperage={amperage} polarity={polarity} position={[-3.8, 0.35, -2.0]} />
+        )}
+        {weldingProcess === 'MIG' && (
+          <MIGMachine3D voltage={voltage} wireFeedSpeed={wireFeedSpeed} gasFlow={gasFlow} position={[-3.8, 0.35, -2.0]} />
+        )}
+        {weldingProcess === 'OAW' && (
+          <OAWMachine3D oawFlame={oawFlame} oxygenPressure={oxygenPressure} acetylenePressure={acetylenePressure} position={[-3.8, 0.35, -2.0]} />
+        )}
+
+        {/* WORKPIECE GROUND CLAMP (KLEM MASSA) */}
+        {weldingProcess !== 'OAW' && !isPipe && (
+          <GroundClamp position={[-2.8, 0, 1.8]} isPipe={isPipe} />
+        )}
+
         <group rotation={groupRotation}>
           {interactionMode === 'weld' && (
             <InteractionPlane 
@@ -436,7 +764,14 @@ const Welding3D = ({
               onUp={onTorchUp} 
             />
           )}
-          <MetalPlate weldProgress={weldProgress !== undefined ? weldProgress : torchPos} weldType={weldType} isPipe={isPipe} defects={defects} onDefectClick={onDefectClick} />
+          <MetalPlate
+            weldProgress={weldProgress !== undefined ? weldProgress : torchPos}
+            weldType={weldType}
+            isPipe={isPipe}
+            defects={defects}
+            onDefectClick={onDefectClick}
+            plateThickness={plateThickness}
+          />
           
           <Torch position={tPos} rotation={tRot} weldingProcess={weldingProcess} smawElectrode={smawElectrode} torchPos={torchPos} />
           <Sparks isWelding={isWelding} position={tPos} weldingProcess={weldingProcess} />
@@ -453,7 +788,7 @@ const Welding3D = ({
           {(isWelding || weldingProcess === 'OAW') ? 'ARC/FLAME ACTIVE - READY TO WELD' : 'ARC OFF - READY TO WELD'}
         </div>
         <div style={{ color: 'var(--text-main)', fontSize: '0.8rem', marginTop: '4px', fontWeight: 'bold' }}>
-          TIPE: {weldType.toUpperCase()} | POSISI: {weldPosition} | PROSES: {weldingProcess}
+          TIPE: {weldType.toUpperCase()} | POSISI: {weldPosition} | PROSES: {weldingProcess} | PLAT: {plateThickness}
         </div>
       </div>
     </div>

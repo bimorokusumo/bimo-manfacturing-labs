@@ -132,6 +132,71 @@ const QUESTIONS = [
     ],
     answer: 'GTAW / TIG (Tungsten Inert Gas)',
     explanation: 'GTAW (TIG) menggunakan elektroda wolfram (tungsten) yang tidak ikut meleleh, dengan pelindung gas Argon murni 99.99%. Menghasilkan sambungan paling bersih, bebas spatter, dan bebas terak.'
+  },
+  {
+    id: 11,
+    topic: 'Gas Pelindung GMAW (MIG vs MAG)',
+    question: 'Apakah perbedaan mendasar antara proses pengelasan MIG (Metal Inert Gas) dan MAG (Metal Active Gas)?',
+    options: [
+      'MIG menggunakan gas mulia inert murni (Argon/Helium), sedangkan MAG menggunakan gas aktif reaktif (CO₂ murni atau campuran Ar + CO₂)',
+      'MIG menggunakan kawat gulungan, sedangkan MAG menggunakan elektroda batangan bersalut fluks',
+      'MIG hanya bisa menggunakan arus bolak-balik AC, sedangkan MAG wajib arus searah DC',
+      'MIG menghasilkan lapisan terak tebal, sedangkan MAG tidak menghasilkan terak sama sekali'
+    ],
+    answer: 'MIG menggunakan gas mulia inert murni (Argon/Helium), sedangkan MAG menggunakan gas aktif reaktif (CO₂ murni atau campuran Ar + CO₂)',
+    explanation: 'MIG (Metal Inert Gas) memakai gas mulia murni (Argon/Helium) yang stabil dan sama sekali tidak bereaksi kimia dengan cairan las. Sedangkan MAG (Metal Active Gas) memakai gas aktif reaktif seperti gas CO₂ murni atau campuran Ar + CO₂/O₂ yang mengalami reaksi disosiasi termal dan mempengaruhi metalurgi kawah las.'
+  },
+  {
+    id: 12,
+    topic: 'Metalurgi Las Baja Karbon (MAG)',
+    question: 'Mengapa pengelasan baja karbon lunak (Mild Steel) sangat dianjurkan menggunakan proses MAG (CO₂ / Ar+CO₂) dan BUKAN Argon murni?',
+    options: [
+      'Disosiasi gas CO₂ memberikan penetrasi mangkuk dalam, menurunkan tegangan permukaan cairan las, dan kawat ER70S-6 memiliki deoksidator (Mn & Si)',
+      'Argon murni akan membakar habis kandungan besi di dalam baja karbon',
+      'Gas CO₂ membuat busur listrik mengeluarkan aroma harum sehingga juru las tidak pusing',
+      'Mesin las MAG memerlukan voltase yang jauh lebih rendah daripada mesin las MIG'
+    ],
+    answer: 'Disosiasi gas CO₂ memberikan penetrasi mangkuk dalam, menurunkan tegangan permukaan cairan las, dan kawat ER70S-6 memiliki deoksidator (Mn & Si)',
+    explanation: 'Gas CO₂ pada suhu busur terurai menghasilkan energi panas rekombinasi tinggi yang membentuk penetrasi mangkuk dalam dan menurunkan tegangan permukaan sehingga cairan baja mengalir rata (good wetting). Oksigen bebas diikat oleh deoksidator Mangan (Mn) dan Silikon (Si) kawat ER70S-6 menjadi mikroslag mengapung, mencegah porositas. Sebaliknya Argon murni membuat cairan baja menggumpal sempit dan fusi tepinya buruk.'
+  },
+  {
+    id: 13,
+    topic: 'Metalurgi Logam Non-Ferro (Aluminium)',
+    question: 'Mengapa pengelasan logam Aluminium wajib menggunakan gas pelindung mulia murni (MIG Argon murni) dan dilarang keras menggunakan gas aktif MAG (CO₂)?',
+    options: [
+      'Aluminium sangat reaktif terhadap oksigen; gas CO₂ membentuk kerak refraktori Al₂O₃ (titik lebur 2.072°C) yang memicu porositas dan sambungan patah getas',
+      'Gas CO₂ akan mengubah warna aluminium menjadi merah berkarat',
+      'Gas Argon membuat berat jenis aluminium menjadi lebih padat seperti baja',
+      'Nozel stang las akan langsung tersumbat oleh kawat aluminium bila dialiri gas CO₂'
+    ],
+    answer: 'Aluminium sangat reaktif terhadap oksigen; gas CO₂ membentuk kerak refraktori Al₂O₃ (titik lebur 2.072°C) yang memicu porositas dan sambungan patah getas',
+    explanation: 'Aluminium sangat reaktif terhadap oksigen. Gas aktif CO₂ akan membakar aluminium menjadi lapisan keras alumina oksida (Al₂O₃) yang memiliki titik leleh 2.072°C (jauh melampaui aluminium yang hanya 660°C). Lapisan ini tidak meleleh, menjebak gas, menimbulkan cacat porositas masif, dan merusak sambungan menjadi getas.'
+  },
+  {
+    id: 14,
+    topic: 'Parameter Las TIG Aluminium (AC)',
+    question: 'Mengapa pengelasan material Aluminium dengan las TIG (GTAW) harus menggunakan sumber arus bolak-balik (AC) dan bukan arus searah (DC)?',
+    options: [
+      'Siklus positif AC menghasilkan aksi pembersihan katodik (Cathodic Cleaning) memecah lapisan oksida Al₂O₃, sedangkan siklus negatif memberi penetrasi lebur',
+      'Jarum tungsten akan langsung mencair rontok bila dialiri arus searah DCEN',
+      'Arus bolak-balik menghasilkan suara frekuensi tinggi yang membuat filler rod meleleh otomatis',
+      'Listrik PLN hanya menyediakan arus bolak-balik AC'
+    ],
+    answer: 'Siklus positif AC menghasilkan aksi pembersihan katodik (Cathodic Cleaning) memecah lapisan oksida Al₂O₃, sedangkan siklus negatif memberi penetrasi lebur',
+    explanation: 'Pada arus AC, siklus elektroda positif (EP) membombardir permukaan dengan ion Argon bermassa berat untuk memecah lapisan keras oksida Al₂O₃ (Cathodic Cleaning Action). Sementara siklus elektroda negatif (EN) menembakkan elektron ke plat aluminium untuk memberikan panas penetrasi lebur yang dalam.'
+  },
+  {
+    id: 15,
+    topic: 'K3 & Keselamatan Las OAW (Karbit)',
+    question: 'Berapakah batas tekanan kerja maksimal gas Asetilen pada regulator torch las karbit (OAW) yang tidak boleh dilanggar demi mencegah ledakan spontan?',
+    options: [
+      'Maksimal 15 psi (± 1,0 bar / 100 kPa)',
+      'Maksimal 150 psi (± 10 bar)',
+      'Maksimal 2.000 psi (setara dengan tekanan tabung oksigen)',
+      'Bebas dinaikkan berapapun selama api las belum padam'
+    ],
+    answer: 'Maksimal 15 psi (± 1,0 bar / 100 kPa)',
+    explanation: 'Gas asetilen bebas (C₂H₂) memiliki sifat kimiawi tidak stabil di atas tekanan 15 psi (1,03 bar / 100 kPa). Di atas batas ini, molekul asetilen dapat mengalami disosiasi eksotermik spontan (terurai sendiri menghasilkan panas dahsyat) bahkan tanpa oksigen, yang memicu ledakan berdaya hancur tinggi di regulator dan selang.'
   }
 ];
 
@@ -190,7 +255,12 @@ const WeldingQuiz = ({ onComplete }) => {
   };
 
   if (quizFinished) {
-    const isPass = score >= 700;
+    const maxScore = QUESTIONS.length * 100;
+    const passThreshold = Math.round(maxScore * 0.7);
+    const isPass = score >= passThreshold;
+    const accuracyPercent = Math.round((score / maxScore) * 100);
+    const correctAnswers = Math.round(score / 100);
+
     return (
       <div className="dashboard-card" style={{ padding: '40px', textAlign: 'center', maxWidth: '650px', margin: '0 auto' }}>
         <div style={{ fontSize: '4rem', marginBottom: '16px' }}>{isPass ? '🏆' : '📚'}</div>
@@ -199,17 +269,17 @@ const WeldingQuiz = ({ onComplete }) => {
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '24px' }}>
           {isPass 
-            ? 'Kamu telah menguasai kaidah Jenis Pengelasan (SMAW, MIG, TIG, OAW), Alat & Elektroda AWS, K3 APD, dan Teknik Dasar Praktik Pengelasan.' 
-            : 'Pelajari kembali materi Jenis Pengelasan, Kode Elektroda AWS A5.1, Parameter 5 Kunci, dan Pencegahan Cacat Las.'}
+            ? 'Kamu telah menguasai kaidah Proses Pengelasan (SMAW, MIG, MAG, TIG, OAW), Metalurgi Gas Pelindung, Kode Elektroda AWS, K3 APD, dan Pencegahan Cacat Las.' 
+            : 'Pelajari kembali materi Perbedaan MIG/MAG, Alasan Gas Aktif pada Mild Steel, Arus AC TIG Aluminium, dan Batas Tekanan OAW.'}
         </p>
 
         <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '20px', marginBottom: '28px' }}>
           <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 700 }}>SKOR AKHIR ASESMEN:</div>
           <div style={{ fontSize: '3rem', fontWeight: 900, color: '#ea580c', margin: '6px 0' }}>
-            {score} <span style={{ fontSize: '1.2rem', color: '#94a3b8' }}>/ 1000 XP</span>
+            {score} <span style={{ fontSize: '1.2rem', color: '#94a3b8' }}>/ {maxScore} XP</span>
           </div>
           <div style={{ fontSize: '0.85rem', fontWeight: 700, color: isPass ? '#10b981' : '#dc2626' }}>
-            Tingkat Akurasi: {(score / 10).toFixed(0)}% ({score / 100} Benar dari {QUESTIONS.length} Soal)
+            Tingkat Akurasi: {accuracyPercent}% ({correctAnswers} Benar dari {QUESTIONS.length} Soal • Ambang Kelulusan: 70%)
           </div>
         </div>
 

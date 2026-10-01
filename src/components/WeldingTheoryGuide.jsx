@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
+import { FAQ_CATEGORIES, FAQ_ITEMS } from '../data/weldingFaqData';
 
 const WeldingTheoryGuide = () => {
   const [activeTab, setActiveTab] = useState('alat'); // Open on 'alat' so user can see electrode codes immediately
@@ -22,6 +23,11 @@ const WeldingTheoryGuide = () => {
   const [isAnimatingWeave, setIsAnimatingWeave] = useState(true);
   const [animProgress, setAnimProgress] = useState(0);
 
+  // FAQ STATES (Sub-Modul 4)
+  const [activeFaqCategory, setActiveFaqCategory] = useState('all');
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
+  const [expandedFaqIds, setExpandedFaqIds] = useState(new Set([1, 2, 4]));
+
   // Animated loop for weaving pattern
   useEffect(() => {
     let timer;
@@ -36,7 +42,8 @@ const WeldingTheoryGuide = () => {
   const tabs = [
     { id: 'jenis', label: '1. Jenis-Jenis Pengelasan', icon: '⚡' },
     { id: 'alat', label: '2. Kode Elektroda & Peralatan Bengkel Las', icon: '🧰' },
-    { id: 'teknik', label: '3. Simulasi Praktik & Teknik Dasar', icon: '🔥' }
+    { id: 'teknik', label: '3. Simulasi Praktik & Teknik Dasar', icon: '🔥' },
+    { id: 'faq', label: '4. Tanya Jawab & Komparasi Metalurgi (FAQ)', icon: '❓' }
   ];
 
   // PROCESS DATA
@@ -660,6 +667,44 @@ const WeldingTheoryGuide = () => {
   const activeComp = selectedDiagramPart && curDiagram?.components[selectedDiagramPart] ? curDiagram.components[selectedDiagramPart] : null;
   const curAws = AWS_CODES[selectedAwsCode];
   const curTrade = TRADE_BRANDS[selectedTradeBrand];
+
+  // FAQ Handlers & Filter Logic
+  const toggleFaq = (id) => {
+    sound.playClick();
+    setExpandedFaqIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const expandAllFaq = () => {
+    sound.playClick();
+    setExpandedFaqIds(new Set(FAQ_ITEMS.map(f => f.id)));
+  };
+
+  const collapseAllFaq = () => {
+    sound.playClick();
+    setExpandedFaqIds(new Set());
+  };
+
+  const filteredFaqItems = FAQ_ITEMS.filter(item => {
+    const matchesCategory = activeFaqCategory === 'all' || item.categories.includes(activeFaqCategory);
+    if (!matchesCategory) return false;
+    if (!faqSearchQuery.trim()) return true;
+    const query = faqSearchQuery.toLowerCase();
+    return (
+      item.question.toLowerCase().includes(query) ||
+      item.subtitle.toLowerCase().includes(query) ||
+      item.detail.toLowerCase().includes(query) ||
+      item.categoryLabel.toLowerCase().includes(query) ||
+      (item.highlights && item.highlights.some(h => h.toLowerCase().includes(query)))
+    );
+  });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box', overflowX: 'hidden' }}>
@@ -2969,6 +3014,520 @@ const WeldingTheoryGuide = () => {
                   Jumlah gas Oksigen lebih banyak daripada Asetilen. Inti api lebih runcing, warna ungu kebiruan dengan suara desis tajam (suhu mencapai 3.300°C). Digunakan khusus untuk mengelas kuningan dan perunggu.
                 </div>
               </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* SUB-MODUL 4: TANYA JAWAB (FAQ) & KOMPARASI METALURGI PENGELASAN     */}
+      {/* =================================================================== */}
+      {activeTab === 'faq' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* HEADER & CONTROLS CARD */}
+          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+              <div style={{ flex: 1, minWidth: '280px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '1.4rem' }}>❓</span>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                    Tanya Jawab (FAQ) & Komparasi Metalurgi Pengelasan Industri
+                  </h3>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                  Referensi teknis mendalam berbasis standar <strong>AWS D1.1 (Structural Steel)</strong>, <strong>ASME Section IX</strong>, dan <strong>ISO 14175 (Gas Shielding)</strong>. Membahas alasan pemilihan gas MIG vs MAG, metalurgi baja karbon vs non-ferro, perbandingan SMAW vs MIG vs TIG, arus AC/DC TIG, fenomena retak hidrogen elektroda oven, serta batas kritis keselamatan gas asetilen.
+                </p>
+              </div>
+
+              {/* Quick Actions */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={expandAllFaq}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #cbd5e1',
+                    background: '#f8fafc',
+                    color: '#334155',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>📂</span>
+                  <span>Buka Semua ({FAQ_ITEMS.length})</span>
+                </button>
+                <button
+                  onClick={collapseAllFaq}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #cbd5e1',
+                    background: '#f8fafc',
+                    color: '#334155',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <span>📁</span>
+                  <span>Tutup Semua</span>
+                </button>
+              </div>
+            </div>
+
+            {/* SEARCH INPUT BAR */}
+            <div style={{ position: 'relative', width: '100%' }}>
+              <input
+                type="text"
+                value={faqSearchQuery}
+                onChange={(e) => setFaqSearchQuery(e.target.value)}
+                placeholder="🔍 Cari topik / kata kunci (misal: Mild Steel, Aluminium, Porositas, AC Balance, Oven, Asetilen, Argon, Deoksidator, Root Pass)..."
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  border: '2px solid #e2e8f0',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                  background: '#ffffff',
+                  color: '#0f172a',
+                  transition: 'border-color 0.2s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#ea580c'}
+                onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+              />
+              {faqSearchQuery && (
+                <button
+                  onClick={() => setFaqSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#64748b',
+                    fontSize: '0.9rem',
+                    fontWeight: 800
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* CATEGORY FILTER PILLS */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '4px' }}>
+                Kategori:
+              </span>
+              {FAQ_CATEGORIES.map(cat => {
+                const isSelected = activeFaqCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => { sound.playClick(); setActiveFaqCategory(cat.id); }}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      border: isSelected ? '2px solid #ea580c' : '1px solid var(--border-light)',
+                      background: isSelected ? 'rgba(234, 88, 12, 0.1)' : '#ffffff',
+                      color: isSelected ? '#ea580c' : 'var(--text-main)',
+                      fontWeight: isSelected ? 800 : 600,
+                      fontSize: '0.78rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    <span>{cat.icon}</span>
+                    <span>{cat.label}</span>
+                    {cat.count && (
+                      <span style={{
+                        padding: '1px 6px',
+                        borderRadius: '10px',
+                        background: isSelected ? '#ea580c' : '#f1f5f9',
+                        color: isSelected ? '#ffffff' : '#64748b',
+                        fontSize: '0.7rem',
+                        fontWeight: 700
+                      }}>
+                        {cat.count}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* RESULTS COUNT */}
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Menampilkan <strong>{filteredFaqItems.length}</strong> dari {FAQ_ITEMS.length} pertanyaan</span>
+              {faqSearchQuery && <span>Hasil pencarian untuk: "<em>{faqSearchQuery}</em>"</span>}
+            </div>
+          </div>
+
+          {/* FAQ ACCORDION LIST */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {filteredFaqItems.length === 0 ? (
+              <div className="dashboard-card" style={{ padding: '36px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🔎</div>
+                <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-main)' }}>Tidak Ditemukan Pertanyaan yang Sesuai</div>
+                <div style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+                  Coba kata kunci lain atau pilih filter kategori "Semua Tanya Jawab".
+                </div>
+                <button
+                  onClick={() => { setFaqSearchQuery(''); setActiveFaqCategory('all'); }}
+                  style={{
+                    marginTop: '16px',
+                    padding: '8px 18px',
+                    borderRadius: '6px',
+                    border: '1px solid #ea580c',
+                    background: 'transparent',
+                    color: '#ea580c',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  Reset Pencarian
+                </button>
+              </div>
+            ) : (
+              filteredFaqItems.map((item) => {
+                const isExpanded = expandedFaqIds.has(item.id);
+                return (
+                  <div
+                    key={item.id}
+                    className="dashboard-card"
+                    style={{
+                      padding: 0,
+                      overflow: 'hidden',
+                      border: isExpanded ? `2px solid ${item.badgeColor || '#ea580c'}` : '1px solid var(--border-light)',
+                      boxShadow: isExpanded ? '0 4px 14px rgba(0,0,0,0.06)' : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    {/* ACCORDION HEADER (Clickable) */}
+                    <div
+                      onClick={() => toggleFaq(item.id)}
+                      style={{
+                        padding: '18px 20px',
+                        cursor: 'pointer',
+                        background: isExpanded ? '#fbfcfe' : '#ffffff',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '14px',
+                        userSelect: 'none'
+                      }}
+                    >
+                      {/* Number Badge */}
+                      <span style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '8px',
+                        background: item.badgeBg || '#eff6ff',
+                        color: item.badgeColor || '#2563eb',
+                        border: `1px solid ${item.badgeBorder || '#bfdbfe'}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 900,
+                        fontSize: '0.85rem',
+                        flexShrink: 0
+                      }}>
+                        #{item.id}
+                      </span>
+
+                      {/* Title & Subtitle */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                          <span style={{
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            background: item.badgeBg || '#eff6ff',
+                            color: item.badgeColor || '#2563eb',
+                            fontSize: '0.72rem',
+                            fontWeight: 800
+                          }}>
+                            {item.categoryLabel}
+                          </span>
+                          {item.standards && (
+                            <span style={{
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              background: '#f1f5f9',
+                              color: '#64748b',
+                              fontSize: '0.7rem',
+                              fontWeight: 700
+                            }}>
+                              {item.standards.split(',')[0]}
+                            </span>
+                          )}
+                        </div>
+                        <h4 style={{
+                          margin: 0,
+                          fontSize: '1rem',
+                          fontWeight: 800,
+                          color: isExpanded ? item.badgeColor : 'var(--text-main)',
+                          lineHeight: 1.4
+                        }}>
+                          {item.question}
+                        </h4>
+                        {!isExpanded && (
+                          <p style={{
+                            margin: '4px 0 0 0',
+                            fontSize: '0.8rem',
+                            color: 'var(--text-muted)',
+                            lineHeight: 1.4,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}>
+                            {item.subtitle}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Expand Chevron */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '6px',
+                        background: isExpanded ? 'rgba(0,0,0,0.05)' : '#f8fafc',
+                        color: isExpanded ? '#ea580c' : '#64748b',
+                        fontSize: '0.9rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {isExpanded ? '▲' : '▼'}
+                      </div>
+                    </div>
+
+                    {/* EXPANDED CONTENT BODY */}
+                    {isExpanded && (
+                      <div style={{
+                        padding: '0 20px 24px 20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '16px',
+                        borderTop: '1px solid #f1f5f9',
+                        background: '#ffffff'
+                      }}>
+                        {/* Subtitle / Punchy Summary */}
+                        <div style={{
+                          padding: '12px 16px',
+                          background: item.badgeBg || '#eff6ff',
+                          borderLeft: `4px solid ${item.badgeColor || '#2563eb'}`,
+                          borderRadius: '6px',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          color: '#0f172a',
+                          lineHeight: 1.5
+                        }}>
+                          💡 Ringkasan Inti: {item.subtitle}
+                        </div>
+
+                        {/* HIGHLIGHT BULLETS */}
+                        {item.highlights && item.highlights.length > 0 && (
+                          <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+                            gap: '10px'
+                          }}>
+                            {item.highlights.map((hl, hIdx) => (
+                              <div
+                                key={hIdx}
+                                style={{
+                                  padding: '10px 12px',
+                                  background: '#f8fafc',
+                                  border: '1px solid #e2e8f0',
+                                  borderRadius: '6px',
+                                  fontSize: '0.8rem',
+                                  color: '#334155',
+                                  lineHeight: 1.5,
+                                  display: 'flex',
+                                  gap: '8px'
+                                }}
+                              >
+                                <span style={{ color: item.badgeColor || '#ea580c', fontWeight: 900, fontSize: '0.9rem' }}>•</span>
+                                <span>{hl}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* COMPARISON TABLE (IF ANY) */}
+                        {item.table && (
+                          <div style={{
+                            overflowX: 'auto',
+                            borderRadius: '8px',
+                            border: '1px solid #cbd5e1',
+                            margin: '4px 0'
+                          }}>
+                            <table style={{
+                              width: '100%',
+                              borderCollapse: 'collapse',
+                              fontSize: '0.82rem',
+                              textAlign: 'left'
+                            }}>
+                              <thead>
+                                <tr style={{ background: '#0f172a', color: '#ffffff' }}>
+                                  {item.table.headers.map((h, i) => (
+                                    <th key={i} style={{ padding: '10px 14px', fontWeight: 800 }}>
+                                      {h}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {item.table.rows.map((r, rIdx) => (
+                                  <tr
+                                    key={rIdx}
+                                    style={{
+                                      background: rIdx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                                      borderBottom: '1px solid #e2e8f0'
+                                    }}
+                                  >
+                                    {r.map((cell, cIdx) => (
+                                      <td
+                                        key={cIdx}
+                                        style={{
+                                          padding: '10px 14px',
+                                          color: cIdx === 0 ? '#0f172a' : '#334155',
+                                          fontWeight: cIdx === 0 ? 800 : 500,
+                                          lineHeight: 1.4
+                                        }}
+                                      >
+                                        {cell}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+
+                        {/* DETAILED EXPLANATION */}
+                        <div style={{
+                          padding: '16px',
+                          background: '#fafbfc',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          fontSize: '0.85rem',
+                          color: '#1e293b',
+                          lineHeight: 1.7,
+                          whiteSpace: 'pre-line',
+                          fontFamily: 'inherit'
+                        }}>
+                          {item.detail}
+                        </div>
+
+                        {/* PRO TIP / GOLDEN WORKSHOP RULE */}
+                        {item.proTip && (
+                          <div style={{
+                            padding: '12px 16px',
+                            background: '#fffbeb',
+                            borderLeft: '4px solid #f59e0b',
+                            borderRadius: '6px',
+                            fontSize: '0.82rem',
+                            color: '#92400e',
+                            lineHeight: 1.5,
+                            display: 'flex',
+                            gap: '10px',
+                            alignItems: 'flex-start'
+                          }}>
+                            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>⭐</span>
+                            <div>
+                              <strong>TIPS PRAKTISI WELDER:</strong> {item.proTip}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* STANDARDS FOOTER */}
+                        {item.standards && (
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            fontSize: '0.75rem',
+                            color: '#64748b',
+                            borderTop: '1px solid #f1f5f9',
+                            paddingTop: '10px'
+                          }}>
+                            <span>📜 <strong>Standar Rujukan Industri:</strong> {item.standards}</span>
+                            <span style={{ fontWeight: 700, color: item.badgeColor }}>Topik #{item.id}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* INDUSTRIAL MATRIX QUICK REFERENCE SUMMARY */}
+          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.3rem' }}>📊</span>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                Matriks Komparasi Ringkas 5 Proses Pengelasan (SMAW • MIG • MAG • TIG • OAW)
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+              Tabel panduan cepat untuk juru las dan insinyur manufaktur dalam menentukan proses pengelasan paling efisien, ekonomis, dan tepat guna sesuai tuntutan pekerjaan.
+            </p>
+
+            <div style={{ overflowX: 'auto', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: '#0f172a', color: '#ffffff' }}>
+                    <th style={{ padding: '10px 12px' }}>Proses Las</th>
+                    <th style={{ padding: '10px 12px' }}>Elektroda / Kawat</th>
+                    <th style={{ padding: '10px 12px' }}>Gas Pelindung</th>
+                    <th style={{ padding: '10px 12px' }}>Karakteristik Penetrasi</th>
+                    <th style={{ padding: '10px 12px' }}>Efisiensi Deposisi</th>
+                    <th style={{ padding: '10px 12px' }}>Ketahanan Angin</th>
+                    <th style={{ padding: '10px 12px' }}>Aplikasi Utama</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { proc: 'SMAW / MMA', el: 'Batangan fluks terbungkus (E6013, E7018)', gas: 'Gas fluks mandiri (CO₂ uap)', pen: 'Sedang - Dalam', eff: '± 65%', wind: 'Sangat Baik (Tahan angin)', app: 'Konstruksi lapangan, jembatan, perpipaan darat' },
+                    { proc: 'GMAW / MAG', el: 'Kawat pejal kontinu (ER70S-6)', gas: '100% CO₂ atau Ar + 20% CO₂', pen: 'Dalam (Mangkuk Lebar)', eff: '± 95%', wind: 'Rentan (Indoor saja)', app: 'Fabrikasi baja karbon, karoseri truk, otomotif' },
+                    { proc: 'GMAW / MIG', el: 'Kawat pejal kontinu (ER4043, ER5356)', gas: '100% Argon Murni / Ar+He', pen: 'Sempit menusuk di tengah', eff: '± 95%', wind: 'Rentan (Indoor saja)', app: 'Tangki aluminium, struktur kapal aluminium' },
+                    { proc: 'GTAW / TIG', el: 'Tungsten tak meleleh + filler rod', gas: '100% Argon Murni (UHP)', pen: 'Terkontrol sangat presisi', eff: '± 98% (Laju lambat)', wind: 'Sangat Rentan', app: 'Akar pipa tekanan tinggi, pipa makanan, aerospace' },
+                    { proc: 'OAW / Karbit', el: 'Kawat las tanpa fluks (RG-45)', gas: 'Api Asetilen + Oksigen (1:1)', pen: 'Dangkal - Sedang', eff: 'Rendah (Laju lambat)', wind: 'Cukup Baik', app: 'Reparasi knalpot tipis, brazing kuningan' }
+                  ].map((row, idx) => (
+                    <tr key={idx} style={{ background: idx % 2 === 0 ? '#ffffff' : '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <td style={{ padding: '10px 12px', fontWeight: 800, color: '#ea580c' }}>{row.proc}</td>
+                      <td style={{ padding: '10px 12px', color: '#334155' }}>{row.el}</td>
+                      <td style={{ padding: '10px 12px', color: '#0f172a', fontWeight: 600 }}>{row.gas}</td>
+                      <td style={{ padding: '10px 12px', color: '#334155' }}>{row.pen}</td>
+                      <td style={{ padding: '10px 12px', fontWeight: 700, color: '#16a34a' }}>{row.eff}</td>
+                      <td style={{ padding: '10px 12px', color: '#334155' }}>{row.wind}</td>
+                      <td style={{ padding: '10px 12px', color: '#475569' }}>{row.app}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 

@@ -9,6 +9,7 @@ import LabDiagnosticBanner from './LabDiagnosticBanner';
 import {
   SMAWMachinePanel,
   MIGMachinePanel,
+  TIGMachinePanel,
   OAWMachinePanel,
   WELDING_WPS_DATABASE
 } from './WeldingMachinePanel';
@@ -634,7 +635,16 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
   const [inductance, setInductance] = useState(5);
   const [triggerMode, setTriggerMode] = useState('2T');
 
-  // 3. OAW (OXY-ACETYLENE) PARAMETERS
+  // 3. TIG (GTAW) PARAMETERS
+  const [tigPostFlow, setTigPostFlow] = useState(8.0);
+  const [tigPulseFreq, setTigPulseFreq] = useState(1.0);
+  const [tigCurrentType, setTigCurrentType] = useState('DCEN');
+  const [tigTungstenType, setTigTungstenType] = useState('EWLa-1.5');
+  const [tigTungstenDia, setTigTungstenDia] = useState(2.4);
+  const [tigCupSize, setTigCupSize] = useState('#7');
+  const [tigHfIgnition, setTigHfIgnition] = useState(true);
+
+  // 4. OAW (OXY-ACETYLENE) PARAMETERS
   const [oxygenPressure, setOxygenPressure] = useState(2.5);
   const [acetylenePressure, setAcetylenePressure] = useState(0.5);
   const [oxygenValve, setOxygenValve] = useState(50);
@@ -673,6 +683,17 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
       setGasFlow(data.optimalGasFlow);
       setInductance(data.optimalInductance);
       setShieldingGas(data.recommendedGas);
+    } else if (proc === 'TIG') {
+      const data = WELDING_WPS_DATABASE.TIG[thick] || WELDING_WPS_DATABASE.TIG['6mm'];
+      setAmperage(data.optimalCurrent);
+      setTigPostFlow(data.postFlow);
+      setTigPulseFreq(data.pulseFreq);
+      setTigCurrentType(data.currentType);
+      setPolarity(data.currentType);
+      setTigTungstenType(data.tungstenType);
+      setTigTungstenDia(data.tungstenDiameter);
+      setTigCupSize(data.cupSize);
+      setGasFlow(data.gasFlow);
     } else if (proc === 'OAW') {
       const data = WELDING_WPS_DATABASE.OAW[thick] || WELDING_WPS_DATABASE.OAW['4mm'];
       setOxygenPressure(data.oxygenPressure);
@@ -781,6 +802,19 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             if (inductance < -4 || shieldingGas === '100% CO2') {
               const dt = DEFECT_TYPES.find(d => d.id === 'spatter') || DEFECT_TYPES[2];
               generatedDefects.push({ uid: `sp-${Date.now()}`, pos: 70, ...dt });
+            }
+          } else if (weldingProcess === 'TIG') {
+            const wps = WELDING_WPS_DATABASE.TIG[plateThickness] || WELDING_WPS_DATABASE.TIG['6mm'];
+            if (gasFlow < 6 || tigPostFlow < 4.0) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'porosity') || DEFECT_TYPES[0];
+              generatedDefects.push({ uid: `tig-po-${Date.now()}`, pos: 45, ...dt });
+            }
+            if (amperage > wps.currentRange[1] + 15) {
+              const dt = DEFECT_TYPES.find(d => d.id === (plateThickness === '2mm' ? 'burn_through' : 'undercut')) || DEFECT_TYPES[1];
+              generatedDefects.push({ uid: `tig-ov-${Date.now()}`, pos: 55, ...dt });
+            } else if (amperage < wps.currentRange[0] - 12) {
+              const dt = DEFECT_TYPES.find(d => d.id === 'incomplete_penetration') || DEFECT_TYPES[5];
+              generatedDefects.push({ uid: `tig-uv-${Date.now()}`, pos: 60, ...dt });
             }
           } else if (weldingProcess === 'OAW') {
             if (oawFlame === 'oxidizing') {
@@ -1034,14 +1068,21 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                   style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                   onClick={() => handleSelectProcess('MIG')}
                 >
-                  🌀 MIG / MAG (GMAW)
+                  🌀 MIG / MAG
+                </button>
+                <button 
+                  className={`btn-game ${weldingProcess === 'TIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                  onClick={() => handleSelectProcess('TIG')}
+                >
+                  🎯 TIG / GTAW
                 </button>
                 <button 
                   className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
                   style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                   onClick={() => handleSelectProcess('OAW')}
                 >
-                  🔥 OAW (OKSIGEN-ASETILIN)
+                  🔥 OAW
                 </button>
               </div>
             </div>
@@ -1087,10 +1128,26 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             </button>
           </div>
         </div>
+      </div>
 
-        {/* ACTIVE MACHINE SETTINGS PANEL */}
+      {/* WORKSPACE: SIDE-BY-SIDE SPLIT (COMPACT MACHINE PANEL ON LEFT + 3D SIMULATOR ON RIGHT) */}
+      <div style={{
+        display: 'flex',
+        gap: '16px',
+        alignItems: 'stretch',
+        flexWrap: 'wrap',
+        width: '100%',
+        minWidth: 0
+      }}>
+        {/* LEFT: COMPACT MACHINE PANEL */}
         {showMachinePanel && (
-          <div style={{ marginTop: '8px' }}>
+          <div style={{
+            width: '350px',
+            maxWidth: '100%',
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
             {weldingProcess === 'SMAW' && (
               <SMAWMachinePanel
                 plateThickness={plateThickness}
@@ -1133,6 +1190,31 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                 onApplyWpsPreset={() => handleApplyWpsPreset('MIG', plateThickness)}
               />
             )}
+            {weldingProcess === 'TIG' && (
+              <TIGMachinePanel
+                plateThickness={plateThickness}
+                onSelectThickness={handleSelectThickness}
+                current={amperage}
+                onChangeCurrent={setAmperage}
+                postFlow={tigPostFlow}
+                onChangePostFlow={setTigPostFlow}
+                pulseFreq={tigPulseFreq}
+                onChangePulseFreq={setTigPulseFreq}
+                currentType={tigCurrentType}
+                onChangeCurrentType={(t) => { setTigCurrentType(t); setPolarity(t); }}
+                tungstenType={tigTungstenType}
+                onChangeTungstenType={setTigTungstenType}
+                tungstenDiameter={tigTungstenDia}
+                onChangeTungstenDiameter={setTigTungstenDia}
+                cupSize={tigCupSize}
+                onChangeCupSize={setTigCupSize}
+                gasFlow={gasFlow}
+                onChangeGasFlow={setGasFlow}
+                hfIgnition={tigHfIgnition}
+                onToggleHf={() => setTigHfIgnition(!tigHfIgnition)}
+                onApplyWpsPreset={() => handleApplyWpsPreset('TIG', plateThickness)}
+              />
+            )}
             {weldingProcess === 'OAW' && (
               <OAWMachinePanel
                 plateThickness={plateThickness}
@@ -1154,22 +1236,22 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             )}
           </div>
         )}
-      </div>
 
-      {/* 3D WELDING CANVAS */}
-      <div 
-        style={{
-          flex: 1,
-          position: 'relative',
-          minHeight: '400px',
-          background: '#050a14',
-          borderRadius: '16px',
-          border: '1px solid var(--border-light)',
-          overflow: 'hidden',
-          boxShadow: '0 0 30px rgba(0,0,0,0.5)',
-          touchAction: 'none' // Prevent scrolling when sliding on mobile
-        }}
-      >
+        {/* RIGHT: 3D WELDING CANVAS */}
+        <div 
+          style={{
+            flex: 1,
+            minWidth: '320px',
+            position: 'relative',
+            minHeight: '520px',
+            background: '#050a14',
+            borderRadius: '16px',
+            border: '1px solid var(--border-light)',
+            overflow: 'hidden',
+            boxShadow: '0 0 30px rgba(0,0,0,0.5)',
+            touchAction: 'none' // Prevent scrolling when sliding on mobile
+          }}
+        >
         {/* DEFECT OVERLAY LIST FOR QUICK ACCESS */}
         {defects.length > 0 && (
           <div style={{
@@ -1309,6 +1391,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             />
           </ErrorBoundary>
         )}
+      </div>
       </div>
 
       {/* BOTTOM STEPPER - ALUR SIMULASI */}

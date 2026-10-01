@@ -23,6 +23,23 @@ const Sparks = ({ isWelding, position, rotation = [0, 0, 0], weldingProcess }) =
 
   if (!isWelding || weldingProcess === 'OAW') return null;
 
+  if (weldingProcess === 'TIG') {
+    return (
+      <group position={position} rotation={rotation}>
+        {/* Focused Blue-Violet Plasma Arc column */}
+        <mesh position={[0, 0, 0]}>
+          <coneGeometry args={[0.035, 0.08, 16]} />
+          <meshBasicMaterial color="#a5b4fc" />
+        </mesh>
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.02, 12, 12]} />
+          <meshBasicMaterial color="#ffffff" />
+        </mesh>
+        <pointLight distance={3} intensity={7} color="#818cf8" />
+      </group>
+    );
+  }
+
   const sparkColor = weldingProcess === 'MIG' ? '#ffffff' : '#ffcc00';
   const lightColor = weldingProcess === 'MIG' ? '#aaddff' : '#ffaa00';
   const intensity = weldingProcess === 'MIG' ? 8 : 5;
@@ -156,6 +173,43 @@ const Torch = ({ position, rotation = [0, 0, -Math.PI / 6], weldingProcess, smaw
         <mesh position={[0, 0.05, 0]}>
           <cylinderGeometry args={[0.01, 0.015, 0.1, 16]} />
           <meshStandardMaterial color="#d4d4d8" metalness={0.9} />
+        </mesh>
+      </group>
+    );
+  }
+
+  if (weldingProcess === 'TIG') {
+    return (
+      <group position={position} rotation={rotation}>
+        {/* TIG Torch Barrel Handle */}
+        <mesh position={[-0.05, 0.4, 0]} rotation={[0, 0, -Math.PI / 8]}>
+          <cylinderGeometry args={[0.04, 0.045, 0.5, 16]} />
+          <meshStandardMaterial color="#09090b" roughness={0.6} />
+        </mesh>
+        {/* Long Screw-On Back Cap */}
+        <mesh position={[-0.12, 0.65, 0]} rotation={[0, 0, -Math.PI / 8]}>
+          <coneGeometry args={[0.025, 0.4, 16]} />
+          <meshStandardMaterial color="#18181b" roughness={0.5} />
+        </mesh>
+        {/* Pink Alumina Ceramic Gas Lens Cup (#7) */}
+        <mesh position={[0, 0.1, 0]}>
+          <cylinderGeometry args={[0.035, 0.05, 0.16, 16]} />
+          <meshStandardMaterial color="#f472b6" roughness={0.3} />
+        </mesh>
+        {/* Tungsten Needle Electrode protruding from cup */}
+        <mesh position={[0, 0.02, 0]}>
+          <cylinderGeometry args={[0.007, 0.002, 0.08, 16]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Tungsten Colored Tip Ring (Red Thoriated EWTh-2) */}
+        <mesh position={[0, 0.045, 0]}>
+          <cylinderGeometry args={[0.0072, 0.0072, 0.015, 16]} />
+          <meshStandardMaterial color="#ef4444" roughness={0.4} />
+        </mesh>
+        {/* TIG Filler Rod (Kawat Tambah ER70S-6) fed at 15 deg */}
+        <mesh position={[0.2, 0.12, 0]} rotation={[0, 0, Math.PI / 3]}>
+          <cylinderGeometry args={[0.005, 0.005, 0.5, 8]} />
+          <meshStandardMaterial color="#d4d4d8" metalness={0.8} roughness={0.2} />
         </mesh>
       </group>
     );
@@ -671,6 +725,89 @@ const OAWMachine3D = ({ oawFlame = 'neutral', oxygenPressure = 2.0, acetylenePre
   );
 };
 
+// 3D MODEL: TIG AC/DC INVERTER POWER SOURCE (GTAW)
+const TIGMachine3D = ({ current = 135, currentType = 'DCEN', position = [-3.8, 0.35, -2.0] }) => {
+  return (
+    <group position={position}>
+      {/* Workshop Base Stand */}
+      <mesh position={[0, -0.65, 0]} receiveShadow>
+        <boxGeometry args={[1.1, 0.1, 0.8]} />
+        <meshStandardMaterial color="#1e1b4b" metalness={0.6} />
+      </mesh>
+
+      {/* Wheels */}
+      {[-0.45, 0.45].map((wx, i) =>
+        [-0.35, 0.35].map((wz, j) => (
+          <mesh key={`${i}-${j}`} position={[wx, -0.75, wz]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.06, 16]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+        ))
+      )}
+
+      {/* TIG Inverter Chassis (Deep Indigo / Slate) */}
+      <mesh position={[-0.1, -0.05, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.9, 0.85, 0.65]} />
+        <meshStandardMaterial color="#1e1b4b" metalness={0.5} roughness={0.3} />
+      </mesh>
+
+      {/* Top Handle */}
+      <mesh position={[-0.1, 0.42, 0]}>
+        <boxGeometry args={[0.55, 0.06, 0.1]} />
+        <meshStandardMaterial color="#818cf8" metalness={0.8} />
+      </mesh>
+
+      {/* Front Faceplate */}
+      <mesh position={[0.36, -0.05, 0]}>
+        <boxGeometry args={[0.03, 0.75, 0.58]} />
+        <meshStandardMaterial color="#09090b" roughness={0.4} />
+      </mesh>
+
+      {/* Pure Argon Gas Cylinder mounted at back */}
+      <group position={[-0.6, 0.32, -0.1]}>
+        <mesh position={[0, 0, 0]} castShadow>
+          <cylinderGeometry args={[0.16, 0.16, 1.45, 24]} />
+          <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.3} />
+        </mesh>
+        {/* Dark Green Collar (Pure Argon) */}
+        <mesh position={[0, 0.73, 0]}>
+          <cylinderGeometry args={[0.162, 0.162, 0.16, 24]} />
+          <meshStandardMaterial color="#15803d" metalness={0.6} />
+        </mesh>
+        {/* Brass Valve */}
+        <mesh position={[0, 0.88, 0]}>
+          <boxGeometry args={[0.07, 0.1, 0.07]} />
+          <meshStandardMaterial color="#d97706" metalness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Ground Cable to Plate */}
+      <mesh position={[1.0, -0.35, 0.6]} rotation={[0.3, 0.4, -0.2]}>
+        <cylinderGeometry args={[0.02, 0.02, 2.4, 12]} />
+        <meshStandardMaterial color="#18181b" roughness={0.8} />
+      </mesh>
+
+      {/* Machine Label HUD */}
+      <Html position={[0, 0.75, 0]} center distanceFactor={9}>
+        <div style={{
+          background: 'rgba(30, 27, 75, 0.92)',
+          padding: '4px 10px',
+          borderRadius: '6px',
+          border: '1px solid #818cf8',
+          color: '#ffffff',
+          fontSize: '11px',
+          fontWeight: 800,
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          pointerEvents: 'none'
+        }}>
+          🎯 TIG AC/DC 250 ({current} A • {currentType} • Pure Argon)
+        </div>
+      </Html>
+    </group>
+  );
+};
+
 const Welding3D = ({ 
   isWelding, torchPos, weldProgress, weldType = 'groove', weldPosition = '1G', 
   defects = [], onDefectClick, interactionMode = 'camera', 
@@ -744,6 +881,9 @@ const Welding3D = ({
         )}
         {weldingProcess === 'MIG' && (
           <MIGMachine3D voltage={voltage} wireFeedSpeed={wireFeedSpeed} gasFlow={gasFlow} position={[-3.8, 0.35, -2.0]} />
+        )}
+        {weldingProcess === 'TIG' && (
+          <TIGMachine3D current={amperage} currentType={polarity} position={[-3.8, 0.35, -2.0]} />
         )}
         {weldingProcess === 'OAW' && (
           <OAWMachine3D oawFlame={oawFlame} oxygenPressure={oxygenPressure} acetylenePressure={acetylenePressure} position={[-3.8, 0.35, -2.0]} />

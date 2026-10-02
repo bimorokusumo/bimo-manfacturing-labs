@@ -2596,21 +2596,26 @@ const MeasuringToolsLab = ({
 
                           {/* SLEEVE / BARREL CYLINDER (LARAS TETAP) */}
                           {/* Top border band */}
-                          <rect x="20" y="90" width={thimbleX - 20} height="30" fill="#9e9e9e" />
+                          <rect x="0" y="90" width={thimbleX} height="30" fill="#9e9e9e" />
                           {/* Center main cylinder body */}
-                          <rect x="20" y="120" width={thimbleX - 20} height="140" fill="#f0f0f0" />
+                          <rect x="0" y="120" width={thimbleX} height="140" fill="#f0f0f0" />
                           {/* Bottom border band */}
-                          <rect x="20" y="260" width={thimbleX - 20} height="30" fill="#9e9e9e" />
+                          <rect x="0" y="260" width={thimbleX} height="30" fill="#9e9e9e" />
 
                           {/* SLEEVE HORIZONTAL DATUM LINE (GARIS REFERENSI TENGAH) */}
-                          <line x1="20" y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
+                          {/* Dimulai tepat sebelum angka 0 dan berakhir tepat di bibir bidal (thimbleX) */}
+                          {(() => {
+                            const datumStartX = Math.max(0, markZeroX - 28);
+                            return (
+                              <line x1={datumStartX} y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
+                            );
+                          })()}
 
                           {/* SLEEVE GRADUATIONS (0 to 25 mm) */}
                           {Array.from({ length: 26 }).map((_, i) => {
                             const xi = markZeroX + i * scalePPM;
-                            if (xi < 20 || xi > thimbleX) return null;
+                            if (xi < 0 || xi > thimbleX) return null;
                             const isFive = i % 5 === 0;
-                            const isLastWhole = i === microWholeMm;
 
                             return (
                               <g key={'macro-slv-' + i}>
@@ -2619,7 +2624,7 @@ const MeasuringToolsLab = ({
                                   x1={xi}
                                   y1="190"
                                   x2={xi}
-                                  y2={isFive ? "100" : "138"}
+                                  y2={isFive ? "95" : "138"}
                                   stroke="#000000"
                                   strokeWidth={isFive ? 3.4 : 2.4}
                                   strokeLinecap="square"
@@ -2628,8 +2633,8 @@ const MeasuringToolsLab = ({
                                 {isFive && (
                                   <text
                                     x={xi}
-                                    y="82"
-                                    fontSize="25"
+                                    y="80"
+                                    fontSize="26"
                                     fontWeight="bold"
                                     fill="#000000"
                                     textAnchor="middle"
@@ -2639,43 +2644,21 @@ const MeasuringToolsLab = ({
                                   </text>
                                 )}
 
-                                {/* Highlight marker on active whole mm if guides enabled */}
-                                {microShowGuides && isLastWhole && (
-                                  <g>
-                                    <rect x={xi - 18} y="44" width="36" height="18" rx="4" fill="#0284c7" />
-                                    <text x={xi} y="56" fontSize="10" fontWeight="900" fill="#ffffff" textAnchor="middle">
-                                      {i} mm
-                                    </text>
-                                    <polygon points={`${xi},66 ${xi - 4},62 ${xi + 4},62`} fill="#0284c7" />
-                                  </g>
-                                )}
-
                                 {/* Lower Half-Millimeter Line (0.5 mm) - Standard Mode */}
                                 {microReadingMode === 'standard' && i < 25 && (() => {
                                   const xHalf = xi + scalePPM * 0.5;
-                                  if (xHalf < 20 || xHalf > thimbleX) return null;
-                                  const isCurrentHalf = (i === microWholeMm && microHalfMm > 0);
+                                  if (xHalf < 0 || xHalf > thimbleX) return null;
                                   return (
-                                    <g key={'macro-half-' + i}>
-                                      <line
-                                        x1={xHalf}
-                                        y1="190"
-                                        x2={xHalf}
-                                        y2="242"
-                                        stroke="#000000"
-                                        strokeWidth="2.4"
-                                        strokeLinecap="square"
-                                      />
-                                      {microShowGuides && isCurrentHalf && (
-                                        <g>
-                                          <rect x={xHalf - 26} y="318" width="52" height="18" rx="4" fill="#059669" />
-                                          <text x={xHalf} y="330" fontSize="9" fontWeight="900" fill="#ffffff" textAnchor="middle">
-                                            +0.50 mm
-                                          </text>
-                                          <polygon points={`${xHalf},314 ${xHalf - 4},318 ${xHalf + 4},318`} fill="#059669" />
-                                        </g>
-                                      )}
-                                    </g>
+                                    <line
+                                      key={'macro-half-' + i}
+                                      x1={xHalf}
+                                      y1="190"
+                                      x2={xHalf}
+                                      y2="242"
+                                      stroke="#000000"
+                                      strokeWidth="2.4"
+                                      strokeLinecap="square"
+                                    />
                                   );
                                 })()}
                               </g>
@@ -2683,12 +2666,10 @@ const MeasuringToolsLab = ({
                           })}
 
                           {/* ROTATING THIMBLE ASSEMBLY (BIDAL PUTAR) */}
-                          {/* 1. Thimble Bevel Nose (Tirus Bidal) */}
+                          {/* 1. Thimble Bevel Nose (Tirus Bidal) - Bersih tanpa garis outline */}
                           <polygon
                             points={`${thimbleX},90 ${thimbleX + 90},40 ${thimbleX + 90},340 ${thimbleX},290`}
-                            fill="#d1d5db"
-                            stroke="#1f2937"
-                            strokeWidth="1.8"
+                            fill="#cccccc"
                           />
 
                           {/* 2. Thimble Cylindrical Body (Badan Silinder Bidal) */}
@@ -2700,10 +2681,8 @@ const MeasuringToolsLab = ({
                           <rect x={thimbleX + 90} y="165" width={920 - (thimbleX + 90)} height="50" fill="#ffffff" />
                           {/* Bottom shaded band */}
                           <rect x={thimbleX + 90} y="290" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
-                          {/* Outer bevel transition border */}
-                          <line x1={thimbleX + 90} y1="40" x2={thimbleX + 90} y2="340" stroke="#374151" strokeWidth="1.5" />
 
-                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) */}
+                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) - SEMUA HORIZONTAL */}
                           {[-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8].map((offset) => {
                             const divValue = ((nearestIntDiv + offset) % maxDiv + maxDiv) % maxDiv;
                             let diff = divValue - activeDiv;
@@ -2715,30 +2694,27 @@ const MeasuringToolsLab = ({
 
                             const isFive = divValue % 5 === 0;
                             const isCoincident = Math.abs(diff) < 0.5;
-                            // 3D cone slope factor
-                            const yRight = yDiv + (yDiv - 190) * 0.07;
-                            const yTickRight = yDiv + (yDiv - 190) * 0.07 * (44 / 90);
 
                             return (
                               <g key={'macro-thim-' + offset}>
                                 {isFive ? (
-                                  // Long graduation line extending across bevel into body + bold number
+                                  // Garis kelipatan 5 horizontal panjang dengan angka tebal di kanan
                                   <g>
                                     <line
                                       x1={thimbleX}
                                       y1={yDiv}
-                                      x2={thimbleX + 140}
-                                      y2={yRight}
-                                      stroke={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
-                                      strokeWidth={isCoincident ? 3.4 : 2.8}
+                                      x2={thimbleX + 115}
+                                      y2={yDiv}
+                                      stroke="#000000"
+                                      strokeWidth="2.8"
                                       strokeLinecap="square"
                                     />
                                     <text
-                                      x={thimbleX + 152}
-                                      y={yRight}
-                                      fontSize="25"
+                                      x={thimbleX + 125}
+                                      y={yDiv}
+                                      fontSize="26"
                                       fontWeight="bold"
-                                      fill={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
+                                      fill="#000000"
                                       dominantBaseline="central"
                                       fontFamily="system-ui, -apple-system, sans-serif"
                                     >
@@ -2746,49 +2722,16 @@ const MeasuringToolsLab = ({
                                     </text>
                                   </g>
                                 ) : (
-                                  // Regular graduation tick on the bevel edge
+                                  // Garis satuan pendek horizontal di tepi tirus
                                   <line
                                     x1={thimbleX}
                                     y1={yDiv}
-                                    x2={isCoincident && microShowGuides ? thimbleX + 90 : thimbleX + 44}
-                                    y2={isCoincident && microShowGuides ? yRight : yTickRight}
-                                    stroke={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
-                                    strokeWidth={isCoincident ? 3.2 : 2.2}
+                                    x2={isCoincident ? thimbleX + 46 : thimbleX + 36}
+                                    y2={yDiv}
+                                    stroke="#000000"
+                                    strokeWidth={isCoincident ? 3.0 : 2.2}
                                     strokeLinecap="square"
                                   />
-                                )}
-
-                                {/* Coincident highlight marker when guides are enabled */}
-                                {microShowGuides && isCoincident && (
-                                  <g>
-                                    {/* Red indicator arrow pointing to coincident line */}
-                                    <polygon
-                                      points={`${thimbleX - 14},190 ${thimbleX - 4},185 ${thimbleX - 4},195`}
-                                      fill="#dc2626"
-                                    />
-                                    <text
-                                      x={thimbleX - 18}
-                                      y="194"
-                                      fontSize="12"
-                                      fontWeight="900"
-                                      fill="#dc2626"
-                                      textAnchor="end"
-                                      fontFamily="system-ui, -apple-system, sans-serif"
-                                    >
-                                      SEGARIS ({divValue}) ◄
-                                    </text>
-                                    {/* Dashed alignment ray across */}
-                                    <line
-                                      x1="20"
-                                      y1="190"
-                                      x2={thimbleX + 140}
-                                      y2="190"
-                                      stroke="#dc2626"
-                                      strokeWidth="1.2"
-                                      strokeDasharray="4,3"
-                                      opacity="0.7"
-                                    />
-                                  </g>
                                 )}
                               </g>
                             );
@@ -3052,72 +2995,110 @@ const MeasuringToolsLab = ({
                 )}
 
                 {/* CONTROLS (SLIDER & STEPPERS) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)' }}>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '14px',
+                  background: 'rgba(255,255,255,0.02)',
+                  padding: '16px',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-light)'
+                }}>
+                  {/* BARIS 1: JUDUL & INPUT ANGKA MANUAL */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                    <label htmlFor="micro-range-slider" style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)' }}>
                       Atur Putaran Spindle & Thimble (Rentang 0.00 s/d 25.00 mm):
-                    </span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#38bdf8', fontFamily: 'monospace' }}>
-                      {microValue.toFixed(2)} mm
-                    </span>
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Input Manual:</span>
+                      <div style={{ display: 'flex', alignItems: 'center', background: '#0f172a', border: '1.5px solid #38bdf8', borderRadius: '6px', padding: '3px 8px' }}>
+                        <input
+                          id="micro-number-input"
+                          type="number"
+                          min="0"
+                          max="25"
+                          step="0.01"
+                          value={microValue}
+                          onChange={(e) => {
+                            const val = parseFloat(e.target.value);
+                            if (!isNaN(val)) setMicroValue(Math.max(0, Math.min(25, parseFloat(val.toFixed(2)))));
+                          }}
+                          style={{
+                            width: '65px',
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#38bdf8',
+                            fontSize: '1.05rem',
+                            fontWeight: 900,
+                            fontFamily: 'monospace',
+                            outline: 'none',
+                            textAlign: 'right'
+                          }}
+                        />
+                        <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 700, marginLeft: '4px' }}>mm</span>
+                      </div>
+                    </div>
                   </div>
 
-                  <input
-                    type="range"
-                    min="0"
-                    max="25"
-                    step="0.01"
-                    value={microValue}
-                    onChange={(e) => setMicroValue(parseFloat(e.target.value))}
-                    style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
-                  />
+                  {/* BARIS 2: SLIDER RANGE & PENANDA RULER */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <input
+                      id="micro-range-slider"
+                      type="range"
+                      min="0"
+                      max="25"
+                      step="0.01"
+                      value={microValue}
+                      onChange={(e) => setMicroValue(parseFloat(e.target.value))}
+                      style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer', height: '6px' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 2px', fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                      <span>0 mm</span>
+                      <span>5 mm</span>
+                      <span>10 mm</span>
+                      <span>15 mm</span>
+                      <span>20 mm</span>
+                      <span>25 mm</span>
+                    </div>
+                  </div>
 
-                  {/* QUICK STEPPERS & PRESETS */}
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    {[
-                      { label: '📐 7.74 mm (Sesuai Gambar Soal)', exact: 7.74, highlight: true },
-                      { label: '📍 0.00 mm (Nol)', exact: 0.00 },
-                      { label: '📍 5.50 mm (Garis 0.5 Pas)', exact: 5.50 },
-                      { label: '📍 7.48 mm (Belum 0.5 mm)', exact: 7.48 },
-                      { label: '📍 7.52 mm (Lewat 0.5 mm)', exact: 7.52 },
-                      { label: '📍 12.35 mm', exact: 12.35 },
-                      { label: '-0.5 mm', delta: -0.5 },
-                      { label: '-0.05 mm', delta: -0.05 },
-                      { label: '-0.01 mm', delta: -0.01 },
-                      { label: '+0.01 mm', delta: +0.01 },
-                      { label: '+0.05 mm', delta: +0.05 },
-                      { label: '+0.5 mm', delta: +0.5 },
-                      { label: 'Acak 🎲', random: true }
-                    ].map((btn, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          sound.playClick();
-                          if (btn.random) {
-                            const rand = (Math.floor(Math.random() * 2500) / 100).toFixed(2);
-                            setMicroValue(parseFloat(rand));
-                          } else if (btn.exact !== undefined) {
-                            setMicroValue(btn.exact);
-                          } else {
-                            setMicroValue(prev => Math.max(0, Math.min(25, parseFloat((prev + btn.delta).toFixed(2)))));
-                          }
-                        }}
-                        style={{
-                          padding: btn.highlight ? '6px 14px' : '6px 10px',
-                          borderRadius: '6px',
-                          background: btn.highlight ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.05)',
-                          border: btn.highlight ? '1px solid #38bdf8' : '1px solid var(--border-light)',
-                          color: '#fff',
-                          fontSize: '0.78rem',
-                          fontWeight: btn.highlight ? 800 : 600,
-                          cursor: 'pointer',
-                          boxShadow: btn.highlight ? '0 2px 8px rgba(2, 132, 199, 0.4)' : 'none'
-                        }}
-                      >
-                        {btn.label}
-                      </button>
-                    ))}
+                  {/* BARIS 3: PENGATUR LANGKAH HALUS (STEPPERS) & RATCHET DI TENGAH */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '10px',
+                    paddingTop: '8px',
+                    borderTop: '1px solid rgba(255,255,255,0.06)'
+                  }}>
+                    {/* TOMBOL LANGKAH MUNDUR */}
+                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>Mundur:</span>
+                      {[-0.5, -0.05, -0.01].map((delta) => (
+                        <button
+                          key={delta}
+                          onClick={() => {
+                            sound.playClick();
+                            setMicroValue(prev => Math.max(0, parseFloat((prev + delta).toFixed(2))));
+                          }}
+                          style={{
+                            padding: '5px 8px',
+                            borderRadius: '5px',
+                            background: 'rgba(239, 68, 68, 0.1)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            color: '#fca5a5',
+                            fontSize: '0.74rem',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {delta} mm
+                        </button>
+                      ))}
+                    </div>
 
+                    {/* TOMBOL RATCHET MEKANIK */}
                     <button
                       onClick={() => {
                         triggerRatchetClick();
@@ -3138,8 +3119,82 @@ const MeasuringToolsLab = ({
                         boxShadow: '0 2px 8px rgba(245, 158, 11, 0.4)'
                       }}
                     >
-                      🔊 Putar Ratchet (+0.01 Klik!)
+                      🔊 Putar Ratchet (+0.01 mm Klik!)
                     </button>
+
+                    {/* TOMBOL LANGKAH MAJU */}
+                    <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)' }}>Maju:</span>
+                      {[+0.01, +0.05, +0.5].map((delta) => (
+                        <button
+                          key={delta}
+                          onClick={() => {
+                            sound.playClick();
+                            setMicroValue(prev => Math.min(25, parseFloat((prev + delta).toFixed(2))));
+                          }}
+                          style={{
+                            padding: '5px 8px',
+                            borderRadius: '5px',
+                            background: 'rgba(16, 185, 129, 0.1)',
+                            border: '1px solid rgba(16, 185, 129, 0.3)',
+                            color: '#6ee7b7',
+                            fontSize: '0.74rem',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          +{delta} mm
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* BARIS 4: PRESET LATIHAN & CONTOH SOAL */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    flexWrap: 'wrap',
+                    paddingTop: '8px',
+                    borderTop: '1px solid rgba(255,255,255,0.06)'
+                  }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#38bdf8', marginRight: '2px' }}>
+                      Contoh Soal:
+                    </span>
+                    {[
+                      { label: '⭐ 7.74 mm (Gambar Soal)', exact: 7.74, active: true },
+                      { label: '0.00 mm (Nol)', exact: 0.00 },
+                      { label: '5.50 mm (Garis 0.5 Pas)', exact: 5.50 },
+                      { label: '7.48 mm (Belum 0.5 mm)', exact: 7.48 },
+                      { label: '7.52 mm (Lewat 0.5 mm)', exact: 7.52 },
+                      { label: '12.35 mm', exact: 12.35 },
+                      { label: 'Acak 🎲', random: true }
+                    ].map((btn, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          sound.playClick();
+                          if (btn.random) {
+                            const rand = (Math.floor(Math.random() * 2500) / 100).toFixed(2);
+                            setMicroValue(parseFloat(rand));
+                          } else if (btn.exact !== undefined) {
+                            setMicroValue(btn.exact);
+                          }
+                        }}
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: '5px',
+                          background: btn.active ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.05)',
+                          border: btn.active ? '1px solid #38bdf8' : '1px solid var(--border-light)',
+                          color: '#fff',
+                          fontSize: '0.74rem',
+                          fontWeight: btn.active ? 800 : 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {btn.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
 

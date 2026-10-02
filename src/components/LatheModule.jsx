@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { sound } from '../utils/audio';
 import Lathe3D from './Lathe3D';
-import PreparationModal from './PreparationModal';
 import LatheFormulaCalculatorModal from './LatheFormulaCalculatorModal';
+import LatheFormulaView from './LatheFormulaView';
+import LatheTestView from './LatheTestView';
+import LatheVideoDemonstration from './LatheVideoDemonstration';
 import { latheJobsheets } from '../data/latheJobsheets';
 
 const LatheModule = ({ addXP }) => {
-  const [isPrepared, setIsPrepared] = useState(false);
+  const [activeLatheTab, setActiveLatheTab] = useState('pemotongan'); // 'rumus', 'test', 'pemotongan'
+  const [cuttingSubMode, setCuttingSubMode] = useState('video'); // 'video', 'simulator'
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = latheJobsheets[activeJobsheetIndex] || latheJobsheets[0];
@@ -299,9 +302,205 @@ const LatheModule = ({ addXP }) => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
-      {!isPrepared && <PreparationModal machineName="MESIN BUBUT" onComplete={() => setIsPrepared(true)} />}
+      
+      {/* 3 PILIHAN UTAMA: RUMUS PEMESINAN, SOAL TEST, PROSES PEMOTONGAN */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        background: 'var(--bg-card)',
+        padding: '12px 18px',
+        borderRadius: '14px',
+        border: '1px solid var(--border-light)',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '10px',
+            background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '1.3rem',
+            color: '#ffffff'
+          }}>
+            ⚙️
+          </div>
+          <div>
+            <div style={{ fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '0.5px' }}>
+              MODUL MESIN BUBUT (LATHE MACHINE)
+            </div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Pilih menu pembelajaran pemesinan di bawah ini:
+            </div>
+          </div>
+        </div>
 
-      {/* HEADER BAR & JOBSHEET SELECTOR */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => { sound.playClick(); setActiveLatheTab('rumus'); }}
+            style={{
+              padding: '10px 18px',
+              borderRadius: '10px',
+              border: activeLatheTab === 'rumus' ? '2px solid #38bdf8' : '1px solid var(--border-light)',
+              background: activeLatheTab === 'rumus' ? '#0284c7' : 'transparent',
+              color: activeLatheTab === 'rumus' ? '#ffffff' : 'var(--text-main)',
+              fontWeight: activeLatheTab === 'rumus' ? 800 : 600,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s',
+              boxShadow: activeLatheTab === 'rumus' ? '0 4px 15px rgba(2, 132, 199, 0.35)' : 'none'
+            }}
+          >
+            <span>📐</span> 1. Rumus Pemesinan
+          </button>
+
+          <button
+            onClick={() => { sound.playClick(); setActiveLatheTab('test'); }}
+            style={{
+              padding: '10px 18px',
+              borderRadius: '10px',
+              border: activeLatheTab === 'test' ? '2px solid #f59e0b' : '1px solid var(--border-light)',
+              background: activeLatheTab === 'test' ? '#f59e0b' : 'transparent',
+              color: activeLatheTab === 'test' ? '#ffffff' : 'var(--text-main)',
+              fontWeight: activeLatheTab === 'test' ? 800 : 600,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s',
+              boxShadow: activeLatheTab === 'test' ? '0 4px 15px rgba(245, 158, 11, 0.35)' : 'none'
+            }}
+          >
+            <span>📝</span> 2. Soal Test
+          </button>
+
+          <button
+            onClick={() => { sound.playClick(); setActiveLatheTab('pemotongan'); }}
+            style={{
+              padding: '10px 18px',
+              borderRadius: '10px',
+              border: activeLatheTab === 'pemotongan' ? '2px solid #10b981' : '1px solid var(--border-light)',
+              background: activeLatheTab === 'pemotongan' ? '#10b981' : 'transparent',
+              color: activeLatheTab === 'pemotongan' ? '#ffffff' : 'var(--text-main)',
+              fontWeight: activeLatheTab === 'pemotongan' ? 800 : 600,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.2s',
+              boxShadow: activeLatheTab === 'pemotongan' ? '0 4px 15px rgba(16, 185, 129, 0.35)' : 'none'
+            }}
+          >
+            <span>⚙️</span> 3. Proses Pemotongan
+          </button>
+        </div>
+      </div>
+
+      {/* 1. RUMUS PEMESINAN */}
+      {activeLatheTab === 'rumus' && (
+        <LatheFormulaView
+          initialDiameter={rawDiameter}
+          initialLength={rawLength}
+          currentRpm={rpm}
+          materialName={activeJobsheet.material}
+          onApplyRpm={(newRpm) => {
+            setRpm(newRpm);
+          }}
+          onGoToCutting={() => setActiveLatheTab('pemotongan')}
+        />
+      )}
+
+      {/* 2. SOAL TEST */}
+      {activeLatheTab === 'test' && (
+        <LatheTestView
+          addXP={addXP}
+          onStartPractical={() => setActiveLatheTab('pemotongan')}
+        />
+      )}
+
+      {/* 3. PROSES PEMOTONGAN */}
+      {activeLatheTab === 'pemotongan' && (
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          
+          {/* SUB-TABS: VIDEO DEMONSTRASI VS SIMULATOR 3D */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            background: 'var(--bg-card)',
+            padding: '10px 16px',
+            borderRadius: '12px',
+            border: '1px solid var(--border-light)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1.1rem' }}>⚙️</span>
+              <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                TAMPILAN PROSES PEMOTONGAN:
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => { sound.playClick(); setCuttingSubMode('video'); }}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  border: cuttingSubMode === 'video' ? '2px solid #38bdf8' : '1px solid var(--border-light)',
+                  background: cuttingSubMode === 'video' ? 'rgba(56, 189, 248, 0.2)' : 'transparent',
+                  color: cuttingSubMode === 'video' ? '#38bdf8' : 'var(--text-muted)',
+                  fontWeight: cuttingSubMode === 'video' ? 800 : 600,
+                  fontSize: '0.84rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>🎬</span> Video Demonstrasi Pemotongan (13 Operasi)
+              </button>
+
+              <button
+                onClick={() => { sound.playClick(); setCuttingSubMode('simulator'); }}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  border: cuttingSubMode === 'simulator' ? '2px solid #10b981' : '1px solid var(--border-light)',
+                  background: cuttingSubMode === 'simulator' ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
+                  color: cuttingSubMode === 'simulator' ? '#10b981' : 'var(--text-muted)',
+                  fontWeight: cuttingSubMode === 'simulator' ? 800 : 600,
+                  fontSize: '0.84rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>🎮</span> Simulator Praktik 3D Interaktif
+              </button>
+            </div>
+          </div>
+
+          {/* SUB-VIEW 1: VIDEO DEMONSTRASI (LANDSCAPE PENUH) */}
+          {cuttingSubMode === 'video' && (
+            <LatheVideoDemonstration onSwitchToSimulator={() => setCuttingSubMode('simulator')} />
+          )}
+
+          {/* SUB-VIEW 2: SIMULATOR 3D PRAKTIK */}
+          {cuttingSubMode === 'simulator' && (
+            <>
+              {/* HEADER BAR & JOBSHEET SELECTOR */}
       <div
         style={{
           display: 'flex',
@@ -1017,6 +1216,11 @@ const LatheModule = ({ addXP }) => {
               Lanjutkan Praktik
             </button>
           </div>
+        </div>
+      )}
+            </>
+          )}
+
         </div>
       )}
 

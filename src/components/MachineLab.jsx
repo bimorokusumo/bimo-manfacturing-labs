@@ -300,7 +300,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
         
         {/* LATHE */}
         <div 
-          onClick={() => { sound.playClick(); setPendingMachine('lathe'); }}
+          onClick={() => { sound.playClick(); setSelectedMachine('lathe'); }}
           className="game-card game-card-hover" 
           style={{ cursor: 'pointer', border: '1px solid rgba(59, 130, 246, 0.3)' }}
         >
@@ -310,15 +310,15 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
           <div style={{ padding: '24px' }}>
             <h3 style={{ color: 'var(--game-tp)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>Mesin Bubut (Lathe)</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-              Simulasi mesin bubut konvensional. Latih pengaturan parameter pemotongan silindris.
+              Tersedia 3 Pilihan: <strong>📐 Rumus Pemesinan</strong>, <strong>📝 Soal Test</strong>, & <strong>⚙️ Proses Pemotongan</strong> (Video 13 Operasi & Simulator 3D).
             </p>
-            <button className="btn-game btn-game-tp" style={{ width: '100%' }}>OPERASIKAN MESIN</button>
+            <button className="btn-game btn-game-tp" style={{ width: '100%' }}>MASUK MESIN BUBUT</button>
           </div>
         </div>
 
         {/* MILLING */}
         <div 
-          onClick={() => { sound.playClick(); setPendingMachine('milling'); }}
+          onClick={() => { sound.playClick(); setSelectedMachine('milling'); }}
           className="game-card game-card-hover" 
           style={{ cursor: 'pointer', border: '1px solid rgba(245, 158, 11, 0.3)' }}
         >
@@ -353,22 +353,6 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
         </div>
 
       </div>
-
-      {pendingMachine && (
-        <MachinePreTest 
-          machineType={pendingMachine} 
-          onPass={(score) => {
-            sound.playClick();
-            if (addXP && score > 0) addXP(score);
-            setSelectedMachine(pendingMachine);
-            setPendingMachine(null);
-          }}
-          onCancel={() => {
-            sound.playClick();
-            setPendingMachine(null);
-          }}
-        />
-      )}
     </div>
   );
 };

@@ -3864,22 +3864,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'torque' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/torque_wrench_infographic.svg" 
-              alt="Infografis Momen Gaya Kunci Pas"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Interactive Formula Solver for Torque */}
           {renderTorqueFormulaSolver()}
 
@@ -3893,22 +3877,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'lever' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/levers_three_classes.svg" 
-              alt="3 Kelas Tuas Mekanika"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Embedded Formula Solver */}
           {renderLeverFormulaSolver()}
 
@@ -3922,22 +3890,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'equilibrium' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/equilibrium_beam.svg" 
-              alt="Kesetimbangan Balok Crane"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Embedded Formula Solver */}
           {renderBeamFormulaSolver()}
 
@@ -3951,22 +3903,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'stress' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/stress_strain_curve.svg" 
-              alt="Diagram Tegangan Regangan"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Embedded Formula Solver */}
           {renderStressFormulaSolver()}
 
@@ -3980,22 +3916,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'pulley' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/pulley_chain_block.svg" 
-              alt="Katrol dan Chain Block"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Embedded Formula Solver for Pulley */}
           {renderPulleyFormulaSolver()}
 
@@ -4009,22 +3929,6 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'friction' && (
         <div>
-          {/* Visual Hero SVG */}
-          <div style={{
-            background: '#ffffff',
-            padding: '16px',
-            borderRadius: '14px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <img 
-              src="/assets/images/mechanics/friction_inclined_plane.svg" 
-              alt="Mekanika Bidang Miring dan Hukum Gesekan"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
-            />
-          </div>
-
           {/* Embedded Formula Solver for Friction */}
           {renderFrictionFormulaSolver()}
 

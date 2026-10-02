@@ -2602,14 +2602,9 @@ const MeasuringToolsLab = ({
                           {/* Bottom border band */}
                           <rect x="0" y="260" width={thimbleX} height="30" fill="#9e9e9e" />
 
-                          {/* SLEEVE HORIZONTAL DATUM LINE (GARIS REFERENSI TENGAH) */}
-                          {/* Dimulai tepat sebelum angka 0 dan berakhir tepat di bibir bidal (thimbleX) */}
-                          {(() => {
-                            const datumStartX = Math.max(0, markZeroX - 28);
-                            return (
-                              <line x1={datumStartX} y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
-                            );
-                          })()}
+                          {/* SLEEVE HORIZONTAL DATUM LINE (GARIS REFERENSI TENGAH PENUH) */}
+                          {/* Membentang penuh dari kiri laras (x=0) lurus horizontal hingga menyentuh bidal (thimbleX) */}
+                          <line x1="0" y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
 
                           {/* SLEEVE GRADUATIONS (0 to 25 mm) */}
                           {Array.from({ length: 26 }).map((_, i) => {
@@ -2682,7 +2677,8 @@ const MeasuringToolsLab = ({
                           {/* Bottom shaded band */}
                           <rect x={thimbleX + 90} y="290" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
 
-                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) - SEMUA HORIZONTAL */}
+                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) */}
+                          {/* Garis tengah lurus horizontal, sedangkan garis di atas & bawahnya miring di ujung mengikuti kerucut bidal */}
                           {[-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8].map((offset) => {
                             const divValue = ((nearestIntDiv + offset) % maxDiv + maxDiv) % maxDiv;
                             let diff = divValue - activeDiv;
@@ -2695,23 +2691,31 @@ const MeasuringToolsLab = ({
                             const isFive = divValue % 5 === 0;
                             const isCoincident = Math.abs(diff) < 0.5;
 
+                            // Kemiringan garis mengikuti tirus kerucut di ujung bidal:
+                            // Jika tepat di tengah (yDiv = 190), kemiringan = 0 (lurus sejajar garis tengah laras)
+                            // Jika di atas, miring ke atas; jika di bawah, miring ke bawah
+                            const coneSlope = (yDiv - 190) * 0.20;
+                            const yLongEnd = yDiv + coneSlope * (115 / 90);
+                            const yTickEnd = isCoincident ? 190 : (yDiv + coneSlope * (36 / 90));
+                            const tickLength = isCoincident ? 50 : 36;
+
                             return (
                               <g key={'macro-thim-' + offset}>
                                 {isFive ? (
-                                  // Garis kelipatan 5 horizontal panjang dengan angka tebal di kanan
+                                  // Garis kelipatan 5 (misal 20, 25) miring mengikuti tirus tembus ke silinder dengan angka di ujung
                                   <g>
                                     <line
                                       x1={thimbleX}
                                       y1={yDiv}
                                       x2={thimbleX + 115}
-                                      y2={yDiv}
+                                      y2={yLongEnd}
                                       stroke="#000000"
                                       strokeWidth="2.8"
                                       strokeLinecap="square"
                                     />
                                     <text
                                       x={thimbleX + 125}
-                                      y={yDiv}
+                                      y={yLongEnd}
                                       fontSize="26"
                                       fontWeight="bold"
                                       fill="#000000"
@@ -2722,14 +2726,15 @@ const MeasuringToolsLab = ({
                                     </text>
                                   </g>
                                 ) : (
-                                  // Garis satuan pendek horizontal di tepi tirus
+                                  // Garis strip satuan pendek di ujung tirus miring mengikuti kerucut
+                                  // Jika garis segaris tengah (isCoincident), tepat horizontal lurus menyambung garis tengah
                                   <line
                                     x1={thimbleX}
-                                    y1={yDiv}
-                                    x2={isCoincident ? thimbleX + 46 : thimbleX + 36}
-                                    y2={yDiv}
+                                    y1={isCoincident ? 190 : yDiv}
+                                    x2={thimbleX + tickLength}
+                                    y2={yTickEnd}
                                     stroke="#000000"
-                                    strokeWidth={isCoincident ? 3.0 : 2.2}
+                                    strokeWidth={isCoincident ? 3.4 : 2.2}
                                     strokeLinecap="square"
                                   />
                                 )}

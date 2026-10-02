@@ -2596,21 +2596,26 @@ const MeasuringToolsLab = ({
 
                           {/* SLEEVE / BARREL CYLINDER (LARAS TETAP) */}
                           {/* Top border band */}
-                          <rect x="0" y="90" width={thimbleX} height="30" fill="#9e9e9e" />
+                          <rect x="0" y="50" width={thimbleX} height="42" fill="#9e9e9e" />
                           {/* Center main cylinder body */}
-                          <rect x="0" y="120" width={thimbleX} height="140" fill="#f0f0f0" />
+                          <rect x="0" y="92" width={thimbleX} height="196" fill="#ebebeb" />
                           {/* Bottom border band */}
-                          <rect x="0" y="260" width={thimbleX} height="30" fill="#9e9e9e" />
+                          <rect x="0" y="288" width={thimbleX} height="42" fill="#9e9e9e" />
 
                           {/* SLEEVE HORIZONTAL DATUM LINE (GARIS REFERENSI TENGAH PENUH) */}
-                          {/* Membentang penuh dari kiri laras (x=0) lurus horizontal hingga menyentuh bidal (thimbleX) */}
-                          <line x1="0" y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
+                          {/* Membentang penuh dari kiri laras (x=0) lurus horizontal di y=190 menyentuh bibir bidal (thimbleX) */}
+                          <line x1="0" y1="190" x2={thimbleX} y2="190" stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
 
                           {/* SLEEVE GRADUATIONS (0 to 25 mm) */}
                           {Array.from({ length: 26 }).map((_, i) => {
                             const xi = markZeroX + i * scalePPM;
                             if (xi < 0 || xi > thimbleX) return null;
                             const isFive = i % 5 === 0;
+
+                            // Jika angka berada sangat dekat tepi bidal (misal saat 0 mm atau 25 mm pas), geser sedikit ke kiri agar tidak terpotong
+                            const isNearThimbleEdge = (thimbleX - xi < 22);
+                            const textAnchor = isNearThimbleEdge ? "end" : "middle";
+                            const textX = isNearThimbleEdge ? (xi - 4) : xi;
 
                             return (
                               <g key={'macro-slv-' + i}>
@@ -2619,20 +2624,20 @@ const MeasuringToolsLab = ({
                                   x1={xi}
                                   y1="190"
                                   x2={xi}
-                                  y2={isFive ? "95" : "138"}
+                                  y2={isFive ? "138" : "156"}
                                   stroke="#000000"
-                                  strokeWidth={isFive ? 3.4 : 2.4}
+                                  strokeWidth={isFive ? 3.2 : 2.4}
                                   strokeLinecap="square"
                                 />
-                                {/* Upper Number Label (Setiap kelipatan 5 mm: 0, 5, 10, 15, 20, 25) */}
+                                {/* Upper Number Label (Kelipatan 5 mm: 0, 5, 10, 15, 20, 25) - Jelas di dalam silinder terang */}
                                 {isFive && (
                                   <text
-                                    x={xi}
-                                    y="80"
-                                    fontSize="26"
-                                    fontWeight="bold"
+                                    x={textX}
+                                    y="124"
+                                    fontSize="24"
+                                    fontWeight="900"
                                     fill="#000000"
-                                    textAnchor="middle"
+                                    textAnchor={textAnchor}
                                     fontFamily="system-ui, -apple-system, sans-serif"
                                   >
                                     {i}
@@ -2649,7 +2654,7 @@ const MeasuringToolsLab = ({
                                       x1={xHalf}
                                       y1="190"
                                       x2={xHalf}
-                                      y2="242"
+                                      y2="224"
                                       stroke="#000000"
                                       strokeWidth="2.4"
                                       strokeLinecap="square"
@@ -2661,24 +2666,23 @@ const MeasuringToolsLab = ({
                           })}
 
                           {/* ROTATING THIMBLE ASSEMBLY (BIDAL PUTAR) */}
-                          {/* 1. Thimble Bevel Nose (Tirus Bidal) - Bersih tanpa garis outline */}
+                          {/* 1. Thimble Bevel Nose (Tirus Bidal) */}
                           <polygon
-                            points={`${thimbleX},90 ${thimbleX + 90},40 ${thimbleX + 90},340 ${thimbleX},290`}
+                            points={`${thimbleX},50 ${thimbleX + 90},0 ${thimbleX + 90},380 ${thimbleX},330`}
                             fill="#cccccc"
                           />
 
                           {/* 2. Thimble Cylindrical Body (Badan Silinder Bidal) */}
                           {/* Top shaded band */}
-                          <rect x={thimbleX + 90} y="40" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
+                          <rect x={thimbleX + 90} y="0" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
                           {/* Center main cylinder body */}
-                          <rect x={thimbleX + 90} y="90" width={920 - (thimbleX + 90)} height="200" fill="#f0f0f0" />
+                          <rect x={thimbleX + 90} y="50" width={920 - (thimbleX + 90)} height="280" fill="#ebebeb" />
                           {/* Center light highlight band */}
                           <rect x={thimbleX + 90} y="165" width={920 - (thimbleX + 90)} height="50" fill="#ffffff" />
                           {/* Bottom shaded band */}
-                          <rect x={thimbleX + 90} y="290" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
+                          <rect x={thimbleX + 90} y="330" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
 
-                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) */}
-                          {/* Garis tengah lurus horizontal, sedangkan garis di atas & bawahnya miring di ujung mengikuti kerucut bidal */}
+                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) - SEMUA 100% LURUS HORIZONTAL */}
                           {[-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8].map((offset) => {
                             const divValue = ((nearestIntDiv + offset) % maxDiv + maxDiv) % maxDiv;
                             let diff = divValue - activeDiv;
@@ -2686,55 +2690,46 @@ const MeasuringToolsLab = ({
                             while (diff < -maxDiv / 2) diff += maxDiv;
                             
                             const yDiv = 190 - diff * 15.5;
-                            if (yDiv < 35 || yDiv > 345) return null;
+                            if (yDiv < 25 || yDiv > 355) return null;
 
                             const isFive = divValue % 5 === 0;
-                            const isCoincident = Math.abs(diff) < 0.5;
-
-                            // Kemiringan garis mengikuti tirus kerucut di ujung bidal:
-                            // Jika tepat di tengah (yDiv = 190), kemiringan = 0 (lurus sejajar garis tengah laras)
-                            // Jika di atas, miring ke atas; jika di bawah, miring ke bawah
-                            const coneSlope = (yDiv - 190) * 0.20;
-                            const yLongEnd = yDiv + coneSlope * (115 / 90);
-                            const yTickEnd = isCoincident ? 190 : (yDiv + coneSlope * (36 / 90));
-                            const tickLength = isCoincident ? 50 : 36;
 
                             return (
                               <g key={'macro-thim-' + offset}>
                                 {isFive ? (
-                                  // Garis kelipatan 5 (misal 20, 25) miring mengikuti tirus tembus ke silinder dengan angka di ujung
+                                  // Garis kelipatan 5 (misal 20, 25) lurus horizontal tembus ke silinder dengan angka di ujung
                                   <g>
                                     <line
                                       x1={thimbleX}
                                       y1={yDiv}
                                       x2={thimbleX + 115}
-                                      y2={yLongEnd}
+                                      y2={yDiv}
                                       stroke="#000000"
-                                      strokeWidth="2.8"
+                                      strokeWidth="3.0"
                                       strokeLinecap="square"
                                     />
                                     <text
                                       x={thimbleX + 125}
-                                      y={yLongEnd}
-                                      fontSize="26"
-                                      fontWeight="bold"
+                                      y={yDiv}
+                                      fontSize="24"
+                                      fontWeight="900"
                                       fill="#000000"
                                       dominantBaseline="central"
+                                      textAnchor="start"
                                       fontFamily="system-ui, -apple-system, sans-serif"
                                     >
                                       {divValue}
                                     </text>
                                   </g>
                                 ) : (
-                                  // Garis strip satuan pendek di ujung tirus miring mengikuti kerucut
-                                  // Jika garis segaris tengah (isCoincident), tepat horizontal lurus menyambung garis tengah
+                                  // Garis strip satuan pendek di ujung tirus, lurus horizontal murni menyambung garis tengah acuan
                                   <line
                                     x1={thimbleX}
-                                    y1={isCoincident ? 190 : yDiv}
-                                    x2={thimbleX + tickLength}
-                                    y2={yTickEnd}
+                                    y1={yDiv}
+                                    x2={thimbleX + 38}
+                                    y2={yDiv}
                                     stroke="#000000"
-                                    strokeWidth={isCoincident ? 3.4 : 2.2}
+                                    strokeWidth="2.2"
                                     strokeLinecap="square"
                                   />
                                 )}

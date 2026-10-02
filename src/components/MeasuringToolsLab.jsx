@@ -809,11 +809,13 @@ const MeasuringToolsLab = ({
   // ==========================================
   // 2. MIKROMETER SEKRUP STATE (0-25 mm)
   // ==========================================
-  const [microValue, setMicroValue] = useState(7.82); // in mm (0 to 25)
+  const [microValue, setMicroValue] = useState(7.74); // in mm (0 to 25) - default 7.74 mm matches textbook reference diagram
   const [microWorkpiece, setMicroWorkpiece] = useState('bearing-ball');
-  const [microReadingMode, setMicroReadingMode] = useState('standard'); // 'standard' or 'simple' // bearing-ball, sheet-metal, drill-bit, none
+  const [microReadingMode, setMicroReadingMode] = useState('standard'); // 'standard' or 'simple'
   const [showMicroReadout, setShowMicroReadout] = useState(true);
   const [isRatchetClicking, setIsRatchetClicking] = useState(false);
+  const [microViewMode, setMicroViewMode] = useState('detail'); // 'detail' (close-up like reference image), 'full' (whole micrometer), 'both'
+  const [microShowGuides, setMicroShowGuides] = useState(true); // show alignment guidelines and annotations
 
   // ==========================================
   // 3. HEIGHT GAUGE STATE (0-150 mm)
@@ -1047,15 +1049,16 @@ const MeasuringToolsLab = ({
   // ==========================================
   // MICROMETER MATH HELPERS (STANDARD & SIMPLE)
   // ==========================================
-  const microWholeMm = Math.floor(microValue);
-  const microFraction = parseFloat((microValue - microWholeMm).toFixed(2));
+  const safeMicroVal = Math.round(microValue * 100) / 100;
+  const microWholeMm = Math.floor(safeMicroVal);
+  const microFraction = Math.round((safeMicroVal - microWholeMm) * 100) / 100;
   const microHalfMm = (microReadingMode === 'standard' && microFraction >= 0.5) ? 0.5 : 0.0;
   const microThimbleValue = microReadingMode === 'standard' 
-    ? parseFloat((microFraction - microHalfMm).toFixed(2)) 
+    ? Math.round((microFraction - microHalfMm) * 100) / 100 
     : microFraction;
   const microThimbleDivisions = Math.round(microThimbleValue * 100);
   const microMainScale = microReadingMode === 'standard' ? (microWholeMm + microHalfMm) : microWholeMm;
-  const microNoniusScale = parseFloat((microThimbleDivisions * 0.01).toFixed(2));
+  const microNoniusScale = Math.round(microThimbleDivisions) * 0.01;
 
   // ==========================================
   // FEELER GAUGE FIT CHECKER
@@ -2462,249 +2465,600 @@ const MeasuringToolsLab = ({
                     </button>
                   </div>
                 </div>
-
-                {/* MOVABLE MICROMETER SVG VIEWPORT */}
+                {/* VIEW MODE SELECTOR & GUIDELINE TOGGLE */}
                 <div style={{
-                  background: '#090e18',
-                  borderRadius: '12px',
-                  border: '1px solid var(--border-light)',
-                  padding: '24px 16px',
-                  overflowX: 'auto',
                   display: 'flex',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  minHeight: '340px'
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                  background: 'rgba(255,255,255,0.03)',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-light)'
                 }}>
-                  <svg viewBox="0 0 860 300" style={{ width: "100%", maxWidth: "860px", height: "auto", display: "block", userSelect: "none" }}>
-                    <defs>
-                      <linearGradient id="uFrameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#1e3a5f" />
-                        <stop offset="50%" stopColor="#2c5282" />
-                        <stop offset="100%" stopColor="#0f172a" />
-                      </linearGradient>
-                      <linearGradient id="chromeSteel" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#cfd8dc" />
-                        <stop offset="50%" stopColor="#ffffff" />
-                        <stop offset="100%" stopColor="#90a4ae" />
-                      </linearGradient>
-                      <linearGradient id="thimbleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#78909c" />
-                        <stop offset="30%" stopColor="#cfd8dc" />
-                        <stop offset="70%" stopColor="#eceff1" />
-                        <stop offset="100%" stopColor="#607d8b" />
-                      </linearGradient>
-                    </defs>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '4px' }}>
+                      Mode Tampilan:
+                    </span>
+                    <button
+                      onClick={() => { sound.playClick(); setMicroViewMode('detail'); }}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        background: microViewMode === 'detail' ? '#0284c7' : 'transparent',
+                        color: microViewMode === 'detail' ? '#fff' : 'var(--text-muted)',
+                        border: microViewMode === 'detail' ? '1px solid #38bdf8' : '1px solid transparent',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🔬 Detail Skala Presisi (Standar Soal/Gambar)
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setMicroViewMode('full'); }}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        background: microViewMode === 'full' ? '#0284c7' : 'transparent',
+                        color: microViewMode === 'full' ? '#fff' : 'var(--text-muted)',
+                        border: microViewMode === 'full' ? '1px solid #38bdf8' : '1px solid transparent',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      📐 Alat Fisik Lengkap (U-Frame)
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setMicroViewMode('both'); }}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        background: microViewMode === 'both' ? '#0284c7' : 'transparent',
+                        color: microViewMode === 'both' ? '#fff' : 'var(--text-muted)',
+                        border: microViewMode === 'both' ? '1px solid #38bdf8' : '1px solid transparent',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      ✨ Tampilan Ganda (Keduanya)
+                    </button>
+                  </div>
 
-                    {/* CAST STEEL U-FRAME (BINGKAI U) */}
-                    <path
-                      d="M 230 115 C 130 115, 70 175, 70 225 C 70 285, 150 305, 260 305 C 360 305, 410 275, 430 205 L 380 195 C 365 245, 320 265, 250 265 C 160 265, 115 240, 115 215 C 115 175, 165 155, 230 155 Z"
-                      fill="url(#uFrameGrad)"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                    />
+                  {(microViewMode === 'detail' || microViewMode === 'both') && (
+                    <button
+                      onClick={() => { sound.playClick(); setMicroShowGuides(!microShowGuides); }}
+                      style={{
+                        padding: '5px 10px',
+                        borderRadius: '6px',
+                        background: microShowGuides ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
+                        border: microShowGuides ? '1px solid #10b981' : '1px solid #64748b',
+                        color: microShowGuides ? '#10b981' : '#94a3b8',
+                        fontSize: '0.74rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px'
+                      }}
+                      title="Nyalakan/matikan garis bantu penunjuk segaris dan pembacaan"
+                    >
+                      <span>{microShowGuides ? '🎯 Garis Bantu: AKTIF' : '📝 Tampilan Murni (Soal)'}</span>
+                    </button>
+                  )}
+                </div>
 
-                    {/* HEAT INSULATING PLATE (PELINDUNG PANAS TANGAN) */}
-                    <rect x="170" y="270" width="140" height="22" rx="5" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
-                    <text x="240" y="285" fontSize="10" fontWeight="bold" fill="#f59e0b" textAnchor="middle">
-                      0-25mm 0.01mm Mitutoyo
-                    </text>
+                {/* 1. HIGH-DETAIL CLOSE-UP SCALE VIEWPORT (SESUAI GAMBAR SOAL / BUKU TEKNIK) */}
+                {(microViewMode === 'detail' || microViewMode === 'both') && (
+                  <div style={{
+                    background: '#030712',
+                    borderRadius: '12px',
+                    border: '2px solid #334155',
+                    padding: '16px',
+                    overflowX: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px',
+                    boxShadow: 'inset 0 2px 14px rgba(0,0,0,0.85)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#38bdf8', letterSpacing: '0.5px' }}>
+                          🔬 TAMPILAN DETAIL SKALA (MAKRO / KACA PEMBESAR)
+                        </span>
+                        <span style={{ fontSize: '0.68rem', background: '#0284c7', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                          Ketelitian 0.01 mm
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                        Standar Soal Fisika, UN/USK SMK & Mitutoyo
+                      </span>
+                    </div>
 
-                    {/* FIXED ANVIL (LANDASAN TETAP) */}
-                    <rect x="220" y="122" width="25" height="36" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1" />
-                    {/* Carbide Tip on Anvil */}
-                    <rect x="240" y="122" width="5" height="36" fill="#1e293b" />
-
-                    {/* WORKPIECE BETWEEN ANVIL & SPINDLE */}
-                    {microWorkpiece === 'bearing-ball' && microValue > 0.5 && (
-                      <g id="workpiece-ball">
-                        <circle
-                          cx={245 + (microValue * 8.5) / 2}
-                          cy="140"
-                          r={Math.min((microValue * 8.5) / 2, 28)}
-                          fill="url(#goldHighlight)"
-                          stroke="#b45309"
-                          strokeWidth="1.5"
-                        />
-                        <text
-                          x={245 + (microValue * 8.5) / 2}
-                          y="144"
-                          fontSize="8"
-                          fontWeight="bold"
-                          fill="#000"
-                          textAnchor="middle"
-                        >
-                          Bola (Ø)
-                        </text>
-                      </g>
-                    )}
-
-                    {/* MOVABLE SPINDLE (POROS UKUR GESER) */}
-                    <rect
-                      x={245 + microValue * 8.5}
-                      y="122"
-                      width={185 - microValue * 8.5}
-                      height="36"
-                      fill="url(#chromeSteel)"
-                      stroke="#475569"
-                      strokeWidth="1"
-                    />
-                    {/* Carbide Tip on Spindle */}
-                    <rect x={245 + microValue * 8.5} y="122" width="5" height="36" fill="#1e293b" />
-
-                    {/* SPINDLE LOCK NUT LEVER */}
-                    <rect x="415" y="112" width="15" height="56" rx="3" fill="#64748b" stroke="#334155" />
-                    <circle cx="422" cy="140" r="5" fill="#f59e0b" />
-
-                    {/* SLEEVE / BARREL (SILINDER UTAMA TETAP) */}
-                    {/* Starts at 430, goes to 680 */}
-                    <rect x="430" y="116" width="250" height="48" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1.5" />
-                    
-                    {/* Compute thimble X position: starts exactly at 0 mark (x = 445) when microValue = 0 */}
+                    {/* CLOSE-UP SVG */}
                     {(() => {
-                      const thimbleX = 445 + microValue * 8.5;
-                      return (
-                        <g>
-                          {/* SLEEVE DATUM LINE (GARIS TENGAH REFERENSI) - STOPS EXACTLY AT THIMBLE NOSE */}
-                          <line x1="430" y1="140" x2={thimbleX} stroke="#0f172a" strokeWidth="2" />
+                      const scalePPM = 45; // 45 pixels per mm for huge, unmistakable clarity
+                      const thimbleX = Math.min(480, 140 + safeMicroVal * scalePPM);
+                      const markZeroX = thimbleX - safeMicroVal * scalePPM;
+                      const totalHundredths = Math.round(safeMicroVal * 100);
+                      const maxDiv = microReadingMode === 'standard' ? 50 : 100;
+                      const activeDiv = ((totalHundredths % maxDiv) + maxDiv) % maxDiv;
+                      const nearestIntDiv = Math.round(activeDiv);
 
-                          {/* SLEEVE ENGRAVINGS (0 to 25 mm) - ONLY DRAW VISIBLE MARKS LEFT OF THIMBLE! */}
+                      return (
+                        <svg viewBox="0 0 920 380" style={{ width: "100%", maxWidth: "920px", height: "auto", display: "block", userSelect: "none" }}>
+                          {/* VIEWPORT BACKGROUND: PURE BLACK / MAXIMUM DRAFTING CONTRAST */}
+                          <rect x="0" y="0" width="920" height="380" fill="#000000" rx="8" />
+
+                          {/* SLEEVE / BARREL CYLINDER (LARAS TETAP) */}
+                          {/* Top border band */}
+                          <rect x="20" y="90" width={thimbleX - 20} height="30" fill="#9e9e9e" />
+                          {/* Center main cylinder body */}
+                          <rect x="20" y="120" width={thimbleX - 20} height="140" fill="#f0f0f0" />
+                          {/* Bottom border band */}
+                          <rect x="20" y="260" width={thimbleX - 20} height="30" fill="#9e9e9e" />
+
+                          {/* SLEEVE HORIZONTAL DATUM LINE (GARIS REFERENSI TENGAH) */}
+                          <line x1="20" y1="190" x2={thimbleX} stroke="#000000" strokeWidth="3.6" strokeLinecap="square" />
+
+                          {/* SLEEVE GRADUATIONS (0 to 25 mm) */}
                           {Array.from({ length: 26 }).map((_, i) => {
-                            const sx = 445 + i * 8.5;
-                            // Do NOT draw if under or past thimble!
-                            if (sx > thimbleX) return null;
+                            const xi = markZeroX + i * scalePPM;
+                            if (xi < 20 || xi > thimbleX) return null;
                             const isFive = i % 5 === 0;
+                            const isLastWhole = i === microWholeMm;
+
                             return (
-                              <g key={'slv-' + i}>
-                                {/* Garis Skala Atas (Milimeter Bulat 1 mm) */}
+                              <g key={'macro-slv-' + i}>
+                                {/* Upper Millimeter Line (Skala Atas Bulat) */}
                                 <line
-                                  x1={sx}
-                                  y1="140"
-                                  x2={sx}
-                                  y2={isFive ? "120" : "126"}
-                                  stroke="#0f172a"
-                                  strokeWidth={isFive ? 1.8 : 1.1}
+                                  x1={xi}
+                                  y1="190"
+                                  x2={xi}
+                                  y2={isFive ? "100" : "138"}
+                                  stroke="#000000"
+                                  strokeWidth={isFive ? 3.4 : 2.4}
+                                  strokeLinecap="square"
                                 />
+                                {/* Upper Number Label (Setiap kelipatan 5 mm: 0, 5, 10, 15, 20, 25) */}
                                 {isFive && (
-                                  <text x={sx} y="117" fontSize="9" fontWeight="bold" fill="#0f172a" textAnchor="middle">
+                                  <text
+                                    x={xi}
+                                    y="82"
+                                    fontSize="25"
+                                    fontWeight="bold"
+                                    fill="#000000"
+                                    textAnchor="middle"
+                                    fontFamily="system-ui, -apple-system, sans-serif"
+                                  >
                                     {i}
                                   </text>
                                 )}
-                                {/* Garis Skala Bawah (0.5 mm) - Hanya tampil jika mode standar dan belum tertutup thimble */}
-                                {microReadingMode === 'standard' && i < 25 && (sx + 4.25 <= thimbleX) && (
-                                  <line
-                                    x1={sx + 4.25}
-                                    y1="140"
-                                    x2={sx + 4.25}
-                                    y2="153"
-                                    stroke="#0f172a"
-                                    strokeWidth="1.1"
-                                  />
+
+                                {/* Highlight marker on active whole mm if guides enabled */}
+                                {microShowGuides && isLastWhole && (
+                                  <g>
+                                    <rect x={xi - 18} y="44" width="36" height="18" rx="4" fill="#0284c7" />
+                                    <text x={xi} y="56" fontSize="10" fontWeight="900" fill="#ffffff" textAnchor="middle">
+                                      {i} mm
+                                    </text>
+                                    <polygon points={`${xi},66 ${xi - 4},62 ${xi + 4},62`} fill="#0284c7" />
+                                  </g>
                                 )}
+
+                                {/* Lower Half-Millimeter Line (0.5 mm) - Standard Mode */}
+                                {microReadingMode === 'standard' && i < 25 && (() => {
+                                  const xHalf = xi + scalePPM * 0.5;
+                                  if (xHalf < 20 || xHalf > thimbleX) return null;
+                                  const isCurrentHalf = (i === microWholeMm && microHalfMm > 0);
+                                  return (
+                                    <g key={'macro-half-' + i}>
+                                      <line
+                                        x1={xHalf}
+                                        y1="190"
+                                        x2={xHalf}
+                                        y2="242"
+                                        stroke="#000000"
+                                        strokeWidth="2.4"
+                                        strokeLinecap="square"
+                                      />
+                                      {microShowGuides && isCurrentHalf && (
+                                        <g>
+                                          <rect x={xHalf - 26} y="318" width="52" height="18" rx="4" fill="#059669" />
+                                          <text x={xHalf} y="330" fontSize="9" fontWeight="900" fill="#ffffff" textAnchor="middle">
+                                            +0.50 mm
+                                          </text>
+                                          <polygon points={`${xHalf},314 ${xHalf - 4},318 ${xHalf + 4},318`} fill="#059669" />
+                                        </g>
+                                      )}
+                                    </g>
+                                  );
+                                })()}
                               </g>
                             );
                           })}
 
-                          {/* ROTATING THIMBLE (BIDAL PUTAR / SKALA NONIUS) */}
-                          <g transform={`translate(${thimbleX}, 0)`}>
-                            {/* Thimble Bevel Nose */}
-                            <polygon
-                              points="0,114 38,108 38,172 0,166"
-                              fill="url(#thimbleGrad)"
-                              stroke="#334155"
-                              strokeWidth="1.2"
-                            />
-                            {/* Thimble Main Cylindrical Body */}
-                            <rect x="38" y="108" width="125" height="64" fill="url(#thimbleGrad)" stroke="#334155" strokeWidth="1.2" />
-                            
-                            {/* Knurled Grip Texture */}
-                            {Array.from({ length: 11 }).map((_, ki) => (
-                              <line key={'knurl-' + ki} x1={70 + ki * 5} y1="110" x2={70 + ki * 5} y2="170" stroke="#64748b" strokeWidth="1" strokeDasharray="3,3" />
-                            ))}
+                          {/* ROTATING THIMBLE ASSEMBLY (BIDAL PUTAR) */}
+                          {/* 1. Thimble Bevel Nose (Tirus Bidal) */}
+                          <polygon
+                            points={`${thimbleX},90 ${thimbleX + 90},40 ${thimbleX + 90},340 ${thimbleX},290`}
+                            fill="#d1d5db"
+                            stroke="#1f2937"
+                            strokeWidth="1.8"
+                          />
 
-                            {/* SKALA NONIUS ENGRAVINGS (PADA BIDAL PUTAR) */}
-                            {[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map((offset) => {
-                              const maxDiv = microReadingMode === 'standard' ? 50 : 100;
-                              let divNum = (microThimbleDivisions + offset + maxDiv) % maxDiv;
-                              const ty = 140 - offset * 4.8;
-                              const isCoincident = offset === 0;
-                              const isFiveT = divNum % 5 === 0;
-                              return (
-                                <g key={'thim-tick-' + offset}>
-                                  <line
-                                    x1="0"
-                                    y1={ty}
-                                    x2={isCoincident ? "22" : (isFiveT ? "15" : "9")}
-                                    stroke={isCoincident ? "#ef4444" : "#0f172a"}
-                                    strokeWidth={isCoincident ? 2.5 : 1}
-                                  />
-                                  {(isFiveT || isCoincident) && (
+                          {/* 2. Thimble Cylindrical Body (Badan Silinder Bidal) */}
+                          {/* Top shaded band */}
+                          <rect x={thimbleX + 90} y="40" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
+                          {/* Center main cylinder body */}
+                          <rect x={thimbleX + 90} y="90" width={920 - (thimbleX + 90)} height="200" fill="#f0f0f0" />
+                          {/* Center light highlight band */}
+                          <rect x={thimbleX + 90} y="165" width={920 - (thimbleX + 90)} height="50" fill="#ffffff" />
+                          {/* Bottom shaded band */}
+                          <rect x={thimbleX + 90} y="290" width={920 - (thimbleX + 90)} height="50" fill="#9e9e9e" />
+                          {/* Outer bevel transition border */}
+                          <line x1={thimbleX + 90} y1="40" x2={thimbleX + 90} y2="340" stroke="#374151" strokeWidth="1.5" />
+
+                          {/* 3. Thimble Rotational Graduations (Garis Skala Putar Nonius) */}
+                          {[-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8].map((offset) => {
+                            const divValue = ((nearestIntDiv + offset) % maxDiv + maxDiv) % maxDiv;
+                            let diff = divValue - activeDiv;
+                            while (diff > maxDiv / 2) diff -= maxDiv;
+                            while (diff < -maxDiv / 2) diff += maxDiv;
+                            
+                            const yDiv = 190 - diff * 15.5;
+                            if (yDiv < 35 || yDiv > 345) return null;
+
+                            const isFive = divValue % 5 === 0;
+                            const isCoincident = Math.abs(diff) < 0.5;
+                            // 3D cone slope factor
+                            const yRight = yDiv + (yDiv - 190) * 0.07;
+                            const yTickRight = yDiv + (yDiv - 190) * 0.07 * (44 / 90);
+
+                            return (
+                              <g key={'macro-thim-' + offset}>
+                                {isFive ? (
+                                  // Long graduation line extending across bevel into body + bold number
+                                  <g>
+                                    <line
+                                      x1={thimbleX}
+                                      y1={yDiv}
+                                      x2={thimbleX + 140}
+                                      y2={yRight}
+                                      stroke={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
+                                      strokeWidth={isCoincident ? 3.4 : 2.8}
+                                      strokeLinecap="square"
+                                    />
                                     <text
-                                      x="24"
-                                      y={ty + 3.5}
-                                      fontSize={isCoincident ? "10" : "8"}
-                                      fontWeight={isCoincident ? "900" : "bold"}
-                                      fill={isCoincident ? "#ef4444" : "#1e293b"}
-                                      textAnchor="start"
+                                      x={thimbleX + 152}
+                                      y={yRight}
+                                      fontSize="25"
+                                      fontWeight="bold"
+                                      fill={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
+                                      dominantBaseline="central"
+                                      fontFamily="system-ui, -apple-system, sans-serif"
                                     >
-                                      {divNum}
+                                      {divValue}
+                                    </text>
+                                  </g>
+                                ) : (
+                                  // Regular graduation tick on the bevel edge
+                                  <line
+                                    x1={thimbleX}
+                                    y1={yDiv}
+                                    x2={isCoincident && microShowGuides ? thimbleX + 90 : thimbleX + 44}
+                                    y2={isCoincident && microShowGuides ? yRight : yTickRight}
+                                    stroke={microShowGuides && isCoincident ? "#dc2626" : "#000000"}
+                                    strokeWidth={isCoincident ? 3.2 : 2.2}
+                                    strokeLinecap="square"
+                                  />
+                                )}
+
+                                {/* Coincident highlight marker when guides are enabled */}
+                                {microShowGuides && isCoincident && (
+                                  <g>
+                                    {/* Red indicator arrow pointing to coincident line */}
+                                    <polygon
+                                      points={`${thimbleX - 14},190 ${thimbleX - 4},185 ${thimbleX - 4},195`}
+                                      fill="#dc2626"
+                                    />
+                                    <text
+                                      x={thimbleX - 18}
+                                      y="194"
+                                      fontSize="12"
+                                      fontWeight="900"
+                                      fill="#dc2626"
+                                      textAnchor="end"
+                                      fontFamily="system-ui, -apple-system, sans-serif"
+                                    >
+                                      SEGARIS ({divValue}) ◄
+                                    </text>
+                                    {/* Dashed alignment ray across */}
+                                    <line
+                                      x1="20"
+                                      y1="190"
+                                      x2={thimbleX + 140}
+                                      y2="190"
+                                      stroke="#dc2626"
+                                      strokeWidth="1.2"
+                                      strokeDasharray="4,3"
+                                      opacity="0.7"
+                                    />
+                                  </g>
+                                )}
+                              </g>
+                            );
+                          })}
+                        </svg>
+                      );
+                    })()}
+
+                    {/* DIAGRAM BREAKDOWN PILLS BELOW CLOSE-UP */}
+                    {microShowGuides && (
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                        gap: '10px',
+                        width: '100%',
+                        marginTop: '4px'
+                      }}>
+                        <div style={{ background: 'rgba(2, 132, 199, 0.15)', border: '1px solid #0284c7', borderRadius: '8px', padding: '8px 12px' }}>
+                          <div style={{ fontSize: '0.68rem', color: '#38bdf8', fontWeight: 800 }}>SKALA ATAS (BULAT)</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>{microWholeMm} mm</div>
+                          <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>Garis atas terakhir terlewati</div>
+                        </div>
+
+                        <div style={{ background: microHalfMm > 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)', border: microHalfMm > 0 ? '1px solid #10b981' : '1px solid #64748b', borderRadius: '8px', padding: '8px 12px' }}>
+                          <div style={{ fontSize: '0.68rem', color: microHalfMm > 0 ? '#34d399' : '#94a3b8', fontWeight: 800 }}>GARIS BAWAH (0.5 mm)</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 900, color: microHalfMm > 0 ? '#34d399' : '#94a3b8' }}>
+                            {microReadingMode === 'standard' ? (microHalfMm > 0 ? '+0.50 mm (TERLIHAT)' : '+0.00 mm (TERTUTUP)') : 'Mode 1 mm'}
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>
+                            {microReadingMode === 'standard' ? (microHalfMm > 0 ? 'Garis 0.5 mm sudah keluar dari bidal' : 'Garis 0.5 mm belum keluar dari bidal') : 'Hanya ada garis 1 mm'}
+                          </div>
+                        </div>
+
+                        <div style={{ background: 'rgba(245, 158, 11, 0.15)', border: '1px solid #f59e0b', borderRadius: '8px', padding: '8px 12px' }}>
+                          <div style={{ fontSize: '0.68rem', color: '#fbbf24', fontWeight: 800 }}>SKALA NONIUS (BIDAL)</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>+{microNoniusScale.toFixed(2)} mm</div>
+                          <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>Garis ke-{microThimbleDivisions} × 0.01 mm</div>
+                        </div>
+
+                        <div style={{ background: 'rgba(16, 185, 129, 0.25)', border: '1.5px solid #10b981', borderRadius: '8px', padding: '8px 12px' }}>
+                          <div style={{ fontSize: '0.68rem', color: '#10b981', fontWeight: 900 }}>TOTAL BACAAN</div>
+                          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#34d399', fontFamily: 'monospace' }}>
+                            {microValue.toFixed(2)} mm
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: '#cbd5e1' }}>
+                            {microMainScale.toFixed(2)} + {microNoniusScale.toFixed(2)}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 2. FULL ASSEMBLY MICROMETER SVG VIEWPORT */}
+                {(microViewMode === 'full' || microViewMode === 'both') && (
+                  <div style={{
+                    background: '#090e18',
+                    borderRadius: '12px',
+                    border: '1px solid var(--border-light)',
+                    padding: '24px 16px',
+                    overflowX: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '320px',
+                    gap: '10px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 8px' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#94a3b8' }}>
+                        📐 ANATOMI FISIK LENGKAP (FRAME, ANVIL, SPINDLE, & BENDA KERJA)
+                      </span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                        Benda: {microWorkpiece === 'bearing-ball' ? 'Bola Baja (Bearing)' : 'Pelat Logam'}
+                      </span>
+                    </div>
+
+                    <svg viewBox="0 0 860 300" style={{ width: "100%", maxWidth: "860px", height: "auto", display: "block", userSelect: "none" }}>
+                      <defs>
+                        <linearGradient id="uFrameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#1e3a5f" />
+                          <stop offset="50%" stopColor="#2c5282" />
+                          <stop offset="100%" stopColor="#0f172a" />
+                        </linearGradient>
+                        <linearGradient id="chromeSteel" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#cfd8dc" />
+                          <stop offset="50%" stopColor="#ffffff" />
+                          <stop offset="100%" stopColor="#90a4ae" />
+                        </linearGradient>
+                        <linearGradient id="thimbleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#78909c" />
+                          <stop offset="30%" stopColor="#cfd8dc" />
+                          <stop offset="70%" stopColor="#eceff1" />
+                          <stop offset="100%" stopColor="#607d8b" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* CAST STEEL U-FRAME (BINGKAI U) */}
+                      <path
+                        d="M 230 115 C 130 115, 70 175, 70 225 C 70 285, 150 305, 260 305 C 360 305, 410 275, 430 205 L 380 195 C 365 245, 320 265, 250 265 C 160 265, 115 240, 115 215 C 115 175, 165 155, 230 155 Z"
+                        fill="url(#uFrameGrad)"
+                        stroke="#38bdf8"
+                        strokeWidth="2"
+                      />
+
+                      {/* HEAT INSULATING PLATE (PELINDUNG PANAS TANGAN) */}
+                      <rect x="170" y="270" width="140" height="22" rx="5" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+                      <text x="240" y="285" fontSize="10" fontWeight="bold" fill="#f59e0b" textAnchor="middle">
+                        0-25mm 0.01mm Mitutoyo
+                      </text>
+
+                      {/* FIXED ANVIL (LANDASAN TETAP) */}
+                      <rect x="220" y="122" width="25" height="36" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1" />
+                      {/* Carbide Tip on Anvil */}
+                      <rect x="240" y="122" width="5" height="36" fill="#1e293b" />
+
+                      {/* WORKPIECE BETWEEN ANVIL & SPINDLE */}
+                      {microWorkpiece === 'bearing-ball' && microValue > 0.5 && (
+                        <g id="workpiece-ball">
+                          <circle
+                            cx={245 + (microValue * 8.5) / 2}
+                            cy="140"
+                            r={Math.min((microValue * 8.5) / 2, 28)}
+                            fill="url(#goldHighlight)"
+                            stroke="#b45309"
+                            strokeWidth="1.5"
+                          />
+                          <text
+                            x={245 + (microValue * 8.5) / 2}
+                            y="144"
+                            fontSize="8"
+                            fontWeight="bold"
+                            fill="#000"
+                            textAnchor="middle"
+                          >
+                            Bola (Ø)
+                          </text>
+                        </g>
+                      )}
+
+                      {/* MOVABLE SPINDLE (POROS UKUR GESER) */}
+                      <rect
+                        x={245 + microValue * 8.5}
+                        y="122"
+                        width={185 - microValue * 8.5}
+                        height="36"
+                        fill="url(#chromeSteel)"
+                        stroke="#475569"
+                        strokeWidth="1"
+                      />
+                      {/* Carbide Tip on Spindle */}
+                      <rect x={245 + microValue * 8.5} y="122" width="5" height="36" fill="#1e293b" />
+
+                      {/* SPINDLE LOCK NUT LEVER */}
+                      <rect x="415" y="112" width="15" height="56" rx="3" fill="#64748b" stroke="#334155" />
+                      <circle cx="422" cy="140" r="5" fill="#f59e0b" />
+
+                      {/* SLEEVE / BARREL (SILINDER UTAMA TETAP) */}
+                      <rect x="430" y="116" width="250" height="48" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1.5" />
+                      
+                      {/* Compute thimble X position in assembly */}
+                      {(() => {
+                        const thimbleX = 445 + microValue * 8.5;
+                        return (
+                          <g>
+                            {/* SLEEVE DATUM LINE */}
+                            <line x1="430" y1="140" x2={thimbleX} stroke="#0f172a" strokeWidth="2" />
+
+                            {/* SLEEVE ENGRAVINGS (0 to 25 mm) */}
+                            {Array.from({ length: 26 }).map((_, i) => {
+                              const sx = 445 + i * 8.5;
+                              if (sx > thimbleX) return null;
+                              const isFive = i % 5 === 0;
+                              return (
+                                <g key={'slv-' + i}>
+                                  <line
+                                    x1={sx}
+                                    y1="140"
+                                    x2={sx}
+                                    y2={isFive ? "120" : "126"}
+                                    stroke="#0f172a"
+                                    strokeWidth={isFive ? 1.8 : 1.1}
+                                  />
+                                  {isFive && (
+                                    <text x={sx} y="117" fontSize="9" fontWeight="bold" fill="#0f172a" textAnchor="middle">
+                                      {i}
                                     </text>
                                   )}
-                                  {/* Coincident indicator marker */}
-                                  {isCoincident && (
-                                    <g>
-                                      <polygon points="-8,140 -2,137 -2,143" fill="#ef4444" />
-                                      <text x="-12" y="143" fontSize="8" fontWeight="900" fill="#ef4444" textAnchor="end">
-                                        SEGARIS ◄
-                                      </text>
-                                    </g>
+                                  {microReadingMode === 'standard' && i < 25 && (sx + 4.25 <= thimbleX) && (
+                                    <line
+                                      x1={sx + 4.25}
+                                      y1="140"
+                                      x2={sx + 4.25}
+                                      y2="153"
+                                      stroke="#0f172a"
+                                      strokeWidth="1.1"
+                                    />
                                   )}
                                 </g>
                               );
                             })}
 
-                            {/* RATCHET STOP KNOB (PEMUTAR RATCHET) */}
-                            <rect x="163" y="120" width="46" height="40" rx="4" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
-                            <circle cx="186" cy="140" r="8" fill={isRatchetClicking ? '#f59e0b' : '#334155'} />
-                          </g>
+                            {/* ROTATING THIMBLE */}
+                            <g transform={`translate(${thimbleX}, 0)`}>
+                              {/* Thimble Bevel Nose */}
+                              <polygon
+                                points="0,114 38,108 38,172 0,166"
+                                fill="url(#thimbleGrad)"
+                                stroke="#334155"
+                                strokeWidth="1.2"
+                              />
+                              {/* Thimble Main Cylindrical Body */}
+                              <rect x="38" y="108" width="125" height="64" fill="url(#thimbleGrad)" stroke="#334155" strokeWidth="1.2" />
+                              
+                              {/* Knurled Grip Texture */}
+                              {Array.from({ length: 11 }).map((_, ki) => (
+                                <line key={'knurl-' + ki} x1={70 + ki * 5} y1="110" x2={70 + ki * 5} y2="170" stroke="#64748b" strokeWidth="1" strokeDasharray="3,3" />
+                              ))}
 
-                          {/* CALLOUT LABELS ABOVE SVG */}
-                          {/* Callout 1: SKALA UTAMA */}
-                          <g transform="translate(435, 45)">
-                            <rect x="-10" y="-16" width="150" height="38" rx="6" fill="#0c4a6e" stroke="#38bdf8" strokeWidth="1.5" />
-                            <text x="65" y="0" fontSize="10" fontWeight="900" fill="#38bdf8" textAnchor="middle">
-                              SKALA UTAMA (SLEEVE)
-                            </text>
-                            <text x="65" y="14" fontSize="8" fontWeight="600" fill="#cbd5e1" textAnchor="middle">
-                              {microReadingMode === 'standard' ? 'Atas: 1 mm | Bawah: 0.5 mm' : 'Skala Milimeter Bulat (1 mm)'}
-                            </text>
-                            <line x1="65" y1="22" x2="65" y2="70" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3,3" />
-                            <circle cx="65" cy="70" r="3" fill="#38bdf8" />
-                          </g>
+                              {/* SKALA NONIUS ENGRAVINGS */}
+                              {[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map((offset) => {
+                                const maxDivA = microReadingMode === 'standard' ? 50 : 100;
+                                let divNum = (microThimbleDivisions + offset + maxDivA) % maxDivA;
+                                const ty = 140 - offset * 4.8;
+                                const isCoincident = offset === 0;
+                                const isFiveT = divNum % 5 === 0;
+                                return (
+                                  <g key={'thim-tick-' + offset}>
+                                    <line
+                                      x1="0"
+                                      y1={ty}
+                                      x2={isCoincident ? "22" : (isFiveT ? "15" : "9")}
+                                      stroke={isCoincident ? "#ef4444" : "#0f172a"}
+                                      strokeWidth={isCoincident ? 2.5 : 1}
+                                    />
+                                    {(isFiveT || isCoincident) && (
+                                      <text
+                                        x="24"
+                                        y={ty + 3.5}
+                                        fontSize={isCoincident ? "10" : "8"}
+                                        fontWeight={isCoincident ? "900" : "bold"}
+                                        fill={isCoincident ? "#ef4444" : "#1e293b"}
+                                        textAnchor="start"
+                                      >
+                                        {divNum}
+                                      </text>
+                                    )}
+                                  </g>
+                                );
+                              })}
 
-                          {/* Callout 2: SKALA NONIUS */}
-                          <g transform={`translate(${Math.max(620, thimbleX + 25)}, 45)`}>
-                            <rect x="-10" y="-16" width="165" height="38" rx="6" fill="#451a03" stroke="#f59e0b" strokeWidth="1.5" />
-                            <text x="72" y="0" fontSize="10" fontWeight="900" fill="#f59e0b" textAnchor="middle">
-                              SKALA NONIUS (THIMBLE)
-                            </text>
-                            <text x="72" y="14" fontSize="8" fontWeight="600" fill="#fde68a" textAnchor="middle">
-                              Bidal Putar (1 strip = 0.01 mm)
-                            </text>
-                            <line x1="15" y1="22" x2="15" y2="70" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,3" />
-                            <circle cx="15" cy="70" r="3" fill="#f59e0b" />
+                              {/* RATCHET STOP KNOB */}
+                              <rect x="163" y="120" width="46" height="40" rx="4" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
+                              <circle cx="186" cy="140" r="8" fill={isRatchetClicking ? '#f59e0b' : '#334155'} />
+                            </g>
                           </g>
-                        </g>
-                      );
-                    })()}
-
-                  </svg>
-                </div>
+                        );
+                      })()}
+                    </svg>
+                  </div>
+                )}
 
                 {/* CONTROLS (SLIDER & STEPPERS) */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)' }}>
                       Atur Putaran Spindle & Thimble (Rentang 0.00 s/d 25.00 mm):
+                    </span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#38bdf8', fontFamily: 'monospace' }}>
+                      {microValue.toFixed(2)} mm
                     </span>
                   </div>
 
@@ -2718,17 +3072,21 @@ const MeasuringToolsLab = ({
                     style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
                   />
 
-                  {/* QUICK STEPPERS */}
+                  {/* QUICK STEPPERS & PRESETS */}
                   <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
                     {[
+                      { label: '📐 7.74 mm (Sesuai Gambar Soal)', exact: 7.74, highlight: true },
+                      { label: '📍 0.00 mm (Nol)', exact: 0.00 },
+                      { label: '📍 5.50 mm (Garis 0.5 Pas)', exact: 5.50 },
+                      { label: '📍 7.48 mm (Belum 0.5 mm)', exact: 7.48 },
+                      { label: '📍 7.52 mm (Lewat 0.5 mm)', exact: 7.52 },
+                      { label: '📍 12.35 mm', exact: 12.35 },
                       { label: '-0.5 mm', delta: -0.5 },
                       { label: '-0.05 mm', delta: -0.05 },
                       { label: '-0.01 mm', delta: -0.01 },
                       { label: '+0.01 mm', delta: +0.01 },
                       { label: '+0.05 mm', delta: +0.05 },
                       { label: '+0.5 mm', delta: +0.5 },
-                      { label: 'Set 7.82 mm', exact: 7.82 },
-                      { label: 'Set 12.35 mm', exact: 12.35 },
                       { label: 'Acak 🎲', random: true }
                     ].map((btn, idx) => (
                       <button
@@ -2745,14 +3103,15 @@ const MeasuringToolsLab = ({
                           }
                         }}
                         style={{
-                          padding: '6px 12px',
+                          padding: btn.highlight ? '6px 14px' : '6px 10px',
                           borderRadius: '6px',
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid var(--border-light)',
+                          background: btn.highlight ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.05)',
+                          border: btn.highlight ? '1px solid #38bdf8' : '1px solid var(--border-light)',
                           color: '#fff',
                           fontSize: '0.78rem',
-                          fontWeight: 600,
-                          cursor: 'pointer'
+                          fontWeight: btn.highlight ? 800 : 600,
+                          cursor: 'pointer',
+                          boxShadow: btn.highlight ? '0 2px 8px rgba(2, 132, 199, 0.4)' : 'none'
                         }}
                       >
                         {btn.label}
@@ -2779,7 +3138,7 @@ const MeasuringToolsLab = ({
                         boxShadow: '0 2px 8px rgba(245, 158, 11, 0.4)'
                       }}
                     >
-                      🔊 Putar Ratchet (Klik!)
+                      🔊 Putar Ratchet (+0.01 Klik!)
                     </button>
                   </div>
                 </div>
@@ -2882,21 +3241,42 @@ const MeasuringToolsLab = ({
                   )}
                 </div>
 
-                {/* PENJELASAN PRAKTIS SKALA */}
+                {/* PENJELASAN PRAKTIS SKALA & TIPS MENGHILANGKAN KEBINGUNGAN SISWA */}
                 <div className="dashboard-card" style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#b45309', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>💡</span> Cara Membaca Seperti Umumnya:
+                    <span>💡</span> Panduan Membaca Tanpa Bingung (Standar Gambar Soal):
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.5 }}>
-                    <p style={{ margin: '0 0 6px 0' }}>
-                      <strong style={{ color: '#0f172a' }}>1. Skala Utama:</strong> Terletak pada tabung tetap (sleeve). Nilai yang dibaca adalah angka terakhir yang terlihat di sebelah kiri bidal putar.
+                  <div style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <p style={{ margin: 0 }}>
+                      <strong style={{ color: '#0f172a' }}>1. Skala Atas (Milimeter Bulat):</strong> Amati garis-garis di atas garis horizontal. Angka terakhir yang terbuka sebelum bibir bidal adalah milimeter bulat (saat ini: <strong style={{ color: '#0284c7' }}>{microWholeMm} mm</strong>).
                     </p>
-                    <p style={{ margin: '0 0 6px 0' }}>
-                      <strong style={{ color: '#0f172a' }}>2. Skala Nonius:</strong> Terletak pada bidal putar (thimble). Nilai yang dibaca adalah garis yang lurus dengan garis horizontal di tengah skala utama.
+                    <p style={{ margin: 0 }}>
+                      <strong style={{ color: '#0f172a' }}>2. Garis Bawah (Setengah Milimeter / 0.5 mm):</strong> Garis ini berada di posisi selang-seling di bawah garis horizontal.
+                      <br/>
+                      {microReadingMode === 'standard' ? (
+                        microHalfMm > 0 ? (
+                          <span style={{ color: '#059669', fontWeight: 700 }}>
+                            ✓ Garis bawah setelah {microWholeMm} mm <u>SUDAH TERLIHAT</u> keluar dari bibir bidal &rarr; Tambahkan <strong style={{ color: '#059669' }}>+0.50 mm</strong>!
+                          </span>
+                        ) : (
+                          <span style={{ color: '#64748b', fontWeight: 600 }}>
+                            ✗ Garis bawah setelah {microWholeMm} mm <u>BELUM TERLIHAT</u> (masih tertutup bidal) &rarr; Bernilai <strong style={{ color: '#64748b' }}>+0.00 mm</strong>.
+                          </span>
+                        )
+                      ) : (
+                        <span>Mode sederhana: instrumen kisar 1 mm (hanya garis atas).</span>
+                      )}
                     </p>
-                    <p style={{ margin: 0, color: '#b45309', fontWeight: 600 }}>
-                      <em>Jika bingung dengan garis 0.5 mm di bawah, Anda dapat mengklik tombol "Mode Sederhana" di atas!</em>
+                    <p style={{ margin: 0 }}>
+                      <strong style={{ color: '#0f172a' }}>3. Skala Nonius Bidal (0.01 mm):</strong> Cari satu garis pada keliling bidal putar yang <strong>tepat lurus segaris</strong> dengan garis acuan horizontal tengah laras.
+                      <br/>
+                      Nilai = garis ke-<strong style={{ color: '#b45309' }}>{microThimbleDivisions}</strong> &times; 0.01 mm = <strong style={{ color: '#b45309' }}>+{microNoniusScale.toFixed(2)} mm</strong>.
                     </p>
+                    <div style={{ background: '#f8fafc', padding: '8px 10px', borderRadius: '6px', border: '1px solid #e2e8f0', marginTop: '4px' }}>
+                      <strong style={{ color: '#0284c7' }}>
+                        📌 Total = Skala Atas ({microWholeMm}) + Garis Bawah ({microHalfMm.toFixed(2)}) + Bidal ({microNoniusScale.toFixed(2)}) = {microValue.toFixed(2)} mm
+                      </strong>
+                    </div>
                   </div>
                 </div>
 

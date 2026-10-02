@@ -2807,6 +2807,794 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
     );
   };
 
+
+  // ===========================================================================
+  // REUSABLE CASE STUDY CARD RENDERER WITH TECHNICAL SVG ILLUSTRATION
+  // ===========================================================================
+  const renderCaseStudyCard = ({
+    badge = '📚 STUDI KASUS NYATA BENGKEL MESIN SMK',
+    caseNumber = '1',
+    title,
+    subtitle,
+    svgIllustration,
+    scenarioText,
+    givenData = [],
+    questions = [],
+    solutions = [],
+    workshopSafety,
+    themeColor = '#0284c7'
+  }) => {
+    return (
+      <div style={{
+        background: '#ffffff',
+        borderRadius: '16px',
+        padding: '24px',
+        marginTop: '24px',
+        border: '1px solid #e2e8f0',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.06)'
+      }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span style={{
+                background: `${themeColor}15`,
+                color: themeColor,
+                padding: '3px 10px',
+                borderRadius: '999px',
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                letterSpacing: '0.5px',
+                textTransform: 'uppercase'
+              }}>
+                {badge}
+              </span>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b' }}>
+                Kasus #{caseNumber}
+              </span>
+            </div>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
+              {title}
+            </h3>
+            {subtitle && (
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#64748b', lineHeight: 1.4 }}>
+                {subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Gambar Ilustrasi Teknik SVG */}
+        <div style={{
+          background: '#0b132b',
+          borderRadius: '14px',
+          padding: '16px',
+          marginBottom: '20px',
+          border: '1px solid #1e293b',
+          boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.4)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '0 4px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              📐 Gambar Ilustrasi Diagram Teknik Kasus:
+            </span>
+            <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+              Skema Vektor Gaya, Dimensi Jarak &amp; Titik Kerja
+            </span>
+          </div>
+          {svgIllustration}
+        </div>
+
+        {/* Skenario Masalah di Bengkel */}
+        <div style={{
+          background: '#f8fafc',
+          borderLeft: `4px solid ${themeColor}`,
+          padding: '14px 18px',
+          borderRadius: '0 10px 10px 0',
+          marginBottom: '18px'
+        }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '4px' }}>
+            📖 Skenario Masalah Nyata di Bengkel:
+          </div>
+          <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
+            {scenarioText}
+          </div>
+        </div>
+
+        {/* Grid: Data Diketahui & Pertanyaan */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '20px' }}>
+          {/* Data Diketahui */}
+          <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0369a1', textTransform: 'uppercase', marginBottom: '8px' }}>
+              📋 Data Masalah (Diketahui):
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {givenData.map((item, idx) => (
+                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '4px' }}>
+                  <span style={{ color: '#475569' }}>{item.label}:</span>
+                  <strong style={{ color: '#0f172a' }}>{item.val}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pertanyaan Tantangan */}
+          <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '10px', border: '1px solid #fde68a' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#b45309', textTransform: 'uppercase', marginBottom: '8px' }}>
+              ❓ Pertanyaan / Tantangan Teknis:
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {questions.map((q, idx) => (
+                <div key={idx} style={{ fontSize: '0.76rem', color: '#78350f', lineHeight: 1.45 }}>
+                  {q}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bedah Penyelesaian Lengkap Langkah demi Langkah */}
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '12px',
+          border: '1px solid #e2e8f0',
+          padding: '16px 18px',
+          marginBottom: '18px'
+        }}>
+          <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>✏️</span> Bedah Penyelesaian Lengkap Langkah demi Langkah:
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {solutions.map((sol, idx) => (
+              <div key={idx} style={{
+                background: '#f8fafc',
+                padding: '12px 14px',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0',
+                borderLeft: `3px solid ${themeColor}`
+              }}>
+                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: themeColor, marginBottom: '4px' }}>
+                  {sol.title}
+                </div>
+                {sol.formula && (
+                  <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#475569', marginBottom: '4px', background: '#ffffff', padding: '4px 8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}>
+                    {sol.formula}
+                  </div>
+                )}
+                <div style={{ fontSize: '0.78rem', color: '#1e293b', lineHeight: 1.55 }}>
+                  {sol.desc}
+                </div>
+                {sol.result && (
+                  <div style={{ marginTop: '6px', fontSize: '0.82rem', fontWeight: 900, color: '#15803d' }}>
+                    🎯 Hasil: {sol.result}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* K3 & Workshop Safety Insight */}
+        {workshopSafety && (
+          <div style={{
+            background: '#fff1f2',
+            border: '1px solid #fecdd3',
+            borderLeft: '4px solid #e11d48',
+            borderRadius: '0 10px 10px 0',
+            padding: '12px 16px'
+          }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#be123c', marginBottom: '3px' }}>
+              🛡️ ATURAN KERJA &amp; KESELAMATAN BENGKEL (K3):
+            </div>
+            <div style={{ fontSize: '0.76rem', color: '#881337', lineHeight: 1.5 }}>
+              {workshopSafety}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // 1. STUDI KASUS TORSI: BAUT RODA TRUK MACET
+  const renderTorqueCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        <path d="M 0,50 L 760,50 M 0,100 L 760,100 M 0,150 L 760,150 M 0,200 L 760,200" stroke="#1e293b" strokeWidth="1" strokeDasharray="3,3" />
+        
+        {/* Wheel Hub */}
+        <g transform="translate(130, 125)">
+          <circle cx="0" cy="0" r="75" fill="#1e293b" stroke="#475569" strokeWidth="4" />
+          <circle cx="0" cy="0" r="48" fill="#0f172a" stroke="#64748b" strokeWidth="2" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((ang, i) => {
+            const rad = (ang * Math.PI) / 180;
+            return <circle key={i} cx={Math.cos(rad)*36} cy={Math.sin(rad)*36} r="4" fill="#94a3b8" />;
+          })}
+          <polygon points="0,-16 14,-8 14,8 0,16 -14,8 -14,-8" fill="#cbd5e1" stroke="#f87171" strokeWidth="2.5" />
+          <circle cx="0" cy="0" r="4" fill="#ef4444" />
+          <text x="0" y="-22" fill="#fca5a5" fontSize="9" fontWeight="bold" textAnchor="middle">Baut Roda M20</text>
+          <path d="M -30,-20 A 40 40 0 0 1 20,-35" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3,2" />
+          <polygon points="20,-38 27,-32 18,-30" fill="#38bdf8" />
+          <text x="-5" y="-45" fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="middle">τ = 360 Nm</text>
+        </g>
+
+        {/* Wrench 1 (d1 = 30 cm) */}
+        <g>
+          <path d="M 130,120 L 290,120 L 290,130 L 130,130 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1.5" />
+          <circle cx="290" cy="125" r="10" fill="#1e293b" stroke="#94a3b8" strokeWidth="2" />
+          <line x1="130" y1="165" x2="290" y2="165" stroke="#ef4444" strokeWidth="1.5" />
+          <line x1="130" y1="158" x2="130" y2="172" stroke="#ef4444" strokeWidth="1.5" />
+          <line x1="290" y1="158" x2="290" y2="172" stroke="#ef4444" strokeWidth="1.5" />
+          <text x="210" y="180" fill="#ef4444" fontSize="9.5" fontWeight="bold" textAnchor="middle">d1 = 30 cm (0,3 m)</text>
+          <line x1="290" y1="125" x2="290" y2="45" stroke="#ef4444" strokeWidth="3" />
+          <polygon points="285,50 290,40 295,50" fill="#ef4444" />
+          <text x="290" y="32" fill="#ef4444" fontSize="10.5" fontWeight="900" textAnchor="middle">F1 = 1.200 N</text>
+          <text x="290" y="20" fill="#fca5a5" fontSize="8.5" textAnchor="middle">(~122 kg - GAGAL/BERAT!)</text>
+        </g>
+
+        {/* Extension Pipe (d2 = 1.2 m) */}
+        <g>
+          <rect x="270" y="116" width="370" height="18" rx="4" fill="#ea580c" stroke="#f97316" strokeWidth="1.5" />
+          <text x="450" y="129" fill="#ffffff" fontSize="9" fontWeight="bold" textAnchor="middle">Pipa Perpanjangan Galvanis (Cheater Pipe)</text>
+          <line x1="130" y1="210" x2="640" y2="210" stroke="#10b981" strokeWidth="1.5" />
+          <line x1="130" y1="203" x2="130" y2="217" stroke="#10b981" strokeWidth="1.5" />
+          <line x1="640" y1="203" x2="640" y2="217" stroke="#10b981" strokeWidth="1.5" />
+          <text x="385" y="226" fill="#10b981" fontSize="10" fontWeight="bold" textAnchor="middle">d2 = 120 cm (1,20 meter) ➔ 4x Lebih Panjang!</text>
+          <line x1="640" y1="125" x2="640" y2="65" stroke="#10b981" strokeWidth="3" />
+          <polygon points="635,70 640,60 645,70" fill="#10b981" />
+          <text x="640" y="52" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F2 = 300 N</text>
+          <text x="640" y="38" fill="#86efac" fontSize="8.5" fontWeight="bold" textAnchor="middle">(~30 kg - ENTENG &amp; BERHASIL!)</text>
+        </g>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '1',
+      title: 'Membuka Baut Roda Truk Tronton Macet Berkarat (Torsi τ = F × d)',
+      subtitle: 'Penerapan Hukum Momen Gaya untuk Meringankan Beban Otot Teknisi Menggunakan Pipa Sambung (Cheater Pipe)',
+      svgIllustration: svg,
+      scenarioText: 'Di bengkel sasis otomotif SMK, seorang siswa kesulitan membuka baut roda truk tronton (ulir M20) yang macet akibat karat dan torsi pengencangan pabrik sebesar 360 Nm. Siswa mencoba menggunakan kunci ring standar sepanjang 30 cm, namun baut tidak bergeming sedikitpun walau ditarik sekuat tenaga. Guru pembimbing menyarankan memasang pipa sambungan (cheater pipe) sepanjang 1,2 meter ke gagang kunci ring.',
+      givenData: [
+        { label: 'Torsi Pembuka Baut Macet (τ)', val: '360 Nm' },
+        { label: 'Panjang Kunci Ring Standar (d1)', val: '30 cm = 0,30 meter' },
+        { label: 'Panjang Kunci + Pipa Sambungan (d2)', val: '120 cm = 1,20 meter' },
+        { label: 'Batas Kekuatan Tarik Tangan Siswa', val: '≈ 250 - 300 N (~25 - 30 kg)' }
+      ],
+      questions: [
+        '1. Berapakah gaya otot tangan (F1) yang harus dikeluarkan siswa jika hanya memakai kunci ring standar 30 cm?',
+        '2. Mengapa baut macet dan siswa tidak mampu memutarnya pada jarak d1?',
+        '3. Berapakah gaya otot tangan (F2) yang dibutuhkan jika siswa menyambung pipa perpanjangan menjadi 1,2 meter?',
+        '4. Berapa kali lipat penghematan tenaga yang diperoleh siswa?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menghitung Gaya F1 pada Kunci Standar (d1 = 0,30 m)',
+          formula: 'F1 = τ / d1',
+          desc: 'F1 = 360 Nm ÷ 0,30 m = 1.200 Newton. Konversi ke beban gravitasi setara: 1.200 N ÷ 9,8 m/s² ≈ 122,4 kg beban otot tangan! Manusia normal tidak mampu menarik beban 122 kg dengan satu tangan.',
+          result: '1.200 Newton (~122,4 kg) ➔ Terlalu berat, baut macet total!'
+        },
+        {
+          title: 'Langkah 2: Menghitung Gaya F2 setelah Menggunakan Pipa Sambung (d2 = 1,20 m)',
+          formula: 'F2 = τ / d2',
+          desc: 'F2 = 360 Nm ÷ 1,20 m = 300 Newton. Konversi ke beban gravitasi setara: 300 N ÷ 9,8 m/s² ≈ 30,6 kg beban otot tangan. Beban 30 kg dapat ditarik dengan mantap oleh satu siswa dewasa berposisi kuda-kuda kokoh!',
+          result: '300 Newton (~30,6 kg) ➔ Enteng, baut langsung berputar lancar!'
+        },
+        {
+          title: 'Langkah 3: Perbandingan Rasio Efisiensi Penggandaan Lengan',
+          formula: 'Rasio = F1 / F2 = d2 / d1',
+          desc: 'Rasio = 1.200 N ÷ 300 N = 4x lipat lebih ringan! Dengan memperpanjang lengan momen sebesar 4x (dari 0,3 m ke 1,2 m), tenaga otot yang dibutuhkan terpangkas sebesar 75%!',
+          result: 'Hemat tenaga 4x lipat (hanya butuh 25% dari tenaga awal)'
+        }
+      ],
+      workshopSafety: 'Saat menggunakan pipa sambungan pada kunci ring/pas, pastikan kunci dalam kondisi presisi (tidak aus/dol) dan pipa pas masuk mengunci gagang. Jangan pernah menghentak tarikan secara mendadak agar baut tidak patah atau kunci meleset melukai tangan.',
+      themeColor: '#0284c7'
+    });
+  };
+
+  // 2. STUDI KASUS TUAS: MENGUNGKIT KAKI MESIN BUBUT 600 KG
+  const renderLeverCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        <line x1="40" y1="195" x2="720" y2="195" stroke="#475569" strokeWidth="2.5" />
+        {[80, 140, 200, 260, 320, 380, 440, 500, 560, 620, 680].map((x, i) => (
+          <line key={i} x1={x} y1="195" x2={x-15} y2="210" stroke="#334155" strokeWidth="1.5" />
+        ))}
+        {/* Lathe Foot */}
+        <g transform="translate(100, 195)">
+          <rect x="-40" y="-80" width="80" height="80" rx="4" fill="#334155" stroke="#64748b" strokeWidth="2" />
+          <text x="0" y="-45" fill="#f8fafc" fontSize="9.5" fontWeight="bold" textAnchor="middle">Kaki Mesin</text>
+          <text x="0" y="-30" fill="#94a3b8" fontSize="8" textAnchor="middle">Bubut (300 kg)</text>
+          <line x1="0" y1="-80" x2="0" y2="-10" stroke="#ef4444" strokeWidth="3" />
+          <polygon points="-5,-15 0,-5 5,-15" fill="#ef4444" />
+          <text x="0" y="-90" fill="#ef4444" fontSize="10.5" fontWeight="900" textAnchor="middle">W = 2.940 N</text>
+        </g>
+        {/* Fulcrum */}
+        <g transform="translate(200, 195)">
+          <polygon points="0,-45 -22,0 22,0" fill="#d97706" stroke="#f59e0b" strokeWidth="2" />
+          <circle cx="0" cy="-45" r="4" fill="#ffffff" />
+          <text x="0" y="16" fill="#fbbf24" fontSize="9" fontWeight="bold" textAnchor="middle">Tumpuan (Fulcrum)</text>
+        </g>
+        {/* Crowbar */}
+        <g>
+          <line x1="120" y1="190" x2="660" y2="90" stroke="#38bdf8" strokeWidth="8" strokeLinecap="round" />
+          <line x1="120" y1="215" x2="200" y2="215" stroke="#f87171" strokeWidth="1.5" />
+          <line x1="120" y1="208" x2="120" y2="222" stroke="#f87171" strokeWidth="1.5" />
+          <line x1="200" y1="208" x2="200" y2="222" stroke="#f87171" strokeWidth="1.5" />
+          <text x="160" y="232" fill="#fca5a5" fontSize="9" fontWeight="bold" textAnchor="middle">Lb = 15 cm</text>
+          <line x1="200" y1="215" x2="660" y2="215" stroke="#38bdf8" strokeWidth="1.5" />
+          <line x1="200" y1="208" x2="200" y2="222" stroke="#38bdf8" strokeWidth="1.5" />
+          <line x1="660" y1="208" x2="660" y2="222" stroke="#38bdf8" strokeWidth="1.5" />
+          <text x="430" y="232" fill="#38bdf8" fontSize="9.5" fontWeight="bold" textAnchor="middle">Lk = 135 cm (1,35 meter)</text>
+          {/* Hand vector */}
+          <g transform="translate(660, 90)">
+            <circle cx="0" cy="-25" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+            <text x="0" y="-21" fontSize="11" textAnchor="middle">✋</text>
+            <line x1="0" y1="-5" x2="0" y2="40" stroke="#10b981" strokeWidth="3" />
+            <polygon points="-5,35 0,45 5,35" fill="#10b981" />
+            <text x="0" y="60" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F = 326,7 N</text>
+            <text x="0" y="74" fill="#86efac" fontSize="8.5" textAnchor="middle">(≈ 33 kg dorongan tangan)</text>
+          </g>
+        </g>
+        <g transform="translate(430, 40)">
+          <rect x="-130" y="-18" width="260" height="36" rx="8" fill="#1e293b" stroke="#38bdf8" strokeWidth="1.5" />
+          <text x="0" y="4" fill="#38bdf8" fontSize="10.5" fontWeight="900" textAnchor="middle">
+            KM = Lk / Lb = 135 / 15 = 9× Penggandaan Gaya!
+          </text>
+        </g>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '2',
+      title: 'Mengungkit Kaki Mesin Bubut 600 kg dengan Linggis Baja (Tuas Kelas 1: W · Lb = F · Lk)',
+      subtitle: 'Membuktikan Penggandaan Gaya Hingga 9x Lipat untuk Memasang Karet Peredam Getaran (Vibration Pad)',
+      svgIllustration: svg,
+      scenarioText: 'Di bengkel pemesinan SMK, teknisi dan siswa hendak menyetel kedataran (leveling) dan memasang bantalan karet peredam getaran di bawah salah satu kaki mesin bubut seberat 600 kg. Kaki yang diangkat menopang setengah massa total mesin yaitu 300 kg (W = 2.940 N). Karena forklift tidak muat masuk ke lorong mesin, teknisi menggunakan linggis baja panjang 1,5 meter (150 cm) dan ganjal balok kayu keras sebagai tumpuan pada jarak 15 cm dari kaki mesin.',
+      givenData: [
+        { label: 'Massa Beban Kaki Mesin (m)', val: '300 kg' },
+        { label: 'Berat Beban Kaki Mesin (W = m · g)', val: '300 × 9,8 = 2.940 N' },
+        { label: 'Panjang Total Linggis Baja (L)', val: '150 cm = 1,50 meter' },
+        { label: 'Lengan Beban (Lb = jarak tumpu ke kaki)', val: '15 cm = 0,15 meter' }
+      ],
+      questions: [
+        '1. Berapakah panjang lengan kuasa (Lk) yang tersedia untuk tangan teknisi?',
+        '2. Berapakah Keuntungan Mekanis (KM) dari susunan tuas kelas 1 ini?',
+        '3. Berapakah gaya tekan tangan (F) yang harus dikerahkan teknisi untuk mengangkat mesin? Apakah aman dilakukan satu orang?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menentukan Panjang Lengan Kuasa (Lk)',
+          formula: 'Lk = L_total - Lb',
+          desc: 'Lk = 150 cm - 15 cm = 135 cm (1,35 meter). Jarak tangan dari titik tumpu menjadi 9x lebih panjang dibandingkan jarak beban.',
+          result: '135 cm (1,35 meter)'
+        },
+        {
+          title: 'Langkah 2: Menghitung Keuntungan Mekanis (KM)',
+          formula: 'KM = Lk / Lb',
+          desc: 'KM = 135 cm ÷ 15 cm = 9,0x lipat. Sistem tuas ini melipatgandakan gaya tekan tangan sebesar 9 kali lipat ke ujung beban!',
+          result: 'KM = 9,0×'
+        },
+        {
+          title: 'Langkah 3: Menghitung Gaya Kuasa Tekan Tangan (F)',
+          formula: 'F = W / KM = (W × Lb) / Lk',
+          desc: 'F = 2.940 N ÷ 9,0 = 326,7 Newton. Konversi beban gravitasi setara: 326,7 N ÷ 9,8 m/s² ≈ 33,3 kg dorongan tangan. Teknisi cukup menekan ujung linggis dengan memanfaatkan sebagian berat badannya (~33 kg) untuk mengangkat mesin 300 kg!',
+          result: '326,7 Newton (~33,3 kg dorongan tangan)'
+        }
+      ],
+      workshopSafety: 'Selalu gunakan balok kayu tumpuan yang solid (bukan bata merah atau balok rapuh yang bisa retak hancur mendadak). Saat mesin terangkat, JANGAN PERNAH menyelipkan jari tangan di bawah kaki mesin sebelum balok pengaman (safety wedge) disisipkan!',
+      themeColor: '#b45309'
+    });
+  };
+
+  // 3. STUDI KASUS KESETIMBANGAN: BALOK CRANE BENGKEL
+  const renderBeamCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        <rect x="100" y="105" width="560" height="20" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
+        <line x1="100" y1="115" x2="660" y2="115" stroke="#cbd5e1" strokeWidth="2" />
+        
+        {/* Support A */}
+        <g transform="translate(100, 125)">
+          <polygon points="0,0 -16,28 16,28" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+          <circle cx="0" cy="0" r="4" fill="#ffffff" />
+          <line x1="-22" y1="28" x2="22" y2="28" stroke="#10b981" strokeWidth="2" />
+          <text x="0" y="42" fill="#10b981" fontSize="9.5" fontWeight="bold" textAnchor="middle">Tumpuan Sendi A</text>
+          <line x1="0" y1="75" x2="0" y2="5" stroke="#10b981" strokeWidth="3" />
+          <polygon points="-5,10 0,0 5,10" fill="#10b981" />
+          <text x="0" y="90" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">RA = 8.000 N</text>
+          <text x="0" y="103" fill="#86efac" fontSize="8" textAnchor="middle">(2x lebih berat!)</text>
+        </g>
+
+        {/* Support B */}
+        <g transform="translate(660, 125)">
+          <polygon points="0,0 -16,22 16,22" fill="#1e293b" stroke="#38bdf8" strokeWidth="2" />
+          <circle cx="0" cy="0" r="4" fill="#ffffff" />
+          <circle cx="-8" cy="27" r="4" fill="#38bdf8" />
+          <circle cx="8" cy="27" r="4" fill="#38bdf8" />
+          <line x1="-20" y1="32" x2="20" y2="32" stroke="#38bdf8" strokeWidth="2" />
+          <text x="0" y="46" fill="#38bdf8" fontSize="9.5" fontWeight="bold" textAnchor="middle">Tumpuan Rol B</text>
+          <line x1="0" y1="75" x2="0" y2="5" stroke="#38bdf8" strokeWidth="3" />
+          <polygon points="-5,10 0,0 5,10" fill="#38bdf8" />
+          <text x="0" y="90" fill="#38bdf8" fontSize="11" fontWeight="900" textAnchor="middle">RB = 4.000 N</text>
+          <text x="0" y="103" fill="#93c5fd" fontSize="8" textAnchor="middle">(Lebih ringan)</text>
+        </g>
+
+        {/* Hoist Load at x = 286 (a = 2m, b = 4m) */}
+        <g transform="translate(286, 115)">
+          <rect x="-18" y="-22" width="36" height="22" rx="4" fill="#d97706" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="0" y="-8" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">HOIST</text>
+          <line x1="0" y1="0" x2="0" y2="25" stroke="#cbd5e1" strokeWidth="2" />
+          <rect x="-26" y="25" width="52" height="34" rx="4" fill="#334155" stroke="#94a3b8" strokeWidth="1.5" />
+          <text x="0" y="42" fill="#f8fafc" fontSize="8" fontWeight="bold" textAnchor="middle">Mesin Frais</text>
+          <text x="0" y="53" fill="#94a3b8" fontSize="7" textAnchor="middle">1.200 kg</text>
+          <line x1="0" y1="59" x2="0" y2="95" stroke="#ef4444" strokeWidth="3.5" />
+          <polygon points="-5,90 0,100 5,90" fill="#ef4444" />
+          <text x="0" y="114" fill="#ef4444" fontSize="11.5" fontWeight="900" textAnchor="middle">P = 12.000 N</text>
+        </g>
+
+        {/* Dimensions */}
+        <line x1="100" y1="65" x2="286" y2="65" stroke="#f59e0b" strokeWidth="1.5" />
+        <line x1="100" y1="58" x2="100" y2="72" stroke="#f59e0b" strokeWidth="1.5" />
+        <line x1="286" y1="58" x2="286" y2="72" stroke="#f59e0b" strokeWidth="1.5" />
+        <text x="193" y="58" fill="#f59e0b" fontSize="9.5" fontWeight="bold" textAnchor="middle">a = 2,00 m</text>
+        
+        <line x1="286" y1="65" x2="660" y2="65" stroke="#f59e0b" strokeWidth="1.5" />
+        <line x1="286" y1="58" x2="286" y2="72" stroke="#f59e0b" strokeWidth="1.5" />
+        <line x1="660" y1="58" x2="660" y2="72" stroke="#f59e0b" strokeWidth="1.5" />
+        <text x="473" y="58" fill="#f59e0b" fontSize="9.5" fontWeight="bold" textAnchor="middle">b = 4,00 m</text>
+        
+        <line x1="100" y1="35" x2="660" y2="35" stroke="#cbd5e1" strokeWidth="1.5" />
+        <line x1="100" y1="28" x2="100" y2="42" stroke="#cbd5e1" strokeWidth="1.5" />
+        <line x1="660" y1="28" x2="660" y2="42" stroke="#cbd5e1" strokeWidth="1.5" />
+        <text x="380" y="28" fill="#cbd5e1" fontSize="10" fontWeight="bold" textAnchor="middle">Bentang Total Balok L = 6,00 m</text>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '3',
+      title: 'Balok Gelagar Crane Bengkel Menopang Hoist Mesin Frais 1.200 kg (ΣM = 0 & ΣFy = 0)',
+      subtitle: 'Menghitung Beban Reaksi Tumpuan Tiang A & B serta Momen Lentur Maksimum Balok I-Beam',
+      svgIllustration: svg,
+      scenarioText: 'Di bengkel permesinan SMK, derek jembatan (overhead crane) menggunakan balok baja profil IWF dengan bentang tumpuan L = 6 meter. Tiang kiri (titik A) menggunakan tumpuan Sendi (Engsel), sedangkan tiang kanan (titik B) menggunakan tumpuan Rol. Crane sedang mengangkat sebuah mesin frais vertikal berbobot 1.200 kg (P ≈ 12.000 N dengan g = 10 m/s²) pada posisi 2 meter dari tiang A.',
+      givenData: [
+        { label: 'Bentang Total Balok Crane (L)', val: '6,00 meter' },
+        { label: 'Beban Mesin Frais (P)', val: '12.000 N (1.200 kg)' },
+        { label: 'Jarak Beban ke Tumpuan A (a)', val: '2,00 meter' },
+        { label: 'Jarak Beban ke Tumpuan B (b)', val: '6 - 2 = 4,00 meter' }
+      ],
+      questions: [
+        '1. Berapakah gaya reaksi tumpuan di tiang A (RA) dan di tiang B (RB)?',
+        '2. Mengapa beban di tiang A lebih besar daripada tiang B?',
+        '3. Berapakah momen lentur maksimum (Mmax) yang dialami balok crane?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menghitung Reaksi RA menggunakan Kesetimbangan Momen di Titik B (ΣMB = 0)',
+          formula: '(RA × L) - (P × b) = 0 ➔ RA = (P × b) / L',
+          desc: 'RA × 6,0 m = 12.000 N × 4,0 m = 48.000 Nm. RA = 48.000 ÷ 6,0 = 8.000 Newton (~800 kg). Tumpuan A menanggung 2/3 dari total beban karena posisi mesin lebih dekat ke tiang A.',
+          result: 'RA = 8.000 Newton (~800 kg)'
+        },
+        {
+          title: 'Langkah 2: Menghitung Reaksi RB menggunakan Kesetimbangan Gaya Vertikal (ΣFy = 0)',
+          formula: 'RA + RB - P = 0 ➔ RB = P - RA',
+          desc: 'RB = 12.000 N - 8.000 N = 4.000 Newton (~400 kg). Cek kesetimbangan: RA + RB = 8.000 + 4.000 = 12.000 N (Seimbang sempurna 100%!).',
+          result: 'RB = 4.000 Newton (~400 kg)'
+        },
+        {
+          title: 'Langkah 3: Menghitung Momen Lentur Maksimum Balok (Mmax)',
+          formula: 'Mmax = RA × a = (P × a × b) / L',
+          desc: 'Momen maksimum balok terjadi tepat di bawah posisi gantungan hoist (x = 2 m): Mmax = 8.000 N × 2,0 m = 16.000 Nm (16 kNm). Nilai ini dipakai teknisi untuk menentukan ukuran profil baja balok IWF agar tidak melengkung berbahaya.',
+          result: 'Mmax = 16.000 Nm (16 kNm)'
+        }
+      ],
+      workshopSafety: 'Fondasi tiang A harus dirancang mampu menahan beban 2x lebih besar (8 kN) daripada tiang B (4 kN). Saat crane bergerak membawa beban berat, dilarang keras bagi siapa pun melintas di bawah beban gantung!',
+      themeColor: '#166534'
+    });
+  };
+
+  // 4. STUDI KASUS TEGANGAN: BAUT SILINDER HEAD
+  const renderStressCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        
+        {/* Cylinder Cross Section */}
+        <g transform="translate(180, 125)">
+          <rect x="-100" y="-95" width="200" height="45" rx="4" fill="#334155" stroke="#64748b" strokeWidth="2" />
+          <text x="-50" y="-70" fill="#94a3b8" fontSize="9" fontWeight="bold">Cylinder Head</text>
+          <rect x="-100" y="-50" width="200" height="8" fill="#d97706" />
+          <text x="65" y="-44" fill="#fbbf24" fontSize="7" fontWeight="bold">Gasket</text>
+          <rect x="-100" y="-42" width="200" height="110" rx="4" fill="#1e293b" stroke="#475569" strokeWidth="2" />
+          <text x="-50" y="20" fill="#64748b" fontSize="9" fontWeight="bold">Engine Block</text>
+          <circle cx="-40" cy="5" r="22" fill="#ef4444" opacity="0.35" />
+          <text x="-40" y="9" fill="#fca5a5" fontSize="8" fontWeight="bold" textAnchor="middle">Piston Gas</text>
+          
+          <rect x="25" y="-110" width="24" height="15" rx="3" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+          <rect x="30" y="-95" width="14" height="150" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1.5" />
+          <line x1="37" y1="-80" x2="37" y2="-10" stroke="#ef4444" strokeWidth="2.5" />
+          <polygon points="33,-70 37,-80 41,-70" fill="#ef4444" />
+          <line x1="37" y1="20" x2="37" y2="-50" stroke="#ef4444" strokeWidth="2.5" />
+          <polygon points="33,-40 37,-50 41,-40" fill="#ef4444" />
+          <text x="37" y="-116" fill="#f87171" fontSize="9" fontWeight="bold" textAnchor="middle">Baut M14</text>
+        </g>
+
+        {/* Circular Section Zoom at right */}
+        <g transform="translate(500, 115)">
+          <circle cx="0" cy="0" r="50" fill="#1e293b" stroke="#38bdf8" strokeWidth="2.5" />
+          {[-35, -20, -5, 10, 25, 40].map((ly, i) => (
+            <line key={i} x1="-35" y1={ly} x2="35" y2={ly} stroke="#38bdf8" strokeWidth="1" strokeDasharray="3,2" opacity="0.6" />
+          ))}
+          <line x1="-50" y1="0" x2="50" y2="0" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="0" y="-8" fill="#f59e0b" fontSize="8.5" fontWeight="bold" textAnchor="middle">d = 12 mm</text>
+          <text x="0" y="16" fill="#38bdf8" fontSize="10.5" fontWeight="bold" textAnchor="middle">A = 113,1 mm²</text>
+          <text x="0" y="-60" fill="#94a3b8" fontSize="9" fontWeight="bold" textAnchor="middle">Penampang Inti Baut</text>
+        </g>
+
+        {/* Formula & Result Callout */}
+        <g transform="translate(500, 205)">
+          <rect x="-140" y="-18" width="280" height="36" rx="8" fill="#064e3b" stroke="#10b981" strokeWidth="1.5" />
+          <text x="0" y="-2" fill="#86efac" fontSize="9.5" fontWeight="bold" textAnchor="middle">
+            σ = F / A = 24.000 N / 113,1 mm² = 212,2 MPa
+          </text>
+          <text x="0" y="12" fill="#ffffff" fontSize="9" fontWeight="bold" textAnchor="middle">
+            ✅ AMAN! (σ_kerja 212,2 MPa &lt; σ_izin 300 MPa | SF = 1,41)
+          </text>
+        </g>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '4',
+      title: 'Uji Keamanan Baut Silinder Head Mesin Diesel M14 (σ = F / A)',
+      subtitle: 'Menghitung Tegangan Tarik dan Faktor Keamanan Baut Baja Kelas 8.8 Menahan Ledakan Silinder 24 kN',
+      svgIllustration: svg,
+      scenarioText: 'Pada mesin diesel 4-tak, kepala silinder (cylinder head) diikat ke blok mesin oleh serangkaian baut baja mutu tinggi kelas 8.8 (Tegangan tarik izin σ_izin = 300 MPa atau 300 N/mm²). Saat terjadi kompresi dan ledakan pembakaran bahan bakar di ruang bakar, sebuah baut silinder menerima beban gaya tarik aksial puncak sebesar F = 24.000 Newton (24 kN). Baut yang digunakan bertipe ulir metrik M14 dengan diameter inti nominal efektif d = 12 mm.',
+      givenData: [
+        { label: 'Gaya Tarik Ledakan Pembakaran (F)', val: '24.000 N (24 kN)' },
+        { label: 'Diameter Inti Efektif Baut (d)', val: '12,0 mm' },
+        { label: 'Tegangan Tarik Izin Baja Kelas 8.8 (σ_izin)', val: '300 MPa = 300 N/mm²' }
+      ],
+      questions: [
+        '1. Berapakah luas penampang inti baut (A)?',
+        '2. Berapakah tegangan tarik kerja (σ) yang dialami baut saat mesin bekerja?',
+        '3. Apakah baut tersebut aman dari risiko putus/mulur permanen (σ ≤ σ_izin)? Berapakah Faktor Keamanannya (Safety Factor)?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menghitung Luas Penampang Inti Baut (A)',
+          formula: 'A = (π / 4) × d²',
+          desc: 'A = (3,1416 ÷ 4) × (12 mm)² = 0,7854 × 144 mm² = 113,10 mm².',
+          result: '113,10 mm²'
+        },
+        {
+          title: 'Langkah 2: Menghitung Tegangan Tarik Kerja (σ)',
+          formula: 'σ = F / A',
+          desc: 'σ = 24.000 N ÷ 113,10 mm² = 212,20 N/mm² = 212,20 MPa.',
+          result: '212,20 MPa (N/mm²)'
+        },
+        {
+          title: 'Langkah 3: Evaluasi Keamanan & Menghitung Safety Factor (SF)',
+          formula: 'SF = σ_izin / σ_kerja',
+          desc: 'Karena σ_kerja (212,20 MPa) ≤ σ_izin (300 MPa), baut AMAN berada di zona elastis. SF = 300 ÷ 212,20 = 1,41 (Memenuhi standar keselamatan mesin otomotif SF > 1,25).',
+          result: 'AMAN (Faktor Keamanan SF = 1,41)'
+        }
+      ],
+      workshopSafety: 'Selalu kencangkan baut silinder head menggunakan Kunci Torsi (Torque Wrench) secara bertahap dan menyilang (cross-tightening). Jangan pernah mengencangkan secara berlebihan karena dapat memicu tegangan melampaui batas luluh baja!',
+      themeColor: '#6d28d9'
+    });
+  };
+
+  // 5. STUDI KASUS KATROL: CHAIN BLOCK 1 TON
+  const renderPulleyCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        <rect x="60" y="15" width="640" height="18" fill="#334155" stroke="#64748b" strokeWidth="1.5" />
+        <text x="380" y="28" fill="#94a3b8" fontSize="8.5" fontWeight="bold" textAnchor="middle">Balok Girder Gantry Crane Bengkel</text>
+        
+        {/* Fixed Pulley */}
+        <g transform="translate(260, 45)">
+          <rect x="-30" y="0" width="60" height="18" rx="3" fill="#475569" stroke="#94a3b8" />
+          <circle cx="-12" cy="18" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2.5" />
+          <circle cx="12" cy="18" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2.5" />
+          <text x="0" y="38" fill="#a7f3d0" fontSize="7.5" textAnchor="middle">Katrol Tetap (2 Sheaves)</text>
+        </g>
+
+        {/* Moving Pulley */}
+        <g transform="translate(260, 130)">
+          <circle cx="-12" cy="0" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2.5" />
+          <circle cx="12" cy="0" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2.5" />
+          <rect x="-30" y="6" width="60" height="16" rx="3" fill="#475569" stroke="#94a3b8" />
+          <path d="M 0,22 L 0,40 C 0,52 20,52 20,40 C 20,32 10,32 10,40" fill="none" stroke="#f59e0b" strokeWidth="3" />
+          <text x="0" y="-12" fill="#a7f3d0" fontSize="7.5" textAnchor="middle">Katrol Bergerak</text>
+        </g>
+
+        {/* 4 Chains */}
+        <g stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4,2">
+          <line x1="240" y1="63" x2="240" y2="130" />
+          <line x1="254" y1="63" x2="254" y2="130" />
+          <line x1="266" y1="63" x2="266" y2="130" />
+          <line x1="280" y1="63" x2="280" y2="130" />
+        </g>
+        <text x="260" y="98" fill="#38bdf8" fontSize="9" fontWeight="900" textAnchor="middle">n = 4 Tali Penahan Beban</text>
+
+        {/* Lathe Box */}
+        <g transform="translate(260, 195)">
+          <rect x="-70" y="-20" width="140" height="40" rx="4" fill="#1e293b" stroke="#ef4444" strokeWidth="2" />
+          <text x="0" y="-3" fill="#f8fafc" fontSize="9.5" fontWeight="bold" textAnchor="middle">Mesin Bubut (1.000 kg)</text>
+          <text x="0" y="11" fill="#fca5a5" fontSize="8.5" fontWeight="bold" textAnchor="middle">Berat Beban W = 9.800 N</text>
+        </g>
+
+        {/* Hand Chain */}
+        <g transform="translate(540, 95)">
+          <circle cx="0" cy="-35" r="20" fill="#1e293b" stroke="#f59e0b" strokeWidth="2.5" />
+          <text x="0" y="-32" fill="#fbbf24" fontSize="8" fontWeight="bold" textAnchor="middle">Roda Gigi</text>
+          <text x="0" y="-21" fill="#94a3b8" fontSize="7" textAnchor="middle">Rasio 1:4</text>
+          <line x1="-12" y1="-15" x2="-12" y2="65" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,2" />
+          <line x1="12" y1="-15" x2="12" y2="65" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,2" />
+          <g transform="translate(-12, 50)">
+            <circle cx="0" cy="-14" r="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+            <text x="0" y="-10" fontSize="9" textAnchor="middle">✋</text>
+            <line x1="0" y1="0" x2="0" y2="35" stroke="#10b981" strokeWidth="3" />
+            <polygon points="-4,30 0,40 4,30" fill="#10b981" />
+            <text x="0" y="55" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F_tangan = 612,5 N</text>
+            <text x="0" y="68" fill="#86efac" fontSize="8.5" textAnchor="middle">(≈ 62 kg tarikan tangan)</text>
+          </g>
+        </g>
+
+        {/* Badge */}
+        <g transform="translate(540, 185)">
+          <rect x="-120" y="-16" width="240" height="32" rx="6" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+          <text x="0" y="4" fill="#a7f3d0" fontSize="9" fontWeight="900" textAnchor="middle">
+            KM Total = 4 Tali × 4 Gigi = 16× Lipat!
+          </text>
+        </g>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '5',
+      title: 'Mengangkat Mesin Bubut 1.000 kg Menggunakan Takal Chain Block 4 Tali (F = W / n)',
+      subtitle: 'Membuktikan Bagaimana Beban Seberat 1 Ton Mampu Diangkat Ringan Hanya dengan Tarikan Rantai Tangan 60 kg',
+      svgIllustration: svg,
+      scenarioText: 'Dua orang siswa dan teknisi bengkel SMK ditugaskan menaikkan unit mesin bubut baru seberat 1.000 kg (W ≈ 9.800 N) dari lantai bengkel ke atas meja pondasi beton setinggi 80 cm. Tidak ada forklift bertenaga mesin di lorong tersebut, sehingga mereka menggunakan alat angkat manual Takal Chain Block dengan konstruksi 4 utas tali/rantai penahan beban (n = 4) yang dilengkapi roda gigi reduksi transmisi 1:4.',
+      givenData: [
+        { label: 'Massa Mesin Bubut (m)', val: '1.000 kg' },
+        { label: 'Berat Beban Total (W = m · g)', val: '1.000 × 9,8 = 9.800 N' },
+        { label: 'Jumlah Tali/Rantai Penahan Beban (n)', val: '4 utas tali paralel (KM katrol = 4)' },
+        { label: 'Rasio Reduksi Roda Gigi Manual Tambahan', val: '1 : 4' }
+      ],
+      questions: [
+        '1. Berapakah Keuntungan Mekanis (KM) murni dari susunan 4 tali katrol majemuk tersebut?',
+        '2. Berapakah tegangan gaya tarik rantai beban (F_katrol) yang ditahan oleh blok pengait?',
+        '3. Berapakah gaya tarik rantai tangan (F_tangan) yang harus dikerahkan oleh siswa setelah melewati reduksi roda gigi?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menghitung Berat Total Mesin (W)',
+          formula: 'W = m × g',
+          desc: 'W = 1.000 kg × 9,8 m/s² = 9.800 Newton.',
+          result: '9.800 Newton'
+        },
+        {
+          title: 'Langkah 2: Menghitung Gaya Tarik pada Sistem Katrol Majemuk (F_katrol)',
+          formula: 'F_katrol = W / n',
+          desc: 'Karena beban 9.800 N ditanggung bersama oleh n = 4 tali vertikal paralel: F_katrol = 9.800 N ÷ 4 = 2.450 Newton (~250 kg). Keuntungan mekanis susunan katrol adalah KM = 4x lipat.',
+          result: '2.450 Newton (~250 kg)'
+        },
+        {
+          title: 'Langkah 3: Menghitung Gaya Tarik Tangan Siswa dengan Bantuan Reduksi Roda Gigi',
+          formula: 'F_tangan = F_katrol / Rasio Gigi',
+          desc: 'F_tangan = 2.450 N ÷ 4 = 612,5 Newton. Konversi beban gravitasi setara: 612,5 N ÷ 9,8 m/s² ≈ 62,5 kg tarikan tangan. Total penggandaan tenaga mencapai 16x lipat sehingga mesin 1 ton bisa diangkat bertahap dengan tangan kosong!',
+          result: '612,5 Newton (~62,5 kg tarikan tangan)'
+        }
+      ],
+      workshopSafety: 'Selalu periksa sertifikasi batas beban kerja (Working Load Limit / WLL) pada rantai takal sebelum digunakan. Pastikan pengait terpasang safety latch pengunci agar sling sabuk pengikat mesin tidak terlepas saat proses pengangkatan!',
+      themeColor: '#047857'
+    });
+  };
+
+  // 6. STUDI KASUS GESEKAN: RAMP MIRING GENSET & OLI LICIN
+  const renderFrictionCaseStudy = () => {
+    const svg = (
+      <svg viewBox="0 0 760 250" width="100%" height="auto" style={{ display: 'block' }}>
+        <rect width="760" height="250" rx="10" fill="#0b132b" stroke="#1e293b" />
+        <g transform="translate(60, 95)">
+          <rect x="0" y="0" width="70" height="110" fill="#334155" stroke="#64748b" strokeWidth="2" />
+          <text x="35" y="55" fill="#cbd5e1" fontSize="8.5" fontWeight="bold" textAnchor="middle">Bak Mobil</text>
+          <text x="35" y="70" fill="#94a3b8" fontSize="7.5" textAnchor="middle">Pikap</text>
+        </g>
+        <line x1="60" y1="205" x2="720" y2="205" stroke="#475569" strokeWidth="2" />
+        
+        {/* Ramp */}
+        <g>
+          <line x1="130" y1="95" x2="380" y2="205" stroke="#d97706" strokeWidth="10" strokeLinecap="round" />
+          <path d="M 330,205 A 50 50 0 0 0 342,185" fill="none" stroke="#f59e0b" strokeWidth="2" />
+          <text x="320" y="195" fill="#fbbf24" fontSize="9" fontWeight="bold">α = 25°</text>
+        </g>
+
+        {/* Crate on Ramp */}
+        <g transform="translate(250, 145) rotate(23)">
+          <rect x="-25" y="-35" width="50" height="35" rx="3" fill="#1e293b" stroke="#ef4444" strokeWidth="2" />
+          <text x="0" y="-16" fill="#fca5a5" fontSize="7.5" fontWeight="bold" textAnchor="middle">Genset 300kg</text>
+          <line x1="0" y1="-17" x2="0" y2="-65" stroke="#38bdf8" strokeWidth="2.5" />
+          <polygon points="-4,-60 0,-70 4,-60" fill="#38bdf8" />
+          <text x="0" y="-75" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">N = 2.664 N</text>
+          <line x1="0" y1="-17" x2="55" y2="-17" stroke="#ef4444" strokeWidth="2.5" />
+          <polygon points="50,-21 60,-17 50,-13" fill="#ef4444" />
+          <text x="55" y="-5" fill="#ef4444" fontSize="8" fontWeight="bold">Wx = 1.242 N</text>
+          <line x1="0" y1="-17" x2="-45" y2="-17" stroke="#10b981" strokeWidth="2.5" />
+          <polygon points="-40,-21 -50,-17 -40,-13" fill="#10b981" />
+          <text x="-50" y="-5" fill="#10b981" fontSize="8" fontWeight="bold">fs</text>
+        </g>
+
+        {/* Oil Drops */}
+        <circle cx="210" cy="130" r="3" fill="#0f172a" stroke="#fbbf24" strokeWidth="1" />
+        <circle cx="280" cy="162" r="3.5" fill="#0f172a" stroke="#fbbf24" strokeWidth="1" />
+
+        {/* Side-by-Side Comparison Boards */}
+        <g transform="translate(560, 75)">
+          <rect x="-140" y="-40" width="280" height="75" rx="8" fill="#064e3b" stroke="#10b981" strokeWidth="1.5" />
+          <text x="-125" y="-20" fill="#a7f3d0" fontSize="10" fontWeight="900">1. Papan Kayu Kering (μ = 0,55):</text>
+          <text x="-125" y="-3" fill="#ffffff" fontSize="8.5">• Batas Gesek fs,max = 0,55 × 2.664 = 1.465 N</text>
+          <text x="-125" y="13" fill="#ffffff" fontSize="8.5">• Wx (1.242 N) &lt; fs,max (1.465 N) | α_kritis = 28,8° &gt; 25°</text>
+          <text x="-125" y="27" fill="#86efac" fontSize="9" fontWeight="900">➔ HASIL: MESIN DIAM AMAN (TIDAK MEROSOT)</text>
+        </g>
+        <g transform="translate(560, 175)">
+          <rect x="-140" y="-40" width="280" height="75" rx="8" fill="#450a0a" stroke="#dc2626" strokeWidth="1.5" />
+          <text x="-125" y="-20" fill="#fca5a5" fontSize="10" fontWeight="900">2. Papan Terkena Oli (μ = 0,15):</text>
+          <text x="-125" y="-3" fill="#ffffff" fontSize="8.5">• Batas Gesek fs,max = 0,15 × 2.664 = 399 N</text>
+          <text x="-125" y="13" fill="#ffffff" fontSize="8.5">• Wx (1.242 N) &gt;&gt; fs,max (399 N) | α_kritis = 8,5° &lt;&lt; 25°</text>
+          <text x="-125" y="27" fill="#f87171" fontSize="9" fontWeight="900">➔ BAHAYA: MELUNCUR BEBAS (BISA MENIMPA ORANG!)</text>
+        </g>
+      </svg>
+    );
+
+    return renderCaseStudyCard({
+      caseNumber: '6',
+      title: 'Menurunkan Genset Bengkel 300 kg Melalui Ramp & Bahaya Ceceran Oli Licin (fs = μ · N)',
+      subtitle: 'Menghitung Sudut Kritis Merosot dan Bahaya Fatal Bila Bidang Miring Terkena Ceceran Oli Mesin',
+      svgIllustration: svg,
+      scenarioText: 'Siswa bengkel mesin sedang menurunkan unit generator genset darurat berbobot 300 kg (W = 2.940 N) dari bak mobil pikap menggunakan papan bidang miring dengan sudut kemiringan α = 25°. Koefisien gesek statis pada permukaan papan kayu kering adalah μ_kering = 0,55. Namun, saat proses berlangsung, terjadi tumpahan oli mesin bekas di permukaan papan sehingga koefisien geseknya anjlok drastis menjadi μ_oli = 0,15.',
+      givenData: [
+        { label: 'Berat Genset (W)', val: '300 × 9,8 = 2.940 N' },
+        { label: 'Sudut Kemiringan Ramp (α)', val: '25° (sin 25° = 0,4226 | cos 25° = 0,9063)' },
+        { label: 'Koefisien Gesek Statis Papan Kering (μ_kering)', val: '0,55' },
+        { label: 'Koefisien Gesek Statis Permukaan Beroli (μ_oli)', val: '0,15' }
+      ],
+      questions: [
+        '1. Berapakah gaya luncur gravitasi (Wx) yang mendorong genset meluncur ke bawah ramp?',
+        '2. Berapakah gaya gesek penahan maksimal pada kondisi kering (fs_kering)? Apakah genset meluncur atau diam?',
+        '3. Berapakah gaya gesek penahan saat ramp terkena oli (fs_oli)? Apa bahaya yang terjadi?',
+        '4. Berapakah sudut kritis merosot (α_kritis) untuk kedua kondisi tersebut?'
+      ],
+      solutions: [
+        {
+          title: 'Langkah 1: Menghitung Gaya Normal (N) dan Gaya Luncur Gravitasi (Wx)',
+          formula: 'N = W × cos(α)  |  Wx = W × sin(α)',
+          desc: 'N = 2.940 N × cos(25°) = 2.940 × 0,9063 = 2.664,5 Newton. Wx = 2.940 N × sin(25°) = 2.940 × 0,4226 = 1.242,4 Newton.',
+          result: 'N = 2.664,5 N  |  Wx = 1.242,4 N'
+        },
+        {
+          title: 'Langkah 2: Analisis Kondisi Papan Kayu Kering (μ = 0,55)',
+          formula: 'fs,max = μ_kering × N',
+          desc: 'fs,max = 0,55 × 2.664,5 N = 1.465,5 Newton. Sudut kritis: tan(α_kritis) = 0,55 ➔ α_kritis = arctan(0,55) = 28,8°. Karena sudut kemiringan ramp (25°) masih di bawah sudut kritis (28,8°), dan daya tahan gesek fs,max (1.465,5 N) > Wx (1.242,4 N), maka genset DIAM TERKUNCI AMAN.',
+          result: 'DIAM AMAN (fs,max 1.465,5 N > Wx 1.242,4 N)'
+        },
+        {
+          title: 'Langkah 3: Analisis Kondisi Papan Terkena Ceceran Oli Mesin (μ = 0,15)',
+          formula: 'fs,max = μ_oli × N',
+          desc: 'fs,max = 0,15 × 2.664,5 N = 399,7 Newton. Sudut kritis: α_kritis = arctan(0,15) = 8,5° (jauh lebih curam dari 8,5°!). Gaya gesek penahan (399,7 N) JAUH LEBIH KECIL dari gaya dorong gravitasi (1.242,4 N). Sisa gaya luncur tak tertahan: F_net = 1.242,4 - 399,7 = 842,7 N! Genset seberat 300 kg akan meluncur jatuh bebas tak terkendali!',
+          result: 'BAHAYA FATAL! Meluncur deras dengan gaya dorong bebas 842,7 N'
+        }
+      ],
+      workshopSafety: 'Bidang miring pemindah barang WAJIB bebas dari oli atau pelumas! Selalu gunakan pelat bordes bertekstur anti-selip (chequer plate) dan selalu pasang tali rem penahan atau takal kerek tambang di bagian atas saat menurunkan muatan berat.',
+      themeColor: '#0369a1'
+    });
+  };
+
   return (
     <div className="mechanics-lab-container" style={{
       padding: '20px',
@@ -2863,10 +3651,10 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            Studio Visual Mekanika Teknik
+            Pusat Rumus Mekanika Teknik &amp; Studi Kasus
           </h1>
           <p style={{ fontSize: '0.88rem', color: '#e0f2fe', margin: 0, lineHeight: 1.5 }}>
-            Pelajari konsep momen gaya, sistem tuas pengungkit, kesetimbangan balok, tegangan tarik, dan takal katrol lewat <strong>contoh nyata bengkel, kalkulator rumus interaktif, dan simulator visual</strong>.
+            Koleksi lengkap rumus mekanika terapan SMK, kalkulator interaktif pintar (bedah langkah 5 tahap), dan <strong>studi kasus nyata bengkel dengan gambar ilustrasi teknik</strong>.
           </p>
         </div>
 
@@ -2920,8 +3708,8 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {
               id: 'torque',
               icon: '🔧',
-              title: '1. Kunci Pas & Baut Macet',
-              problem: 'Kenapa pegang jauh terasa enteng?',
+              title: '1. Rumus Torsi (τ = F × d)',
+              problem: 'Kasus: Baut Roda Truk Macet Berkarat',
               formula: 'τ = F × d',
               color: '#0284c7',
               bg: '#f0f9ff'
@@ -2929,17 +3717,17 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {
               id: 'lever',
               icon: '🕹️',
-              title: '2. Tang Potong & Gunting Plat',
-              problem: 'Melipatgandakan gaya tekan tangan',
-              formula: 'W × Lb = F × Lk',
+              title: '2. Rumus Tuas (W·Lb = F·Lk)',
+              problem: 'Kasus: Mengungkit Mesin Bubut 600 kg',
+              formula: 'KM = Lk / Lb',
               color: '#b45309',
               bg: '#fffbeb'
             },
             {
               id: 'equilibrium',
               icon: '⚖️',
-              title: '3. Derek Crane & Balok',
-              problem: 'Tiang dekat menanggung beban 2x lipat',
+              title: '3. Rumus Kesetimbangan (ΣM = 0)',
+              problem: 'Kasus: Balok Crane Hoist Frais 1,2 Ton',
               formula: 'ΣM = 0 | ΣFy = 0',
               color: '#166534',
               bg: '#f0fdf4'
@@ -2947,8 +3735,8 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {
               id: 'stress',
               icon: '📏',
-              title: '4. Baut Silinder Mesin Putus',
-              problem: 'Jangan melewati batas elastis baja!',
+              title: '4. Rumus Tegangan (σ = F / A)',
+              problem: 'Kasus: Baut Silinder Head Diesel M14',
               formula: 'σ = F / A',
               color: '#6d28d9',
               bg: '#f5f3ff'
@@ -2956,8 +3744,8 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {
               id: 'pulley',
               icon: '🏗️',
-              title: '5. Takal Chain Block 1 Ton',
-              problem: 'Angkat 1 ton hanya dengan tarikan 250 kg',
+              title: '5. Rumus Katrol (F = W / n)',
+              problem: 'Kasus: Takal Chain Block Angkat 1 Ton',
               formula: 'F = W / n',
               color: '#047857',
               bg: '#ecfdf5'
@@ -2965,9 +3753,9 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {
               id: 'friction',
               icon: '📐',
-              title: '6. Ramp Muat & Bahaya Oli Licin',
-              problem: 'Kapan mesin merosot di bidang miring?',
-              formula: 'tan(α) > μ',
+              title: '6. Rumus Gesekan (fs = μ · N)',
+              problem: 'Kasus: Ramp Genset & Bahaya Oli Licin',
+              formula: 'fs = μ · N',
               color: '#0369a1',
               bg: '#f0f9ff'
             }
@@ -3025,14 +3813,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         paddingBottom: '4px'
       }}>
         {[
-          { id: 'torque', label: '🔧 Momen Gaya & Torsi', badge: 'Kunci Pas Baut' },
-          { id: 'lever', label: '🕹️ Sistem Tuas', badge: '3 Kelas Pengungkit' },
-          { id: 'equilibrium', label: '⚖️ Kesetimbangan', badge: 'Tumpuan Balok' },
-          { id: 'stress', label: '📏 Tegangan & Regangan', badge: 'Uji Tarik' },
-          { id: 'pulley', label: '🏗️ Katrol & Chain Block', badge: 'Takal Crane' },
-          { id: 'friction', label: '📐 Gesekan & Kemiringan', badge: 'Bidang Miring' },
-          { id: 'calculator', label: '🧮 Bank & Kalkulator Rumus', badge: 'Hitung Otomatis' },
-          { id: 'quiz', label: '🏆 Kuis Kasus Bengkel', badge: '+500 XP' }
+          { id: 'torque', label: '🔧 1. Rumus Torsi (τ = F × d)', badge: 'Kunci Pas Baut' },
+          { id: 'lever', label: '🕹️ 2. Rumus Tuas (W·Lb = F·Lk)', badge: 'Pengungkit Mesin' },
+          { id: 'equilibrium', label: '⚖️ 3. Rumus Kesetimbangan (ΣM = 0)', badge: 'Balok Crane' },
+          { id: 'stress', label: '📏 4. Rumus Tegangan (σ = F/A)', badge: 'Baut Silinder' },
+          { id: 'pulley', label: '🏗️ 5. Rumus Katrol (F = W/n)', badge: 'Chain Block 1 Ton' },
+          { id: 'friction', label: '📐 6. Rumus Gesekan (fs = μ·N)', badge: 'Ramp Miring & Oli' },
+          { id: 'calculator', label: '🧮 7. Bank Semua Rumus', badge: 'All-in-One' },
+          { id: 'quiz', label: '🏆 8. Kuis Kasus Bengkel', badge: '+500 XP' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -3072,7 +3860,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       </div>
 
       {/* =====================================================================
-          TAB 1: MOMEN GAYA & TORSI (KUNCI PAS BAUT)
+          TAB 1: RUMUS MOMEN GAYA & TORSI (τ = F × d)
       ===================================================================== */}
       {activeTab === 'torque' && (
         <div>
@@ -3092,279 +3880,16 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             />
           </div>
 
-          {/* Core Concept Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '20px' }}>
-            <div style={{ background: '#fef2f2', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #dc2626' }}>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#991b1b', marginBottom: '4px' }}>
-                ❌ Pegangan Terlalu Dekat (d = 10 cm)
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45 }}>
-                Lengan momen sangat pendek! Siswa harus mengerahkan tenaga otot raksasa <strong>600 Newton (setara beban 61 kg)</strong>! Baut terasa macet dan tidak mau berputar.
-              </div>
-            </div>
-
-            <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #f59e0b' }}>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#b45309', marginBottom: '4px' }}>
-                🟡 Pegangan Ujung Kunci (d = 30 cm)
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45 }}>
-                Jarak lengan bertambah 3x lipat! Gaya otot yang dibutuhkan berkurang 3x menjadi <strong>200 Newton (~20 kg)</strong>. Baut mulai bisa diputar.
-              </div>
-            </div>
-
-            <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #16a34a' }}>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#166534', marginBottom: '4px' }}>
-                ✅ Pakai Pipa Sambung (d = 60 cm)
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45 }}>
-                Lengan momen menjadi 6x lipat! Siswa hanya perlu mendorong dengan gaya <strong>100 Newton (~10 kg)</strong>. Terasa super enteng seperti memutar kran air!
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Wrench Torque Simulator */}
-          <div style={{
-            background: '#ffffff',
-            padding: '22px',
-            borderRadius: '16px',
-            boxShadow: '0 6px 18px rgba(0,0,0,0.06)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
-              <div>
-                <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-                  🎮 Simulator Visual Kunci Pas &amp; Baut Macet
-                </h3>
-                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                  Geser posisi tangan Anda di sepanjang gagang kunci dan buktikan sendiri perubahan gaya otot yang dibutuhkan!
-                </span>
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-              {/* Sliders */}
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                {/* One-Click Presets for Wrench */}
-                <div style={{ marginBottom: '14px', background: '#eff6ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#1d4ed8', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                    ⚡ PILIH SKENARIO BENGKEL (Klik isi otomatis):
-                  </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
-                    {[
-                      { label: '🛵 Baut Motor M8 (30 Nm, 15 cm)', d: 15, tau: 30 },
-                      { label: '🚗 Baut Roda Mobil (60 Nm, 30 cm)', d: 30, tau: 60 },
-                      { label: '🚛 Baut Truk + Pipa (100 Nm, 60 cm)', d: 60, tau: 100 },
-                      { label: '🥵 Salah Dekat (60 Nm, 5 cm Macet!)', d: 5, tau: 60 }
-                    ].map(preset => (
-                      <button
-                        key={preset.label}
-                        onClick={() => {
-                          sound.playClick();
-                          setHandDistanceCm(preset.d);
-                          setRequiredTorqueNm(preset.tau);
-                          setBoltTurnSuccess(null);
-                        }}
-                        style={{
-                          padding: '6px 8px',
-                          borderRadius: '6px',
-                          border: (handDistanceCm === preset.d && requiredTorqueNm === preset.tau) ? '2px solid #2563eb' : '1px solid #cbd5e1',
-                          background: (handDistanceCm === preset.d && requiredTorqueNm === preset.tau) ? '#dbeafe' : '#ffffff',
-                          color: '#1e40af',
-                          fontSize: '0.72rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          textAlign: 'left'
-                        }}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <label style={{ fontSize: '0.82rem', fontWeight: 800, color: '#1e293b' }}>
-                      1. Posisi Pegangan Tangan (Lengan Momen d):
-                    </label>
-                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#0284c7', background: '#e0f2fe', padding: '2px 8px', borderRadius: '4px' }}>
-                      {handDistanceCm} cm ({handDistanceMeter.toFixed(2)} m)
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="5"
-                    max="70"
-                    step="5"
-                    value={handDistanceCm}
-                    onChange={(e) => { sound.playClick(); setHandDistanceCm(Number(e.target.value)); setBoltTurnSuccess(null); }}
-                    style={{ width: '100%', accentColor: '#0284c7' }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b', marginTop: '2px' }}>
-                    <span>5 cm (Sangat Dekat)</span>
-                    <span>30 cm (Ujung Kunci)</span>
-                    <span>70 cm (Pipa Panjang)</span>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '18px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <label style={{ fontSize: '0.82rem', fontWeight: 800, color: '#1e293b' }}>
-                      2. Torsi Baut Yang Dibutuhkan (τ):
-                    </label>
-                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#ea580c', background: '#ffedd5', padding: '2px 8px', borderRadius: '4px' }}>
-                      {requiredTorqueNm} Nm
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="30"
-                    max="120"
-                    step="5"
-                    value={requiredTorqueNm}
-                    onChange={(e) => { sound.playClick(); setRequiredTorqueNm(Number(e.target.value)); setBoltTurnSuccess(null); }}
-                    style={{ width: '100%', accentColor: '#ea580c' }}
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#64748b', marginTop: '2px' }}>
-                    <span>30 Nm (Baut M8)</span>
-                    <span>60 Nm (Baut Roda)</span>
-                    <span>120 Nm (Baut Truk)</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleTurnBolt}
-                  style={{
-                    width: '100%',
-                    background: effortStatus === 'heavy' ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    color: '#ffffff',
-                    border: 'none',
-                    padding: '12px',
-                    borderRadius: '8px',
-                    fontWeight: 900,
-                    fontSize: '0.9rem',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.15)'
-                  }}
-                >
-                  🔄 COBA PUTAR BAUT DENGAN TENAGA INI!
-                </button>
-              </div>
-
-              {/* Visual Canvas */}
-              <div>
-                <div style={{
-                  background: '#0f172a',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  color: '#ffffff',
-                  position: 'relative',
-                  border: '1px solid #334155',
-                  marginBottom: '14px'
-                }}>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '10px' }}>
-                    Simulasi Visual Lengan Kunci &amp; Posisi Tangan
-                  </div>
-
-                  <svg viewBox="0 0 360 120" width="100%" height="120">
-                    {/* Nut Hexagon Rotating */}
-                    <g transform={`translate(45, 60) rotate(${rotationAngle})`}>
-                      <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11" fill="#475569" stroke="#cbd5e1" strokeWidth="2"/>
-                      <circle cx="0" cy="0" r="10" fill="#0f172a"/>
-                      <text x="0" y="3.5" textAnchor="middle" fill="#f8fafc" fontSize="7.5" fontWeight="bold">M16</text>
-                    </g>
-                    {/* Wrench body */}
-                    <path d="M 45,60 L 75,50 L 250,50 L 250,70 L 75,70 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1.5"/>
-                    <circle cx="250" cy="60" r="12" fill="#1e293b" stroke="#cbd5e1" strokeWidth="3"/>
-
-                    {/* Pipe extension if > 35cm */}
-                    {handDistanceCm > 35 && (
-                      <rect x="230" y="46" width="120" height="28" rx="4" fill="#ea580c" stroke="#f97316" strokeWidth="1.5" strokeDasharray="3,2"/>
-                    )}
-
-                    {(() => {
-                      const handX = 55 + ((handDistanceCm - 5) / 65) * 280;
-                      return (
-                        <g transform={`translate(${handX}, 28)`}>
-                          <line x1="0" y1="-10" x2="0" y2="20" stroke={effortColor} strokeWidth="3.5"/>
-                          <polygon points="-5,14 0,22 5,14" fill={effortColor}/>
-                          <circle cx="0" cy="-16" r="14" fill="#1e293b" stroke={effortColor} strokeWidth="2"/>
-                          <text x="0" y="-12" fontSize="12" textAnchor="middle">✋</text>
-                          <text x="0" y="-34" fontSize="8.5" fontWeight="900" fill={effortColor} textAnchor="middle">
-                            {effortForceNewton} N
-                          </text>
-                        </g>
-                      );
-                    })()}
-                  </svg>
-
-                  <div style={{
-                    background: `${effortColor}20`,
-                    border: `1px solid ${effortColor}`,
-                    padding: '10px 14px',
-                    borderRadius: '10px',
-                    marginBottom: '10px'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 900, color: effortColor }}>
-                          {effortBadge}
-                        </div>
-                        <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginTop: '2px' }}>
-                          {effortAdvice}
-                        </div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: effortColor }}>
-                          {effortForceNewton} N
-                        </div>
-                        <div style={{ fontSize: '0.68rem', color: '#94a3b8' }}>
-                          ≈ {effortKgEquivalent} kg beban otot
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Step-by-Step Math Breakdown Box */}
-                    <div style={{
-                      background: '#0f172a',
-                      borderRadius: '8px',
-                      padding: '10px 12px',
-                      border: '1px solid #334155'
-                    }}>
-                      <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', marginBottom: '4px' }}>
-                        📐 Bedah Perhitungan Simulator (τ = F × d):
-                      </div>
-                      <div style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#f8fafc', lineHeight: 1.5 }}>
-                        1. Data: Jarak d = {handDistanceCm} cm ({handDistanceMeter.toFixed(2)} m) | Torsi τ = {requiredTorqueNm} Nm<br />
-                        2. Rumus: F = τ / d<br />
-                        3. Hitung: F = {requiredTorqueNm} Nm ÷ {handDistanceMeter.toFixed(2)} m = <strong style={{ color: effortColor }}>{effortForceNewton} Newton</strong> (~{effortKgEquivalent} kg beban otot tangan)
-                      </div>
-                    </div>
-                  </div>
-
-                  {boltTurnSuccess === true && (
-                    <div style={{ marginTop: '10px', background: '#dcfce7', color: '#166534', padding: '8px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 800 }}>
-                      🎉 KLIK! Baut berhasil diputar dengan lancar! Torsi {requiredTorqueNm} Nm tercapai dengan mudah. (+100 XP)
-                    </div>
-                  )}
-                  {boltTurnSuccess === false && (
-                    <div style={{ marginTop: '10px', background: '#fee2e2', color: '#991b1b', padding: '8px 12px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 800 }}>
-                      ❌ TANGAN TIDAK KUAT! Gaya {effortForceNewton} N (&gt; 50 kg beban tangan) terlalu berat. Geser pegangan ke ujung kunci atau gunakan pipa sambungan!
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Embedded Interactive Formula Solver for Torque */}
+          {/* Interactive Formula Solver for Torque */}
           {renderTorqueFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderTorqueCaseStudy()}
         </div>
       )}
 
       {/* =====================================================================
-          TAB 2: SISTEM TUAS (PENGUNGKIT)
+          TAB 2: RUMUS SISTEM TUAS (PENGUNGKIT) (W · Lb = F · Lk)
       ===================================================================== */}
       {activeTab === 'lever' && (
         <div>
@@ -3386,11 +3911,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
           {/* Embedded Formula Solver */}
           {renderLeverFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderLeverCaseStudy()}
         </div>
       )}
 
       {/* =====================================================================
-          TAB 3: KESETIMBANGAN TUMPUAN BALOK (CRANE)
+          TAB 3: RUMUS KESETIMBANGAN BALOK CRANE (ΣM = 0 & ΣFy = 0)
       ===================================================================== */}
       {activeTab === 'equilibrium' && (
         <div>
@@ -3412,11 +3940,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
           {/* Embedded Formula Solver */}
           {renderBeamFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderBeamCaseStudy()}
         </div>
       )}
 
       {/* =====================================================================
-          TAB 4: TEGANGAN & REGANGAN (UJI TARIK)
+          TAB 4: RUMUS TEGANGAN & REGANGAN BAUT (σ = F / A)
       ===================================================================== */}
       {activeTab === 'stress' && (
         <div>
@@ -3438,11 +3969,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
           {/* Embedded Formula Solver */}
           {renderStressFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderStressCaseStudy()}
         </div>
       )}
 
       {/* =====================================================================
-          TAB 5: KATROL & CHAIN BLOCK
+          TAB 5: RUMUS KATROL & TAKAL CHAIN BLOCK (F = W / n)
       ===================================================================== */}
       {activeTab === 'pulley' && (
         <div>
@@ -3462,107 +3996,16 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             />
           </div>
 
-          {/* Interactive Pulley Simulator Card */}
-          <div style={{
-            background: '#ffffff',
-            padding: '22px',
-            borderRadius: '16px',
-            boxShadow: '0 6px 18px rgba(0,0,0,0.06)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ margin: '0 0 6px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              🎮 Kalkulator &amp; Simulator Mengangkat Mesin dengan Chain Block
-            </h3>
-            <p style={{ margin: '0 0 16px 0', fontSize: '0.8rem', color: '#64748b' }}>
-              Pilih jumlah tali penahan katrol majemuk untuk membuktikan bagaimana beban 1 ton dapat ditarik ringan oleh tangan manusia (F = W / n):
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ marginBottom: '14px' }}>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#1e293b', marginBottom: '6px' }}>
-                    Konfigurasi Tali Katrol (KM):
-                  </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
-                    {[
-                      { n: 1, label: '1 Tali (KM 1)' },
-                      { n: 2, label: '2 Tali (KM 2)' },
-                      { n: 4, label: '4 Tali (KM 4)' },
-                      { n: 8, label: '8 Tali (KM 8)' }
-                    ].map(p => (
-                      <button
-                        key={p.n}
-                        onClick={() => { sound.playClick(); setPulleyRopes(p.n); }}
-                        style={{
-                          padding: '8px 2px',
-                          borderRadius: '6px',
-                          border: pulleyRopes === p.n ? '2px solid #10b981' : '1px solid #cbd5e1',
-                          background: pulleyRopes === p.n ? '#dcfce7' : '#ffffff',
-                          color: pulleyRopes === p.n ? '#166534' : '#334155',
-                          fontSize: '0.75rem',
-                          fontWeight: 800,
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {p.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>Berat Mesin:</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#dc2626' }}>{machineWeightKg} kg ({Math.round(machineWeightN)} N)</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="200"
-                    max="2000"
-                    step="100"
-                    value={machineWeightKg}
-                    onChange={(e) => setMachineWeightKg(Number(e.target.value))}
-                    style={{ width: '100%', accentColor: '#dc2626' }}
-                  />
-                </div>
-              </div>
-
-              {/* Readout with Stepped Calculation */}
-              <div style={{ background: '#f0fdf4', padding: '16px', borderRadius: '12px', border: '1px solid #bbf7d0', borderLeft: '4px solid #10b981' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <div>
-                    <div style={{ fontSize: '0.72rem', color: '#166534', fontWeight: 800, textTransform: 'uppercase' }}>Tenaga Tarik Rantai Yang Dibutuhkan:</div>
-                    <div style={{ fontSize: '1.75rem', fontWeight: 900, color: '#166534', margin: '2px 0' }}>
-                      {pulleyPullForceN} Newton <span style={{ fontSize: '1rem', color: '#15803d' }}>(~{pulleyPullKgEquivalent} kg)</span>
-                    </div>
-                  </div>
-                  <span style={{ background: '#dcfce7', color: '#166534', padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 900 }}>
-                    KM = {pulleyRopes}×
-                  </span>
-                </div>
-
-                <div style={{ fontSize: '0.78rem', color: '#15803d', fontWeight: 700, marginBottom: '10px' }}>
-                  🎉 Beban mesin {machineWeightKg} kg diringankan {pulleyRopes}x lipat menjadi setara beban {pulleyPullKgEquivalent} kg!
-                </div>
-
-                {/* Step-by-step box */}
-                <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bbf7d0', fontSize: '0.75rem', fontFamily: 'monospace', color: '#0f172a', lineHeight: 1.55 }}>
-                  1. Berat total beban: W = {machineWeightKg} kg × 9.8 m/s² = {Math.round(machineWeightN)} N<br />
-                  2. Rumus: F = W / n (dengan n = {pulleyRopes} utas tali penahan)<br />
-                  3. Gaya tarik kuasa: F = {Math.round(machineWeightN)} N ÷ {pulleyRopes} = <strong>{pulleyPullForceN} Newton</strong> (~{pulleyPullKgEquivalent} kg)
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Embedded Formula Solver for Pulley */}
           {renderPulleyFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderPulleyCaseStudy()}
         </div>
       )}
 
       {/* =====================================================================
-          TAB 6: GESEKAN & BIDANG MIRING
+          TAB 6: RUMUS GESEKAN & BIDANG MIRING (fs = μ · N)
       ===================================================================== */}
       {activeTab === 'friction' && (
         <div>
@@ -3582,120 +4025,11 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             />
           </div>
 
-          <div style={{
-            background: '#ffffff',
-            padding: '22px',
-            borderRadius: '16px',
-            boxShadow: '0 6px 18px rgba(0,0,0,0.06)',
-            border: '1px solid #e2e8f0',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ margin: '0 0 6px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              🎮 Simulator Bidang Miring &amp; Gesekan Statis/Kinetis
-            </h3>
-            <p style={{ margin: '0 0 16px 0', fontSize: '0.8rem', color: '#64748b' }}>
-              Benda akan meluncur turun saat sudut bidang miring melebihi sudut gesek statis: tan(α) &gt; μ.
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                <div style={{ marginBottom: '14px' }}>
-                  <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 800, color: '#1e293b', marginBottom: '6px' }}>Kondisi Permukaan Bidang Miring:</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                    {[
-                      { id: 'rusty', name: 'Besi Karat', mu: 'μ = 0.65' },
-                      { id: 'dry', name: 'Besi Bersih', mu: 'μ = 0.35' },
-                      { id: 'grease', name: 'Oli Gemuk', mu: 'μ = 0.08' }
-                    ].map(s => (
-                      <button
-                        key={s.id}
-                        onClick={() => { sound.playClick(); setSurfaceType(s.id); }}
-                        style={{
-                          padding: '8px 4px',
-                          borderRadius: '6px',
-                          border: surfaceType === s.id ? '2px solid #0284c7' : '1px solid #cbd5e1',
-                          background: surfaceType === s.id ? '#e0f2fe' : '#ffffff',
-                          color: surfaceType === s.id ? '#0369a1' : '#334155',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <div>{s.name}</div>
-                        <div style={{ fontSize: '0.65rem', color: '#64748b' }}>{s.mu}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>Sudut Kemiringan (α):</span>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0284c7' }}>{inclineAngleDeg}°</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="5"
-                    max="55"
-                    step="1"
-                    value={inclineAngleDeg}
-                    onChange={(e) => setInclineAngleDeg(Number(e.target.value))}
-                    style={{ width: '100%', accentColor: '#0284c7' }}
-                  />
-                </div>
-              </div>
-
-              {/* Readout with Stepped Math Breakdown */}
-              {(() => {
-                const sampleW = 100; // Newton (massa ~10.2 kg)
-                const normForce = (sampleW * Math.cos(angleRad)).toFixed(1);
-                const parallelForce = (sampleW * Math.sin(angleRad)).toFixed(1);
-                const maxFriction = (frictionCoeff * Number(normForce)).toFixed(1);
-                const critAngle = ((Math.atan(frictionCoeff) * 180) / Math.PI).toFixed(1);
-                const tanVal = Math.tan(angleRad).toFixed(2);
-
-                return (
-                  <div style={{ background: isSliding ? '#fef2f2' : '#f0fdf4', padding: '16px', borderRadius: '12px', border: `1px solid ${isSliding ? '#fca5a5' : '#bbf7d0'}`, borderLeft: `4px solid ${isSliding ? '#dc2626' : '#16a34a'}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <div style={{ fontSize: '0.88rem', fontWeight: 900, color: isSliding ? '#dc2626' : '#16a34a' }}>
-                        {isSliding ? '⛷️ BENDA MELUNCUR TURUN!' : '🛑 BENDA DIAM TERKUNCI (GESEKAN STATIS)'}
-                      </div>
-                      <span style={{
-                        background: isSliding ? '#fee2e2' : '#dcfce7',
-                        color: isSliding ? '#991b1b' : '#166534',
-                        padding: '3px 8px',
-                        borderRadius: '6px',
-                        fontSize: '0.72rem',
-                        fontWeight: 800
-                      }}>
-                        α kritis = {critAngle}°
-                      </span>
-                    </div>
-
-                    <div style={{ fontSize: '0.78rem', color: isSliding ? '#991b1b' : '#166534', fontWeight: 700, marginBottom: '10px' }}>
-                      {isSliding
-                        ? `Sudut ${inclineAngleDeg}° sudah melebihi batas kritis (${critAngle}°). tan(${inclineAngleDeg}°) = ${tanVal} > μ (${frictionCoeff}).`
-                        : `Sudut ${inclineAngleDeg}° masih di bawah batas kritis (${critAngle}°). tan(${inclineAngleDeg}°) = ${tanVal} ≤ μ (${frictionCoeff}).`}
-                    </div>
-
-                    {/* Step-by-Step Math Breakdown Box */}
-                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '8px', border: `1px solid ${isSliding ? '#fecaca' : '#bbf7d0'}`, fontSize: '0.74rem', fontFamily: 'monospace', color: '#0f172a', lineHeight: 1.55 }}>
-                      <div style={{ fontWeight: 800, color: isSliding ? '#b91c1c' : '#15803d', marginBottom: '4px' }}>
-                        📐 Analisis Gaya Uji (Beban Balok W = 100 N):
-                      </div>
-                      1. Gaya Normal: N = W × cos({inclineAngleDeg}°) = 100 × {Math.cos(angleRad).toFixed(3)} = {normForce} N<br />
-                      2. Gaya Tarik Gravitasi: Wx = W × sin({inclineAngleDeg}°) = 100 × {Math.sin(angleRad).toFixed(3)} = {parallelForce} N<br />
-                      3. Batas Cengkeram Statis: fs,max = μ × N = {frictionCoeff} × {normForce} N = <strong>{maxFriction} N</strong><br />
-                      4. Kesimpulan: {isSliding ? `Wx (${parallelForce} N) > fs,max (${maxFriction} N) ➔ Gaya dorong gravitasi menang!` : `Wx (${parallelForce} N) ≤ fs,max (${maxFriction} N) ➔ Gesekan mampu menahan beban!`}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-
           {/* Embedded Formula Solver for Friction */}
           {renderFrictionFormulaSolver()}
+
+          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {renderFrictionCaseStudy()}
         </div>
       )}
 

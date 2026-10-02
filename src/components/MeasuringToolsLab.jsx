@@ -810,11 +810,9 @@ const MeasuringToolsLab = ({
   // 2. MIKROMETER SEKRUP STATE (0-25 mm)
   // ==========================================
   const [microValue, setMicroValue] = useState(7.74); // in mm (0 to 25) - default 7.74 mm matches textbook reference diagram
-  const [microWorkpiece, setMicroWorkpiece] = useState('bearing-ball');
   const [microReadingMode, setMicroReadingMode] = useState('standard'); // 'standard' or 'simple'
   const [showMicroReadout, setShowMicroReadout] = useState(true);
   const [isRatchetClicking, setIsRatchetClicking] = useState(false);
-  const [microViewMode, setMicroViewMode] = useState('detail'); // 'detail' (close-up like reference image), 'full' (whole micrometer), 'both'
   const [microShowGuides, setMicroShowGuides] = useState(true); // show alignment guidelines and annotations
 
   // ==========================================
@@ -2465,7 +2463,7 @@ const MeasuringToolsLab = ({
                     </button>
                   </div>
                 </div>
-                {/* VIEW MODE SELECTOR & GUIDELINE TOGGLE */}
+                {/* TOOLBAR & GUIDELINE TOGGLE */}
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -2477,83 +2475,38 @@ const MeasuringToolsLab = ({
                   borderRadius: '8px',
                   border: '1px solid var(--border-light)'
                 }}>
-                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '4px' }}>
-                      Mode Tampilan:
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#38bdf8' }}>
+                      🔬 SIMULATOR MIKROMETER SEKRUP PRESISI (0 - 25 mm)
                     </span>
-                    <button
-                      onClick={() => { sound.playClick(); setMicroViewMode('detail'); }}
-                      style={{
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        background: microViewMode === 'detail' ? '#0284c7' : 'transparent',
-                        color: microViewMode === 'detail' ? '#fff' : 'var(--text-muted)',
-                        border: microViewMode === 'detail' ? '1px solid #38bdf8' : '1px solid transparent',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      🔬 Detail Skala Presisi (Standar Soal/Gambar)
-                    </button>
-                    <button
-                      onClick={() => { sound.playClick(); setMicroViewMode('full'); }}
-                      style={{
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        background: microViewMode === 'full' ? '#0284c7' : 'transparent',
-                        color: microViewMode === 'full' ? '#fff' : 'var(--text-muted)',
-                        border: microViewMode === 'full' ? '1px solid #38bdf8' : '1px solid transparent',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      📐 Alat Fisik Lengkap (U-Frame)
-                    </button>
-                    <button
-                      onClick={() => { sound.playClick(); setMicroViewMode('both'); }}
-                      style={{
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        background: microViewMode === 'both' ? '#0284c7' : 'transparent',
-                        color: microViewMode === 'both' ? '#fff' : 'var(--text-muted)',
-                        border: microViewMode === 'both' ? '1px solid #38bdf8' : '1px solid transparent',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      ✨ Tampilan Ganda (Keduanya)
-                    </button>
+                    <span style={{ fontSize: '0.68rem', background: '#0284c7', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                      Ketelitian 0.01 mm
+                    </span>
                   </div>
 
-                  {(microViewMode === 'detail' || microViewMode === 'both') && (
-                    <button
-                      onClick={() => { sound.playClick(); setMicroShowGuides(!microShowGuides); }}
-                      style={{
-                        padding: '5px 10px',
-                        borderRadius: '6px',
-                        background: microShowGuides ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                        border: microShowGuides ? '1px solid #10b981' : '1px solid #64748b',
-                        color: microShowGuides ? '#10b981' : '#94a3b8',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px'
-                      }}
-                      title="Nyalakan/matikan garis bantu penunjuk segaris dan pembacaan"
-                    >
-                      <span>{microShowGuides ? '🎯 Garis Bantu: AKTIF' : '📝 Tampilan Murni (Soal)'}</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => { sound.playClick(); setMicroShowGuides(!microShowGuides); }}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      background: microShowGuides ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
+                      border: microShowGuides ? '1px solid #10b981' : '1px solid #64748b',
+                      color: microShowGuides ? '#10b981' : '#94a3b8',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px'
+                    }}
+                    title="Nyalakan/matikan garis bantu penunjuk segaris dan pembacaan"
+                  >
+                    <span>{microShowGuides ? '🎯 Garis Bantu: AKTIF' : '📝 Tampilan Murni (Soal)'}</span>
+                  </button>
                 </div>
 
                 {/* 1. HIGH-DETAIL CLOSE-UP SCALE VIEWPORT (SESUAI GAMBAR SOAL / BUKU TEKNIK) */}
-                {(microViewMode === 'detail' || microViewMode === 'both') && (
-                  <div style={{
+                <div style={{
                     background: '#030712',
                     borderRadius: '12px',
                     border: '2px solid #334155',
@@ -2783,216 +2736,6 @@ const MeasuringToolsLab = ({
                       </div>
                     )}
                   </div>
-                )}
-
-                {/* 2. FULL ASSEMBLY MICROMETER SVG VIEWPORT */}
-                {(microViewMode === 'full' || microViewMode === 'both') && (
-                  <div style={{
-                    background: '#090e18',
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-light)',
-                    padding: '24px 16px',
-                    overflowX: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    minHeight: '320px',
-                    gap: '10px'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 8px' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#94a3b8' }}>
-                        📐 ANATOMI FISIK LENGKAP (FRAME, ANVIL, SPINDLE, & BENDA KERJA)
-                      </span>
-                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                        Benda: {microWorkpiece === 'bearing-ball' ? 'Bola Baja (Bearing)' : 'Pelat Logam'}
-                      </span>
-                    </div>
-
-                    <svg viewBox="0 0 860 300" style={{ width: "100%", maxWidth: "860px", height: "auto", display: "block", userSelect: "none" }}>
-                      <defs>
-                        <linearGradient id="uFrameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#1e3a5f" />
-                          <stop offset="50%" stopColor="#2c5282" />
-                          <stop offset="100%" stopColor="#0f172a" />
-                        </linearGradient>
-                        <linearGradient id="chromeSteel" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#cfd8dc" />
-                          <stop offset="50%" stopColor="#ffffff" />
-                          <stop offset="100%" stopColor="#90a4ae" />
-                        </linearGradient>
-                        <linearGradient id="thimbleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#78909c" />
-                          <stop offset="30%" stopColor="#cfd8dc" />
-                          <stop offset="70%" stopColor="#eceff1" />
-                          <stop offset="100%" stopColor="#607d8b" />
-                        </linearGradient>
-                      </defs>
-
-                      {/* CAST STEEL U-FRAME (BINGKAI U) */}
-                      <path
-                        d="M 230 115 C 130 115, 70 175, 70 225 C 70 285, 150 305, 260 305 C 360 305, 410 275, 430 205 L 380 195 C 365 245, 320 265, 250 265 C 160 265, 115 240, 115 215 C 115 175, 165 155, 230 155 Z"
-                        fill="url(#uFrameGrad)"
-                        stroke="#38bdf8"
-                        strokeWidth="2"
-                      />
-
-                      {/* HEAT INSULATING PLATE (PELINDUNG PANAS TANGAN) */}
-                      <rect x="170" y="270" width="140" height="22" rx="5" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
-                      <text x="240" y="285" fontSize="10" fontWeight="bold" fill="#f59e0b" textAnchor="middle">
-                        0-25mm 0.01mm Mitutoyo
-                      </text>
-
-                      {/* FIXED ANVIL (LANDASAN TETAP) */}
-                      <rect x="220" y="122" width="25" height="36" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1" />
-                      {/* Carbide Tip on Anvil */}
-                      <rect x="240" y="122" width="5" height="36" fill="#1e293b" />
-
-                      {/* WORKPIECE BETWEEN ANVIL & SPINDLE */}
-                      {microWorkpiece === 'bearing-ball' && microValue > 0.5 && (
-                        <g id="workpiece-ball">
-                          <circle
-                            cx={245 + (microValue * 8.5) / 2}
-                            cy="140"
-                            r={Math.min((microValue * 8.5) / 2, 28)}
-                            fill="url(#goldHighlight)"
-                            stroke="#b45309"
-                            strokeWidth="1.5"
-                          />
-                          <text
-                            x={245 + (microValue * 8.5) / 2}
-                            y="144"
-                            fontSize="8"
-                            fontWeight="bold"
-                            fill="#000"
-                            textAnchor="middle"
-                          >
-                            Bola (Ø)
-                          </text>
-                        </g>
-                      )}
-
-                      {/* MOVABLE SPINDLE (POROS UKUR GESER) */}
-                      <rect
-                        x={245 + microValue * 8.5}
-                        y="122"
-                        width={185 - microValue * 8.5}
-                        height="36"
-                        fill="url(#chromeSteel)"
-                        stroke="#475569"
-                        strokeWidth="1"
-                      />
-                      {/* Carbide Tip on Spindle */}
-                      <rect x={245 + microValue * 8.5} y="122" width="5" height="36" fill="#1e293b" />
-
-                      {/* SPINDLE LOCK NUT LEVER */}
-                      <rect x="415" y="112" width="15" height="56" rx="3" fill="#64748b" stroke="#334155" />
-                      <circle cx="422" cy="140" r="5" fill="#f59e0b" />
-
-                      {/* SLEEVE / BARREL (SILINDER UTAMA TETAP) */}
-                      <rect x="430" y="116" width="250" height="48" fill="url(#chromeSteel)" stroke="#475569" strokeWidth="1.5" />
-                      
-                      {/* Compute thimble X position in assembly */}
-                      {(() => {
-                        const thimbleX = 445 + microValue * 8.5;
-                        return (
-                          <g>
-                            {/* SLEEVE DATUM LINE */}
-                            <line x1="430" y1="140" x2={thimbleX} stroke="#0f172a" strokeWidth="2" />
-
-                            {/* SLEEVE ENGRAVINGS (0 to 25 mm) */}
-                            {Array.from({ length: 26 }).map((_, i) => {
-                              const sx = 445 + i * 8.5;
-                              if (sx > thimbleX) return null;
-                              const isFive = i % 5 === 0;
-                              return (
-                                <g key={'slv-' + i}>
-                                  <line
-                                    x1={sx}
-                                    y1="140"
-                                    x2={sx}
-                                    y2={isFive ? "120" : "126"}
-                                    stroke="#0f172a"
-                                    strokeWidth={isFive ? 1.8 : 1.1}
-                                  />
-                                  {isFive && (
-                                    <text x={sx} y="117" fontSize="9" fontWeight="bold" fill="#0f172a" textAnchor="middle">
-                                      {i}
-                                    </text>
-                                  )}
-                                  {microReadingMode === 'standard' && i < 25 && (sx + 4.25 <= thimbleX) && (
-                                    <line
-                                      x1={sx + 4.25}
-                                      y1="140"
-                                      x2={sx + 4.25}
-                                      y2="153"
-                                      stroke="#0f172a"
-                                      strokeWidth="1.1"
-                                    />
-                                  )}
-                                </g>
-                              );
-                            })}
-
-                            {/* ROTATING THIMBLE */}
-                            <g transform={`translate(${thimbleX}, 0)`}>
-                              {/* Thimble Bevel Nose */}
-                              <polygon
-                                points="0,114 38,108 38,172 0,166"
-                                fill="url(#thimbleGrad)"
-                                stroke="#334155"
-                                strokeWidth="1.2"
-                              />
-                              {/* Thimble Main Cylindrical Body */}
-                              <rect x="38" y="108" width="125" height="64" fill="url(#thimbleGrad)" stroke="#334155" strokeWidth="1.2" />
-                              
-                              {/* Knurled Grip Texture */}
-                              {Array.from({ length: 11 }).map((_, ki) => (
-                                <line key={'knurl-' + ki} x1={70 + ki * 5} y1="110" x2={70 + ki * 5} y2="170" stroke="#64748b" strokeWidth="1" strokeDasharray="3,3" />
-                              ))}
-
-                              {/* SKALA NONIUS ENGRAVINGS */}
-                              {[-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].map((offset) => {
-                                const maxDivA = microReadingMode === 'standard' ? 50 : 100;
-                                let divNum = (microThimbleDivisions + offset + maxDivA) % maxDivA;
-                                const ty = 140 - offset * 4.8;
-                                const isCoincident = offset === 0;
-                                const isFiveT = divNum % 5 === 0;
-                                return (
-                                  <g key={'thim-tick-' + offset}>
-                                    <line
-                                      x1="0"
-                                      y1={ty}
-                                      x2={isCoincident ? "22" : (isFiveT ? "15" : "9")}
-                                      stroke={isCoincident ? "#ef4444" : "#0f172a"}
-                                      strokeWidth={isCoincident ? 2.5 : 1}
-                                    />
-                                    {(isFiveT || isCoincident) && (
-                                      <text
-                                        x="24"
-                                        y={ty + 3.5}
-                                        fontSize={isCoincident ? "10" : "8"}
-                                        fontWeight={isCoincident ? "900" : "bold"}
-                                        fill={isCoincident ? "#ef4444" : "#1e293b"}
-                                        textAnchor="start"
-                                      >
-                                        {divNum}
-                                      </text>
-                                    )}
-                                  </g>
-                                );
-                              })}
-
-                              {/* RATCHET STOP KNOB */}
-                              <rect x="163" y="120" width="46" height="40" rx="4" fill="#1e293b" stroke="#0f172a" strokeWidth="1.5" />
-                              <circle cx="186" cy="140" r="8" fill={isRatchetClicking ? '#f59e0b' : '#334155'} />
-                            </g>
-                          </g>
-                        );
-                      })()}
-                    </svg>
-                  </div>
-                )}
 
                 {/* CONTROLS (SLIDER & STEPPERS) */}
                 <div style={{

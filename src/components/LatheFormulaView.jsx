@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 
-// Database Standar Kecepatan Potong (Cutting Speed Vc / Cs) untuk Mesin Bubut
+// Database Standar Kecepatan Potong (Cutting Speed Vc / Cs) untuk Mesin Bubut SMK
 export const CS_DATABASE = [
   {
     material: 'Baja Lunak / Karbon Rendah (St 37 / Mild Steel)',
@@ -9,49 +9,49 @@ export const CS_DATABASE = [
     csCarbide: 150,
     feedRough: '0.20 - 0.40',
     feedFinish: '0.08 - 0.15',
-    coolant: 'Soluble Oil (Emulsi Putih)',
-    desc: 'Kandungan karbon < 0.25%, ulet, mudah dibentuk, tatal bersambung.'
+    coolant: 'Soluble Oil (Emulsi Air Susu)',
+    desc: 'Kandungan karbon < 0.25%. Bahan latihan utama siswa kelas 10, ulet dan mudah disayat.'
   },
   {
-    material: 'Baja Karbon Sedang (St 45 / S45C / AISI 1045)',
+    material: 'Baja Karbon Sedang (St 45 / S45C / As Poros)',
     csHss: 20,
     csCarbide: 120,
     feedRough: '0.15 - 0.35',
     feedFinish: '0.06 - 0.12',
     coolant: 'Soluble Oil / Mineral Oil',
-    desc: 'Kandungan karbon 0.35 - 0.50%, bahan umum untuk poros mesin, roda gigi, dan as.'
+    desc: 'Kandungan karbon 0.35 - 0.50%. Bahan baku poros mesin, baut berkekuatan tinggi, dan as roda.'
   },
   {
-    material: 'Baja Karbon Tinggi & Paduan (St 60 / VCL / Tool Steel)',
+    material: 'Baja Paduan & Perkakas (St 60 / Tool Steel)',
     csHss: 15,
     csCarbide: 90,
     feedRough: '0.12 - 0.25',
     feedFinish: '0.05 - 0.10',
     coolant: 'Heavy Duty Cutting Oil',
-    desc: 'Keras dan tahan aus, membutuhkan gaya potong tinggi dan pahat karbida berlapis TiAlN.'
+    desc: 'Keras dan tahan gesekan, membutuhkan gaya potong tinggi dan pahat karbida.'
   },
   {
-    material: 'Besi Tuang / Besi Cor Kelabu (Cast Iron / FC 25)',
+    material: 'Besi Tuang / Cor Kelabu (Cast Iron / FC 25)',
     csHss: 18,
     csCarbide: 110,
     feedRough: '0.20 - 0.45',
     feedFinish: '0.10 - 0.20',
-    coolant: 'Kering (Dry) / Udara Bertekanan',
-    desc: 'Getas, tatal berupa serbuk debu grafit. Tidak boleh disiram air agar tatal tidak membatu.'
+    coolant: 'Kering (Dry) / Tiupan Udara',
+    desc: 'Getas, tatal berupa serbuk debu grafit. Dibubut kering tanpa air agar tatal tidak membatu.'
   },
   {
-    material: 'Aluminium & Paduannya (Al Alloy 6061 / Dural)',
+    material: 'Aluminium & Paduannya (Dural / Al 6061)',
     csHss: 80,
-    csCarbide: 320,
+    csCarbide: 300,
     feedRough: '0.25 - 0.50',
     feedFinish: '0.08 - 0.18',
     coolant: 'Minyak Tanah (Kerosene) / Emulsi Ringan',
-    desc: 'Logam non-ferro sangat lunak, kecepatan sayat sangat tinggi, rawan terbentuk Built-Up Edge.'
+    desc: 'Logam non-ferro sangat lunak, kecepatan sayat sangat tinggi, hasil permukaan sangat mengkilap.'
   },
   {
-    material: 'Kuningan / Tembaga (Brass / Copper / Bronze)',
+    material: 'Kuningan & Tembaga (Brass / Copper)',
     csHss: 45,
-    csCarbide: 220,
+    csCarbide: 200,
     feedRough: '0.20 - 0.40',
     feedFinish: '0.08 - 0.15',
     coolant: 'Kering atau Emulsi Ringan',
@@ -63,8 +63,8 @@ export const CS_DATABASE = [
     csCarbide: 85,
     feedRough: '0.12 - 0.25',
     feedFinish: '0.05 - 0.10',
-    coolant: 'Sulphur-based Extreme Pressure Oil',
-    desc: 'Cepat mengeras saat terdeformasi (work-hardening). Sayatan harus mantap dan tidak boleh berhenti di tempat.'
+    coolant: 'Sulphur-based EP Oil',
+    desc: 'Cepat mengeras jika tergesek (work-hardening). Sayatan harus mantap dan tidak boleh berhenti di tempat.'
   }
 ];
 
@@ -79,50 +79,38 @@ const LatheFormulaView = ({
   onApplyRpm,
   onGoToCutting
 }) => {
-  // Tab Navigasi:
-  // 'spindle' (n & Vc), 'time' (F & Tc all ops), 'taper' (3 Metode Tirus), 'doc-mrr' (a & MRR), 'thread' (Ulir Metris), 'examples' (Contoh Soal Rinci), 'glossary' (Bank Rumus & Simbol)
-  const [activeTab, setActiveTab] = useState('spindle');
+  // Sub-Tab Navigation:
+  // 'cutting-speed' | 'spindle' | 'time' | 'taper' | 'doc-mrr' | 'examples' | 'glossary'
+  const [activeTab, setActiveTab] = useState('cutting-speed');
   const [appliedNotice, setAppliedNotice] = useState(null);
 
-  // 1. Spindle RPM State
+  // Tab 1: Dedicated Cutting Speed (Vc) Calculator State
+  const [csCalcDiameter, setCsCalcDiameter] = useState(30); // mm
+  const [csCalcRpm, setCsCalcRpm] = useState(500); // RPM
+
+  // Tab 2: Spindle Speed (n) Calculator State
   const [selectedMaterialIdx, setSelectedMaterialIdx] = useState(0);
-  const [toolType, setToolType] = useState('carbide'); // 'hss' | 'carbide'
+  const [toolType, setToolType] = useState('hss'); // default hss for kelas 10
   const [calcDiameter, setCalcDiameter] = useState(initialDiameter);
   const [customCs, setCustomCs] = useState(null);
 
-  // 2. Feeding & Time State (Turning, Facing, Grooving, Drilling, Threading)
-  const [opCategory, setOpCategory] = useState('turning'); // 'turning' | 'facing' | 'drilling' | 'grooving' | 'threading'
+  // Tab 3: Feeding & Time State
+  const [opCategory, setOpCategory] = useState('turning'); // 'turning' | 'facing' | 'drilling'
   const [calcLength, setCalcLength] = useState(initialLength);
-  const [calcFeedRev, setCalcFeedRev] = useState(0.15); // mm/putaran (f)
+  const [calcFeedRev, setCalcFeedRev] = useState(0.10); // mm/putaran (f)
   const [calcSpindleRpm, setCalcSpindleRpm] = useState(currentRpm);
   const [safetyApproach, setSafetyApproach] = useState(2); // la (mm)
-  const [safetyOverrun, setSafetyOverrun] = useState(1); // lu (mm)
-  const [numPasses, setNumPasses] = useState(1); // i (frekuensi pemakanan)
-  
-  // Drilling specifics
-  const [drillDiameter, setDrillDiameter] = useState(12);
-  const [drillDepth, setDrillDepth] = useState(40);
 
-  // Grooving specifics
-  const [grooveDepth, setGrooveDepth] = useState(5);
-
-  // Threading specifics
-  const [threadPitch, setThreadPitch] = useState(2.0); // P (mm)
-  const [threadLength, setThreadLength] = useState(40);
-  const [threadPasses, setThreadPasses] = useState(6);
-
-  // 3. Taper Turning State
-  const [taperMode, setTaperMode] = useState('eretan'); // 'eretan' | 'tailstock' | 'konisitas'
+  // Tab 4: Taper Turning State (Simple & Advanced)
   const [bigD, setBigD] = useState(initialDiameter);
-  const [smallD, setSmallD] = useState(Math.max(10, initialDiameter - 12));
-  const [taperL, setTaperL] = useState(45);
+  const [smallD, setSmallD] = useState(Math.max(10, initialDiameter - 10));
+  const [taperL, setTaperL] = useState(30);
   const [totalWorkLength, setTotalWorkLength] = useState(initialLength);
 
-  // 4. Depth of Cut & MRR State
+  // Tab 5: Depth of Cut State
   const [docRawD, setDocRawD] = useState(initialDiameter);
-  const [docTargetD, setDocTargetD] = useState(Math.max(10, initialDiameter - 8));
+  const [docTargetD, setDocTargetD] = useState(Math.max(10, initialDiameter - 6));
   const [passesCount, setPassesCount] = useState(2);
-  const [specificForceKc, setSpecificForceKc] = useState(2200); // N/mm² untuk baja
 
   // Match initial material name
   useEffect(() => {
@@ -141,7 +129,7 @@ const LatheFormulaView = ({
       setCalcDiameter(initialDiameter);
       setBigD(initialDiameter);
       setDocRawD(initialDiameter);
-      setDocTargetD(Math.max(5, initialDiameter - 8));
+      setDocTargetD(Math.max(5, initialDiameter - 6));
     }
   }, [initialDiameter]);
 
@@ -149,7 +137,15 @@ const LatheFormulaView = ({
   // MATHEMATICAL CALCULATIONS (EXACT & STEPPED)
   // ==========================================
 
-  // 1. Spindle RPM
+  // 1. Standalone Cutting Speed Calculation: Vc = (π * d * n) / 1000
+  const validCsD = Math.max(0.1, Number(csCalcDiameter) || 1);
+  const validCsRpm = Math.max(1, Number(csCalcRpm) || 100);
+  const calculatedCircumference = (Math.PI * validCsD).toFixed(2); // mm per putaran
+  const calculatedTotalLinearMm = (Math.PI * validCsD * validCsRpm).toFixed(1); // mm per menit
+  const calculatedCuttingSpeedExact = ((Math.PI * validCsD * validCsRpm) / 1000);
+  const calculatedCuttingSpeedDisplay = calculatedCuttingSpeedExact.toFixed(2);
+
+  // 2. Spindle RPM Calculation: n = (1000 * Vc) / (π * d)
   const presetCs = toolType === 'carbide'
     ? CS_DATABASE[selectedMaterialIdx].csCarbide
     : CS_DATABASE[selectedMaterialIdx].csHss;
@@ -162,41 +158,24 @@ const LatheFormulaView = ({
     Math.abs(curr - theoreticalRpm) < Math.abs(prev - theoreticalRpm) ? curr : prev
   );
 
-  // Cutting Speed Real jika memakai Gearbox terdekat
-  const actualCsWithStandardRpm = ((Math.PI * validD * nearestStandardRpm) / 1000).toFixed(1);
-
-  // 2. Feeding & Machining Time (Tc)
+  // 3. Feeding & Time Calculation
   const validF = Math.max(0.01, Number(calcFeedRev) || 0.1);
   const validRpmForTime = Math.max(1, Number(calcSpindleRpm) || 100);
   const feedSpeedF = (validF * validRpmForTime).toFixed(1); // mm/menit
   
-  // Cut distance per operation
-  let effectiveStrokeL = Number(calcLength) + Number(safetyApproach) + Number(safetyOverrun);
-  let effectivePasses = Math.max(1, Number(numPasses) || 1);
-
+  let strokeDistance = Number(calcLength) + Number(safetyApproach);
   if (opCategory === 'facing') {
-    effectiveStrokeL = (validD / 2) + Number(safetyApproach);
+    strokeDistance = (validD / 2) + Number(safetyApproach);
   } else if (opCategory === 'drilling') {
-    const drillPointCone = 0.3 * Number(drillDiameter);
-    effectiveStrokeL = Number(drillDepth) + drillPointCone + Number(safetyApproach);
-  } else if (opCategory === 'grooving') {
-    effectiveStrokeL = Number(grooveDepth) + Number(safetyApproach);
-  } else if (opCategory === 'threading') {
-    effectiveStrokeL = Number(threadLength) + Number(safetyApproach) + Number(safetyOverrun);
-    effectivePasses = Math.max(1, Number(threadPasses) || 6);
+    strokeDistance = Number(calcLength) + (0.3 * validD) + Number(safetyApproach);
   }
 
-  // Waktu per sayatan & waktu total
-  const timePerPassMin = (effectiveStrokeL / (validF * validRpmForTime));
-  const timeTotalMin = opCategory === 'threading'
-    ? (effectiveStrokeL / (Number(threadPitch) * validRpmForTime)) * effectivePasses
-    : timePerPassMin * effectivePasses;
-
-  const totalSeconds = Math.round(timeTotalMin * 60);
+  const machiningTimeMin = (strokeDistance / (validF * validRpmForTime));
+  const totalSeconds = Math.round(machiningTimeMin * 60);
   const displayMinutes = Math.floor(totalSeconds / 60);
   const displaySeconds = totalSeconds % 60;
 
-  // 3. Taper Calculations
+  // 4. Taper Calculation: tg α = (D - d) / (2 * l)
   const validBigD = Number(bigD) || 0;
   const validSmallD = Number(smallD) || 0;
   const validTaperL = Math.max(0.1, Number(taperL) || 1);
@@ -208,48 +187,26 @@ const LatheFormulaView = ({
   const alphaDeg = (alphaRad * 180 / Math.PI);
   const alphaDegFixed = alphaDeg.toFixed(2);
   const alphaDegInt = Math.floor(alphaDeg);
-  const alphaMinInt = Math.floor((alphaDeg - alphaDegInt) * 60);
-  const alphaSecInt = Math.round(((alphaDeg - alphaDegInt) * 60 - alphaMinInt) * 60);
-
-  // Tailstock Offset
+  const alphaMinInt = Math.round((alphaDeg - alphaDegInt) * 60);
   const tailstockOffset = (tanAlpha * validTotalL).toFixed(2);
 
-  // Konisitas (K)
-  const conicityK = validTaperL > 0 ? (dDiff / validTaperL) : 0;
-  const conicityRatio = conicityK > 0 ? Math.round(1 / conicityK) : 0;
-
-  // 4. Depth of Cut (a), MRR & Power
+  // 5. Depth of Cut
   const validRawD = Number(docRawD) || 0;
   const validTargetD = Number(docTargetD) || 0;
   const totalDoc = Math.max(0, (validRawD - validTargetD) / 2);
   const docPerPass = (totalDoc / Math.max(1, parseInt(passesCount) || 1)).toFixed(2);
 
-  // MRR = 1000 * Vc * f * a [mm³/menit]
-  const mrrMm3Min = Math.round(1000 * effectiveCs * validF * Number(docPerPass));
-  const mrrCm3Min = (mrrMm3Min / 1000).toFixed(1);
-
-  // Estimasi Daya Potong Pc [kW] = (Fc * Vc) / (60000 * eta) dengan Fc = kc * a * f
-  const cuttingForceFc = specificForceKc * Number(docPerPass) * validF; // Newton
-  const powerPckW = ((cuttingForceFc * effectiveCs) / (60000 * 0.8)).toFixed(2); // efisiensi 80%
-
-  // 5. Threading Metrics (Metris ISO)
-  const curThreadPitch = Number(threadPitch) || 2.0;
-  const threadDepthH1 = (0.6134 * curThreadPitch).toFixed(3); // kedalaman ulir luar
-  const threadMinorD = (validBigD - (1.2268 * curThreadPitch)).toFixed(2);
-  const threadPitchD = (validBigD - (0.6495 * curThreadPitch)).toFixed(2);
-  const tapDrillD = (validBigD - curThreadPitch).toFixed(2);
-
   const handleApplySpindleRpm = (rpmVal) => {
     sound.playSuccess();
     if (onApplyRpm) onApplyRpm(rpmVal);
-    setAppliedNotice(`Spindel mesin pemotong berhasil diatur ke ${rpmVal} RPM!`);
+    setAppliedNotice(`Spindel mesin berhasil disinkronkan ke ${rpmVal} RPM!`);
     setTimeout(() => setAppliedNotice(null), 3500);
   };
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '1180px', margin: '0 auto', color: '#f8fafc', paddingBottom: '30px' }}>
       
-      {/* HEADER BANNER UTAMA */}
+      {/* HEADER BANNER */}
       <div style={{
         background: 'linear-gradient(135deg, #0b1528 0%, #172554 100%)',
         border: '1.5px solid #38bdf8',
@@ -279,14 +236,14 @@ const LatheFormulaView = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h2 style={{ fontSize: '1.45rem', fontWeight: 900, margin: 0, color: '#ffffff', letterSpacing: '0.5px' }}>
-                PANDUAN RUMUS & KALKULATOR PEMESINAN BUBUT
+                RUMUS TEKNIK PEMESINAN BUBUT DASAR (KELAS 10 SMK)
               </h2>
               <span style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #38bdf8', color: '#38bdf8', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>
-                ISO 3685 & DIN 8589
+                Kurikulum Merdeka / Fase E
               </span>
             </div>
             <p style={{ margin: '6px 0 0 0', fontSize: '0.88rem', color: '#93c5fd' }}>
-              Kumpulan rumus matematis lengkap, penurunan variabel, diagram skematis teknik, contoh pengerjaan soal terperinci, dan kalkulator interaktif berstandar SMK Teknik Pemesinan.
+              Panduan rumus kecepatan potong (Cutting Speed), putaran spindel (RPM), gerak makan, waktu pembubutan, dan contoh studi kasus dasar bengkel yang mudah dipahami siswa baru.
             </p>
           </div>
         </div>
@@ -310,7 +267,7 @@ const LatheFormulaView = ({
               transition: 'all 0.2s'
             }}
           >
-            <span>⚙️ Lanjut ke Proses Pemotongan</span> →
+            <span>⚙️ Menuju Proses Pemotongan</span> →
           </button>
         )}
       </div>
@@ -332,7 +289,7 @@ const LatheFormulaView = ({
         </div>
       )}
 
-      {/* BILAH SUB-TAB LENGKAP */}
+      {/* BILAH SUB-TAB DENGAN HIGHLIGHT KHUSUS CUTTING SPEED & STUDI KASUS */}
       <div style={{
         display: 'flex',
         gap: '6px',
@@ -343,20 +300,20 @@ const LatheFormulaView = ({
         border: '1px solid #1e293b'
       }}>
         {[
-          { id: 'spindle', label: '1. Putaran Spindel (n & Vc)', icon: '🔄' },
-          { id: 'time', label: '2. Waktu Pemesinan (Tc Semua Operasi)', icon: '⏱️' },
-          { id: 'taper', label: '3. Pembubutan Tirus (3 Metode)', icon: '📐' },
-          { id: 'doc-mrr', label: '4. Tebal Sayat, MRR & Daya (a, Q, Pc)', icon: '⚡' },
-          { id: 'thread', label: '5. Parameter Ulir Metris (M-Thread)', icon: '🔩' },
-          { id: 'examples', label: '6. Contoh Soal & Langkah Rinci', icon: '📝' },
-          { id: 'glossary', label: '7. Glosarium Simbol & Tabel ISO', icon: '📚' }
+          { id: 'cutting-speed', label: '1. Kecepatan Potong (Cutting Speed / Vc)', icon: '⚡' },
+          { id: 'spindle', label: '2. Putaran Mesin / Spindel (n / RPM)', icon: '🔄' },
+          { id: 'time', label: '3. Gerak Makan & Waktu Sayat (F & Tc)', icon: '⏱️' },
+          { id: 'taper', label: '4. Pembubutan Tirus Sederhana', icon: '📐' },
+          { id: 'doc-mrr', label: '5. Kedalaman Potong Radial (a)', icon: '📏' },
+          { id: 'examples', label: '6. Studi Kasus Dasar (Kelas 10 SMK)', icon: '📝' },
+          { id: 'glossary', label: '7. Glosarium Simbol & Tabel Standar', icon: '📚' }
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => { sound.playClick(); setActiveTab(tab.id); }}
             style={{
               flex: '1 1 150px',
-              padding: '10px 12px',
+              padding: '10px 14px',
               borderRadius: '10px',
               border: activeTab === tab.id ? '2px solid #38bdf8' : '1px solid transparent',
               background: activeTab === tab.id ? 'rgba(56, 189, 248, 0.18)' : 'transparent',
@@ -378,95 +335,213 @@ const LatheFormulaView = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 1: PUTARAN SPINDEL (n & Vc) */}
+      {/* TAB 1: RUMUS KECEPATAN POTONG (CUTTING SPEED - Vc / Cs) */}
       {/* ========================================================================= */}
-      {activeTab === 'spindle' && (
+      {activeTab === 'cutting-speed' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* PENJELASAN KONSEP & DIAGRAM TEKNIK */}
-          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🔄</span> Prinsip Kecepatan Potong (Cutting Speed - Vc) dan Putaran Spindel (n)
-            </h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-                <p style={{ margin: '0 0 10px 0' }}>
-                  <strong>Kecepatan Potong (Vc atau Cs)</strong> adalah panjang keliling benda kerja yang disayat oleh ujung mata pahat dalam waktu satu menit (dinyatakan dalam satuan <strong>meter/menit</strong>).
-                </p>
-                <div style={{ background: 'rgba(2, 132, 199, 0.1)', borderLeft: '4px solid #38bdf8', padding: '10px 14px', borderRadius: '0 8px 8px 0', marginBottom: '10px' }}>
-                  <strong>Mengapa ada angka 1000 pada rumus?</strong><br />
-                  Kecepatan potong Vc bersatuan <em>meter</em>, sedangkan diameter benda kerja d diukur dalam <em>milimeter</em> (1 m = 1000 mm). Angka 1000 adalah faktor konversi agar satuannya konsisten!
+          {/* DEFINISI & ASAL USUL RUMUS CUTTING SPEED */}
+          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <span style={{ fontSize: '1.6rem' }}>⚡</span>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8', margin: 0 }}>
+                  RUMUS KECEPATAN POTONG (CUTTING SPEED - Vc atau Cs)
+                </h3>
+                <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>
+                  Konsep paling fundamental dalam pemesinan bubut untuk menentukan kemampuan potong pahat terhadap bahan
                 </div>
-                <div style={{ color: '#93c5fd', fontSize: '0.84rem' }}>
-                  • Jika diameter benda kerja semakin <strong>kecil</strong>, maka putaran mesin $n$ harus semakin <strong>tinggi</strong>.<br />
-                  • Jika bahan benda kerja semakin <strong>keras</strong>, maka nilai $V_c$ semakin <strong>kecil</strong> sehingga $n$ diperlambat.
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'center' }}>
+              <div style={{ fontSize: '0.9rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                <p style={{ margin: '0 0 12px 0' }}>
+                  <strong>Apa itu Kecepatan Potong (Cutting Speed)?</strong><br />
+                  Ibarat roda sepeda yang menggelinding di atas jalan aspal, <strong>Kecepatan Potong (Vc)</strong> adalah panjang lintasan keliling benda kerja yang disayat oleh ujung mata pahat dalam waktu <strong>satu menit</strong>.
+                </p>
+
+                <div style={{ background: 'rgba(2, 132, 199, 0.1)', borderLeft: '4px solid #38bdf8', padding: '12px 16px', borderRadius: '0 8px 8px 0', marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 800, color: '#38bdf8', marginBottom: '4px' }}>Asal-Usul Penurunan Rumus (Mudah Dipahami):</div>
+                  <div style={{ fontSize: '0.85rem', color: '#f8fafc' }}>
+                    1. Satu putaran penuh silinder menempuh jarak keliling: <strong>π × d</strong> (dalam milimeter).<br />
+                    2. Jika benda berputar sebanyak <strong>n putaran per menit (RPM)</strong>, jarak tempuh per menit menjadi: <strong>π × d × n</strong> (mm/menit).<br />
+                    3. Karena standar internasional menyatakan kecepatan potong dalam <strong>meter/menit</strong>, maka hasil harus dibagi <strong>1000</strong> (karena 1 meter = 1000 mm).
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#10b981', background: '#020617', padding: '12px 18px', borderRadius: '10px', border: '1px solid #10b981', textAlign: 'center', fontFamily: 'monospace' }}>
+                  Vc = (π × d × n) / 1000 [meter/menit]
                 </div>
               </div>
 
-              {/* DIAGRAM SVG SKEMATIS PUTARAN SPINDEL */}
+              {/* DIAGRAM VISUAL LINGKARAN KELILING & SAYATAN */}
               <div style={{ background: '#020617', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', textAlign: 'center' }}>
-                <svg viewBox="0 0 420 180" style={{ width: '100%', maxHeight: '180px' }}>
-                  {/* Spindle Chuck */}
-                  <rect x="20" y="30" width="50" height="120" rx="4" fill="#334155" stroke="#64748b" strokeWidth="2" />
-                  <rect x="25" y="45" width="40" height="25" fill="#475569" />
-                  <rect x="25" y="110" width="40" height="25" fill="#475569" />
-                  <text x="45" y="95" fill="#94a3b8" fontSize="10" fontWeight="bold" textAnchor="middle">CHUCK</text>
+                <svg viewBox="0 0 400 180" style={{ width: '100%', maxHeight: '180px' }}>
+                  {/* Circle Cross Section */}
+                  <circle cx="140" cy="90" r="60" fill="url(#metalGrad)" stroke="#38bdf8" strokeWidth="2" />
+                  
+                  {/* Center Dot */}
+                  <circle cx="140" cy="90" r="4" fill="#ef4444" />
+                  
+                  {/* Diameter Line */}
+                  <line x1="80" y1="90" x2="200" y2="90" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 2" />
+                  <text x="140" y="82" fill="#38bdf8" fontSize="12" fontWeight="bold" textAnchor="middle">Ø d (mm)</text>
 
-                  {/* Workpiece Cylinder */}
-                  <rect x="70" y="50" width="220" height="80" rx="2" fill="url(#metalGrad)" stroke="#38bdf8" strokeWidth="1.5" />
-                  <defs>
-                    <linearGradient id="metalGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#475569" />
-                      <stop offset="40%" stopColor="#94a3b8" />
-                      <stop offset="70%" stopColor="#475569" />
-                      <stop offset="100%" stopColor="#1e293b" />
-                    </linearGradient>
-                  </defs>
-
-                  {/* Center line (Sumbu Putar) */}
-                  <line x1="10" y1="90" x2="310" y2="90" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="8 3 2 3" />
-                  <text x="315" y="93" fill="#ef4444" fontSize="9" fontWeight="bold">Sumbu Putar</text>
-
-                  {/* Rotation arrow */}
-                  <path d="M 120 40 A 25 25 0 0 1 120 70" fill="none" stroke="#f59e0b" strokeWidth="2.5" markerEnd="url(#arrow)" />
-                  <text x="140" y="45" fill="#f59e0b" fontSize="11" fontWeight="bold">n (RPM)</text>
+                  {/* Circumference Label */}
+                  <path d="M 140 25 A 65 65 0 0 1 205 90" fill="none" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4 2" />
+                  <text x="195" y="45" fill="#f59e0b" fontSize="10" fontWeight="bold">Keliling = π × d</text>
 
                   {/* Cutting Tool */}
-                  <polygon points="210,130 225,155 245,155 240,130" fill="#eab308" stroke="#ca8a04" strokeWidth="1.5" />
-                  <rect x="225" y="145" width="70" height="20" fill="#334155" stroke="#475569" />
-                  <text x="260" y="158" fill="#ffffff" fontSize="9" fontWeight="bold">PAHAT</text>
+                  <polygon points="200,90 235,75 235,105" fill="#eab308" stroke="#ca8a04" strokeWidth="1.5" />
+                  <rect x="235" y="80" width="70" height="20" fill="#334155" stroke="#475569" />
+                  <text x="270" y="93" fill="#ffffff" fontSize="9" fontWeight="bold" textAnchor="middle">PAHAT</text>
 
-                  {/* Dimension d */}
-                  <line x1="295" y1="50" x2="295" y2="130" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="290" y1="50" x2="300" y2="50" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="290" y1="130" x2="300" y2="130" stroke="#38bdf8" strokeWidth="1.5" />
-                  <text x="305" y="94" fill="#38bdf8" fontSize="12" fontWeight="bold">Ø d</text>
-
-                  {/* Velocity Vector Vc */}
-                  <line x1="210" y1="130" x2="170" y2="130" stroke="#10b981" strokeWidth="3" markerEnd="url(#greenArrow)" />
-                  <text x="185" y="125" fill="#10b981" fontSize="11" fontWeight="bold">Vc (m/min)</text>
+                  {/* Tangential Vc Vector */}
+                  <line x1="200" y1="90" x2="200" y2="25" stroke="#10b981" strokeWidth="3" markerEnd="url(#greenArrow)" />
+                  <text x="210" y="40" fill="#10b981" fontSize="12" fontWeight="bold">Vc (m/menit)</text>
                 </svg>
                 <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '4px' }}>
-                  Diagram: Vektor kecepatan potong $V_c$ bersinggungan langsung dengan gerak putar $n$ pada diameter $d$
+                  Panjang lintasan keliling yang digores mata pahat dalam 1 menit = Vc (meter/menit)
                 </div>
               </div>
             </div>
           </div>
 
-          {/* DUA KOLOM: INPUT PARAMETER VS PENJABARAN RUMUS LANGKAH DEMI LANGKAH */}
+          {/* DUA KOLOM: KALKULATOR KHUSUS CUTTING SPEED VS TABEL REKOMENDASI KELAS 10 */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
             
-            {/* KOLOM KIRI: INPUT PARAMETER */}
+            {/* KALKULATOR INTERAKTIF Vc */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Masukkan Parameter Kerja Anda
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🧮</span> Kalkulator Menghitung Cutting Speed (Vc)
               </h4>
 
-              {/* Material Dropdown */}
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.84rem', color: '#cbd5e1', fontWeight: 700 }}>
+                    1. Diameter Benda Kerja (d):
+                  </label>
+                  <span style={{ fontSize: '1rem', color: '#38bdf8', fontWeight: 900 }}>Ø {csCalcDiameter} mm</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="100"
+                  step="1"
+                  value={csCalcDiameter}
+                  onChange={(e) => setCsCalcDiameter(Number(e.target.value))}
+                  style={{ width: '100%', accentColor: '#38bdf8', cursor: 'pointer' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.84rem', color: '#cbd5e1', fontWeight: 700 }}>
+                    2. Putaran Spindel Mesin (n):
+                  </label>
+                  <span style={{ fontSize: '1rem', color: '#f59e0b', fontWeight: 900 }}>{csCalcRpm} RPM</span>
+                </div>
+                <input
+                  type="range"
+                  min="100"
+                  max="1500"
+                  step="50"
+                  value={csCalcRpm}
+                  onChange={(e) => setCsCalcRpm(Number(e.target.value))}
+                  style={{ width: '100%', accentColor: '#f59e0b', cursor: 'pointer' }}
+                />
+              </div>
+
+              {/* STEP BY STEP BREAKDOWN */}
+              <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6 }}>
+                <div style={{ color: '#94a3b8', fontSize: '0.76rem', textTransform: 'uppercase', marginBottom: '6px' }}>Langkah Perhitungan:</div>
+                • Keliling 1 putaran = 3.1416 × {csCalcDiameter} = <strong style={{ color: '#38bdf8' }}>{calculatedCircumference} mm</strong><br />
+                • Lintasan dalam 1 menit = {calculatedCircumference} × {csCalcRpm} = <strong>{calculatedTotalLinearMm} mm/min</strong><br />
+                • Dibagi 1000 = {calculatedTotalLinearMm} / 1000 = <strong style={{ color: '#10b981', fontSize: '1.2rem' }}>{calculatedCuttingSpeedDisplay} m/menit</strong>
+              </div>
+
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '16px', textAlign: 'center', marginTop: '16px' }}>
+                <div style={{ fontSize: '0.78rem', color: '#6ee7b7', fontWeight: 800 }}>KECEPATAN POTONG YANG DIHASILKAN (Vc):</div>
+                <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#10b981', margin: '4px 0' }}>
+                  {calculatedCuttingSpeedDisplay} <span style={{ fontSize: '1.1rem' }}>m/menit</span>
+                </div>
+                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
+                  {calculatedCuttingSpeedExact < 35 
+                    ? 'Cocok untuk Baja Lunak St 37 / Baja Sedang dengan Pahat HSS.' 
+                    : calculatedCuttingSpeedExact <= 100 
+                    ? 'Cocok untuk Aluminium dengan Pahat HSS, atau Baja dengan Pahat Karbida.' 
+                    : 'Kecepatan tinggi, wajib menggunakan Pahat Karbida bersiraman coolant melimpah.'}
+                </div>
+              </div>
+            </div>
+
+            {/* TABEL STANDAR Vc KELAS 10 YANG MUDAH DIINGAT */}
+            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>📚</span> Patokan Nilai Vc Sederhana untuk Kelas 10 SMK
+              </h4>
+              <p style={{ fontSize: '0.82rem', color: '#cbd5e1', margin: '0 0 14px 0' }}>
+                Di bengkel sekolah, siswa kelas 10 umumnya menggunakan <strong>Pahat HSS</strong>. Ingat angka-angka patokan dasar berikut saat praktik:
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {[
+                  { mat: 'Baja Lunak (St 37 / Mild Steel)', hss: '20 - 30 m/min', carbide: '120 - 150 m/min', note: 'Bahan paling sering dipakai job sheet' },
+                  { mat: 'Baja Sedang (St 45 / S45C)', hss: '15 - 25 m/min', carbide: '100 - 130 m/min', note: 'Bahan poros & roda gigi' },
+                  { mat: 'Aluminium / Duralumin', hss: '60 - 100 m/min', carbide: '250 - 350 m/min', note: 'Logam lunak, sayatan boleh cepat' },
+                  { mat: 'Kuningan / Tembaga (Brass)', hss: '30 - 50 m/min', carbide: '150 - 220 m/min', note: 'Mudah dipotong, tatal rapuh' },
+                  { mat: 'Besi Tuang Kelabu (Cast Iron)', hss: '15 - 20 m/min', carbide: '90 - 120 m/min', note: 'Wajib dibubut kering tanpa air' }
+                ].map((row, idx) => (
+                  <div key={idx} style={{ background: '#1e293b', padding: '12px 14px', borderRadius: '10px', borderLeft: '4px solid #38bdf8' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <strong style={{ fontSize: '0.88rem', color: '#ffffff' }}>{row.mat}</strong>
+                      <span style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800, background: 'rgba(56, 189, 248, 0.15)', padding: '2px 8px', borderRadius: '4px' }}>
+                        HSS: {row.hss}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
+                      <span>💡 {row.note}</span>
+                      <span style={{ color: '#10b981' }}>Karbida: {row.carbide}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 2: PUTARAN MESIN / SPINDEL (n / RPM) */}
+      {/* ========================================================================= */}
+      {activeTab === 'spindle' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
+              🔄 Rumus Kecepatan Putaran Spindel (n / RPM)
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
+              Dari rumus kecepatan potong Vc = (π × d × n) / 1000, kita balik rumusnya untuk mencari nilai <strong>n (putaran spindel per menit / RPM)</strong> yang harus disetel pada tuas mesin bubut:
+            </p>
+            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#38bdf8', background: '#020617', padding: '12px 18px', borderRadius: '10px', border: '1px solid #0284c7', textAlign: 'center', fontFamily: 'monospace', margin: '14px 0' }}>
+              n = (1000 × Vc) / (π × d) [RPM]
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+            
+            {/* INPUT PANEL */}
+            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
+                ⚙️ Tentukan Putaran Mesin untuk Pekerjaan Anda
+              </h4>
+
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700, marginBottom: '6px' }}>
-                  Bahan Benda Kerja (Workpiece Material):
+                  Bahan Benda Kerja:
                 </label>
                 <select
                   value={selectedMaterialIdx}
@@ -474,40 +549,24 @@ const LatheFormulaView = ({
                     setSelectedMaterialIdx(Number(e.target.value));
                     setCustomCs(null);
                   }}
-                  style={{
-                    width: '100%',
-                    background: '#1e293b',
-                    border: '1px solid #334155',
-                    color: '#ffffff',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    fontSize: '0.88rem',
-                    fontWeight: 700
-                  }}
+                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#ffffff', padding: '10px', borderRadius: '8px', fontSize: '0.88rem', fontWeight: 700 }}
                 >
                   {CS_DATABASE.map((item, idx) => (
                     <option key={idx} value={idx}>{item.material}</option>
                   ))}
                 </select>
-                <div style={{ fontSize: '0.78rem', color: '#93c5fd', marginTop: '6px' }}>
-                  ℹ️ {CS_DATABASE[selectedMaterialIdx].desc}
-                </div>
-                <div style={{ fontSize: '0.76rem', color: '#10b981', marginTop: '3px' }}>
-                  💧 Rekomendasi Coolant: <strong>{CS_DATABASE[selectedMaterialIdx].coolant}</strong>
-                </div>
               </div>
 
-              {/* Tool Type Selector */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700, marginBottom: '6px' }}>
-                  Jenis Alat Potong / Pahat:
+                  Pilihan Alat Potong / Pahat:
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   <button
                     type="button"
                     onClick={() => { setToolType('hss'); setCustomCs(null); }}
                     style={{
-                      padding: '12px',
+                      padding: '10px',
                       borderRadius: '8px',
                       border: toolType === 'hss' ? '2px solid #38bdf8' : '1px solid #334155',
                       background: toolType === 'hss' ? 'rgba(56, 189, 248, 0.2)' : '#1e293b',
@@ -517,15 +576,13 @@ const LatheFormulaView = ({
                       fontSize: '0.85rem'
                     }}
                   >
-                    HSS (Baja Cepat)<br />
-                    <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Cs: {CS_DATABASE[selectedMaterialIdx].csHss} m/min</span>
+                    Pahat HSS (Standar Siswa)
                   </button>
-
                   <button
                     type="button"
                     onClick={() => { setToolType('carbide'); setCustomCs(null); }}
                     style={{
-                      padding: '12px',
+                      padding: '10px',
                       borderRadius: '8px',
                       border: toolType === 'carbide' ? '2px solid #10b981' : '1px solid #334155',
                       background: toolType === 'carbide' ? 'rgba(16, 185, 129, 0.2)' : '#1e293b',
@@ -535,24 +592,20 @@ const LatheFormulaView = ({
                       fontSize: '0.85rem'
                     }}
                   >
-                    Karbida (Carbide Insert)<br />
-                    <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Cs: {CS_DATABASE[selectedMaterialIdx].csCarbide} m/min</span>
+                    Pahat Karbida (Insert)
                   </button>
                 </div>
               </div>
 
-              {/* Diameter Slider */}
               <div style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>
-                    Diameter Benda Kerja (d):
-                  </label>
+                  <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Benda Kerja (d):</label>
                   <span style={{ fontSize: '1rem', color: '#38bdf8', fontWeight: 900 }}>Ø {calcDiameter} mm</span>
                 </div>
                 <input
                   type="range"
-                  min="8"
-                  max="120"
+                  min="10"
+                  max="100"
                   step="1"
                   value={calcDiameter}
                   onChange={(e) => setCalcDiameter(Number(e.target.value))}
@@ -560,74 +613,43 @@ const LatheFormulaView = ({
                 />
               </div>
 
-              {/* Cutting Speed Input */}
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>
-                    Kecepatan Potong Efektif (Vc):
-                  </label>
-                  <span style={{ fontSize: '0.95rem', color: '#10b981', fontWeight: 800 }}>{effectiveCs} m/menit</span>
-                </div>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700, marginBottom: '4px', display: 'block' }}>
+                  Kecepatan Potong Standar (Vc):
+                </label>
                 <input
                   type="number"
                   value={effectiveCs}
                   onChange={(e) => setCustomCs(Number(e.target.value))}
-                  style={{
-                    width: '100%',
-                    background: '#1e293b',
-                    border: '1px solid #334155',
-                    color: '#ffffff',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    fontSize: '0.9rem',
-                    fontWeight: 700
-                  }}
+                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px 12px', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 700 }}
                 />
               </div>
             </div>
 
-            {/* KOLOM KANAN: PENJABARAN RUMUS MATEMATIS LANGKAH DEMI LANGKAH */}
+            {/* HASIL LANGKAH HITUNG & GEARBOX */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981', margin: '0 0 16px 0' }}>
-                  🧮 Penjabaran Matematis Terbuka (Step-by-Step)
+                  🎯 Langkah Perhitungan & Penyetelan Tuas Mesin
                 </h4>
 
-                {/* LANGKAH 1: RUMUS UMUM */}
-                <div style={{ background: 'rgba(2, 132, 199, 0.08)', border: '1px dashed #0284c7', borderRadius: '12px', padding: '14px', marginBottom: '14px' }}>
-                  <div style={{ fontSize: '0.74rem', color: '#93c5fd', textTransform: 'uppercase', fontWeight: 800 }}>LANGKAH 1: RUMUS DASAR SPINDEL</div>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#38bdf8', margin: '6px 0', fontFamily: 'monospace' }}>
-                    n = (1000 × Vc) / (π × d)
-                  </div>
+                <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
+                  • n = (1000 × {effectiveCs}) / (3.1416 × {calcDiameter})<br />
+                  • n = {1000 * effectiveCs} / {(Math.PI * validD).toFixed(2)}<br />
+                  • n = <strong style={{ color: '#38bdf8', fontSize: '1.15rem' }}>{theoreticalRpmExact.toFixed(2)} RPM</strong> (Hasil Hitungan Kertas)
                 </div>
 
-                {/* LANGKAH 2: SUBSTITUSI NILAI */}
-                <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px dashed #d97706', borderRadius: '12px', padding: '14px', marginBottom: '14px' }}>
-                  <div style={{ fontSize: '0.74rem', color: '#fde68a', textTransform: 'uppercase', fontWeight: 800 }}>LANGKAH 2: SUBSTITUSI ANGKA NYATA</div>
-                  <div style={{ fontSize: '0.95rem', color: '#f8fafc', margin: '6px 0', lineHeight: 1.6, fontFamily: 'monospace' }}>
-                    n = (1000 × {effectiveCs}) / (3.1416 × {calcDiameter})<br />
-                    n = {1000 * effectiveCs} / {(Math.PI * validD).toFixed(2)}<br />
-                    n = <strong style={{ color: '#38bdf8', fontSize: '1.1rem' }}>{theoreticalRpmExact.toFixed(2)} RPM</strong>
+                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '16px' }}>
+                  <div style={{ fontSize: '0.74rem', color: '#6ee7b7', fontWeight: 800, textTransform: 'uppercase' }}>PILIHAN TINGKAT GEARBOX MESIN NYATA:</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 900, color: '#10b981', margin: '4px 0' }}>
+                    {nearestStandardRpm} RPM
                   </div>
-                </div>
-
-                {/* LANGKAH 3: PEMILIHAN GEAR MESIN */}
-                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '0.74rem', color: '#6ee7b7', textTransform: 'uppercase', fontWeight: 800 }}>LANGKAH 3: PENYESUAIAN GEARBOX BENGKEL</div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                    <div>
-                      <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#10b981' }}>{nearestStandardRpm} RPM</div>
-                      <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Tingkat gigi mesin konvensional terdekat</div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Vc Aktual Lapangan:</div>
-                      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#f8fafc' }}>{actualCsWithStandardRpm} m/min</div>
-                    </div>
+                  <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
+                    Setel tuas A-B-C / 1-2-3 pada kepala tetap (headstock) ke tingkat <strong>{nearestStandardRpm} RPM</strong> (tingkat kecepatan terdekat yang aman).
                   </div>
                 </div>
               </div>
 
-              {/* TOMBOL TERAPKAN */}
               <div style={{ marginTop: '18px' }}>
                 <button
                   type="button"
@@ -646,14 +668,13 @@ const LatheFormulaView = ({
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '8px',
-                    boxShadow: '0 6px 20px rgba(2, 132, 199, 0.4)',
+                    boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
                     transition: 'all 0.2s'
                   }}
                 >
                   <span>⚡ Terapkan {nearestStandardRpm} RPM ke Simulator Pemotongan</span>
                 </button>
               </div>
-
             </div>
 
           </div>
@@ -661,56 +682,67 @@ const LatheFormulaView = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: WAKTU PEMESINAN (Tc SEMUA OPERASI) */}
+      {/* TAB 3: GERAK MAKAN & WAKTU SAYAT (F & Tc) */}
       {/* ========================================================================= */}
       {activeTab === 'time' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* PEMILIHAN KATEGORI OPERASI */}
-          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '16px' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#cbd5e1', marginBottom: '10px' }}>
-              PILIH OPERASI PEMBUBUTAN:
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '8px' }}>
-              {[
-                { id: 'turning', name: '1. Bubut Memanjang (Turning)', icon: '📏' },
-                { id: 'facing', name: '2. Bubut Muka (Facing)', icon: '🪓' },
-                { id: 'drilling', name: '3. Pengeboran Sumbu (Drilling)', icon: '🎯' },
-                { id: 'grooving', name: '4. Bubut Alur (Grooving)', icon: '⛏️' },
-                { id: 'threading', name: '5. Bubut Ulir (Threading)', icon: '🔩' }
-              ].map(op => (
-                <button
-                  key={op.id}
-                  onClick={() => { sound.playClick(); setOpCategory(op.id); }}
-                  style={{
-                    padding: '10px',
-                    borderRadius: '8px',
-                    border: opCategory === op.id ? '2px solid #38bdf8' : '1px solid #334155',
-                    background: opCategory === op.id ? 'rgba(56, 189, 248, 0.2)' : '#1e293b',
-                    color: opCategory === op.id ? '#38bdf8' : '#94a3b8',
-                    fontWeight: opCategory === op.id ? 800 : 600,
-                    fontSize: '0.82rem',
-                    cursor: 'pointer',
-                    textAlign: 'left'
-                  }}
-                >
-                  {op.icon} {op.name}
-                </button>
-              ))}
-            </div>
+          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
+              ⏱️ Kecepatan Pemakanan (F) dan Waktu Pembubutan (Tc)
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
+              • <strong>Kecepatan Pemakanan (F):</strong> Kecepatan gerak maju eretan memanjang secara otomatis dalam satuan <strong>mm/menit</strong>. Rumus: <strong>F = f × n</strong>.<br />
+              • <strong>Waktu Pemesinan (Tc):</strong> Durasi menit yang dibutuhkan pahat untuk menyayat dari awal hingga selesai. Rumus: <strong>Tc = (L + la) / F</strong>.
+            </p>
           </div>
 
-          {/* DUA KOLOM: INPUT OPERASI VS HASIL FORMULA DENGAN DIAGRAM */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
             
-            {/* INPUT PANEL SESUAI OPERASI */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Parameter Operasi {opCategory.toUpperCase()}
+                ⚙️ Parameter Pengerjaan
               </h4>
 
-              {/* Panjang Pemotongan (L) untuk Turning */}
-              {opCategory === 'turning' && (
+              <div style={{ marginBottom: '14px' }}>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700, display: 'block', marginBottom: '6px' }}>Operasi Pemotongan:</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setOpCategory('turning')}
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: opCategory === 'turning' ? '2px solid #38bdf8' : '1px solid #334155',
+                      background: opCategory === 'turning' ? 'rgba(56, 189, 248, 0.2)' : '#1e293b',
+                      color: opCategory === 'turning' ? '#38bdf8' : '#94a3b8',
+                      fontWeight: 700,
+                      fontSize: '0.82rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Bubut Rata (Turning)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOpCategory('facing')}
+                    style={{
+                      padding: '8px',
+                      borderRadius: '6px',
+                      border: opCategory === 'facing' ? '2px solid #f59e0b' : '1px solid #334155',
+                      background: opCategory === 'facing' ? 'rgba(245, 158, 11, 0.2)' : '#1e293b',
+                      color: opCategory === 'facing' ? '#f59e0b' : '#94a3b8',
+                      fontWeight: 700,
+                      fontSize: '0.82rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Bubut Muka (Facing)
+                  </button>
+                </div>
+              </div>
+
+              {opCategory === 'turning' ? (
                 <div style={{ marginBottom: '14px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                     <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Panjang Pembubutan (L):</label>
@@ -719,79 +751,18 @@ const LatheFormulaView = ({
                   <input
                     type="range"
                     min="10"
-                    max="300"
+                    max="200"
                     value={calcLength}
                     onChange={(e) => setCalcLength(Number(e.target.value))}
                     style={{ width: '100%', accentColor: '#38bdf8' }}
                   />
                 </div>
-              )}
-
-              {/* Kedalaman Bor untuk Drilling */}
-              {opCategory === 'drilling' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '14px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Bor (d):</label>
-                    <input
-                      type="number"
-                      value={drillDiameter}
-                      onChange={(e) => setDrillDiameter(Number(e.target.value))}
-                      style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>Kedalaman Bor (l):</label>
-                    <input
-                      type="number"
-                      value={drillDepth}
-                      onChange={(e) => setDrillDepth(Number(e.target.value))}
-                      style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px' }}
-                    />
-                  </div>
+              ) : (
+                <div style={{ marginBottom: '14px', background: '#1e293b', padding: '10px', borderRadius: '8px', fontSize: '0.8rem', color: '#fde68a' }}>
+                  💡 Pada pembubutan muka (facing), panjang langkah adalah jari-jari: <strong>d/2 = {validD / 2} mm</strong>.
                 </div>
               )}
 
-              {/* Kedalaman Alur untuk Grooving */}
-              {opCategory === 'grooving' && (
-                <div style={{ marginBottom: '14px' }}>
-                  <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Kedalaman Alur (h = (D - d)/2):</label>
-                  <input
-                    type="number"
-                    value={grooveDepth}
-                    onChange={(e) => setGrooveDepth(Number(e.target.value))}
-                    style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
-                  />
-                </div>
-              )}
-
-              {/* Ulir Kisar untuk Threading */}
-              {opCategory === 'threading' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '14px' }}>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>Kisar / Pitch (P):</label>
-                    <input
-                      type="number"
-                      step="0.25"
-                      value={threadPitch}
-                      onChange={(e) => setThreadPitch(Number(e.target.value))}
-                      style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700 }}>Jumlah Sayat (i):</label>
-                    <input
-                      type="number"
-                      min="2"
-                      max="15"
-                      value={threadPasses}
-                      onChange={(e) => setThreadPasses(Number(e.target.value))}
-                      style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px' }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Gerak Makan (f) */}
               <div style={{ marginBottom: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                   <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Gerak Makan (f):</label>
@@ -800,17 +771,16 @@ const LatheFormulaView = ({
                 <input
                   type="range"
                   min="0.05"
-                  max="0.50"
-                  step="0.02"
+                  max="0.40"
+                  step="0.05"
                   value={calcFeedRev}
                   onChange={(e) => setCalcFeedRev(Number(e.target.value))}
                   style={{ width: '100%', accentColor: '#10b981' }}
                 />
               </div>
 
-              {/* Spindle RPM */}
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Putaran Spindel Mesin (n):</label>
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Putaran Spindel (n):</label>
                 <input
                   type="number"
                   value={calcSpindleRpm}
@@ -818,70 +788,27 @@ const LatheFormulaView = ({
                   style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
                 />
               </div>
-
-              {/* Jarak Awalan & Bebas (la & lu) */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div>
-                  <label style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Jarak Awalan (la):</label>
-                  <input
-                    type="number"
-                    value={safetyApproach}
-                    onChange={(e) => setSafetyApproach(Number(e.target.value))}
-                    style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '6px', borderRadius: '6px' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Jarak Bebas (lu):</label>
-                  <input
-                    type="number"
-                    value={safetyOverrun}
-                    onChange={(e) => setSafetyOverrun(Number(e.target.value))}
-                    style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '6px', borderRadius: '6px' }}
-                  />
-                </div>
-              </div>
             </div>
 
-            {/* HASIL RUMUS & LANGKAH PENGERJAAN */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', margin: '0 0 16px 0' }}>
-                  ⏱️ Rumus & Perhitungan Waktu Pemesinan (Tc)
+                  📊 Hasil Kecepatan Makan & Waktu Sayat
                 </h4>
 
-                {/* FORMULA SPESIFIK */}
-                <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px dashed #f59e0b', borderRadius: '12px', padding: '14px', marginBottom: '14px' }}>
-                  <div style={{ fontSize: '0.74rem', color: '#fde68a', fontWeight: 800 }}>RUMUS BAKU:</div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#fbbf24', margin: '6px 0', fontFamily: 'monospace' }}>
-                    {opCategory === 'turning' && 'Tc = (L + la + lu) / (f × n) × i'}
-                    {opCategory === 'facing' && 'Tc = (d/2 + la) / (f × n)'}
-                    {opCategory === 'drilling' && 'Tc = (l + 0.3d + la) / (f × n)'}
-                    {opCategory === 'grooving' && 'Tc = (h + la) / (f × n)'}
-                    {opCategory === 'threading' && 'Tc = (L + la + lu) / (P × n) × i'}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.5 }}>
-                    {opCategory === 'turning' && 'L = panjang benda, la = jarak awalan (2-4 mm), lu = jarak bebas (0-2 mm), i = jumlah sayatan.'}
-                    {opCategory === 'facing' && 'Pahat hanya menyayat dari diameter terluar sampai ke titik pusat (jari-jari = d/2).'}
-                    {opCategory === 'drilling' && '0.3d adalah tinggi konus mata bor bersudut 118° agar lubang silinder terbentuk penuh.'}
-                    {opCategory === 'grooving' && 'h adalah selisih jari-jari alur: h = (D - d) / 2.'}
-                    {opCategory === 'threading' && 'Pada pembubutan ulir, gerak makan per putaran sama persis dengan kisar ulir (P).'}
-                  </div>
+                <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
+                  • F = f × n = {validF} × {validRpmForTime} = <strong style={{ color: '#10b981' }}>{feedSpeedF} mm/menit</strong><br />
+                  • Lintasan Sayat = {strokeDistance.toFixed(1)} mm (termasuk awalan 2 mm)<br />
+                  • Tc = {strokeDistance.toFixed(1)} / {feedSpeedF} = <strong style={{ color: '#38bdf8' }}>{machiningTimeMin.toFixed(2)} menit</strong>
                 </div>
 
-                {/* SUBSTITUSI NUMERIK */}
-                <div style={{ background: '#1e293b', borderRadius: '10px', padding: '12px', fontSize: '0.85rem', color: '#f8fafc', fontFamily: 'monospace', marginBottom: '14px' }}>
-                  • Kecepatan Makan F = f × n = {validF} × {validRpmForTime} = <strong style={{ color: '#10b981' }}>{feedSpeedF} mm/menit</strong><br />
-                  • Panjang Lintasan Total = <strong style={{ color: '#38bdf8' }}>{effectiveStrokeL.toFixed(1)} mm</strong>
-                </div>
-
-                {/* HASIL DISPLAY WAKTU */}
-                <div style={{ background: 'rgba(2, 132, 199, 0.1)', border: '1.5px solid #0284c7', borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.74rem', color: '#93c5fd', fontWeight: 800 }}>TOTAL WAKTU PEMESINAN (Tc):</div>
+                <div style={{ background: 'rgba(2, 132, 199, 0.1)', border: '1.5px solid #0284c7', borderRadius: '12px', padding: '18px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 800 }}>DURASI PENYAYATAN (Tc):</div>
                   <div style={{ fontSize: '2rem', fontWeight: 900, color: '#38bdf8', margin: '4px 0' }}>
                     {displayMinutes > 0 ? `${displayMinutes} menit ` : ''}{displaySeconds} detik
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
-                    ({timeTotalMin.toFixed(2)} menit total waktu aktif pahat)
+                    Proses pemakanan satu langkah selesai dalam {totalSeconds} detik.
                   </div>
                 </div>
               </div>
@@ -892,78 +819,28 @@ const LatheFormulaView = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 3: PEMBUBUTAN TIRUS (3 METODE LENGKAP) */}
+      {/* TAB 4: PEMBUBUTAN TIRUS SEDERHANA */}
       {/* ========================================================================= */}
       {activeTab === 'taper' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* EXPLANATION & SVG SCHEMATIC */}
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 12px 0' }}>
-              📐 Tiga Metode Pembubutan Tirus (Taper Turning)
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
+              📐 Rumus Pembubutan Tirus (Penggeseran Eretan Atas)
             </h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-                <p style={{ margin: '0 0 10px 0' }}>
-                  <strong>Tirus (Taper)</strong> adalah perubahan diameter secara proporsional dan teratur sepanjang sumbu poros. Terdapat 3 metode standar pengerjaan di mesin bubut konvensional:
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.84rem' }}>
-                  <div><strong>1. Menggeser Eretan Atas (Compound Slide):</strong> Cocok untuk tirus pendek dengan sudut tirus sembarang/besar. Digerakkan secara manual.</div>
-                  <div><strong>2. Menggeser Kepala Lepas (Offset Tailstock):</strong> Cocok untuk tirus panjang dengan sudut landai (&lt; 8°). Dapat menggunakan pemakanan otomatis (*auto-feed*).</div>
-                  <div><strong>3. Mistar Tirus (Taper Attachment):</strong> Memanfaatkan penuntun sudut di belakang bed mesin tanpa melepas kelurusan tailstock.</div>
-                </div>
-              </div>
-
-              {/* DIAGRAM SVG TIRUS */}
-              <div style={{ background: '#020617', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b' }}>
-                <svg viewBox="0 0 420 180" style={{ width: '100%', maxHeight: '180px' }}>
-                  {/* Center line */}
-                  <line x1="20" y1="90" x2="400" y2="90" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="8 3 2 3" />
-                  
-                  {/* Tapered workpiece profile */}
-                  <polygon points="50,30 250,55 350,55 350,125 250,125 50,150" fill="url(#metalGrad)" stroke="#38bdf8" strokeWidth="2" />
-                  
-                  {/* Extension lines for angle alpha */}
-                  <line x1="50" y1="55" x2="250" y2="55" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3 3" />
-                  
-                  {/* Angle arc */}
-                  <path d="M 120 55 A 70 70 0 0 1 115 39" fill="none" stroke="#f59e0b" strokeWidth="2" />
-                  <text x="130" y="47" fill="#f59e0b" fontSize="12" fontWeight="bold">α</text>
-
-                  {/* Dimension D */}
-                  <line x1="40" y1="30" x2="40" y2="150" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="35" y1="30" x2="45" y2="30" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="35" y1="150" x2="45" y2="150" stroke="#38bdf8" strokeWidth="1.5" />
-                  <text x="25" y="95" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="end">Ø D</text>
-
-                  {/* Dimension d */}
-                  <line x1="260" y1="55" x2="260" y2="125" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="255" y1="55" x2="265" y2="55" stroke="#38bdf8" strokeWidth="1.5" />
-                  <line x1="255" y1="125" x2="265" y2="125" stroke="#38bdf8" strokeWidth="1.5" />
-                  <text x="270" y="95" fill="#38bdf8" fontSize="11" fontWeight="bold">Ø d</text>
-
-                  {/* Dimension l (panjang tirus) */}
-                  <line x1="50" y1="165" x2="250" y2="165" stroke="#10b981" strokeWidth="1.5" />
-                  <line x1="50" y1="160" x2="50" y2="170" stroke="#10b981" strokeWidth="1.5" />
-                  <line x1="250" y1="160" x2="250" y2="170" stroke="#10b981" strokeWidth="1.5" />
-                  <text x="150" y="177" fill="#10b981" fontSize="11" fontWeight="bold" textAnchor="middle">l (panjang tirus)</text>
-
-                  {/* Dimension L (panjang total) */}
-                  <line x1="50" y1="15" x2="350" y2="15" stroke="#cbd5e1" strokeWidth="1" />
-                  <text x="200" y="10" fill="#cbd5e1" fontSize="10" textAnchor="middle">L total poros</text>
-                </svg>
-              </div>
+            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
+              Untuk siswa kelas 10, metode tirus yang paling dasar adalah dengan <strong>memutar eretan atas (top slide)</strong> sebesar sudut setengah tirus:
+            </p>
+            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8', background: '#020617', padding: '12px 18px', borderRadius: '10px', border: '1px solid #0284c7', textAlign: 'center', fontFamily: 'monospace', margin: '14px 0' }}>
+              tg α = (D - d) / (2 × l)
             </div>
           </div>
 
-          {/* INPUT & HASIL METODE TIRUS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
             
-            {/* INPUT PANEL */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Ukuran Benda Tirus dari Gambar Kerja
+                ⚙️ Ukuran Benda Tirus dari Gambar
               </h4>
 
               <div style={{ marginBottom: '14px' }}>
@@ -986,8 +863,8 @@ const LatheFormulaView = ({
                 />
               </div>
 
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Panjang Bidang Tirus (l):</label>
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Panjang Tirus (l):</label>
                 <input
                   type="number"
                   value={taperL}
@@ -995,69 +872,33 @@ const LatheFormulaView = ({
                   style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
                 />
               </div>
-
-              <div>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Panjang Total Poros Benda (L total):</label>
-                <input
-                  type="number"
-                  value={totalWorkLength}
-                  onChange={(e) => setTotalWorkLength(Number(e.target.value))}
-                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
-                />
-              </div>
             </div>
 
-            {/* HASIL 3 METODE */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              
-              {/* METODE 1: ERETAN ATAS */}
-              <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1.5px solid #0284c7', borderRadius: '14px', padding: '18px' }}>
-                <div style={{ fontSize: '0.76rem', color: '#38bdf8', fontWeight: 800, textTransform: 'uppercase' }}>
-                  METODE 1: PENGGESERAN ERETAN ATAS (COMPOUND SLIDE)
+            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981', margin: '0 0 16px 0' }}>
+                  🎯 Hasil Perhitungan Derajat Eretan Atas
+                </h4>
+
+                <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
+                  • Selisih Diameter (D - d) = {validBigD} - {validSmallD} = {dDiff} mm<br />
+                  • tg α = {dDiff} / (2 × {validTaperL}) = {dDiff} / {2 * validTaperL} = <strong style={{ color: '#38bdf8' }}>{tanAlpha.toFixed(4)}</strong><br />
+                  • Sudut α = arctan({tanAlpha.toFixed(4)})
                 </div>
-                <div style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: '4px 0' }}>
-                  Rumus: <strong>tg α = (D - d) / (2 × l)</strong>
-                </div>
-                <div style={{ fontSize: '0.82rem', color: '#94a3b8', fontFamily: 'monospace' }}>
-                  tg α = ({validBigD} - {validSmallD}) / (2 × {validTaperL}) = {dDiff} / {2 * validTaperL} = <strong style={{ color: '#38bdf8' }}>{tanAlpha.toFixed(4)}</strong>
-                </div>
-                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', margin: '6px 0' }}>
-                  α = {alphaDegFixed}° <span style={{ fontSize: '1.1rem', color: '#93c5fd' }}>({alphaDegInt}° {alphaMinInt}' {alphaSecInt}")</span>
-                </div>
-                <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
-                  🛠️ <strong>Penyetelan:</strong> Kendurkan dua baut pengikat eretan atas, putar piringan skala eretan sebesar <strong>{alphaDegFixed}°</strong>, lalu kencangkan kembali bautnya.
+
+                <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1.5px solid #0284c7', borderRadius: '12px', padding: '18px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 800 }}>SUDUT ERETAN ATAS YANG HARUS DIPUTAR:</div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#ffffff', margin: '4px 0' }}>
+                    α = {alphaDegFixed}°
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#6ee7b7' }}>
+                    ({alphaDegInt}° {alphaMinInt}')
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#cbd5e1', marginTop: '8px' }}>
+                    Kendurkan baut eretan atas, putar piringan sebesar {alphaDegFixed}°, kencangkan baut kembali.
+                  </div>
                 </div>
               </div>
-
-              {/* METODE 2: GESER KEPALA LEPAS */}
-              <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1.5px solid #d97706', borderRadius: '14px', padding: '18px' }}>
-                <div style={{ fontSize: '0.76rem', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
-                  METODE 2: PENGGESERAN KEPALA LEPAS (OFFSET TAILSTOCK)
-                </div>
-                <div style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: '4px 0' }}>
-                  Rumus: <strong>S = ((D - d) / (2 × l)) × L total</strong>
-                </div>
-                <div style={{ fontSize: '0.82rem', color: '#94a3b8', fontFamily: 'monospace' }}>
-                  S = {tanAlpha.toFixed(4)} × {validTotalL}
-                </div>
-                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ffffff', margin: '6px 0' }}>
-                  S = {tailstockOffset} mm
-                </div>
-                <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
-                  🛠️ <strong>Penyetelan:</strong> Geser baut penyetel horizontal di bagian belakang badan kepala lepas sejauh <strong>{tailstockOffset} mm</strong>. Pasang benda di antara dua senter dengan pembawa (*lathe dog*).
-                </div>
-              </div>
-
-              {/* METODE 3: KONISITAS */}
-              <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '14px', padding: '14px' }}>
-                <div style={{ fontSize: '0.76rem', color: '#10b981', fontWeight: 800 }}>
-                  KONISITAS (CONICITY K):
-                </div>
-                <div style={{ fontSize: '1rem', fontWeight: 800, color: '#f8fafc', marginTop: '4px' }}>
-                  K = (D - d) / l = 1 : {conicityRatio} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({(conicityK * 100).toFixed(1)}%)</span>
-                </div>
-              </div>
-
             </div>
 
           </div>
@@ -1065,30 +906,24 @@ const LatheFormulaView = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 4: TEBAL SAYAT, MRR & ESTIMASI DAYA POTONG */}
+      {/* TAB 5: KEDALAMAN POTONG RADIAL (a) */}
       {/* ========================================================================= */}
       {activeTab === 'doc-mrr' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 12px 0' }}>
-              ⚡ Tebal Sayat (a), Laju Pelepasan Geram (MRR), dan Daya Mesin (Pc)
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
+              📏 Tebal Sayatan / Kedalaman Potong Radial (Depth of Cut - a)
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
-              <strong>Depth of Cut (a)</strong> adalah tebal lapisan logam yang disayat pahat dalam satu lintasan. Dari parameter ini, kita dapat menghitung volume logam yang dibuang per menit (<strong>Material Removal Rate - MRR</strong>) dan konsumsi daya motor listrik mesin bubut agar motor tidak kelebihan beban (*overload*).
+              Pada mesin bubut, benda kerja berbentuk silinder. Setiap pahat masuk sejauh <strong>1 mm (secara radial)</strong>, maka diameter benda kerja akan berkurang sebesar <strong>2 mm</strong>. Rumus: <strong>a = (D0 - D1) / 2</strong>.
             </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
-            
-            {/* INPUT PANEL */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Parameter Reduksi Diameter
-              </h4>
-
               <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Awal (D0):</label>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Awal Benda (D0):</label>
                 <input
                   type="number"
                   value={docRawD}
@@ -1098,7 +933,7 @@ const LatheFormulaView = ({
               </div>
 
               <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Akhir (D1):</label>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Target Setelah Dibubut (D1):</label>
                 <input
                   type="number"
                   value={docTargetD}
@@ -1107,184 +942,32 @@ const LatheFormulaView = ({
                 />
               </div>
 
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Rencana Jumlah Frekuensi Sayatan (Passes):</label>
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Jumlah Langkah Sayat (Passes):</label>
                 <input
                   type="number"
                   min="1"
-                  max="12"
+                  max="10"
                   value={passesCount}
                   onChange={(e) => setPassesCount(e.target.value)}
                   style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
                 />
               </div>
-
-              <div>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Tekanan Potong Spesifik Bahan (kc):</label>
-                <input
-                  type="number"
-                  value={specificForceKc}
-                  onChange={(e) => setSpecificForceKc(Number(e.target.value))}
-                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
-                />
-                <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '3px' }}>
-                  Standar: Baja St 37 ≈ 1800, Baja St 45 ≈ 2200, Cast Iron ≈ 1200 N/mm²
-                </div>
-              </div>
             </div>
 
-            {/* HASIL DISPLAY MRR & POWER */}
-            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              
-              {/* TEBAL SAYAT (a) */}
-              <div style={{ background: 'rgba(56, 189, 248, 0.08)', border: '1px dashed #38bdf8', borderRadius: '12px', padding: '14px' }}>
-                <div style={{ fontSize: '0.74rem', color: '#93c5fd', fontWeight: 800 }}>KEDALAMAN POTONG RADIAL (a):</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#38bdf8', margin: '4px 0' }}>
-                  a = (D0 - D1) / 2 = {docPerPass} mm / sayatan
+            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid #10b981', borderRadius: '12px', padding: '18px', textAlign: 'center', marginBottom: '16px' }}>
+                <div style={{ fontSize: '0.78rem', color: '#6ee7b7', fontWeight: 800 }}>KEDALAMAN POTONG PER LANGKAH SAYAT:</div>
+                <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#10b981', margin: '4px 0' }}>
+                  a = {docPerPass} mm
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
-                  Total selisih jari-jari: {totalDoc.toFixed(2)} mm dibagi dalam {passesCount} kali pemakanan.
+                  Total pengurangan jari-jari {totalDoc.toFixed(2)} mm dibagi dalam {passesCount} kali sayatan.
                 </div>
               </div>
 
-              {/* LAJU PELEPASAN GERAM (MRR) */}
-              <div style={{ background: 'rgba(16, 185, 129, 0.08)', border: '1px dashed #10b981', borderRadius: '12px', padding: '14px' }}>
-                <div style={{ fontSize: '0.74rem', color: '#6ee7b7', fontWeight: 800 }}>LAJU PELEPASAN GERAM (MRR / Q):</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#10b981', margin: '4px 0' }}>
-                  Q = {mrrCm3Min} cm³/menit
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#cbd5e1', fontFamily: 'monospace' }}>
-                  Rumus: Q = Vc × f × a = {effectiveCs} × {validF} × {docPerPass} = {mrrMm3Min.toLocaleString()} mm³/menit
-                </div>
-              </div>
-
-              {/* ESTIMASI DAYA POTONG */}
-              <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px dashed #f59e0b', borderRadius: '12px', padding: '14px' }}>
-                <div style={{ fontSize: '0.74rem', color: '#fde68a', fontWeight: 800 }}>ESTIMASI KEBUTUHAN DAYA MOTOR (Pc):</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f59e0b', margin: '4px 0' }}>
-                  Pc ≈ {powerPckW} kW <span style={{ fontSize: '0.9rem', color: '#cbd5e1' }}>({(Number(powerPckW) * 1.341).toFixed(2)} HP)</span>
-                </div>
-                <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
-                  Gaya potong utama tangensial Fc = {Math.round(cuttingForceFc)} Newton. Pastikan motor mesin bubut Anda memiliki kapasitas di atas angka ini.
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* TAB 5: PARAMETER ULIR METRIS (M-THREAD) */}
-      {/* ========================================================================= */}
-      {activeTab === 'thread' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
-          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 12px 0' }}>
-              🔩 Standar Geometri & Pembubutan Ulir Segitiga Metris (ISO Metric)
-            </h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', alignItems: 'center' }}>
-              <div style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>
-                <p style={{ margin: '0 0 10px 0' }}>
-                  Ulir Metris memiliki sudut puncak profil <strong>60°</strong> dan bentuk puncak/lembah yang di-radiuskan. Pembubutan ulir metris pada mesin bubut konvensional disinkronkan melalui <strong>poros transportir (lead screw)</strong>.
-                </p>
-                <div style={{ background: 'rgba(2, 132, 199, 0.1)', padding: '10px', borderRadius: '8px', borderLeft: '4px solid #38bdf8', fontSize: '0.84rem' }}>
-                  • <strong>Kisar (Pitch - P):</strong> Jarak antara dua puncak ulir yang berdekatan.<br />
-                  • <strong>Kedalaman Sayat Ulir Luar:</strong> H1 = 0.6134 × P<br />
-                  • <strong>Diameter Lubang Bor Tap:</strong> d_bor = D - P
-                </div>
-              </div>
-
-              {/* DIAGRAM SVG ULIR 60 DERAJAT */}
-              <div style={{ background: '#020617', padding: '16px', borderRadius: '12px', border: '1px solid #1e293b', textAlign: 'center' }}>
-                <svg viewBox="0 0 420 160" style={{ width: '100%', maxHeight: '160px' }}>
-                  {/* Thread teeth profile */}
-                  <path d="M 30,120 L 70,40 L 110,120 L 150,40 L 190,120 L 230,40 L 270,120 L 310,40 L 350,120 L 390,40" fill="none" stroke="#38bdf8" strokeWidth="2.5" />
-                  
-                  {/* Major Diameter Line */}
-                  <line x1="20" y1="40" x2="400" y2="40" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4 2" />
-                  <text x="405" y="44" fill="#f59e0b" fontSize="10" fontWeight="bold">D (Major)</text>
-
-                  {/* Minor Diameter Line */}
-                  <line x1="20" y1="120" x2="400" y2="120" stroke="#10b981" strokeWidth="1" strokeDasharray="4 2" />
-                  <text x="405" y="124" fill="#10b981" fontSize="10" fontWeight="bold">d1 (Minor)</text>
-
-                  {/* 60 deg angle */}
-                  <path d="M 135,70 A 20 20 0 0 1 165,70" fill="none" stroke="#ef4444" strokeWidth="1.5" />
-                  <text x="150" y="65" fill="#ef4444" fontSize="11" fontWeight="bold" textAnchor="middle">60°</text>
-
-                  {/* Pitch Dimension P */}
-                  <line x1="70" y1="25" x2="150" y2="25" stroke="#ffffff" strokeWidth="1.5" />
-                  <line x1="70" y1="20" x2="70" y2="30" stroke="#ffffff" strokeWidth="1.5" />
-                  <line x1="150" y1="20" x2="150" y2="30" stroke="#ffffff" strokeWidth="1.5" />
-                  <text x="110" y="20" fill="#ffffff" fontSize="11" fontWeight="bold" textAnchor="middle">Pitch (P)</text>
-
-                  {/* Height H1 */}
-                  <line x1="240" y1="40" x2="240" y2="120" stroke="#a855f7" strokeWidth="1.5" />
-                  <text x="245" y="85" fill="#a855f7" fontSize="10" fontWeight="bold">H1 = 0.6134 P</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* KALKULATOR ELEMEN ULIR */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Hitung Dimensi Ulir Metris
-              </h4>
-
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Diameter Nominal Baut (D):</label>
-                <input
-                  type="number"
-                  value={bigD}
-                  onChange={(e) => setBigD(Number(e.target.value))}
-                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
-                />
-              </div>
-
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 700 }}>Kisar Ulir (Pitch P dalam mm):</label>
-                <input
-                  type="number"
-                  step="0.25"
-                  value={threadPitch}
-                  onChange={(e) => setThreadPitch(Number(e.target.value))}
-                  style={{ width: '100%', background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '8px', borderRadius: '6px', marginTop: '4px' }}
-                />
-                <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '4px' }}>
-                  Contoh standar: M10 × 1.5, M12 × 1.75, M16 × 2.0, M20 × 2.5
-                </div>
-              </div>
-            </div>
-
-            <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981', margin: 0 }}>
-                📋 Hasil Parameter Geometri Ulir M{bigD} × {threadPitch}
-              </h4>
-
-              <div style={{ background: '#1e293b', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.84rem', color: '#cbd5e1' }}>Kedalaman Ulir Luar (H1):</span>
-                <strong style={{ color: '#38bdf8' }}>{threadDepthH1} mm</strong>
-              </div>
-
-              <div style={{ background: '#1e293b', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.84rem', color: '#cbd5e1' }}>Diameter Inti / Minor (d1):</span>
-                <strong style={{ color: '#10b981' }}>Ø {threadMinorD} mm</strong>
-              </div>
-
-              <div style={{ background: '#1e293b', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.84rem', color: '#cbd5e1' }}>Diameter Tusuk / Pitch (d2):</span>
-                <strong style={{ color: '#f59e0b' }}>Ø {threadPitchD} mm</strong>
-              </div>
-
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.84rem', color: '#6ee7b7' }}>Diameter Bor Tap Mur (D - P):</span>
-                <strong style={{ color: '#ffffff', fontSize: '1.05rem' }}>Ø {tapDrillD} mm</strong>
+              <div style={{ background: '#1e293b', padding: '12px 14px', borderRadius: '10px', fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5 }}>
+                💡 <strong>Tips Aman Kelas 10:</strong> Jangan memakan terlalu dalam saat pertama kali membubut. Untuk sayatan kasar (*roughing*) cukup 1.0 mm per langkah, dan untuk sayatan halus (*finishing*) sisakan 0.2 mm agar permukaan halus dan tidak bergetar.
               </div>
             </div>
           </div>
@@ -1292,105 +975,147 @@ const LatheFormulaView = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 6: CONTOH SOAL & LANGKAH PENGERJAAN DETAIL */}
+      {/* TAB 6: CONTOH STUDI KASUS DASAR (KELAS 10 SMK) */}
       {/* ========================================================================= */}
       {activeTab === 'examples' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              📝 Contoh Soal Penerapan Bengkel & Langkah Penyelesaian Rinci
-            </h3>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: 0 }}>
-              Pelajari contoh kasus nyata pembubutan di bawah ini untuk memahami secara mendalam alur penerapan rumus dari lembar kerja (*jobsheet*) ke mesin bubut nyata.
+          <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span style={{ fontSize: '1.6rem' }}>📝</span>
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#38bdf8', margin: 0 }}>
+                5 STUDI KASUS DASAR BENGKEL (KHUSUS KELAS 10 SMK FASE E)
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
+              Soal-soal studi kasus ini dirancang khusus dari pekerjaan nyata siswa baru di bengkel sekolah (menggunakan angka-angka bulat yang mudah dihitung) lengkap dengan langkah penyelesaian terperinci: <strong>Diketahui → Ditanya → Rumus → Hitungan → Cara Setel Mesin Nyata</strong>.
             </p>
           </div>
 
           {[
             {
-              title: 'KASUS 1: Pembubutan Rata Poros Baja S45C (Mencari n, F, dan Tc)',
-              problem: 'Sebuah poros pejal dari bahan Baja Karbon Sedang St 45 (S45C) berdiameter Ø40 mm akan dibubut rata menjadi Ø36 mm sepanjang 120 mm menggunakan pahat Karbida. Kecepatan potong Vc yang direkomendasikan adalah 120 m/menit dan gerak makan f = 0.15 mm/putaran. Hitunglah putaran spindel teoritis, pilih putaran gearbox mesin yang sesuai, lalu hitung kecepatan pemakanan F dan waktu pemesinan Tc bila jarak awalan la = 2 mm!',
+              id: 1,
+              title: 'STUDI KASUS 1: Menghitung Putaran Spindel (n / RPM) Latihan Pertama',
+              story: 'Budi (siswa kelas 10) menerima benda kerja silinder Baja Lunak St 37 berdiameter Ø30 mm dari guru pembimbing. Budi akan membubut rata menggunakan pahat HSS. Di tabel dinding bengkel tertulis kecepatan potong Vc = 25 m/menit. Berapakah putaran mesin (n) yang harus disetel oleh Budi pada tuas mesin bubut?',
+              given: '• Bahan = Baja Lunak St 37\n• Diameter benda (d) = 30 mm\n• Pahat = HSS (Vc = 25 m/menit)\n• Konstanta π ≈ 3.14',
+              asked: 'Putaran spindel mesin n (dalam RPM)?',
+              formula: 'n = (1000 × Vc) / (π × d)',
               steps: [
-                {
-                  step: 'Langkah 1: Menuliskan Besaran yang Diketahui (Data Awal)',
-                  content: '• Diameter benda (d) = 40 mm\n• Kecepatan potong (Vc) = 120 m/menit\n• Panjang pembubutan (L) = 120 mm\n• Gerak makan (f) = 0.15 mm/putaran\n• Jarak awalan (la) = 2 mm'
-                },
-                {
-                  step: 'Langkah 2: Menghitung Putaran Spindel Teoritis (n)',
-                  content: 'Gunakan rumus:\nn = (1000 × Vc) / (π × d)\nn = (1000 × 120) / (3.1416 × 40)\nn = 120.000 / 125.66 = 954.93 RPM'
-                },
-                {
-                  step: 'Langkah 3: Menentukan Putaran Mesin Nyata (Gearbox Selection)',
-                  content: 'Tingkatan putaran gearbox mesin yang tersedia: 600, 750, 900, 1200 RPM.\nPutaran 954.93 RPM disetel ke tingkat aman terdekat di bawahnya yaitu: n = 900 RPM.'
-                },
-                {
-                  step: 'Langkah 4: Menghitung Kecepatan Pemakanan (F)',
-                  content: 'F = f × n = 0.15 mm/put × 900 RPM = 135 mm/menit.'
-                },
-                {
-                  step: 'Langkah 5: Menghitung Waktu Pemesinan (Tc)',
-                  content: 'Tc = (L + la) / F\nTc = (120 + 2) / 135 = 122 / 135 = 0.903 menit\nDalam detik: 0.903 × 60 = 54.2 detik (sekitar 54 detik).'
-                }
+                '1. Kalikan 1000 dengan Vc: 1000 × 25 = 25.000',
+                '2. Hitung keliling penampang benda: 3.14 × 30 = 94.2 mm',
+                '3. Bagi hasil keduanya: n = 25.000 / 94.2 = 265.39 RPM'
               ],
-              conclusion: 'Setel tuas spindel mesin ke 900 RPM. Eretan otomatis akan bergerak 135 mm/menit dan proses sayatan selesai dalam waktu 54 detik.'
+              conclusion: 'Hasil hitungan adalah 265 RPM. Di tuas gearbox mesin bubut sekolah tersedia pilihan 150, 250, dan 450 RPM. Budi memilih tingkat terdekat yang aman yaitu 250 RPM.'
             },
             {
-              title: 'KASUS 2: Pembubutan Tirus Poros Konis (Mencari Sudut Eretan Atas α dan Geser S)',
-              problem: 'Sebuah poros tirus memiliki diameter terbesar D = 48 mm, diameter terkecil d = 36 mm, panjang bidang tirus l = 40 mm, dan panjang keseluruhan poros L total = 160 mm. Tentukan sudut pergeseran eretan atas (α) dan tentukan pula jarak pergeseran kepala lepas (S)!',
+              id: 2,
+              title: 'STUDI KASUS 2: Menghitung Kecepatan Potong (Cutting Speed / Vc)',
+              story: 'Rian sedang membubut poros Aluminium berdiameter Ø20 mm. Mesin bubut di bengkel sedang berputar pada kecepatan n = 600 RPM. Rian ingin mengetahui berapa kecepatan potong (Vc) yang terjadi pada ujung mata pahat, dan apakah kecepatan tersebut aman untuk pahat HSS?',
+              given: '• Diameter poros (d) = 20 mm\n• Putaran mesin (n) = 600 RPM\n• Pahat = HSS (Batas aman aluminium: 60 - 100 m/menit)\n• Konstanta π ≈ 3.14',
+              asked: 'Kecepatan potong Vc (dalam meter/menit)?',
+              formula: 'Vc = (π × d × n) / 1000',
               steps: [
-                {
-                  step: 'Langkah 1: Menuliskan Besaran yang Diketahui',
-                  content: '• D = 48 mm, d = 36 mm\n• Panjang tirus (l) = 40 mm\n• Panjang total poros (L total) = 160 mm'
-                },
-                {
-                  step: 'Langkah 2: Menghitung Sudut Eretan Atas (α)',
-                  content: 'tg α = (D - d) / (2 × l)\ntg α = (48 - 36) / (2 × 40) = 12 / 80 = 0.15\nα = arctan(0.15) = 8.53°\nKonversi desimal ke menit: 0.53° × 60 = 31.8\' ≈ 32\'\nMaka sudut eretan atas: α = 8° 32\'.'
-                },
-                {
-                  step: 'Langkah 3: Menghitung Pergeseran Kepala Lepas (S)',
-                  content: 'S = ((D - d) / (2 × l)) × L total\nS = tg α × L total\nS = 0.15 × 160 mm = 24 mm.'
-                }
+                '1. Hitung keliling 1 putaran: 3.14 × 20 mm = 62.8 mm',
+                '2. Kalikan dengan jumlah putaran per menit: 62.8 × 600 = 37.680 mm/menit',
+                '3. Ubah ke meter dengan membagi 1000: Vc = 37.680 / 1000 = 37.68 m/menit'
               ],
-              conclusion: 'Jika menggunakan eretan atas, putar eretan 8° 32\'. Jika dibubut di antara dua senter, geser alas kepala lepas sebesar 24 mm.'
+              conclusion: 'Kecepatan potong yang dihasilkan adalah 37.68 m/menit. Angka ini sangat aman untuk pahat HSS (di bawah batas maksimal 100 m/menit), bahkan putaran mesin masih bisa dinaikkan ke tingkat berikutnya (misal 900 RPM) agar hasil bubut lebih halus.'
             },
             {
-              title: 'KASUS 3: Pembubutan Muka (Facing) & Pengeboran Sumbu (Drilling)',
-              problem: 'Batang silinder Ø50 mm akan diratakan mukanya (facing) dari diameter luar sampai ke pusat senter dengan n = 600 RPM dan f = 0.12 mm/putaran. Setelah itu dilakukan pengeboran lubang awal dengan mata bor Ø12 mm sedalam 35 mm dengan n = 800 RPM dan f = 0.10 mm/putaran. Berapa waktu pengerjaan masing-masing?',
+              id: 3,
+              title: 'STUDI KASUS 3: Menghitung Kecepatan Gerak Makan Eretan Otomatis (F)',
+              story: 'Doni ingin menyalakan tuas pemakanan otomatis (auto-feed) agar permukaan poros silindernya rata dan mengkilap. Spindel mesin berputar pada n = 500 RPM, dan handel transmisi feeding disetel pada nilai f = 0.1 mm/putaran. Berapa millimeter eretan akan bergerak maju dalam satu menit?',
+              given: '• Putaran mesin (n) = 500 RPM\n• Gerak makan per putaran (f) = 0.1 mm/putaran',
+              asked: 'Kecepatan pemakanan otomatis F (dalam mm/menit)?',
+              formula: 'F = f × n',
               steps: [
-                {
-                  step: 'Langkah 1: Waktu Pembubutan Muka (Facing)',
-                  content: 'Panjang lintasan facing adalah jari-jari: r = d/2 = 50/2 = 25 mm.\nTambahkan jarak awalan la = 2 mm.\nF_facing = f × n = 0.12 × 600 = 72 mm/menit.\nTc_facing = (25 + 2) / 72 = 27 / 72 = 0.375 menit (22.5 detik).'
-                },
-                {
-                  step: 'Langkah 2: Waktu Pengeboran Sumbu (Drilling)',
-                  content: 'Sudut mata bor 118° menyumbang ujung kerucut sebesar 0.3 × d_bor:\n0.3 × 12 mm = 3.6 mm.\nTotal kedalaman: l_total = 35 + 3.6 + 2 (awalan) = 40.6 mm.\nF_drill = 0.10 × 800 = 80 mm/menit.\nTc_drill = 40.6 / 80 = 0.5075 menit (30.4 detik).'
-                }
+                '1. Kalikan gerak makan f dengan putaran n: F = 0.1 × 500',
+                '2. Hasil perhitungan: F = 50 mm/menit'
               ],
-              conclusion: 'Penyayatan muka membutuhkan waktu 23 detik, dan pengeboran sumbu membutuhkan waktu 30 detik.'
+              conclusion: 'Eretan pembawa pahat akan bergerak maju menyayat sepanjang 50 mm setiap satu menit secara konstan.'
+            },
+            {
+              id: 4,
+              title: 'STUDI KASUS 4: Menghitung Waktu Pembubutan Rata (Tc)',
+              story: 'Siti mendapat tugas membubut rata poros sepanjang L = 100 mm dengan kecepatan pemakanan otomatis F = 50 mm/menit. Sebelum menyayat, Siti memposisikan ujung pahat berjarak la = 2 mm di depan benda kerja sebagai jarak awalan aman. Berapa menit waktu yang dibutuhkan untuk menyelesaikan satu kali langkah penyayatan?',
+              given: '• Panjang bidang sayat (L) = 100 mm\n• Jarak awalan pahat (la) = 2 mm\n• Kecepatan pemakanan (F) = 50 mm/menit',
+              asked: 'Waktu pemesinan Tc (dalam menit dan detik)?',
+              formula: 'Tc = (L + la) / F',
+              steps: [
+                '1. Hitung total jarak lintasan pahat: 100 + 2 = 102 mm',
+                '2. Bagi dengan kecepatan makan: Tc = 102 / 50 = 2.04 menit',
+                '3. Konversi 0.04 menit ke detik: 0.04 × 60 detik = 2.4 detik'
+              ],
+              conclusion: 'Waktu yang dibutuhkan Siti adalah 2 menit 2 detik untuk satu kali penyayatan penuh.'
+            },
+            {
+              id: 5,
+              title: 'STUDI KASUS 5: Menghitung Sudut Eretan Atas untuk Tirus Sederhana',
+              story: 'Siswa diminta membuat ujung tirus sederhana pada benda kerja latihan. Diameter pangkal yang besar D = 30 mm, diameter ujung yang kecil d = 20 mm, dan panjang bidang tirus l = 25 mm. Berapa derajat skala eretan atas (top slide) harus diputar oleh siswa?',
+              given: '• Diameter besar (D) = 30 mm\n• Diameter kecil (d) = 20 mm\n• Panjang tirus (l) = 25 mm',
+              asked: 'Sudut pergeseran eretan atas α (dalam derajat)?',
+              formula: 'tg α = (D - d) / (2 × l)',
+              steps: [
+                '1. Hitung selisih diameter: D - d = 30 - 20 = 10 mm',
+                '2. Kalikan 2 dengan panjang tirus: 2 × 25 = 50 mm',
+                '3. Bagi hasil selisih dengan 50: tg α = 10 / 50 = 0.2',
+                '4. Cari nilai sudut tangen 0.2: α = arctan(0.2) = 11.31° (sekitar 11° 19\')'
+              ],
+              conclusion: 'Siswa mengendurkan dua baut eretan atas, memutar piringan skala eretan tepat sebesar 11.3° (sekitar 11 derajat), lalu mengencangkan baut kembali untuk membubut tirus.'
             }
-          ].map((item, idx) => (
-            <div key={idx} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
-              <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', marginBottom: '10px' }}>
-                {item.title}
-              </div>
-              <div style={{ background: '#1e293b', padding: '14px', borderRadius: '10px', fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, marginBottom: '14px' }}>
-                <strong>Pertanyaan Soal:</strong><br />
-                {item.problem}
+          ].map((item) => (
+            <div key={item.id} style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#0284c7', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 900, fontSize: '0.9rem' }}>
+                  {item.id}
+                </span>
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f59e0b', margin: 0 }}>
+                  {item.title}
+                </h4>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '14px' }}>
+              {/* CERITA KASUS */}
+              <div style={{ background: '#1e293b', padding: '14px 16px', borderRadius: '10px', fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.6, marginBottom: '14px' }}>
+                <strong>📖 Situasi Kasus di Bengkel:</strong><br />
+                {item.story}
+              </div>
+
+              {/* GRID DIKETAHUI, DITANYA, RUMUS */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '14px' }}>
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #38bdf8' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800 }}>📋 DIKETAHUI:</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', whiteSpace: 'pre-line', marginTop: '4px', fontFamily: 'monospace' }}>
+                    {item.given}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #f59e0b' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 800 }}>❓ DITANYAKAN:</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px' }}>
+                    {item.asked}
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#10b981', fontWeight: 800, marginTop: '8px' }}>💡 RUMUS DASAR:</div>
+                  <div style={{ fontSize: '0.88rem', color: '#6ee7b7', fontWeight: 900, fontFamily: 'monospace', marginTop: '2px' }}>
+                    {item.formula}
+                  </div>
+                </div>
+              </div>
+
+              {/* LANGKAH PERHITUNGAN */}
+              <div style={{ background: '#020617', padding: '14px', borderRadius: '10px', border: '1px solid #1e293b', marginBottom: '14px' }}>
+                <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 800, textTransform: 'uppercase', marginBottom: '6px' }}>
+                  ✏️ Langkah Perhitungan Matematis:
+                </div>
                 {item.steps.map((st, sIdx) => (
-                  <div key={sIdx} style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #38bdf8' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8' }}>{st.step}</div>
-                    <div style={{ fontSize: '0.84rem', color: '#f8fafc', whiteSpace: 'pre-line', marginTop: '4px', lineHeight: 1.5, fontFamily: 'monospace' }}>
-                      {st.content}
-                    </div>
+                  <div key={sIdx} style={{ fontSize: '0.84rem', color: '#f8fafc', fontFamily: 'monospace', padding: '3px 0' }}>
+                    {st}
                   </div>
                 ))}
               </div>
 
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', padding: '12px', borderRadius: '8px', fontSize: '0.84rem', color: '#6ee7b7' }}>
-                💡 <strong>Kesimpulan Bengkel:</strong> {item.conclusion}
+              {/* KESIMPULAN PENYETELAN MESIN NYATA */}
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid #10b981', padding: '12px 16px', borderRadius: '10px', fontSize: '0.85rem', color: '#6ee7b7', lineHeight: 1.5 }}>
+                🎯 <strong>Kesimpulan & Penyetelan Mesin Nyata:</strong> {item.conclusion}
               </div>
             </div>
           ))}
@@ -1406,10 +1131,10 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              📚 Glosarium Lambang, Besaran & Satuan Standar ISO Permesinan
+              📚 Glosarium Lambang & Satuan Standar Pemesinan Bubut
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: 0 }}>
-              Daftar referensi lambang internasional yang wajib dipahami oleh siswa SMK dan juru bubut teknik mesin.
+              Daftar lambang besaran internasional yang harus dipahami oleh siswa SMK Teknik Pemesinan.
             </p>
           </div>
 
@@ -1420,25 +1145,21 @@ const LatheFormulaView = ({
                   <th style={{ padding: '12px 16px' }}>Simbol</th>
                   <th style={{ padding: '12px 16px' }}>Nama Besaran</th>
                   <th style={{ padding: '12px 16px' }}>Satuan</th>
-                  <th style={{ padding: '12px 16px' }}>Definisi & Keterangan</th>
+                  <th style={{ padding: '12px 16px' }}>Keterangan Sederhana (Kelas 10)</th>
                 </tr>
               </thead>
               <tbody>
                 {[
-                  { sym: 'Vc (Cs)', name: 'Cutting Speed (Kecepatan Potong)', unit: 'meter/menit (m/min)', desc: 'Kecepatan keliling benda kerja yang dilalui ujung mata potong.' },
-                  { sym: 'n', name: 'Revolutions Per Minute (Putaran Spindel)', unit: 'putaran/menit (RPM)', desc: 'Frekuensi putaran poros utama yang menjepit benda kerja.' },
-                  { sym: 'd / D', name: 'Diameter Benda Kerja', unit: 'milimeter (mm)', desc: 'Ukuran garis tengah silinder benda kerja (luar atau dalam).' },
-                  { sym: 'f', name: 'Feed Per Revolution (Gerak Makan)', unit: 'mm/putaran', desc: 'Pergeseran jarak maju pahat pada setiap satu putaran penuh spindel.' },
-                  { sym: 'F (Vf)', name: 'Feed Speed (Kecepatan Pemakanan)', unit: 'mm/menit', desc: 'Perpindahan linier pahat per satuan menit (F = f × n).' },
-                  { sym: 'a', name: 'Depth of Cut (Kedalaman Sayat)', unit: 'milimeter (mm)', desc: 'Tebal penyayatan radial pahat ke dalam benda: a = (D0 - D1)/2.' },
-                  { sym: 'Tc (Tm)', name: 'Machining Time (Waktu Pemesinan)', unit: 'menit atau detik', desc: 'Durasi waktu penyayatan aktif selama pemotongan berlangsung.' },
-                  { sym: 'L', name: 'Panjang Bidang Sayat', unit: 'milimeter (mm)', desc: 'Panjang bagian benda kerja yang harus disayat rata.' },
-                  { sym: 'la', name: 'Jarak Awalan (Approach Distance)', unit: 'milimeter (mm)', desc: 'Jarak awal pahat sebelum menyentuh benda (standar 2 - 4 mm).' },
-                  { sym: 'lu', name: 'Jarak Bebas (Overrun Distance)', unit: 'milimeter (mm)', desc: 'Kelebihan lintasan pahat setelah selesai menyayat (0 - 2 mm).' },
-                  { sym: 'α', name: 'Sudut Kemiringan Tirus', unit: 'derajat (°)', desc: 'Sudut setengah tirus untuk penyetelan eretan atas: tg α = (D-d)/(2l).' },
-                  { sym: 'S', name: 'Offset Kepala Lepas', unit: 'milimeter (mm)', desc: 'Jarak penggeseran badan tailstock melintang sumbu mesin.' },
-                  { sym: 'Q (MRR)', name: 'Material Removal Rate', unit: 'cm³/menit atau mm³/menit', desc: 'Volume gram/tatal yang diproduksi per satuan waktu.' },
-                  { sym: 'P', name: 'Kisar Ulir (Thread Pitch)', unit: 'milimeter (mm)', desc: 'Jarak puncak ke puncak ulir bertetangga pada ulir metris.' }
+                  { sym: 'Vc (Cs)', name: 'Cutting Speed (Kecepatan Potong)', unit: 'meter/menit (m/min)', desc: 'Panjang sayatan yang dilalui ujung pahat dalam 1 menit.' },
+                  { sym: 'n', name: 'Revolutions Per Minute (Putaran Mesin)', unit: 'putaran/menit (RPM)', desc: 'Berapa kali spindel berputar dalam waktu 1 menit.' },
+                  { sym: 'd / D', name: 'Diameter Benda Kerja', unit: 'milimeter (mm)', desc: 'Ukuran garis tengah poros atau silinder benda kerja.' },
+                  { sym: 'f', name: 'Feed Per Revolution (Gerak Makan)', unit: 'mm/putaran', desc: 'Berapa mm pahat bergeser maju setiap kali benda berputar 1 putaran.' },
+                  { sym: 'F', name: 'Feed Speed (Kecepatan Pemakanan)', unit: 'mm/menit', desc: 'Kecepatan gerak maju eretan otomatis per menit: F = f × n.' },
+                  { sym: 'a', name: 'Depth of Cut (Kedalaman Potong)', unit: 'milimeter (mm)', desc: 'Tebal sayatan radial pahat: a = (D0 - D1) / 2.' },
+                  { sym: 'Tc', name: 'Machining Time (Waktu Sayat)', unit: 'menit atau detik', desc: 'Berapa lama waktu penyayatan aktif selama pemotongan berlangsung.' },
+                  { sym: 'L', name: 'Panjang Pembubutan', unit: 'milimeter (mm)', desc: 'Panjang bagian poros yang harus disayat rata.' },
+                  { sym: 'la', name: 'Jarak Awalan (Approach Distance)', unit: 'milimeter (mm)', desc: 'Jarak awalan sebelum pahat menyentuh benda kerja (2 - 4 mm).' },
+                  { sym: 'α', name: 'Sudut Eretan Atas Tirus', unit: 'derajat (°)', desc: 'Sudut setengah tirus untuk memutar skala eretan atas.' }
                 ].map((row, rIdx) => (
                   <tr key={rIdx} style={{ borderBottom: '1px solid #1e293b', background: rIdx % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'transparent' }}>
                     <td style={{ padding: '12px 16px', fontWeight: 900, color: '#38bdf8', fontFamily: 'monospace' }}>{row.sym}</td>

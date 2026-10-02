@@ -467,56 +467,61 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           </div>
 
           {/* SECTION 3: ✏️ LANGKAH SUBSTITUSI & HITUNGAN DETAIL */}
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '18px' }}>
             <div style={{
-              fontSize: '0.8rem',
+              fontSize: '1.05rem',
               fontWeight: 900,
-              color: '#1e293b',
-              marginBottom: '8px',
-              textTransform: 'uppercase'
+              color: '#0f172a',
+              marginBottom: '10px',
+              textTransform: 'uppercase',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              ✏️ 3. Langkah Substitusi &amp; Penjabaran Perhitungan:
+              <span>✏️</span> 3. Langkah Substitusi &amp; Penjabaran Perhitungan:
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {steps.map((st, sIdx) => (
                 <div key={sIdx} style={{
                   background: '#ffffff',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  padding: '8px 12px',
-                  borderLeft: `4px solid ${themeColor}`
+                  border: '1.5px solid #cbd5e1',
+                  borderRadius: '10px',
+                  padding: '12px 16px',
+                  borderLeft: `5px solid ${themeColor}`,
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <span style={{
                       background: themeColor,
                       color: '#ffffff',
-                      fontSize: '0.65rem',
+                      fontSize: '0.78rem',
                       fontWeight: 900,
-                      padding: '1px 6px',
-                      borderRadius: '4px'
+                      padding: '2px 8px',
+                      borderRadius: '5px'
                     }}>
                       Langkah {st.stepNum || (sIdx + 1)}
                     </span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#334155' }}>
+                    <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#1e293b' }}>
                       {st.title}
                     </span>
                   </div>
                   <div style={{
-                    fontFamily: "'Fira Code', monospace",
-                    fontSize: '0.84rem',
-                    fontWeight: 700,
+                    fontFamily: "'Fira Code', 'Courier New', monospace",
+                    fontSize: '1.02rem',
+                    fontWeight: 800,
                     color: '#0f172a',
                     background: lightBg,
-                    padding: '6px 10px',
-                    borderRadius: '6px',
-                    border: `1px solid ${borderColor}`,
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: `1.5px solid ${borderColor}`,
                     overflowX: 'auto',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    letterSpacing: '0.3px'
                   }}>
                     {st.math}
                   </div>
                   {st.note && (
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', lineHeight: 1.4 }}>
+                    <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '6px', lineHeight: 1.5 }}>
                       💡 {st.note}
                     </div>
                   )}
@@ -2935,38 +2940,131 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* Bedah Penyelesaian Lengkap Langkah demi Langkah */}
         <div style={{
           background: '#ffffff',
-          borderRadius: '12px',
-          border: '1px solid #e2e8f0',
-          padding: '16px 18px',
-          marginBottom: '18px'
+          borderRadius: '16px',
+          border: `2px solid ${themeColor}40`,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+          overflow: 'hidden',
+          marginBottom: '22px'
         }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>✏️</span> Bedah Penyelesaian Lengkap Langkah demi Langkah:
+          {/* Header Banner - Besar & Kontras */}
+          <div style={{
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            padding: '16px 22px',
+            color: '#ffffff',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '10px',
+            borderBottom: `4px solid ${themeColor}`
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '1.6rem' }}>✏️</span>
+              <div>
+                <div style={{ fontSize: '1.22rem', fontWeight: 900, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#ffffff' }}>
+                  Bedah Penyelesaian Lengkap Langkah demi Langkah:
+                </div>
+                <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>
+                  Penjabaran matematis terperinci, substitusi nilai, dan konversi satuan fisik
+                </div>
+              </div>
+            </div>
+            <span style={{
+              background: themeColor,
+              color: '#ffffff',
+              padding: '5px 14px',
+              borderRadius: '999px',
+              fontSize: '0.78rem',
+              fontWeight: 900,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+            }}>
+              Solusi Terbuka
+            </span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '18px', background: '#f8fafc' }}>
             {solutions.map((sol, idx) => (
               <div key={idx} style={{
-                background: '#f8fafc',
-                padding: '12px 14px',
-                borderRadius: '8px',
-                border: '1px solid #e2e8f0',
-                borderLeft: `3px solid ${themeColor}`
+                background: '#ffffff',
+                padding: '18px 20px',
+                borderRadius: '12px',
+                border: '1.5px solid #e2e8f0',
+                borderLeft: `6px solid ${themeColor}`,
+                boxShadow: '0 3px 12px rgba(0,0,0,0.04)'
               }}>
-                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: themeColor, marginBottom: '4px' }}>
-                  {sol.title}
+                {/* Step Title Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                  <span style={{
+                    background: `${themeColor}20`,
+                    color: themeColor,
+                    padding: '4px 12px',
+                    borderRadius: '6px',
+                    fontSize: '0.88rem',
+                    fontWeight: 900,
+                    textTransform: 'uppercase',
+                    border: `1px solid ${themeColor}40`
+                  }}>
+                    Langkah {idx + 1}
+                  </span>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
+                    {sol.title.replace(/^Langkah \d+:\s*/, '')}
+                  </div>
                 </div>
+
+                {/* Formula Highlight Box */}
                 {sol.formula && (
-                  <div style={{ fontSize: '0.74rem', fontFamily: 'monospace', color: '#475569', marginBottom: '4px', background: '#ffffff', padding: '4px 8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}>
-                    {sol.formula}
+                  <div style={{
+                    fontSize: '1.05rem',
+                    fontFamily: "'Fira Code', 'Courier New', monospace",
+                    fontWeight: 800,
+                    color: '#0369a1',
+                    marginBottom: '12px',
+                    background: '#f0f9ff',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    border: '1.5px solid #bae6fd',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <span style={{ color: '#0284c7', fontSize: '0.88rem', fontWeight: 900, textTransform: 'uppercase' }}>📐 Rumus:</span>
+                    <span style={{ letterSpacing: '0.3px' }}>{sol.formula}</span>
                   </div>
                 )}
-                <div style={{ fontSize: '0.78rem', color: '#1e293b', lineHeight: 1.55 }}>
+
+                {/* Arithmetic & Calculation Explanation */}
+                <div style={{
+                  fontSize: '1.02rem',
+                  color: '#1e293b',
+                  lineHeight: 1.75,
+                  background: '#f8fafc',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                  marginBottom: sol.result ? '12px' : '0'
+                }}>
                   {sol.desc}
                 </div>
+
+                {/* Contrast Final Result */}
                 {sol.result && (
-                  <div style={{ marginTop: '6px', fontSize: '0.82rem', fontWeight: 900, color: '#15803d' }}>
-                    🎯 Hasil: {sol.result}
+                  <div style={{
+                    fontSize: '1.12rem',
+                    fontWeight: 900,
+                    color: '#15803d',
+                    background: '#f0fdf4',
+                    border: '2px solid #86efac',
+                    padding: '12px 18px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    boxShadow: '0 2px 6px rgba(22, 163, 74, 0.1)'
+                  }}>
+                    <span style={{ fontSize: '1.4rem' }}>🎯</span>
+                    <span><strong>Hasil Akhir:</strong> {sol.result}</span>
                   </div>
                 )}
               </div>

@@ -15,6 +15,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Persegi Panjang Rata (Kedua muka sejajar, tebal sedikit menirus di ujung)',
     simbol: '▬',
     icon: '🟦',
+    fotoReal: '/assets/images/perkakas/kikir_plat_real.jpg',
     fungsi: 'Meratakan dan mensejajarkan permukaan bidang datar luar, membuat sudut siku 90°, meratakan bekas potongan gergaji, dan pengerjaan pasak luar.',
     fiturKhusus: 'Memiliki "Safe Edge" (satu sisi tepi sempit polos licin tanpa gigi) untuk mengikir bidang datar yang berbatasan dengan dinding tegak 90° tanpa mengikis atau merusak dinding tersebut.',
     bendaKerja: 'Balok besi ST37, pelat strip tebal, dudukan mesin bubut, permukaan kampuh las rata, siku tumpuan.',
@@ -28,6 +29,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Segitiga Sama Sisi (Sudut baji 60° pada ketiga rusuknya)',
     simbol: '▲',
     icon: '🔺',
+    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
     fungsi: 'Membersihkan alur bersudut V, meratakan sudut dalam lancip lebih dari 60°, meratakan sudut tajam 90°, dan mengasah menajamkan gigi gergaji manual.',
     fiturKhusus: 'Ketiga sisinya memiliki alur gigi pemotong presisi; rusuk sudutnya tajam untuk mencapai pojok celah sudut mati yang sempit.',
     bendaKerja: 'Alur V kampuh las, celah gigi roda gigi, alur pasak tirus, mata bilah gergaji besi dan gergaji kayu.',
@@ -41,6 +43,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Lingkaran Bundar Silindris (Menirus mengecil ke arah ujung bilah)',
     simbol: '●',
     icon: '⚪',
+    fotoReal: '/assets/images/perkakas/kikir_bengkel_real.jpg',
     fungsi: 'Memperbesar diameter lubang silindris hasil pengeboran, menghaluskan alur cekung sempit, dan membentuk fillet radius dalam.',
     fiturKhusus: 'Ujung yang melancip tirus memungkinkan kikir masuk ke lubang berdiameter kecil sebelum diperbesar bertahap ke diameter pangkalnya.',
     bendaKerja: 'Lubang baut pelat, alur pasak bundar (Woodruff keyway), pipa dalam, profil kurva cekung bodi cetakan.',
@@ -54,6 +57,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Kombinasi (Satu muka datar rata dan satu muka melengkung cembung / kubah)',
     simbol: '◗',
     icon: '🌓',
+    fotoReal: '/assets/images/perkakas/kikir_bengkel_real.jpg',
     fungsi: 'Perkakas paling serbaguna di bengkel kerja bangku: muka datar untuk meratakan bidang datar, muka cembung untuk bidang cekung radius dalam.',
     fiturKhusus: 'Dua fungsi dalam satu alat; muka cembung mencegah kikir terjepit saat mengikis permukaan busur radius dalam yang besar.',
     bendaKerja: 'Cincin lubang bantalan bearing, alur lengkung kontur pelat, sambungan pipa melengkung, bidang rata.',
@@ -67,6 +71,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Bujur Sangkar Sama Sisi (4 sisi tegak lurus 90° dengan ujung tirus)',
     simbol: '■',
     icon: '⬛',
+    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
     fungsi: 'Membuat dan meratakan lubang segi empat, membersihkan alur pasak poros (keyway), celah splina, dan alur persegi presisi.',
     fiturKhusus: 'Keempat sisinya memiliki alur gerigi potong double cut; sudut 90° tajam mampu membersihkan sudut mati alur pasak hingga tuntas.',
     bendaKerja: 'Lubang pasak roda gigi, alur pasak poros transmisi mesin, lubang kunci socket, celah baut persegi.',
@@ -80,6 +85,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Bilah Pisau Baji Lancip (Sudut lancip sangat sempit < 30°)',
     simbol: '◣',
     icon: '🔪',
+    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
     fungsi: 'Mengerjakan celah alur yang sangat sempit, sudut baji lancip kurang dari 60°, dan gigi presisi roda gigi mikro.',
     fiturKhusus: 'Punggung kikir tebal untuk kekuatan struktural kaku, sedangkan tepi bawahnya sangat tipis tajam mirip bilah pisau.',
     bendaKerja: 'Celah roda gigi halus, cetakan molding presisi, celah pasak sudut lancip, alur kartu kunci master kunci silinder.',
@@ -93,6 +99,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Setengah Bulat / Datar dengan Gigi Prisma Menonjol Bebas',
     simbol: '▥',
     icon: '🪵',
+    fotoReal: '/assets/images/perkakas/kikir_kekasaran_real.jpg',
     fungsi: 'Pengikisan awal material lunak non-ferrous, kayu keras, dan non-logam tanpa menyebabkan gigi kikir tersumbat (anti-clogging).',
     fiturKhusus: 'Gigi pemotong bukan berupa alur garis menerus, melainkan tonjolan prisma tajam individual yang terpisah satu sama lain.',
     bendaKerja: 'Kayu jati pola cor logam (pattern making), timbal babbitt bantalan mesin, teflon nylon, aluminium murni lunak.',
@@ -102,7 +109,7 @@ export const KIKIR_PROFILES = [
 ];
 
 // =============================================================================
-// DATABASE 17 PERKAKAS BENGKEL (MANUAL HAND TOOLS & POWER TOOLS LENGKAP)
+// DATABASE 17 PERKAKAS BENGKEL DENGAN FOTO ASLI NYATA BENGKEL & INDUSTRI
 // =============================================================================
 export const CUTTING_TOOLS_DATA = [
   // ---------------------------------------------------------------------------
@@ -121,8 +128,23 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Pemotongan terjadi saat bilah kikir didorong MAJU ke depan (forward stroke) dengan gaya tekan stabil dari kedua tangan. Tiap baris gigi kikir bertindak sebagai baji mikro yang mengikis lapisan logam menjadi tatal halus mikroskopis. Saat bilah ditarik MUNDUR ke belakang, gaya tekan harus dilepaskan total agar gigi potong tidak tumpul tergerus gesekan balik.',
     images: [
       {
+        url: '/assets/images/perkakas/kikir_bengkel_real.jpg',
+        title: 'Foto Asli Set Kikir Bengkel Mesin di Meja Kerja',
+        desc: 'Koleksi foto asli perkakas kikir tangan baja tempa lengkap dengan gagang pegangan dan serpihan tatal bengkel nyata.'
+      },
+      {
+        url: '/assets/images/perkakas/kikir_kekasaran_real.jpg',
+        title: 'Foto Asli Detail Gerigi: Smooth, 2nd Cut & Bastard',
+        desc: 'Foto makro nyata perbandingan kerapatan gigi kikir plat dari tingkat paling kasar (Bastard) hingga halus (Smooth).'
+      },
+      {
+        url: '/assets/images/perkakas/kikir_plat_real.jpg',
+        title: 'Foto Asli Kikir Plat Rata (Flat File)',
+        desc: 'Foto close-up nyata bilah kikir plat baja dengan guratan double cut dan tepi safe edge.'
+      },
+      {
         url: '/assets/images/perkakas/kikir_set_lengkap.svg',
-        title: 'Infografis Lengkap Anatomi & 7 Penampang Kikir Bengkel',
+        title: 'Infografis Vektor Anatomi & 7 Penampang Kikir',
         desc: 'Bagan teknis standar industri: anatomi kikir (ujung, badan, ekor, ferrule, gagang), 7 bentuk profil penampang melintang, tingkat kekasaran gigi, dan aturan keselamatan kerja.'
       }
     ],
@@ -137,13 +159,13 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Alat Pembersih Wajib', value: 'Sikat Kikir Kuningan (File Card) & Kapur Tulis (Chalk)' }
     ],
     komponen: [
-      { no: '01', nama: 'Ujung Kikir (Point / Tip)', desc: 'Ujung terdepan bilah kikir yang sedikit tirus membulat untuk mempermudah mengarahkan awal langkah dorongan potong.', pinPos: { x: 12, y: 19 }, lokasiFisik: 'Ujung paling depan bilah baja kikir' },
-      { no: '02', nama: 'Muka / Badan Kikir (Face / Body)', desc: 'Bidang sayat utama kikir yang dipenuhi ribuan gigi pemotong baja keras berpola single cut atau double cut.', pinPos: { x: 38, y: 19 }, lokasiFisik: 'Permukaan badan kikir bagian tengah yang lebar' },
-      { no: '03', nama: 'Tepi Kikir & Safe Edge', desc: 'Bidang sempit samping kikir. Kikir plat memiliki "Safe Edge" (tepi licin tanpa gigi) untuk mengikir sudut 90° tanpa merusak dinding tegak.', pinPos: { x: 52, y: 22 }, lokasiFisik: 'Sisi tepi samping bilah kikir' },
-      { no: '04', nama: 'Tumit Kikir (Heel)', desc: 'Bagian pangkal bilah kikir tanpa gigi pemotong sebelum transisi menuju leher ekor tirus.', pinPos: { x: 58, y: 19 }, lokasiFisik: 'Bagian pangkal bilah tepat sebelum leher gagang' },
-      { no: '05', nama: 'Ekor Kikir (Tang)', desc: 'Bagian tirus runcing di pangkal kikir yang ditancapkan erat ke dalam lubang gagang kayu/plastik.', pinPos: { x: 65, y: 19 }, lokasiFisik: 'Bagian ekor baja yang tertanam di dalam gagang' },
-      { no: '06', nama: 'Cincin Penguat (Brass Ferrule)', desc: 'Cincin logam kuningan atau baja tebal yang mengikat leher gagang kayu agar kayu tidak pecah atau retak saat ekor kikir ditekan.', pinPos: { x: 67, y: 19 }, lokasiFisik: 'Ring cincin kuningan di ujung depan gagang kayu' },
-      { no: '07', nama: 'Gagang Kikir (Ergonomic Handle)', desc: 'Pegangan kayu halus atau komposit ergonomis untuk kenyamanan dorongan tangan dan mencegah ekor kikir menusuk telapak tangan.', pinPos: { x: 79, y: 19 }, lokasiFisik: 'Gagang pegangan kayu oval di bagian belakang' }
+      { no: '01', nama: 'Ujung Kikir (Point / Tip)', desc: 'Ujung terdepan bilah kikir yang sedikit tirus membulat untuk mempermudah mengarahkan awal langkah dorongan potong.', pinPos: { x: 14, y: 35 }, lokasiFisik: 'Ujung paling depan bilah baja kikir' },
+      { no: '02', nama: 'Muka / Badan Kikir (Face / Body)', desc: 'Bidang sayat utama kikir yang dipenuhi ribuan gigi pemotong baja keras berpola single cut atau double cut.', pinPos: { x: 42, y: 48 }, lokasiFisik: 'Permukaan badan kikir bagian tengah yang lebar' },
+      { no: '03', nama: 'Tepi Kikir & Safe Edge', desc: 'Bidang sempit samping kikir. Kikir plat memiliki "Safe Edge" (tepi licin tanpa gigi) untuk mengikir sudut 90° tanpa merusak dinding tegak.', pinPos: { x: 50, y: 40 }, lokasiFisik: 'Sisi tepi samping bilah kikir' },
+      { no: '04', nama: 'Tumit Kikir (Heel)', desc: 'Bagian pangkal bilah kikir tanpa gigi pemotong sebelum transisi menuju leher ekor tirus.', pinPos: { x: 62, y: 55 }, lokasiFisik: 'Bagian pangkal bilah tepat sebelum leher gagang' },
+      { no: '05', nama: 'Ekor Kikir (Tang)', desc: 'Bagian tirus runcing di pangkal kikir yang ditancapkan erat ke dalam lubang gagang kayu/plastik.', pinPos: { x: 72, y: 62 }, lokasiFisik: 'Bagian ekor baja yang tertanam di dalam gagang' },
+      { no: '06', nama: 'Cincin Penguat (Brass Ferrule)', desc: 'Cincin logam kuningan atau baja tebal yang mengikat leher gagang kayu agar kayu tidak pecah atau retak saat ekor kikir ditekan.', pinPos: { x: 75, y: 65 }, lokasiFisik: 'Ring cincin kuningan di ujung depan gagang kayu' },
+      { no: '07', nama: 'Gagang Kikir (Ergonomic Handle)', desc: 'Pegangan kayu halus atau komposit ergonomis untuk kenyamanan dorongan tangan dan mencegah ekor kikir menusuk telapak tangan.', pinPos: { x: 86, y: 72 }, lokasiFisik: 'Gagang pegangan kayu oval di bagian belakang' }
     ],
     bendaKerja: ['Balok baja karbon ST37 / S45C', 'Pelat strip & profil siku', 'Alur pasak poros roda gigi', 'Baja perkakas setelah dipotong gergaji', 'Aluminium paduan (menggunakan kikir gigi tunggal)'],
     sopKerja: [
@@ -175,8 +197,13 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Bilah gergaji dirancang hanya memotong pada LANGKAH MAJU (forward cutting stroke). Gigi gergaji miring ke arah depan menjauhi gagang. Pada langkah maju, operator memberikan tekanan dorong vertikal; pada langkah mundur, tekanan diangkat sedikit agar gigi gergaji tidak tumpul tergerus.',
     images: [
       {
+        url: '/assets/images/perkakas/gergaji_tangan_real.jpg',
+        title: 'Foto Asli Gergaji Besi Manual (Hand Hacksaw)',
+        desc: 'Unit gergaji tangan besi asli dengan rangka baja tubular, gagang pistol, mur kupu-kupu penegang, dan bilah bimetal terpasang.'
+      },
+      {
         url: '/assets/images/perkakas/gergaji_tangan.svg',
-        title: 'Infografis Gergaji Tangan Besi & Aturan Emas 3 Gigi TPI',
+        title: 'Infografis Teknis Rangka & Aturan 3 Gigi TPI',
         desc: 'Bagan teknis anatomi rangka gergaji, mur kupu penegang, arah pasang gigi maju, dan aturan TPI untuk material tebal vs tipis.'
       }
     ],
@@ -189,10 +216,10 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Kecepatan Sayat Manual', value: '40 s.d. 50 langkah dorong per menit' }
     ],
     komponen: [
-      { no: '01', nama: 'Mur Kupu-Kupu Penegang (Wing Nut)', desc: 'Mur ulir penegang bilah di ujung depan rangka; diputar hingga bilah gergaji tegang lurus tanpa lendutan.', pinPos: { x: 12, y: 22 }, lokasiFisik: 'Mur kupu-kupu di ujung depan bawah rangka gergaji' },
-      { no: '02', nama: 'Rangka Baja Tubular C', desc: 'Rangka baja pipa kokoh yang menjaga kelurusan tarikan dan meminimalisir lenturan gaya potong.', pinPos: { x: 42, y: 12 }, lokasiFisik: 'Pipa baja melengkung di bagian atas bilah' },
-      { no: '03', nama: 'Bilah Gergaji HSS Bimetal', desc: 'Pita pemotong baja bimetal dengan deretan gigi tajam; punggung lentur anti-patah dan gigi potong tahan aus.', pinPos: { x: 46, y: 27 }, lokasiFisik: 'Bilah baja biru tipis bergigi di bagian bawah rangka' },
-      { no: '04', nama: 'Gagang Pistol Ergonomis', desc: 'Gagang pegangan bentuk pistol untuk transfer dorongan tangan kanan yang mantap dan simetris.', pinPos: { x: 78, y: 27 }, lokasiFisik: 'Gagang pegangan di bagian belakang rangka' }
+      { no: '01', nama: 'Mur Kupu-Kupu Penegang (Wing Nut)', desc: 'Mur ulir penegang bilah di ujung depan rangka; diputar hingga bilah gergaji tegang lurus tanpa lendutan.', pinPos: { x: 12, y: 52 }, lokasiFisik: 'Mur kupu-kupu di ujung depan bawah rangka gergaji' },
+      { no: '02', nama: 'Rangka Baja Tubular C', desc: 'Rangka baja pipa kokoh yang menjaga kelurusan tarikan dan meminimalisir lenturan gaya potong.', pinPos: { x: 50, y: 25 }, lokasiFisik: 'Pipa baja melengkung di bagian atas bilah' },
+      { no: '03', nama: 'Bilah Gergaji HSS Bimetal', desc: 'Pita pemotong baja bimetal dengan deretan gigi tajam; punggung lentur anti-patah dan gigi potong tahan aus.', pinPos: { x: 48, y: 65 }, lokasiFisik: 'Bilah baja biru tipis bergigi di bagian bawah rangka' },
+      { no: '04', nama: 'Gagang Pistol Ergonomis', desc: 'Gagang pegangan bentuk pistol untuk transfer dorongan tangan kanan yang mantap dan simetris.', pinPos: { x: 88, y: 48 }, lokasiFisik: 'Gagang pegangan di bagian belakang rangka' }
     ],
     bendaKerja: ['Poros as baja pejal Ø 10 - 50 mm', 'Pipa baja seamless & hollow', 'Baja profil siku L 40x40', 'Pelat strip tebal', 'Batang tembaga & aluminium'],
     sopKerja: [
@@ -222,8 +249,13 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Baji tajam pahat ditempelkan pada logam pada sudut serang 35° - 40°, kemudian kepala pahat dipukul dengan palu konde. Energi kinetik pukulan diteruskan melalui baji untuk membelah, mengikis, atau memutus serat logam.',
     images: [
       {
+        url: '/assets/images/perkakas/pahat_tangan_real.jpg',
+        title: 'Foto Asli Set Pahat Tangan Dingin (Cold Chisels)',
+        desc: 'Koleksi nyata pahat baja tempa penampang segi delapan dengan mata baji tajam (flat chisel & cape chisel) dan kepala pukul ter-chamfer.'
+      },
+      {
         url: '/assets/images/perkakas/pahat_tangan.svg',
-        title: 'Infografis 4 Jenis Pahat Dingin & Bahaya Fatal Kepala Jamur',
+        title: 'Infografis 4 Jenis Pahat Dingin & Bahaya Kepala Jamur',
         desc: 'Visual detail pahat pelat, alur, setengah bulat, intan, sudut baji 60°, dan SOP gerinda chamfer kepala jamur (mushroomed head).'
       }
     ],
@@ -236,9 +268,9 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Kekerasan Kepala Pukul', value: '38 - 42 HRC (Ulet dan kenyal untuk menahan pukulan palu)' }
     ],
     komponen: [
-      { no: '01', nama: 'Mata Potong Baji (Cutting Edge)', desc: 'Ujung tajam baji pemotong yang sedikit cembung untuk memusatkan titik potong di tengah bilah.', pinPos: { x: 18, y: 35 }, lokasiFisik: 'Bilah baji tajam di bagian ujung bawah pahat' },
-      { no: '02', nama: 'Batang Segi Delapan (Body)', desc: 'Badan pahat bersegi delapan agar mantap digenggam tangan dan tidak mudah terpuntir atau menggelinding di meja kerja.', pinPos: { x: 18, y: 22 }, lokasiFisik: 'Batang segi delapan baja bagian tengah pahat' },
-      { no: '03', nama: 'Kepala Pukul (Striking Head)', desc: 'Bagian atas tempat palu mendarat; wajib di-chamfer 1-2 mm untuk mencegah pembentukan kepala jamur (mushrooming).', pinPos: { x: 18, y: 12 }, lokasiFisik: 'Kepala bagian atas yang dipukul oleh palu' }
+      { no: '01', nama: 'Mata Potong Baji (Cutting Edge)', desc: 'Ujung tajam baji pemotong yang sedikit cembung untuk memusatkan titik potong di tengah bilah.', pinPos: { x: 18, y: 50 }, lokasiFisik: 'Bilah baji tajam di bagian ujung bawah pahat' },
+      { no: '02', nama: 'Batang Segi Delapan (Body)', desc: 'Badan pahat bersegi delapan agar mantap digenggam tangan dan tidak mudah terpuntir atau menggelinding di meja kerja.', pinPos: { x: 50, y: 50 }, lokasiFisik: 'Batang segi delapan baja bagian tengah pahat' },
+      { no: '03', nama: 'Kepala Pukul (Striking Head)', desc: 'Bagian atas tempat palu mendarat; wajib di-chamfer 1-2 mm untuk mencegah pembentukan kepala jamur (mushrooming).', pinPos: { x: 85, y: 50 }, lokasiFisik: 'Kepala bagian atas yang dipukul oleh palu' }
     ],
     bendaKerja: ['Kepala paku keling (rivet head) rusak', 'Kepala baut dol/karat', 'Terak dan tonjolan kampuh las', 'Alur pasak poros dan kanal pelumas', 'Pelat baja strip tipis'],
     sopKerja: [
@@ -267,8 +299,13 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Menyalurkan energi kinetik pukulan dari ayunan lengan tangan melalui kepala palu logam atau komposit lunak menuju media sasaran.',
     images: [
       {
+        url: '/assets/images/perkakas/palu_bengkel_real.jpg',
+        title: 'Foto Asli Palu Konde Bengkel Mesin (Ball-Peen Hammer)',
+        desc: 'Palu konde asli bengkel pemesinan dengan kepala baja tempa mengkilap, muka pukul datar, muka bulat konde, dan tangkai kayu solid.'
+      },
+      {
         url: '/assets/images/perkakas/kunci_dan_palu.svg',
-        title: 'Infografis Palu Bengkel Mesin & Perkakas Kunci Cr-V',
+        title: 'Infografis Jenis Palu Bengkel & Perkakas Kunci Cr-V',
         desc: 'Visual perbandingan palu konde baja tempa, palu tembaga lunak anti-cacat, palu dead blow, dan kelompok kunci mekanik.'
       }
     ],
@@ -280,10 +317,10 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Sistem Pengunci Baji', value: 'Baji Baja dan Baji Kayu Bersilang Ganda (Double Cross Wedge)' }
     ],
     komponen: [
-      { no: '01', nama: 'Muka Datar (Flat Face)', desc: 'Bidang datar sedikit cembung untuk memukul penitik pusat, pahat, dan pasak.', pinPos: { x: 12, y: 22 }, lokasiFisik: 'Muka pukul bagian depan kepala palu' },
-      { no: '02', nama: 'Muka Bulat Konde (Ball Peen)', desc: 'Muka setengah bola bundar untuk menempa kepala keling bulat dan memperkuat struktur logam las.', pinPos: { x: 30, y: 22 }, lokasiFisik: 'Muka bulat kubah di bagian belakang kepala palu' },
-      { no: '03', nama: 'Mata Palu & Baji Pengunci (Eye & Wedges)', desc: 'Lubang oval tempat tangkai masuk, dikunci baji kayu dan baja agar kepala palu tidak terbang lepas.', pinPos: { x: 21, y: 24 }, lokasiFisik: 'Lubang tengah sambungan kepala dan gagang' },
-      { no: '04', nama: 'Gagang Tangkai Kayu Hickory', desc: 'Tangkai kayu lentur penyerap kejut getaran benturan tangan.', pinPos: { x: 21, y: 38 }, lokasiFisik: 'Tangkai kayu panjang pegangan palu' }
+      { no: '01', nama: 'Muka Datar (Flat Face)', desc: 'Bidang datar sedikit cembung untuk memukul penitik pusat, pahat, dan pasak.', pinPos: { x: 12, y: 48 }, lokasiFisik: 'Muka pukul bagian depan kepala palu' },
+      { no: '02', nama: 'Muka Bulat Konde (Ball Peen)', desc: 'Muka setengah bola bundar untuk menempa kepala keling bulat dan memperkuat struktur logam las.', pinPos: { x: 28, y: 48 }, lokasiFisik: 'Muka bulat kubah di bagian belakang kepala palu' },
+      { no: '03', nama: 'Mata Palu & Baji Pengunci (Eye & Wedges)', desc: 'Lubang oval tempat tangkai masuk, dikunci baji kayu dan baja agar kepala palu tidak terbang lepas.', pinPos: { x: 20, y: 50 }, lokasiFisik: 'Lubang tengah sambungan kepala dan gagang' },
+      { no: '04', nama: 'Gagang Tangkai Kayu Hickory', desc: 'Tangkai kayu lentur penyerap kejut getaran benturan tangan.', pinPos: { x: 65, y: 50 }, lokasiFisik: 'Tangkai kayu panjang pegangan palu' }
     ],
     bendaKerja: ['Kepala penitik pusat (center punch)', 'Pahat tangan dingin', 'Paku keling piringan rem & pelat', 'Poros presisi, bantalan bearing, dan pasak mesin'],
     sopKerja: [
@@ -311,6 +348,11 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Memutar tuas engkol memutar poros ulir acme yang mendorong rahang geser maju atau mundur, menghasilkan gaya jepit mekanis hingga puluhan kilonewton.',
     images: [
       {
+        url: '/assets/images/perkakas/ragum_meja_real.jpg',
+        title: 'Foto Asli Ragum Meja Kerja Bangku (Machinist Bench Vise)',
+        desc: 'Unit ragum meja besi tuang masif asli dibaut pada meja kerja kayu, dengan rahang baja keras presisi dan tuas engkol baja acme.'
+      },
+      {
         url: '/assets/images/perkakas/ragum_dan_penanda.svg',
         title: 'Infografis Ragum Meja Bengkel & Perkakas Penanda Presisi',
         desc: 'Bagan teknis ragum meja, fungsi soft jaws pelindung benda halus, penitik pusat 90°, penitik garis 30°, dan penggores baja karbida.'
@@ -325,11 +367,11 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Pelindung Rahang (Soft Jaws)', value: 'Pelat Tembaga (Copper), Aluminium paduan, atau Karet' }
     ],
     komponen: [
-      { no: '01', nama: 'Rahang Tetap (Fixed Jaw)', desc: 'Bodi rahang belakang yang dibaut mati pada meja kerja bangku.', pinPos: { x: 30, y: 22 }, lokasiFisik: 'Rahang bagian belakang yang menyatu dengan bodi tapak' },
-      { no: '02', nama: 'Rahang Geser (Movable Jaw)', desc: 'Rahang depan yang bergerak maju-mundur mengikuti putaran poros ulir acme.', pinPos: { x: 18, y: 22 }, lokasiFisik: 'Rahang bagian depan yang dapat digeser' },
-      { no: '03', nama: 'Poros Ulir Acme & Tuas Putar', desc: 'Poros ulir baja bertorsi tinggi dengan tuas geser silindris berujung bola bulat.', pinPos: { x: 14, y: 29 }, lokasiFisik: 'Tuas besi pemutar dan poros ulir di bawah rahang' },
-      { no: '04', nama: 'Pelat Rahang Baja (Hardened Jaw Inserts)', desc: 'Pelat baja keras bergerigi yang dapat diganti jika aus, dibaut pada muka rahang.', pinPos: { x: 24, y: 20 }, lokasiFisik: 'Sisipan pelat bergerigi di permukaan jepit' },
-      { no: '05', nama: 'Landasan Pukul (Anvil Plate)', desc: 'Bidang datar baja di belakang rahang tetap untuk meluruskan pelat atau paku kecil.', pinPos: { x: 34, y: 18 }, lokasiFisik: 'Bidang datar persegi di belakang rahang tetap' }
+      { no: '01', nama: 'Rahang Tetap (Fixed Jaw)', desc: 'Bodi rahang belakang yang dibaut mati pada meja kerja bangku.', pinPos: { x: 58, y: 35 }, lokasiFisik: 'Rahang bagian belakang yang menyatu dengan bodi tapak' },
+      { no: '02', nama: 'Rahang Geser (Movable Jaw)', desc: 'Rahang depan yang bergerak maju-mundur mengikuti putaran poros ulir acme.', pinPos: { x: 42, y: 35 }, lokasiFisik: 'Rahang bagian depan yang dapat digeser' },
+      { no: '03', nama: 'Poros Ulir Acme & Tuas Putar', desc: 'Poros ulir baja bertorsi tinggi dengan tuas geser silindris berujung bola bulat.', pinPos: { x: 28, y: 55 }, lokasiFisik: 'Tuas besi pemutar dan poros ulir di bawah rahang' },
+      { no: '04', nama: 'Pelat Rahang Baja (Hardened Jaw Inserts)', desc: 'Pelat baja keras bergerigi yang dapat diganti jika aus, dibaut pada muka rahang.', pinPos: { x: 50, y: 30 }, lokasiFisik: 'Sisipan pelat bergerigi di permukaan jepit' },
+      { no: '05', nama: 'Landasan Pukul (Anvil Plate)', desc: 'Bidang datar baja di belakang rahang tetap untuk meluruskan pelat atau paku kecil.', pinPos: { x: 72, y: 32 }, lokasiFisik: 'Bidang datar persegi di belakang rahang tetap' }
     ],
     bendaKerja: ['Balok baja yang akan dikikir', 'Pipa dan poros yang akan digergaji', 'Pelat strip yang akan dipahat', 'Komponen yang akan ditap ulir dalam'],
     sopKerja: [
@@ -358,8 +400,13 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/tap_dan_dies.jpg',
-        title: 'Set Tap Tangan Standar Metrik M3 - M16 & Stang Pemutar',
+        title: 'Foto Asli Set Tap Tangan Standar Metrik & Stang Pemutar',
         desc: 'Set lengkap tap tirus, tap antara, tap dasar finishing, sney lingkar berbelah, dan tap handle adjustable.'
+      },
+      {
+        url: '/assets/images/cutting_tools/dies_presisi.jpg',
+        title: 'Foto Asli Sney Pembuat Ulir Luar Presisi',
+        desc: 'Sney bulat berbelah baja HSS dengan alur pemotong ulir luar poros baut.'
       }
     ],
     spesifikasi: [
@@ -406,8 +453,13 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/reamer_presisi.jpg',
-        title: 'Reamer Presisi H7 Alur Heliks & Lurus HSS',
+        title: 'Foto Asli Reamer Tangan Presisi H7 Alur Heliks',
         desc: 'Reamer finishing lubang pasak pena silinder dengan toleransi mikron H7 dan tangkai pemutar stang tap.'
+      },
+      {
+        url: '/assets/images/cutting_tools/reamer_mesin.jpg',
+        title: 'Foto Asli Reamer Mesin Tirus Morse MT2',
+        desc: 'Reamer mesin berbatang tirus morse untuk finishing presisi pada mesin bor bangku dan bubut.'
       }
     ],
     spesifikasi: [
@@ -448,6 +500,11 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Menyalurkan momen gaya (torsi) dari tangan operator ke kepala baut atau mur dengan rasio lengan pengungkit (torque lever).',
     images: [
       {
+        url: '/assets/images/perkakas/kunci_bengkel_real.jpg',
+        title: 'Foto Asli Set Kunci Kombinasi Cr-V (Combination Spanners)',
+        desc: 'Set nyata 6 kunci kombinasi chrome-vanadium dengan ukuran metrik stamped (ujung pas dan ring 12 sudut).'
+      },
+      {
         url: '/assets/images/perkakas/kunci_dan_palu.svg',
         title: 'Infografis Kelompok Kunci Bengkel Mesin Cr-V & Tang Buaya',
         desc: 'Visual anatomi kunci kombinasi, kunci ring 12-sudut, rachet soket, kunci L heksagonal, dan tang buaya pengunci pelat.'
@@ -461,9 +518,9 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Kunci L Heksagonal', value: 'Set 9 Pcs (1.5, 2, 2.5, 3, 4, 5, 6, 8, 10 mm) dengan Ujung Bola (Ball Point)' }
     ],
     komponen: [
-      { no: '01', nama: 'Ujung Ring 12-Sudut (Box-End)', desc: 'Mencengkeram seluruh 6 sisi kepala baut secara melingkar; digunakan untuk torsi awal membuka baut keras dan pengencangan akhir.', pinPos: { x: 55, y: 19 }, lokasiFisik: 'Cincin melingkar di ujung kiri kunci' },
-      { no: '02', nama: 'Ujung Pas Terbuka (Open-End)', desc: 'Rahang terbuka bersudut offset 15° untuk putaran cepat di ruang sempit setelah baut kendur.', pinPos: { x: 80, y: 19 }, lokasiFisik: 'Rahang garpu terbuka di ujung kanan kunci' },
-      { no: '03', nama: 'Gagang Batang Tuas (Beam Handle)', desc: 'Batang I-beam berprofil kokoh untuk kenyamanan genggaman dorong atau tarik tangan.', pinPos: { x: 68, y: 19 }, lokasiFisik: 'Batang penghubung tengah kunci' }
+      { no: '01', nama: 'Ujung Ring 12-Sudut (Box-End)', desc: 'Mencengkeram seluruh 6 sisi kepala baut secara melingkar; digunakan untuk torsi awal membuka baut keras dan pengencangan akhir.', pinPos: { x: 18, y: 25 }, lokasiFisik: 'Cincin melingkar di ujung kiri kunci' },
+      { no: '02', nama: 'Ujung Pas Terbuka (Open-End)', desc: 'Rahang terbuka bersudut offset 15° untuk putaran cepat di ruang sempit setelah baut kendur.', pinPos: { x: 82, y: 75 }, lokasiFisik: 'Rahang garpu terbuka di ujung kanan kunci' },
+      { no: '03', nama: 'Gagang Batang Tuas (Beam Handle)', desc: 'Batang I-beam berprofil kokoh untuk kenyamanan genggaman dorong atau tarik tangan.', pinPos: { x: 50, y: 50 }, lokasiFisik: 'Batang penghubung tengah kunci' }
     ],
     bendaKerja: ['Baut kepala segi enam (Hex bolt) M4 - M24', 'Mur pengikat ragum meja', 'Baut pengikat eretan dan chuck mesin bubut', 'Baut penutup gearbox motor mesin'],
     sopKerja: [
@@ -491,6 +548,11 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Ujung runcing karbida menggores lapisan oksida pelat logam atau pukulan palu ringan pada penitik memindahkan titik koordinat gambar kerja ke benda nyata.',
     images: [
       {
+        url: '/assets/images/perkakas/penanda_gores_real.jpg',
+        title: 'Foto Asli Penggores Baja Presisi (Machinist Scribers)',
+        desc: 'Pena penggores baja berkartrid karbida keras dengan pegangan knurled bertekstur anti-slip di atas pelat logam bengkel.'
+      },
+      {
         url: '/assets/images/perkakas/ragum_dan_penanda.svg',
         title: 'Infografis Perkakas Penanda, Penggores & Penitik Presisi',
         desc: 'Visual anatomi penitik pusat 90°, penitik garis 30°, penggores ujung karbida tungsten, dan jangka pembagi pegas.'
@@ -504,10 +566,10 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Presisi Jangka Pembagi', value: 'Baut Setelan Mur Mikro (Knurled Nut Adjuster) Akurasi 0.1 mm' }
     ],
     komponen: [
-      { no: '01', nama: 'Penitik Pusat (Center Punch 90°)', desc: 'Ujung baji 90° pembuat cekungan dudukan mata bor bor meja agar ujung bor tidak bergeser saat mulai berputar.', pinPos: { x: 62, y: 15 }, lokasiFisik: 'Batang baja knurled dengan ujung tirus 90°' },
-      { no: '02', nama: 'Penitik Garis (Prick Punch 30°)', desc: 'Ujung baji runcing 30° untuk menitik titik-titik acuan garis dan tumpuan jangka pembagi.', pinPos: { x: 62, y: 32 }, lokasiFisik: 'Batang penitik dengan ujung tirus lancip 30°' },
-      { no: '03', nama: 'Penggores Baja Karbida (Scriber)', desc: 'Pena penggores berujung intan karbida untuk menggores pelat baja dengan bantuan mistar baja.', pinPos: { x: 62, y: 48 }, lokasiFisik: 'Pena baja tipis panjang dengan ujung karbida' },
-      { no: '04', nama: 'Jangka Pembagi Pegas (Spring Dividers)', desc: 'Dua kaki baja berujung jarum dengan busur pegas dan mur pengatur radius lingkaran.', pinPos: { x: 62, y: 65 }, lokasiFisik: 'Jangka berkaki jarum ganda dengan mur penyetel' }
+      { no: '01', nama: 'Penggores Baja Karbida (Scriber)', desc: 'Pena penggores berujung intan karbida untuk menggores pelat baja dengan bantuan mistar baja.', pinPos: { x: 45, y: 35 }, lokasiFisik: 'Pena baja tipis panjang dengan ujung karbida' },
+      { no: '02', nama: 'Penitik Pusat (Center Punch 90°)', desc: 'Ujung baji 90° pembuat cekungan dudukan mata bor bor meja agar ujung bor tidak bergeser saat mulai berputar.', pinPos: { x: 65, y: 55 }, lokasiFisik: 'Batang baja knurled dengan ujung tirus 90°' },
+      { no: '03', nama: 'Penitik Garis (Prick Punch 30°)', desc: 'Ujung baji runcing 30° untuk menitik titik-titik acuan garis dan tumpuan jangka pembagi.', pinPos: { x: 75, y: 65 }, lokasiFisik: 'Batang penitik dengan ujung tirus lancip 30°' },
+      { no: '04', nama: 'Jangka Pembagi Pegas (Spring Dividers)', desc: 'Dua kaki baja berujung jarum dengan busur pegas dan mur pengatur radius lingkaran.', pinPos: { x: 30, y: 60 }, lokasiFisik: 'Jangka berkaki jarum ganda dengan mur penyetel' }
     ],
     bendaKerja: ['Pelat baja ST37 persiapan bor', 'Benda kerja bubut dan frais', 'Pola pelat seng sheet metal', 'Dudukan blok bantalan mesin'],
     sopKerja: [
@@ -539,7 +601,7 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/gerinda_tangan.jpg',
-        title: 'Tampak Utama Gerinda Tangan 4 Inci di Meja Bengkel',
+        title: 'Foto Asli Mesin Gerinda Tangan 4 Inci di Meja Bengkel',
         desc: 'Unit gerinda tangan 4 inci dengan batu potong terpasang, pelindung keselamatan (wheel guard), kabel grounding, dan benda kerja profil baja.'
       }
     ],
@@ -592,7 +654,7 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/gerinda_potong.jpg',
-        title: 'Tampak Nyata Mesin Potong Chop Saw 14 Inci',
+        title: 'Foto Asli Mesin Potong Chop Saw 14 Inci Meja',
         desc: 'Mesin gerinda potong industri dengan batu 355mm, pelindung berengsel, tuas tekan D-Handle, dan ragum miter pengunci cepat.'
       }
     ],
@@ -644,6 +706,11 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Benda kerja ditumpangkan pada landasan kerja (tool rest) dengan celah 2-3 mm dari batu gerinda, kemudian disentuhkan ke permukaan depan batu yang berputar pada kecepatan keliling 30 m/s dengan gerakan menggeser kiri-kanan secara teratur.',
     images: [
       {
+        url: '/assets/images/perkakas/gerinda_duduk_real.jpg',
+        title: 'Foto Asli Mesin Gerinda Duduk Bangku (Bench Grinder)',
+        desc: 'Unit nyata mesin gerinda duduk bangku dengan roda batu gerinda abrasif, pelindung kaca eye shield transparan, tudung pengaman baja, dan landasan kerja tool rest.'
+      },
+      {
         url: '/assets/images/perkakas/gerinda_duduk.svg',
         title: 'Infografis Mesin Gerinda Duduk & Standar Celah Tool Rest',
         desc: 'Bagan teknis batu kasar vs halus, eye shield transparan, bak pendingin air quench, dan aturan celah landasan maksimal 2-3 mm (OSHA 1910.215).'
@@ -659,12 +726,12 @@ export const CUTTING_TOOLS_DATA = [
       { label: 'Bak Pendingin (Water Pot)', value: 'Terintegrasi di bodi depan untuk quenching pendinginan pahat' }
     ],
     komponen: [
-      { no: '01', nama: 'Batu Gerinda Kasar (Grit 36)', desc: 'Piringan gerinda aluminium oksida kelabu untuk pengasahan awal membuang material tebal dan memotong kepala jamur pahat.', pinPos: { x: 20, y: 35 }, lokasiFisik: 'Roda batu gerinda di sebelah kiri mesin' },
-      { no: '02', nama: 'Batu Gerinda Halus (Grit 60/80)', desc: 'Piringan gerinda putih untuk finishing penajaman sudut baji pahat bubut HSS dan mata bor twist drill.', pinPos: { x: 75, y: 35 }, lokasiFisik: 'Roda batu gerinda di sebelah kanan mesin' },
-      { no: '03', nama: 'Landasan Kerja (Tool Rest)', desc: 'Landasan baja tempat menumpangkan pahat; wajib disetel dengan celah maksimal 2-3 mm dari batu agar benda tidak terselot.', pinPos: { x: 15, y: 48 }, lokasiFisik: 'Landasan pelat datar di depan batu gerinda' },
-      { no: '04', nama: 'Kaca Pengaman Mata (Eye Shield)', desc: 'Kaca akrilik polikarbonat transparan yang dapat disetel sudutnya untuk menahan percikan tatal ke mata operator.', pinPos: { x: 22, y: 15 }, lokasiFisik: 'Pelindung kaca bening di atas batu gerinda' },
-      { no: '05', nama: 'Tudung Pengaman Baja (Wheel Guard)', desc: 'Kap baja tebal penutup keliling batu gerinda yang menahan serpihan jika batu gerinda pecah.', pinPos: { x: 20, y: 25 }, lokasiFisik: 'Tudung logam lengkung melingkari roda batu' },
-      { no: '06', nama: 'Bak Celup Pendingin (Quench Pot)', desc: 'Wadah air dingin di depan mesin untuk mencelupkan pahat secara berkala agar logam tidak kehilangan kekerasannya (overheating).', pinPos: { x: 50, y: 65 }, lokasiFisik: 'Mangkuk penampung air di bodi bawah tengah mesin' }
+      { no: '01', nama: 'Batu Gerinda Kasar (Grit 36)', desc: 'Piringan gerinda aluminium oksida kelabu untuk pengasahan awal membuang material tebal dan memotong kepala jamur pahat.', pinPos: { x: 22, y: 52 }, lokasiFisik: 'Roda batu gerinda di sebelah kiri mesin' },
+      { no: '02', nama: 'Batu Gerinda Halus / Sikat Kawat', desc: 'Piringan gerinda putih untuk finishing penajaman sudut baji pahat bubut HSS dan mata bor twist drill.', pinPos: { x: 78, y: 52 }, lokasiFisik: 'Roda batu gerinda di sebelah kanan mesin' },
+      { no: '03', nama: 'Landasan Kerja (Tool Rest)', desc: 'Landasan baja tempat menumpangkan pahat; wajib disetel dengan celah maksimal 2-3 mm dari batu agar benda tidak terselot.', pinPos: { x: 18, y: 68 }, lokasiFisik: 'Landasan pelat datar di depan batu gerinda' },
+      { no: '04', nama: 'Kaca Pengaman Mata (Eye Shield)', desc: 'Kaca akrilik polikarbonat transparan yang dapat disetel sudutnya untuk menahan percikan tatal ke mata operator.', pinPos: { x: 26, y: 28 }, lokasiFisik: 'Pelindung kaca bening di atas batu gerinda' },
+      { no: '05', nama: 'Tudung Pengaman Baja (Wheel Guard)', desc: 'Kap baja tebal penutup keliling batu gerinda yang menahan serpihan jika batu gerinda pecah.', pinPos: { x: 20, y: 40 }, lokasiFisik: 'Tudung logam lengkung melingkari roda batu' },
+      { no: '06', nama: 'Bodi Motor Induksi Sentral', desc: 'Motor listrik tanpa sikat (brushless induction motor) tahan debu abrasi yang menggerakkan kedua spindel.', pinPos: { x: 50, y: 55 }, lokasiFisik: 'Rumah motor silindris bagian tengah mesin' }
     ],
     bendaKerja: ['Pahat bubut HSS (pahat rata, muka, ulir, potong)', 'Mata bor twist drill Ø 3 - 25 mm', 'Kepala pahat tangan mekar (mushroom head)', 'Ujung penitik pusat dan penggores baja'],
     sopKerja: [
@@ -695,7 +762,7 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/bor_bangku.jpg',
-        title: 'Tampak Nyata Mesin Bor Bangku Workshop Fabrikasi',
+        title: 'Foto Asli Mesin Bor Bangku Workshop Fabrikasi',
         desc: 'Mesin bor bangku industri dengan penutup puli sabuk, chuck bor Jacobs 16mm, tuas pemakanan tiga bintang, dan meja putar bertingkat.'
       }
     ],
@@ -747,8 +814,13 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/bor_tangan.jpg',
-        title: 'Tampak Utama Bor Tangan Listrik Keyed Chuck 13mm',
+        title: 'Foto Asli Bor Tangan Listrik Keyed Chuck 13mm',
         desc: 'Bor tangan listrik tipe pistol grip bertenaga 650W dengan cekam 13mm, saklar variabel, pengunci kontinu, dan ventilasi motor.'
+      },
+      {
+        url: '/assets/images/cutting_tools/bor_tangan_alt.jpg',
+        title: 'Foto Asli Bor Tangan Ergonomis dengan Pengukur Kedalaman',
+        desc: 'Bor tangan portabel dilengkapi batang pengukur kedalaman dan gagang samping auxiliary handle.'
       }
     ],
     spesifikasi: [
@@ -794,8 +866,13 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/gergaji_mesin.jpg',
-        title: 'Mesin Gergaji Pita Logam Horisontal Industri',
+        title: 'Foto Asli Mesin Gergaji Pita Logam Horisontal Industri',
         desc: 'Mesin bandsaw pemotong profil baja tebal dengan lengan hidrolik turun, ragum jepit cepat, dan pemandu pita bearing karbida.'
+      },
+      {
+        url: '/assets/images/cutting_tools/gergaji_mesin_alt.jpg',
+        title: 'Foto Asli Detail Pemandu Bilah Pita & Saluran Coolant',
+        desc: 'Blok pemandu pita karbida berpendingin cairan emulsi langsung menyiram titik pemotongan.'
       }
     ],
     spesifikasi: [
@@ -842,7 +919,7 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/mesin_guillotine.jpg',
-        title: 'Mesin Potong Pelat Guillotine Hidrolik 2.5 Meter',
+        title: 'Foto Asli Mesin Potong Pelat Guillotine Hidrolik 2.5 Meter',
         desc: 'Mesin pemotong pelat industri kapasitas tebal 6mm panjang 2500mm dengan silinder hidrolik hold-downs dan meja bola gelinding.'
       }
     ],
@@ -890,8 +967,13 @@ export const CUTTING_TOOLS_DATA = [
     images: [
       {
         url: '/assets/images/cutting_tools/alligator_shear.jpg',
-        title: 'Mesin Alligator Shear Pemotong Besi Beton & Profil Baja',
+        title: 'Foto Asli Mesin Alligator Shear Pemotong Besi Beton & Profil',
         desc: 'Mesin aligator shear hidrolik industri dengan pisau potong 800mm, silinder penekan hidrolik, dan rahang engsel buaya.'
+      },
+      {
+        url: '/assets/images/cutting_tools/alligator_shear_alt.jpg',
+        title: 'Foto Asli Rahang Potong Aligator Membuka',
+        desc: 'Detail pisau geser baja tuang tebal pada rahang atas dan bawah moncong aligator.'
       }
     ],
     spesifikasi: [
@@ -1231,7 +1313,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 borderRadius: '6px',
                 textTransform: 'uppercase'
               }}>
-                🔨 Perkakas Tangan Manual & ⚡ Bertenaga
+                📸 Foto Asli Nyata Bengkel
               </span>
             </div>
             <p className="cutting-tools-subtitle" style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
@@ -1243,7 +1325,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
         {/* Tab Navigasi Utama */}
         <div className="cutting-tools-tabs" style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '10px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
           {[
-            { id: 'katalog', label: '📸 Katalog & Visual Perkakas', icon: '🔍' },
+            { id: 'katalog', label: '📸 Katalog & Foto Asli Perkakas', icon: '🔍' },
             { id: 'materi', label: '📖 Teori Kikir, TPI & Rumus RPM', icon: '📐' },
             { id: 'safety', label: '⚠️ Standar K3 Perkakas', icon: '🛡️' },
             { id: 'quiz', label: '🎯 Kuis Asesmen (1000 XP)', icon: '🏆' }
@@ -1577,7 +1659,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                       <span>🗜️</span> Eksplorator Interaktif 7 Profil Bentuk Penampang Kikir
                     </h3>
                     <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
-                      Klik salah satu dari 7 bentuk kikir di bawah ini untuk melihat penampang geometris, fungsi, fitur khusus, dan aplikasi benda kerja:
+                      Klik salah satu dari 7 bentuk kikir di bawah ini untuk melihat foto nyata, penampang geometris, fungsi, fitur khusus, dan aplikasi benda kerja:
                     </p>
                   </div>
                   <span style={{ background: '#e0f2fe', color: '#0369a1', fontSize: '0.68rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px' }}>
@@ -1633,28 +1715,37 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   flexDirection: 'column',
                   gap: '12px'
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{
-                        width: '44px',
-                        height: '44px',
-                        borderRadius: '10px',
-                        background: '#0284c7',
-                        color: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.6rem',
-                        boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
-                      }}>
-                        {activeKikirProfile.icon}
-                      </div>
+                      {/* Thumbnail Foto Asli Profil Kikir */}
+                      {activeKikirProfile.fotoReal && (
+                        <div style={{
+                          width: '100px',
+                          height: '75px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          border: '2px solid #0284c7',
+                          background: '#0f172a',
+                          flexShrink: 0,
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                        }}>
+                          <img
+                            src={activeKikirProfile.fotoReal}
+                            alt={activeKikirProfile.nama}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
+                      )}
+
                       <div>
                         <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
                           {activeKikirProfile.nama}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>
                           {activeKikirProfile.namaEng} • Simbol: <strong style={{ color: '#0f172a' }}>{activeKikirProfile.simbol}</strong>
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700, marginTop: '2px' }}>
+                          📸 Foto Asli Mata Kikir Baja Terpasang
                         </div>
                       </div>
                     </div>
@@ -1709,7 +1800,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
               </div>
             )}
 
-            {/* CARD 2: CANVAS VISUAL REALISTIS / INFOGRAFIS DENGAN PIN INTERAKTIF */}
+            {/* CARD 2: CANVAS FOTO ASLI NYATA DENGAN PIN INTERAKTIF */}
             <div style={{
               background: '#ffffff',
               borderRadius: '12px',
@@ -1720,10 +1811,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                    📸 Visual Infografis & Anatomi Komponen Nyata
+                    📸 Foto Asli Nyata Bengkel & Anatomi Komponen
                   </h3>
                   <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
-                    Klik nomor pin pada gambar atau klik item komponen di daftar bawah untuk mempelajari letak dan fungsinya
+                    {currentTool.images[selectedImageIndex]?.title || currentTool.images[0]?.title}
                   </p>
                 </div>
 
@@ -1762,7 +1853,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 </div>
               </div>
 
-              {/* CANVAS GAMBAR DENGAN PIN INTERAKTIF */}
+              {/* CANVAS FOTO ASLI DENGAN PIN INTERAKTIF */}
               <div
                 style={{
                   position: 'relative',
@@ -1779,7 +1870,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 }}
               >
                 <img
-                  src={currentTool.images[0]?.url}
+                  src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url}
                   alt={currentTool.nama}
                   style={{
                     width: '100%',
@@ -1807,11 +1898,11 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   border: '1px solid rgba(255,255,255,0.15)',
                   zIndex: 20
                 }}>
-                  <span>📍</span> KLIK NOMOR PIN PADA GAMBAR UNTUK MELIHAT PENERAPAN BAGIANNYA
+                  <span>📍</span> KLIK NOMOR PIN PADA FOTO UNTUK MELIHAT PENERAPAN BAGIANNYA
                 </div>
 
-                {/* Overlay Pin Interaktif */}
-                {showAllPins && currentTool.komponen.map((komp, idx) => {
+                {/* Overlay Pin Interaktif (Hanya tampil pada foto pertama yang terkalibrasi) */}
+                {showAllPins && selectedImageIndex === 0 && currentTool.komponen.map((komp, idx) => {
                   const isSelected = activeKomponenIdx === idx;
                   const isHovered = hoveredPinIdx === idx;
                   const posX = komp.pinPos?.x ?? 50;
@@ -1927,6 +2018,55 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   );
                 })}
               </div>
+
+              {/* THUMBNAIL STRIP PHOTO GALLERY SWITCHER */}
+              {currentTool.images && currentTool.images.length > 1 && (
+                <div style={{
+                  display: 'flex',
+                  gap: '8px',
+                  marginTop: '12px',
+                  padding: '8px 10px',
+                  background: '#f8fafc',
+                  borderRadius: '8px',
+                  border: '1px solid #e2e8f0',
+                  overflowX: 'auto',
+                  alignItems: 'center'
+                }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                    📸 Galeri Foto & Bagan:
+                  </span>
+                  {currentTool.images.map((img, imgIdx) => {
+                    const isImgActive = selectedImageIndex === imgIdx;
+                    return (
+                      <button
+                        key={imgIdx}
+                        onClick={() => {
+                          sound.playClick();
+                          setSelectedImageIndex(imgIdx);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          border: isImgActive ? '2px solid #ea580c' : '1px solid #cbd5e1',
+                          background: isImgActive ? '#fff7ed' : '#ffffff',
+                          color: isImgActive ? '#c2410c' : '#334155',
+                          fontSize: '0.72rem',
+                          fontWeight: isImgActive ? 800 : 600,
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
+                        <span>{img.url.endsWith('.svg') ? '📐' : '📸'}</span>
+                        <span>{img.title.split(' (')[0]}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* DAFTAR GRID KOMPONEN DI BAWAH GAMBAR */}
               <div style={{ marginTop: '16px' }}>
@@ -2680,7 +2820,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             
             <img
               className="lightbox-img"
-              src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0].url}
+              src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url}
               alt={currentTool.nama}
               style={{
                 maxWidth: '100%',
@@ -2693,10 +2833,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
 
             <div style={{ marginTop: '12px', textAlign: 'center', color: '#ffffff' }}>
               <div style={{ fontSize: '1.05rem', fontWeight: 900 }}>
-                {currentTool.nama} — {currentTool.images[selectedImageIndex]?.title}
+                {currentTool.nama} — {currentTool.images[selectedImageIndex]?.title || currentTool.images[0]?.title}
               </div>
               <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
-                {currentTool.images[selectedImageIndex]?.desc}
+                {currentTool.images[selectedImageIndex]?.desc || currentTool.images[0]?.desc}
               </div>
             </div>
           </div>

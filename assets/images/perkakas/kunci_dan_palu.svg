@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="chromeSteel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="30%" stop-color="#cbd5e1" />
+      <stop offset="70%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+    <linearGradient id="hammerWood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="50%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="brassHead" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="900" height="520" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <g transform="translate(450, 36)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#f8fafc" text-anchor="middle" letter-spacing="0.5">
+      PALU BENGKEL (HAMMERS) &amp; PERKAKAS KUNCI PEMASANGAN (WRENCHES)
+    </text>
+    <text x="0" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8" text-anchor="middle">
+      Palu Konde, Palu Tembaga, Kunci Kombinasi Cr-V, Kunci Soket Ratchet, Kunci L, &amp; Tang Bengkel
+    </text>
+  </g>
+
+  <!-- LEFT HALF: PALU BENGKEL MESIN (3 JENIS UTAMA) -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="380" height="400" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <path d="M 0,0 L 380,0 L 380,34 L 0,34 Z" fill="#334155" rx="10"/>
+    <text x="16" y="22" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#f8fafc">
+      🔨 JENIS-JENIS PALU KERJA BANGKU
+    </text>
+
+    <!-- 1. Palu Konde (Ball Peen Hammer) -->
+    <g transform="translate(16, 50)">
+      <rect x="0" y="0" width="348" height="98" rx="6" fill="#0f172a" stroke="#334155"/>
+      <g transform="translate(50, 48)">
+        <!-- Hammer Head -->
+        <path d="M -35,-15 L 15,-15 L 15,15 L -35,15 Z" fill="url(#chromeSteel)" stroke="#334155"/>
+        <!-- Ball Peen Dome -->
+        <path d="M 15,-15 C 30,-15 35,0 35,0 C 35,0 30,15 15,15 Z" fill="url(#chromeSteel)" stroke="#334155"/>
+        <line x1="-35" y1="-15" x2="-35" y2="15" stroke="#ffffff" stroke-width="2"/>
+        <!-- Handle -->
+        <rect x="-10" y="15" width="12" height="60" rx="3" fill="url(#hammerWood)" stroke="#92400e"/>
+      </g>
+      <text x="110" y="28" fill="#38bdf8" font-size="11" font-weight="900">1. Palu Konde (Ball-Peen Hammer)</text>
+      <text x="110" y="46" fill="#cbd5e1" font-size="8.5">
+        Muka rata: Memukul penitik, pahat, paku keling.
+      </text>
+      <text x="110" y="62" fill="#cbd5e1" font-size="8.5">
+        Muka bulat (konde): Menempa kepala keling (riveting) &amp; peening logam.
+      </text>
+      <text x="110" y="80" fill="#94a3b8" font-size="8">Bahan: Baja perkakas tempa keras (Forged High Carbon Steel).</text>
+    </g>
+
+    <!-- 2. Palu Lunak Kuningan / Tembaga (Brass / Copper Hammer) -->
+    <g transform="translate(16, 160)">
+      <rect x="0" y="0" width="348" height="98" rx="6" fill="#0f172a" stroke="#334155"/>
+      <g transform="translate(50, 48)">
+        <rect x="-35" y="-15" width="60" height="30" rx="3" fill="url(#brassHead)" stroke="#a16207"/>
+        <rect x="-10" y="15" width="12" height="60" rx="3" fill="url(#hammerWood)" stroke="#92400e"/>
+      </g>
+      <text x="110" y="28" fill="#facc15" font-size="11" font-weight="900">2. Palu Tembaga / Kuningan (Brass)</text>
+      <text x="110" y="46" fill="#cbd5e1" font-size="8.5">
+        Kepala lunak anti-cacat (non-marring).
+      </text>
+      <text x="110" y="62" fill="#cbd5e1" font-size="8.5">
+        Fungsi: Mengetuk poros presisi, bearing, arbor mesin bubut tanpa membuat gompal atau merusak ulir.
+      </text>
+      <text x="110" y="80" fill="#94a3b8" font-size="8">Sifat: Non-sparking (anti percikan api di area gas/minyak).</text>
+    </g>
+
+    <!-- 3. Palu Karet / Plastik (Rubber / Dead-Blow Mallet) -->
+    <g transform="translate(16, 270)">
+      <rect x="0" y="0" width="348" height="110" rx="6" fill="#0f172a" stroke="#334155"/>
+      <g transform="translate(50, 52)">
+        <rect x="-35" y="-16" width="60" height="32" rx="6" fill="#ea580c" stroke="#c2410c"/>
+        <rect x="-10" y="16" width="12" height="60" rx="3" fill="#334155" stroke="#1e293b"/>
+      </g>
+      <text x="110" y="28" fill="#fb923c" font-size="11" font-weight="900">3. Palu Plastik / Dead Blow</text>
+      <text x="110" y="46" fill="#cbd5e1" font-size="8.5">
+        Berisi gotri baja peredam pantulan (dead-blow effect).
+      </text>
+      <text x="110" y="64" fill="#cbd5e1" font-size="8.5">
+        Fungsi: Meratakan pelat sheet metal, merapatkan benda kerja pada ragum mesin frais tanpa memantul kembali ke atas.
+      </text>
+      <text x="110" y="86" fill="#94a3b8" font-size="8">Tidak merusak permukaan cat, cetakan die, atau pelat halus.</text>
+    </g>
+  </g>
+
+  <!-- RIGHT HALF: KUNCI-KUNCI BENGKEL (WRENCHES & SPANNERS) -->
+  <g transform="translate(470, 80)">
+    <rect x="0" y="0" width="380" height="400" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <path d="M 0,0 L 380,0 L 380,34 L 0,34 Z" fill="#334155" rx="10"/>
+    <text x="16" y="22" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#f8fafc">
+      🔧 KELOMPOK KUNCI MEKANIK (CR-V STEEL)
+    </text>
+
+    <!-- 4 Wrench Groups -->
+    <g transform="translate(16, 50)">
+      <!-- 1. Kunci Kombinasi (Pas & Ring) -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="348" height="75" rx="6" fill="#0f172a" stroke="#334155"/>
+        <circle cx="28" cy="38" r="18" fill="#38bdf8" opacity="0.2"/>
+        <text x="28" y="44" fill="#38bdf8" font-size="16" font-weight="900" text-anchor="middle">🔧</text>
+        <text x="58" y="24" fill="#f8fafc" font-size="11" font-weight="900">Kunci Kombinasi (Open &amp; Box Ring)</text>
+        <text x="58" y="42" fill="#cbd5e1" font-size="8.5">Ujung cincin ring 12 sudut (box-end) 15° + ujung pas (open-end).</text>
+        <text x="58" y="58" fill="#94a3b8" font-size="8">Aturan: Gunakan ujung RING untuk torsi awal/akhir; ujung pas hanya untuk putaran cepat!</text>
+      </g>
+
+      <!-- 2. Kunci Soket & Gagang Ratchet -->
+      <g transform="translate(0, 85)">
+        <rect x="0" y="0" width="348" height="75" rx="6" fill="#0f172a" stroke="#334155"/>
+        <circle cx="28" cy="38" r="18" fill="#22c55e" opacity="0.2"/>
+        <text x="28" y="44" fill="#22c55e" font-size="16" font-weight="900" text-anchor="middle">⚙️</text>
+        <text x="58" y="24" fill="#f8fafc" font-size="11" font-weight="900">Kunci Soket &amp; Ratchet Reversible</text>
+        <text x="58" y="42" fill="#cbd5e1" font-size="8.5">Mata soket 6-point &amp; 12-point (Drive 1/4", 3/8", 1/2").</text>
+        <text x="58" y="58" fill="#94a3b8" font-size="8">Mekanisme roda gigi gigi searah mempermudah bongkar-pasang di ruang sempit.</text>
+      </g>
+
+      <!-- 3. Kunci L Heksagonal (Allen Hex Key) -->
+      <g transform="translate(0, 170)">
+        <rect x="0" y="0" width="348" height="75" rx="6" fill="#0f172a" stroke="#334155"/>
+        <circle cx="28" cy="38" r="18" fill="#f97316" opacity="0.2"/>
+        <text x="28" y="44" fill="#f97316" font-size="15" font-weight="900" text-anchor="middle">⬡</text>
+        <text x="58" y="24" fill="#f8fafc" font-size="11" font-weight="900">Kunci L Heksagonal (Allen Key / Torx)</text>
+        <text x="58" y="42" fill="#cbd5e1" font-size="8.5">Profil segi enam metrik (1.5 mm - 19 mm) &amp; model bintang Torx.</text>
+        <text x="58" y="58" fill="#94a3b8" font-size="8">Untuk baut socket head cap screw, baut pengikat puli mesin, dan insert bubut CNC.</text>
+      </g>
+
+      <!-- 4. Tang Bengkel & Tang Buaya (Locking Pliers) -->
+      <g transform="translate(0, 255)">
+        <rect x="0" y="0" width="348" height="75" rx="6" fill="#0f172a" stroke="#334155"/>
+        <circle cx="28" cy="38" r="18" fill="#eab308" opacity="0.2"/>
+        <text x="28" y="44" fill="#eab308" font-size="16" font-weight="900" text-anchor="middle">🗜️</text>
+        <text x="58" y="24" fill="#f8fafc" font-size="11" font-weight="900">Tang Buaya (Vice-Grip / Locking Pliers)</text>
+        <text x="58" y="42" fill="#cbd5e1" font-size="8.5">Tuas toggle pengunci otomatis dengan baut setelan rentang rahang.</text>
+        <text x="58" y="58" fill="#94a3b8" font-size="8">Mengunci pelat saat pengelasan, memutar kepala baut yang dol/rusak tanpa slip.</text>
+      </g>
+    </g>
+  </g>
+</svg>

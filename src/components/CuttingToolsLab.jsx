@@ -1699,204 +1699,6 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
               </div>
             </div>
 
-            {/* CARD KHUSUS: SUB-EKSPLORATOR 7 PROFIL KIKIR BENGKEL (JIKA ALAT KIKIR TERPILIH) */}
-            {currentTool.id === 'kikir-bengkel' && (
-              <div style={{
-                background: '#ffffff',
-                borderRadius: '12px',
-                border: '1.5px solid #38bdf8',
-                padding: '20px',
-                boxShadow: '0 4px 16px rgba(56, 189, 248, 0.1)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0369a1', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span>🗜️</span> Eksplorator Interaktif 7 Profil Bentuk Penampang Kikir
-                    </h3>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
-                      Klik salah satu dari 7 bentuk kikir di bawah ini untuk melihat foto nyata, penampang geometris, fungsi, fitur khusus, dan aplikasi benda kerja:
-                    </p>
-                  </div>
-                  <span style={{ background: '#e0f2fe', color: '#0369a1', fontSize: '0.68rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px' }}>
-                    Standar SMK Teknik Mesin
-                  </span>
-                </div>
-
-                {/* 7 Profile Selector Tabs */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '6px', marginBottom: '16px' }}>
-                  {KIKIR_PROFILES.map((prof) => {
-                    const isProfActive = activeKikirProfileId === prof.id;
-                    return (
-                      <button
-                        key={prof.id}
-                        onClick={() => handleSelectKikirProfile(prof.id)}
-                        style={{
-                          padding: '9px 6px',
-                          borderRadius: '8px',
-                          border: isProfActive ? '2.5px solid #0284c7' : '1px solid #cbd5e1',
-                          background: isProfActive ? '#0284c7' : '#f8fafc',
-                          color: isProfActive ? '#ffffff' : '#1e293b',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          gap: '3px',
-                          transition: 'all 0.15s ease',
-                          boxShadow: isProfActive ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none'
-                        }}
-                      >
-                        <span style={{ fontSize: '1.3rem' }}>{prof.icon}</span>
-                        <span style={{ fontSize: '0.72rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
-                          {prof.nama.split(' (')[0]}
-                        </span>
-                        <span style={{
-                          fontSize: '0.62rem',
-                          fontWeight: 700,
-                          background: isProfActive ? 'rgba(255,255,255,0.25)' : '#e2e8f0',
-                          color: isProfActive ? '#ffffff' : '#64748b',
-                          padding: '1px 6px',
-                          borderRadius: '4px'
-                        }}>
-                          {isProfActive ? '✓ FOTO AKTIF' : prof.simbol}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Detail Profil Kikir Terpilih */}
-                <div style={{
-                  background: '#f0f9ff',
-                  border: '1px solid #bae6fd',
-                  borderRadius: '10px',
-                  padding: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                      {/* Thumbnail Foto Asli Profil Kikir */}
-                      {activeKikirProfile.fotoReal && (
-                        <div
-                          onClick={() => {
-                            sound.playClick();
-                            handleSelectKikirProfile(activeKikirProfile.id);
-                            const el = document.getElementById('hero-canvas-card');
-                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          }}
-                          title="Klik untuk melihat foto profil ini di kanvas utama atas"
-                          style={{
-                            position: 'relative',
-                            width: '130px',
-                            height: '95px',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            border: '2px solid #0284c7',
-                            background: '#0f172a',
-                            flexShrink: 0,
-                            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.2)',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <img
-                            src={activeKikirProfile.fotoReal}
-                            alt={activeKikirProfile.nama}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          />
-                          <div style={{
-                            position: 'absolute',
-                            bottom: '0',
-                            left: '0',
-                            right: '0',
-                            background: 'rgba(2, 132, 199, 0.92)',
-                            color: '#ffffff',
-                            fontSize: '0.6rem',
-                            fontWeight: 800,
-                            padding: '2px 4px',
-                            textAlign: 'center'
-                          }}>
-                            📸 LIHAT DI KANVAS
-                          </div>
-                        </div>
-                      )}
-
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
-                            {activeKikirProfile.nama}
-                          </span>
-                          <span style={{
-                            background: '#e0f2fe',
-                            color: '#0284c7',
-                            fontSize: '0.66rem',
-                            fontWeight: 800,
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            border: '1px solid #bae6fd'
-                          }}>
-                            ✓ Aktif Ditampilkan
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', marginTop: '2px' }}>
-                          {activeKikirProfile.namaEng} • Simbol: <strong style={{ color: '#0f172a' }}>{activeKikirProfile.simbol}</strong>
-                        </div>
-                        <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700, marginTop: '3px' }}>
-                          📸 Foto Asli Resolusi Tinggi Terpasang di Layar Utama Atas
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleNarrationKikirProfile(activeKikirProfile)}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        border: '1px solid #0284c7',
-                        background: '#ffffff',
-                        color: '#0284c7',
-                        fontSize: '0.72rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px'
-                      }}
-                    >
-                      <span>🔊</span>
-                      <span>Dengarkan Profil Ini</span>
-                    </button>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px', fontSize: '0.78rem' }}>
-                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
-                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>📐 Bentuk Penampang Melintang:</div>
-                      <div style={{ color: '#334155' }}>{activeKikirProfile.penampang}</div>
-                    </div>
-
-                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
-                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>🎯 Fungsi Utama di Bengkel:</div>
-                      <div style={{ color: '#334155' }}>{activeKikirProfile.fungsi}</div>
-                    </div>
-
-                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
-                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>⭐ Fitur Khusus & Keunggulan:</div>
-                      <div style={{ color: '#334155' }}>{activeKikirProfile.fiturKhusus}</div>
-                    </div>
-
-                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
-                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>🔩 Rekomendasi Gigi & Penggunaan:</div>
-                      <div style={{ color: '#334155' }}>{activeKikirProfile.rekomendasiGigi}</div>
-                    </div>
-                  </div>
-
-                  <div style={{ background: '#e0f2fe', padding: '8px 12px', borderRadius: '6px', fontSize: '0.74rem', color: '#0369a1', lineHeight: 1.45 }}>
-                    <strong>💡 Tips Teknik Pengikiran:</strong> {activeKikirProfile.tipsTeknik}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* CARD 2: CANVAS FOTO ASLI NYATA DENGAN PIN INTERAKTIF */}
             <div
               id="hero-canvas-card"
@@ -1952,6 +1754,112 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   </button>
                 </div>
               </div>
+
+              {/* PILIHAN BENTUK PENAMPANG KIKIR: LANGSUNG MENGUBAH GAMBAR KANVAS UTAMA */}
+              {currentTool.id === 'kikir-bengkel' && (
+                <div style={{
+                  marginBottom: '16px',
+                  padding: '12px 14px',
+                  background: '#f0f9ff',
+                  borderRadius: '10px',
+                  border: '1.5px solid #0284c7',
+                  boxShadow: '0 2px 8px rgba(2, 132, 199, 0.08)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0369a1', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span>🗜️</span> Pilih Bentuk Penampang Kikir (Klik untuk langsung melihat foto aslinya):
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700 }}>
+                      Foto Aktif: <strong>{currentTool.images[selectedImageIndex]?.title || 'Kikir Plat Rata'}</strong>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {[
+                      { id: 'plat', label: 'Flat (Plat Rata)', icon: '🔲' },
+                      { id: 'bulat', label: 'Bulat (Round / Ekor Tikus)', icon: '⭕' },
+                      { id: 'segitiga', label: 'Segitiga (Triangular)', icon: '🔺' },
+                      { id: 'setengah-bulat', label: 'Setengah Bulat (Half-Round)', icon: '🌓' },
+                      { id: 'segi-empat', label: 'Segi Empat (Square)', icon: '⬛' },
+                      { id: 'pisau', label: 'Pisau (Knife)', icon: '🔪' },
+                      { id: 'parut', label: 'Parut (Rasp)', icon: '🪵' }
+                    ].map((shape) => {
+                      const isSelected = activeKikirProfileId === shape.id;
+                      return (
+                        <button
+                          key={shape.id}
+                          onClick={() => handleSelectKikirProfile(shape.id)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '8px 14px',
+                            borderRadius: '8px',
+                            border: isSelected ? '2.5px solid #0284c7' : '1px solid #93c5fd',
+                            background: isSelected ? '#0284c7' : '#ffffff',
+                            color: isSelected ? '#ffffff' : '#0369a1',
+                            fontSize: '0.78rem',
+                            fontWeight: isSelected ? 800 : 700,
+                            cursor: 'pointer',
+                            boxShadow: isSelected ? '0 3px 10px rgba(2, 132, 199, 0.35)' : 'none',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <span style={{ fontSize: '1.05rem' }}>{shape.icon}</span>
+                          <span>{shape.label}</span>
+                          {isSelected && (
+                            <span style={{
+                              fontSize: '0.62rem',
+                              fontWeight: 900,
+                              background: 'rgba(255,255,255,0.25)',
+                              padding: '1px 5px',
+                              borderRadius: '4px'
+                            }}>
+                              ✓ AKTIF
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Ringkasan Fungsi Singkat Profil Terpilih */}
+                  <div style={{
+                    marginTop: '10px',
+                    paddingTop: '8px',
+                    borderTop: '1px solid #bae6fd',
+                    fontSize: '0.74rem',
+                    color: '#0369a1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '8px'
+                  }}>
+                    <span>
+                      💡 <strong>Fungsi {activeKikirProfile.nama.split(' (')[0]}:</strong> {activeKikirProfile.fungsi}
+                    </span>
+                    <button
+                      onClick={() => handleNarrationKikirProfile(activeKikirProfile)}
+                      style={{
+                        padding: '3px 8px',
+                        borderRadius: '5px',
+                        border: '1px solid #0284c7',
+                        background: '#ffffff',
+                        color: '#0284c7',
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span>🔊</span> Narasi Profil
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* CANVAS FOTO ASLI DENGAN PIN INTERAKTIF */}
               <div

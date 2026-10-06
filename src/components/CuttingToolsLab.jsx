@@ -29,7 +29,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Segitiga Sama Sisi (Sudut baji 60° pada ketiga rusuknya)',
     simbol: '▲',
     icon: '🔺',
-    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_segitiga_real.jpg',
     fungsi: 'Membersihkan alur bersudut V, meratakan sudut dalam lancip lebih dari 60°, meratakan sudut tajam 90°, dan mengasah menajamkan gigi gergaji manual.',
     fiturKhusus: 'Ketiga sisinya memiliki alur gigi pemotong presisi; rusuk sudutnya tajam untuk mencapai pojok celah sudut mati yang sempit.',
     bendaKerja: 'Alur V kampuh las, celah gigi roda gigi, alur pasak tirus, mata bilah gergaji besi dan gergaji kayu.',
@@ -43,7 +43,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Lingkaran Bundar Silindris (Menirus mengecil ke arah ujung bilah)',
     simbol: '●',
     icon: '⚪',
-    fotoReal: '/assets/images/perkakas/kikir_bengkel_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_bulat_real.jpg',
     fungsi: 'Memperbesar diameter lubang silindris hasil pengeboran, menghaluskan alur cekung sempit, dan membentuk fillet radius dalam.',
     fiturKhusus: 'Ujung yang melancip tirus memungkinkan kikir masuk ke lubang berdiameter kecil sebelum diperbesar bertahap ke diameter pangkalnya.',
     bendaKerja: 'Lubang baut pelat, alur pasak bundar (Woodruff keyway), pipa dalam, profil kurva cekung bodi cetakan.',
@@ -57,7 +57,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Kombinasi (Satu muka datar rata dan satu muka melengkung cembung / kubah)',
     simbol: '◗',
     icon: '🌓',
-    fotoReal: '/assets/images/perkakas/kikir_bengkel_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_setengah_bulat_real.jpg',
     fungsi: 'Perkakas paling serbaguna di bengkel kerja bangku: muka datar untuk meratakan bidang datar, muka cembung untuk bidang cekung radius dalam.',
     fiturKhusus: 'Dua fungsi dalam satu alat; muka cembung mencegah kikir terjepit saat mengikis permukaan busur radius dalam yang besar.',
     bendaKerja: 'Cincin lubang bantalan bearing, alur lengkung kontur pelat, sambungan pipa melengkung, bidang rata.',
@@ -71,7 +71,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Bujur Sangkar Sama Sisi (4 sisi tegak lurus 90° dengan ujung tirus)',
     simbol: '■',
     icon: '⬛',
-    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_segi_empat_real.jpg',
     fungsi: 'Membuat dan meratakan lubang segi empat, membersihkan alur pasak poros (keyway), celah splina, dan alur persegi presisi.',
     fiturKhusus: 'Keempat sisinya memiliki alur gerigi potong double cut; sudut 90° tajam mampu membersihkan sudut mati alur pasak hingga tuntas.',
     bendaKerja: 'Lubang pasak roda gigi, alur pasak poros transmisi mesin, lubang kunci socket, celah baut persegi.',
@@ -85,7 +85,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Bilah Pisau Baji Lancip (Sudut lancip sangat sempit < 30°)',
     simbol: '◣',
     icon: '🔪',
-    fotoReal: '/assets/images/perkakas/kikir_set_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_pisau_real.jpg',
     fungsi: 'Mengerjakan celah alur yang sangat sempit, sudut baji lancip kurang dari 60°, dan gigi presisi roda gigi mikro.',
     fiturKhusus: 'Punggung kikir tebal untuk kekuatan struktural kaku, sedangkan tepi bawahnya sangat tipis tajam mirip bilah pisau.',
     bendaKerja: 'Celah roda gigi halus, cetakan molding presisi, celah pasak sudut lancip, alur kartu kunci master kunci silinder.',
@@ -99,7 +99,7 @@ export const KIKIR_PROFILES = [
     penampang: 'Setengah Bulat / Datar dengan Gigi Prisma Menonjol Bebas',
     simbol: '▥',
     icon: '🪵',
-    fotoReal: '/assets/images/perkakas/kikir_kekasaran_real.jpg',
+    fotoReal: '/assets/images/perkakas/kikir_parut_real.jpg',
     fungsi: 'Pengikisan awal material lunak non-ferrous, kayu keras, dan non-logam tanpa menyebabkan gigi kikir tersumbat (anti-clogging).',
     fiturKhusus: 'Gigi pemotong bukan berupa alur garis menerus, melainkan tonjolan prisma tajam individual yang terpisah satu sama lain.',
     bendaKerja: 'Kayu jati pola cor logam (pattern making), timbal babbitt bantalan mesin, teflon nylon, aluminium murni lunak.',
@@ -128,24 +128,64 @@ export const CUTTING_TOOLS_DATA = [
     prinsipKerja: 'Pemotongan terjadi saat bilah kikir didorong MAJU ke depan (forward stroke) dengan gaya tekan stabil dari kedua tangan. Tiap baris gigi kikir bertindak sebagai baji mikro yang mengikis lapisan logam menjadi tatal halus mikroskopis. Saat bilah ditarik MUNDUR ke belakang, gaya tekan harus dilepaskan total agar gigi potong tidak tumpul tergerus gesekan balik.',
     images: [
       {
-        url: '/assets/images/perkakas/kikir_bengkel_real.jpg',
-        title: 'Foto Asli Set Kikir Bengkel Mesin di Meja Kerja',
-        desc: 'Koleksi foto asli perkakas kikir tangan baja tempa lengkap dengan gagang pegangan dan serpihan tatal bengkel nyata.'
-      },
-      {
-        url: '/assets/images/perkakas/kikir_kekasaran_real.jpg',
-        title: 'Foto Asli Detail Gerigi: Smooth, 2nd Cut & Bastard',
-        desc: 'Foto makro nyata perbandingan kerapatan gigi kikir plat dari tingkat paling kasar (Bastard) hingga halus (Smooth).'
-      },
-      {
+        id: 'plat',
         url: '/assets/images/perkakas/kikir_plat_real.jpg',
-        title: 'Foto Asli Kikir Plat Rata (Flat File)',
-        desc: 'Foto close-up nyata bilah kikir plat baja dengan guratan double cut dan tepi safe edge.'
+        title: 'Kikir Plat Rata (Flat File)',
+        desc: 'Foto makro asli bilah kikir plat baja tempa dengan guratan double cut dan tepi aman (safe edge).'
       },
       {
+        id: 'bulat',
+        url: '/assets/images/perkakas/kikir_bulat_real.jpg',
+        title: 'Kikir Bulat / Ekor Tikus (Round File)',
+        desc: 'Foto makro asli kikir bundar silindris menirus untuk memperbesar lubang bor dan menghaluskan alur cekung.'
+      },
+      {
+        id: 'setengah-bulat',
+        url: '/assets/images/perkakas/kikir_setengah_bulat_real.jpg',
+        title: 'Kikir Setengah Bulat (Half-Round File)',
+        desc: 'Foto makro asli kikir setengah lingkaran (kombinasi muka datar dan muka cembung kubah) untuk bidang melengkung.'
+      },
+      {
+        id: 'segitiga',
+        url: '/assets/images/perkakas/kikir_segitiga_real.jpg',
+        title: 'Kikir Segitiga (Triangular File)',
+        desc: 'Foto asli kikir segitiga sama sisi sudut 60° untuk alur sudut sempit dan pengasahan mata bilah gergaji.'
+      },
+      {
+        id: 'segi-empat',
+        url: '/assets/images/perkakas/kikir_segi_empat_real.jpg',
+        title: 'Kikir Segi Empat (Square File)',
+        desc: 'Foto makro asli kikir bujur sangkar 4 sisi 90° untuk membuat alur pasak poros transmisi dan celah persegi.'
+      },
+      {
+        id: 'pisau',
+        url: '/assets/images/perkakas/kikir_pisau_real.jpg',
+        title: 'Kikir Pisau / Celah (Knife / Warding File)',
+        desc: 'Foto makro asli kikir bilah baji sangat lancip untuk celah alur sempit dan celah pasak presisi sudut < 30°.'
+      },
+      {
+        id: 'parut',
+        url: '/assets/images/perkakas/kikir_parut_real.jpg',
+        title: 'Kikir Parut (Wood & Soft Metal Rasp)',
+        desc: 'Foto asli pengerjaan kikir parut bergigi prisma individual tajam untuk material lunak non-clogging.'
+      },
+      {
+        id: 'set-bengkel',
+        url: '/assets/images/perkakas/kikir_bengkel_real.jpg',
+        title: 'Foto Set Kikir di Meja Bengkel Mesin',
+        desc: 'Koleksi foto asli perkakas kikir tangan baja tempa lengkap dengan serpihan bram dan tatal bengkel nyata.'
+      },
+      {
+        id: 'makro-gerigi',
+        url: '/assets/images/perkakas/kikir_kekasaran_real.jpg',
+        title: 'Foto Makro Detail Gigi: Smooth, 2nd Cut & Bastard',
+        desc: 'Foto makro perbandingan kerapatan gigi kikir plat dari tingkat kasar (Bastard) hingga halus (Smooth).'
+      },
+      {
+        id: 'infografis',
         url: '/assets/images/perkakas/kikir_set_lengkap.svg',
         title: 'Infografis Vektor Anatomi & 7 Penampang Kikir',
-        desc: 'Bagan teknis standar industri: anatomi kikir (ujung, badan, ekor, ferrule, gagang), 7 bentuk profil penampang melintang, tingkat kekasaran gigi, dan aturan keselamatan kerja.'
+        desc: 'Bagan teknis standar industri: anatomi kikir, 7 penampang profil, tingkat kekasaran gigi, dan aturan K3.'
       }
     ],
     spesifikasi: [
@@ -1201,6 +1241,21 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
     setSelectedImageIndex(0);
     setActiveKomponenIdx(0);
     setHoveredPinIdx(null);
+    if (id === 'kikir-bengkel') {
+      setActiveKikirProfileId('plat');
+    }
+  };
+
+  // Handler sinkronisasi profil kikir dengan kanvas foto utama
+  const handleSelectKikirProfile = (profId) => {
+    sound.playClick();
+    setActiveKikirProfileId(profId);
+    if (selectedToolId === 'kikir-bengkel') {
+      const idx = currentTool.images.findIndex(img => img.id === profId);
+      if (idx !== -1) {
+        setSelectedImageIndex(idx);
+      }
+    }
   };
 
   // Hitung RPM: N = (1000 * Cs) / (pi * d)
@@ -1674,14 +1729,11 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                     return (
                       <button
                         key={prof.id}
-                        onClick={() => {
-                          sound.playClick();
-                          setActiveKikirProfileId(prof.id);
-                        }}
+                        onClick={() => handleSelectKikirProfile(prof.id)}
                         style={{
                           padding: '9px 6px',
                           borderRadius: '8px',
-                          border: isProfActive ? '2px solid #0284c7' : '1px solid #cbd5e1',
+                          border: isProfActive ? '2.5px solid #0284c7' : '1px solid #cbd5e1',
                           background: isProfActive ? '#0284c7' : '#f8fafc',
                           color: isProfActive ? '#ffffff' : '#1e293b',
                           cursor: 'pointer',
@@ -1697,8 +1749,15 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                         <span style={{ fontSize: '0.72rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
                           {prof.nama.split(' (')[0]}
                         </span>
-                        <span style={{ fontSize: '0.62rem', opacity: isProfActive ? 0.9 : 0.6 }}>
-                          {prof.simbol}
+                        <span style={{
+                          fontSize: '0.62rem',
+                          fontWeight: 700,
+                          background: isProfActive ? 'rgba(255,255,255,0.25)' : '#e2e8f0',
+                          color: isProfActive ? '#ffffff' : '#64748b',
+                          padding: '1px 6px',
+                          borderRadius: '4px'
+                        }}>
+                          {isProfActive ? '✓ FOTO AKTIF' : prof.simbol}
                         </span>
                       </button>
                     );
@@ -1716,36 +1775,74 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   gap: '12px'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
                       {/* Thumbnail Foto Asli Profil Kikir */}
                       {activeKikirProfile.fotoReal && (
-                        <div style={{
-                          width: '100px',
-                          height: '75px',
-                          borderRadius: '8px',
-                          overflow: 'hidden',
-                          border: '2px solid #0284c7',
-                          background: '#0f172a',
-                          flexShrink: 0,
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                        }}>
+                        <div
+                          onClick={() => {
+                            sound.playClick();
+                            handleSelectKikirProfile(activeKikirProfile.id);
+                            const el = document.getElementById('hero-canvas-card');
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }}
+                          title="Klik untuk melihat foto profil ini di kanvas utama atas"
+                          style={{
+                            position: 'relative',
+                            width: '130px',
+                            height: '95px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            border: '2px solid #0284c7',
+                            background: '#0f172a',
+                            flexShrink: 0,
+                            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.2)',
+                            cursor: 'pointer'
+                          }}
+                        >
                           <img
                             src={activeKikirProfile.fotoReal}
                             alt={activeKikirProfile.nama}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
+                          <div style={{
+                            position: 'absolute',
+                            bottom: '0',
+                            left: '0',
+                            right: '0',
+                            background: 'rgba(2, 132, 199, 0.92)',
+                            color: '#ffffff',
+                            fontSize: '0.6rem',
+                            fontWeight: 800,
+                            padding: '2px 4px',
+                            textAlign: 'center'
+                          }}>
+                            📸 LIHAT DI KANVAS
+                          </div>
                         </div>
                       )}
 
                       <div>
-                        <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
-                          {activeKikirProfile.nama}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
+                            {activeKikirProfile.nama}
+                          </span>
+                          <span style={{
+                            background: '#e0f2fe',
+                            color: '#0284c7',
+                            fontSize: '0.66rem',
+                            fontWeight: 800,
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            border: '1px solid #bae6fd'
+                          }}>
+                            ✓ Aktif Ditampilkan
+                          </span>
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic', marginTop: '2px' }}>
                           {activeKikirProfile.namaEng} • Simbol: <strong style={{ color: '#0f172a' }}>{activeKikirProfile.simbol}</strong>
                         </div>
-                        <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700, marginTop: '2px' }}>
-                          📸 Foto Asli Mata Kikir Baja Terpasang
+                        <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700, marginTop: '3px' }}>
+                          📸 Foto Asli Resolusi Tinggi Terpasang di Layar Utama Atas
                         </div>
                       </div>
                     </div>
@@ -1801,13 +1898,16 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             )}
 
             {/* CARD 2: CANVAS FOTO ASLI NYATA DENGAN PIN INTERAKTIF */}
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '12px',
-              border: '1px solid #e2e8f0',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
-            }}>
+            <div
+              id="hero-canvas-card"
+              style={{
+                background: '#ffffff',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0',
+                padding: '20px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              }}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
@@ -1885,20 +1985,23 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   position: 'absolute',
                   top: '12px',
                   left: '12px',
-                  background: 'rgba(15, 23, 42, 0.88)',
+                  background: 'rgba(15, 23, 42, 0.90)',
                   color: '#ffffff',
                   backdropFilter: 'blur(8px)',
-                  padding: '5px 12px',
+                  padding: '6px 14px',
                   borderRadius: '6px',
                   fontSize: '0.72rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  border: '1px solid rgba(255,255,255,0.15)',
+                  gap: '8px',
+                  border: '1px solid rgba(255,255,255,0.2)',
                   zIndex: 20
                 }}>
-                  <span>📍</span> KLIK NOMOR PIN PADA FOTO UNTUK MELIHAT PENERAPAN BAGIANNYA
+                  <span>📸 FOTO ASLI NYATA:</span>
+                  <span style={{ color: '#fb923c' }}>
+                    {currentTool.images[selectedImageIndex]?.title || currentTool.nama}
+                  </span>
                 </div>
 
                 {/* Overlay Pin Interaktif (Hanya tampil pada foto pertama yang terkalibrasi) */}
@@ -2043,6 +2146,9 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                         onClick={() => {
                           sound.playClick();
                           setSelectedImageIndex(imgIdx);
+                          if (img.id && KIKIR_PROFILES.some(p => p.id === img.id)) {
+                            setActiveKikirProfileId(img.id);
+                          }
                         }}
                         style={{
                           display: 'flex',

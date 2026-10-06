@@ -5,23 +5,541 @@ import { recordQuizResult } from '../services/sheetService';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
-// DATABASE 9 ALAT PEMOTONG (FOTO REALISTIS, ANATOMI, SPESIFIKASI & SOP NYATA)
+// DATABASE 7 BENTUK PROFIL PENAMPANG KIKIR BENGKEL (HAND FILES STANDAR SMK)
 // =============================================================================
-const CUTTING_TOOLS_DATA = [
+export const KIKIR_PROFILES = [
+  {
+    id: 'plat',
+    nama: 'Kikir Plat / Gepeng (Flat File)',
+    namaEng: 'Flat File / Hand File',
+    penampang: 'Persegi Panjang Rata (Kedua muka sejajar, tebal sedikit menirus di ujung)',
+    simbol: '▬',
+    icon: '🟦',
+    fungsi: 'Meratakan dan mensejajarkan permukaan bidang datar luar, membuat sudut siku 90°, meratakan bekas potongan gergaji, dan pengerjaan pasak luar.',
+    fiturKhusus: 'Memiliki "Safe Edge" (satu sisi tepi sempit polos licin tanpa gigi) untuk mengikir bidang datar yang berbatasan dengan dinding tegak 90° tanpa mengikis atau merusak dinding tersebut.',
+    bendaKerja: 'Balok besi ST37, pelat strip tebal, dudukan mesin bubut, permukaan kampuh las rata, siku tumpuan.',
+    rekomendasiGigi: 'Double cut pada muka lebar untuk pengikisan cepat, single cut pada tepi; tingkat Bastard s.d. Second Cut.',
+    tipsTeknik: 'Gunakan gerakan dorong diagonal menyilang (cross filing) untuk menghasilkan kerataan bidang absolut tanpa cekungan.'
+  },
+  {
+    id: 'segitiga',
+    nama: 'Kikir Segitiga (Triangular File)',
+    namaEng: 'Triangular File / Three-Square File',
+    penampang: 'Segitiga Sama Sisi (Sudut baji 60° pada ketiga rusuknya)',
+    simbol: '▲',
+    icon: '🔺',
+    fungsi: 'Membersihkan alur bersudut V, meratakan sudut dalam lancip lebih dari 60°, meratakan sudut tajam 90°, dan mengasah menajamkan gigi gergaji manual.',
+    fiturKhusus: 'Ketiga sisinya memiliki alur gigi pemotong presisi; rusuk sudutnya tajam untuk mencapai pojok celah sudut mati yang sempit.',
+    bendaKerja: 'Alur V kampuh las, celah gigi roda gigi, alur pasak tirus, mata bilah gergaji besi dan gergaji kayu.',
+    rekomendasiGigi: 'Single cut halus untuk penajaman gigi gergaji; double cut sedang untuk pengerjaan alur V benda kerja umum.',
+    tipsTeknik: 'Jaga posisi kikir tetap sejajar dengan dasar alur agar sudut 60° tidak melebar atau melengkung.'
+  },
+  {
+    id: 'bulat',
+    nama: 'Kikir Bulat / Ekor Tikus (Round File)',
+    namaEng: 'Round File / Rat-Tail File',
+    penampang: 'Lingkaran Bundar Silindris (Menirus mengecil ke arah ujung bilah)',
+    simbol: '●',
+    icon: '⚪',
+    fungsi: 'Memperbesar diameter lubang silindris hasil pengeboran, menghaluskan alur cekung sempit, dan membentuk fillet radius dalam.',
+    fiturKhusus: 'Ujung yang melancip tirus memungkinkan kikir masuk ke lubang berdiameter kecil sebelum diperbesar bertahap ke diameter pangkalnya.',
+    bendaKerja: 'Lubang baut pelat, alur pasak bundar (Woodruff keyway), pipa dalam, profil kurva cekung bodi cetakan.',
+    rekomendasiGigi: 'Single cut spiral heliks untuk hasil lubang bundar mulus tanpa cacat faset.',
+    tipsTeknik: 'Putar kikir sedikit searah jarum jam sambil didorong maju untuk mencegah bilah tersangkut dan membuat lubang tetap bulat sempurna.'
+  },
+  {
+    id: 'setengah-bulat',
+    nama: 'Kikir Setengah Bulat (Half-Round File)',
+    namaEng: 'Half-Round File',
+    penampang: 'Kombinasi (Satu muka datar rata dan satu muka melengkung cembung / kubah)',
+    simbol: '◗',
+    icon: '🌓',
+    fungsi: 'Perkakas paling serbaguna di bengkel kerja bangku: muka datar untuk meratakan bidang datar, muka cembung untuk bidang cekung radius dalam.',
+    fiturKhusus: 'Dua fungsi dalam satu alat; muka cembung mencegah kikir terjepit saat mengikis permukaan busur radius dalam yang besar.',
+    bendaKerja: 'Cincin lubang bantalan bearing, alur lengkung kontur pelat, sambungan pipa melengkung, bidang rata.',
+    rekomendasiGigi: 'Double cut pada muka datar, cut spiral khusus pada muka lengkung cembung.',
+    tipsTeknik: 'Saat mengikir bidang lengkung dalam, kombinasikan gerakan dorong maju dengan ayunan memutar ke samping mengikuti radius benda.'
+  },
+  {
+    id: 'segi-empat',
+    nama: 'Kikir Segi Empat (Square File)',
+    namaEng: 'Square File',
+    penampang: 'Bujur Sangkar Sama Sisi (4 sisi tegak lurus 90° dengan ujung tirus)',
+    simbol: '■',
+    icon: '⬛',
+    fungsi: 'Membuat dan meratakan lubang segi empat, membersihkan alur pasak poros (keyway), celah splina, dan alur persegi presisi.',
+    fiturKhusus: 'Keempat sisinya memiliki alur gerigi potong double cut; sudut 90° tajam mampu membersihkan sudut mati alur pasak hingga tuntas.',
+    bendaKerja: 'Lubang pasak roda gigi, alur pasak poros transmisi mesin, lubang kunci socket, celah baut persegi.',
+    rekomendasiGigi: 'Double cut Bastard untuk pembentukan awal, dilanjutkan Second Cut untuk mencapai ukuran toleransi pasak H7.',
+    tipsTeknik: 'Pastikan penekanan seimbang pada keempat sisi agar alur pasak tidak miring (taper) yang membuat pasak longgar.'
+  },
+  {
+    id: 'pisau',
+    nama: 'Kikir Pisau (Knife File)',
+    namaEng: 'Knife File',
+    penampang: 'Bilah Pisau Baji Lancip (Sudut lancip sangat sempit < 30°)',
+    simbol: '◣',
+    icon: '🔪',
+    fungsi: 'Mengerjakan celah alur yang sangat sempit, sudut baji lancip kurang dari 60°, dan gigi presisi roda gigi mikro.',
+    fiturKhusus: 'Punggung kikir tebal untuk kekuatan struktural kaku, sedangkan tepi bawahnya sangat tipis tajam mirip bilah pisau.',
+    bendaKerja: 'Celah roda gigi halus, cetakan molding presisi, celah pasak sudut lancip, alur kartu kunci master kunci silinder.',
+    rekomendasiGigi: 'Double cut halus pada kedua muka samping bilah, single cut pada tepi pisau tipis.',
+    tipsTeknik: 'Jangan memberikan tekanan tekan terlalu keras karena bilah tepi tipis rentan melengkung atau gompal.'
+  },
+  {
+    id: 'parut',
+    nama: 'Kikir Parut (Rasp File)',
+    namaEng: 'Wood & Soft Metal Rasp Cut File',
+    penampang: 'Setengah Bulat / Datar dengan Gigi Prisma Menonjol Bebas',
+    simbol: '▥',
+    icon: '🪵',
+    fungsi: 'Pengikisan awal material lunak non-ferrous, kayu keras, dan non-logam tanpa menyebabkan gigi kikir tersumbat (anti-clogging).',
+    fiturKhusus: 'Gigi pemotong bukan berupa alur garis menerus, melainkan tonjolan prisma tajam individual yang terpisah satu sama lain.',
+    bendaKerja: 'Kayu jati pola cor logam (pattern making), timbal babbitt bantalan mesin, teflon nylon, aluminium murni lunak.',
+    rekomendasiGigi: 'Rasp cut individual kasar; rongga tatal besar mencegah bram melekat di sela gigi.',
+    tipsTeknik: 'DILARANG KERAS digunakan pada baja keras! Gigi prisma individual kikir parut akan patah dan rontok seketika.'
+  }
+];
+
+// =============================================================================
+// DATABASE 17 PERKAKAS BENGKEL (MANUAL HAND TOOLS & POWER TOOLS LENGKAP)
+// =============================================================================
+export const CUTTING_TOOLS_DATA = [
+  // ---------------------------------------------------------------------------
+  // KELOMPOK 1: PERKAKAS TANGAN MANUAL (HAND TOOLS)
+  // ---------------------------------------------------------------------------
+  {
+    id: 'kikir-bengkel',
+    nama: 'Kikir Bengkel Lengkap (Hand Files - 7 Bentuk Profil)',
+    namaEng: 'Engineer Machinist Hand Files & Rasps Set',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'kikir',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • 7 Profil • Baja T12 (62-67 HRC)',
+    deskripsiSingkat: 'Perkakas tangan manual nomor satu di bengkel pemesinan untuk meratakan bidang, membuat siku 90°, membentuk radius cembung/cekung, membersihkan bram tajam (deburring), dan finishing toleransi presisi.',
+    deskripsiLengkap: 'Kikir bengkel adalah perkakas tangan berbahan baja karbon tinggi tempa (T12 atau T13 dengan kekerasan 62 - 67 HRC) yang memiliki ribuan gigi baji mikro pemotong seragam. Di bengkel kerja bangku SMK Teknik Mesin, kikir merupakan kompetensi dasar wajib: siswa dituntut mampu mengikir benda kerja balok hingga memiliki kerataan 0.05 mm dan kesikuan 90° terverifikasi dengan siku presisi dan dial indicator. Kikir dikelompokkan berdasarkan 3 aspek: Bentuk penampang (7 macam), Tingkat kekasaran gigi (Kasar/Bastard, Sedang/Second Cut, Halus/Smooth, Sangat Halus/Dead Smooth), dan Pola guratan gigi (Single Cut vs Double Cut).',
+    prinsipKerja: 'Pemotongan terjadi saat bilah kikir didorong MAJU ke depan (forward stroke) dengan gaya tekan stabil dari kedua tangan. Tiap baris gigi kikir bertindak sebagai baji mikro yang mengikis lapisan logam menjadi tatal halus mikroskopis. Saat bilah ditarik MUNDUR ke belakang, gaya tekan harus dilepaskan total agar gigi potong tidak tumpul tergerus gesekan balik.',
+    images: [
+      {
+        url: '/assets/images/perkakas/kikir_set_lengkap.svg',
+        title: 'Infografis Lengkap Anatomi & 7 Penampang Kikir Bengkel',
+        desc: 'Bagan teknis standar industri: anatomi kikir (ujung, badan, ekor, ferrule, gagang), 7 bentuk profil penampang melintang, tingkat kekasaran gigi, dan aturan keselamatan kerja.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Panjang Bilah Standar', value: '150 mm (6"), 200 mm (8"), 250 mm (10"), 300 mm (12")' },
+      { label: 'Material Baja Bilah', value: 'Baja Karbon Tinggi T12 / W1 (Kekerasan 62 - 67 HRC)' },
+      { label: 'Bentuk Penampang', value: '7 Profil: Plat, Segitiga, Bulat, 1/2 Bulat, Segi Empat, Pisau, Parut' },
+      { label: 'Tingkat Kekasaran', value: 'Bastard (0.5-1.0mm), Second Cut (0.25-0.5mm), Smooth (0.1-0.25mm)' },
+      { label: 'Pola Guratan Gigi', value: 'Single Cut (Gigi Tunggal 70°) & Double Cut (Gigi Silang 45°/75°)' },
+      { label: 'Toleransi Pengerjaan', value: 'Finishing hingga ± 0.05 mm (dengan kikir Smooth & pengapuran)' },
+      { label: 'Bahan Gagang Pegangan', value: 'Kayu Keras Berkualitas / Plastik Komposit dengan Brass Ferrule' },
+      { label: 'Alat Pembersih Wajib', value: 'Sikat Kikir Kuningan (File Card) & Kapur Tulis (Chalk)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Ujung Kikir (Point / Tip)', desc: 'Ujung terdepan bilah kikir yang sedikit tirus membulat untuk mempermudah mengarahkan awal langkah dorongan potong.', pinPos: { x: 12, y: 19 }, lokasiFisik: 'Ujung paling depan bilah baja kikir' },
+      { no: '02', nama: 'Muka / Badan Kikir (Face / Body)', desc: 'Bidang sayat utama kikir yang dipenuhi ribuan gigi pemotong baja keras berpola single cut atau double cut.', pinPos: { x: 38, y: 19 }, lokasiFisik: 'Permukaan badan kikir bagian tengah yang lebar' },
+      { no: '03', nama: 'Tepi Kikir & Safe Edge', desc: 'Bidang sempit samping kikir. Kikir plat memiliki "Safe Edge" (tepi licin tanpa gigi) untuk mengikir sudut 90° tanpa merusak dinding tegak.', pinPos: { x: 52, y: 22 }, lokasiFisik: 'Sisi tepi samping bilah kikir' },
+      { no: '04', nama: 'Tumit Kikir (Heel)', desc: 'Bagian pangkal bilah kikir tanpa gigi pemotong sebelum transisi menuju leher ekor tirus.', pinPos: { x: 58, y: 19 }, lokasiFisik: 'Bagian pangkal bilah tepat sebelum leher gagang' },
+      { no: '05', nama: 'Ekor Kikir (Tang)', desc: 'Bagian tirus runcing di pangkal kikir yang ditancapkan erat ke dalam lubang gagang kayu/plastik.', pinPos: { x: 65, y: 19 }, lokasiFisik: 'Bagian ekor baja yang tertanam di dalam gagang' },
+      { no: '06', nama: 'Cincin Penguat (Brass Ferrule)', desc: 'Cincin logam kuningan atau baja tebal yang mengikat leher gagang kayu agar kayu tidak pecah atau retak saat ekor kikir ditekan.', pinPos: { x: 67, y: 19 }, lokasiFisik: 'Ring cincin kuningan di ujung depan gagang kayu' },
+      { no: '07', nama: 'Gagang Kikir (Ergonomic Handle)', desc: 'Pegangan kayu halus atau komposit ergonomis untuk kenyamanan dorongan tangan dan mencegah ekor kikir menusuk telapak tangan.', pinPos: { x: 79, y: 19 }, lokasiFisik: 'Gagang pegangan kayu oval di bagian belakang' }
+    ],
+    bendaKerja: ['Balok baja karbon ST37 / S45C', 'Pelat strip & profil siku', 'Alur pasak poros roda gigi', 'Baja perkakas setelah dipotong gergaji', 'Aluminium paduan (menggunakan kikir gigi tunggal)'],
+    sopKerja: [
+      'DILARANG KERAS MENGGUNAKAN KIKIR TANPA GAGANG: Ekor kikir yang runcing dapat menusuk tembus urat telapak tangan jika kikir macet saat didorong!',
+      'Atur ketinggian ragum meja: Berdirilah tegak, tekuk siku tangan Anda dan tempelkan ujung jari ke dagu. Ketinggian siku harus tepat sejajar dengan rahang ragum (± 100 - 105 cm dari lantai).',
+      'Pasang kuda-kuda kaki stabil: Kaki kiri maju ke depan membentuk sudut 30°, kaki kanan di belakang membentuk sudut 75°, jarak kedua kaki sekitar 30 - 40 cm.',
+      'Pegang kikir dengan benar: Tangan kanan menggenggam gagang kikir dengan ibu jari di atas, telapak tangan kiri menekan ujung kikir secara rileks.',
+      'Gerakan pengikiran: Berikan tekanan saat bilah didorong MAJU ke depan. Lepaskan tekanan sepenuhnya saat bilah ditarik MUNDUR ke belakang.',
+      'Terapkan pengapuran (chalking): Usapkan kapur tulis pada permukaan kikir halus untuk mencegah tatal gram menyumbat sela gigi kikir (pinning) yang bisa mencakar permukaan benda kerja.',
+      'Bersihkan sela gigi kikir secara teratur menggunakan sikat kikir kawat kuningan (File Card) dengan arah dorongan searah kemiringan alur gigi kikir.'
+    ],
+    k3Penting: [
+      'Jangan pernah memukul kikir dengan palu, dan jangan gunakan kikir sebagai tuas pengungkit (kikir sangat getas pada 65 HRC dan mudah patah berkeping-keping).',
+      'Jangan meniup tatal gram kikir dengan mulut; serpihan gram tajam dapat masuk ke mata operator atau teman di samping meja.',
+      'Gunakan kuas pembersih untuk menyapu tatal dari atas benda kerja dan meja kerja; jangan menyeka dengan telapak tangan terbuka karena bram halus dapat menusuk kulit.',
+      'Simpan kikir dalam rak gantung khusus kayu; jangan menumpuk kikir saling beradu satu sama lain karena gerigi kerasnya akan saling menumpulkan.'
+    ]
+  },
+  {
+    id: 'gergaji-tangan',
+    nama: 'Gergaji Besi Manual (Hand Hacksaw Frame & Blades)',
+    namaEng: 'Adjustable Hand Hacksaw Frame & Bimetal Blades',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'gergaji-manual',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Rangka Setelan 10"-12" • Bilah HSS Bimetal',
+    deskripsiSingkat: 'Perkakas tangan manual pemotong stok panjang profil baja, pipa, baut, dan pelat strip dengan bilah gergaji HSS bergigi 14 - 32 TPI.',
+    deskripsiLengkap: 'Gergaji tangan besi (hacksaw) terdiri dari rangka baja kaku tubular berbentuk C (dapat disetel untuk bilah panjang 250 mm atau 300 mm), gagang pegangan pistol (pistol grip), mur kupu-kupu penegang (wing nut), dan bilah gergaji fleksibel bimetal HSS. Bilah gergaji dipasang dengan pin penahan dan ditegangkan hingga berbunyi denting nada tinggi saat dijentik. Pemilihan bilah gergaji ditentukan oleh Teeth Per Inch (TPI) sesuai aturan mutlak minimal 3 gigi menyentuh benda kerja secara simultan.',
+    prinsipKerja: 'Bilah gergaji dirancang hanya memotong pada LANGKAH MAJU (forward cutting stroke). Gigi gergaji miring ke arah depan menjauhi gagang. Pada langkah maju, operator memberikan tekanan dorong vertikal; pada langkah mundur, tekanan diangkat sedikit agar gigi gergaji tidak tumpul tergerus.',
+    images: [
+      {
+        url: '/assets/images/perkakas/gergaji_tangan.svg',
+        title: 'Infografis Gergaji Tangan Besi & Aturan Emas 3 Gigi TPI',
+        desc: 'Bagan teknis anatomi rangka gergaji, mur kupu penegang, arah pasang gigi maju, dan aturan TPI untuk material tebal vs tipis.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Panjang Bilah Standar', value: '300 mm (12 inci) & 250 mm (10 inci)' },
+      { label: 'Material Bilah', value: 'HSS Bimetal (Gigi HSS M2 dilas pada punggung baja pegas fleksibel)' },
+      { label: 'Variasi TPI (Gigi/Inci)', value: '14 TPI (Kasar), 18 TPI (Sedang), 24 TPI (Halus), 32 TPI (Sangat Halus)' },
+      { label: 'Ketebalan Bilah', value: '0.65 mm (Kerf pemotongan ± 0.9 mm)' },
+      { label: 'Tipe Kerangka', value: 'Tubular Steel C-Frame Adjustable with Tensioning Wing Nut' },
+      { label: 'Kecepatan Sayat Manual', value: '40 s.d. 50 langkah dorong per menit' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Mur Kupu-Kupu Penegang (Wing Nut)', desc: 'Mur ulir penegang bilah di ujung depan rangka; diputar hingga bilah gergaji tegang lurus tanpa lendutan.', pinPos: { x: 12, y: 22 }, lokasiFisik: 'Mur kupu-kupu di ujung depan bawah rangka gergaji' },
+      { no: '02', nama: 'Rangka Baja Tubular C', desc: 'Rangka baja pipa kokoh yang menjaga kelurusan tarikan dan meminimalisir lenturan gaya potong.', pinPos: { x: 42, y: 12 }, lokasiFisik: 'Pipa baja melengkung di bagian atas bilah' },
+      { no: '03', nama: 'Bilah Gergaji HSS Bimetal', desc: 'Pita pemotong baja bimetal dengan deretan gigi tajam; punggung lentur anti-patah dan gigi potong tahan aus.', pinPos: { x: 46, y: 27 }, lokasiFisik: 'Bilah baja biru tipis bergigi di bagian bawah rangka' },
+      { no: '04', nama: 'Gagang Pistol Ergonomis', desc: 'Gagang pegangan bentuk pistol untuk transfer dorongan tangan kanan yang mantap dan simetris.', pinPos: { x: 78, y: 27 }, lokasiFisik: 'Gagang pegangan di bagian belakang rangka' }
+    ],
+    bendaKerja: ['Poros as baja pejal Ø 10 - 50 mm', 'Pipa baja seamless & hollow', 'Baja profil siku L 40x40', 'Pelat strip tebal', 'Batang tembaga & aluminium'],
+    sopKerja: [
+      'PASANG GIGI MENGHADAP KE DEPAN: Pastikan mata gigi gergaji menghadap ke arah depan menjauhi gagang (memotong saat langkah dorong).',
+      'Kencangkan mur kupu-kupu hingga bilah kencang; bilah yang kendur akan meliuk dan patah seketika saat memotong.',
+      'Jepit benda kerja pada ragum sedekat mungkin dengan rahang (maksimal 10 mm dari rahang) untuk mencegah getaran dan bunyi derit.',
+      'Gunakan kikir segitiga untuk membuat takik awal (notch) pada garis potong agar bilah gergaji tidak meleset.',
+      'Terapkan ritme potong 40-50 langkah per menit; jangan menggergaji terlalu cepat karena panas friksi akan melunakkan gigi bilah.',
+      'Gunakan seluruh panjang bilah gergaji dari pangkal hingga ujung agar keausan gigi merata.'
+    ],
+    k3Penting: [
+      'Patuhi "Aturan Emas 3 Gigi": Minimal 3 gigi gergaji harus selalu kontak dengan ketebalan benda kerja agar gigi tidak rontok.',
+      'Pegang gagang dengan mantap dan jauhkan ibu jari tangan kiri dari garis potong bilah.',
+      'Saat potongan hampir putus, kurangi tekanan dan tahan ujung benda kerja agar tidak jatuh menimpa kaki operator.'
+    ]
+  },
+  {
+    id: 'pahat-tangan',
+    nama: 'Pahat Tangan Dingin (Cold Chisels - 4 Jenis)',
+    namaEng: 'Engineers Cold Chisels (Flat, Cape, Round, Diamond)',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'pahat',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Baja Tempa Segi-8 • 4 Bentuk Baji',
+    deskripsiSingkat: 'Perkakas tangan manual pemotong logam dingin, pengikis kampuh las, pemotong kepala baut/keling rusak, dan pembentuk alur pasak.',
+    deskripsiLengkap: 'Pahat tangan dingin (cold chisel) dibuat dari baja perkakas tempa penampang segi delapan (octagonal tool steel) berkadar karbon 0.8% atau baja paduan Cr-V. Pahat memiliki 4 bentuk utama: Pahat Pelat/Rata (Flat Chisel), Pahat Alur (Cross-cut / Cape Chisel), Pahat Setengah Bulat (Half-Round Chisel), dan Pahat Runcing Intan (Diamond Point Chisel). Bagian mata potong dikeraskan (hardened & tempered) hingga 56-58 HRC, sedangkan bagian kepala pukul dibiarkan lebih ulet (tough) agar tidak pecah saat dihantam palu.',
+    prinsipKerja: 'Baji tajam pahat ditempelkan pada logam pada sudut serang 35° - 40°, kemudian kepala pahat dipukul dengan palu konde. Energi kinetik pukulan diteruskan melalui baji untuk membelah, mengikis, atau memutus serat logam.',
+    images: [
+      {
+        url: '/assets/images/perkakas/pahat_tangan.svg',
+        title: 'Infografis 4 Jenis Pahat Dingin & Bahaya Fatal Kepala Jamur',
+        desc: 'Visual detail pahat pelat, alur, setengah bulat, intan, sudut baji 60°, dan SOP gerinda chamfer kepala jamur (mushroomed head).'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Panjang Keseluruhan', value: '150 mm s.d. 250 mm' },
+      { label: 'Profil Penampang Batang', value: 'Segi Delapan (Octagonal Bar) 12 - 25 mm' },
+      { label: 'Material Baja', value: 'High Carbon Steel (0.8% C) / Chrome-Vanadium Tempa' },
+      { label: 'Sudut Baji Mata Potong', value: '60° untuk baja lunak, 70° untuk baja keras, 45° untuk aluminium' },
+      { label: 'Kekerasan Mata Potong', value: '54 - 58 HRC (Dikeraskan & di-temper warna jerami tua)' },
+      { label: 'Kekerasan Kepala Pukul', value: '38 - 42 HRC (Ulet dan kenyal untuk menahan pukulan palu)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Mata Potong Baji (Cutting Edge)', desc: 'Ujung tajam baji pemotong yang sedikit cembung untuk memusatkan titik potong di tengah bilah.', pinPos: { x: 18, y: 35 }, lokasiFisik: 'Bilah baji tajam di bagian ujung bawah pahat' },
+      { no: '02', nama: 'Batang Segi Delapan (Body)', desc: 'Badan pahat bersegi delapan agar mantap digenggam tangan dan tidak mudah terpuntir atau menggelinding di meja kerja.', pinPos: { x: 18, y: 22 }, lokasiFisik: 'Batang segi delapan baja bagian tengah pahat' },
+      { no: '03', nama: 'Kepala Pukul (Striking Head)', desc: 'Bagian atas tempat palu mendarat; wajib di-chamfer 1-2 mm untuk mencegah pembentukan kepala jamur (mushrooming).', pinPos: { x: 18, y: 12 }, lokasiFisik: 'Kepala bagian atas yang dipukul oleh palu' }
+    ],
+    bendaKerja: ['Kepala paku keling (rivet head) rusak', 'Kepala baut dol/karat', 'Terak dan tonjolan kampuh las', 'Alur pasak poros dan kanal pelumas', 'Pelat baja strip tipis'],
+    sopKerja: [
+      'Gunakan palu konde (ball peen hammer) yang beratnya sesuai dengan ukuran pahat (bobot palu 400 - 800 gram).',
+      'Tatapan mata operator harus SELALU FOKUS KE MATA POTONG PAHAT, bukan melihat ke kepala pahat saat memukul!',
+      'Genggam batang pahat dengan tangan kiri rileks sekitar 2-3 cm di bawah kepala pahat.',
+      'Pasang peredam karet (rubber hand-guard) pada batang pahat untuk melindungi tangan jika palu meleset.',
+      'Gerinda ulang (dressing) kepala pahat seketika jika mulai mekar atau retak membentuk kepala jamur.'
+    ],
+    k3Penting: [
+      'BAHAYA FATAL KEPALA JAMUR (MUSHROOM HEAD): Jangan pernah memakai pahat dengan kepala mekar/retak! Serpihan logam baja getas dapat terlepas dan melesat seperti peluru menembus mata atau leher.',
+      'Wajib mengenakan safety goggles ANSI Z87.1 dengan pelindung samping saat memahat.',
+      'Pasang jaring penahan serpihan (chip shield) di belakang benda kerja agar serpihan tatal pahat tidak mengenai praktikan lain di seberang meja.'
+    ]
+  },
+  {
+    id: 'palu-bengkel',
+    nama: 'Palu Bengkel Mesin (Ball Peen, Brass & Dead Blow Mallets)',
+    namaEng: 'Machinist Ball Peen, Brass & Soft Mallets',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'palu',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Palu Konde Tempa • Palu Tembaga Non-Marring',
+    deskripsiSingkat: 'Perkakas tangan manual pemukul untuk penitik, pahat dingin, pembentukan paku keling (riveting), dan perakitan poros presisi tanpa merusak komponen.',
+    deskripsiLengkap: 'Palu bengkel mesin memiliki fungsi khusus yang berbeda dari palu tukang kayu. Palu Konde (Ball Peen Hammer) memiliki satu muka datar untuk memukul pahat/penitik dan satu muka bulat peluru (konde) untuk meratakan kepala keling (riveting) dan peening logam. Palu Tembaga/Kuningan (Brass Hammer) dan Palu Karet/Plastik (Dead-Blow Mallet) digunakan untuk perakitan komponen presisi, bearing, dan merapatkan benda pada ragum mesin frais tanpa meninggalkan goresan (non-marring) dan tanpa pantulan.',
+    prinsipKerja: 'Menyalurkan energi kinetik pukulan dari ayunan lengan tangan melalui kepala palu logam atau komposit lunak menuju media sasaran.',
+    images: [
+      {
+        url: '/assets/images/perkakas/kunci_dan_palu.svg',
+        title: 'Infografis Palu Bengkel Mesin & Perkakas Kunci Cr-V',
+        desc: 'Visual perbandingan palu konde baja tempa, palu tembaga lunak anti-cacat, palu dead blow, dan kelompok kunci mekanik.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Bobot Palu Konde', value: '250 g (1/2 lb), 450 g (1 lb), 680 g (1.5 lb), 900 g (2 lb)' },
+      { label: 'Material Kepala Palu Konde', value: 'Forged High Carbon Steel (Kepala dikeraskan 50-55 HRC)' },
+      { label: 'Material Palu Lunak', value: 'Kuningan Padat (Brass), Tembaga (Copper), Karet Uretan (Polyurethane)' },
+      { label: 'Bahan Tangkai Gagang', value: 'Kayu Hickory Amerika Berkualitas Tinggi / Fiberglass Anti-Getar' },
+      { label: 'Sistem Pengunci Baji', value: 'Baji Baja dan Baji Kayu Bersilang Ganda (Double Cross Wedge)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Muka Datar (Flat Face)', desc: 'Bidang datar sedikit cembung untuk memukul penitik pusat, pahat, dan pasak.', pinPos: { x: 12, y: 22 }, lokasiFisik: 'Muka pukul bagian depan kepala palu' },
+      { no: '02', nama: 'Muka Bulat Konde (Ball Peen)', desc: 'Muka setengah bola bundar untuk menempa kepala keling bulat dan memperkuat struktur logam las.', pinPos: { x: 30, y: 22 }, lokasiFisik: 'Muka bulat kubah di bagian belakang kepala palu' },
+      { no: '03', nama: 'Mata Palu & Baji Pengunci (Eye & Wedges)', desc: 'Lubang oval tempat tangkai masuk, dikunci baji kayu dan baja agar kepala palu tidak terbang lepas.', pinPos: { x: 21, y: 24 }, lokasiFisik: 'Lubang tengah sambungan kepala dan gagang' },
+      { no: '04', nama: 'Gagang Tangkai Kayu Hickory', desc: 'Tangkai kayu lentur penyerap kejut getaran benturan tangan.', pinPos: { x: 21, y: 38 }, lokasiFisik: 'Tangkai kayu panjang pegangan palu' }
+    ],
+    bendaKerja: ['Kepala penitik pusat (center punch)', 'Pahat tangan dingin', 'Paku keling piringan rem & pelat', 'Poros presisi, bantalan bearing, dan pasak mesin'],
+    sopKerja: [
+      'Periksa kekencangan kepala palu sebelum dipakai: pastikan baji pengunci kokoh dan gagang tidak retak.',
+      'Genggam tangkai palu dekat ujung belakang (bukan di dekat kepala) untuk mendapatkan torsi ayunan maksimum.',
+      'Pastikan bidang pukul mendarat sejajar datar (flush) tepat di tengah sasaran untuk mencegah selip.',
+      'Gunakan palu tembaga atau dead-blow saat merapatkan benda kerja pada ragum mesin frais atau memukul poros bearing.'
+    ],
+    k3Penting: [
+      'DILARANG MEMUKUL DUA KEPALA PALU BAJA SATU SAMA LAIN: Muka baja keras yang saling bertubrukan dapat meledak pecah (spalling) menghasilkan serpihan tajam mematikan.',
+      'Pastikan tangan dan gagang palu bebas dari oli atau gemuk licin.',
+      'Jangan pernah menggunakan palu dengan tangkai kayu yang longgar, retak, atau dibalut lakban darurat.'
+    ]
+  },
+  {
+    id: 'ragum-meja',
+    nama: 'Ragum Meja Kerja Bangku (Machinist Bench Vise & Soft Jaws)',
+    namaEng: 'Heavy Duty Cast Steel Bench Vise with Swivel Base',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'penjepit',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Besi Tuang Nodular • Pelindung Soft Jaws',
+    deskripsiSingkat: 'Perkakas pencekam utama meja bengkel mesin untuk memegang benda kerja secara kokoh dan aman selama proses pengikiran, pemahatan, penggergajian, dan pengetapan.',
+    deskripsiLengkap: 'Ragum meja (bench vise) terbuat dari besi tuang nodular (ductile cast iron) atau baja tuang berkekuatan tarik tinggi. Memiliki rahang tetap (fixed jaw), rahang geser (movable jaw), poros ulir penggerak (lead screw baja acme), dan landasan pukul kecil (anvil). Rahang aslinya terbuat dari baja keras bergerigi (serrated hardened jaws) untuk cengkeraman kuat, namun dapat dilengkapi pelindung rahang lunak (soft jaws tembaga/aluminium) untuk mencekam benda kerja halus tanpa merusak permukaan.',
+    prinsipKerja: 'Memutar tuas engkol memutar poros ulir acme yang mendorong rahang geser maju atau mundur, menghasilkan gaya jepit mekanis hingga puluhan kilonewton.',
+    images: [
+      {
+        url: '/assets/images/perkakas/ragum_dan_penanda.svg',
+        title: 'Infografis Ragum Meja Bengkel & Perkakas Penanda Presisi',
+        desc: 'Bagan teknis ragum meja, fungsi soft jaws pelindung benda halus, penitik pusat 90°, penitik garis 30°, dan penggores baja karbida.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Lebar Rahang (Jaw Width)', value: '100 mm (4"), 125 mm (5"), 150 mm (6"), 200 mm (8")' },
+      { label: 'Bukaan Maksimum Rahang', value: '125 s.d. 225 mm' },
+      { label: 'Material Bodi Ragum', value: 'Ductile Cast Iron / Forged Steel (Kekuatan tarik > 450 MPa)' },
+      { label: 'Profil Ulir Poros', value: 'Ulir Segi Empat / Acme Threaded Lead Screw' },
+      { label: 'Ketinggian Meja Ideal', value: 'Tinggi rahang sejajar siku lengan tangan (± 100 - 105 cm)' },
+      { label: 'Pelindung Rahang (Soft Jaws)', value: 'Pelat Tembaga (Copper), Aluminium paduan, atau Karet' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Rahang Tetap (Fixed Jaw)', desc: 'Bodi rahang belakang yang dibaut mati pada meja kerja bangku.', pinPos: { x: 30, y: 22 }, lokasiFisik: 'Rahang bagian belakang yang menyatu dengan bodi tapak' },
+      { no: '02', nama: 'Rahang Geser (Movable Jaw)', desc: 'Rahang depan yang bergerak maju-mundur mengikuti putaran poros ulir acme.', pinPos: { x: 18, y: 22 }, lokasiFisik: 'Rahang bagian depan yang dapat digeser' },
+      { no: '03', nama: 'Poros Ulir Acme & Tuas Putar', desc: 'Poros ulir baja bertorsi tinggi dengan tuas geser silindris berujung bola bulat.', pinPos: { x: 14, y: 29 }, lokasiFisik: 'Tuas besi pemutar dan poros ulir di bawah rahang' },
+      { no: '04', nama: 'Pelat Rahang Baja (Hardened Jaw Inserts)', desc: 'Pelat baja keras bergerigi yang dapat diganti jika aus, dibaut pada muka rahang.', pinPos: { x: 24, y: 20 }, lokasiFisik: 'Sisipan pelat bergerigi di permukaan jepit' },
+      { no: '05', nama: 'Landasan Pukul (Anvil Plate)', desc: 'Bidang datar baja di belakang rahang tetap untuk meluruskan pelat atau paku kecil.', pinPos: { x: 34, y: 18 }, lokasiFisik: 'Bidang datar persegi di belakang rahang tetap' }
+    ],
+    bendaKerja: ['Balok baja yang akan dikikir', 'Pipa dan poros yang akan digergaji', 'Pelat strip yang akan dipahat', 'Komponen yang akan ditap ulir dalam'],
+    sopKerja: [
+      'Gunakan pelindung rahang lunak (soft jaws) tembaga atau aluminium saat menjepit benda kerja yang sudah difrais, dibubut halus, atau memiliki ulir presisi.',
+      'Jepit benda kerja di bagian tengah rahang agar tekanan jepit seimbang dan poros ulir tidak menerima momen puntir miring.',
+      'Kencangkan tuas engkol HANYA DENGAN KEKUATAN TANGAN; jangan menyambung tuas dengan pipa perpanjangan atau memukul tuas dengan palu!',
+      'Saat selesai bekerja, bersihkan tatal dengan kuas dan sisakan celah rahang terbuka 5 mm tanpa dijepit kencang untuk mengendurkan tegangan baut ulir.'
+    ],
+    k3Penting: [
+      'Pastikan baut pondasi pengikat ragum ke meja kerja terkunci kencang dan meja tidak goyang.',
+      'Jangan meletakkan benda kerja berat di tepi meja dekat ragum yang rawan jatuh menimpa kaki praktikan.',
+      'Gunakan penyangga penopang (pipe stand) jika menjepit pipa atau batang baja yang sangat panjang.'
+    ]
+  },
+  {
+    id: 'tap-dies',
+    nama: 'Tap dan Sney (Manual Threading Taps & Split Dies)',
+    namaEng: 'Hand Taps Set (Taper, Plug, Bottoming) & Round Split Dies',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'ulir',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Baja HSS M2 • Standar Metrik ISO',
+    deskripsiSingkat: 'Perkakas tangan manual pembuat ulir dalam (Tap) dan ulir luar (Sney/Die) dengan standar metrik ISO pada poros baut dan lubang pelat logam.',
+    deskripsiLengkap: 'Tap tangan (Hand Tap) digunakan untuk membuat ulir dalam pada lubang bor, terdiri dari 1 set berisi 3 tingkat tap: Tap No. 1 (Taper tap berujung tirus panjang 4°), Tap No. 2 (Plug tap tirus sedang 10°), dan Tap No. 3 (Bottoming tap berujung rata untuk lubang buntu). Sney (Round Split Die) digunakan untuk membuat ulir luar pada batang poros as silindris. Keduanya digerakkan menggunakan batang pemutar stang tap (tap wrench) dan pemutar sney (die stock).',
+    prinsipKerja: 'Bilah ulir HSS menyayat alur spiral heliks ke dinding logam. Operator memutar stang tap: maju 180° s.d. 270° untuk menyayat, lalu putar balik 90° ke kiri untuk memutus tatal gram logam.',
+    images: [
+      {
+        url: '/assets/images/cutting_tools/tap_dan_dies.jpg',
+        title: 'Set Tap Tangan Standar Metrik M3 - M16 & Stang Pemutar',
+        desc: 'Set lengkap tap tirus, tap antara, tap dasar finishing, sney lingkar berbelah, dan tap handle adjustable.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Standar Ulir', value: 'ISO Metric Coarse (M3x0.5, M4x0.7, M5x0.8, M6x1.0, M8x1.25, M10x1.5, M12x1.75)' },
+      { label: 'Material Baja', value: 'High Speed Steel (HSS M2) Kekerasan 63 - 66 HRC' },
+      { label: 'Jumlah Set Tap Tangan', value: '3 Buah per ukuran (No. 1 Tirus, No. 2 Antara, No. 3 Dasar/Rata)' },
+      { label: 'Bentuk Sney', value: 'Round Split Die dengan 3 sekrup penyetel kelonggaran toleransi' },
+      { label: 'Rumus Lubang Bor Tap', value: 'D_bor = D_nominal - Kisar (Pitch). Contoh M8x1.25: bor Ø 6.8 mm' },
+      { label: 'Pelumas Wajib', value: 'Cutting Oil / Oli SAE 30 (baja), Spiritus / Alkohol (aluminium)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Tap No. 1 (Taper Tap)', desc: 'Tap pemandu awal dengan 8 - 10 alur ulir pertama ditiruskan melandai (4°) agar mudah masuk sejajar.', pinPos: { x: 30, y: 35 }, lokasiFisik: 'Tap dengan ujung paling tirus melandai panjang' },
+      { no: '02', nama: 'Tap No. 2 (Plug / Intermediate Tap)', desc: 'Tap kedua dengan 3 - 5 alur tirus (10°) untuk memperdalam dan membentuk 75% profil ulir.', pinPos: { x: 45, y: 35 }, lokasiFisik: 'Tap kedua dengan ujung tirus sedang' },
+      { no: '03', nama: 'Tap No. 3 (Bottoming / Finishing Tap)', desc: 'Tap ketiga dengan hanya 1 - 1.5 alur tirus (berujung hampir rata) untuk menyempurnakan ulir hingga ke dasar lubang buntu.', pinPos: { x: 60, y: 35 }, lokasiFisik: 'Tap ketiga dengan ujung tirus sangat pendek/rata' },
+      { no: '04', nama: 'Sney Bulat Berbelah (Split Die)', desc: 'Cincin baja HSS pembuat ulir luar pada poros baut silindris dengan celah baut penyetel ukuran.', pinPos: { x: 75, y: 50 }, lokasiFisik: 'Cincin bulat bergigi ulir dalam' },
+      { no: '05', nama: 'Stang Pemutar Tap (Tap Wrench)', desc: 'Gagang pemutar dengan rahang jepit V untuk mencekam tangkai segi empat tap dengan seimbang.', pinPos: { x: 45, y: 70 }, lokasiFisik: 'Gagang pemutar panjang dengan baut jepit' }
+    ],
+    bendaKerja: ['Lubang pelat baja untuk baut pengikat', 'Blok mesin silinder', 'Batang poros baja untuk ulir baut M8 - M16', 'Baut tanam stud bolt'],
+    sopKerja: [
+      'HITUNG DIAMETER BOR SEBELUM NGETAP: Wajib gunakan rumus D_bor = D_nominal - Pitch. Jika lubang bor terlalu sempit, tap akan macet dan patah seketika di dalam lubang!',
+      'Beri chamfer 45° pada bibir lubang bor dan ujung batang poros sebelum pengetapan/penyeneyan.',
+      'Periksa kesikuan 90°: Pada awal 2 putaran pertama, tempelkan siku-siku presisi (try square) dari 2 arah sudut berbeda.',
+      'TERAPKAN RITME POTONG WAJIB: Putar maju searah jarum jam 180° - 270°, lalu putar balik ke kiri 90° hingga terasa bunyi "klik" tanda tatal putus.',
+      'Gunakan pelumas wajib: Oli mesin untuk baja karbon; spiritus/alkohol untuk aluminium.',
+      'Lakukan pengetapan berurutan: Tap No. 1 -> Tap No. 2 -> Tap No. 3.'
+    ],
+    k3Penting: [
+      'Tap dibuat dari baja HSS berkekerasan tinggi yang SANGAT GETAS. Jangan memaksakan putaran jika terasa macet; putar balik dan bersihkan tatalnya!',
+      'Dorong kedua gagang stang tap dengan gaya seimbang kedua tangan simetris untuk mencegah momen bengkok (bending force) penyebab nomor satu tap patah.',
+      'Bersihkan batang tap beroli menggunakan kain majun; jangan menyeka tatal tajam dengan telapak tangan terbuka.'
+    ]
+  },
+  {
+    id: 'reamer',
+    nama: 'Reamer Tangan Presisi (High Precision Hand Reamer H7)',
+    namaEng: 'High Precision Adjustable & Solid Hand Reamer H7',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'pengikisan',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Toleransi Mikron H7 • Helical Flute',
+    deskripsiSingkat: 'Perkakas tangan manual presisi finishing untuk memperbesar dan menghaluskan lubang silindris hingga mencapai toleransi standar ISO H7 dan kehalusan cermin N6.',
+    deskripsiLengkap: 'Reamer tangan (hand reamer) adalah alat finishing akhir, BUKAN pembuat lubang utama. Digunakan setelah proses pengeboran untuk mencapai diameter lubang dengan toleransi mikron (+0.015 mm pada kelas H7). Ujung depannya memiliki ketirusan tirus panjang (starting taper) agar reamer masuk sejajar ke dalam lubang bor. Reamer memiliki jumlah alur potong ganjil atau spasi tidak seragam (uneven spacing) untuk mencegah getaran chatter.',
+    prinsipKerja: 'Bilah potong membujur atau spiral heliks menyayat lapisan logam tipis (allowance 0.1 - 0.2 mm) saat diputar perlahan searah jarum jam dengan pelumasan melimpah.',
+    images: [
+      {
+        url: '/assets/images/cutting_tools/reamer_presisi.jpg',
+        title: 'Reamer Presisi H7 Alur Heliks & Lurus HSS',
+        desc: 'Reamer finishing lubang pasak pena silinder dengan toleransi mikron H7 dan tangkai pemutar stang tap.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Ukuran Diameter', value: 'Ø 3 mm s.d. Ø 25 mm (Standar Toleransi ISO H7)' },
+      { label: 'Material Pisau', value: 'Baja Kecepatan Tinggi HSS-E (Cobalt 5%) Kekerasan 64 HRC' },
+      { label: 'Bentuk Alur (Flute)', value: 'Heliks Kiri Sudut 7° - 10° (Left Hand Spiral, Right Hand Cut)' },
+      { label: 'Kelonggaran Sayat (Allowance)', value: 'Hanya disisakan 0.15 - 0.25 mm dari proses pengeboran' },
+      { label: 'Kehalusan Permukaan', value: 'Mencapai Ra 0.8 s.d. 1.6 μm (Kelas N6 cermin)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Ketirusan Awal (Starting Taper)', desc: 'Tirus melandai di ujung depan reamer untuk memandu lubang agar konsentris.', pinPos: { x: 22, y: 35 }, lokasiFisik: 'Ujung paling depan bilah reamer' },
+      { no: '02', nama: 'Bilah Potong Presisi (Cutting Flutes)', desc: 'Deretan bilah potong berjarak spasi asimetris untuk mencegah gelombang resonansi chatter.', pinPos: { x: 45, y: 35 }, lokasiFisik: 'Bilah bergerigi heliks di badan reamer' },
+      { no: '03', nama: 'Bidang Pembimbing (Margin / Land)', desc: 'Bidang silindris halus tanpa sudut potong yang mengukur dan menuntun kelurusan dinding lubang.', pinPos: { x: 55, y: 35 }, lokasiFisik: 'Bidang silindris sempit di belakang mata potong' },
+      { no: '04', nama: 'Tangkai Pemutar Segi Empat (Square Shank)', desc: 'Ujung tangkai segi empat untuk dijepit pada stang pemutar tap.', pinPos: { x: 80, y: 35 }, lokasiFisik: 'Pangkal tangkai belakang reamer' }
+    ],
+    bendaKerja: ['Lubang pena tirus & pena silinder (dowel pin)', 'Bushing bantalan perunggu/kuningan', 'Lubang engsel presisi perkakas jig & fixture'],
+    sopKerja: [
+      'Sisakan kelonggaran bor yang tepat: Jangan mereamer lubang dengan selisih tebal > 0.3 mm (misal untuk reamer Ø 10 H7, lubang dibor dahulu dengan mata bor Ø 9.8 mm).',
+      'DILARANG MEMUTAR BALIK KE KIRI: Reamer HANYA boleh diputar searah jarum jam (kanan), baik saat maju menyayat maupun saat ditarik keluar lubang!',
+      'Gunakan pelumas cutting oil melimpah untuk menghasilkan dinding lubang berkilap cermin.',
+      'Pastikan posisi reamer benar-benar tegak lurus 90° terhadap bidang kerja.'
+    ],
+    k3Penting: [
+      'Bilah reamer sangat tajam dan getas; jangan menyentuh bilah dengan tangan telanjang dan hindarkan dari benturan.',
+      'Memutar balik reamer akan menjepit tatal di bawah margin, menggores lubang dan membuat bilah reamer retak seketika.'
+    ]
+  },
+  {
+    id: 'kunci-bengkel',
+    nama: 'Kunci Bengkel & Perakitan (Wrenches, Sockets & Hex Keys)',
+    namaEng: 'Mechanic Combination Wrenches, Sockets & Hex Keys Set',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'kunci',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Chrome-Vanadium (Cr-V) Steel • Standar DIN',
+    deskripsiSingkat: 'Kelompok perkakas tangan manual perakitan dan perawatan mesin untuk mengencangkan dan mengendorkan baut kepala segi enam, mur, baut L heksagonal, dan sambungan mekanik.',
+    deskripsiLengkap: 'Kunci bengkel mekanik dibuat dari baja paduan Chrome-Vanadium (Cr-V 31CrV3) dengan finishing satin atau mirror chrome plating anti-karat. Terdiri dari Kunci Pas (Open-end wrench sudut 15°), Kunci Ring (Box-end wrench 12 sudut sudut offset 15°-75°), Kunci Kombinasi (Combination spanner), Kunci Soket Ratchet (Reversible socket wrench drive 1/2", 3/8", 1/4"), Kunci L Segi Enam (Allen hex key 1.5 - 19 mm), Kunci Inggris (Adjustable wrench), dan Tang Buaya Pengunci (Locking pliers / vice grip).',
+    prinsipKerja: 'Menyalurkan momen gaya (torsi) dari tangan operator ke kepala baut atau mur dengan rasio lengan pengungkit (torque lever).',
+    images: [
+      {
+        url: '/assets/images/perkakas/kunci_dan_palu.svg',
+        title: 'Infografis Kelompok Kunci Bengkel Mesin Cr-V & Tang Buaya',
+        desc: 'Visual anatomi kunci kombinasi, kunci ring 12-sudut, rachet soket, kunci L heksagonal, dan tang buaya pengunci pelat.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Standar Dimensi', value: 'DIN 3113 / ISO 7738 Standar Metrik (Ukuran 6 mm s.d. 32 mm)' },
+      { label: 'Material Baja', value: 'Baja Paduan Chrome-Vanadium (Cr-V) Taraf Industri' },
+      { label: 'Bentuk Ujung Ring', value: '12 Sudut (Bi-Hexagonal / Wave Profile) Mencegah Kepala Baut Aus' },
+      { label: 'Drive Kunci Soket', value: 'Square Drive 1/4" (Mikro), 3/8" (Sedang), 1/2" (Standar Bengkel Mesin)' },
+      { label: 'Kunci L Heksagonal', value: 'Set 9 Pcs (1.5, 2, 2.5, 3, 4, 5, 6, 8, 10 mm) dengan Ujung Bola (Ball Point)' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Ujung Ring 12-Sudut (Box-End)', desc: 'Mencengkeram seluruh 6 sisi kepala baut secara melingkar; digunakan untuk torsi awal membuka baut keras dan pengencangan akhir.', pinPos: { x: 55, y: 19 }, lokasiFisik: 'Cincin melingkar di ujung kiri kunci' },
+      { no: '02', nama: 'Ujung Pas Terbuka (Open-End)', desc: 'Rahang terbuka bersudut offset 15° untuk putaran cepat di ruang sempit setelah baut kendur.', pinPos: { x: 80, y: 19 }, lokasiFisik: 'Rahang garpu terbuka di ujung kanan kunci' },
+      { no: '03', nama: 'Gagang Batang Tuas (Beam Handle)', desc: 'Batang I-beam berprofil kokoh untuk kenyamanan genggaman dorong atau tarik tangan.', pinPos: { x: 68, y: 19 }, lokasiFisik: 'Batang penghubung tengah kunci' }
+    ],
+    bendaKerja: ['Baut kepala segi enam (Hex bolt) M4 - M24', 'Mur pengikat ragum meja', 'Baut pengikat eretan dan chuck mesin bubut', 'Baut penutup gearbox motor mesin'],
+    sopKerja: [
+      'TARIK, JANGAN DORONG: Selalu posisikan kunci dengan gerakan MENARIK (pulling toward you) ke arah badan Anda, bukan mendorong. Jika kunci selip saat didorong, buku jari tangan akan membentur logam keras bengkel!',
+      'Gunakan ujung RING untuk membuka baut pertama kali; jangan menggunakan ujung pas untuk torsi berat karena rahang pas bisa mengembang dan menumpulkan sudut baut (rounding).',
+      'Pilih ukuran kunci yang pas persis (contoh baut 17mm wajib kunci 17mm; jangan memakai kunci 18mm atau kunci inggris longgar).',
+      'Dilarang menyambung tangkai kunci dengan pipa sambungan panjang yang melebihi batas elastisitas baja Cr-V.'
+    ],
+    k3Penting: [
+      'Pastikan rahang kunci terpasang masuk sedalam mungkin pada kepala baut sebelum diberi gaya torsi.',
+      'Bersihkan oli dan gemuk dari permukaan kunci sebelum dipakai agar tangan tidak tergelincir.',
+      'Jangan memukul tangkai kunci dengan palu kecuali menggunakan kunci pukul khusus (striking face box wrench).'
+    ]
+  },
+  {
+    id: 'penanda-gores',
+    nama: 'Alat Penanda & Penggores (Scriber, Center Punch & Dividers)',
+    namaEng: 'Layout & Marking Tools (Carbide Scriber, Punches, Dividers)',
+    kategori: 'Perkakas Tangan Manual (Hand Tools)',
+    kategoriKey: 'penanda',
+    kategoriType: 'manual',
+    badge: 'Manual Hand Tool • Karbida Tungsten • Sudut Titik 90° & 30°',
+    deskripsiSingkat: 'Kelompok perkakas tangan penanda dan pelukis benda kerja untuk menggores garis ukuran batas sayat presisi, menandai titik pusat pengeboran, dan melukis busur radius.',
+    deskripsiLengkap: 'Sebelum proses penyayatan logam dimulai, benda kerja wajib ditandai (layout & marking) sesuai gambar kerja teknik. Penggores Baja Karbida (Scriber berkekerasan > 65 HRC) digunakan menggores garis ukuran tajam. Penitik Pusat (Center Punch sudut 90°) membuat cekungan dudukan mata bor agar tidak selip. Penitik Garis (Prick Punch sudut 30°-60°) menandai sepanjang garis goresan. Jangka Pembagi Pegas (Spring Dividers) melukis lingkaran dan membagi jarak garis sama panjang.',
+    prinsipKerja: 'Ujung runcing karbida menggores lapisan oksida pelat logam atau pukulan palu ringan pada penitik memindahkan titik koordinat gambar kerja ke benda nyata.',
+    images: [
+      {
+        url: '/assets/images/perkakas/ragum_dan_penanda.svg',
+        title: 'Infografis Perkakas Penanda, Penggores & Penitik Presisi',
+        desc: 'Visual anatomi penitik pusat 90°, penitik garis 30°, penggores ujung karbida tungsten, dan jangka pembagi pegas.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Sudut Ujung Penitik Pusat', value: '90 Derajat (Sesuai dengan sudut bibir awal mata bor twist drill)' },
+      { label: 'Sudut Ujung Penitik Garis', value: '30 s.d. 60 Derajat (Tajam dan sempit untuk kejelasan garis lukis)' },
+      { label: 'Material Tip Penggores', value: 'Tungsten Carbide Tip (Dapat menggores baja keras hingga 60 HRC)' },
+      { label: 'Bahan Batang Penitik', value: 'Baja Perkakas Tempa Knurled Body Anti-Slip' },
+      { label: 'Presisi Jangka Pembagi', value: 'Baut Setelan Mur Mikro (Knurled Nut Adjuster) Akurasi 0.1 mm' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Penitik Pusat (Center Punch 90°)', desc: 'Ujung baji 90° pembuat cekungan dudukan mata bor bor meja agar ujung bor tidak bergeser saat mulai berputar.', pinPos: { x: 62, y: 15 }, lokasiFisik: 'Batang baja knurled dengan ujung tirus 90°' },
+      { no: '02', nama: 'Penitik Garis (Prick Punch 30°)', desc: 'Ujung baji runcing 30° untuk menitik titik-titik acuan garis dan tumpuan jangka pembagi.', pinPos: { x: 62, y: 32 }, lokasiFisik: 'Batang penitik dengan ujung tirus lancip 30°' },
+      { no: '03', nama: 'Penggores Baja Karbida (Scriber)', desc: 'Pena penggores berujung intan karbida untuk menggores pelat baja dengan bantuan mistar baja.', pinPos: { x: 62, y: 48 }, lokasiFisik: 'Pena baja tipis panjang dengan ujung karbida' },
+      { no: '04', nama: 'Jangka Pembagi Pegas (Spring Dividers)', desc: 'Dua kaki baja berujung jarum dengan busur pegas dan mur pengatur radius lingkaran.', pinPos: { x: 62, y: 65 }, lokasiFisik: 'Jangka berkaki jarum ganda dengan mur penyetel' }
+    ],
+    bendaKerja: ['Pelat baja ST37 persiapan bor', 'Benda kerja bubut dan frais', 'Pola pelat seng sheet metal', 'Dudukan blok bantalan mesin'],
+    sopKerja: [
+      'Gunakan cairan pelukis tata letak (Layout Dye / Dykem Blue) pada pelat agar garis goresan terlihat sangat kontras dan jelas.',
+      'Condongkan penggores sekitar 15° ke arah gerakan gores dan tempelkan rapat pada mistar baja siku.',
+      'Saat menitik: miringkan penitik untuk mencari garis goresan, tegakkan 90° sempurna, lalu pukul pelan satu kali dengan palu konde.',
+      'Jangan memukul penitik berulang-ulang pada satu titik karena akan menghasilkan cekungan ganda (double point).'
+    ],
+    k3Penting: [
+      'Ujung penggores dan jangka sangat runcing dan tajam; selalu pasang pelindung gabus/karet saat tidak digunakan.',
+      'Dilarang menyimpan penggores atau penitik di saku baju wearpack karena dapat menusuk dada atau paha saat membungkuk.'
+    ]
+  },
+
+  // ---------------------------------------------------------------------------
+  // KELOMPOK 2: PERKAKAS BERTENAGA (POWER TOOLS)
+  // ---------------------------------------------------------------------------
   {
     id: 'gerinda-tangan',
-    nama: 'Gerinda Tangan (Angle Grinder)',
+    nama: 'Gerinda Tangan Listrik 4" (Angle Grinder)',
     namaEng: 'Electric Angle Grinder 4" / 100mm',
-    kategori: 'Perkakas Tangan Bertenaga',
-    kategoriKey: 'portable',
-    badge: '220V AC • Portable Power Tool',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'gerinda',
+    kategoriType: 'power',
+    badge: '220V AC • Portable Power Tool • 11.000 RPM',
     deskripsiSingkat: 'Perkakas tangan bertenaga listrik berputar kecepatan tinggi untuk memotong pelat baja, pipa, meratakan kampuh las, dan menghaluskan permukaan logam.',
-    deskripsiLengkap: 'Mesin gerinda tangan (angle grinder) adalah salah satu perkakas tangan bertenaga paling vital di bengkel pemesinan dan fabrikasi. Alat ini menggunakan motor listrik universal berkecepatan tinggi (10.000 - 12.000 RPM) yang mentransmisikan daya melalui bevel gear sudut 90 derajat menuju spindel batu gerinda. Dengan mengganti jenis piringan (batu potong tipis 1.2mm, batu gerinda asah 6mm, flap disc amplas, atau sikat kawat baja), gerinda tangan dapat digunakan untuk memotong profil baja, membuang terak las (slag), chamfering tepi tajam, hingga finishing permukaan.',
+    deskripsiLengkap: 'Mesin gerinda tangan (angle grinder) adalah salah satu perkakas tangan bertenaga paling vital di bengkel pemesinan dan fabrikasi. Alat ini menggunakan motor listrik universal berkecepatan tinggi (11.000 - 12.000 RPM) yang mentransmisikan daya melalui bevel gear sudut 90 derajat menuju spindel batu gerinda. Dengan mengganti jenis piringan (batu potong tipis 1.2mm, batu gerinda asah 6mm, flap disc amplas, atau sikat kawat baja), gerinda tangan dapat digunakan untuk memotong profil baja, membuang terak las (slag), chamfering tepi tajam, hingga finishing permukaan.',
     prinsipKerja: 'Pemotongan terjadi melalui proses abrasi berkecepatan tinggi (friksi butiran abrasif Aluminium Oksida atau Silikon Karbida yang diikat resin) pada kecepatan keliling mencapai 80 m/s. Butiran abrasif mikroskopis mengikis logam menjadi partikel debu halus dan percikan bunga api pijar.',
     images: [
       {
         url: '/assets/images/cutting_tools/gerinda_tangan.jpg',
-        title: 'Tampak Utama di Meja Kerja Bengkel',
+        title: 'Tampak Utama Gerinda Tangan 4 Inci di Meja Bengkel',
         desc: 'Unit gerinda tangan 4 inci dengan batu potong terpasang, pelindung keselamatan (wheel guard), kabel grounding, dan benda kerja profil baja.'
       }
     ],
@@ -36,37 +554,38 @@ const CUTTING_TOOLS_DATA = [
       { label: 'Berat Bersih Alat', value: '± 1.8 kg' }
     ],
     komponen: [
-      { no: '01', nama: 'Spindle Lock Button', desc: 'Tombol pengunci poros spindel untuk mempermudah pelepasan dan pengencangan batu gerinda menggunakan kunci pas pin khusus (pin spanner).', pinPos: { x: 34, y: 42 }, lokasiFisik: 'Tombol hitam di atas rumah roda gigi logam (gearbox) kepala gerinda' },
-      { no: '02', nama: 'Wheel Safety Guard (Pelindung Roda)', desc: 'Tudung baja kokoh penutup setengah lingkaran batu gerinda untuk mengarahkan percikan api pijar menjauhi operator dan menahan serpihan jika batu pecah.', pinPos: { x: 35, y: 70 }, lokasiFisik: 'Tudung baja hitam setengah lingkaran penutup batu potong di bawah kepala gerinda' },
-      { no: '03', nama: 'Auxiliary Handle (Gagang Samping)', desc: 'Gagang samping ergonomis yang dapat dipasang di sisi kiri atau kanan bodi untuk stabilitas kontrol dua tangan selama pemotongan berat.', pinPos: { x: 30, y: 55 }, lokasiFisik: 'Gagang hitam silindris yang terpasang menonjol di samping kiri rumah roda gigi' },
-      { no: '04', nama: 'Switch On/Off & Safety Lock', desc: 'Saklar geser dengan pengunci kontinu. Memungkinkan alat beroperasi stabil dan dapat dimatikan seketika saat darurat.', pinPos: { x: 43, y: 51 }, lokasiFisik: 'Saklar geser hitam di bodi samping oranye dekat sambungan kepala' },
+      { no: '01', nama: 'Spindle Lock Button', desc: 'Tombol pengunci poros spindel untuk mempermudah pelepasan dan pengencangan batu gerinda menggunakan kunci pas pin khusus (pin spanner).', pinPos: { x: 34, y: 42 }, lokasiFisik: 'Tombol hitam di atas rumah roda gigi logam kepala gerinda' },
+      { no: '02', nama: 'Wheel Safety Guard (Pelindung Roda)', desc: 'Tudung baja kokoh penutup setengah lingkaran batu gerinda untuk mengarahkan percikan api pijar menjauhi operator dan menahan serpihan jika batu pecah.', pinPos: { x: 35, y: 70 }, lokasiFisik: 'Tudung baja hitam penutup batu potong di bawah kepala gerinda' },
+      { no: '03', nama: 'Auxiliary Handle (Gagang Samping)', desc: 'Gagang samping ergonomis yang dapat dipasang di sisi kiri atau kanan bodi untuk stabilitas kontrol dua tangan selama pemotongan berat.', pinPos: { x: 30, y: 55 }, lokasiFisik: 'Gagang hitam silindris menonjol di samping kiri rumah roda gigi' },
+      { no: '04', nama: 'Switch On/Off & Safety Lock', desc: 'Saklar geser dengan pengunci kontinu; memungkinkan alat beroperasi stabil dan dapat dimatikan seketika saat darurat.', pinPos: { x: 43, y: 51 }, lokasiFisik: 'Saklar geser hitam di bodi samping dekat sambungan kepala' },
       { no: '05', nama: 'Flens Penjepit (Inner & Outer Flange)', desc: 'Dua ring baja presisi yang menjepit batu gerinda pada spindel ulir dengan torsi pengencangan seimbang agar tidak slip atau oleng.', pinPos: { x: 21, y: 63 }, lokasiFisik: 'Cincin mur penjepit di titik pusat piringan batu potong' },
-      { no: '06', nama: 'Lubang Ventilasi Pendingin Motor', desc: 'Kisi-kisi saluran udara tempat kipas internal meniupkan udara dingin melewati armature stator untuk mencegah motor overheat.', pinPos: { x: 61, y: 53 }, lokasiFisik: 'Kisi-kisi celah udara bergaris pada bodi oranye sebelum gagang pegangan' }
+      { no: '06', nama: 'Lubang Ventilasi Pendingin Motor', desc: 'Kisi-kisi saluran udara tempat kipas internal meniupkan udara dingin melewati armature stator untuk mencegah motor overheat.', pinPos: { x: 61, y: 53 }, lokasiFisik: 'Kisi-kisi celah udara bergaris pada bodi sebelum gagang' }
     ],
     bendaKerja: ['Pipa hollow baja ringan / tebal', 'Pelat strip & siku (Angle Bar ST37)', 'Besi beton ulir / polos', 'Kampuh sambungan las (bead joint)', 'Baja stainless (menggunakan INOX disc)'],
     sopKerja: [
       'Lakukan "Ring Test" pada batu gerinda baru: ketuk pelan dengan tangkai obeng kayu; bunyi denting jernih menandakan batu utuh tanpa retak internal.',
       'Pasang wheel guard pada sudut yang mengarahkan percikan bunga api ke bawah atau menjauhi badan dan bahan mudah terbakar.',
-      'Kencangkan batu gerinda menggunakan kunci pin asli, jangan memukul flens dengan palu atau pahat.',
+      'Kencangkan batu gerinda menggunakan kunci pin asli; jangan memukul flens dengan palu atau pahat.',
       'Jepit benda kerja dengan kokoh pada ragum meja. Jangan pernah menginjak atau memegang benda kerja dengan tangan saat digerinda!',
       'Nyalakan mesin dan biarkan berputar stabil 1 menit sebelum menyentuh benda kerja untuk mendeteksi getaran abnormal.',
-      'Untuk memotong: jaga sudut tegak lurus 90° terhadap bidang potong. Jangan menekan terlalu kuat ke samping (batu tipis rawan pecah karena gaya puntir/torsional).'
+      'Untuk memotong: jaga sudut tegak lurus 90° terhadap bidang potong. Jangan menekan terlalu kuat ke samping (batu tipis rawan pecah karena gaya puntir).'
     ],
     k3Penting: [
       'Wajib kacamata pelindung (Safety Goggles ANSI Z87.1) dan Face Shield transparan.',
       'DILARANG melepas pelindung roda (wheel guard) dalam kondisi apapun saat operasional!',
-      'Gunakan sarung tangan kulit las dan celemek kulit (leather apron) penahan bunga api.',
+      'Gunakan sarung tangan kulit las dan celemek kulit penahan bunga api.',
       'Pastikan area kerja radius 5 meter bebas dari tiner, solar, gemuk, kain majun, atau gas mudah meledak.',
       'Tunggu putaran spindel berhenti total sebelum meletakkan gerinda di atas meja kerja.'
     ]
   },
   {
     id: 'gerinda-potong',
-    nama: 'Gerinda Potong (Chop Saw / Cut-Off Saw)',
+    nama: 'Gerinda Potong Chop Saw 14" (Abrasive Cut-Off Machine)',
     namaEng: 'Abrasive Cut-Off Machine 14" / 355mm',
-    kategori: 'Perkakas Tangan Bertenaga',
-    kategoriKey: 'portable',
-    badge: '220V AC • Heavy Duty Cut-Off',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'gerinda',
+    kategoriType: 'power',
+    badge: '220V AC • Heavy Duty Cut-Off • 2400 Watt',
     deskripsiSingkat: 'Mesin potong stasioner dengan batu potong abrasif 14 inci bertenaga besar untuk pemotongan cepat profil baja, pipa tebal, UNP, siku, dan besi pejal.',
     deskripsiLengkap: 'Mesin gerinda potong (Chop Saw / Cut-Off Saw) adalah mesin potong stasioner meja yang menggunakan piringan potong abrasif berdiameter besar 355 mm (14 inci). Digerakkan oleh motor listrik bertenaga 2000 - 2400 Watt dengan sistem engsel pivot turun (chop action). Mesin ini dilengkapi ragum jepit miter terintegrasi yang dapat disetel sudut potongnya dari 0° hingga 45°. Chop saw adalah tulang punggung di bengkel fabrikasi logam untuk memotong stok panjang profil baja struktural menjadi ukuran siap rakit sebelum proses pengelasan.',
     prinsipKerja: 'Operator menurunkan tuas kepala motor berputar ke arah benda kerja yang dijepit di ragum landasan. Batu abrasif berkecepatan 3800 RPM menggesek material baja dengan tekanan vertikal stabil, menghasilkan potongan lurus yang bersih dengan bantuan gravitasi dan gaya tekan manual.',
@@ -89,8 +608,8 @@ const CUTTING_TOOLS_DATA = [
     ],
     komponen: [
       { no: '01', nama: 'D-Handle dengan Trigger & Safety Switch', desc: 'Gagang pegangan ergonomis bentuk huruf D dengan saklar tombol pemicu dan tombol pengunci pengaman ganda untuk mencegah mesin menyala tidak sengaja.', pinPos: { x: 56, y: 23 }, lokasiFisik: 'Gagang atas bentuk D yang dipegang tangan operator untuk menekan mesin turun' },
-      { no: '02', nama: 'Retractable Spark Wheel Guard', desc: 'Pelindung batu baja kokoh dengan bagian bawah berengsel yang otomatis membuka saat pisau turun menyentuh benda kerja dan menutup kembali saat kepala diangkat.', pinPos: { x: 63, y: 37 }, lokasiFisik: 'Kap pelindung lengkung oranye besar di sekeliling piringan potong 14 inci' },
-      { no: '03', nama: 'Quick-Release Vise (Ragum Cepat)', desc: 'Ragum penjepit benda kerja dengan tuas ulir acme dan pengunci mur geser cepat (quick release nut) untuk mencekam profil pipa atau siku dengan sangat kokoh.', pinPos: { x: 68, y: 70 }, lokasiFisik: 'Ragum dengan ulir acme dan engkol putar di meja landasan bawah' },
+      { no: '02', nama: 'Retractable Spark Wheel Guard', desc: 'Pelindung batu baja kokoh dengan bagian bawah berengsel yang otomatis membuka saat pisau turun menyentuh benda kerja dan menutup kembali saat kepala diangkat.', pinPos: { x: 63, y: 37 }, lokasiFisik: 'Kap pelindung lengkung besar di sekeliling piringan potong 14 inci' },
+      { no: '03', nama: 'Quick-Release Vise (Ragum Cepat)', desc: 'Ragum penjepit benda kerja dengan tuas ulir acme dan pengunci mur geser cepat untuk mencekam profil pipa atau siku dengan sangat kokoh.', pinPos: { x: 68, y: 70 }, lokasiFisik: 'Ragum dengan ulir acme dan engkol putar di meja landasan bawah' },
       { no: '04', nama: 'Miter Gauge Angle Scale', desc: 'Skala busur derajat sudut potong (0° hingga 45°) pada rahang belakang ragum untuk pemotongan siku miter presisi.', pinPos: { x: 52, y: 63 }, lokasiFisik: 'Pelat skala busur derajat di rahang belakang ragum bawah' },
       { no: '05', nama: 'Spark Deflector Plate', desc: 'Pelat deflektor di belakang roda untuk membelokkan lontaran partikel bunga api ke bawah lantai bengkel dan mencegah kerusakan kabel motor.', pinPos: { x: 35, y: 57 }, lokasiFisik: 'Pelat penahan percikan api di belakang bawah piringan potong' },
       { no: '06', nama: 'Heavy Duty Pressed Steel Base', desc: 'Meja landasan baja tebal berbobot berat dengan lubang baut pondasi meja untuk meminimalisir getaran resonansi saat memotong.', pinPos: { x: 46, y: 82 }, lokasiFisik: 'Meja landasan tapak pelat baja hitam tebal di bagian paling bawah mesin' }
@@ -113,493 +632,433 @@ const CUTTING_TOOLS_DATA = [
     ]
   },
   {
-    id: 'bor-bangku',
-    nama: 'Mesin Bor Bangku (Bench Drill Press)',
-    namaEng: 'Stationary Bench Drill Press Machine',
-    kategori: 'Mesin Pembuat Lubang & Chamfering',
-    kategoriKey: 'drilling',
-    badge: 'Mesin Bengkel Stasioner • Multi-Speed Pulley',
-    deskripsiSingkat: 'Mesin bor tegak stasioner yang dipasang di atas meja kerja bengkel untuk melubangi logam dengan kepresisian tinggi, sumbu spindel tegak lurus sempurna, dan kedalaman terkontrol.',
-    deskripsiLengkap: 'Mesin bor bangku (Bench Drill Press) adalah mesin perkakas standar yang wajib ada di setiap bengkel pemesinan SMK dan industri manufaktur. Berbeda dari bor tangan portabel yang mengandalkan kestabilan tangan operator, bor bangku memiliki tiang kolom baja pejal dan kepala spindel kaku yang menjamin lubang hasil pengeboran tegak lurus tepat 90 derajat terhadap permukaan meja kerja. Mesin ini memiliki sistem transmisi puli bertingkat (step pulley) berpita V-belt di bagian atas kepala untuk mengatur putaran spindel (RPM) sesuai diameter mata bor dan jenis material logam.',
-    prinsipKerja: 'Motor listrik memutar sabuk V-belt pada rasio puli bertingkat tertentu untuk menghasilkan putaran spindel N (RPM). Spindel menggerakkan chuck yang mencekam mata bor pilin (twist drill bit). Operator memutar tuas roda bintang 3 cabang (star feed lever) untuk mengumpankan mata bor secara vertikal masuk ke benda kerja yang dicekam kuat pada ragum mesin.',
+    id: 'gerinda-duduk',
+    nama: 'Mesin Gerinda Duduk Bangku (Double-Ended Bench Grinder)',
+    namaEng: 'Workshop Bench Grinder (Coarse 36G & Fine 60G Wheels)',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'gerinda',
+    kategoriType: 'power',
+    badge: '220V AC • Pengasah Pahat & Bor • Celah Tool Rest 2-3 mm',
+    deskripsiSingkat: 'Mesin bertenaga stasioner meja dengan 2 roda batu gerinda (kasar & halus) untuk mengasah mata bor twist drill, membentuk sudut pahat bubut HSS, dan meratakan kepala jamur pahat.',
+    deskripsiLengkap: 'Mesin gerinda duduk (bench grinder) adalah mesin perkakas wajib di setiap bengkel pemesinan. Memiliki motor listrik poros ganda (double-ended motor 2850 RPM). Sisi kiri biasanya dipasangi batu gerinda kasar (Grey Aluminium Oxide Grit 36) untuk pengasahan awal pembentukan profil baja kasar, sedangkan sisi kanan dipasangi batu gerinda halus (White Aluminium Oxide Grit 60/80) untuk penajaman presisi sudut potong pahat bubut dan mata bor twist drill. Dilengkapi pelindung percikan bening (transparent eye shields) dan landasan kerja (tool rest).',
+    prinsipKerja: 'Benda kerja ditumpangkan pada landasan kerja (tool rest) dengan celah 2-3 mm dari batu gerinda, kemudian disentuhkan ke permukaan depan batu yang berputar pada kecepatan keliling 30 m/s dengan gerakan menggeser kiri-kanan secara teratur.',
     images: [
       {
-        url: '/assets/images/cutting_tools/bor_bangku.jpg',
-        title: 'Tampak Asli Mesin Bor Bangku Bengkel SMK',
-        desc: 'Mesin bor bangku presisi lengkap dengan ragum bor meja (drill vise), mata bor pilin HSS terpasang di chuck, penutup puli atas, dan tatal gram pengeboran.'
+        url: '/assets/images/perkakas/gerinda_duduk.svg',
+        title: 'Infografis Mesin Gerinda Duduk & Standar Celah Tool Rest',
+        desc: 'Bagan teknis batu kasar vs halus, eye shield transparan, bak pendingin air quench, dan aturan celah landasan maksimal 2-3 mm (OSHA 1910.215).'
       }
     ],
     spesifikasi: [
-      { label: 'Daya Motor Penggerak', value: '375 - 750 Watt (1/2 s.d. 1 HP)' },
-      { label: 'Kapasitas Cekam Chuck', value: '1.5 - 13 mm / 16 mm (JT33 / B16)' },
-      { label: 'Tingkat Kecepatan Puli', value: '5 s.d. 16 Tingkat (250 - 3000 RPM)' },
-      { label: 'Langkah Spindel Maks.', value: '60 - 85 mm (Spindle Stroke)' },
-      { label: 'Jarak Spindel ke Tiang', value: '130 - 180 mm (Swing distance)' },
-      { label: 'Ukuran Meja Kerja', value: '200 x 200 mm (Beralur T-Slot)' },
-      { label: 'Kemiringan Meja Kerja', value: '0° s.d. 45° (Tilt Left/Right)' },
-      { label: 'Koneksi Tirus Spindel', value: 'Morse Taper MT2 / MT3' }
+      { label: 'Daya Motor Penggerak', value: '375 - 550 Watt (Induction Motor)' },
+      { label: 'Kecepatan Spindel Tetap', value: '2.850 - 3.000 RPM' },
+      { label: 'Ukuran Batu Gerinda', value: '150 x 20 x 12.7 mm (6") atau 200 x 25 x 20 mm (8")' },
+      { label: 'Tingkat Grit Batu', value: 'Batu Kiri: Grit 36 (Kasar) • Batu Kanan: Grit 60-80 (Halus)' },
+      { label: 'Batas Celah Landasan (Tool Rest)', value: 'MAKSIMAL 2 s.d. 3 mm dari permukaan batu gerinda' },
+      { label: 'Batas Celah Spark Arrester', value: 'MAKSIMAL 1.5 s.d. 1.6 mm dari bagian atas batu' },
+      { label: 'Bak Pendingin (Water Pot)', value: 'Terintegrasi di bodi depan untuk quenching pendinginan pahat' }
     ],
     komponen: [
-      { no: '01', nama: 'Pulley & Belt Transmission Box', desc: 'Rumah penutup transmisi di bagian atas dengan tabel diagram kecepatan RPM. Berisi 2 atau 3 susun puli bertingkat aluminium dan sabuk V-belt karet.', pinPos: { x: 44, y: 6 }, lokasiFisik: 'Kotak penutup atas tempat susunan puli bertingkat dan sabuk V-belt pemindah putaran' },
-      { no: '02', nama: 'Depth Gauge Stop Collar (Pengatur Kedalaman)', desc: 'Skala milimeter dan mur pengunci pembatas langkah turun spindel untuk membuat lubang buntu (blind holes) dengan kedalaman presisi seragam.', pinPos: { x: 55, y: 22 }, lokasiFisik: 'Mistar skala milimeter vertikal dengan baut pembatas di depan kepala mesin' },
-      { no: '03', nama: 'Three-Spoke Feed Handle (Tuas Bintang)', desc: 'Tiga tuas kemudi bergagang bundar untuk menggerakkan poros rack and pinion spindel turun masuk ke benda kerja dengan kontrol kepekaan tangan operator.', pinPos: { x: 67, y: 24 }, lokasiFisik: 'Tuas kemudi roda bintang berkepala bulat hitam yang dipegang tangan operator' },
-      { no: '04', nama: 'Keyed Drill Chuck (Cekam Bor)', desc: 'Kepala cekam 3 rahang (three-jaw chuck) berbahan baja paduan yang dikencangkan menggunakan kunci chuck (chuck key) untuk mencengkeram tangkai silindris mata bor.', pinPos: { x: 53, y: 50 }, lokasiFisik: 'Kepala cekam silindris hitam di ujung poros spindel penancap mata bor' },
-      { no: '05', nama: 'Adjustable Work Table (Meja Kerja)', desc: 'Meja besi cor dengan alur baut T untuk mengikat ragum mesin. Ketinggian meja dapat dinaik-turunkan melalui tuas engkol rack-pinion dan dikunci baut klem tiang.', pinPos: { x: 52, y: 76 }, lokasiFisik: 'Meja besi beralur T tempat ragum menjepit benda kerja balok baja' },
-      { no: '06', nama: 'Solid Steel Column & Heavy Base', desc: 'Kolom tabung baja bulat tebal yang menopang seluruh struktur kepala mesin dan meja kerja di atas landasan tapak besi cor berbobot stabil.', pinPos: { x: 39, y: 62 }, lokasiFisik: 'Tiang silinder tabung baja vertikal kokoh penyangga seluruh mesin' }
+      { no: '01', nama: 'Batu Gerinda Kasar (Grit 36)', desc: 'Piringan gerinda aluminium oksida kelabu untuk pengasahan awal membuang material tebal dan memotong kepala jamur pahat.', pinPos: { x: 20, y: 35 }, lokasiFisik: 'Roda batu gerinda di sebelah kiri mesin' },
+      { no: '02', nama: 'Batu Gerinda Halus (Grit 60/80)', desc: 'Piringan gerinda putih untuk finishing penajaman sudut baji pahat bubut HSS dan mata bor twist drill.', pinPos: { x: 75, y: 35 }, lokasiFisik: 'Roda batu gerinda di sebelah kanan mesin' },
+      { no: '03', nama: 'Landasan Kerja (Tool Rest)', desc: 'Landasan baja tempat menumpangkan pahat; wajib disetel dengan celah maksimal 2-3 mm dari batu agar benda tidak terselot.', pinPos: { x: 15, y: 48 }, lokasiFisik: 'Landasan pelat datar di depan batu gerinda' },
+      { no: '04', nama: 'Kaca Pengaman Mata (Eye Shield)', desc: 'Kaca akrilik polikarbonat transparan yang dapat disetel sudutnya untuk menahan percikan tatal ke mata operator.', pinPos: { x: 22, y: 15 }, lokasiFisik: 'Pelindung kaca bening di atas batu gerinda' },
+      { no: '05', nama: 'Tudung Pengaman Baja (Wheel Guard)', desc: 'Kap baja tebal penutup keliling batu gerinda yang menahan serpihan jika batu gerinda pecah.', pinPos: { x: 20, y: 25 }, lokasiFisik: 'Tudung logam lengkung melingkari roda batu' },
+      { no: '06', nama: 'Bak Celup Pendingin (Quench Pot)', desc: 'Wadah air dingin di depan mesin untuk mencelupkan pahat secara berkala agar logam tidak kehilangan kekerasannya (overheating).', pinPos: { x: 50, y: 65 }, lokasiFisik: 'Mangkuk penampung air di bodi bawah tengah mesin' }
     ],
-    bendaKerja: ['Pelat baja konstruksi tebal 2 - 30 mm', 'Blok mesin aluminium & besi cor (Cast Iron)', 'Poros silindris (menggunakan V-Block)', 'Benda kerja persiapan lubang tap ulir dalam', 'Profil hollow & siku rangka mekanik'],
+    bendaKerja: ['Pahat bubut HSS (pahat rata, muka, ulir, potong)', 'Mata bor twist drill Ø 3 - 25 mm', 'Kepala pahat tangan mekar (mushroom head)', 'Ujung penitik pusat dan penggores baja'],
     sopKerja: [
-      'Gunakan penitik pusat (center punch) dan palu untuk membuat titik awam pemandu ujung mata bor agar tidak bergeser meleset saat mulai berputar.',
-      'Hitung putaran spindle yang benar dengan rumus: N = (1000 x Cs) / (π x d). Pindahkan posisi V-belt pada susunan puli sesuai angka RPM yang didapat.',
-      'Wajib jepit benda kerja pada ragum bor mesin (drill press vise) dan ikat ragum pada alur meja beralur T menggunakan baut klem!',
-      'Lepaskan KUNCI CHUCK (chuck key) dari kepala cekam segera setelah mengencangkan mata bor. Jangan pernah tinggalkan kunci menempel!',
-      'Gunakan cairan pendingin (coolant / dromus oil) saat mengebor baja untuk menjaga ketajaman mata bor dan melumasi keluarnya tatal/chip.',
-      'Untuk diameter besar (> 10mm), lakukan pengeboran bertahap (pilot hole) dimulai dari mata bor diameter 4-5mm terlebih dahulu.'
+      'PERIKSA CELAH LANDASAN (TOOL REST): Pastikan jarak antara tool rest dengan permukaan batu adalah 2 - 3 mm. Jika lebih dari 3 mm, benda kerja dapat terjepit ke putaran batu 3000 RPM!',
+      'Gunakan seluruh lebar permukaan batu gerinda dengan menggerakkan pahat ke kiri dan ke kanan secara teratur agar batu aus merata.',
+      'DILARANG MENGASAH DI SISI SAMPING BATU: Sisi samping sangat tipis dan tidak dirancang menerima gaya tekan aksial; batu dapat pecah berkeping-keping!',
+      'Celupkan pahat ke dalam bak air pendingin secara berkala setiap 5 detik agar baja HSS tidak kehilangan kekerasannya (annealing).',
+      'Lakukan "Dressing" batu gerinda secara rutin menggunakan dresser intan (wheel dresser) jika permukaan batu mulai bergelombang atau tersumbat.'
     ],
     k3Penting: [
-      'DILARANG KERAS MENGGUNAKAN SARUNG TANGAN KAIN saat mengoperasikan mesin bor! Kain sarung tangan dapat tersangkut dan tergulung oleh spindel putar, menyebabkan fraktur jari atau amputasi.',
-      'Rambut panjang wajib diikat rapi dan dimasukkan ke dalam topi kerja; lepaskan jam tangan, kalung, dan baju lengan panjang yang kedodoran.',
-      'Wajib kacamata pengaman untuk melindungi mata dari tatal gram spiral yang terlempar.',
-      'DILARANG membersihkan tatal gram menggunakan tangan telanjang saat mata bor berputar; gunakan kuas pembersih setelah mesin mati.'
+      'DILARANG MENGASAH ALUMINIUM, KUNINGAN, ATAU TEMBAGA: Logam lunak akan meleleh menyumbat pori-pori batu (loading), memicu panas ekstrem dan letupan batu gerinda!',
+      'DILARANG MEMAKAI SARUNG TANGAN KAIN saat mengoperasikan gerinda duduk (bahaya terseret ke putaran batu).',
+      'Wajib kacamata keselamatan (safety goggles) meskipun mesin sudah memiliki pelindung kaca eye shield.',
+      'Berdirilah sedikit menyamping saat menyalakan mesin pertama kali; tunggu putaran stabil 1 menit sebelum mulai mengasah.'
+    ]
+  },
+  {
+    id: 'bor-bangku',
+    nama: 'Mesin Bor Bangku (Bench Drill Press)',
+    namaEng: 'Stationary Bench Drill Press Machine',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'bor',
+    kategoriType: 'power',
+    badge: '220V AC • Transmisi V-Belt • Kapasitas Ø 16mm',
+    deskripsiSingkat: 'Mesin perkakas bertenaga stasioner meja presisi untuk melubangi benda kerja logam dengan mata bor twist drill, countersink, counterbore, dan reamer.',
+    deskripsiLengkap: 'Mesin bor bangku (bench drill press) adalah mesin pembuat lubang stasioner yang dipasang di atas meja kerja bengkel. Digerakkan oleh motor listrik induksi dengan transmisi sabuk puli bertingkat (step pulley V-belt) yang memungkinkan pengaturan 5 hingga 16 tingkat kecepatan putaran spindel (250 - 3000 RPM). Dilengkapi chuck pencekam berputar (keyed drill chuck 1.5 - 16 mm), meja kerja yang dapat disetel ketinggiannya dan dimiringkan hingga 45°, serta tuas pemakanan manual dengan pegas pembalik (quill spring return).',
+    prinsipKerja: 'Motor listrik memutar poros spindel melalui sabuk puli V-belt. Operator memutar tuas penekan (feed handle) untuk menurunkan spindel vertikal ke arah benda kerja yang dijepit pada ragum bor meja (drill vise).',
+    images: [
+      {
+        url: '/assets/images/cutting_tools/bor_bangku.jpg',
+        title: 'Tampak Nyata Mesin Bor Bangku Workshop Fabrikasi',
+        desc: 'Mesin bor bangku industri dengan penutup puli sabuk, chuck bor Jacobs 16mm, tuas pemakanan tiga bintang, dan meja putar bertingkat.'
+      }
+    ],
+    spesifikasi: [
+      { label: 'Daya Motor Listrik', value: '375 - 550 Watt (1/2 HP - 3/4 HP)' },
+      { label: 'Kapasitas Pengeboran Maks.', value: 'Ø 13 mm s.d. Ø 16 mm (Baja ST37)' },
+      { label: 'Rentang Kecepatan Spindel', value: '250 - 3.100 RPM (5 s.d. 12 Tingkat Puli)' },
+      { label: 'Langkah Spindel Vertikal', value: '60 mm - 85 mm (Stroke)' },
+      { label: 'Tirus Poros Spindel', value: 'Morse Taper MT2 / B16 Chuck Arbor' },
+      { label: 'Kapasitas Cekam Chuck', value: 'Ø 1.5 mm s.d. Ø 16 mm (Keyed Chuck)' },
+      { label: 'Kemiringan Meja Kerja', value: '0° s.d. 45° (Kiri dan Kanan)' },
+      { label: 'Berat Keseluruhan', value: '± 32 - 45 kg' }
+    ],
+    komponen: [
+      { no: '01', nama: 'Pulley & V-Belt Transmission', desc: 'Sistem transmisi puli bertingkat dan sabuk V di bagian atas mesin untuk mengubah kecepatan RPM spindel sesuai diameter mata bor dan jenis material.', pinPos: { x: 50, y: 12 }, lokasiFisik: 'Tudung penutup puli logam oranye di bagian paling atas mesin' },
+      { no: '02', nama: 'Spindle Quill & Keyed Drill Chuck', desc: 'Poros vertikal berputar presisi yang menampung chuck pencekam tiga rahang untuk mengunci mata bor twist drill.', pinPos: { x: 42, y: 44 }, lokasiFisik: 'Cekam bor tiga rahang dan poros vertikal di bawah kepala mesin' },
+      { no: '03', nama: 'Three-Spoke Feed Handle (Tuas Pemakanan)', desc: 'Tiga tuas ergonomis model bintang untuk mengontrol laju pemakanan turun mata bor dengan umpan balik gaya potong yang presisi.', pinPos: { x: 58, y: 40 }, lokasiFisik: 'Tuas tiga cabang di samping kanan kepala mesin' },
+      { no: '04', nama: 'Depth Stop Gauge (Pengatur Kedalaman)', desc: 'Skala batang ulir berpenyetel mur untuk membatasi kedalaman lubang bor secara presisi (lubang buntu berulang).', pinPos: { x: 35, y: 38 }, lokasiFisik: 'Batang skala ukur kedalaman di samping kiri rumah spindel' },
+      { no: '05', nama: 'Slotted Work Table (Meja Kerja)', desc: 'Meja besi tuang dengan celah alur T untuk mengikat ragum bor dengan baut pengunci; dapat diputar 360° dan dimiringkan 45°.', pinPos: { x: 48, y: 62 }, lokasiFisik: 'Meja pelat besi tuang tempat meletakkan ragum di bawah mata bor' },
+      { no: '06', nama: 'Cast Iron Column & Base', desc: 'Tiang silindris baja tebal dan tapak landasan berbobot berat untuk menjaga ketegaklurusan vertikal spindel terhadap meja.', pinPos: { x: 52, y: 85 }, lokasiFisik: 'Tapak dasar baja hitam di bagian bawah yang dibaut ke meja bengkel' }
+    ],
+    bendaKerja: ['Pelat baja tebal ST37 / S45C', 'Profil hollow dan UNP fabrikasi', 'Blok aluminium paduan', 'Dudukan engsel dan pelat flange pipa'],
+    sopKerja: [
+      'Gunakan rumus RPM: N = (1000 × Cs) / (π × d). Makin besar diameter mata bor, putaran RPM HARUS MAKIN LAMBAT!',
+      'Sebelum mengebor, tandai titik pusat dengan Penitik Pusat (Center Punch 90°) agar ujung mata bor tidak bergoyang.',
+      'WAJIB MENJEPIT BENDA KERJA PADA RAGUM BOR: Jangan pernah memegang pelat dengan tangan kosong karena jika bor tembus dan macet, pelat akan berputar seperti baling-baling pisau!',
+      'Beri ganjal kayu atau balok paralel di bawah benda kerja agar mata bor tidak menembus dan merusak meja bor.',
+      'Gunakan cairan pendingin (coolant emulsi soluble oil) saat mengebor baja untuk mendinginkan bibir potong bor.',
+      'Lakukan "Peck Drilling" (pengeboran putus-putus turun-naik) pada lubang dalam untuk membuang tatal spiral gram.'
+    ],
+    k3Penting: [
+      'DILARANG KERAS MENGGUNAKAN SARUNG TANGAN KAIN saat mengebor: Benang kain yang tersangkut pada spindel putar akan menyeret jari dan tangan ke putaran mesin!',
+      'Rambut panjang wajib diikat dan dimasukkan ke dalam topi kerja; lepaskan jam tangan, cincin, dan kalung.',
+      'Kunci chuck bor (chuck key) WAJIB LANGSUNG DILEPAS dari kepala chuck setelah mengencangkan mata bor.',
+      'Wajib menggunakan kacamata keselamatan (safety goggles ANSI Z87.1).'
     ]
   },
   {
     id: 'bor-tangan',
-    nama: 'Mesin Bor Tangan (Hand Drill / Cordless Drill)',
-    namaEng: 'Electric Corded & Cordless Power Drill',
-    kategori: 'Perkakas Tangan Bertenaga',
-    kategoriKey: 'portable',
-    badge: 'Baterai Li-Ion / 220V • Portable High Flexibility',
-    deskripsiSingkat: 'Perkakas tangan bertenaga portabel (kabel atau nirkabel baterai) untuk membuat lubang pada lokasi yang fleksibel, sempit, dan tidak dapat dijangkau oleh mesin bor stasioner.',
-    deskripsiLengkap: 'Mesin bor tangan (Portable Hand Drill / Cordless Drill Driver) adalah perkakas paling serbaguna di lapangan bengkel dan instalasi industri. Tersedia dalam varian berkabel colok 220V untuk pekerjaan berat kontinu, maupun bertenaga baterai lithium-ion 18V-20V tanpa kabel (cordless). Mesin modern dilengkapi chuck tanpa kunci (keyless chuck), pengatur torsi mekanik (clutch ring), dua percepatan mekanis (low gear torsi besar untuk mata bor besar/sekrup, high gear untuk mata bor kecil kecepatan tinggi), serta pemicu putaran variabel (variable speed trigger) dan pembalik arah putar (reverse forward switch).',
-    prinsipKerja: 'Motor DC tanpa sikat (Brushless Motor) atau motor AC universal menggerakkan planetary gear set untuk melipatgandakan torsi. Putaran disalurkan ke keyless chuck yang mencengkeram mata bor. Kecepatan putaran diatur secara presisi oleh kedalaman tarikan jari telunjuk operator pada saklar pemicu elektronik PWM.',
+    nama: 'Mesin Bor Tangan Portabel (Pistol Grip & Cordless Drill)',
+    namaEng: 'Heavy Duty Pistol Grip & Cordless Rotary Drill',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'bor',
+    kategoriType: 'power',
+    badge: '220V AC / 18V Li-Ion • Variabel Speed • Reversible',
+    deskripsiSingkat: 'Perkakas tangan bertenaga rotari portabel untuk melubangi struktur logam di lokasi perakitan, memasang sekrup perakit, dan countersinking.',
+    deskripsiLengkap: 'Mesin bor tangan (portable rotary drill) adalah perkakas paling fleksibel untuk pekerjaan perakitan lapangan dan fabrikasi. Digerakkan oleh motor listrik bertenaga 550 - 750 Watt atau motor brushless baterai Li-Ion 18V/20V. Dilengkapi saklar pemicu kecepatan variabel (variable speed trigger), saklar pembalik arah putaran (forward/reverse switch), cincin kopling pembatas torsi (torque clutch collar), dan cekam bor tanpa kunci (keyless chuck) atau cekam bergigi (keyed chuck 13 mm).',
+    prinsipKerja: 'Motor listrik memutar spindel melalui planetary gear reduction. Operator mengarahkan moncong mata bor secara manual tegak lurus terhadap bidang benda kerja dengan tekanan dorong searah sumbu bor.',
     images: [
       {
         url: '/assets/images/cutting_tools/bor_tangan.jpg',
-        title: 'Tampak Asli Mesin Bor Tangan Portabel',
-        desc: 'Mesin bor tangan nirkabel (cordless drill) dengan keyless chuck baja, selektor torsi bertingkat, bodi ergonomis berlapis karet, dan baterai Li-Ion.'
-      },
-      {
-        url: '/assets/images/cutting_tools/bor_tangan_alt.jpg',
-        title: 'Unit Cordless Drill dengan Bit Holder',
-        desc: 'Tampilan sudut kerja mesin bor tangan baterai siap pakai lengkap dengan mata obeng dan mata bor HSS.'
+        title: 'Tampak Utama Bor Tangan Listrik Keyed Chuck 13mm',
+        desc: 'Bor tangan listrik tipe pistol grip bertenaga 650W dengan cekam 13mm, saklar variabel, pengunci kontinu, dan ventilasi motor.'
       }
     ],
     spesifikasi: [
-      { label: 'Tegangan Baterai / Listrik', value: '18V - 20V Max Li-Ion / 220V AC 550W' },
-      { label: 'Kapasitas Chuck', value: '0.8 - 10 mm / 13 mm (Keyless Ratchet)' },
-      { label: 'Torsi Maksimum', value: '50 - 75 Nm' },
-      { label: 'Kecepatan Gigi 1 (Low)', value: '0 - 450 RPM (Torsi Tinggi)' },
-      { label: 'Kecepatan Gigi 2 (High)', value: '0 - 1.800 RPM (Pengeboran Cepat)' },
-      { label: 'Kapasitas Bor pada Baja', value: 'Maks. Ø 13 mm' },
-      { label: 'Kapasitas Bor pada Kayu', value: 'Maks. Ø 38 mm' },
-      { label: 'Penyetelan Torsi (Clutch)', value: '15 s.d. 24 Tingkat + Drill Mode' }
+      { label: 'Daya Listrik / Baterai', value: '550 - 750 Watt (Kabel) / 18V - 20V Li-Ion (Cordless)' },
+      { label: 'Kecepatan Tanpa Beban', value: '0 - 2.800 RPM (Variabel Elektronik)' },
+      { label: 'Kapasitas Cekam Spindel', value: '1.5 mm s.d. 13 mm (1/2 inci)' },
+      { label: 'Kapasitas Bor pada Baja', value: 'Maksimal Ø 13 mm' },
+      { label: 'Fitur Arah Putaran', value: 'Reversible (Putaran Kanan untuk Bor / Putaran Kiri untuk Buka Sekrup)' },
+      { label: 'Berat Bersih Alat', value: '± 1.6 - 2.1 kg' }
     ],
     komponen: [
-      { no: '01', nama: 'Keyless Ratcheting Chuck', desc: 'Kepala cekam putar tangan tanpa kunci. Cukup putar selongsong luar dengan tangan untuk mengunci mata bor dengan mekanisme klik pengunci rapat.', pinPos: { x: 38, y: 37 }, lokasiFisik: 'Moncong silindris paling depan penjepit mata bor putar tangan tanpa kunci' },
-      { no: '02', nama: 'Torque Adjustment Collar', desc: 'Cincin putar pengatur slip torsi (1 s.d. 20) untuk mencegah kepala baut aus/rusak saat penyekrupan, serta ikon bor (Drill Mode) untuk daya torsi penuh tanpa slip saat mengebor logam.', pinPos: { x: 46, y: 38 }, lokasiFisik: 'Cincin putar kerah berangka pengatur batas torsi tepat di belakang cekam' },
-      { no: '03', nama: 'Dual-Speed Mechanical Gearbox Switch', desc: 'Tuas geser atas untuk memilih gigi 1 (putaran lambat tenaga besar) atau gigi 2 (putaran cepat untuk mata bor kecil).', pinPos: { x: 54, y: 33 }, lokasiFisik: 'Tombol geser selektor gigi kecepatan mekanik di bagian punggung atas mesin' },
-      { no: '04', nama: 'Variable Speed Trigger & Reverse Switch', desc: 'Pelatuk saklar yang mengatur kecepatan sesuai kedalaman tekanan jari, dipadukan tombol geser jempol untuk arah putar kanan (forward) atau kiri (reverse).', pinPos: { x: 47, y: 51 }, lokasiFisik: 'Pelatuk jari telunjuk saklar On/Off kecepatan dan tombol pembalik arah putar' },
-      { no: '05', nama: 'Integrated LED Worklight', desc: 'Lampu LED putih terang di atas dudukan baterai yang otomatis menyala menerangi titik pengeboran pada sudut sempit atau remang.', pinPos: { x: 47, y: 73 }, lokasiFisik: 'Lampu LED kecil di atas dudukan baterai yang menembak cahaya ke arah mata bor' },
-      { no: '06', nama: 'Ergonomic Rubber Soft-Grip Handle', desc: 'Pegangan berbentuk gagang pistol dengan lapisan karet bertekstur peredam getaran dan anti selip saat tangan berkeringat.', pinPos: { x: 50, y: 64 }, lokasiFisik: 'Gagang pistol pegangan tangan utama dilapisi karet lembut hitam anti-selip' }
+      { no: '01', nama: 'Keyed / Keyless Drill Chuck 13mm', desc: 'Cekam tiga rahang presisi untuk mengunci tangkai mata bor twist drill silindris dengan kuat.', pinPos: { x: 20, y: 35 }, lokasiFisik: 'Kepala cekam logam hitam di moncong paling depan bor' },
+      { no: '02', nama: 'Variable Speed Trigger & Lock Button', desc: 'Pemicu kecepatan putaran variabel; makin dalam ditekan makin cepat putarannya, dengan tombol kunci saklar otomatis.', pinPos: { x: 52, y: 56 }, lokasiFisik: 'Tombol pelatuk hitam dan tombol bulat oranye di gagang' },
+      { no: '03', nama: 'Forward / Reverse Switch Lever', desc: 'Tuas saklar pembalik arah putaran motor (searah jarum jam untuk mengebor, berlawanan jarum jam untuk melepas sekrup).', pinPos: { x: 50, y: 48 }, lokasiFisik: 'Tuas kecil di atas pelatuk pemicu' },
+      { no: '04', nama: 'Ergonomic Rubber Softgrip Handle', desc: 'Gagang pegangan pistol berbalut karet anti-slip untuk meredam getaran dan mencegah lelah pada pergelangan tangan.', pinPos: { x: 62, y: 68 }, lokasiFisik: 'Gagang pegangan bentuk pistol di bagian bawah bodi' },
+      { no: '05', nama: 'Motor Housing & Ventilation Grilles', desc: 'Rumah motor poliamida tahan benturan dengan kisi-kisi sirkulasi udara pendingin rotor stator.', pinPos: { x: 58, y: 32 }, lokasiFisik: 'Bodi plastik oranye bagian tengah tempat motor listrik' }
     ],
-    bendaKerja: ['Rangka bodi mobil / sasis karoseri', 'Pemasangan pelat penutup panel listrik', 'Pengeboran profil baja di tempat proyek (on-site)', 'Pengeboran lubang tembus paku keling (blind rivet)', 'Pemasangan baut baut self-drilling screw (roofing)'],
+    bendaKerja: ['Rangka baja ringan dan hollow', 'Pelat bodi kendaraan dan kabinet panel listrik', 'Profil baja siku dan UNP di lokasi konstruksi', 'Papan komposit dan braket mesin'],
     sopKerja: [
-      'Gunakan penitik pusat untuk memberi umpan takik agar ujung mata bor tidak tergelincir menggores benda kerja.',
-      'Posisikan bor benar-benar tegak lurus (90°) terhadap permukaan material: jika posisi miring, mata bor diameter kecil (< 4mm) akan patah seketika.',
-      'Gunakan kecepatan rendah di awal pengeboran hingga bibir potong mata bor mulai menggigit material logam, lalu tingkatkan kecepatan secara teratur.',
-      'Terapkan tekanan dorong tubuh yang stabil searah sumbu bor: jangan mengungkit atau mengayunkan mesin ke samping.',
-      'Saat mata bor hampir menembus sisi bawah pelat logam (titik kritis breakthrough), kurangi tekanan dorong untuk mencegah mata bor terjepit dan terpuntir (snagging).',
-      'Jika mata bor terjepit, pindahkan selektor ke arah putar balik (reverse) dan tekan pelatuk pelan untuk membebaskan mata bor.'
+      'Pilih mata bor yang tajam; mata bor yang tumpul memerlukan tekanan dorong berlebih yang rawan membuat mata bor patah.',
+      'Gunakan penitik pusat sebelum mengebor agar mata bor tidak "berjalan" (skating) menggores permukaan pelat.',
+      'Posisikan bor benar-benar TEGAK LURUS 90° terhadap bidang benda kerja: jangan mengungkit ke samping saat mengebor!',
+      'Gunakan kecepatan rendah saat memulai awal pengeboran, naikkan kecepatan saat mata bor sudah mulai menyayat material.',
+      'Kurangi tekanan dorong saat mata bor hampir tembus ke sisi belakang pelat untuk mencegah bor menyangkut dan memelintir pergelangan tangan.'
     ],
     k3Penting: [
-      'Waspadai bahaya kickback: jika mata bor tiba-tiba macet pada lubang, bodi bor tangan akan terpelanting balik melawan pergelangan tangan.',
-      'Wajib kacamata keselamatan untuk menahan lontaran tatal panas.',
-      'Jangan pernah memegang benda kerja pelat tipis dengan tangan terbuka; pelat tipis yang tersangkut mata bor dapat berputar kencang seperti bilah pisau helikopter (helikopetering). Selalu jepit dengan tang buaya (locking pliers) atau klem C.'
-    ]
-  },
-  {
-    id: 'guillotine',
-    nama: 'Mesin Guillotine (Guillotine Shearing Machine)',
-    namaEng: 'Hydraulic Sheet Metal Guillotine Power Shear',
-    kategori: 'Mesin Pemotong Plat & Fabrikasi',
-    kategoriKey: 'shearing',
-    badge: 'Mesin Industri Berat • Hydraulic Shearing 30-100 Ton',
-    deskripsiSingkat: 'Mesin industri pemotong pelat lembaran logam berkapasitas besar dengan pisau panjang horizontal yang memotong pelat baja secara rapi, lurus, dan presisi tanpa menghasilkan tatal.',
-    deskripsiLengkap: 'Mesin potong pelat Guillotine (Guillotine Shearing Machine) adalah mesin fabrikasi lembaran logam utama di industri karoseri, ducting HVAC, panel kabinet, dan pembuatan lambung kapal. Mesin ini memanfaatkan mekanisme geser murni (shearing action) antara dua bilah pisau panjang baja perkakas tahan aus: pisau bawah terpasang tetap pada meja landasan, sedangkan pisau atas bergerak turun dengan sudut kemiringan kecil (rake angle 1° - 2.5°). Mesin bertenaga hidrolik mampu memotong pelat baja tebal 1mm hingga 16mm dengan panjang pemotongan mencapai 2.5 hingga 4 meter dalam sekali ayunan potong.',
-    prinsipKerja: 'Pelat diletakkan di atas meja dan didorong hingga menyentuh pembatas belakang (backgauge). Operator menginjak pedal kaki (foot pedal). Silinder hidrolik pencekam (hold-down cylinders) otomatis turun terlebih dahulu menjepit pelat sekuat tenaga agar tidak terangkat, kemudian bilah pisau atas turun menyapu pelat melampaui batas elastis dan plastis material hingga terjadi patahan geser (shear fracture) lurus sempurna.',
-    images: [
-      {
-        url: '/assets/images/cutting_tools/mesin_guillotine.jpg',
-        title: 'Tampak Asli Mesin Guillotine Shear Hidrolik Industri',
-        desc: 'Mesin potong pelat hidrolik kapasitas industri dengan silinder pencekam pelat (hold-downs), meja berpelor bola, kontrol CNC, dan kisi pelindung keselamatan jari.'
-      }
-    ],
-    spesifikasi: [
-      { label: 'Kekuatan Gaya Potong', value: '40 s.d. 120 Tonase Hidrolik' },
-      { label: 'Panjang Pemotongan Maks.', value: '2.500 - 3.200 mm (2.5 - 3.2 Meter)' },
-      { label: 'Tebal Pelat Baja Karbon (ST37)', value: 'Maks. 6.0 - 12.0 mm' },
-      { label: 'Tebal Pelat Stainless Steel', value: 'Maks. 3.0 - 6.0 mm' },
-      { label: 'Sudut Rake Pisau (Rake Angle)', value: '1° s.d. 2.5° (Dapat disetel hidrolik)' },
-      { label: 'Jarak Gerak Backgauge', value: '20 - 750 mm (Akurasi ± 0.1 mm)' },
-      { label: 'Jumlah Langkah Potong', value: '12 - 20 Kali Potong per Menit' },
-      { label: 'Daya Motor Pompa Hidrolik', value: '7.5 - 15 kW (3 Phasa 380V)' }
-    ],
-    komponen: [
-      { no: '01', nama: 'Hydraulic Hold-Down Clamps (Silinder Pencekam)', desc: 'Barisan silinder hidrolik berjejer di depan pisau yang otomatis menekan dan menjepit pelat logam ke meja tepat sebelum pisau potong menyentuh pelat, guna mencegah pelat melenting terangkat.', pinPos: { x: 65, y: 15 }, lokasiFisik: 'Barisan silinder hidrolik bulat di bagian atas depan yang menekan pelat ke meja' },
-      { no: '02', nama: 'Upper & Lower Shearing Blades', desc: 'Bilah pisau baja paduan perkakas khusus (Cr12MoV / High Carbon High Chrome) bermata potong tajam pada 4 sisinya yang dapat dibalik posisinya saat satu sisi mulai tumpul.', pinPos: { x: 53, y: 36 }, lokasiFisik: 'Bilah pisau baja perkakas horizontal panjang di celah pemotongan tengah' },
-      { no: '03', nama: 'Motorized CNC Backgauge (Mistar Pembatas)', desc: 'Mistar penahan pembatas ukuran di belakang pisau yang digerakkan motor servo dan sekrup bola (ball screw) dengan akurasi digital milimeter untuk menentukan lebar potongan.', pinPos: { x: 48, y: 25 }, lokasiFisik: 'Mistar pembatas ukuran otomatis di bagian belakang bilah pemotong' },
-      { no: '04', nama: 'Transfer Ball Worktable & Front Support Arms', desc: 'Meja tumpuan berpelor bola baja putar bebas untuk memudahkan operator menggeser pelat baja berukuran 1.2 x 2.4 meter tanpa menggores permukaan dan tanpa beban berat.', pinPos: { x: 72, y: 65 }, lokasiFisik: 'Meja landasan pelat depan dengan bantalan pelor penumpu beban pelat' },
-      { no: '05', nama: 'Mechanical Finger Guard (Kisi Pengaman Jari)', desc: 'Jeruji pelindung fisik di sepanjang bagian depan pisau yang hanya memiliki celah sempit untuk lewat pelat, mencegah jari atau tangan operator masuk ke zona potong.', pinPos: { x: 35, y: 32 }, lokasiFisik: 'Jeruji kisi pengaman horizontal pembatas jari di depan pisau' },
-      { no: '06', nama: 'Emergency Foot Switch Pedal', desc: 'Pedal kaki berpelindung kap atas yang ditekan operator untuk memicu siklus potong dan dilengkapi saklar rem darurat (emergency stop) jika dilepas.', pinPos: { x: 40, y: 88 }, lokasiFisik: 'Pedal kaki saklar darurat di lantai depan operator' }
-    ],
-    bendaKerja: ['Lembaran pelat baja SPCC / SPHC / ST37 (tebal 1 - 8 mm)', 'Pelat bordes (chequered plate) untuk lantai bak bordes', 'Pelat aluminium sheet dekoratif dan ducting', 'Lembaran pelat baja tahan karat (Stainless Steel 304/316)', 'Pelat strip lebar untuk komponen braket mesin'],
-    sopKerja: [
-      'Setel celah pisau (Blade Clearance): celah antara pisau atas dan bawah wajib disetel sekitar 7% - 10% dari ketebalan pelat. Celah terlalu rapat membuat pisau tabrakan; celah terlalu renggang menghasilkan burr (duri tajam) besar.',
-      'Atur ukuran potongan pada panel kontrol digital backgauge sesuai dimensi gambar kerja.',
-      'Dorong pelat masuk melewati celah pelindung jari hingga tepi belakang pelat menabrak rata mistar backgauge di kedua sisinya.',
-      'Pastikan tangan dan tubuh operator berada di luar batas garis batas kuning aman meja.',
-      'Injak pedal kaki untuk mengaktifkan pemotongan; amati silinder pencekam menjepit pelat sebelum pisau turun.',
-      'Ambil hasil potongan yang jatuh ke bak penampung belakang mesin menggunakan sarung tangan kulit pelindung.'
-    ],
-    k3Penting: [
-      'BAHAYA AMPUTASI FATAL: DILARANG KERAS memasukkan jari atau tangan ke celah di bawah kisi pelindung pisau guillotine!',
-      'Gunakan sarung tangan kulit tebal khusus fabrikasi saat mengangkat pelat; tepi pelat hasil pemotongan sangat tajam seperti silet (burr hazard).',
-      'Hanya SATU OPERATOR yang berhak mengendalikan pedal kaki. Jika bekerja berpasangan mengangkat pelat besar, pastikan rekan kerja sudah memberi aba-aba aman sebelum pedal diinjak.',
-      'Pastikan sensor tirai optik (safety light curtain) belakang aktif untuk menghentikan mesin jika ada orang melintas di area drop belakang.'
-    ]
-  },
-  {
-    id: 'alligator',
-    nama: 'Aligator Shear (Crocodile Shear / Gunting Buaya)',
-    namaEng: 'Hydraulic Alligator Shear Scrap Metal Cutter',
-    kategori: 'Mesin Pemotong Plat & Fabrikasi',
-    kategoriKey: 'shearing',
-    badge: 'Mesin Industri Berat • Heavy Scrap & Bar Cutting',
-    deskripsiSingkat: 'Mesin potong hidrolik berkekuatan rahang raksasa berbentuk moncong buaya untuk memotong besi beton bertulang, pipa tebal, profil rel, dan besi tua rongsok.',
-    deskripsiLengkap: 'Mesin Alligator Shear (dikenal juga sebagai Crocodile Shear atau Gunting Buaya Hidrolik) adalah mesin pemotong material logam berat yang dinamai berdasarkan bentuk mekanisme rahang potongnya yang menyerupai moncong buaya yang membuka dan menutup. Mesin ini dirancang untuk tugas berat (heavy-duty demolition and recycling) seperti memotong besi beton batangan (rebar) dalam jumlah banyak sekaligus, balok kanal UNP, pipa gas tebal, as baja padat, kabel baja tebal, hingga sasis kendaraan besi tua sebelum masuk ke tungku peleburan baja.',
-    prinsipKerja: 'Sebuah silinder hidrolik berdiameter besar (bore 160 - 250 mm) dengan tekanan pompa oli hingga 25 MPa mendorong lengan rahang atas yang berengsel poros pivot. Lengan atas yang membawa bilah pisau baja perkakas turun mengatup ke arah landasan rahang bawah statis dengan gaya tekan puluhan hingga ratusan ton, meremukkan dan menggunting logam seketika.',
-    images: [
-      {
-        url: '/assets/images/cutting_tools/alligator_shear.jpg',
-        title: 'Tampak Asli Mesin Alligator Shear Hidrolik',
-        desc: 'Mesin pemotong gunting buaya hidrolik dengan rahang baja terbuka, bilah pisau perkakas tebal, silinder hidrolik tekan, dan tuas kontrol.'
-      },
-      {
-        url: '/assets/images/cutting_tools/alligator_shear_alt.jpg',
-        title: 'Detail Rahang dan Silinder Penjepit',
-        desc: 'Tampak dekat mekanisme engsel pisau geser dan pelindung penahan benturan material saat proses pemotongan besi padat.'
-      }
-    ],
-    spesifikasi: [
-      { label: 'Gaya Geser Maksimum', value: '63 s.d. 250 Ton Gaya (630 - 2500 kN)' },
-      { label: 'Panjang Bilah Pisau', value: '600 - 1.200 mm' },
-      { label: 'Bukaan Maksimum Rahang', value: '250 - 450 mm (Jaw Opening)' },
-      { label: 'Kapasitas Potong Besi As Pejal', value: 'Maks. Ø 50 - 85 mm' },
-      { label: 'Kapasitas Potong Besi Beton', value: 'Maks. 5 - 8 Batang D25 bersamaan' },
-      { label: 'Kapasitas Potong Pelat Baja', value: 'Tebal 20 - 35 mm' },
-      { label: 'Tekanan Sistem Hidrolik', value: '16 - 25 MPa' },
-      { label: 'Kecepatan Siklus Potong', value: '8 s.d. 18 Siklus per Menit' }
-    ],
-    komponen: [
-      { no: '01', nama: 'Moving Upper Shear Jaw (Rahang Bergerak Atas)', desc: 'Lengan baja cor monoblok yang berayun naik-turun pada pin poros engsel utama berkekuatan tinggi, membawa pisau pemotong atas.', pinPos: { x: 29, y: 31 }, lokasiFisik: 'Lengan moncong buaya kuning berayun naik-turun pembawa pisau atas' },
-      { no: '02', nama: 'Stationary Anvil Lower Jaw (Rahang Landasan Bawah)', desc: 'Dudukan landasan tetap berkekakuan tinggi yang dibaut mati pada sasis mesin untuk menahan beban gaya potong vertikal.', pinPos: { x: 26, y: 52 }, lokasiFisik: 'Rahang landasan baja tetap di bawah pisau penahan gaya geser' },
-      { no: '03', nama: 'Heavy-Duty Hydraulic Push Cylinder', desc: 'Silinder hidrolik bertekanan tinggi yang terhubung antara rangka belakang mesin dengan bagian ekor rahang atas.', pinPos: { x: 50, y: 20 }, lokasiFisik: 'Silinder hidrolik besar di bagian belakang atas pendorong lengan rahang' },
-      { no: '04', nama: 'Hardened Tool Steel Shear Blades', desc: 'Segmen bilah pisau baja paduan tahan bentur (Grade H13 atau S7) yang dibaut dengan toleransi tinggi dan dapat dibolak-balik keempat sudut potongnya.', pinPos: { x: 32, y: 44 }, lokasiFisik: 'Bilah pisau potong baja tebal di sisi potong pertemuan kedua rahang' },
-      { no: '05', nama: 'Safety Hold-Down Clamp Bar', desc: 'Batang penahan material mekanis atau hidrolik di depan rahang untuk mencegah material terlempar melonjak ke atas saat pisau mulai menggigit.', pinPos: { x: 40, y: 42 }, lokasiFisik: 'Pelat penahan logam pencegah lontaran lonjakan material saat digunting' },
-      { no: '06', nama: 'Operator Safety Foot Control / Lever', desc: 'Tuas manual atau pedal hidrolik dengan katup proporsional untuk mengendalikan gerak satu siklus atau pemotongan otomatis berulang.', pinPos: { x: 68, y: 92 }, lokasiFisik: 'Pedal kaki oranye di lantai yang diinjak operator untuk mengaktifkan pemotongan' }
-    ],
-    bendaKerja: ['Besi beton ulir konstruksi (Deformed Rebar) diameter besar', 'Rongsok profil baja struktural (H-Beam, IWF, UNP, Siku tebal)', 'Pipa baja dinding tebal dan tabung gas bekas', 'Poros gandar as baja mesin bekas', 'Bundel kabel baja (wire rope) dan kawat sling tebal'],
-    sopKerja: [
-      'Periksa level oli hidrolik pada sight glass tangki mesin dan pastikan tidak ada kebocoran selang bertekanan tinggi.',
-      'Nyalakan motor pompa hidrolik; tunggu hingga jarum manometer tekanan mencapai tekanan kerja normal (16 - 20 MPa).',
-      'Posisikan material logam sedalam mungkin ke arah pangkal engsel rahang (semakin dekat ke poros engsel, gaya momen potong semakin maksimal).',
-      'Pastikan penahan material (hold-down clamp) terpasang rapat di atas benda kerja untuk menahan gaya lonjak potongan logam.',
-      'Injak pedal kendali untuk melakukan siklus potong; jauhkan tangan minimal 60 cm dari area pertemuan pisau.',
-      'Biarkan potongan jatuh bebas ke kotak kontainer penampung di bawah mesin.'
-    ],
-    k3Penting: [
-      'BAHAYA CRUSHING & AMPUTASI EKSTREM: Dilarang keras menaruh anggota tubuh di antara kedua rahang; gaya geser mesin ini mampu memotong baja padat puluhan milimeter seketika.',
-      'BAHAYA PROYEKTIL: Material baja keras atau getas (seperti baja pegas atau as hidrolik krom) dapat patah meletup dan melontarkan serpihan proyektil tajam berkecepatan tinggi; operator WAJIB berdiri di balik dinding pelindung polikarbonat / kawat ram jaring dan mengenakan pelindung mata lengkap.',
-      'Gunakan helm proyek (safety helmet) dan sepatu safety bersol baja (steel toe boots) untuk mengantisipasi jatuhnya potongan besi berat.'
+      'Pegang bor dengan dua tangan jika mengebor lubang > Ø 8 mm untuk mengantisipasi hentakan torsi mendadak (kickback).',
+      'Pastikan kabel listrik tidak melilit kaki atau benda tajam di sekitar area kerja.',
+      'Gunakan safety goggles untuk menahan lontaran tatal spiral halus.'
     ]
   },
   {
     id: 'gergaji-mesin',
-    nama: 'Gergaji Besi Mesin (Horizontal Bandsaw / Power Hacksaw)',
-    namaEng: 'Horizontal Metal Cutting Bandsaw & Power Hacksaw',
-    kategori: 'Mesin Pemotong Plat & Fabrikasi',
-    kategoriKey: 'sawing',
-    badge: 'Mesin Bengkel Stasioner • Continuous Coolant Cut',
-    deskripsiSingkat: 'Mesin pemotong stok batang logam (poros pejal, pipa tebal, profil baja) menggunakan pita gergaji berputar kontinu atau bilah gergaji bolak-balik dengan pendinginan fluida otomatis.',
-    deskripsiLengkap: 'Mesin gergaji besi (Horizontal Bandsaw dan Power Hacksaw) adalah mesin perkakas pemotong primer yang bertugas memotong bahan mentah (raw stock bar) menjadi potongan pendek sebelum dibubut atau difrais. Horizontal bandsaw menggunakan bilah pita baja fleksibel bimetal tanpa ujung (loop tertutup) yang berputar melingkari dua roda puli besar secara kontinu ke satu arah. Karena pita terus bergerak menyayat logam tanpa ada langkah mundur kosong, proses pemotongan sangat efisien, bidang potong halus rata, celah sayatan (kerf loss) tipis sehingga menghemat material berharga, dan dilengkapi katup hidrolik penurun otomatis (hydraulic downfeed) serta sirkulasi pompa pendingin (coolant).',
-    prinsipKerja: 'Motor listrik memutar drive wheel yang menggerakkan pita gergaji bimetal berputar melintasi roller guide bearing berkarbid. Rangka busur gergaji (bow) turun secara presisi dan perlahan menembus benda kerja yang dijepit di ragum mesin, diatur oleh silinder pengatur hidrolik needle-valve. Cairan pendingin disemprotkan tepat di titik mata gergaji menyayat benda kerja.',
+    nama: 'Mesin Gergaji Pita Horisontal (Horizontal Metal Bandsaw)',
+    namaEng: 'Horizontal Metal Cutting Bandsaw Machine',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'gergaji-mesin',
+    kategoriType: 'power',
+    badge: '380V / 220V AC • Hydraulic Downfeed • Kontinyu 100%',
+    deskripsiSingkat: 'Mesin potong bertenaga industri dengan pita gergaji kontinyu berkecepatan tinggi untuk memotong balok baja tebal, poros pejal, pipa industri, dan bundle profil.',
+    deskripsiLengkap: 'Mesin gergaji pita horisontal (horizontal metal bandsaw) adalah mesin potong paling efisien untuk memotong stok bahan mentah (raw stock bar). Menggunakan bilah pita gergaji baja bimetal lingkar tertutup (continuous loop blade) yang berputar di atas dua roda puli besar. Dilengkapi silinder hidrolik pengontrol laju turun otomatis (hydraulic downfeed cylinder), pompa sirkulasi pendingin (coolant pump), ragum putar miter 45°, dan sistem saklar mati otomatis (auto shut-off switch) saat pemotongan selesai.',
+    prinsipKerja: 'Pita gergaji bimetal berputar satu arah secara kontinyu tanpa langkah kosong. Lengan gergaji turun perlahan diatur oleh katup hidrolik, menyayat material dengan tekanan konstan dan semprotan pendingin terus-menerus.',
     images: [
       {
         url: '/assets/images/cutting_tools/gergaji_mesin.jpg',
-        title: 'Tampak Asli Mesin Gergaji Pita Horizontal (Bandsaw)',
-        desc: 'Horizontal Metal Bandsaw industri memotong pipa dan batang baja tebal dengan sistem sirkulasi coolant, ragum miter putar, dan silinder hidrolik penurun.'
-      },
-      {
-        url: '/assets/images/cutting_tools/gergaji_mesin_alt.jpg',
-        title: 'Mesin Gergaji Besi Power Hacksaw Alternatif',
-        desc: 'Mesin gergaji besi torak bolak-balik (power hacksaw) tugas berat di bengkel mesin tradisional dengan mekanisme engkol eksentrik.'
+        title: 'Mesin Gergaji Pita Logam Horisontal Industri',
+        desc: 'Mesin bandsaw pemotong profil baja tebal dengan lengan hidrolik turun, ragum jepit cepat, dan pemandu pita bearing karbida.'
       }
     ],
     spesifikasi: [
-      { label: 'Daya Motor Utama', value: '1.1 - 2.2 kW (1.5 - 3.0 HP)' },
-      { label: 'Ukuran Pita Gergaji (Bandsaw)', value: 'Panjang 2.750 mm x Lebar 27 mm x Tebal 0.9 mm' },
-      { label: 'Kerapatan Gigi Bilah (TPI)', value: '4/6, 6/10, atau 10/14 TPI (Teeth Per Inch)' },
-      { label: 'Kecepatan Pita Gergaji', value: '4 Tingkat: 25, 40, 60, 80 m/min' },
-      { label: 'Kapasitas Potong Bulat 90°', value: 'Maks. Ø 220 - 300 mm' },
-      { label: 'Kapasitas Potong Kotak 90°', value: 'Maks. 220 x 260 mm' },
-      { label: 'Sudut Putar Ragum Miter', value: '0° s.d. 60° (Swivel Bow Head)' },
-      { label: 'Sistem Pengumpanan Turun', value: 'Silinder Hidrolik Regulasi Presisi (Needle Valve)' }
+      { label: 'Daya Motor Penggerak', value: '750 - 1.500 Watt (1 HP - 2 HP)' },
+      { label: 'Dimensi Pita Gergaji', value: 'Panjang 2.360 mm x Lebar 20 mm x Tebal 0.9 mm' },
+      { label: 'Kecepatan Sayat Pita', value: '25, 40, 50, 70 m/menit (Variabel Puli / Inverter)' },
+      { label: 'Kapasitas Potong Bulat 90°', value: 'Ø 180 mm s.d. Ø 220 mm' },
+      { label: 'Kapasitas Potong Kotak 90°', value: '180 x 300 mm' },
+      { label: 'Sistem Umpan Sayat (Feed)', value: 'Silinder Hidrolik dengan Katup Needle Valve' },
+      { label: 'Pompa Cairan Pendingin', value: 'Centrifugal Coolant Pump 50W Terintegrasi' }
     ],
     komponen: [
-      { no: '01', nama: 'Saw Bow Frame (Busur Rangka Gergaji)', desc: 'Rangka besi cor kokoh berengsel yang menampung dua roda pita gergaji, motor penggerak, pemandu bearing, dan saluran pipa pendingin.', pinPos: { x: 48, y: 45 }, lokasiFisik: 'Rangka besi cor besar abu-abu berlabel CAUTION penampung roda pita gergaji' },
-      { no: '02', nama: 'Bi-Metal Bandsaw Blade (Pita Gergaji Bimetal)', desc: 'Pita baja paduan khusus dengan ujung gigi berbahan baja kecepatan tinggi M42 (HSS Cobalt 8%) yang tahan panas gesek dan sangat tajam.', pinPos: { x: 62, y: 49 }, lokasiFisik: 'Pita gergaji tipis melintang yang sedang menyayat benda kerja silinder putih' },
-      { no: '03', nama: 'Carbide Guide Rollers & Bearings', desc: 'Bantalan rol presisi dan sisipan tungsten karbid yang memuntir pita 90 derajat vertikal agar bilah tegak lurus sempurna saat menyayat benda kerja.', pinPos: { x: 56, y: 46 }, lokasiFisik: 'Blok pemandu oranye ber-bearing penahan kelurusan pita gergaji di zona potong' },
-      { no: '04', nama: 'Hydraulic Downfeed Cylinder & Dial', desc: 'Silinder hidrolik pengatur kecepatan turun busur. Dilengkapi kran jarum untuk mengatur laju pemakanan lambat untuk baja keras atau cepat untuk aluminium.', pinPos: { x: 56, y: 25 }, lokasiFisik: 'Panel konsol kontrol dan silinder hidrolik pengatur kecepatan turun rangka' },
-      { no: '05', nama: 'Quick-Clamping Machine Vise', desc: 'Ragum besi cor dengan tuas pengunci cepat dan penahan panjang potongan (length stop rod) untuk pemotongan massal berulang berukuran sama.', pinPos: { x: 58, y: 55 }, lokasiFisik: 'Ragum besi cor penahan dan penjepit material batang logam pejal' },
-      { no: '06', nama: 'Coolant Pump & Recirculation Tank', desc: 'Pompa listrik submersible dan nosel kran fleksibel yang menyemprotkan emulsi dromus pendingin secara kontinu dan menyaring tatal kembali ke tangki.', pinPos: { x: 48, y: 73 }, lokasiFisik: 'Bak tampungan tatal gram logam dan sirkulasi cairan pendingin di bawah rangka' }
+      { no: '01', nama: 'Continuous Bimetal Saw Blade', desc: 'Pita gergaji lingkar tertutup bimetal M42 yang berputar stabil memotong logam tanpa jeda langkah balik.', pinPos: { x: 48, y: 38 }, lokasiFisik: 'Bilah pita tipis di bawah lengan gergaji' },
+      { no: '02', nama: 'Hydraulic Downfeed Cylinder', desc: 'Silinder hidrolik dengan katup keran mikro untuk mengatur kecepatan turun lengan gergaji secara halus dan otomatis.', pinPos: { x: 32, y: 45 }, lokasiFisik: 'Silinder hidrolik vertikal di bawah engsel lengan' },
+      { no: '03', nama: 'Blade Guide Arms (Pemandu Bearing)', desc: 'Dua lengan pemandu dengan bantalan rol dan sisipan karbida yang menahan pita gergaji tetap tegak lurus 90° terhadap material.', pinPos: { x: 58, y: 42 }, lokasiFisik: 'Blok pemandu dengan kran selang pendingin di atas benda kerja' },
+      { no: '04', nama: 'Heavy Duty Swivel Vise (Ragum Miter)', desc: 'Ragum besi tuang masif untuk menjepit bundel pipa atau batang pejal dengan setelan sudut 0° s.d. 45°.', pinPos: { x: 42, y: 65 }, lokasiFisik: 'Ragum masif di meja landasan bawah' },
+      { no: '05', nama: 'Flood Coolant System', desc: 'Sistem selang fleksibel yang menyemprotkan cairan pendingin langsung ke titik kontak gigi gergaji untuk membuang panas dan tatal.', pinPos: { x: 62, y: 35 }, lokasiFisik: 'Selang fleksibel di lengan pemandu bilah' }
     ],
-    bendaKerja: ['Batang poros as baja pejal (Steel Round Bar S45C / VCL)', 'Pipa baja berdinding tebal dan silinder hidrolik', 'Baja profil H-Beam dan I-Beam struktural', 'Balok aluminium pejal (Duralumin 6061 / 7075)', 'Baja perkakas (Tool Steel SKD11 / AISI D2)'],
+    bendaKerja: ['Batang poros baja pejal S45C / AISI 4140', 'Pipa baja tebal seamless SCH 80', 'Profil struktural balok H-Beam & IWF', 'Baja perkakas cetakan SKD11 tebal'],
     sopKerja: [
-      'Pilih bilah gergaji dengan TPI (Teeth Per Inch) yang tepat: terapkan "Aturan 3 Gigi Minimal", yaitu minimal 3 gigi gergaji harus selalu kontak dengan ketebalan benda kerja saat menyayat.',
-      'Setel ketegangan pita gergaji (blade tension) menggunakan meteran torsi roda tangan pengencang agar pita tidak meliuk melengkung saat memotong.',
-      'Jepit batang logam kuat-kuat pada ragum; pasang penopang rol (roller stand) di ujung batang panjang agar seimbang.',
-      'Buka kran pompa pendingin (coolant) dan arahkan semprotan tepat pada area kontak bilah gergaji dan logam.',
-      'Nyalakan mesin dan putar katup hidrolik downfeed secara perlahan untuk memulai pemakanan material.',
-      'Mesin akan otomatis mati (auto shut-off) begitu potongan putus berkat saklar batas (limit switch) yang tersentuh di bagian bawah meja.'
+      'Pilih TPI pita gergaji sesuai aturan minimal 3 gigi kontak simultan dengan ketebalan benda kerja.',
+      'Kencangkan handel penegang pita gergaji hingga jarum indikator tegangan berada pada zona hijau.',
+      'Jepit material sekuat mungkin pada ragum: material yang goyang akan mematahkan bilah pita seketika!',
+      'Nyalakan pompa cairan pendingin sebelum bilah menyentuh benda kerja.',
+      'Atur katup hidrolik turun secara perlahan; jangan membiarkan kepala gergaji jatuh membentur material.'
     ],
     k3Penting: [
-      'DILARANG menyentuh pita gergaji atau mencoba mengambil benda kerja saat pita masih bergerak!',
-      'Pastikan pintu penutup roda puli gergaji tertutup rapat dan terkunci baut sebelum menyalakan motor mesin.',
-      'Gunakan sarung tangan saat menangani pita gergaji pengganti yang tajam dan pegang dengan hati-hati saat melipat/membuka lipatan coil pita.',
-      'Bersihkan tatal gram pada sikat pembersih roda (wire chip brush) secara rutin untuk mencegah pita tergelincir dari puli.'
+      'Dilarang membuka penutup roda pita (blade wheels cover) saat mesin sedang beroperasi.',
+      'Gunakan roller stand penopang di ujung material panjang agar material tidak njomplang saat putus.',
+      'Pastikan tombol Emergency Stop dalam jangkauan cepat operator.'
     ]
   },
   {
-    id: 'reamer',
-    nama: 'Reamer Presisi (Hand & Machine Reamer)',
-    namaEng: 'Precision Hand & Machine Chucking Reamers',
-    kategori: 'Perkakas Potong Presisi Ulir & Lubang',
-    kategoriKey: 'finishing',
-    badge: 'Perkakas Potong Finishing • Akurasi Toleransi H7 (0.01 mm)',
-    deskripsiSingkat: 'Perkakas potong presisi bertingkat alur banyak untuk memperbesar dan menghaluskan dinding lubang hasil pengeboran dengan akurasi dimensi geometris tinggi dan nilai kekasaran permukaan mikro (Ra rendah).',
-    deskripsiLengkap: 'Reamer (peluas lubang presisi) adalah alat potong rotari finishing berbilah tajam jamak (multi-flute cutter). Mata bor biasa hanya mampu menghasilkan lubang dengan toleransi kasar (IT11 - IT12) dan permukaan beralur spiral kasar. Untuk memasang pena pasak (dowel pin), bearing presisi, atau bushing peluru poros yang memerlukan toleransi ketat kelas ISO H7 (deviasi dimensi hanya berkisar +0.015 mm) dan permukaan cermin halus (kekasaran Ra < 0.8 µm), reamer wajib digunakan. Reamer dibagi menjadi Reamer Tangan (Hand Reamer dengan chamfer runcing panjang dan tangkai kotak) serta Reamer Mesin (Chucking Reamer dengan tangkai silindris atau tirus Morse).',
-    prinsipKerja: 'Reamer tidak digunakan untuk membuat lubang baru dari awal, melainkan hanya menyayat lapisan logam sangat tipis (allowance pengeboran 0.1 mm - 0.3 mm) pada lubang yang sudah dibor sebelumnya. Bilah-bilah pisau lurus atau heliks memotong dinding silinder lubang secara melingkar seimbang, menghasilkan bentuk silinder sempurna tanpa ovalitas (kebulatan tinggi).',
+    id: 'guillotine',
+    nama: 'Mesin Potong Pelat Guillotine (Hydraulic Guillotine Shear)',
+    namaEng: 'Hydraulic Guillotine Sheet Metal Shear Machine',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'shearing',
+    kategoriType: 'power',
+    badge: '380V 3-Fasa • Gaya Geser 40 Ton • Tebal Pelat s.d. 6mm',
+    deskripsiSingkat: 'Mesin perkakas potong bertenaga hidrolik industri untuk memotong lembaran pelat baja lebar (sheet metal) dengan garis potong lurus sempurna hingga panjang 2.500 mm.',
+    deskripsiLengkap: 'Mesin potong pelat guillotine (hydraulic shearing machine) adalah mesin potong utama di industri fabrikasi bodi dan karoseri. Mesin ini memiliki dua bilah pisau baja paduan perkakas panjang: pisau bawah terpasang tetap pada meja mesin, sedangkan pisau atas dipasang miring (rake angle 1° - 2.5°) pada ram hidrolik yang bergerak turun vertikal. Menggunakan deretan silinder pencekam hidrolik (hydraulic hold-downs) untuk menekan pelat secara kokoh sebelum pisau turun, serta penahan belakang otomatis (digital motorized backgauge) untuk akurasi ukuran potongan.',
+    prinsipKerja: 'Pemotongan terjadi murni melalui aksi gaya geser mekanis (shearing action) seperti gunting raksasa. Pisau atas yang miring memotong pelat secara bertahap dari satu sisi ke sisi lain, mereduksi gaya potong yang dibutuhkan dan menghasilkan potongan lurus tanpa serpihan tatal gram.',
     images: [
       {
-        url: '/assets/images/cutting_tools/reamer_presisi.jpg',
-        title: 'Tampak Asli Reamer Tangan Setelan (Adjustable Hand Reamer)',
-        desc: 'Reamer tangan presisi dengan bilah pisau baja perkakas yang dapat disetel diameternya melalui mur ulir kerucut ganda.'
-      },
-      {
-        url: '/assets/images/cutting_tools/reamer_mesin.jpg',
-        title: 'Reamer Mesin Alur Heliks (Spiral Chucking Reamer)',
-        desc: 'Reamer mesin berkecepatan tinggi dengan alur tatal spiral kiri untuk pembuangan tatal ke depan pada lubang tembus.'
+        url: '/assets/images/cutting_tools/mesin_guillotine.jpg',
+        title: 'Mesin Potong Pelat Guillotine Hidrolik 2.5 Meter',
+        desc: 'Mesin pemotong pelat industri kapasitas tebal 6mm panjang 2500mm dengan silinder hidrolik hold-downs dan meja bola gelinding.'
       }
     ],
     spesifikasi: [
-      { label: 'Material Mata Potong', value: 'HSS-Co (M35 Cobalt) / Solid Carbide Tungsten' },
-      { label: 'Toleransi Standar Lubang', value: 'ISO H7 (Contoh: Ø10H7 = +0.015 / -0.000 mm)' },
-      { label: 'Kekasaran Permukaan (Ra)', value: 'Ra 0.4 s.d. 0.8 µm (Permukaan Halus Presisi)' },
-      { label: 'Allowance Ukuran Lubang Awal', value: 'Tinggalkan 0.15 - 0.25 mm dari diameter akhir' },
-      { label: 'Konfigurasi Alur (Flute)', value: 'Lurus (Straight Flute) & Spiral Heliks Kiri' },
-      { label: 'Tangkai Pegangan Tangan', value: 'Square Shank (Segi Empat untuk Tap Wrench)' },
-      { label: 'Tangkai Pegangan Mesin', value: 'Morse Taper MT1-MT4 atau Straight Shank' },
-      { label: 'Sudut Chamfer Masuk', value: 'Tangan: Tirus halus 1° s.d. 2° | Mesin: 45°' }
+      { label: 'Kapasitas Tebal Potong', value: '0.5 mm s.d. 6.0 mm (Baja Lunak ST37) / 3.0 mm (Stainless Steel)' },
+      { label: 'Panjang Garis Potong Maks.', value: '2.500 mm (2.5 meter) s.d. 3.200 mm' },
+      { label: 'Tekanan Sistem Hidrolik', value: '20 - 25 MPa (Gaya tekan geser ± 40 - 60 Ton)' },
+      { label: 'Daya Motor Pompa Hidrolik', value: '7.5 kW (10 HP) 380V 3-Fasa' },
+      { label: 'Sudut Miring Pisau (Rake Angle)', value: "1° 00' s.d. 2° 30' (Dapat disetel hidrolik)" },
+      { label: 'Rentang Backgauge Motorized', value: '20 mm s.d. 750 mm (Digital Readout Akurasi 0.1 mm)' },
+      { label: 'Jumlah Silinder Hold-Downs', value: '14 Unit Silinder Penjepit Hidrolik' },
+      { label: 'Berat Keseluruhan Mesin', value: '± 5.500 kg (5.5 Ton)' }
     ],
     komponen: [
-      { no: '01', nama: 'Starting Chamfer / Lead Taper (Ujung Pengarah)', desc: 'Bagian ujung depan yang tirus perlahan berfungsi sebagai pemandu masuk tepat ke sumbu lubang dan melakukan pemotongan tebal tatal pertama kali.', pinPos: { x: 8, y: 50 }, lokasiFisik: 'Ujung paling depan yang tirus pemandu masuk tepat ke sumbu lubang bor' },
-      { no: '02', nama: 'Flutes (Alur Pembuang Tatal)', desc: 'Alur-alur memanjang dengan jumlah bilah genap tidak simetris (irregular spacing) yang dirancang khusus untuk meredam getaran obrol (anti-chatter).', pinPos: { x: 27, y: 43 }, lokasiFisik: 'Alur bilah memanjang pembuang tatal di bagian tengah bilah potong' },
-      { no: '03', nama: 'Cutting Lands & Margin (Bidang Ukur Diametral)', desc: 'Punggung tepi silinder berukuran presisi mikro yang mengikis lubang dan menstabilkan pergerakan reamer agar tidak oleng.', pinPos: { x: 36, y: 58 }, lokasiFisik: 'Tepi silinder presisi mikro pemotong dan penghalus dinding lubang kelas H7' },
-      { no: '04', nama: 'Reamer Body (Badan Silinder Reamer)', desc: 'Batang pejal yang sedikit mengecil ke arah belakang (back taper sekitar 0.01 mm per 100mm) untuk mencegah gesekan panas berlebih di belakang mata potong.', pinPos: { x: 58, y: 50 }, lokasiFisik: 'Badan poros silinder baja di belakang alur mata potong' },
-      { no: '05', nama: 'Square Driving Shank (Tangkai Penggerak)', desc: 'Ujung belakang berbentuk bujur sangkar (square head) yang dijepit pada tangkai pemutar tap (tap wrench) untuk pemutaran manual tangan.', pinPos: { x: 93, y: 50 }, lokasiFisik: 'Ujung pangkal belakang berbentuk bujur sangkar untuk dijepit tangkai tap wrench' },
-      { no: '06', nama: 'Adjusting Nuts (Pada Reamer Setelan)', desc: 'Sepasang mur ulir di kedua ujung bilah yang dikencangkan/dikendorkan untuk menggeser bilah pada celah miring guna memperbesar atau memperkecil diameter reamer.', pinPos: { x: 14, y: 50 }, lokasiFisik: 'Sepasang mur ulir pengatur di ujung bilah untuk menyetel diameter reamer' }
+      { no: '01', nama: 'Hydraulic Hold-Down Clamps', desc: 'Deretan 14 silinder hidrolik yang turun menjepit pelat secara kokoh sesaat sebelum pisau atas menyentuh logam untuk mencegah pelat terangkat atau bergeser.', pinPos: { x: 50, y: 35 }, lokasiFisik: 'Deretan piston silinder hidrolik di sepanjang garis potong' },
+      { no: '02', nama: 'Upper & Lower Shearing Blades', desc: 'Bilah pisau baja paduan Cr12MoV berkekerasan 58 HRC dengan 4 sisi tajam yang dapat dibalik saat satu sisi aus.', pinPos: { x: 52, y: 44 }, lokasiFisik: 'Pisau potong baja panjang di bawah piston pencekam' },
+      { no: '03', nama: 'Front Sheet Support Arms with Scale', desc: 'Lengan penopang depan dengan mistar baja dan pemandu siku untuk memposisikan pelat lebar tegak lurus sempurna.', pinPos: { x: 35, y: 72 }, lokasiFisik: 'Lengan batang besi panjang yang menjorok ke depan meja' },
+      { no: '04', nama: 'Ball-Transfer Worktable (Meja Bola)', desc: 'Meja kerja baja masif yang dilengkapi butiran bola-bola baja bebas putar untuk mempermudah menggeser lembaran pelat baja berat.', pinPos: { x: 55, y: 65 }, lokasiFisik: 'Permukaan meja kerja depan di depan garis pisau' },
+      { no: '05', nama: 'Foot Switch Pedal (Pedal Kaki)', desc: 'Pedal kaki kontrol listrik berpelindung kap untuk memicu siklus potong operator dari posisi kerja aman.', pinPos: { x: 46, y: 88 }, lokasiFisik: 'Pedal injak kuning di lantai depan mesin' }
     ],
-    bendaKerja: ['Lubang dudukan pin pena pasak (Dowel Pin)', 'Lubang bushing kuningan pada rumah bantalan mesin', 'Lubang engsel presisi perkakas cetakan jig & fixture', 'Lubang piston connecting rod motor bakar', 'Lubang hidrolik valve block presisi tinggi'],
+    bendaKerja: ['Lembaran pelat baja hitam (SPHC / Plate ST37)', 'Pelat kapal ketebalan 4 - 6 mm', 'Pelat stainless steel SUS 304 tebal 1 - 3 mm', 'Pelat aluminium fabrikasi panel karoseri'],
     sopKerja: [
-      'Siapkan lubang awal dengan mata bor: DIAMETER MATA BOR WAJIB LEBIH KECIL dari ukuran reamer. Contoh: Untuk reamer Ø 10 mm, bor dengan mata bor Ø 9.8 mm (sisakan 0.2 mm). Jangan mereamer lubang yang terlalu tebal karena reamer bukan alat pembuang tatal massal!',
-      'Gunakan selalu pelumas berkualitas tinggi (cutting oil / oli mesin SAE 30) pada reamer dan dinding lubang.',
-      'Pasang reamer tegak lurus sempurna pada sumbu lubang menggunakan bantuan tap guide atau center spindel mesin bubut/bor.',
-      'Putar reamer searah jarum jam (kanan) secara perlahan dan berikan tekanan dorong ringan yang konstan.',
-      'ATURAN EMAS REAMER: JANGAN PERNAH MEMUTAR BALIK REAMER (berlawanan arah jarum jam / ke kiri), baik saat menyayat maupun saat mencabut reamer keluar dari lubang! Memutar balik akan membuat tatal terjepit di bawah bilah potong, merusak dinding lubang yang sudah halus, dan langsung mematahkan mata reamer.',
-      'Bersihkan tatal halus dari alur reamer menggunakan kuas halus bersih sebelum menyimpannya kembali di kotak kayu pelindung.'
+      'SETEL CELAH PISAU (BLADE CLEARANCE): Celah antara pisau atas dan bawah wajib disetel sebesar 7% s.d. 10% dari ketebalan pelat yang dipotong.',
+      'Dilarang memotong pelat yang melebihi kapasitas ketebalan maksimal mesin (misal pelat > 6mm pada mesin 6mm) karena dapat mematahkan poros piston.',
+      'Posisikan lembaran pelat menempel rapat pada pemandu siku samping (side squaring arm).',
+      'Pastikan tangan operator berada di luar garis pelindung jeruji pengaman (finger guard) saat menginjak pedal kaki.'
     ],
     k3Penting: [
-      'Bilah mata potong reamer sangat tajam; hindari memegang badan bilah tanpa sarung tangan atau kain pelapis.',
-      'Jangan pernah memukul reamer dengan palu baja atau menjatuhkannya ke lantai; material HSS/karbid reamer sangat getas dan akan gompal seketika.',
-      'Selalu bersihkan gram mikroskopis dengan kuas, jangan pernah ditiup dengan mulut karena serpihan tajam dapat mengenai mata.'
+      'BAHAYA AMPUTASI TANGAN: DILARANG KERAS memasukkan jari atau tangan ke bawah silinder pencekam atau bilah pisau dalam kondisi apapun!',
+      'Gunakan sarung tangan kulit tebal saat memegang pelat karena tepi potongan pelat hasil shearing sangat tajam seperti silet.',
+      'Pastikan area belakang mesin bebas dari orang karena hasil potongan pelat dapat meluncur jatuh dengan kecepatan tinggi.'
     ]
   },
   {
-    id: 'tap-dies',
-    nama: 'Tap dan Dies (Metrik Threading Tool Set)',
-    namaEng: 'Internal & External Metric Thread Cutting Set',
-    kategori: 'Perkakas Potong Presisi Ulir & Lubang',
-    kategoriKey: 'finishing',
-    badge: 'Perkakas Manual Presisi • Standar Ulir Metrik ISO',
-    deskripsiSingkat: 'Set perkakas pemotong ulir presisi manual: Tap untuk membuat ulir dalam (mur/lubang berulir) dan Dies (Sney) untuk membuat ulir luar pada batang poros (baut/stud bar).',
-    deskripsiLengkap: 'Set perkakas Tap dan Dies (Sney) adalah perlengkapan pokok di bengkel pemesinan untuk pembuatan dan perbaikan ulir baut standar Metrik ISO maupun Whitworth/UNC. Tap digunakan untuk membuat ulir dalam pada lubang tembus atau lubang buntu yang telah dibor sebelumnya. Satu set tap tangan metrik umumnya terdiri dari 3 nomor bertingkat: Tap No. 1 (Taper Tap ujung tirus panjang), Tap No. 2 (Plug/Intermediate Tap), dan Tap No. 3 (Bottoming Tap ujung rata untuk lubang buntu). Sebaliknya, Dies (Sney) berbentuk piringan cincin baja pejal yang dipasang pada rumah tangkai die stock untuk memotong ulir luar pada permukaan batang silindris.',
-    prinsipKerja: 'Tap dan Dies menyayat alur ulir heliks bersudut 60° (standar Metrik ISO) dengan kedalaman profil ulir sesuai kisar pitch (P). Operator memutar tangkai secara manual dengan teknik siklus: putar maju 1/2 hingga 3/4 putaran untuk menyayat tatal, lalu putar balik 1/4 putaran ke belakang untuk memutus tatal gram (chip breaking).',
+    id: 'alligator',
+    nama: 'Mesin Potong Logam Scrap Aligator (Alligator Shear)',
+    namaEng: 'Hydraulic Crocodile / Alligator Scrap Metal Shear',
+    kategori: 'Perkakas Bertenaga (Power Tools)',
+    kategoriKey: 'shearing',
+    kategoriType: 'power',
+    badge: '380V 3-Fasa • Gaya Potong 120 Ton • Rahang Buaya',
+    deskripsiSingkat: 'Mesin potong bertenaga hidrolik rahang engsel buaya berkekuatan ratusan ton untuk memotong besi beton bertulang (rebar), balok UNP tebal, dan besi scrap.',
+    deskripsiLengkap: 'Mesin potong aligator (alligator shear / crocodile shear) dinamai demikian karena bentuk rahang potongnya yang membuka-menutup mirip moncong buaya. Digerakkan oleh silinder hidrolik bertekanan tinggi dengan gaya potong mencapai 60 hingga 250 ton. Mesin ini merupakan perkakas andalan di bengkel fabrikasi berat, workshop pembesian konstruksi, dan fasilitas daur ulang logam untuk memotong stok batang pejal tebal tanpa memerlukan media pendingin atau batu abrasif yang habis pakai.',
+    prinsipKerja: 'Lengan rahang atas berengsel digerakkan turun oleh silinder hidrolik menuju rahang bawah tetap. Pisau baja khusus menyayat dan meremukkan batang logam dengan gaya geser hidrolik masif.',
     images: [
       {
-        url: '/assets/images/cutting_tools/tap_dan_dies.jpg',
-        title: 'Tampak Asli Mata Tap & Gagang Pemutar T-Wrench',
-        desc: 'Mata tap baja HSS beralur lurus terpasang pada tangkai pemutar tap (T-Handle Tap Wrench) siap membuat ulir dalam pada balok logam.'
-      },
-      {
-        url: '/assets/images/cutting_tools/dies_presisi.jpg',
-        title: 'Mata Sney Bulat Presisi (Round Threading Die)',
-        desc: 'Piringan die sney baja perkakas berlubang pembuang tatal dan baut penyetel belah (split die) untuk pemotongan ulir baut luar.'
+        url: '/assets/images/cutting_tools/alligator_shear.jpg',
+        title: 'Mesin Alligator Shear Pemotong Besi Beton & Profil Baja',
+        desc: 'Mesin aligator shear hidrolik industri dengan pisau potong 800mm, silinder penekan hidrolik, dan rahang engsel buaya.'
       }
     ],
     spesifikasi: [
-      { label: 'Standar Profil Ulir', value: 'ISO Metric Thread 60° (Contoh: M6x1.0, M8x1.25, M10x1.5)' },
-      { label: 'Material Perkakas', value: 'HSS (High-Speed Steel M2) / Alloy Tool Steel' },
-      { label: 'Set Tap Tangan Lengkap', value: '3 Tingkat: No.1 (Taper), No.2 (Plug), No.3 (Bottoming)' },
-      { label: 'Bentuk Die (Sney)', value: 'Round Split Die (Dapat disetel celah kelonggaran ulir)' },
-      { label: 'Rumus Diameter Lubang Bor Tap', value: 'D_bor = D_nominal - Pitch (M10 x 1.5 -> Bor Ø 8.5 mm)' },
-      { label: 'Rumus Diameter Poros Ulir Baut', value: 'D_poros = D_nominal - (0.1 x Pitch) (Contoh: M10 -> Poros Ø 9.85 mm)' },
-      { label: 'Gagang Pemutar Tap (Tap Wrench)', value: 'Adjustable Bar Tap Wrench & T-Handle Wrench' },
-      { label: 'Gagang Pemutar Sney (Die Stock)', value: 'Die Stock Cast Steel dengan 3 atau 5 Baut Pengunci' }
+      { label: 'Gaya Tekan Potong Maks.', value: '1.200 kN (120 Ton Gaya Tekan Hidrolik)' },
+      { label: 'Panjang Bilah Pisau', value: '600 mm s.d. 800 mm' },
+      { label: 'Kapasitas Potong Baja Pejal', value: 'Ø 50 mm s.d. Ø 65 mm (Baja ST37 / Rebar Besi Beton)' },
+      { label: 'Kapasitas Pelat Persegi', value: 'Tebal 20 mm x Lebar 300 mm' },
+      { label: 'Kecepatan Siklus Potong', value: '10 s.d. 18 kali potong per menit' },
+      { label: 'Daya Motor Listrik Pompa', value: '15 kW (20 HP) 380V 3-Fasa' },
+      { label: 'Berat Keseluruhan Mesin', value: '± 3.800 kg' }
     ],
     komponen: [
-      { no: '01', nama: 'Tap No. 1 (Taper Tap - Alur Cincin 1 Garis)', desc: 'Tap pemula dengan tirus panjang di ujungnya (8 hingga 10 gigi tirus chamfer). Digunakan pertama kali karena mudah masuk tegak lurus dan pemotongannya bertahap ringan.', pinPos: { x: 10, y: 88 }, lokasiFisik: 'Ujung gigi tirus mata tap pembuat alur ulir dalam standar metrik ISO' },
-      { no: '02', nama: 'Tap No. 2 (Plug / Intermediate Tap - Alur Cincin 2 Garis)', desc: 'Tap perantara dengan 4 hingga 5 gigi tirus chamfer untuk melanjutkan pemakanan memperdalam profil ulir setelah Tap No. 1.', pinPos: { x: 20, y: 80 }, lokasiFisik: 'Alur lurus pembuang tatal gram dan mata sayat ulir bersudut 60 derajat' },
-      { no: '03', nama: 'Tap No. 3 (Bottoming Tap - Tanpa Garis Cincin)', desc: 'Tap penyelesai dengan ujung tirus sangat pendek (hanya 1-2 gigi potong) khusus untuk membuat profil ulir penuh hingga menyentuh dasar lubang buntu (blind hole).', pinPos: { x: 31, y: 70 }, lokasiFisik: 'Tangkai berkepala bujur sangkar yang dicekam rahang rumah cekam' },
-      { no: '04', nama: 'Straight Flutes & Cutting Edges', desc: '3 atau 4 alur cekung memanjang tempat tatal terkelupas dan jalan masuk bagi oli pelumas pendingin mencapai mata potong.', pinPos: { x: 74, y: 35 }, lokasiFisik: 'Batang silindris baja krom T-Handle pemutar manual dengan dua tangan' },
-      { no: '05', nama: 'Round Split Die (Mata Sney Bulat Belah)', desc: 'Cincin pemotong ulir luar dengan 3-4 lubang pelepasan tatal dan sebuah celah belah di sisi luar yang dapat disetel baut ekspansi untuk mengatur kerapatan suaian ulir (tight/loose fit).', pinPos: { x: 48, y: 58 }, lokasiFisik: 'Selongsong hitam bermotif jaring silang (knurling) pengencang rahang tap' },
-      { no: '06', nama: 'Adjustable Tap Wrench & Die Stock Handles', desc: 'Batang pemutar dua lengan panjang yang memberikan momen gaya torsi seimbang dari kedua tangan operator agar perkakas tidak patah terpuntir miring.', pinPos: { x: 70, y: 44 }, lokasiFisik: 'Rumah silinder hitam pemegang poros T dan saklar arah putar ratchet' }
+      { no: '01', nama: 'Movable Alligator Upper Jaw', desc: 'Lengan rahang atas masif berbahan baja tuang nodular yang berengsel dan digerakkan oleh piston hidrolik utama.', pinPos: { x: 42, y: 35 }, lokasiFisik: 'Rahang atas yang membuka dan menutup seperti moncong buaya' },
+      { no: '02', nama: 'Heavy Duty Shear Blades (Pisau Geser)', desc: 'Bilah pisau baja paduan perkakas keras tebal dengan 4 sisi potong yang mampu menahan gaya kejut ratusan ton.', pinPos: { x: 46, y: 45 }, lokasiFisik: 'Bilah pisau potong baja tebal pada rahang atas dan bawah' },
+      { no: '03', nama: 'Hydraulic Hold-Down Ram', desc: 'Lengan pencekam sekunder yang menekan batang logam ke landasan sebelum pisau memotong untuk mencegah besi terlempar ke atas.', pinPos: { x: 38, y: 40 }, lokasiFisik: 'Lengan penekan hidrolik di sebelah pisau potong' },
+      { no: '04', nama: 'Heavy Fabricated Steel Frame', desc: 'Rangka baja monolitik berbobot berat yang menyerap seluruh torsi dan getaran gaya geser tanpa mengalami deformasi.', pinPos: { x: 65, y: 60 }, lokasiFisik: 'Rangka bodi baja kokoh bagian belakang tempat silinder' }
     ],
-    bendaKerja: ['Lubang baut pengikat pada blok silinder mesin', 'Braket dudukan sensor dan motor listrik', 'Batang poros berulir stud bolt (baut tanam)', 'Perbaikan ulir baut yang aus atau rusak (thread chasing/repair)', 'Pembuatan mur dan baut custom di bengkel bubut'],
+    bendaKerja: ['Besi beton ulir / polos (Rebar Ø 16 - 40 mm)', 'Profil kanal UNP 100 - 150 mm', 'Baja siku sudut tebal L 75x75x8', 'Potongan pipa baja tebal dan scrap logam padat'],
     sopKerja: [
-      'HITUNG DIAMETER BOR SEBELUM NGETAP: Gunakan rumus wajib D = Nominal - Kisar (P). Contoh: ulir M8x1.25 wajib dibor dengan mata bor Ø 6.8 mm (8 - 1.25 = 6.75 dibulatkan ke 6.8 mm). Jika lubang bor terlalu kecil, tap akan macet dan patah di dalam lubang!',
-      'Untuk sney ulir luar: chamfer ujung batang as sebesar 45 derajat agar sney mudah masuk sejajar.',
-      'Gunakan pelumas wajib: Oli mesin, tap oil, atau gemuk saat memotong baja; gunakan spiritus/alkohol saat ngetap aluminium.',
-      'Pastikan posisi tap atau sney benar-benar TEGAK LURUS 90 derajat terhadap bidang kerja. Periksa dengan siku-siku (try square) pada awal 2 putaran pertama.',
-      'TERAPKAN RITME POTONG: Putar searah jarum jam 180° - 270°, lalu putar balik ke kiri 90° hingga terasa bunyi "klik" renyah tanda tatal gram putus. Tatal yang tidak diputus akan menyumbat alur flute dan mematahkan tap!',
-      'Lakukan pengetapan secara berurutan: mulai dari Tap No. 1, lanjutkan Tap No. 2, dan akhiri dengan Tap No. 3 jika diperlukan lubang buntu.'
+      'Posisikan batang logam sedekat mungkin ke titik engsel rahang (bagian dalam) untuk memanfaatkan gaya ungkit momen maksimum.',
+      'Pastikan hold-down ram menekan batang besi sebelum pisau memotong.',
+      'Dilarang memotong baja berkekerasan tinggi (seperti poros as baja yang sudah di-hardening) karena dapat mematahkan mata pisau aligator.',
+      'Gunakan alat bantu gancu atau capit panjang untuk mengumpankan besi scrap pendek ke dalam rahang.'
     ],
     k3Penting: [
-      'BAHAYA TAP PATAH: Tap dibuat dari baja HSS berkekerasan tinggi yang sangat getas. Jangan pernah memaksakan putaran jika terasa berat/macet; putar balik dan semprot oli pembersih!',
-      'Gunakan kacamata pelindung untuk mencegah tatal gram terlempar saat memutar balik.',
-      'Gunakan kain majun untuk menyeka batang tap yang berlumur oli dan tatal tajam; jangan menyeka dengan telapak tangan.',
-      'Pegang kedua gagang pemutar (tap wrench) secara seimbang dengan dorongan kedua tangan simetris untuk mencegah momen bengkok (bending force) yang menjadi penyebab nomor satu tap patah.'
+      'BAHAYA HENTAKAN UJUNG BESI (KICKBACK): Ujung batang besi panjang dapat menghentak ke atas dengan keras saat dipotong; berdirilah di samping pelindung, jangan di atas batang!',
+      'Wajib mengenakan pelindung wajah (face shield) dan helm keselamatan industri.',
+      'Pastikan tidak ada orang berdiri di sisi kanan atau kiri garis potong saat mesin bekerja.'
     ]
   }
 ];
 
 // =============================================================================
-// DATABASE KUIS ASESMEN KOMPREHENSIF 10 SOAL PEMBELAJARAN
+// DATABASE 10 SOAL ASESMEN KOMPREHENSIF PERKAKAS BENGKEL (1000 XP)
 // =============================================================================
-const QUIZ_QUESTIONS = [
+export const QUIZ_QUESTIONS = [
   {
     id: 1,
-    question: 'Berapa kecepatan keliling maksimum standar yang diizinkan untuk batu gerinda tangan 4 inci (100 mm) berbahan resinoid?',
-    options: ['30 m/s', '50 m/s', '80 m/s', '120 m/s'],
-    correct: 2,
-    explanation: 'Standar keselamatan internasional (EN 12413 / OSHA) menetapkan batas kecepatan keliling aman untuk batu gerinda potong dan asah resinoid berkecepatan tinggi adalah 80 m/s (sekitar 11.000 - 12.000 RPM untuk diameter 100mm).'
+    question: 'Mengapa dilarang keras menggunakan kikir tanpa gagang pegangan (tang kikir telanjang) di bengkel kerja bangku?',
+    options: [
+      'Karena bilah kikir menjadi lebih berat saat digerakkan',
+      'Karena ekor kikir (tang) yang runcing dapat menusuk tembus ke urat telapak tangan jika kikir macet saat didorong',
+      'Karena dapat menurunkan kecepatan langkah pengikiran',
+      'Karena hasil pengikiran menjadi kurang mengkilap'
+    ],
+    correct: 1,
+    explanation: 'Ekor kikir (tang) sangat tajam dan melancip. Dorongan tenaga penuh dari badan saat kikir menabrak benda kerja dapat menyebabkan ekor kikir menembus telapak tangan hingga melukai urat dan tendon!'
   },
   {
     id: 2,
-    question: 'Mengapa operator mesin bor bangku DILARANG KERAS menggunakan sarung tangan kain?',
+    question: 'Bentuk penampang kikir manakah yang paling tepat digunakan untuk membersihkan alur pasak poros roda gigi dan lubang bujur sangkar 90°?',
     options: [
-      'Karena sarung tangan membuat tangan operator cepat berkeringat',
-      'Karena serat kain sarung tangan dapat tersangkut dan terbelit oleh spindel atau mata bor putar, menyebabkan fraktur/amputasi jari',
-      'Karena sarung tangan membuat mata bor cepat tumpul',
-      'Karena getaran mesin bor dapat merusak lapisan karet sarung tangan'
+      'Kikir Bulat (Round File)',
+      'Kikir Pisau (Knife File)',
+      'Kikir Segi Empat (Square File)',
+      'Kikir Parut (Rasp File)'
     ],
-    correct: 1,
-    explanation: 'Aturan K3 internasional pada semua mesin perkakas berputar (bor, bubut, frais) melarang penggunaan sarung tangan kain karena jika tersangkut sedikit saja pada spindel atau mata bor yang berputar ribuan RPM, tangan akan terseret masuk seketika.'
+    correct: 2,
+    explanation: 'Kikir segi empat (square file) memiliki 4 sisi tegak lurus 90° dengan gigi pemotong double cut di keempat sisinya, sangat ideal untuk alur pasak (keyways) dan lubang persegi.'
   },
   {
     id: 3,
-    question: 'Berapakah diameter mata bor yang tepat untuk melubangi pelat baja sebelum dibuat ulir dalam menggunakan Tap M10 x 1.5?',
-    options: ['10.0 mm', '9.0 mm', '8.5 mm', '7.0 mm'],
+    question: 'Bagaimanakah arah pemasangan mata bilah gergaji besi (hacksaw blade) yang benar sesuai SOP standar bengkel mesin?',
+    options: [
+      'Gigi gergaji menghadap ke belakang ke arah gagang pemegang',
+      'Gigi gergaji menghadap bebas bolak-balik',
+      'Gigi gergaji menghadap ke depan menjauhi gagang (memotong saat langkah dorong maju)',
+      'Gigi gergaji diposisikan miring 45 derajat ke samping bilah'
+    ],
     correct: 2,
-    explanation: 'Rumus baku pengetapan ulir metrik adalah D_bor = D_nominal - Pitch. Maka untuk M10 x 1.5: D_bor = 10 - 1.5 = 8.5 mm. Jika menggunakan bor 10mm ulir tidak akan terbentuk, sedangkan jika terlalu kecil tap akan patah di dalam.'
+    explanation: 'Bilah gergaji besi dirancang hanya memotong saat langkah maju (forward stroke). Gigi harus menghadap ke depan menjauhi gagang; saat ditarik mundur tekanan harus dilepaskan agar gigi tidak aus.'
   },
   {
     id: 4,
-    question: 'Pada mesin potong pelat Guillotine Shear, apakah fungsi utama dari deretan silinder "Hydraulic Hold-Down Clamps"?',
+    question: 'Berapakah jumlah minimal gigi gergaji yang harus selalu kontak dengan ketebalan benda kerja saat memotong ("Aturan Emas Pemilihan TPI")?',
     options: [
-      'Untuk mendinginkan bilah pisau dengan oli',
-      'Untuk menekan dan menjepit pelat secara kokoh sesaat sebelum pisau turun memotong agar pelat tidak terangkat/bergeser',
-      'Untuk mengukur panjang pelat secara digital',
-      'Untuk mendorong hasil potongan pelat keluar ke belakang'
+      'Minimal 1 gigi',
+      'Minimal 3 gigi menyentuh simultan',
+      'Minimal 10 gigi',
+      'Minimal 24 gigi'
     ],
     correct: 1,
-    explanation: 'Silinder pencekam (hold-downs) pada mesin guillotine turun menjepit pelat dengan gaya tekan puluhan ton tepat sebelum pisau potong menyentuh logam, mencegah efek ungkitan gaya geser yang bisa mementalkan pelat.'
+    explanation: 'Aturan umum gergaji tangan dan bandsaw menyatakan minimal 3 gigi gergaji harus selalu kontak dengan benda kerja. Jika kurang dari 3 gigi, gigi gergaji akan menyangkut pada tepi tipis material dan rontok (tooth stripping).'
   },
   {
     id: 5,
-    question: 'Mengapa reamer presisi (Hand / Machine Reamer) TIDAK BOLEH diputar ke arah sebaliknya (berlawanan jarum jam / ke kiri)?',
+    question: 'Apa bahaya fatal dari kepala pahat tangan dingin (cold chisel) yang membentuk "kepala jamur" (mushroomed head)?',
     options: [
-      'Karena putaran kiri akan membuat motor mesin terbakar',
-      'Karena tatal gram akan terjepit di bawah bilah potong, menggores permukaan cermin lubang, dan mematahkan bilah reamer seketika',
+      'Mata potong pahat menjadi tumpul secara otomatis',
+      'Serpihan baja getas yang merekah dapat pecah dan melesat berkecepatan tinggi menembus mata atau leher saat dipukul palu',
+      'Suara denting palu menjadi terlalu bising',
+      'Berat pahat berkurang sehingga tidak bertenaga'
+    ],
+    correct: 1,
+    explanation: 'Pukulan berulang palu menyebabkan logam kepala pahat memipih, mengeras, dan retak (mushrooming). Logam getas ini dapat terpental seperti peluru saat dipukul palu. Wajib digerinda tirus (chamfer) secara rutin!'
+  },
+  {
+    id: 6,
+    question: 'Berapa batas jarak aman celah landasan kerja (tool rest) terhadap batu gerinda duduk (bench grinder) sesuai standar OSHA 1910.215?',
+    options: [
+      'Maksimal 2 s.d. 3 mm',
+      'Bebas antara 10 s.d. 15 mm',
+      'Menempel rapat tanpa celah',
+      'Minimal 20 mm agar jari leluasa'
+    ],
+    correct: 0,
+    explanation: 'Celah landasan (tool rest) maksimal 2-3 mm. Jika celah lebih dari 3 mm, benda kerja kecil dapat terselot dan terjepit ke putaran batu 3000 RPM, menyebabkan batu gerinda meledak pecah (wheel explosion) dan mencederai tangan operator.'
+  },
+  {
+    id: 7,
+    question: 'Mengapa operator mesin bor bangku DILARANG KERAS menggunakan sarung tangan kain rajut saat bekerja?',
+    options: [
+      'Karena sarung tangan membuat tangan operator cepat berkeringat',
+      'Karena serat benang kain dapat tersangkut dan terbelit oleh spindel atau mata bor putar, menyeret tangan ke putaran mesin (bahaya entanglement)',
+      'Karena sarung tangan membuat mata bor cepat tumpul',
+      'Karena getaran mesin bor merusak kain sarung tangan'
+    ],
+    correct: 1,
+    explanation: 'Bahaya Entanglement (terbelit)! Mesin bor memiliki torsi putar yang sangat besar. Serat benang sarung tangan yang tersangkut sedikit saja pada spindel atau mata bor akan memilin tangan hingga fraktur tulang/amputasi seketika.'
+  },
+  {
+    id: 8,
+    question: 'Berapakah diameter mata bor yang tepat untuk melubangi pelat baja sebelum dibuat ulir dalam menggunakan Tap M10 x 1.5?',
+    options: [
+      '10.0 mm',
+      '9.5 mm',
+      '8.5 mm',
+      '7.0 mm'
+    ],
+    correct: 2,
+    explanation: 'Rumus baku pengetapan ulir metrik adalah: D_bor = D_nominal - Pitch. Maka untuk M10 x 1.5: D_bor = 10 - 1.5 = 8.5 mm. Jika lubang terlalu kecil tap akan macet dan patah di dalam.'
+  },
+  {
+    id: 9,
+    question: 'Mengapa reamer tangan presisi (Hand Reamer H7) TIDAK BOLEH diputar ke arah sebaliknya (berlawanan jarum jam / ke kiri)?',
+    options: [
+      'Karena putaran kiri akan membuat motor listrik terbakar',
+      'Karena tatal gram halus akan terjepit di bawah bilah potong, menggores dinding lubang, dan mematahkan gigi reamer seketika',
       'Karena reamer akan terlepas dari tangkai pemutarnya',
       'Karena sudut heliks reamer akan berubah menjadi lurus'
     ],
     correct: 1,
-    explanation: 'Bilah reamer dirancang hanya memiliki relief sudut potong satu arah. Memutar balik reamer akan menekan tatal halus masuk ke bawah bidang ukur (margin), mengakibatkan baret parah pada dinding lubang dan gigi potong reamer langsung retak/gompal.'
-  },
-  {
-    id: 6,
-    question: 'Alat pemotong manakah yang dirancang khusus untuk memotong besi beton bertulang (rebar), balok UNP tebal, dan besi tua rongsokan dengan rahang hidrolik mirip moncong buaya?',
-    options: ['Gerinda Tangan', 'Aligator Shear (Crocodile Shear)', 'Reamer Mesin', 'Mesin Bor Bangku'],
-    correct: 1,
-    explanation: 'Alligator Shear (Crocodile Shear) memiliki lengan rahang atas bergerak hidrolik dengan gaya tekan 60 hingga 250 ton untuk meremukkan dan menggunting besi beton, profil struktural, dan scrap metal.'
-  },
-  {
-    id: 7,
-    question: 'Berapakah batas jumlah minimal gigi pita gergaji (Bandsaw) yang harus selalu kontak dengan ketebalan benda kerja saat memotong ("Aturan Emas Pemilihan TPI")?',
-    options: ['Minimal 1 gigi', 'Minimal 3 gigi', 'Minimal 10 gigi', 'Minimal 24 gigi'],
-    correct: 1,
-    explanation: 'Aturan umum pemotongan gergaji mesin (bandsaw / hacksaw) menyatakan minimal 3 gigi gergaji harus selalu kontak dengan benda kerja secara simultan. Jika kurang dari 3 gigi, gigi gergaji akan menyangkut pada tepi material dan rontok (tooth stripping).'
-  },
-  {
-    id: 8,
-    question: 'Pada proses pembuatan ulir dalam manual, manakah urutan mata tap yang benar dari awal hingga akhir?',
-    options: [
-      'Tap No. 3 (Bottoming) -> Tap No. 2 (Plug) -> Tap No. 1 (Taper)',
-      'Tap No. 1 (Taper) -> Tap No. 2 (Plug) -> Tap No. 3 (Bottoming)',
-      'Tap No. 2 (Plug) -> Tap No. 1 (Taper) -> Tap No. 3 (Bottoming)',
-      'Langsung menggunakan Tap No. 3 tanpa tap lainnya'
-    ],
-    correct: 1,
-    explanation: 'Urutan baku pengetapan tangan adalah Tap No. 1 (Taper tap berujung tirus panjang untuk pemandu awal) -> Tap No. 2 (Plug tap untuk memperdalam profil ulir) -> Tap No. 3 (Bottoming tap berujung rata untuk lubang buntu).'
-  },
-  {
-    id: 9,
-    question: 'Apakah fungsi fitur "Clutch Ring / Torque Adjustment Collar" pada mesin bor tangan portabel (Cordless Drill)?',
-    options: [
-      'Mengatur kecepatan putaran spindel secara mekanis',
-      'Mengatur batas torsi putar agar kepala sekrup tidak aus dan mesin slip otomatis saat beban tertentu tercapai',
-      'Mengubah fungsi bor menjadi mesin gerinda',
-      'Mengunci mata bor tanpa kunci chuck'
-    ],
-    correct: 1,
-    explanation: 'Cincin pengatur torsi (clutch collar 1 - 20) membatasi gaya puntir dengan mekanisme slip ball-detent, sehingga motor bor akan slip dan tidak merusak kepala sekrup saat baut sudah kencang sempurna.'
+    explanation: 'Bilah reamer dirancang hanya memiliki relief sudut potong satu arah. Memutar balik reamer akan menekan tatal gram ke bawah bidang ukur (margin), menggores permukaan cermin lubang dan mematahkan bilah reamer seketika.'
   },
   {
     id: 10,
-    question: 'Berapa besaran kelonggaran (allowance) diameter lubang yang disisakan dari proses pengeboran untuk proses reaming ukuran Ø 10 mm H7?',
-    options: ['Disisakan 1.5 - 2.0 mm', 'Disisakan 0.15 - 0.25 mm', 'Disisakan 5.0 mm', 'Tidak perlu disisakan (diameter bor sama dengan diameter reamer)'],
+    question: 'Mengapa pelindung rahang lunak (soft jaws tembaga/aluminium) dipasang pada ragum meja kerja bangku?',
+    options: [
+      'Agar ragum meja menjadi lebih berat dan tidak goyang',
+      'Untuk mencegah gerigi baja keras ragum melukai, mencakar, atau merusak permukaan benda kerja yang sudah halus',
+      'Untuk menambah gaya jepit menjadi dua kali lipat',
+      'Untuk mencegah benda kerja berkarat'
+    ],
     correct: 1,
-    explanation: 'Reamer adalah alat finishing presisi tinggi, bukan pembuat lubang utama. Untuk diameter sekitar 10mm, allowance yang disisakan dari proses pengeboran awal adalah 0.15 mm hingga 0.25 mm (contoh dibor dengan mata bor Ø 9.8 mm).'
+    explanation: 'Rahang asli ragum terbuat dari baja keras dengan gerigi kasar. Menjepit benda kerja yang sudah difrais, dibubut halus, atau memiliki ulir tanpa pelindung soft jaws tembaga/aluminium akan meninggalkan bekas luka jepit cacat permanen.'
   }
 ];
 
 const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null }) => {
   const [labTab, setLabTab] = useState('katalog'); // 'katalog', 'materi', 'safety', 'quiz'
-  const [selectedToolId, setSelectedToolId] = useState('gerinda-tangan');
-  const [categoryFilter, setCategoryFilter] = useState('all'); // 'all', 'portable', 'shearing', 'drilling', 'sawing', 'finishing'
+  const [selectedToolId, setSelectedToolId] = useState('kikir-bengkel');
+  const [typeFilter, setTypeFilter] = useState('all'); // 'all', 'manual', 'power'
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  // State Sub-Eksplorasi Profil Kikir (Jika sedang memilih alat kikir-bengkel)
+  const [activeKikirProfileId, setActiveKikirProfileId] = useState('plat');
 
   // State untuk Interaksi Pin Anatomi Foto Alat
   const [activeKomponenIdx, setActiveKomponenIdx] = useState(0);
@@ -617,6 +1076,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
 
   // Cari data alat terpilih
   const currentTool = CUTTING_TOOLS_DATA.find(t => t.id === selectedToolId) || CUTTING_TOOLS_DATA[0];
+  const activeKikirProfile = KIKIR_PROFILES.find(p => p.id === activeKikirProfileId) || KIKIR_PROFILES[0];
 
   // Integrasi Audio Narator Aksesibilitas & Inklusi
   const { speakText, stopSpeech, isSpeaking, currentNarrativeTitle } = useAccessibility();
@@ -625,10 +1085,8 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
     const komp = tool.komponen?.map(k => `${k.nama}: ${k.desc}`).slice(0, 3).join('. ') || '';
     const sop = tool.sopKerja?.slice(0, 2).join('. ') || '';
     const k3 = tool.k3Penting?.[0] || '';
-    return `Alat pemotong yang sedang Anda pilih adalah: ${tool.nama}, nama teknis internasional: ${tool.namaEng}. Kategori alat: ${tool.kategori}. ${tool.deskripsiSingkat} ${tool.deskripsiLengkap}. Prinsip kerja pemotongannya: ${tool.prinsipKerja}. Tiga komponen kuncinya antara lain: ${komp}. Langkah standar SOP: ${sop}. Peraturan keselamatan K3 yang wajib dipatuhi: ${k3}.`;
+    return `Perkakas bengkel yang sedang Anda pilih adalah: ${tool.nama}, nama teknis internasional: ${tool.namaEng}. Kategori: ${tool.kategori}. ${tool.deskripsiSingkat} ${tool.deskripsiLengkap}. Prinsip kerjanya: ${tool.prinsipKerja}. Tiga bagian kuncinya antara lain: ${komp}. Langkah standar SOP: ${sop}. Peraturan keselamatan K3 yang wajib dipatuhi: ${k3}.`;
   };
-
-  const isSpeakingCurrentTool = isSpeaking && currentNarrativeTitle === `Alat: ${currentTool.nama}`;
 
   const handleToggleToolAudio = (tool = currentTool) => {
     const title = `Alat: ${tool.nama}`;
@@ -639,10 +1097,20 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
     }
   };
 
-  // Filter daftar alat
-  const filteredTools = categoryFilter === 'all'
+  const handleNarrationKikirProfile = (prof) => {
+    const title = `Profil Kikir: ${prof.nama}`;
+    if (isSpeaking && currentNarrativeTitle === title) {
+      stopSpeech();
+    } else {
+      const text = `Profil kikir: ${prof.nama}. Bentuk penampang melintang: ${prof.penampang}. Fungsi utamanya di bengkel: ${prof.fungsi}. Fitur khusus: ${prof.fiturKhusus}. Contoh benda kerja: ${prof.bendaKerja}. Rekomendasi gerigi: ${prof.rekomendasiGigi}. Tips teknik kerja: ${prof.tipsTeknik}`;
+      speakText(text, title);
+    }
+  };
+
+  // Filter daftar alat berdasarkan tipe: semua, manual, bertenaga
+  const filteredTools = typeFilter === 'all'
     ? CUTTING_TOOLS_DATA
-    : CUTTING_TOOLS_DATA.filter(t => t.kategoriKey === categoryFilter);
+    : CUTTING_TOOLS_DATA.filter(t => t.kategoriType === typeFilter);
 
   // Ganti alat aktif
   const handleSelectTool = (id) => {
@@ -675,7 +1143,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
 
   const handleQuizSubmit = () => {
     if (Object.keys(quizAnswers).length < QUIZ_QUESTIONS.length) {
-      alert('Harap jawab seluruh 10 soal evaluasi sebelum mengumpulkan!');
+      alert('Harap jawab seluruh 10 soal asesmen evaluasi perkakas sebelum mengumpulkan!');
       return;
     }
     sound.playSuccess?.();
@@ -686,8 +1154,8 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
     const score100 = Math.round((correctCount / QUIZ_QUESTIONS.length) * 100);
 
     recordQuizResult({
-      modul: 'Alat Pemotong',
-      judulKuis: 'Kuis Ensiklopedia Alat Pemotong',
+      modul: 'Perkakas Bengkel',
+      judulKuis: 'Kuis Ensiklopedia Perkakas Bengkel',
       skor: score100,
       jawabanBenar: correctCount,
       totalSoal: QUIZ_QUESTIONS.length,
@@ -702,23 +1170,26 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
       addMissionCompleted('mission-cutting-tools');
       sound.playSuccess?.();
       setXpClaimed(true);
-      alert(`🎉 Selamat! Anda memperoleh 1000 XP atas penguasaan modul Ensiklopedia Alat Pemotong Pemesinan!`);
+      alert('🎉 Selamat! Anda memperoleh 1000 XP atas penguasaan modul Ensiklopedia Perkakas Bengkel (Perkakas Manual & Bertenaga)!');
     }
   };
+
+  const manualToolsCount = CUTTING_TOOLS_DATA.filter(t => t.kategoriType === 'manual').length;
+  const powerToolsCount = CUTTING_TOOLS_DATA.filter(t => t.kategoriType === 'power').length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#ffffff', color: '#0f172a', overflow: 'hidden' }}>
       
       <div style={{ padding: '16px 20px 0 20px' }}>
         <LabDiagnosticBanner
-          labTitle="Alat Pemotong & Perkakas Pemesinan"
-          desc="Diagnosa 10 soal sudut baji pahat, jenis mata bor (twist drill), gergaji besi (TPI), dan SOP gerinda tangan."
+          labTitle="Perkakas Bengkel & Alat Potong Pemesinan"
+          desc="Diagnosa 10 soal standar: kikir 7 profil, gergaji tangan (TPI), pahat dingin, celah gerinda duduk (2-3mm), dan kalkulasi RPM bor."
           onOpenDiagnostic={onOpenDiagnostic}
         />
       </div>
 
       {/* =====================================================================
-          HEADER MODUL PEMBELAJARAN
+          HEADER MODUL PEMBELAJARAN PERKAKAS
           ===================================================================== */}
       <div className="cutting-tools-header" style={{
         background: '#ffffff',
@@ -732,22 +1203,23 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div className="cutting-tools-header-icon" style={{
-            width: '44px',
-            height: '44px',
+            width: '46px',
+            height: '46px',
             borderRadius: '12px',
-            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+            background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.4rem',
-            boxShadow: '0 4px 14px rgba(249, 115, 22, 0.25)'
+            fontSize: '1.5rem',
+            boxShadow: '0 4px 14px rgba(234, 88, 12, 0.25)',
+            color: '#fff'
           }}>
-            ⚙️
+            🛠️
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 className="cutting-tools-title" style={{ fontSize: '1.2rem', fontWeight: 900, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>
-                Ensiklopedia Visual Alat Pemotong Pemesinan
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <h1 className="cutting-tools-title" style={{ fontSize: '1.25rem', fontWeight: 900, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>
+                Ensiklopedia Perkakas Bengkel
               </h1>
               <span style={{
                 background: '#fff7ed',
@@ -759,21 +1231,21 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 borderRadius: '6px',
                 textTransform: 'uppercase'
               }}>
-                Foto Asli Bengkel & Industri
+                🔨 Perkakas Tangan Manual & ⚡ Bertenaga
               </span>
             </div>
             <p className="cutting-tools-subtitle" style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-              Media Pembelajaran Pengenalan 9 Perkakas Tangan Bertenaga, Mesin Potong Fabrikasi & Presisi SMK Teknik Mesin
+              Media Pembelajaran Terpadu Pengenalan 17 Perkakas Bengkel: Kikir Lengkap 7 Profil, Gergaji Besi, Pahat, Ragum, Tap, serta Mesin Potong Fabrikasi SMK
             </p>
           </div>
         </div>
 
         {/* Tab Navigasi Utama */}
-        <div className="cutting-tools-tabs" style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+        <div className="cutting-tools-tabs" style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '10px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
           {[
-            { id: 'katalog', label: '📸 Katalog & Foto Asli Alat', icon: '🔍' },
-            { id: 'materi', label: '📖 Teori & Standarisasi', icon: '📐' },
-            { id: 'safety', label: '⚠️ SOP Keselamatan K3', icon: '🛡️' },
+            { id: 'katalog', label: '📸 Katalog & Visual Perkakas', icon: '🔍' },
+            { id: 'materi', label: '📖 Teori Kikir, TPI & Rumus RPM', icon: '📐' },
+            { id: 'safety', label: '⚠️ Standar K3 Perkakas', icon: '🛡️' },
             { id: 'quiz', label: '🎯 Kuis Asesmen (1000 XP)', icon: '🏆' }
           ].map(tab => {
             const isActive = labTab === tab.id;
@@ -823,157 +1295,178 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Mulai Tes Diagnostik Alat Pemotong (10 Soal Pilgan)"
+              title="Mulai Tes Diagnostik Perkakas Bengkel (10 Soal Pilgan)"
             >
               <span>📋</span>
-              <span>Tes Diagnostik (10 Soal)</span>
+              <span>Tes Diagnostik Perkakas</span>
             </button>
           )}
         </div>
       </div>
 
       {/* =====================================================================
-          VIEW 1: KATALOG & FOTO ASLI ALAT (PEMBELAJARAN VISUAL MURNI)
+          VIEW 1: KATALOG & VISUAL INTERAKTIF PERKAKAS
           ===================================================================== */}
       {labTab === 'katalog' && (
         <div className="cutting-tools-layout" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
           
-          {/* SIDEBAR DAFTAR 9 ALAT */}
+          {/* SIDEBAR DAFTAR 17 PERKAKAS */}
           <div className="cutting-tools-sidebar" style={{
-            width: '320px',
-            minWidth: '300px',
+            width: '340px',
+            minWidth: '320px',
             background: '#ffffff',
             borderRight: '1px solid #e2e8f0',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden'
           }}>
-            {/* Filter Kategori */}
-            <div className="cutting-tools-sidebar-filter" style={{ padding: '12px 14px', borderBottom: '1px solid #e2e8f0', background: '#ffffff' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '8px' }}>
-                Filter Kelompok Alat
+            {/* Filter Utama: 2 KELOMPOK BESAR (PERKAKAS MANUAL & BERTENAGA) */}
+            <div className="cutting-tools-sidebar-filter" style={{ padding: '12px 14px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>
+                Kategori Utama Perkakas
               </div>
-              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                {[
-                  { key: 'all', label: 'Semua (9)' },
-                  { key: 'portable', label: 'Bertenaga' },
-                  { key: 'shearing', label: 'Plat/Shear' },
-                  { key: 'drilling', label: 'Bor' },
-                  { key: 'sawing', label: 'Gergaji' },
-                  { key: 'finishing', label: 'Presisi' }
-                ].map(f => (
-                  <button
-                    key={f.key}
-                    onClick={() => {
-                      sound.playClick();
-                      setCategoryFilter(f.key);
-                    }}
-                    style={{
-                      padding: '4px 8px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      fontSize: '0.68rem',
-                      fontWeight: categoryFilter === f.key ? 800 : 600,
-                      background: categoryFilter === f.key ? '#ea580c' : '#f1f5f9',
-                      color: categoryFilter === f.key ? '#ffffff' : '#475569',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    {f.label}
-                  </button>
-                ))}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px' }}>
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setTypeFilter('all');
+                  }}
+                  style={{
+                    padding: '6px 4px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    fontSize: '0.68rem',
+                    fontWeight: typeFilter === 'all' ? 800 : 600,
+                    background: typeFilter === 'all' ? '#0f172a' : '#e2e8f0',
+                    color: typeFilter === 'all' ? '#ffffff' : '#334155',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'center'
+                  }}
+                >
+                  🌟 Semua ({CUTTING_TOOLS_DATA.length})
+                </button>
+
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setTypeFilter('manual');
+                  }}
+                  style={{
+                    padding: '6px 4px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    fontSize: '0.68rem',
+                    fontWeight: typeFilter === 'manual' ? 800 : 600,
+                    background: typeFilter === 'manual' ? '#0284c7' : '#e2e8f0',
+                    color: typeFilter === 'manual' ? '#ffffff' : '#334155',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'center'
+                  }}
+                >
+                  🔨 Manual ({manualToolsCount})
+                </button>
+
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setTypeFilter('power');
+                  }}
+                  style={{
+                    padding: '6px 4px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    fontSize: '0.68rem',
+                    fontWeight: typeFilter === 'power' ? 800 : 600,
+                    background: typeFilter === 'power' ? '#ea580c' : '#e2e8f0',
+                    color: typeFilter === 'power' ? '#ffffff' : '#334155',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'center'
+                  }}
+                >
+                  ⚡ Tenaga ({powerToolsCount})
+                </button>
               </div>
             </div>
 
-            {/* List Menu 9 Alat */}
+            {/* List Menu 17 Perkakas */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '10px 8px', background: '#ffffff' }}>
-              {filteredTools.map((t, index) => {
+              {filteredTools.map((t) => {
                 const isSelected = t.id === selectedToolId;
+                const isManual = t.kategoriType === 'manual';
                 return (
                   <div
                     key={t.id}
                     className="cutting-tools-tool-item"
                     onClick={() => handleSelectTool(t.id)}
                     style={{
-                      padding: '10px 12px',
+                      padding: '9px 12px',
                       borderRadius: '8px',
                       marginBottom: '6px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '12px',
-                      background: isSelected ? '#fff7ed' : '#ffffff',
-                      border: isSelected ? '1.5px solid #ea580c' : '1px solid #e2e8f0',
-                      boxShadow: isSelected ? '0 2px 8px rgba(234, 88, 12, 0.12)' : 'none',
+                      gap: '10px',
+                      background: isSelected ? (isManual ? '#f0f9ff' : '#fff7ed') : '#ffffff',
+                      border: isSelected 
+                        ? (isManual ? '1.5px solid #0284c7' : '1.5px solid #ea580c') 
+                        : '1px solid #e2e8f0',
+                      boxShadow: isSelected ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                       transition: 'all 0.15s ease'
                     }}
                   >
                     {/* Thumbnail Foto Asli */}
                     <div className="cutting-tools-thumb" style={{
-                      width: '52px',
-                      height: '42px',
+                      width: '48px',
+                      height: '40px',
                       borderRadius: '6px',
                       overflow: 'hidden',
-                      background: '#f1f5f9',
+                      background: '#0f172a',
                       flexShrink: 0,
-                      border: isSelected ? '1px solid #ea580c' : '1px solid #e2e8f0'
+                      border: isSelected ? (isManual ? '1.5px solid #0284c7' : '1.5px solid #ea580c') : '1px solid #cbd5e1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}>
                       <img
-                        src={t.images[0].url}
+                        src={t.images[0]?.url}
                         alt={t.nama}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       />
                     </div>
 
+                    {/* Informasi Teks Singkat */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '0.65rem', color: isSelected ? '#c2410c' : '#94a3b8', fontWeight: 800 }}>
-                          #{String(index + 1).padStart(2, '0')}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '2px' }}>
+                        <span style={{
+                          background: isManual ? '#e0f2fe' : '#ffedd5',
+                          color: isManual ? '#0369a1' : '#c2410c',
+                          fontSize: '0.62rem',
+                          fontWeight: 800,
+                          padding: '1px 5px',
+                          borderRadius: '4px'
+                        }}>
+                          {isManual ? '🔨 MANUAL' : '⚡ DAYA'}
                         </span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <span style={{ fontSize: '0.62rem', color: isSelected ? '#ea580c' : '#64748b', fontWeight: 700 }}>
-                            {t.kategoriKey.toUpperCase()}
+                        {t.id === 'kikir-bengkel' && (
+                          <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '0.6rem', fontWeight: 800, padding: '1px 4px', borderRadius: '4px' }}>
+                            7 PROFIL
                           </span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleToggleToolAudio(t);
-                            }}
-                            style={{
-                              background: isSpeaking && currentNarrativeTitle === `Alat: ${t.nama}` ? '#ea580c' : 'rgba(0,0,0,0.06)',
-                              color: isSpeaking && currentNarrativeTitle === `Alat: ${t.nama}` ? '#ffffff' : '#64748b',
-                              border: 'none',
-                              borderRadius: '4px',
-                              padding: '2px 5px',
-                              fontSize: '0.68rem',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center'
-                            }}
-                            title={`Dengarkan suara materi ${t.nama}`}
-                          >
-                            {isSpeaking && currentNarrativeTitle === `Alat: ${t.nama}` ? '⏹️' : '🔊'}
-                          </button>
-                        </div>
+                        )}
                       </div>
-                      <div className="cutting-tools-tool-name" style={{
-                        fontSize: '0.82rem',
+                      <div style={{
+                        fontSize: '0.78rem',
                         fontWeight: isSelected ? 800 : 700,
-                        color: isSelected ? '#ea580c' : '#1e293b',
+                        color: isSelected ? (isManual ? '#0369a1' : '#c2410c') : '#0f172a',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
                       }}>
-                        {t.nama.split('(')[0].trim()}
+                        {t.nama}
                       </div>
-                      <div className="cutting-tools-tool-eng" style={{
-                        fontSize: '0.68rem',
-                        color: '#64748b',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
+                      <div style={{ fontSize: '0.67rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {t.namaEng}
                       </div>
                     </div>
@@ -981,425 +1474,295 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 );
               })}
             </div>
-
-            {/* Quick Info Box */}
-            <div style={{ padding: '12px 14px', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.72rem', color: '#64748b' }}>
-                <span>💡</span>
-                <span>Klik alat untuk membedah foto nyata, anatomi, spesifikasi, dan SOP bengkel.</span>
-              </div>
-            </div>
           </div>
 
-          {/* MAIN DETAIL VIEW ALAT TERPILIH */}
-          <div className="cutting-tools-main" style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px', background: '#f8fafc' }}>
+          {/* MAIN DETAIL VIEW PANE */}
+          <div className="cutting-tools-detail-pane" style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '24px',
+            background: '#f8fafc',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}>
             
-            {/* CARD 1: HEADER & FOTO NYATA RESOLUSI TINGGI */}
-            <div className="cutting-tools-photo-card" style={{
+            {/* CARD 1: HEADER & IDENTITAS ALAT */}
+            <div style={{
               background: '#ffffff',
-              borderRadius: '14px',
+              borderRadius: '12px',
               border: '1px solid #e2e8f0',
-              overflow: 'hidden',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)'
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
             }}>
-              {/* Header Info */}
-              <div style={{
-                padding: '16px 20px',
-                borderBottom: '1px solid #e2e8f0',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '10px'
-              }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                      {currentTool.nama}
-                    </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
                     <span style={{
-                      background: '#fff7ed',
-                      color: '#c2410c',
-                      border: '1px solid #fed7aa',
+                      background: currentTool.kategoriType === 'manual' ? '#0284c7' : '#ea580c',
+                      color: '#ffffff',
                       fontSize: '0.68rem',
                       fontWeight: 800,
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      textTransform: 'uppercase'
+                    }}>
+                      {currentTool.kategoriType === 'manual' ? '🔨 PERKAKAS TANGAN MANUAL' : '⚡ PERKAKAS BERTENAGA'}
+                    </span>
+                    <span style={{
+                      background: '#f1f5f9',
+                      color: '#475569',
+                      fontSize: '0.68rem',
+                      fontWeight: 700,
                       padding: '3px 8px',
                       borderRadius: '6px'
                     }}>
                       {currentTool.badge}
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '2px' }}>
-                    {currentTool.namaEng} • Kategori: <strong style={{ color: '#0f172a' }}>{currentTool.kategori}</strong>
+
+                  <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
+                    {currentTool.nama}
+                  </h2>
+                  <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600, fontStyle: 'italic', marginBottom: '10px' }}>
+                    {currentTool.namaEng}
                   </div>
+                  <p style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.6, margin: 0 }}>
+                    {currentTool.deskripsiSingkat}
+                  </p>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  {/* Tombol Audio Narator Materi Terpilih */}
-                  <button
-                    onClick={() => handleToggleToolAudio(currentTool)}
-                    style={{
-                      background: isSpeakingCurrentTool ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : '#fff7ed',
-                      border: isSpeakingCurrentTool ? '1.5px solid #9a3412' : '1.5px solid #fed7aa',
-                      color: isSpeakingCurrentTool ? '#ffffff' : '#c2410c',
-                      padding: '7px 14px',
-                      borderRadius: '8px',
-                      fontSize: '0.76rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      boxShadow: isSpeakingCurrentTool ? '0 4px 12px rgba(234, 88, 12, 0.35)' : 'none',
-                      transition: 'all 0.15s ease'
-                    }}
-                    title="Dengarkan Penjelasan Suara Materi Ini (Inklusi & Gaya Belajar Auditori)"
-                  >
-                    <span style={{ fontSize: '1.05rem' }}>{isSpeakingCurrentTool ? '⏹️' : '🔊'}</span>
-                    <span>{isSpeakingCurrentTool ? 'Hentikan Audio Narator' : 'Dengarkan Penjelasan Suara'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setLightboxOpen(true)}
-                    style={{
-                      background: '#f1f5f9',
-                      border: '1px solid #cbd5e1',
-                      color: '#1e293b',
-                      padding: '7px 12px',
-                      borderRadius: '8px',
-                      fontSize: '0.74rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <span>🔍</span> Perbesar Foto Asli
-                  </button>
-                </div>
-              </div>
-
-              {/* Active Audio Narration Banner */}
-              {isSpeakingCurrentTool && (
-                <div style={{
-                  background: '#fff7ed',
-                  borderBottom: '1px solid #fed7aa',
-                  padding: '10px 20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '8px'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                      <span className="sound-wave-bar bar-1" />
-                      <span className="sound-wave-bar bar-2" />
-                      <span className="sound-wave-bar bar-3" />
-                    </div>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#c2410c' }}>
-                      Audio Narator Inklusi: Membacakan materi {currentTool.nama}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <button
-                      onClick={stopSpeech}
-                      style={{
-                        background: '#ea580c',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      ⏹️ Hentikan Suara
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Showcase Foto Asli */}
-              <div className="cutting-tools-photo-grid" style={{ display: 'grid', gridTemplateColumns: currentTool.images.length > 1 ? '1.5fr 1fr' : '1fr', gap: '16px', padding: '20px' }}>
-                
-                {/* Foto Utama */}
-                <div className="cutting-tools-photo-box" style={{ position: 'relative', borderRadius: '10px', overflow: 'hidden', border: '1px solid #e2e8f0', background: '#f8fafc', minHeight: '360px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <img
-                    className="cutting-tools-photo-img"
-                    src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0].url}
-                    alt={currentTool.nama}
-                    onClick={() => setLightboxOpen(true)}
-                    style={{
-                      width: '100%',
-                      maxHeight: '440px',
-                      objectFit: 'contain',
-                      display: 'block',
-                      cursor: 'zoom-in',
-                      transition: 'transform 0.2s ease'
-                    }}
-                  />
-                  
-                  {/* Watermark/Badge Asli */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    background: 'rgba(255, 255, 255, 0.92)',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid #bae6fd',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '0.68rem',
-                    fontWeight: 800,
-                    color: '#0284c7',
+                {/* Tombol Audio Narasi */}
+                <button
+                  onClick={() => handleToggleToolAudio(currentTool)}
+                  style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.05)'
-                  }}>
-                    <span>📷</span> FOTO ASLI BENGKEL & INDUSTRI
-                  </div>
+                    gap: '8px',
+                    padding: '9px 16px',
+                    borderRadius: '8px',
+                    border: '1px solid #cbd5e1',
+                    background: isSpeaking ? '#fee2e2' : '#f8fafc',
+                    color: isSpeaking ? '#dc2626' : '#334155',
+                    fontWeight: 700,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+                    transition: 'all 0.15s ease'
+                  }}
+                  title="Dengarkan penjelasan audio narator untuk perkakas ini"
+                >
+                  <span style={{ fontSize: '1.1rem' }}>{isSpeaking ? '⏹️' : '🔊'}</span>
+                  <span>{isSpeaking ? 'Hentikan Audio' : 'Dengarkan Audio SOP'}</span>
+                </button>
+              </div>
 
-                  {/* Caption Foto */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '0',
-                    left: '0',
-                    right: '0',
-                    background: 'linear-gradient(to top, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.8) 70%, transparent 100%)',
-                    padding: '24px 16px 10px 16px',
-                    color: '#0f172a'
-                  }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
-                      {currentTool.images[selectedImageIndex]?.title}
-                    </div>
-                    <div style={{ fontSize: '0.73rem', color: '#475569', marginTop: '2px' }}>
-                      {currentTool.images[selectedImageIndex]?.desc}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Kolom Samping: Thumbnail Multi-View & Deskripsi Singkat */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  
-                  {/* Pilihan Thumbnail Foto Alternatif (Jika Ada) */}
-                  {currentTool.images.length > 1 && (
-                    <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b', marginBottom: '8px' }}>
-                        SUDUT FOTO REALISTIS TAMBAHAN:
-                      </div>
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        {currentTool.images.map((img, idx) => (
-                          <div
-                            key={idx}
-                            onClick={() => {
-                              sound.playClick();
-                              setSelectedImageIndex(idx);
-                            }}
-                            style={{
-                              width: '90px',
-                              height: '65px',
-                              borderRadius: '6px',
-                              overflow: 'hidden',
-                              cursor: 'pointer',
-                              border: selectedImageIndex === idx ? '2px solid #ea580c' : '1px solid #cbd5e1',
-                              opacity: selectedImageIndex === idx ? 1 : 0.7,
-                              transition: 'all 0.15s'
-                            }}
-                          >
-                            <img src={img.url} alt={img.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Penjelasan Ringkas & Prinsip */}
-                  <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0284c7', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      Peran & Fungsi di Bengkel:
-                    </div>
-                    <p style={{ fontSize: '0.78rem', color: '#0f172a', lineHeight: 1.55, margin: 0 }}>
-                      {currentTool.deskripsiLengkap}
-                    </p>
-                  </div>
-
-                  <div style={{ background: '#fff7ed', padding: '14px', borderRadius: '8px', border: '1px solid #fed7aa' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#c2410c', textTransform: 'uppercase', marginBottom: '4px' }}>
-                      ⚙️ Mekanisme / Prinsip Pemotongan:
-                    </div>
-                    <p style={{ fontSize: '0.76rem', color: '#7c2d12', lineHeight: 1.5, margin: 0 }}>
-                      {currentTool.prinsipKerja}
-                    </p>
-                  </div>
-
-                  {/* Tombol Pintas ke Anatomi Ber-Pin */}
-                  <button
-                    onClick={() => {
-                      sound.playClick();
-                      document.getElementById('anatomy-interactive-section')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    style={{
-                      padding: '11px 16px',
-                      background: 'linear-gradient(135deg, #ea580c, #c2410c)',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 10px rgba(234, 88, 12, 0.3)',
-                      transition: 'all 0.15s ease'
-                    }}
-                  >
-                    <span>🧩</span> Tunjukkan Posisi Bagian Alat Pada Foto Mesin (Pin Interaktif) ↓
-                  </button>
-
-                </div>
-
+              <div style={{ marginTop: '16px', padding: '12px 14px', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #ea580c', fontSize: '0.8rem', color: '#475569', lineHeight: 1.55 }}>
+                <strong style={{ color: '#0f172a' }}>⚙️ Prinsip Mekanika Kerja:</strong> {currentTool.prinsipKerja}
               </div>
             </div>
 
-            {/* CARD 2: ANATOMI & KOMPONEN UTAMA ALAT (IDENTIFIKASI FISIK LANGSUNG DI FOTO) */}
-            <div
-              id="anatomy-interactive-section"
-              style={{
+            {/* CARD KHUSUS: SUB-EKSPLORATOR 7 PROFIL KIKIR BENGKEL (JIKA ALAT KIKIR TERPILIH) */}
+            {currentTool.id === 'kikir-bengkel' && (
+              <div style={{
                 background: '#ffffff',
-                borderRadius: '14px',
-                border: '1px solid #e2e8f0',
-                padding: '24px',
-                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <style>{`
-                @keyframes pinPulse {
-                  0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.8); }
-                  70% { transform: translate(-50%, -50%) scale(1.18); box-shadow: 0 0 0 14px rgba(234, 88, 12, 0); }
-                  100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
-                }
-                @keyframes calloutFloat {
-                  0% { opacity: 0; transform: translateX(-50%) translateY(6px); }
-                  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
-                }
-                .anatomy-part-card {
-                  transition: all 0.2s ease;
-                }
-                .anatomy-part-card:hover {
-                  transform: translateY(-2px);
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-                }
-              `}</style>
-
-              {/* Header Bagian Anatomi */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span>🧩</span> Anatomi & Komponen Fisik Mesin
+                borderRadius: '12px',
+                border: '1.5px solid #38bdf8',
+                padding: '20px',
+                boxShadow: '0 4px 16px rgba(56, 189, 248, 0.1)'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0369a1', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span>🗜️</span> Eksplorator Interaktif 7 Profil Bentuk Penampang Kikir
                     </h3>
-                    <span style={{
-                      background: '#fff7ed',
-                      color: '#ea580c',
-                      fontSize: '0.7rem',
-                      fontWeight: 800,
-                      padding: '2px 8px',
-                      borderRadius: '6px',
-                      border: '1px solid #fed7aa'
-                    }}>
-                      Visual Pin Interaktif
-                    </span>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
+                      Klik salah satu dari 7 bentuk kikir di bawah ini untuk melihat penampang geometris, fungsi, fitur khusus, dan aplikasi benda kerja:
+                    </p>
                   </div>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '4px 0 0 0' }}>
-                    Arahkan kursor atau klik nomor pin langsung pada foto alat nyata di bawah ini untuk melihat letak fisik komponen dan penerapannya di bengkel:
-                  </p>
-                </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <button
-                    onClick={() => {
-                      sound.playClick();
-                      setShowAllPins(!showAllPins);
-                    }}
-                    style={{
-                      padding: '6px 12px',
-                      borderRadius: '7px',
-                      border: '1px solid #cbd5e1',
-                      background: showAllPins ? '#f8fafc' : '#0f172a',
-                      color: showAllPins ? '#334155' : '#ffffff',
-                      fontSize: '0.74rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    <span>{showAllPins ? '👁️' : '🎯'}</span>
-                    {showAllPins ? 'Sembunyikan Pin' : 'Tampilkan Semua Pin'}
-                  </button>
-                  <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 800, background: '#f1f5f9', padding: '6px 10px', borderRadius: '7px' }}>
-                    {currentTool.komponen.length} Bagian Fisik
+                  <span style={{ background: '#e0f2fe', color: '#0369a1', fontSize: '0.68rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px' }}>
+                    Standar SMK Teknik Mesin
                   </span>
                 </div>
-              </div>
 
-              {/* Selector Bar: Pills Cepat Pemilih Komponen */}
-              <div style={{
-                display: 'flex',
-                gap: '6px',
-                overflowX: 'auto',
-                paddingBottom: '8px',
-                marginBottom: '14px'
-              }}>
-                {currentTool.komponen.map((komp, idx) => {
-                  const isSelected = activeKomponenIdx === idx;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        sound.playClick();
-                        setActiveKomponenIdx(idx);
-                      }}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        border: isSelected ? '1.5px solid #ea580c' : '1px solid #e2e8f0',
-                        background: isSelected ? 'linear-gradient(135deg, #f97316, #ea580c)' : '#f8fafc',
-                        color: isSelected ? '#ffffff' : '#334155',
-                        fontSize: '0.74rem',
-                        fontWeight: isSelected ? 900 : 700,
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
+                {/* 7 Profile Selector Tabs */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '6px', marginBottom: '16px' }}>
+                  {KIKIR_PROFILES.map((prof) => {
+                    const isProfActive = activeKikirProfileId === prof.id;
+                    return (
+                      <button
+                        key={prof.id}
+                        onClick={() => {
+                          sound.playClick();
+                          setActiveKikirProfileId(prof.id);
+                        }}
+                        style={{
+                          padding: '9px 6px',
+                          borderRadius: '8px',
+                          border: isProfActive ? '2px solid #0284c7' : '1px solid #cbd5e1',
+                          background: isProfActive ? '#0284c7' : '#f8fafc',
+                          color: isProfActive ? '#ffffff' : '#1e293b',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: '3px',
+                          transition: 'all 0.15s ease',
+                          boxShadow: isProfActive ? '0 3px 10px rgba(2, 132, 199, 0.25)' : 'none'
+                        }}
+                      >
+                        <span style={{ fontSize: '1.3rem' }}>{prof.icon}</span>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 800, textAlign: 'center', lineHeight: 1.2 }}>
+                          {prof.nama.split(' (')[0]}
+                        </span>
+                        <span style={{ fontSize: '0.62rem', opacity: isProfActive ? 0.9 : 0.6 }}>
+                          {prof.simbol}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Detail Profil Kikir Terpilih */}
+                <div style={{
+                  background: '#f0f9ff',
+                  border: '1px solid #bae6fd',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '10px',
+                        background: '#0284c7',
+                        color: '#fff',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        boxShadow: isSelected ? '0 2px 8px rgba(234, 88, 12, 0.25)' : 'none',
-                        transition: 'all 0.15s ease'
+                        justifyContent: 'center',
+                        fontSize: '1.6rem',
+                        boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
+                      }}>
+                        {activeKikirProfile.icon}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
+                          {activeKikirProfile.nama}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontStyle: 'italic' }}>
+                          {activeKikirProfile.namaEng} • Simbol: <strong style={{ color: '#0f172a' }}>{activeKikirProfile.simbol}</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleNarrationKikirProfile(activeKikirProfile)}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: '1px solid #0284c7',
+                        background: '#ffffff',
+                        color: '#0284c7',
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
                       }}
                     >
-                      <span style={{
-                        background: isSelected ? 'rgba(255,255,255,0.25)' : '#e2e8f0',
-                        padding: '1px 5px',
-                        borderRadius: '4px',
-                        fontSize: '0.65rem'
-                      }}>
-                        {komp.no}
-                      </span>
-                      <span>{komp.nama.split('(')[0].trim()}</span>
+                      <span>🔊</span>
+                      <span>Dengarkan Profil Ini</span>
                     </button>
-                  );
-                })}
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px', fontSize: '0.78rem' }}>
+                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
+                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>📐 Bentuk Penampang Melintang:</div>
+                      <div style={{ color: '#334155' }}>{activeKikirProfile.penampang}</div>
+                    </div>
+
+                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
+                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>🎯 Fungsi Utama di Bengkel:</div>
+                      <div style={{ color: '#334155' }}>{activeKikirProfile.fungsi}</div>
+                    </div>
+
+                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
+                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>⭐ Fitur Khusus & Keunggulan:</div>
+                      <div style={{ color: '#334155' }}>{activeKikirProfile.fiturKhusus}</div>
+                    </div>
+
+                    <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '7px', border: '1px solid #e0f2fe' }}>
+                      <div style={{ color: '#0369a1', fontWeight: 800, marginBottom: '3px' }}>🔩 Rekomendasi Gigi & Penggunaan:</div>
+                      <div style={{ color: '#334155' }}>{activeKikirProfile.rekomendasiGigi}</div>
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#e0f2fe', padding: '8px 12px', borderRadius: '6px', fontSize: '0.74rem', color: '#0369a1', lineHeight: 1.45 }}>
+                    <strong>💡 Tips Teknik Pengikiran:</strong> {activeKikirProfile.tipsTeknik}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* CARD 2: CANVAS VISUAL REALISTIS / INFOGRAFIS DENGAN PIN INTERAKTIF */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                <div>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
+                    📸 Visual Infografis & Anatomi Komponen Nyata
+                  </h3>
+                  <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
+                    Klik nomor pin pada gambar atau klik item komponen di daftar bawah untuk mempelajari letak dan fungsinya
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => setShowAllPins(!showAllPins)}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid #cbd5e1',
+                      background: showAllPins ? '#ea580c' : '#f8fafc',
+                      color: showAllPins ? '#ffffff' : '#334155',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {showAllPins ? '✓ Pin Tampil' : 'Sembunyikan Pin'}
+                  </button>
+
+                  <button
+                    onClick={() => setLightboxOpen(true)}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid #cbd5e1',
+                      background: '#f8fafc',
+                      color: '#0f172a',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    🔍 Zoom Ukuran Penuh
+                  </button>
+                </div>
               </div>
 
-              {/* CANVAS FOTO REALISTIS DENGAN PIN INTERAKTIF */}
+              {/* CANVAS GAMBAR DENGAN PIN INTERAKTIF */}
               <div
                 style={{
                   position: 'relative',
@@ -1411,7 +1774,8 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
                   display: 'flex',
                   justifyContent: 'center',
-                  alignItems: 'center'
+                  alignItems: 'center',
+                  minHeight: '340px'
                 }}
               >
                 <img
@@ -1419,7 +1783,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   alt={currentTool.nama}
                   style={{
                     width: '100%',
-                    maxHeight: '480px',
+                    maxHeight: '460px',
                     objectFit: 'contain',
                     display: 'block'
                   }}
@@ -1440,11 +1804,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                   border: '1px solid rgba(255,255,255,0.15)',
                   zIndex: 20
                 }}>
-                  <span>📍</span> KLIK NOMOR PIN PADA FOTO UNTUK MELIHAT PENERAPAN BAGIANNYA
+                  <span>📍</span> KLIK NOMOR PIN PADA GAMBAR UNTUK MELIHAT PENERAPAN BAGIANNYA
                 </div>
 
                 {/* Overlay Pin Interaktif */}
@@ -1473,12 +1836,13 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                             position: 'absolute',
                             top: '50%',
                             left: '50%',
-                            width: '46px',
-                            height: '46px',
+                            width: '44px',
+                            height: '44px',
                             borderRadius: '50%',
                             border: '2.5px solid #ea580c',
                             animation: 'pinPulse 2s infinite ease-out',
-                            pointerEvents: 'none'
+                            pointerEvents: 'none',
+                            transform: 'translate(-50%, -50%)'
                           }}
                         />
                       )}
@@ -1493,25 +1857,24 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                         onMouseEnter={() => setHoveredPinIdx(idx)}
                         onMouseLeave={() => setHoveredPinIdx(null)}
                         style={{
-                          width: isSelected ? '34px' : '28px',
-                          height: isSelected ? '34px' : '28px',
+                          width: isSelected ? '32px' : '26px',
+                          height: isSelected ? '32px' : '26px',
                           borderRadius: '50%',
                           background: isSelected 
                             ? 'linear-gradient(135deg, #f97316, #ea580c)' 
                             : 'rgba(15, 23, 42, 0.92)',
                           color: '#ffffff',
-                          border: isSelected ? '2.5px solid #ffffff' : '2px solid #ea580c',
+                          border: isSelected ? '2px solid #ffffff' : '1.5px solid #ea580c',
                           boxShadow: isSelected 
-                            ? '0 0 18px rgba(234, 88, 12, 0.95), 0 4px 10px rgba(0,0,0,0.5)' 
-                            : '0 2px 8px rgba(0,0,0,0.5)',
+                            ? '0 0 16px rgba(234, 88, 12, 0.9), 0 4px 10px rgba(0,0,0,0.5)' 
+                            : '0 2px 6px rgba(0,0,0,0.5)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontSize: isSelected ? '0.74rem' : '0.66rem',
+                          fontSize: isSelected ? '0.72rem' : '0.64rem',
                           fontWeight: 900,
                           cursor: 'pointer',
-                          transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                          transform: isSelected ? 'scale(1.15)' : (isHovered ? 'scale(1.1)' : 'scale(1)')
+                          transition: 'all 0.15s ease'
                         }}
                       >
                         {komp.no}
@@ -1522,42 +1885,41 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                         <div
                           style={{
                             position: 'absolute',
-                            [calloutAbove ? 'bottom' : 'top']: '40px',
+                            [calloutAbove ? 'bottom' : 'top']: '36px',
                             left: '50%',
                             transform: 'translateX(-50%)',
-                            width: '260px',
+                            width: '250px',
                             background: 'rgba(15, 23, 42, 0.96)',
                             color: '#ffffff',
                             backdropFilter: 'blur(10px)',
-                            borderRadius: '10px',
-                            padding: '10px 14px',
-                            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 0 0 1.5px rgba(234, 88, 12, 0.5)',
+                            borderRadius: '8px',
+                            padding: '10px 12px',
+                            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(234, 88, 12, 0.5)',
                             textAlign: 'left',
                             zIndex: 40,
-                            pointerEvents: 'none',
-                            animation: 'calloutFloat 0.2s ease-out'
+                            pointerEvents: 'none'
                           }}
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '5px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                             <span style={{
                               background: '#ea580c',
                               color: '#fff',
-                              fontSize: '0.64rem',
+                              fontSize: '0.62rem',
                               fontWeight: 900,
-                              padding: '1px 6px',
+                              padding: '1px 5px',
                               borderRadius: '4px'
                             }}>
                               {komp.no}
                             </span>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f8fafc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#f8fafc' }}>
                               {komp.nama}
                             </span>
                           </div>
-                          <div style={{ fontSize: '0.72rem', color: '#fed7aa', fontWeight: 800, marginBottom: '4px', lineHeight: 1.3 }}>
+                          <p style={{ margin: '0 0 4px 0', fontSize: '0.7rem', color: '#cbd5e1', lineHeight: 1.4 }}>
+                            {komp.desc}
+                          </p>
+                          <div style={{ fontSize: '0.62rem', color: '#f97316', fontWeight: 700 }}>
                             📍 {komp.lokasiFisik}
-                          </div>
-                          <div style={{ fontSize: '0.68rem', color: '#cbd5e1', lineHeight: 1.35 }}>
-                            ⚙️ {komp.desc}
                           </div>
                         </div>
                       )}
@@ -1566,346 +1928,305 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 })}
               </div>
 
-              {/* INSPECTOR SPOTLIGHT BAR: DETAIL LENGKAP KOMPONEN TERPILIH */}
-              <div style={{
-                marginTop: '16px',
-                background: '#fff7ed',
-                borderRadius: '12px',
-                border: '1.5px solid #fdba74',
-                padding: '16px 20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '10px',
-                boxShadow: '0 2px 10px rgba(234, 88, 12, 0.08)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{
-                      background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                      color: '#ffffff',
-                      fontSize: '0.9rem',
-                      fontWeight: 900,
-                      padding: '4px 12px',
-                      borderRadius: '8px',
-                      boxShadow: '0 2px 8px rgba(234, 88, 12, 0.3)'
-                    }}>
-                      Bagian No. {currentTool.komponen[activeKomponenIdx]?.no || '01'}
-                    </span>
-                    <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#9a3412' }}>
-                      {currentTool.komponen[activeKomponenIdx]?.nama}
-                    </h4>
-                  </div>
-                  <span style={{
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    color: '#ea580c',
-                    background: '#ffedd5',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    border: '1px solid #fed7aa',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                  }}>
-                    <span>🎯</span> Ditunjuk Pada Pin Foto di Atas
-                  </span>
+              {/* DAFTAR GRID KOMPONEN DI BAWAH GAMBAR */}
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                  Komponen & Anatomi ({currentTool.komponen.length} Bagian Kunci):
                 </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.35fr', gap: '12px' }}>
-                  <div style={{ background: '#ffffff', padding: '12px 14px', borderRadius: '10px', border: '1px solid #fed7aa' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#c2410c', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span>📍</span> Letak Fisik Pada Gambar Mesin:
-                    </div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.45 }}>
-                      {currentTool.komponen[activeKomponenIdx]?.lokasiFisik}
-                    </div>
-                  </div>
-                  
-                  <div style={{ background: '#ffffff', padding: '12px 14px', borderRadius: '10px', border: '1px solid #fed7aa' }}>
-                    <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#c2410c', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span>⚙️</span> Fungsi & Penerapan di Bengkel:
-                    </div>
-                    <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.5 }}>
-                      {currentTool.komponen[activeKomponenIdx]?.desc}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* GRID 6 KARTU KOMPONEN DENGAN SINKRONISASI DUA ARAH */}
-              <div style={{ marginTop: '18px' }}>
-                <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '10px' }}>
-                  Daftar Seluruh Komponen Fisik (Klik kartu untuk menyorot pin di gambar):
-                </div>
-                <div className="cutting-tools-anatomy-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
-                  {currentTool.komponen.map((komp, idx) => {
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '8px' }}>
+                  {currentTool.komponen.map((k, idx) => {
                     const isSelected = activeKomponenIdx === idx;
                     return (
                       <div
                         key={idx}
-                        className="anatomy-part-card"
                         onClick={() => {
                           sound.playClick();
                           setActiveKomponenIdx(idx);
                         }}
                         style={{
-                          background: isSelected ? '#fff7ed' : '#f8fafc',
-                          borderRadius: '10px',
-                          padding: '14px',
-                          border: isSelected ? '2px solid #ea580c' : '1px solid #e2e8f0',
-                          boxShadow: isSelected ? '0 4px 14px rgba(234, 88, 12, 0.16)' : 'none',
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          background: isSelected ? '#fff7ed' : '#ffffff',
+                          border: isSelected ? '1.5px solid #ea580c' : '1px solid #e2e8f0',
                           cursor: 'pointer',
                           display: 'flex',
-                          flexDirection: 'column',
-                          gap: '6px'
+                          gap: '10px',
+                          transition: 'all 0.15s ease'
                         }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{
-                              background: isSelected 
-                                ? 'linear-gradient(135deg, #f97316, #ea580c)' 
-                                : '#e2e8f0',
-                              color: isSelected ? '#ffffff' : '#334155',
-                              fontSize: '0.68rem',
-                              fontWeight: 900,
-                              padding: '2px 7px',
-                              borderRadius: '4px'
-                            }}>
-                              {komp.no}
-                            </span>
-                            <span style={{ fontSize: '0.84rem', fontWeight: 800, color: isSelected ? '#9a3412' : '#0f172a' }}>
-                              {komp.nama}
-                            </span>
+                        <div style={{
+                          width: '26px',
+                          height: '26px',
+                          borderRadius: '50%',
+                          background: isSelected ? '#ea580c' : '#f1f5f9',
+                          color: isSelected ? '#ffffff' : '#475569',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.7rem',
+                          fontWeight: 900,
+                          flexShrink: 0
+                        }}>
+                          {k.no}
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.76rem', fontWeight: 800, color: isSelected ? '#c2410c' : '#0f172a' }}>
+                            {k.nama}
                           </div>
-                          {isSelected && (
-                            <span style={{ fontSize: '0.65rem', background: '#ea580c', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                              Ditunjuk 👆
-                            </span>
-                          )}
+                          <div style={{ fontSize: '0.7rem', color: '#64748b', lineHeight: 1.4, marginTop: '2px' }}>
+                            {k.desc}
+                          </div>
                         </div>
-
-                        <div style={{ background: isSelected ? '#ffedd5' : '#ffffff', padding: '6px 10px', borderRadius: '6px', border: isSelected ? '1px solid #fed7aa' : '1px solid #e2e8f0' }}>
-                          <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#c2410c' }}>📍 Letak: </span>
-                          <span style={{ fontSize: '0.73rem', color: '#0f172a', fontWeight: 700 }}>
-                            {komp.lokasiFisik}
-                          </span>
-                        </div>
-
-                        <p style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.45, margin: 0 }}>
-                          {komp.desc}
-                        </p>
                       </div>
                     );
                   })}
                 </div>
               </div>
-
             </div>
 
-            {/* CARD 3 & 4: SPESIFIKASI TEKNIS INDUSTRI & BENDA KERJA */}
-            <div className="cutting-tools-spec-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '18px' }}>
+            {/* CARD 3: SPESIFIKASI TEKNIS & STANDARISASI */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+            }}>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: '0 0 12px 0' }}>
+                📋 Spesifikasi Parameter Teknis Standar
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
+                {currentTool.spesifikasi.map((spec, sIdx) => (
+                  <div key={sIdx} style={{
+                    background: '#f8fafc',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                      {spec.label}
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 800, marginTop: '2px' }}>
+                      {spec.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CARD 4: SOP KERJA & ATURAN K3 */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
               
-              {/* Spesifikasi Teknis Standar Industri */}
+              {/* Box SOP */}
               <div style={{
                 background: '#ffffff',
-                borderRadius: '14px',
+                borderRadius: '12px',
                 border: '1px solid #e2e8f0',
                 padding: '20px',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
               }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>📊</span> Spesifikasi Standar Industri
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0284c7', margin: '0 0 12px 0' }}>
+                  🔧 Standar Operasional Prosedur (SOP)
                 </h3>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {currentTool.spesifikasi.map((spec, sIdx) => (
-                    <div
-                      key={sIdx}
-                      style={{
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {currentTool.sopKerja.map((sop, sopIdx) => (
+                    <div key={sopIdx} style={{ display: 'flex', gap: '10px', fontSize: '0.78rem', color: '#334155', lineHeight: 1.5 }}>
+                      <span style={{
+                        background: '#e0f2fe',
+                        color: '#0369a1',
+                        width: '20px',
+                        height: '20px',
+                        borderRadius: '50%',
                         display: 'flex',
-                        justifyContent: 'space-between',
                         alignItems: 'center',
-                        padding: '8px 10px',
-                        borderRadius: '6px',
-                        background: sIdx % 2 === 0 ? '#f8fafc' : '#ffffff',
-                        fontSize: '0.76rem',
-                        border: '1px solid #f1f5f9'
-                      }}
-                    >
-                      <span style={{ color: '#64748b' }}>{spec.label}</span>
-                      <strong style={{ color: '#0f172a', fontWeight: 800 }}>{spec.value}</strong>
+                        justifyContent: 'center',
+                        fontSize: '0.66rem',
+                        fontWeight: 900,
+                        flexShrink: 0,
+                        marginTop: '2px'
+                      }}>
+                        {sopIdx + 1}
+                      </span>
+                      <span>{sop}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Benda Kerja & Profil Logam yang Sesuai */}
+              {/* Box K3 Penting */}
               <div style={{
-                background: '#ffffff',
-                borderRadius: '14px',
-                border: '1px solid #e2e8f0',
+                background: '#fff7ed',
+                borderRadius: '12px',
+                border: '1px solid #fed7aa',
                 padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
               }}>
-                <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>🔩</span> Aplikasi Benda Kerja yang Sesuai
-                  </h3>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {currentTool.bendaKerja.map((benda, bIdx) => (
-                      <div
-                        key={bIdx}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          background: '#f8fafc',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          border: '1px solid #e2e8f0',
-                          fontSize: '0.76rem',
-                          color: '#1e293b'
-                        }}
-                      >
-                        <span style={{ color: '#16a34a', fontWeight: 800 }}>✓</span>
-                        <span>{benda}</span>
-                      </div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#c2410c', margin: '0 0 12px 0' }}>
+                  🛡️ Aturan Keselamatan Kerja (K3 Wajib)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {currentTool.k3Penting.map((k3, k3Idx) => (
+                    <div key={k3Idx} style={{ display: 'flex', gap: '10px', fontSize: '0.78rem', color: '#7c2d12', lineHeight: 1.5 }}>
+                      <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>⚠️</span>
+                      <span>{k3}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #fed7aa' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#9a3412', marginBottom: '6px' }}>
+                    Aplikasi Benda Kerja Cocok:
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                    {currentTool.bendaKerja.map((bk, bIdx) => (
+                      <span key={bIdx} style={{
+                        background: '#ffedd5',
+                        color: '#c2410c',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #fed7aa'
+                      }}>
+                        • {bk}
+                      </span>
                     ))}
                   </div>
                 </div>
-
-                <div style={{ marginTop: '16px', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '10px 14px', borderRadius: '8px' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#1d4ed8', marginBottom: '2px' }}>
-                    💡 Standar Kurikulum SMK:
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: '#1e40af' }}>
-                    Kompetensi Dasar (KD) Pengoperasian Alat Pemotong Pemesinan & Fabrikasi Logam Kelas X & XI Teknik Pemesinan.
-                  </div>
-                </div>
               </div>
 
-            </div>
-
-            {/* CARD 5: STANDAR OPERASIONAL PROSEDUR (SOP) LANGKAH KERJA NYATA */}
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '14px',
-              border: '1px solid #e2e8f0',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
-            }}>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>📋</span> Standar Operasional Prosedur (SOP) Pengoperasian di Bengkel
-              </h3>
-              <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 16px 0' }}>
-                Urutan instruksi kerja baku bengkel pemesinan dari persiapan awal, pencekaman, pemotongan, hingga perawatan
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {currentTool.sopKerja.map((step, sIdx) => (
-                  <div
-                    key={sIdx}
-                    style={{
-                      display: 'flex',
-                      gap: '12px',
-                      background: '#f8fafc',
-                      padding: '12px 14px',
-                      borderRadius: '8px',
-                      border: '1px solid #e2e8f0'
-                    }}
-                  >
-                    <div style={{
-                      width: '26px',
-                      height: '26px',
-                      borderRadius: '50%',
-                      background: '#fff7ed',
-                      color: '#ea580c',
-                      border: '1px solid #fed7aa',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.72rem',
-                      fontWeight: 900,
-                      flexShrink: 0
-                    }}>
-                      {sIdx + 1}
-                    </div>
-                    <div style={{ fontSize: '0.76rem', color: '#1e293b', lineHeight: 1.55 }}>
-                      {step}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CARD 6: KESELAMATAN KERJA (K3) & BAHAYA YANG HARUS DIHINDARI */}
-            <div style={{
-              background: '#fef2f2',
-              borderRadius: '14px',
-              border: '1px solid #fecaca',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(239, 68, 68, 0.04)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-                <span style={{ fontSize: '1.4rem' }}>⚠️</span>
-                <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#dc2626', margin: 0 }}>
-                    Peringatan K3 Mutlak untuk {currentTool.nama.split('(')[0].trim()}
-                  </h3>
-                  <p style={{ fontSize: '0.74rem', color: '#991b1b', margin: 0 }}>
-                    Patuhi prosedur keselamatan berikut untuk mencegah insiden kecelakaan kerja di bengkel
-                  </p>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '10px' }}>
-                {currentTool.k3Penting.map((rule, rIdx) => (
-                  <div
-                    key={rIdx}
-                    style={{
-                      background: '#ffffff',
-                      padding: '10px 12px',
-                      borderRadius: '6px',
-                      borderLeft: '4px solid #ef4444',
-                      border: '1px solid #fee2e2',
-                      fontSize: '0.75rem',
-                      color: '#991b1b',
-                      lineHeight: 1.5
-                    }}
-                  >
-                    {rule}
-                  </div>
-                ))}
-              </div>
             </div>
 
           </div>
-
         </div>
       )}
 
       {/* =====================================================================
-          VIEW 2: TEORI & STANDARISASI PEMOTONGAN (RUMUS & TABEL)
+          VIEW 2: TEORI, RUMUS, DAN STANDARISASI PERKAKAS
           ===================================================================== */}
       {labTab === 'materi' && (
-        <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', background: '#f8fafc' }}>
+        <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '22px', background: '#f8fafc' }}>
           
           {/* Header Teori */}
           <div style={{ background: '#ffffff', padding: '18px 20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '0 0 6px 0' }}>
-              📐 Rumus Baku & Standarisasi Parameter Pemotongan Logam
+              📐 Teori Standarisasi Perkakas Bengkel & Parameter Pemotongan Logam
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#64748b', margin: 0 }}>
-              Kompilasi rumus teknis permesinan, kecepatan potong (Cutting Speed), aturan pemilihan TPI gergaji, dan tabel tap drill sizing.
+              Kompilasi materi kompetensi kejuruan SMK Teknik Pemesinan: Klasifikasi Kikir 7 Profil, Kekasaran Bastard-Smooth, Pola Sayat Gigi, Rumus Kecepatan Potong (Cs) & RPM Bor, Tabel Tap Drill Size, dan Aturan TPI Gergaji.
             </p>
           </div>
 
-          {/* KALKULATOR INTERAKTIF RPM BOR NYATA */}
+          {/* SECTION 1: MATERI KOMPREHENSIF KIKIR BENGKEL (7 PROFIL & KEKASARAN) */}
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '12px',
+            border: '1.5px solid #0284c7',
+            padding: '22px',
+            boxShadow: '0 4px 16px rgba(2, 132, 199, 0.08)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+              <span style={{ fontSize: '1.6rem' }}>📘</span>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0369a1', margin: 0 }}>
+                  1. Klasifikasi Standar Kikir Bengkel (7 Bentuk Penampang, Tingkat Kasar, & Pola Sayat)
+                </h3>
+                <p style={{ fontSize: '0.76rem', color: '#64748b', margin: '2px 0 0 0' }}>
+                  Standar DIN 7261 / ISO 234 untuk pekerjaan perataan dan finishing bangku SMK
+                </p>
+              </div>
+            </div>
+
+            {/* Tabel 7 Bentuk Profil Kikir */}
+            <div style={{ overflowX: 'auto', marginBottom: '18px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.76rem', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: '#f0f9ff', color: '#0369a1', borderBottom: '2px solid #bae6fd' }}>
+                    <th style={{ padding: '9px 12px' }}>Profil Kikir</th>
+                    <th style={{ padding: '9px 12px' }}>Penampang Geometri</th>
+                    <th style={{ padding: '9px 12px' }}>Fungsi Utama Bengkel</th>
+                    <th style={{ padding: '9px 12px' }}>Aplikasi Benda Kerja</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {KIKIR_PROFILES.map((p, pIdx) => (
+                    <tr key={pIdx} style={{ borderBottom: '1px solid #e2e8f0', background: pIdx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+                      <td style={{ padding: '9px 12px', fontWeight: 800, color: '#0f172a' }}>
+                        <span style={{ marginRight: '6px' }}>{p.icon}</span> {p.nama}
+                      </td>
+                      <td style={{ padding: '9px 12px', color: '#475569' }}>
+                        {p.penampang}
+                      </td>
+                      <td style={{ padding: '9px 12px', color: '#334155' }}>
+                        {p.fungsi}
+                      </td>
+                      <td style={{ padding: '9px 12px', color: '#0369a1', fontWeight: 700 }}>
+                        {p.bendaKerja}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 3 Grid Penjelas Kikir: Kekasaran, Pola Gigi, dan Teknik Kuda-Kuda */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+              
+              {/* Box 1: Tingkat Kekasaran Gigi */}
+              <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                  📊 4 Tingkat Kekasaran Gigi Kikir
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.72rem' }}>
+                  <div style={{ padding: '6px 8px', background: '#fff', borderRadius: '5px', borderLeft: '3px solid #ef4444' }}>
+                    <strong style={{ color: '#dc2626' }}>1. Kasar (Bastard Cut):</strong> 0.5 - 1.0 mm pitch. Untuk pengikisan awal cepat (roughing / buang bram sisa potongan 0.5 - 1.0 mm).
+                  </div>
+                  <div style={{ padding: '6px 8px', background: '#fff', borderRadius: '5px', borderLeft: '3px solid #f59e0b' }}>
+                    <strong style={{ color: '#d97706' }}>2. Sedang (Second Cut):</strong> 0.25 - 0.5 mm pitch. Untuk mendekati batas garis ukuran toleransi (0.1 - 0.2 mm).
+                  </div>
+                  <div style={{ padding: '6px 8px', background: '#fff', borderRadius: '5px', borderLeft: '3px solid #10b981' }}>
+                    <strong style={{ color: '#059669' }}>3. Halus (Smooth Cut):</strong> 0.1 - 0.25 mm pitch. Untuk finishing akhir permukaan halus presisi.
+                  </div>
+                  <div style={{ padding: '6px 8px', background: '#fff', borderRadius: '5px', borderLeft: '3px solid #3b82f6' }}>
+                    <strong style={{ color: '#2563eb' }}>4. Sangat Halus (Dead Smooth):</strong> Pitch &lt; 0.1 mm. Untuk menghasilkan kilap permukaan cermin tanpa goresan.
+                  </div>
+                </div>
+              </div>
+
+              {/* Box 2: Pola Guratan Gigi */}
+              <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                  🔪 Pola Guratan Gigi Kikir
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.73rem', color: '#475569' }}>
+                  <div style={{ background: '#fff', padding: '8px', borderRadius: '5px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '2px' }}>• Single Cut (Gigi Tunggal):</div>
+                    Satu baris alur sejajar bersudut 65° s.d. 85° terhadap sumbu kikir. Menghasilkan potongan halus, cocok untuk mengikir kuningan, aluminium, dan menajamkan mata gergaji.
+                  </div>
+                  <div style={{ background: '#fff', padding: '8px', borderRadius: '5px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '2px' }}>• Double Cut (Gigi Silang):</div>
+                    Dua baris alur bersilangan: baris pertama (overcut sudut 40°-45°) dan baris kedua (upcut sudut 70°-80°). Tatal terpecah menjadi butiran kecil seperti intan, pembuangan material sangat cepat untuk baja.
+                  </div>
+                </div>
+              </div>
+
+              {/* Box 3: SOP Kuda-Kuda & Perawatan */}
+              <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
+                  🦶 Kuda-Kuda & Perawatan Kikir
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.72rem', color: '#334155' }}>
+                  <div>• <strong>Posisi Kaki:</strong> Kaki kiri maju 30°, kaki kanan belakang 75°, tubuh rileks condong 10° ke depan.</div>
+                  <div>• <strong>Ritme Gerakan:</strong> Dorong maju dengan tekanan seimbang; lepaskan tekanan saat ditarik mundur.</div>
+                  <div>• <strong>Pengapuran (Chalking):</strong> Gosokkan kapur tulis pada kikir halus agar tatal tidak menyumbat (pinning) dan tidak mencakar benda.</div>
+                  <div>• <strong>Sikat Kikir (File Card):</strong> Bersihkan tatal searah alur gigi kikir menggunakan sikat kawat kuningan halus.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* SECTION 2: KALKULATOR INTERAKTIF RPM BOR NYATA */}
           <div style={{
             background: '#ffffff',
             borderRadius: '12px',
@@ -1916,7 +2237,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#c2410c', margin: 0 }}>
-                  🔢 Kalkulator Putaran Spindel Bor (N = (1000 × Cs) / (π × d))
+                  🔢 2. Kalkulator Putaran Spindel Bor (N = (1000 × Cs) / (π × d))
                 </h3>
                 <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
                   Hitung RPM ideal mata bor HSS pada mesin bor bangku untuk mencegah mata bor gosong atau tumpul
@@ -1988,16 +2309,16 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             </div>
           </div>
 
-          {/* TABEL PANDUAN PENTING */}
+          {/* SECTION 3: TABEL PANDUAN PENTING (TAP DRILL, TPI GERGAJI, DAN GERINDA DUDUK) */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
             
             {/* Tabel Ukuran Bor Tap Metrik */}
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0284c7', margin: '0 0 10px 0' }}>
-                🔩 Tabel Tap Drill Size (Standar ISO Metrik)
+                🔩 3. Tabel Tap Drill Size (Standar ISO Metrik)
               </h3>
               <p style={{ fontSize: '0.72rem', color: '#64748b', margin: '0 0 10px 0' }}>
-                Gunakan rumus: <strong>D_bor = D_nominal - Pitch</strong>
+                Rumus Baku: <strong>D_bor = D_nominal - Pitch</strong>
               </p>
 
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.74rem', textAlign: 'left' }}>
@@ -2032,18 +2353,18 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             {/* Aturan Pemilihan TPI Gergaji Besi */}
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ea580c', margin: '0 0 10px 0' }}>
-                🪚 Panduan Pemilihan TPI Bilah Gergaji Besi
+                🪚 4. Panduan Pemilihan TPI Bilah Gergaji Besi
               </h3>
               <p style={{ fontSize: '0.72rem', color: '#64748b', margin: '0 0 10px 0' }}>
-                TPI = Teeth Per Inch (Jumlah gigi per inci panjang bilah gergaji).
+                TPI = Teeth Per Inch (Aturan Emas: Minimal 3 gigi kontak simultan).
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {[
-                  { tpi: '4 - 6 TPI (Gigi Kasar)', tebal: 'Material tebal > 50 mm, batang pejal as besar', desc: 'Pembuangan tatal cepat pada logam lunak dan penampang besar.' },
-                  { tpi: '8 - 10 TPI (Gigi Sedang)', tebal: 'Material tebal 15 - 50 mm, profil siku, kanal', desc: 'Serbaguna untuk pemotongan profil baja umum di bengkel.' },
-                  { tpi: '14 TPI (Gigi Halus Standar)', tebal: 'Material tebal 6 - 15 mm, pipa hollow tebal', desc: 'Standar umum power hacksaw dan horizontal bandsaw bengkel SMK.' },
-                  { tpi: '18 - 24 TPI (Gigi Sangat Halus)', tebal: 'Material tipis < 6 mm, pipa tipis, pelat sheet', desc: 'Mencegah gigi rontok saat menyayat penampang tipis (rule of 3 teeth).' }
+                  { tpi: '14 TPI (Gigi Kasar)', tebal: 'Material pejal tebal > 25 mm, aluminium cor', desc: 'Pembuangan tatal cepat pada logam lunak dan penampang masif.' },
+                  { tpi: '18 TPI (Sedang - Umum)', tebal: 'Material tebal 6 - 25 mm, profil siku, poros baja', desc: 'Paling serbaguna untuk pemotongan profil baja umum di bengkel SMK.' },
+                  { tpi: '24 TPI (Halus)', tebal: 'Material tebal 3 - 6 mm, pipa besi ketebalan sedang', desc: 'Standar pemotongan pipa hollow dan pelat strip tipis.' },
+                  { tpi: '32 TPI (Sangat Halus)', tebal: 'Material sangat tipis < 3 mm, pipa conduit tipis', desc: 'Mencegah gigi rontok saat menyayat penampang tipis (rule of 3 teeth).' }
                 ].map((item, iIdx) => (
                   <div key={iIdx} style={{ background: '#f8fafc', padding: '10px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', fontWeight: 800, color: '#0f172a' }}>
@@ -2062,7 +2383,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
       )}
 
       {/* =====================================================================
-          VIEW 3: SOP & KESELAMATAN KERJA (K3)
+          VIEW 3: SOP & KESELAMATAN KERJA (K3) PERKAKAS BENGKEL
           ===================================================================== */}
       {labTab === 'safety' && (
         <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', background: '#f8fafc' }}>
@@ -2075,10 +2396,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             boxShadow: '0 2px 10px rgba(239, 68, 68, 0.04)'
           }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#dc2626', margin: '0 0 6px 0' }}>
-              🛡️ Keselamatan dan Kesehatan Kerja (K3) Pemotongan Logam
+              🛡️ Keselamatan dan Kesehatan Kerja (K3) Perkakas Bengkel & Pemotongan Logam
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#991b1b', margin: 0, lineHeight: 1.5 }}>
-              Mesin dan perkakas pemotong bertenaga menyimpan energi kinetik tinggi, putaran puluhan ribu RPM, gaya tekan puluhan ton, dan percikan api bersuhu &gt; 1000°C. Kepatuhan K3 adalah harga mati bagi setiap teknisi dan siswa teknik mesin.
+              Perkakas tangan manual yang salah digunakan dapat menusuk telapak tangan (ekor kikir tanpa gagang) atau mementalkan serpihan peluru (kepala jamur pahat). Sementara mesin bertenaga menyimpan putaran puluhan ribu RPM dan gaya potong puluhan ton. Kepatuhan K3 adalah harga mati bagi setiap teknisi dan siswa teknik mesin.
             </p>
           </div>
 
@@ -2090,57 +2411,57 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 1. Pelindung Mata & Wajah (ANSI Z87.1)
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                Wajib mengenakan safety glasses dengan pelindung samping atau face shield penuh saat menggerinda atau memotong. Serpihan batu abrasif atau tatal panas dapat menyebabkan kebutaan permanen.
+                Wajib mengenakan safety glasses dengan pelindung samping atau face shield penuh saat menggerinda, memahat, atau memotong. Serpihan tatal panas atau batu abrasif dapat menyebabkan kebutaan permanen.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
               <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🚫🧤</div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#dc2626', margin: '0 0 6px 0' }}>
-                2. Aturan Sarung Tangan pada Mesin Putar
+                2. Larangan Sarung Tangan Kain pada Mesin Putar
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                <strong>DILARANG KERAS</strong> memakai sarung tangan kain longgar saat mengoperasikan mesin bor, mesin bubut, atau reamer putar. Sarung tangan kulit HANYA digunakan saat mengangkat pelat tajam atau menggerinda.
+                <strong>DILARANG KERAS</strong> memakai sarung tangan kain rajut saat mengoperasikan mesin bor bangku, gerinda duduk, atau mesin bubut. Benang yang tersangkut pada spindel putar akan menyeret jari dan tangan ke putaran mesin (bahaya entanglement).
               </p>
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🛑</div>
+              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🗜️</div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
-                3. Pencekaman Benda Kerja Mutlak
+                3. Pencekaman Benda Kerja Mutlak dengan Ragum
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                Jangan pernah memegang benda kerja pelat atau pipa dengan tangan telanjang saat dibor atau dipotong. Selalu gunakan ragum meja, tang buaya (vice grip), atau klem C yang kokoh.
+                Jangan pernah memegang benda kerja pelat dengan tangan kosong saat dibor atau digergaji. Gunakan ragum meja bangku dengan pelindung soft jaws tembaga/aluminium agar permukaan halus tidak rusak.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🔇</div>
-              <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
-                4. Pelindung Pendengaran (Ear Muff)
+              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>⚠️🔪</div>
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ea580c', margin: '0 0 6px 0' }}>
+                4. Kikir Wajib Bergagang (Dilarang Ekor Telanjang)
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                Kebisingan gerinda potong dan mesin guillotine dapat melampaui 95 dB. Gunakan ear plug atau ear muff untuk mencegah gangguan pendengaran kronis (Noise-Induced Hearing Loss).
+                Ekor kikir (tang) sangat runcing dan tajam. Mendorong kikir tanpa gagang pegangan beresiko menusuk tembus urat telapak tangan jika kikir macet saat menabrak benda kerja.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🔥</div>
-              <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
-                5. Manajemen Bahaya Kebakaran
+              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🍄💥</div>
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#dc2626', margin: '0 0 6px 0' }}>
+                5. Bahaya Kepala Jamur Pahat (Mushroomed Head)
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                Bersihkan area kerja radius 5 meter dari bahan mudah terbakar (kain majun berminyak, tiner cat, tabung elpiji/asetilen). Siapkan tabung APAR (Alat Pemadam Api Ringan) kelas ABC yang siap pakai.
+                Pahat yang kepalanya mekar akibat pukulan palu berulang wajib segera digerinda tirus (chamfer). Serpihan baja getas yang merekah dapat melesat seperti peluru berkecepatan tinggi saat dipukul palu.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🧹</div>
+              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>📏⚙️</div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
-                6. Penanganan Tatal & Bram Tajam
+                6. Celah Landasan Gerinda Duduk Maksimal 2-3 mm
               </h3>
               <p style={{ fontSize: '0.74rem', color: '#475569', lineHeight: 1.5, margin: 0 }}>
-                Gunakan kuas atau pengait tatal khusus untuk membersihkan tatal spiral mesin bor atau gerigi tatal gergaji. Jangan pernah menyeka tatal dengan telapak tangan atau meniupnya dengan angin kompresor ke arah orang lain.
+                Sesuai OSHA 1910.215, jarak landasan kerja (tool rest) terhadap batu gerinda tidak boleh melebihi 2 s.d. 3 mm. Celah yang terlalu longgar akan menjepit benda kerja dan meledakkan batu gerinda.
               </p>
             </div>
 
@@ -2150,7 +2471,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
       )}
 
       {/* =====================================================================
-          VIEW 4: KUIS ASESMEN KOMPREHENSIF (10 SOAL • 1000 XP)
+          VIEW 4: KUIS ASESMEN KOMPREHENSIF PERKAKAS (10 SOAL • 1000 XP)
           ===================================================================== */}
       {labTab === 'quiz' && (
         <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '20px', background: '#f8fafc' }}>
@@ -2170,10 +2491,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
           }}>
             <div>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>
-                🎯 Kuis Evaluasi Pemahaman Alat Pemotong & Perkakas
+                🎯 Kuis Evaluasi Pemahaman Perkakas Bengkel (10 Soal • 1000 XP)
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
-                Uji pengetahuan Anda tentang pengenalan foto alat, fungsi, spesifikasi, dan SOP K3 (10 Soal • 1000 XP).
+                Uji penguasaan Anda seputar kikir 7 profil, gergaji tangan hacksaw, pahat dingin, ragum meja, bor bangku, dan K3 bengkel mesin.
               </p>
             </div>
 
@@ -2206,7 +2527,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             )}
           </div>
 
-          {/* Daftar Soal Kuis */}
+          {/* Daftar 10 Soal Kuis */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {QUIZ_QUESTIONS.map((q, idx) => (
               <div
@@ -2265,7 +2586,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                           transition: 'all 0.1s'
                         }}
                       >
-                        {String.fromCharCode(65 + optIdx)}. {opt}
+                        {opt}
                       </button>
                     );
                   })}
@@ -2296,7 +2617,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                   boxShadow: '0 4px 14px rgba(234, 88, 12, 0.35)'
                 }}
               >
-                SUBMIT JAWABAN & SELESAIKAN EVALUASI (1000 XP)
+                SUBMIT JAWABAN & SELESAIKAN EVALUASI PERKAKAS (1000 XP)
               </button>
             </div>
           )}

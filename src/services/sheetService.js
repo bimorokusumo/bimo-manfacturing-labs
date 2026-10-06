@@ -220,10 +220,10 @@ export const detectLabAndSubQuiz = (item) => {
     labId = 'safety';
     labLabel = 'Safety Lab';
     labIcon = '🛡️';
-  } else if (m.includes('cutting') || m.includes('potong') || j.includes('potong') || j.includes('pahat')) {
+  } else if (m.includes('cutting') || m.includes('potong') || m.includes('perkakas') || j.includes('potong') || j.includes('pahat') || j.includes('perkakas') || j.includes('kikir')) {
     labId = 'cutting-tools';
-    labLabel = 'Alat Pemotong';
-    labIcon = '🔪';
+    labLabel = 'Perkakas Bengkel';
+    labIcon = '🛠️';
   } else if (m.includes('heat') || m.includes('perlakuan panas') || m.includes('metalurgi') || j.includes('hardening') || j.includes('quenching') || j.includes('annealing')) {
     labId = 'heat-treatment';
     labLabel = 'Heat Treatment';
@@ -304,7 +304,7 @@ export const detectLabAndSubQuiz = (item) => {
     }
   } else if (labId === 'cutting-tools') {
     subId = 'cutting_quiz';
-    subLabel = 'Kuis Alat Potong & RPM';
+    subLabel = 'Kuis Perkakas & RPM';
   } else if (labId === 'heat-treatment') {
     subId = 'metallurgy';
     subLabel = 'Kuis Evaluasi Metalurgi';

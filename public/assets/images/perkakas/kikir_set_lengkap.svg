@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="steelBlade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9" />
+      <stop offset="35%" stop-color="#94a3b8" />
+      <stop offset="70%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+    <linearGradient id="woodHandle" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="50%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="brassFerrule" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+    <pattern id="fileTeeth" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#475569" stroke-width="1.2" />
+      <line x1="0" y1="0" x2="6" y2="0" stroke="#334155" stroke-width="0.8" opacity="0.6" />
+    </pattern>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="900" height="520" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <g transform="translate(450, 36)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#f8fafc" text-anchor="middle" letter-spacing="0.5">
+      ANATOMI &amp; 7 MACAM BENTUK PENAMPANG KIKIR BENGKEL (HAND FILES)
+    </text>
+    <text x="0" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8" text-anchor="middle">
+      Standar Perkakas Tangan Pembuang Bram, Perata Bidang, dan Finishing Presisi SMK Teknik Mesin
+    </text>
+  </g>
+
+  <!-- MAIN FILE ANATOMY (Top Half) -->
+  <g transform="translate(60, 85)">
+    <!-- File Blade Body -->
+    <!-- Point / Tip -->
+    <path d="M 50,45 L 80,38 L 480,38 L 500,45 L 480,52 L 80,52 Z" fill="url(#steelBlade)" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M 80,39 L 470,39 L 470,51 L 80,51 Z" fill="url(#fileTeeth)"/>
+
+    <!-- Tang (Ekor Kikir Tersembunyi di dalam Gagang) -->
+    <polygon points="480,43 530,44 530,46 480,47" fill="#64748b" stroke="#94a3b8" stroke-dasharray="2,2"/>
+
+    <!-- Brass Ferrule (Cincin Penguat Gagang) -->
+    <rect x="495" y="32" width="22" height="26" rx="3" fill="url(#brassFerrule)" stroke="#fef08a" stroke-width="1"/>
+    
+    <!-- Wooden / Plastic Handle (Gagang) -->
+    <path d="M 517,34 C 550,26 620,28 660,35 C 675,38 680,45 680,45 C 680,45 675,52 660,55 C 620,62 550,64 517,56 Z" fill="url(#woodHandle)" stroke="#d97706" stroke-width="1.5"/>
+    <!-- Handle contours -->
+    <path d="M 535,36 C 560,33 600,34 640,40" fill="none" stroke="#fef3c7" stroke-width="1" opacity="0.3"/>
+
+    <!-- ANATOMY LABELS & DIMENSION CALLOUTS -->
+    <!-- 1. Ujung Kikir (Point / Tip) -->
+    <line x1="55" y1="45" x2="55" y2="15" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="55" cy="45" r="3" fill="#38bdf8"/>
+    <text x="55" y="8" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">1. Ujung (Point/Tip)</text>
+
+    <!-- 2. Badan / Muka Kikir (Face) -->
+    <line x1="280" y1="38" x2="280" y2="15" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="280" cy="38" r="3" fill="#38bdf8"/>
+    <text x="280" y="8" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">2. Muka Kikir (Gigi Sayat / Face)</text>
+
+    <!-- 3. Panjang Bilah (Length) -->
+    <line x1="50" y1="75" x2="480" y2="75" stroke="#f59e0b" stroke-width="1.5"/>
+    <line x1="50" y1="68" x2="50" y2="82" stroke="#f59e0b" stroke-width="1.5"/>
+    <line x1="480" y1="68" x2="480" y2="82" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="265" y="92" fill="#fbbf24" font-size="10" font-weight="800" text-anchor="middle">Ukuran Panjang Kikir: 150 s.d. 300 mm (6" s.d. 12")</text>
+
+    <!-- 4. Tumit Kikir (Heel) -->
+    <line x1="475" y1="42" x2="475" y2="15" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="475" cy="42" r="3" fill="#38bdf8"/>
+    <text x="475" y="8" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">3. Tumit (Heel)</text>
+
+    <!-- 5. Cincin Ferrule -->
+    <line x1="506" y1="58" x2="506" y2="85" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="506" cy="58" r="3" fill="#f59e0b"/>
+    <text x="506" y="98" fill="#fbbf24" font-size="9" font-weight="800" text-anchor="middle">4. Cincin Ferrule (Penguat)</text>
+
+    <!-- 6. Gagang Kikir (Handle) -->
+    <line x1="610" y1="33" x2="610" y2="15" stroke="#10b981" stroke-width="1.5"/>
+    <circle cx="610" cy="33" r="3" fill="#10b981"/>
+    <text x="610" y="8" fill="#34d399" font-size="10" font-weight="800" text-anchor="middle">5. Gagang Kayu / Plastik</text>
+  </g>
+
+  <!-- DIVIDER LINE -->
+  <line x1="40" y1="205" x2="860" y2="205" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- 7 MACAM BENTUK PENAMPANG KIKIR & FUNGSINYA (Bottom Grid) -->
+  <g transform="translate(40, 220)">
+    <text x="410" y="0" font-size="12" font-weight="900" fill="#38bdf8" text-anchor="middle" letter-spacing="0.5">
+      7 KLASIFIKASI BENTUK PENAMPANG KIKIR &amp; FUNGSI SPESIFIKNYA:
+    </text>
+
+    <!-- 1. Kikir Plat / Gepeng (Flat File) -->
+    <g transform="translate(15, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <rect x="25" y="16" width="55" height="14" rx="2" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="52" y="44" font-size="9.5" font-weight="900" fill="#f8fafc" text-anchor="middle">1. KIKIR PLAT</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Flat / Hand File</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Meratakan bidang</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">datar &amp; bidang siku</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">sudut 90 derajat</text>
+    </g>
+
+    <!-- 2. Kikir Segitiga (Triangular File) -->
+    <g transform="translate(135, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <polygon points="52,12 32,32 72,32" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="52" y="44" font-size="9.5" font-weight="900" fill="#f8fafc" text-anchor="middle">2. KIKIR SEGITIGA</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Triangular File 60°</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Alur pasak V 60°</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Sudut lancip dalam</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Gigi daun gergaji</text>
+    </g>
+
+    <!-- 3. Kikir Bulat (Round File) -->
+    <g transform="translate(255, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <circle cx="52" cy="22" r="11" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="52" y="44" font-size="9.5" font-weight="900" fill="#f8fafc" text-anchor="middle">3. KIKIR BULAT</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Round / Rat-Tail</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Membesarkan lubang</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">silindris / bundar</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Radius cekung dalam</text>
+    </g>
+
+    <!-- 4. Kikir Setengah Bulat (Half Round) -->
+    <g transform="translate(375, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <path d="M 28,26 A 24 24 0 0 1 76,26 Z" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="52" y="44" font-size="9" font-weight="900" fill="#f8fafc" text-anchor="middle">4. SETENGAH BULAT</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Half Round File</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Sisi datar: bidang rata</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Sisi cembung: bidang</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">lengkung cekung</text>
+    </g>
+
+    <!-- 5. Kikir Segi Empat (Square File) -->
+    <g transform="translate(495, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <rect x="41" y="11" width="22" height="22" rx="2" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="52" y="44" font-size="9" font-weight="900" fill="#f8fafc" text-anchor="middle">5. SEGI EMPAT</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Square File</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Alur pasak persegi</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Lubang slot spi</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Sudut siku dalam</text>
+    </g>
+
+    <!-- 6. Kikir Pisau (Knife File) -->
+    <g transform="translate(615, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <polygon points="52,10 68,32 36,32" fill="url(#steelBlade)" stroke="#38bdf8" stroke-width="1.5"/>
+      <line x1="52" y1="10" x2="52" y2="32" stroke="#38bdf8" stroke-width="1"/>
+      <text x="52" y="44" font-size="9.5" font-weight="900" fill="#f8fafc" text-anchor="middle">6. KIKIR PISAU</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Knife File &lt;60°</text>
+      <text x="52" y="74" font-size="7.5" fill="#38bdf8" text-anchor="middle">• Sudut sangat lancip</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Alur baji sempit</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Celah sudut &lt; 60°</text>
+    </g>
+
+    <!-- 7. Kikir Parut (Rasp File) -->
+    <g transform="translate(735, 20)">
+      <rect width="105" height="110" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+      <!-- Cross section profile -->
+      <rect x="25" y="16" width="55" height="14" rx="2" fill="url(#steelBlade)" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="35" cy="23" r="1.5" fill="#f59e0b"/>
+      <circle cx="45" cy="20" r="1.5" fill="#f59e0b"/>
+      <circle cx="55" cy="25" r="1.5" fill="#f59e0b"/>
+      <circle cx="65" cy="21" r="1.5" fill="#f59e0b"/>
+      <text x="52" y="44" font-size="9.5" font-weight="900" fill="#f8fafc" text-anchor="middle">7. KIKIR PARUT</text>
+      <text x="52" y="58" font-size="8" fill="#94a3b8" text-anchor="middle">Rasp File (Bintik)</text>
+      <text x="52" y="74" font-size="7.5" fill="#f59e0b" text-anchor="middle">• Material lunak</text>
+      <text x="52" y="86" font-size="7.5" fill="#cbd5e1" text-anchor="middle">• Kayu keras, timbal,</text>
+      <text x="52" y="98" font-size="7.5" fill="#cbd5e1" text-anchor="middle">kulit, aluminium</text>
+    </g>
+  </g>
+
+  <!-- BOTTOM FOOTER CARDS: TINGKAT KEKASARAN & K3 FILE CARD -->
+  <g transform="translate(40, 395)">
+    <!-- Coarseness Grade Card -->
+    <rect width="470" height="95" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+    <text x="14" y="20" font-size="10.5" font-weight="900" fill="#38bdf8">TINGKAT KEKASARAN GIGI KIKIR (CUT GRADES):</text>
+    
+    <g transform="translate(14, 30)">
+      <rect x="0" y="0" width="135" height="52" rx="4" fill="#0f172a" stroke="#ef4444" stroke-width="1"/>
+      <text x="8" y="16" font-size="9" font-weight="900" fill="#ef4444">1. BASTARD (Kasar)</text>
+      <text x="8" y="30" font-size="7.5" fill="#cbd5e1">• 10 - 14 gigi / cm</text>
+      <text x="8" y="43" font-size="7.5" fill="#94a3b8">• Pemakanan &gt; 0.5 mm</text>
+    </g>
+
+    <g transform="translate(158, 30)">
+      <rect x="0" y="0" width="135" height="52" rx="4" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+      <text x="8" y="16" font-size="9" font-weight="900" fill="#f59e0b">2. SECOND CUT (Sedang)</text>
+      <text x="8" y="30" font-size="7.5" fill="#cbd5e1">• 16 - 24 gigi / cm</text>
+      <text x="8" y="43" font-size="7.5" fill="#94a3b8">• Toleransi 0.1 - 0.2 mm</text>
+    </g>
+
+    <g transform="translate(302, 30)">
+      <rect x="0" y="0" width="154" height="52" rx="4" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+      <text x="8" y="16" font-size="9" font-weight="900" fill="#10b981">3. SMOOTH (Halus)</text>
+      <text x="8" y="30" font-size="7.5" fill="#cbd5e1">• 30 - 40 gigi / cm</text>
+      <text x="8" y="43" font-size="7.5" fill="#94a3b8">• Finishing N6 s.d. N7</text>
+    </g>
+
+    <!-- K3 & Maintenance Card -->
+    <g transform="translate(485, 0)">
+      <rect width="335" height="95" rx="8" fill="#1e293b" stroke="#e11d48" stroke-width="1.5"/>
+      <text x="14" y="20" font-size="10.5" font-weight="900" fill="#f43f5e">⚠️ SOP K3 &amp; PERAWATAN KIKIR BENGKEL:</text>
+      <text x="14" y="38" font-size="8" fill="#fecdd3">• <tspan font-weight="bold">DILARANG</tspan> memakai kikir tanpa gagang (tang menusuk tangan!)</text>
+      <text x="14" y="52" font-size="8" fill="#fecdd3">• <tspan font-weight="bold">HANYA MENYAYAT</tspan> saat langkah maju dorong; tarik tanpa tekan.</text>
+      <text x="14" y="66" font-size="8" fill="#fecdd3">• <tspan font-weight="bold">SIKAT KIKIR (File Card):</tspan> Bersihkan bram (pinning) searah guratan.</text>
+      <text x="14" y="80" font-size="8" fill="#fecdd3">• <tspan font-weight="bold">KAPUR TULIS (Chalking):</tspan> Mencegah bram lengket di sela gigi.</text>
+    </g>
+  </g>
+</svg>

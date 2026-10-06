@@ -29,14 +29,14 @@ const LABS_CONFIG = [
   },
   {
     id: 'cutting-tools',
-    title: 'Alat Pemotong',
-    category: 'FABRIKASI',
-    desc: 'Ensiklopedia foto asli 9 alat pemotong, kalkulator putaran spindel bor, anatomi komponen, dan SOP K3.',
+    title: 'Perkakas Bengkel',
+    category: 'PERKAKAS TANGAN & MESIN',
+    desc: 'Ensiklopedia lengkap Perkakas Tangan Manual (kikir 7 profil, gergaji besi, pahat, palu, tap & reamer) serta Perkakas Bertenaga, kalkulator RPM bor, dan SOP K3 bengkel.',
     image: '/assets/images/labs/cutting_tools_lab.jpg',
     badgeBg: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
     badgeColor: '#ffffff',
     accentColor: '#ea580c',
-    chips: ['Foto Asli 9 Alat', 'Kalkulator RPM Bor']
+    chips: ['Perkakas Tangan & Daya', 'Kikir 7 Profil & RPM']
   },
   {
     id: 'heat-treatment',

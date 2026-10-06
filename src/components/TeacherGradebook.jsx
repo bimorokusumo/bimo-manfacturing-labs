@@ -117,11 +117,11 @@ var LAB_CONFIGS = [
   },
   {
     id: "cutting-tools",
-    tabName: "🔪 3. Alat Pemotong",
-    shortTitle: "Alat Pemotong & RPM",
+    tabName: "🛠️ 3. Perkakas Bengkel",
+    shortTitle: "Perkakas Bengkel & RPM",
     tasks: [
-      { key: "cutting_quiz", name: "🔪 Kuis Pahat & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "pahat", "sudut potong", "cutting"] },
-      { key: "diag_cutting", name: "📝 Tes Diagnostik Alat Potong", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong"] }
+      { key: "cutting_quiz", name: "🛠️ Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
+      { key: "diag_cutting", name: "📝 Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
     ]
   },
   {
@@ -1264,7 +1264,7 @@ const ALL_LAB_TABS = [
   { id: 'all', label: 'Semua Modul', icon: '📋' },
   { id: 'safety', label: 'Safety Lab (K3)', icon: '🛡️' },
   { id: 'machine', label: 'Machine Lab', icon: '⚙️' },
-  { id: 'cutting-tools', label: 'Alat Pemotong', icon: '🔪' },
+  { id: 'cutting-tools', label: 'Perkakas Bengkel', icon: '🛠️' },
   { id: 'heat-treatment', label: 'Heat Treatment', icon: '🌡️' },
   { id: 'mechanics', label: 'Mekanika Teknik', icon: '🔧' },
   { id: 'welding', label: 'Welding Lab', icon: '⚡' },
@@ -1294,9 +1294,9 @@ const SUB_QUIZ_CONFIG = {
     { id: 'lathe', label: 'Praktik Mesin Bubut', icon: '⚙️' }
   ],
   'cutting-tools': [
-    { id: 'all', label: 'Semua Alat Pemotong', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Alat Potong (10 Soal)', icon: '📋' },
-    { id: 'cutting_quiz', label: 'Kuis Pahat & Kalkulasi RPM', icon: '🔪' }
+    { id: 'all', label: 'Semua Perkakas Bengkel', icon: '📑' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Perkakas (10 Soal)', icon: '📋' },
+    { id: 'cutting_quiz', label: 'Kuis Perkakas & Kalkulasi RPM', icon: '🛠️' }
   ],
   'heat-treatment': [
     { id: 'all', label: 'Semua Heat Treatment', icon: '📑' },

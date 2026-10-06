@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="metalFrame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8" />
+      <stop offset="50%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+    <linearGradient id="handleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="50%" stop-color="#c2410c" />
+      <stop offset="100%" stop-color="#9a3412" />
+    </linearGradient>
+    <pattern id="sawTeethPattern" width="10" height="12" patternUnits="userSpaceOnUse">
+      <path d="M 0,0 L 7,10 L 10,0 Z" fill="#ffffff" opacity="0.9"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="900" height="520" rx="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Title Header -->
+  <g transform="translate(450, 36)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" fill="#f8fafc" text-anchor="middle" letter-spacing="0.5">
+      ANATOMI &amp; STANDAR GERGAJI TANGAN BESI (HACKSAW)
+    </text>
+    <text x="0" y="20" font-family="'Segoe UI', Roboto, sans-serif" font-size="11.5" fill="#94a3b8" text-anchor="middle">
+      Perkakas Tangan Manual Pemotong Logam, Pemilihan TPI, &amp; SOP Gerak Potong Maju
+    </text>
+  </g>
+
+  <!-- HACKSAW MAIN ILLUSTRATION -->
+  <g transform="translate(60, 85)">
+    <!-- Hacksaw Frame (Rangka Baja C) -->
+    <path d="M 120,80 L 120,40 C 120,25 135,15 150,15 L 620,15 C 640,15 650,25 650,45 L 650,80" fill="none" stroke="url(#metalFrame)" stroke-width="14" stroke-linecap="round"/>
+    
+    <!-- Adjustment Slide (Rangka Geser Setelan 10" / 12") -->
+    <rect x="360" y="8" width="60" height="14" rx="3" fill="#cbd5e1" stroke="#475569" stroke-width="1.5"/>
+    <circle cx="390" cy="15" r="4" fill="#ea580c"/>
+
+    <!-- Front Blade Mount & Wing Nut (Mur Kupu-Kupu Penegang) -->
+    <rect x="112" y="75" width="16" height="35" rx="3" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+    <!-- Wing Nut ears -->
+    <path d="M 95,85 C 95,78 108,80 112,85 L 112,98 C 108,103 95,105 95,98 Z" fill="#e2e8f0" stroke="#475569" stroke-width="1.5"/>
+    <circle cx="120" cy="105" r="3" fill="#0284c7"/>
+
+    <!-- Rear Blade Mount & Handle Connector -->
+    <rect x="642" y="75" width="16" height="35" rx="3" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+    <circle cx="650" cy="105" r="3" fill="#0284c7"/>
+
+    <!-- Hacksaw Blade (Bilah Gergaji HSS Bimetal 300 mm) -->
+    <rect x="120" y="100" width="530" height="14" fill="url(#bladeGrad)" stroke="#38bdf8" stroke-width="1.2"/>
+    <!-- Blade teeth indication on bottom edge -->
+    <rect x="120" y="111" width="530" height="4" fill="#ffffff" opacity="0.8"/>
+    <!-- Center text on blade -->
+    <text x="385" y="110" font-family="'Segoe UI', Roboto, sans-serif" font-size="8.5" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+      HSS BIMETAL • 300 mm (12") • 18 TPI • FORWARD CUTTING DIRECTION ▶▶
+    </text>
+
+    <!-- Ergonomic Pistol-Grip Handle (Gagang Pistol) -->
+    <path d="M 650,45 C 675,50 710,70 715,100 C 720,130 705,160 670,175 C 645,185 635,170 645,150 C 655,135 660,110 645,95 Z" fill="url(#handleGrad)" stroke="#fdba74" stroke-width="2"/>
+    <!-- Grip contour cutouts -->
+    <circle cx="680" cy="115" r="5" fill="#0f172a" opacity="0.6"/>
+    <circle cx="675" cy="135" r="5" fill="#0f172a" opacity="0.6"/>
+    <circle cx="665" cy="155" r="5" fill="#0f172a" opacity="0.6"/>
+
+    <!-- DIRECTION OF CUT ARROW (SOP GERAKAN POTONG) -->
+    <g transform="translate(385, 138)">
+      <rect x="-140" y="-12" width="280" height="24" rx="6" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+      <text x="0" y="4" font-family="'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="900" fill="#38bdf8" text-anchor="middle">
+        ARAH SAYAT: LANGKAH MAJU / DORONG (FORWARD) ▶
+      </text>
+    </g>
+
+    <!-- CALLOUT LABELS -->
+    <!-- 1. Mur Penegang -->
+    <line x1="100" y1="85" x2="60" y2="40" stroke="#38bdf8" stroke-width="1.2"/>
+    <circle cx="100" cy="85" r="3" fill="#38bdf8"/>
+    <text x="50" y="32" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">Mur Kupu Penegang</text>
+    <text x="50" y="45" fill="#94a3b8" font-size="8" text-anchor="middle">(Wing Tensioner)</text>
+
+    <!-- 2. Rangka Pipa C -->
+    <line x1="300" y1="15" x2="300" y2="-15" stroke="#38bdf8" stroke-width="1.2"/>
+    <circle cx="300" cy="15" r="3" fill="#38bdf8"/>
+    <text x="300" y="-22" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">Rangka Baja Kokoh (Hacksaw Frame)</text>
+
+    <!-- 3. Bilah HSS -->
+    <line x1="385" y1="100" x2="385" y2="65" stroke="#38bdf8" stroke-width="1.2"/>
+    <circle cx="385" cy="100" r="3" fill="#38bdf8"/>
+    <text x="385" y="58" fill="#38bdf8" font-size="10" font-weight="800" text-anchor="middle">Bilah Potong HSS (Blade 12" / 300mm)</text>
+
+    <!-- 4. Gagang Pistol -->
+    <line x1="680" y1="90" x2="740" y2="45" stroke="#f97316" stroke-width="1.2"/>
+    <circle cx="680" cy="90" r="3" fill="#f97316"/>
+    <text x="750" y="37" fill="#f97316" font-size="10" font-weight="800" text-anchor="middle">Gagang Pistol Ergonomis</text>
+    <text x="750" y="50" fill="#fdba74" font-size="8" text-anchor="middle">(Pistol Grip Handle)</text>
+  </g>
+
+  <!-- BOTTOM HALF: PANDUAN TEKNIS TPI & ATURAN 3 GIGI -->
+  <g transform="translate(40, 275)">
+    <!-- Box 1: Aturan Emas 3 Gigi -->
+    <rect x="0" y="0" width="395" height="215" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <path d="M 0,0 L 395,0 L 395,34 L 0,34 Z" fill="#334155" rx="10"/>
+    <text x="16" y="22" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#f8fafc">
+      ⚙️ ATURAN EMAS: MINIMAL 3 GIGI MENYENTUH BENDA KERJA
+    </text>
+
+    <!-- Visual Benda Tipis vs Tebal -->
+    <g transform="translate(20, 50)">
+      <!-- SALAH (Gigi terlalu jarang) -->
+      <rect x="0" y="0" width="165" height="75" rx="6" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="10" y="18" fill="#ef4444" font-size="10" font-weight="900">❌ SALAH: Gigi Rontok!</text>
+      <!-- Pelat tipis terjepit di antara 2 gigi -->
+      <rect x="40" y="45" width="6" height="20" fill="#94a3b8"/>
+      <path d="M 20,40 L 35,46 L 60,40 L 75,46 L 100,40" fill="none" stroke="#f87171" stroke-width="2"/>
+      <text x="10" y="68" fill="#94a3b8" font-size="8">Kurang dari 3 gigi menyentuh</text>
+
+      <!-- BENAR (Gigi halus mencengkeram) -->
+      <rect x="185" y="0" width="170" height="75" rx="6" fill="#0f172a" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="195" y="18" fill="#22c55e" font-size="10" font-weight="900">✓ BENAR: Potongan Halus</text>
+      <!-- Pelat tipis dengan 4 gigi menyentuh -->
+      <rect x="235" y="45" width="22" height="20" fill="#94a3b8"/>
+      <path d="M 205,42 L 215,46 L 225,42 L 235,46 L 245,42 L 255,46 L 265,42" fill="none" stroke="#4ade80" stroke-width="2"/>
+      <text x="195" y="68" fill="#94a3b8" font-size="8">≥ 3 gigi menyentuh simultan</text>
+    </g>
+
+    <text x="20" y="150" fill="#cbd5e1" font-size="10" font-weight="700">Prinsip Mekanika Sayat:</text>
+    <text x="20" y="168" fill="#94a3b8" font-size="9.5">
+      • Benda kerja tipis (pipa hollow, pelat &lt; 3 mm) wajib memakai <tspan fill="#38bdf8" font-weight="800">24 atau 32 TPI</tspan>.
+    </text>
+    <text x="20" y="185" fill="#94a3b8" font-size="9.5">
+      • Jika gigi terlalu jarang (&lt; 3 gigi), bilah akan macet dan gigi rontok seketika.
+    </text>
+    <text x="20" y="202" fill="#94a3b8" font-size="9.5">
+      • Berikan tekanan hanya saat dorong maju; angkat sedikit saat mundur!
+    </text>
+
+    <!-- Box 2: Tabel TPI Standar Industri -->
+    <rect x="425" y="0" width="395" height="215" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <path d="M 425,0 L 820,0 L 820,34 L 425,34 Z" fill="#334155" rx="10"/>
+    <text x="441" y="22" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="900" fill="#f8fafc">
+      📋 TABEL STANDAR TPI (TEETH PER INCH) BENGKEL MESIN
+    </text>
+
+    <!-- Table Rows -->
+    <g transform="translate(441, 48)">
+      <!-- Row 1 -->
+      <rect x="0" y="0" width="365" height="34" rx="5" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="12" y="16" fill="#f97316" font-size="11" font-weight="900">14 TPI (Kasar)</text>
+      <text x="12" y="28" fill="#94a3b8" font-size="8.5">Baja lunak pejal tebal &gt; 25 mm, aluminium cor, kuningan.</text>
+
+      <!-- Row 2 -->
+      <rect x="0" y="38" width="365" height="34" rx="5" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="12" y="54" fill="#38bdf8" font-size="11" font-weight="900">18 TPI (Sedang - Umum)</text>
+      <text x="12" y="66" fill="#94a3b8" font-size="8.5">Paling serbaguna bengkel SMK. Baja karbon, profil siku, poros 6 - 25 mm.</text>
+
+      <!-- Row 3 -->
+      <rect x="0" y="76" width="365" height="34" rx="5" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="12" y="92" fill="#22c55e" font-size="11" font-weight="900">24 TPI (Halus)</text>
+      <text x="12" y="104" fill="#94a3b8" font-size="8.5">Pipa besi ketebalan sedang, profil hollow, pelat strip 3 - 6 mm.</text>
+
+      <!-- Row 4 -->
+      <rect x="0" y="114" width="365" height="34" rx="5" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="12" y="130" fill="#a855f7" font-size="11" font-weight="900">32 TPI (Sangat Halus)</text>
+      <text x="12" y="142" fill="#94a3b8" font-size="8.5">Pipa tipis conduit, kabel baja, pelat seng &lt; 3 mm, tembaga tipis.</text>
+    </g>
+  </g>
+</svg>

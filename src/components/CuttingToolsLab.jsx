@@ -1356,7 +1356,7 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <h1 className="cutting-tools-title" style={{ fontSize: '1.25rem', fontWeight: 900, margin: 0, color: '#0f172a', letterSpacing: '-0.02em' }}>
-                Ensiklopedia Perkakas Bengkel
+                Perkakas Bengkel & Mesin Pemotong
               </h1>
               <span style={{
                 background: '#fff7ed',
@@ -1368,11 +1368,11 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 borderRadius: '6px',
                 textTransform: 'uppercase'
               }}>
-                📸 Foto Asli Nyata Bengkel
+                17 Perkakas Standar SMK
               </span>
             </div>
             <p className="cutting-tools-subtitle" style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-              Media Pembelajaran Terpadu Pengenalan 17 Perkakas Bengkel: Kikir Lengkap 7 Profil, Gergaji Besi, Pahat, Ragum, Tap, serta Mesin Potong Fabrikasi SMK
+              Katalog visual foto asli bengkel, standar SOP pengerjaan, dan kuis kompetensi
             </p>
           </div>
         </div>
@@ -1380,10 +1380,10 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
         {/* Tab Navigasi Utama */}
         <div className="cutting-tools-tabs" style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '10px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
           {[
-            { id: 'katalog', label: '📸 Katalog & Foto Asli Perkakas', icon: '🔍' },
-            { id: 'materi', label: '📖 Teori Kikir, TPI & Rumus RPM', icon: '📐' },
-            { id: 'safety', label: '⚠️ Standar K3 Perkakas', icon: '🛡️' },
-            { id: 'quiz', label: '🎯 Kuis Asesmen (1000 XP)', icon: '🏆' }
+            { id: 'katalog', label: '📸 1. Visual & Foto Asli', icon: '🔍' },
+            { id: 'materi', label: '📖 2. Teori & SOP Perkakas', icon: '📐' },
+            { id: 'safety', label: '🛡️ 3. Standar K3', icon: '🛡️' },
+            { id: 'quiz', label: '🎯 4. Kuis Asesmen (1000 XP)', icon: '🏆' }
           ].map(tab => {
             const isActive = labTab === tab.id;
             return (
@@ -1624,78 +1624,95 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
             gap: '20px'
           }}>
             
-            {/* CARD 1: HEADER & IDENTITAS ALAT */}
+            {/* CARD 1: IDENTITAS ALAT (CLEAN & MINIMALIS) */}
             <div style={{
               background: '#ffffff',
               borderRadius: '12px',
               border: '1px solid #e2e8f0',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              padding: '14px 18px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '4px' }}>
                     <span style={{
                       background: currentTool.kategoriType === 'manual' ? '#0284c7' : '#ea580c',
                       color: '#ffffff',
-                      fontSize: '0.68rem',
+                      fontSize: '0.65rem',
                       fontWeight: 800,
-                      padding: '3px 8px',
-                      borderRadius: '6px',
+                      padding: '2px 7px',
+                      borderRadius: '5px',
                       textTransform: 'uppercase'
                     }}>
-                      {currentTool.kategoriType === 'manual' ? '🔨 PERKAKAS TANGAN MANUAL' : '⚡ PERKAKAS BERTENAGA'}
+                      {currentTool.kategoriType === 'manual' ? '🔨 MANUAL' : '⚡ BERTENAGA'}
                     </span>
                     <span style={{
                       background: '#f1f5f9',
                       color: '#475569',
-                      fontSize: '0.68rem',
+                      fontSize: '0.65rem',
                       fontWeight: 700,
-                      padding: '3px 8px',
-                      borderRadius: '6px'
+                      padding: '2px 7px',
+                      borderRadius: '5px'
                     }}>
                       {currentTool.badge}
                     </span>
                   </div>
 
-                  <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
+                  <h2 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0f172a', margin: '0 0 2px 0', letterSpacing: '-0.02em' }}>
                     {currentTool.nama}
                   </h2>
-                  <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600, fontStyle: 'italic', marginBottom: '10px' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600, fontStyle: 'italic' }}>
                     {currentTool.namaEng}
                   </div>
-                  <p style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.6, margin: 0 }}>
-                    {currentTool.deskripsiSingkat}
-                  </p>
                 </div>
 
-                {/* Tombol Audio Narasi */}
-                <button
-                  onClick={() => handleToggleToolAudio(currentTool)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '9px 16px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    background: isSpeaking ? '#fee2e2' : '#f8fafc',
-                    color: isSpeaking ? '#dc2626' : '#334155',
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
-                    transition: 'all 0.15s ease'
-                  }}
-                  title="Dengarkan penjelasan audio narator untuk perkakas ini"
-                >
-                  <span style={{ fontSize: '1.1rem' }}>{isSpeaking ? '⏹️' : '🔊'}</span>
-                  <span>{isSpeaking ? 'Hentikan Audio' : 'Dengarkan Audio SOP'}</span>
-                </button>
-              </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => {
+                      sound.playClick();
+                      setLabTab('materi');
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #0284c7',
+                      background: 'rgba(2, 132, 199, 0.08)',
+                      color: '#0284c7',
+                      fontWeight: 800,
+                      fontSize: '0.76rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
+                    }}
+                    title="Buka rincian materi teori, SOP, spesifikasi & K3 alat ini"
+                  >
+                    <span>📖 Buka Teori & SOP Lengkap</span>
+                  </button>
 
-              <div style={{ marginTop: '16px', padding: '12px 14px', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #ea580c', fontSize: '0.8rem', color: '#475569', lineHeight: 1.55 }}>
-                <strong style={{ color: '#0f172a' }}>⚙️ Prinsip Mekanika Kerja:</strong> {currentTool.prinsipKerja}
+                  <button
+                    onClick={() => handleToggleToolAudio(currentTool)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      border: '1px solid #cbd5e1',
+                      background: isSpeaking ? '#fee2e2' : '#f8fafc',
+                      color: isSpeaking ? '#dc2626' : '#334155',
+                      fontWeight: 700,
+                      fontSize: '0.76rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
+                    }}
+                    title="Dengarkan penjelasan audio narator"
+                  >
+                    <span style={{ fontSize: '1rem' }}>{isSpeaking ? '⏹️' : '🔊'}</span>
+                    <span>{isSpeaking ? 'Hentikan' : 'Audio SOP'}</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -2082,171 +2099,45 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
                 </div>
               )}
 
-              {/* DAFTAR GRID KOMPONEN DI BAWAH GAMBAR */}
-              <div style={{ marginTop: '16px' }}>
-                <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  Komponen & Anatomi ({currentTool.komponen.length} Bagian Kunci):
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '8px' }}>
-                  {currentTool.komponen.map((k, idx) => {
-                    const isSelected = activeKomponenIdx === idx;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => {
-                          sound.playClick();
-                          setActiveKomponenIdx(idx);
-                        }}
-                        style={{
-                          padding: '10px 12px',
-                          borderRadius: '8px',
-                          background: isSelected ? '#fff7ed' : '#ffffff',
-                          border: isSelected ? '1.5px solid #ea580c' : '1px solid #e2e8f0',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          gap: '10px',
-                          transition: 'all 0.15s ease'
-                        }}
-                      >
-                        <div style={{
-                          width: '26px',
-                          height: '26px',
-                          borderRadius: '50%',
-                          background: isSelected ? '#ea580c' : '#f1f5f9',
-                          color: isSelected ? '#ffffff' : '#475569',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.7rem',
-                          fontWeight: 900,
-                          flexShrink: 0
-                        }}>
-                          {k.no}
-                        </div>
-                        <div>
-                          <div style={{ fontSize: '0.76rem', fontWeight: 800, color: isSelected ? '#c2410c' : '#0f172a' }}>
-                            {k.nama}
-                          </div>
-                          <div style={{ fontSize: '0.7rem', color: '#64748b', lineHeight: 1.4, marginTop: '2px' }}>
-                            {k.desc}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* CARD 3: SPESIFIKASI TEKNIS & STANDARISASI */}
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '12px',
-              border: '1px solid #e2e8f0',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
-            }}>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: '0 0 12px 0' }}>
-                📋 Spesifikasi Parameter Teknis Standar
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-                {currentTool.spesifikasi.map((spec, sIdx) => (
-                  <div key={sIdx} style={{
-                    background: '#f8fafc',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0'
-                  }}>
-                    <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
-                      {spec.label}
-                    </div>
-                    <div style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 800, marginTop: '2px' }}>
-                      {spec.value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* CARD 4: SOP KERJA & ATURAN K3 */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
-              
-              {/* Box SOP */}
+              {/* TOMBOL PINTAS MENUJU TEORI & SOP LENGKAP */}
               <div style={{
-                background: '#ffffff',
-                borderRadius: '12px',
+                marginTop: '16px',
+                padding: '12px 16px',
+                borderRadius: '10px',
+                background: '#f8fafc',
                 border: '1px solid #e2e8f0',
-                padding: '20px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '10px'
               }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0284c7', margin: '0 0 12px 0' }}>
-                  🔧 Standar Operasional Prosedur (SOP)
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {currentTool.sopKerja.map((sop, sopIdx) => (
-                    <div key={sopIdx} style={{ display: 'flex', gap: '10px', fontSize: '0.78rem', color: '#334155', lineHeight: 1.5 }}>
-                      <span style={{
-                        background: '#e0f2fe',
-                        color: '#0369a1',
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.66rem',
-                        fontWeight: 900,
-                        flexShrink: 0,
-                        marginTop: '2px'
-                      }}>
-                        {sopIdx + 1}
-                      </span>
-                      <span>{sop}</span>
-                    </div>
-                  ))}
+                <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
+                  Ingin membaca SOP pemakaian, spesifikasi teknis, atau keselamatan kerja K3?
                 </div>
-              </div>
-
-              {/* Box K3 Penting */}
-              <div style={{
-                background: '#fff7ed',
-                borderRadius: '12px',
-                border: '1px solid #fed7aa',
-                padding: '20px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
-              }}>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#c2410c', margin: '0 0 12px 0' }}>
-                  🛡️ Aturan Keselamatan Kerja (K3 Wajib)
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {currentTool.k3Penting.map((k3, k3Idx) => (
-                    <div key={k3Idx} style={{ display: 'flex', gap: '10px', fontSize: '0.78rem', color: '#7c2d12', lineHeight: 1.5 }}>
-                      <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>⚠️</span>
-                      <span>{k3}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #fed7aa' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#9a3412', marginBottom: '6px' }}>
-                    Aplikasi Benda Kerja Cocok:
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                    {currentTool.bendaKerja.map((bk, bIdx) => (
-                      <span key={bIdx} style={{
-                        background: '#ffedd5',
-                        color: '#c2410c',
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        border: '1px solid #fed7aa'
-                      }}>
-                        • {bk}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setLabTab('materi');
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                    border: 'none',
+                    color: '#ffffff',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 8px rgba(2, 132, 199, 0.25)'
+                  }}
+                >
+                  <span>📖 Buka Teori & SOP Lengkap</span>
+                  <span>➔</span>
+                </button>
               </div>
 
             </div>
@@ -2261,6 +2152,184 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
       {labTab === 'materi' && (
         <div style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '22px', background: '#f8fafc' }}>
           
+          {/* SECTION 0: RINCIAN TEORI, KOMPONEN, SOP & SPESIFIKASI ALAT TERPILIH */}
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '12px',
+            border: '1.5px solid #ea580c',
+            padding: '22px',
+            boxShadow: '0 4px 16px rgba(234, 88, 12, 0.08)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.6rem' }}>🛠️</span>
+                <div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#c2410c', margin: 0 }}>
+                    Rincian Teori & SOP: {currentTool.nama}
+                  </h3>
+                  <div style={{ fontSize: '0.76rem', color: '#64748b', fontStyle: 'italic', margin: '2px 0 0 0' }}>
+                    {currentTool.namaEng} • {currentTool.badge}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  setLabTab('katalog');
+                }}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '7px',
+                  border: '1px solid #ea580c',
+                  background: 'rgba(234, 88, 12, 0.08)',
+                  color: '#ea580c',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>📸</span>
+                <span>Kembali ke Visual Foto</span>
+              </button>
+            </div>
+
+            {/* Deskripsi & Prinsip Mekanika */}
+            <div style={{ marginBottom: '18px', padding: '14px', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #ea580c', fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
+              <p style={{ margin: '0 0 8px 0' }}>{currentTool.deskripsiLengkap || currentTool.deskripsiSingkat}</p>
+              <div><strong style={{ color: '#0f172a' }}>⚙️ Prinsip Mekanika Kerja:</strong> {currentTool.prinsipKerja}</div>
+            </div>
+
+            {/* Komponen & Anatomi */}
+            <div style={{ marginBottom: '18px' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
+                📍 Anatomi Komponen Kunci ({currentTool.komponen.length} Bagian):
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '8px' }}>
+                {currentTool.komponen.map((k, idx) => (
+                  <div key={idx} style={{
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    display: 'flex',
+                    gap: '10px'
+                  }}>
+                    <div style={{
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      background: '#ea580c',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.7rem',
+                      fontWeight: 900,
+                      flexShrink: 0
+                    }}>
+                      {k.no}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0f172a' }}>{k.nama}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.4, marginTop: '2px' }}>{k.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Spesifikasi Parameter Teknis */}
+            <div style={{ marginBottom: '18px' }}>
+              <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
+                📋 Spesifikasi Parameter Teknis Standar:
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
+                {currentTool.spesifikasi.map((spec, sIdx) => (
+                  <div key={sIdx} style={{
+                    background: '#f8fafc',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>{spec.label}</div>
+                    <div style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 800, marginTop: '2px' }}>{spec.value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SOP & K3 Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+              {/* Box SOP */}
+              <div style={{ background: '#f0f9ff', borderRadius: '10px', border: '1px solid #bae6fd', padding: '16px' }}>
+                <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#0369a1', marginBottom: '10px' }}>
+                  🔧 Standar Operasional Prosedur (SOP)
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {currentTool.sopKerja.map((sop, sopIdx) => (
+                    <div key={sopIdx} style={{ display: 'flex', gap: '8px', fontSize: '0.76rem', color: '#0369a1', lineHeight: 1.5 }}>
+                      <span style={{
+                        background: '#0284c7',
+                        color: '#ffffff',
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.62rem',
+                        fontWeight: 900,
+                        flexShrink: 0
+                      }}>
+                        {sopIdx + 1}
+                      </span>
+                      <span>{sop}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Box K3 */}
+              <div style={{ background: '#fff7ed', borderRadius: '10px', border: '1px solid #fed7aa', padding: '16px' }}>
+                <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#c2410c', marginBottom: '10px' }}>
+                  🛡️ Aturan Keselamatan Kerja (K3)
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {currentTool.k3Penting.map((k3, k3Idx) => (
+                    <div key={k3Idx} style={{ display: 'flex', gap: '8px', fontSize: '0.76rem', color: '#7c2d12', lineHeight: 1.5 }}>
+                      <span style={{ fontSize: '0.85rem', flexShrink: 0 }}>⚠️</span>
+                      <span>{k3}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #fed7aa' }}>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#9a3412', marginBottom: '4px' }}>Aplikasi Benda Kerja:</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                    {currentTool.bendaKerja.map((bk, bIdx) => (
+                      <span key={bIdx} style={{
+                        background: '#ffedd5',
+                        color: '#c2410c',
+                        fontSize: '0.66rem',
+                        fontWeight: 700,
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        border: '1px solid #fed7aa'
+                      }}>
+                        • {bk}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
           {/* Header Teori */}
           <div style={{ background: '#ffffff', padding: '18px 20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '0 0 6px 0' }}>

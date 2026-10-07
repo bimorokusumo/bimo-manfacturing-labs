@@ -15,6 +15,7 @@ import {
   detectLabAndSubQuiz
 } from '../services/sheetService';
 import { sound } from '../utils/audio';
+import { MASTER_STUDENTS_LIST as ROSTER_STUDENTS } from '../data/studentsData';
 
 const GOOGLE_APPS_SCRIPT_CODE = `/**
  * =============================================================================
@@ -109,9 +110,9 @@ var LAB_CONFIGS = [
     tabName: "⚙️ 2. Machine Lab",
     shortTitle: "Machine Lab (Permesinan)",
     tasks: [
-      { key: "pretest", name: "⚙️ Pre-Test Teori Permesinan", category: "Pre-Test Formatif", keywords: ["pre-test", "pretest", "teori permesinan"] },
-      { key: "cnc", name: "💻 Kuis Teori & Kode CNC", category: "Kuis CNC & G-Code", keywords: ["cnc", "g-code", "kode g"] },
-      { key: "lathe", name: "🔩 Praktik Mesin Bubut & Frais", category: "Praktik Mesin", keywords: ["bubut", "frais", "praktik mesin"] },
+      { key: "lathe", name: "🔩 Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
+      { key: "milling", name: "🪵 Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
+      { key: "cnc", name: "💻 Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
       { key: "diag_machine", name: "📝 Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
     ]
   },
@@ -998,6 +999,27 @@ function identifyLabAndTask(modulStr, quizStr) {
   var q = String(quizStr || "").toLowerCase();
   var text = m + " " + q;
 
+  // 1. PRIORITAS UTAMA: Jika kuis merupakan Tes Diagnostik
+  if (text.indexOf("diagnostik") !== -1) {
+    for (var i = 0; i < LAB_CONFIGS.length; i++) {
+      var lab = LAB_CONFIGS[i];
+      for (var j = 0; j < lab.tasks.length; j++) {
+        var task = lab.tasks[j];
+        if (task.key.indexOf("diag") !== -1) {
+          for (var k = 0; k < task.keywords.length; k++) {
+            if (text.indexOf(task.keywords[k]) !== -1) {
+              return { labId: lab.id, taskKey: task.key, taskName: task.name };
+            }
+          }
+        }
+      }
+    }
+    if (text.indexOf("machine") !== -1 || text.indexOf("mesin") !== -1) {
+      return { labId: "machine", taskKey: "diag_machine", taskName: "📝 Tes Diagnostik Machine Lab" };
+    }
+  }
+
+  // 2. Cocokkan tugas per lab berdasarkan kata kunci spesifik
   for (var i = 0; i < LAB_CONFIGS.length; i++) {
     var lab = LAB_CONFIGS[i];
     for (var j = 0; j < lab.tasks.length; j++) {
@@ -1288,10 +1310,10 @@ const SUB_QUIZ_CONFIG = {
   ],
   machine: [
     { id: 'all', label: 'Semua Machine Lab', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Machine Lab (10 Soal)', icon: '📋' },
-    { id: 'pretest', label: 'Pre-Test Teori Permesinan', icon: '📝' },
-    { id: 'cnc', label: 'Kuis Teori & Kode CNC', icon: '💻' },
-    { id: 'lathe', label: 'Praktik Mesin Bubut', icon: '⚙️' }
+    { id: 'lathe', label: 'Test Teori Mesin Bubut', icon: '🔩' },
+    { id: 'milling', label: 'Test Teori Mesin Frais', icon: '🪵' },
+    { id: 'cnc', label: 'Test Teori & Kode CNC', icon: '💻' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Machine Lab (10 Soal)', icon: '📋' }
   ],
   'cutting-tools': [
     { id: 'all', label: 'Semua Perkakas Bengkel', icon: '📑' },
@@ -1542,40 +1564,79 @@ const TeacherGradebook = () => {
   // Data Matriks Rekap Pengumpulan Siswa per Kuis (Ceklis Siapa Saja yang Sudah Mengumpulkan)
   const studentSubmissionMatrix = useMemo(() => {
     const studentsMap = {};
-    const quizzesSet = new Set();
+    const labConfig = LAB_CONFIGS.find(l => l.id === activeTab);
+
+    // 1. Inisialisasi 36 Siswa Master Kelas X-TP.A agar selalu tampil terstruktur
+    (ROSTER_STUDENTS || []).forEach(s => {
+      const studentKey = s.name.toLowerCase();
+      studentsMap[studentKey] = {
+        nama: s.name,
+        nomorAbsen: String(s.absen),
+        kelas: s.className || 'X-TP.A',
+        sekolah: s.school || 'SMKN 2 DEPOK',
+        submissions: {},
+        isMaster: true
+      };
+    });
+
+    // 2. Tentukan daftar kolom kuis standar dari LAB_CONFIGS
+    let initialQuizList = [];
+    if (labConfig && labConfig.tasks) {
+      initialQuizList = labConfig.tasks.map(t => t.name);
+    }
+    const quizzesSet = new Set(initialQuizList);
 
     const baseData = activeTab === 'all'
       ? enrichedScores
       : enrichedScores.filter(s => s.labId === activeTab);
 
     baseData.forEach(item => {
-      const nama = (item.namaSiswa || '').trim();
-      const judulKuis = (item.judulKuis || '').trim();
-      if (!nama || !judulKuis) return;
+      const rawNama = (item.namaSiswa || '').trim();
+      const rawJudul = (item.judulKuis || '').trim();
+      if (!rawNama || !rawJudul) return;
 
-      quizzesSet.add(judulKuis);
-      const studentKey = nama.toLowerCase();
+      // Cari kecocokan siswa di daftar master (berdasarkan nama atau absen)
+      let targetKey = rawNama.toLowerCase();
+      if (!studentsMap[targetKey]) {
+        const parsedAbsen = parseInt(item.nomorAbsen, 10);
+        if (!isNaN(parsedAbsen)) {
+          const foundKey = Object.keys(studentsMap).find(k => studentsMap[k].nomorAbsen === String(parsedAbsen));
+          if (foundKey) targetKey = foundKey;
+        }
+      }
 
-      if (!studentsMap[studentKey]) {
-        studentsMap[studentKey] = {
-          nama: nama,
+      if (!studentsMap[targetKey]) {
+        studentsMap[targetKey] = {
+          nama: rawNama,
           nomorAbsen: item.nomorAbsen || '-',
           kelas: item.kelas || '-',
-          sekolah: item.sekolah || 'SMKN 2 Depok',
-          submissions: {}
+          sekolah: item.sekolah || 'SMKN 2 DEPOK',
+          submissions: {},
+          isMaster: false
         };
       }
 
-      if (studentsMap[studentKey].nomorAbsen === '-' && item.nomorAbsen) {
-        studentsMap[studentKey].nomorAbsen = item.nomorAbsen;
-      }
-      if (studentsMap[studentKey].kelas === '-' && item.kelas) {
-        studentsMap[studentKey].kelas = item.kelas;
+      // Tentukan nama kolom kuis tujuan (cocokkan dengan task standar lab)
+      let targetColumnName = rawJudul;
+      if (labConfig && labConfig.tasks) {
+        const itemText = ((item.modul || '') + ' ' + (item.subLabel || '') + ' ' + (item.judulKuis || '')).toLowerCase();
+        for (const t of labConfig.tasks) {
+          if (t.name === rawJudul) {
+            targetColumnName = t.name;
+            break;
+          }
+          if (t.keywords && t.keywords.some(kw => itemText.includes(kw))) {
+            targetColumnName = t.name;
+            break;
+          }
+        }
       }
 
-      const existing = studentsMap[studentKey].submissions[judulKuis];
+      quizzesSet.add(targetColumnName);
+
+      const existing = studentsMap[targetKey].submissions[targetColumnName];
       if (!existing || Number(item.skor) > Number(existing.skor)) {
-        studentsMap[studentKey].submissions[judulKuis] = {
+        studentsMap[targetKey].submissions[targetColumnName] = {
           skor: Number(item.skor) || 0,
           status: item.status || (Number(item.skor) >= 75 ? 'LULUS' : 'REMEDIAL'),
           waktu: item.waktu || item.timestamp?.slice(0, 10),
@@ -1586,8 +1647,26 @@ const TeacherGradebook = () => {
       }
     });
 
-    const quizList = Array.from(quizzesSet).sort();
+    // Urutkan kolom kuis: jika ada di labConfig.tasks, dahulukan sesuai urutan tasks
+    let quizList = [];
+    if (labConfig && labConfig.tasks) {
+      labConfig.tasks.forEach(t => {
+        if (quizzesSet.has(t.name)) {
+          quizList.push(t.name);
+          quizzesSet.delete(t.name);
+        }
+      });
+      Array.from(quizzesSet).sort().forEach(q => quizList.push(q));
+    } else {
+      quizList = Array.from(quizzesSet).sort();
+    }
+
+    // Urutkan siswa: 36 Siswa Master (Absen 1 - 36), lalu siswa tamu/testing
     const studentList = Object.values(studentsMap).sort((a, b) => {
+      const isMasterA = a.isMaster ? 1 : 0;
+      const isMasterB = b.isMaster ? 1 : 0;
+      if (isMasterA !== isMasterB) return isMasterB - isMasterA;
+
       const numA = parseInt(a.nomorAbsen, 10);
       const numB = parseInt(b.nomorAbsen, 10);
       if (!isNaN(numA) && !isNaN(numB)) return numA - numB;

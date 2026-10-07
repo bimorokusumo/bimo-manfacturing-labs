@@ -223,10 +223,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
                   <img src="/assets/images/lathe.png" alt="CNC Lathe" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 </div>
                 <div style={{ padding: '24px' }}>
-                  <h3 style={{ color: '#60a5fa', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>CNC Lathe (Bubut)</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-                    Mesin Bubut CNC 2 Axis (X, Z). Simulasikan eksekusi kode G-Code untuk benda silindris berputar.
-                  </p>
+                  <h3 style={{ color: '#60a5fa', fontSize: '1.4rem', fontWeight: 800, marginBottom: '16px', textTransform: 'uppercase' }}>CNC Lathe (Bubut)</h3>
                   <button className="btn-game" style={{ width: '100%', background: '#3b82f6', color: '#ffffff', border: 'none' }}>SIMULASI BUBUT CNC</button>
                 </div>
               </div>
@@ -240,10 +237,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
                   <img src="/assets/images/cnc.png" alt="CNC Milling" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 </div>
                 <div style={{ padding: '24px' }}>
-                  <h3 style={{ color: 'var(--game-success)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>CNC Milling (Frais)</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-                    Mesin Frais CNC 3 Axis (X, Y, Z). Simulasikan pemakanan blok material 3D dengan visual heightmap.
-                  </p>
+                  <h3 style={{ color: 'var(--game-success)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '16px', textTransform: 'uppercase' }}>CNC Milling (Frais)</h3>
                   <button className="btn-game btn-game-success" style={{ width: '100%' }}>SIMULASI FRAIS CNC</button>
                 </div>
               </div>
@@ -287,16 +281,16 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
         onOpenDiagnostic={onOpenDiagnostic}
       />
       
-      <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '12px' }}>
+      <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>
           GARASI MACHINE LAB
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
-          Silakan pilih mesin yang ingin dioperasikan untuk simulasi
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', margin: 0 }}>
+          Pilih mesin untuk memulai simulasi 3D dan asesmen kompetensi
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
         
         {/* LATHE */}
         <div 
@@ -304,14 +298,16 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
           className="game-card game-card-hover" 
           style={{ cursor: 'pointer', border: '1px solid rgba(59, 130, 246, 0.3)' }}
         >
-          <div style={{ height: '180px', background: 'var(--bg-card-light)', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+          <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
             <img src="/assets/images/lathe.png" alt="Mesin Bubut" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
           </div>
-          <div style={{ padding: '24px' }}>
-            <h3 style={{ color: 'var(--game-tp)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>Mesin Bubut (Lathe)</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-              Tersedia 3 Pilihan: <strong>📐 Rumus Pemesinan</strong>, <strong>📝 Soal Test</strong>, & <strong>⚙️ Proses Pemotongan</strong> (Video 13 Operasi & Simulator 3D).
-            </p>
+          <div style={{ padding: '20px' }}>
+            <h3 style={{ color: 'var(--game-tp)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Bubut (Lathe)</h3>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>📐 Rumus RPM</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>📝 Test Bubut</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
+            </div>
             <button className="btn-game btn-game-tp" style={{ width: '100%' }}>MASUK MESIN BUBUT</button>
           </div>
         </div>
@@ -322,14 +318,15 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
           className="game-card game-card-hover" 
           style={{ cursor: 'pointer', border: '1px solid rgba(245, 158, 11, 0.3)' }}
         >
-          <div style={{ height: '180px', background: 'var(--bg-card-light)', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+          <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
             <img src="/assets/images/milling.png" alt="Mesin Frais" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', filter: 'brightness(1.1) contrast(1.1)' }} />
           </div>
-          <div style={{ padding: '24px' }}>
-            <h3 style={{ color: 'var(--game-tflm)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>Mesin Frais (Milling)</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-              Simulasi pengefraisan rata. Atur pergerakan meja X-Y dan putaran spindle vertikal.
-            </p>
+          <div style={{ padding: '20px' }}>
+            <h3 style={{ color: 'var(--game-tflm)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Frais (Milling)</h3>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🪵 Test Frais</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
+            </div>
             <button className="btn-game btn-game-tflm" style={{ width: '100%' }}>OPERASIKAN MESIN</button>
           </div>
         </div>
@@ -340,14 +337,16 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
           className="game-card game-card-hover" 
           style={{ cursor: 'pointer', border: '1px solid rgba(16, 185, 129, 0.3)' }}
         >
-          <div style={{ height: '180px', background: 'var(--bg-card-light)', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+          <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
             <img src="/assets/images/cnc.png" alt="Mesin CNC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
           </div>
-          <div style={{ padding: '24px' }}>
-            <h3 style={{ color: 'var(--game-success)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px', textTransform: 'uppercase' }}>Mesin CNC</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '20px' }}>
-              Materi dasar CNC, anatomi komponen mesin, dan simulasi eksekusi kode-G (G-Code & M-Code).
-            </p>
+          <div style={{ padding: '20px' }}>
+            <h3 style={{ color: 'var(--game-success)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin CNC</h3>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>📖 G-Code</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🎯 Kuis CNC</span>
+            </div>
             <button className="btn-game btn-game-success" style={{ width: '100%' }}>PELAJARI & OPERASIKAN</button>
           </div>
         </div>

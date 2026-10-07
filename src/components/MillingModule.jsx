@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import Milling3D from './Milling3D';
 import PreparationModal from './PreparationModal';
+import MillingTestView from './MillingTestView';
 import { millingJobsheets } from '../data/millingJobsheets';
 
 const MillingModule = ({ addXP }) => {
+  const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test'
   const [isPrepared, setIsPrepared] = useState(false);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
@@ -50,6 +52,13 @@ const MillingModule = ({ addXP }) => {
 
   // Audio Engine Hook
   useEffect(() => {
+    if (activeTab === 'test') {
+      sound.stopMotorSound();
+      sound.stopCuttingSound();
+      setIsCutting(false);
+      return;
+    }
+
     if (isSpindleRunning) {
       sound.startMotorSound(rpm);
     } else {
@@ -62,7 +71,7 @@ const MillingModule = ({ addXP }) => {
       sound.stopMotorSound();
       sound.stopCuttingSound();
     };
-  }, [isSpindleRunning, rpm]);
+  }, [isSpindleRunning, rpm, activeTab]);
 
   // Sync state on Jobsheet change
   useEffect(() => {
@@ -204,6 +213,7 @@ const MillingModule = ({ addXP }) => {
   // Keyboard Shortcuts for Milling
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (activeTab !== 'simulator') return;
       if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
       if (e.key === 'ArrowLeft') {
@@ -232,7 +242,7 @@ const MillingModule = ({ addXP }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [rapidMode, stepSize, workpieceSize, toolDiameter, isSpindleRunning]);
+  }, [rapidMode, stepSize, workpieceSize, toolDiameter, isSpindleRunning, activeTab]);
 
   // Spindle Toggle
   const toggleSpindle = () => {
@@ -325,7 +335,63 @@ const MillingModule = ({ addXP }) => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
-      {!isPrepared && <PreparationModal machineName="MESIN FRAIS" onComplete={() => setIsPrepared(true)} />}
+      {/* NAVIGATION TABS: SIMULATOR & TEST TEORI FRAIS */}
+      <div style={{
+        display: 'flex',
+        gap: '10px',
+        background: 'var(--bg-card)',
+        padding: '8px',
+        borderRadius: '12px',
+        border: '1px solid var(--border-light)'
+      }}>
+        <button
+          onClick={() => { sound.playClick(); setActiveTab('simulator'); }}
+          style={{
+            flex: 1,
+            padding: '12px 18px',
+            borderRadius: '8px',
+            border: activeTab === 'simulator' ? '2px solid #f59e0b' : '1px solid transparent',
+            background: activeTab === 'simulator' ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+            color: activeTab === 'simulator' ? '#f59e0b' : 'var(--text-muted)',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            fontSize: '0.95rem'
+          }}
+        >
+          <span>⚙️</span> 1. Simulator Praktik Frais 3D
+        </button>
+
+        <button
+          onClick={() => { sound.playClick(); setActiveTab('test'); }}
+          style={{
+            flex: 1,
+            padding: '12px 18px',
+            borderRadius: '8px',
+            border: activeTab === 'test' ? '2px solid #10b981' : '1px solid transparent',
+            background: activeTab === 'test' ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
+            color: activeTab === 'test' ? '#10b981' : 'var(--text-muted)',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            fontSize: '0.95rem'
+          }}
+        >
+          <span>📝</span> 2. Soal Test Teori Frais (25 Soal & Esai)
+        </button>
+      </div>
+
+      {activeTab === 'test' ? (
+        <MillingTestView addXP={addXP} onStartPractical={() => setActiveTab('simulator')} />
+      ) : (
+        <>
+          {!isPrepared && <PreparationModal machineName="MESIN FRAIS" onComplete={() => setIsPrepared(true)} />}
 
       {/* HEADER BAR & JOBSHEET SELECTOR */}
       <div
@@ -1022,6 +1088,8 @@ const MillingModule = ({ addXP }) => {
             </button>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

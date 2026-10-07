@@ -289,18 +289,21 @@ export const detectLabAndSubQuiz = (item) => {
       subLabel = 'Kuis Praktik K3';
     }
   } else if (labId === 'machine') {
-    if (j.includes('pre-test') || j.includes('pretest')) {
-      subId = 'pretest';
-      subLabel = 'Pre-Test Teori Permesinan';
+    if (j.includes('diagnostik')) {
+      subId = 'diagnostic';
+      subLabel = 'Tes Diagnostik Machine Lab';
+    } else if (j.includes('bubut') || m.includes('bubut') || j.includes('lathe') || m.includes('lathe')) {
+      subId = 'lathe';
+      subLabel = 'Test Teori Mesin Bubut';
+    } else if (j.includes('frais') || m.includes('frais') || j.includes('milling') || m.includes('milling')) {
+      subId = 'milling';
+      subLabel = 'Test Teori Mesin Frais';
     } else if (j.includes('cnc') || m.includes('cnc')) {
       subId = 'cnc';
-      subLabel = 'Kuis Teori & Kode CNC';
-    } else if (j.includes('bubut') || m.includes('bubut')) {
-      subId = 'lathe';
-      subLabel = 'Praktik Mesin Bubut';
+      subLabel = 'Test Teori & Kode CNC';
     } else {
       subId = 'machine_general';
-      subLabel = 'Praktik Permesinan';
+      subLabel = 'Praktik Machine Lab';
     }
   } else if (labId === 'cutting-tools') {
     subId = 'cutting_quiz';

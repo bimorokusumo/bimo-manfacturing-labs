@@ -31,7 +31,7 @@ const LABS_CONFIG = [
     id: 'cutting-tools',
     title: 'Perkakas Bengkel',
     category: 'PERKAKAS TANGAN & MESIN',
-    desc: 'Ensiklopedia lengkap Perkakas Tangan Manual (kikir 7 profil, gergaji besi, pahat, palu, tap & reamer) serta Perkakas Bertenaga, kalkulator RPM bor, dan SOP K3 bengkel.',
+    desc: 'Katalog visual perkakas tangan (kikir 7 profil, gergaji, pahat), mesin bor & gerinda, serta kalkulator RPM.',
     image: '/assets/images/labs/cutting_tools_lab.jpg',
     badgeBg: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
     badgeColor: '#ffffff',
@@ -42,7 +42,7 @@ const LABS_CONFIG = [
     id: 'heat-treatment',
     title: 'Heat Treatment Lab',
     category: 'TERMAL & FINISHING',
-    desc: 'Simulasi interaktif 7-bak blackening (black oxide 0.000 mm toleransi), siklus hardening, tempering, annealing, normalizing, dan uji percikan baja.',
+    desc: 'Simulasi visual perlakuan panas logam, siklus hardening & quenching, dan simulator 7-bak blackening.',
     image: '/assets/images/heat_treatment/quench_fire_glow.jpg',
     badgeBg: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)',
     badgeColor: '#ffffff',
@@ -53,7 +53,7 @@ const LABS_CONFIG = [
     id: 'mechanics',
     title: 'Mekanika Teknik Studio',
     category: 'STATIKA & FISIKA TERAPAN',
-    desc: 'Pusat Rumus Mekanika Terapan SMK, Kalkulator Interaktif Pintar, dan Bedah Studi Kasus Bengkel dengan Gambar Ilustrasi Teknik.',
+    desc: 'Kalkulator rumus mekanika terapan SMK, studi kasus bengkel, dan simulasi interaktif momen gaya & tuas.',
     image: '/assets/images/labs/workshop_virtual.jpg',
     badgeBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
     badgeColor: '#ffffff',
@@ -308,80 +308,59 @@ const DashboardView = ({
         </div>
       </div>
 
-      {/* ASESMEN DIAGNOSTIK AWAL HERO BANNER */}
+      {/* ASESMEN DIAGNOSTIK AWAL HERO BANNER (COMPACT & SLEEK) */}
       <div style={{
         width: '100%',
-        background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%)',
-        borderRadius: '16px',
-        padding: '20px 24px',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)',
+        borderRadius: '12px',
+        padding: '10px 18px',
         color: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '16px',
-        marginBottom: '28px',
-        boxShadow: '0 8px 24px rgba(37, 99, 235, 0.2)'
+        gap: '12px',
+        marginBottom: '20px',
+        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '720px' }}>
-          <div style={{
-            fontSize: '2.5rem',
-            background: 'rgba(255, 255, 255, 0.15)',
-            width: '64px',
-            height: '64px',
-            borderRadius: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{
+            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            color: '#000',
+            fontSize: '0.66rem',
+            fontWeight: 900,
+            padding: '3px 8px',
+            borderRadius: '6px',
+            letterSpacing: '0.5px'
           }}>
-            📋
-          </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span style={{
-                background: '#f59e0b',
-                color: '#000',
-                fontSize: '0.68rem',
-                fontWeight: 900,
-                padding: '2px 8px',
-                borderRadius: '6px'
-              }}>
-                LANGKAH AWAL PEMBELAJARAN
-              </span>
-              <span style={{ fontSize: '0.74rem', color: '#bfdbfe', fontWeight: 600 }}>
-                10 Soal Pilihan Ganda (Pilgan)
-              </span>
-            </div>
-            <h4 style={{ margin: '0 0 4px 0', fontSize: '1.2rem', fontWeight: 800 }}>
-              Asesmen Diagnostik Kognitif Awal Siswa
-            </h4>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: '#dbeafe', lineHeight: 1.4 }}>
-              Diagnosa kesiapan awal siswa terkait K3LH, gambar teknik, alat ukur presisi, dan perhitungan parameter bubut/frais sebelum memulai kegiatan praktikum.
-            </p>
-          </div>
+            📋 DIAGNOSTIK
+          </span>
+          <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#f8fafc' }}>
+            Asesmen Diagnostik Kognitif Awal Siswa (10 Soal K3, Gambar Teknik &amp; Pemesinan)
+          </span>
         </div>
 
         <button
           onClick={() => onSelectLab('diagnostic')}
           style={{
             background: '#ffffff',
-            color: '#1e40af',
+            color: '#1e3a8a',
             border: 'none',
-            padding: '12px 22px',
-            borderRadius: '10px',
+            padding: '7px 16px',
+            borderRadius: '8px',
             fontWeight: 800,
-            fontSize: '0.88rem',
+            fontSize: '0.8rem',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: '6px',
             whiteSpace: 'nowrap',
-            transition: 'all 0.15s'
+            transition: 'all 0.15s',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
           }}
         >
-          <span>Mulai Tes Diagnostik (10 Soal)</span>
+          <span>Mulai Tes (10 Soal)</span>
           <span>➔</span>
         </button>
       </div>
@@ -458,7 +437,9 @@ const DashboardView = ({
                     className="dashboard-lab-card-badge"
                     style={{ 
                       background: lab.badgeBg, 
-                      color: lab.badgeColor 
+                      color: lab.badgeColor,
+                      left: '10px',
+                      right: 'auto'
                     }}
                   >
                     {lab.category}
@@ -492,35 +473,20 @@ const DashboardView = ({
                   </button>
                 </div>
 
-              {/* Badan Kartu */}
-              <div className="dashboard-lab-card-body">
-                <div>
-                  <h4>
-                    {lab.title}
-                  </h4>
-                  <p>
-                    {lab.desc}
-                  </p>
-                </div>
-
-                {/* Fitur Chips */}
-                <div className="dashboard-lab-card-tags">
-                  {lab.chips.map((chip, cIdx) => (
-                    <span key={cIdx}>
-                      {chip}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Tombol Footer */}
-                <div className="dashboard-lab-card-footer">
-                  <span style={{ color: lab.accentColor }}>
-                    Buka Laboratorium
-                  </span>
-                  <span className="dashboard-lab-card-arrow" style={{ color: lab.accentColor }}>
-                    →
-                  </span>
-                </div>
+              {/* Badan Kartu (Hanya Judul Saja) */}
+              <div 
+                className="dashboard-lab-card-body" 
+                style={{ 
+                  padding: '16px 14px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  minHeight: '56px'
+                }}
+              >
+                <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.3 }}>
+                  {lab.title}
+                </h4>
               </div>
             </div>
           );

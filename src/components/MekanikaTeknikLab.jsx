@@ -3708,42 +3708,42 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       />
 
       {/* =====================================================================
-          HEADER HERO SECTION
+          HEADER HERO SECTION (CLEAN & COMPACT)
       ===================================================================== */}
       <div style={{
         background: 'linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0284c7 100%)',
-        borderRadius: '16px',
-        padding: '24px 30px',
+        borderRadius: '14px',
+        padding: '16px 22px',
         color: '#ffffff',
-        marginBottom: '20px',
-        boxShadow: '0 10px 25px -5px rgba(2, 132, 199, 0.3)',
+        marginBottom: '16px',
+        boxShadow: '0 6px 20px rgba(2, 132, 199, 0.25)',
         border: '1px solid rgba(255,255,255,0.15)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: '20px'
+        gap: '14px'
       }}>
-        <div style={{ maxWidth: '780px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
             <span style={{
               background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
-              padding: '3px 10px',
+              padding: '2px 8px',
               borderRadius: '999px',
-              fontSize: '0.72rem',
+              fontSize: '0.68rem',
               fontWeight: 800,
-              letterSpacing: '1px',
+              letterSpacing: '0.5px',
               textTransform: 'uppercase',
               color: '#0f172a'
             }}>
               ⚙️ APPLIED MECHANICS &amp; STATICS
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#e0f2fe' }}>Fisika Terapan &amp; Mekanika Teknik Mesin SMK</span>
+            <span style={{ fontSize: '0.74rem', color: '#e0f2fe' }}>Fisika Terapan &amp; Mekanika Teknik Mesin SMK</span>
           </div>
           <h1 style={{
-            fontSize: '2rem',
+            fontSize: '1.45rem',
             fontWeight: 900,
-            margin: '0 0 6px 0',
+            margin: '0 0 3px 0',
             fontFamily: "'Chakra Petch', 'Segoe UI', sans-serif",
             background: 'linear-gradient(135deg, #ffffff 0%, #bae6fd 100%)',
             WebkitBackgroundClip: 'text',
@@ -3751,151 +3751,25 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           }}>
             Pusat Rumus Mekanika Teknik &amp; Studi Kasus
           </h1>
-          <p style={{ fontSize: '0.88rem', color: '#e0f2fe', margin: 0, lineHeight: 1.5 }}>
-            Koleksi lengkap rumus mekanika terapan SMK, kalkulator interaktif pintar (bedah langkah 5 tahap), dan <strong>studi kasus nyata bengkel dengan gambar ilustrasi teknik</strong>.
+          <p style={{ fontSize: '0.8rem', color: '#e0f2fe', margin: 0 }}>
+            Kalkulator interaktif pintar (bedah langkah 5 tahap) dan studi kasus nyata bengkel dengan ilustrasi teknik.
           </p>
         </div>
 
-        {/* 3 Formula Quick Badges */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#facc15' }}>τ = F × d</div>
-            <div style={{ fontSize: '0.68rem', color: '#e0f2fe' }}>Momen Gaya (Torsi)</div>
+        {/* 3 Quick Badges */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#facc15' }}>τ = F × d</div>
+            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Momen Gaya</div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#4ade80' }}>ΣM = 0</div>
-            <div style={{ fontSize: '0.68rem', color: '#e0f2fe' }}>Kesetimbangan Statis</div>
+          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80' }}>ΣM = 0</div>
+            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Kesetimbangan</div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#38bdf8' }}>σ = F / A</div>
-            <div style={{ fontSize: '0.68rem', color: '#e0f2fe' }}>Tegangan Tarik</div>
+          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#38bdf8' }}>σ = F / A</div>
+            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Tegangan Baut</div>
           </div>
-        </div>
-      </div>
-
-      {/* =====================================================================
-          PETA 6 STUDI KASUS MEKANIKA TEKNIK DI BENGKEL (KLIK LANGSUNG MENUJU KASUS)
-      ===================================================================== */}
-      <div style={{
-        background: '#ffffff',
-        borderRadius: '14px',
-        padding: '18px 20px',
-        marginBottom: '20px',
-        border: '1px solid #bae6fd',
-        boxShadow: '0 4px 14px rgba(2, 132, 199, 0.08)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🧭</span>
-            <div>
-              <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
-                Peta Studi Kasus: Pecahkan Masalah Fisika Mekanika di Bengkel
-              </h3>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Klik salah satu studi kasus di bawah ini untuk langsung membuka simulator &amp; kalkulator rumusnya:
-              </span>
-            </div>
-          </div>
-          <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 800 }}>
-            6 TOPIK BENGKEL
-          </span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-          {[
-            {
-              id: 'torque',
-              icon: '🔧',
-              title: '1. Rumus Torsi (τ = F × d)',
-              problem: 'Kasus: Baut Roda Truk Macet Berkarat',
-              formula: 'τ = F × d',
-              color: '#0284c7',
-              bg: '#f0f9ff'
-            },
-            {
-              id: 'lever',
-              icon: '🕹️',
-              title: '2. Rumus Tuas (W·Lb = F·Lk)',
-              problem: 'Kasus: Mengungkit Mesin Bubut 600 kg',
-              formula: 'KM = Lk / Lb',
-              color: '#b45309',
-              bg: '#fffbeb'
-            },
-            {
-              id: 'equilibrium',
-              icon: '⚖️',
-              title: '3. Rumus Kesetimbangan (ΣM = 0)',
-              problem: 'Kasus: Balok Crane Hoist Frais 1,2 Ton',
-              formula: 'ΣM = 0 | ΣFy = 0',
-              color: '#166534',
-              bg: '#f0fdf4'
-            },
-            {
-              id: 'stress',
-              icon: '📏',
-              title: '4. Rumus Tegangan (σ = F / A)',
-              problem: 'Kasus: Baut Silinder Head Diesel M14',
-              formula: 'σ = F / A',
-              color: '#6d28d9',
-              bg: '#f5f3ff'
-            },
-            {
-              id: 'pulley',
-              icon: '🏗️',
-              title: '5. Rumus Katrol (F = W / n)',
-              problem: 'Kasus: Takal Chain Block Angkat 1 Ton',
-              formula: 'F = W / n',
-              color: '#047857',
-              bg: '#ecfdf5'
-            },
-            {
-              id: 'friction',
-              icon: '📐',
-              title: '6. Rumus Gesekan (fs = μ · N)',
-              problem: 'Kasus: Ramp Genset & Bahaya Oli Licin',
-              formula: 'fs = μ · N',
-              color: '#0369a1',
-              bg: '#f0f9ff'
-            }
-          ].map((c) => {
-            const isSelected = activeTab === c.id;
-            return (
-              <button
-                key={c.id}
-                onClick={() => switchTab(c.id)}
-                style={{
-                  background: isSelected ? c.bg : '#ffffff',
-                  border: isSelected ? `2px solid ${c.color}` : '1px solid #e2e8f0',
-                  borderRadius: '10px',
-                  padding: '12px',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: isSelected ? `0 4px 12px ${c.color}25` : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>{c.icon}</span>
-                  <span style={{
-                    fontSize: '0.65rem',
-                    fontWeight: 800,
-                    background: isSelected ? c.color : '#f1f5f9',
-                    color: isSelected ? '#ffffff' : '#64748b',
-                    padding: '2px 6px',
-                    borderRadius: '4px'
-                  }}>
-                    {isSelected ? 'AKTIF' : c.formula}
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.82rem', fontWeight: 900, color: c.color, marginBottom: '2px' }}>
-                  {c.title}
-                </div>
-                <div style={{ fontSize: '0.72rem', color: '#475569', lineHeight: 1.35 }}>
-                  {c.problem}
-                </div>
-              </button>
-            );
-          })}
         </div>
       </div>
 

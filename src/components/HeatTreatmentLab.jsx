@@ -594,41 +594,41 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
         onOpenDiagnostic={onOpenDiagnostic}
       />
       {/* =====================================================================
-          HEADER HERO SECTION (VISUAL INFOGRAPHIC BADGES)
+          HEADER HERO SECTION (CLEAN & COMPACT)
       ===================================================================== */}
       <div style={{
         background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #450a0a 100%)',
-        borderRadius: '16px',
-        padding: '24px 30px',
+        borderRadius: '14px',
+        padding: '16px 22px',
         color: '#ffffff',
-        marginBottom: '20px',
-        boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
+        marginBottom: '16px',
+        boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
         border: '1px solid rgba(255,255,255,0.1)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: '20px'
+        gap: '14px'
       }}>
-        <div style={{ maxWidth: '750px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
             <span style={{
               background: 'linear-gradient(135deg, #f97316 0%, #dc2626 100%)',
-              padding: '3px 10px',
+              padding: '2px 8px',
               borderRadius: '999px',
-              fontSize: '0.72rem',
+              fontSize: '0.68rem',
               fontWeight: 800,
-              letterSpacing: '1px',
+              letterSpacing: '0.5px',
               textTransform: 'uppercase'
             }}>
               🔥 METALLURGY VISUAL STUDIO
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>SMK Teknik Pemesinan &amp; TFLM</span>
+            <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>SMK Teknik Pemesinan &amp; TFLM</span>
           </div>
           <h1 style={{
-            fontSize: '2rem',
+            fontSize: '1.45rem',
             fontWeight: 900,
-            margin: '0 0 6px 0',
+            margin: '0 0 3px 0',
             fontFamily: "'Chakra Petch', 'Segoe UI', sans-serif",
             background: 'linear-gradient(135deg, #ffffff 0%, #fed7aa 100%)',
             WebkitBackgroundClip: 'text',
@@ -636,211 +636,25 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           }}>
             Studio Visual Heat Treatment &amp; Blackening
           </h1>
-          <p style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: 0, lineHeight: 1.5 }}>
-            Pelajari konsep dan langkah kerja perlakuan panas lewat <strong>ilustrasi visual, bagan warna, dan simulator interaktif</strong>.
+          <p style={{ fontSize: '0.8rem', color: '#cbd5e1', margin: 0 }}>
+            Visualisasi siklus termal, bagan warna oksida, dan simulator interaktif 7-bak toleransi 0.000 mm.
           </p>
         </div>
 
         {/* 3 Quick Visual Badges */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#38bdf8' }}>0.000 mm</div>
-            <div style={{ fontSize: '0.68rem', color: '#cbd5e1' }}>Presisi Blackening</div>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ background: 'rgba(255,255,255,0.08)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.12)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#38bdf8' }}>0.000 mm</div>
+            <div style={{ fontSize: '0.64rem', color: '#cbd5e1' }}>Presisi Blackening</div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#f87171' }}>65 HRC</div>
-            <div style={{ fontSize: '0.68rem', color: '#cbd5e1' }}>Kekerasan Martensit</div>
+          <div style={{ background: 'rgba(255,255,255,0.08)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.12)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#f87171' }}>65 HRC</div>
+            <div style={{ fontSize: '0.64rem', color: '#cbd5e1' }}>Kekerasan Martensit</div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px 14px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#4ade80' }}>100%</div>
-            <div style={{ fontSize: '0.68rem', color: '#cbd5e1' }}>Machinability Anneal</div>
+          <div style={{ background: 'rgba(255,255,255,0.08)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.12)' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80' }}>100%</div>
+            <div style={{ fontSize: '0.64rem', color: '#cbd5e1' }}>Machinability Anneal</div>
           </div>
-        </div>
-
-        {/* PROMINENT BANNER: BINGUNG? TONTON VIDEO ANIMASI */}
-        <div style={{
-          width: '100%',
-          marginTop: '16px',
-          background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(220, 38, 38, 0.25) 100%)',
-          border: '1px solid rgba(249, 115, 22, 0.5)',
-          borderRadius: '12px',
-          padding: '14px 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          boxShadow: '0 4px 20px rgba(249, 115, 22, 0.2)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ fontSize: '2.2rem' }}>🎬</span>
-            <div>
-              <div style={{ fontSize: '1rem', fontWeight: 900, color: '#fed7aa' }}>
-                📺 Dilengkapi Video Referensi Praktikum Nyata (YouTube)
-              </div>
-              <div style={{ fontSize: '0.8rem', color: '#cbd5e1', lineHeight: 1.4 }}>
-                Setiap materi (Hardening, Tempering, Annealing, Normalizing, Case Hardening, Blackening) dilengkapi video dokumentasi praktikum asli dan poin kunci observasi!
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={() => switchTab('hardening')}
-            style={{
-              padding: '10px 22px',
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-              border: 'none',
-              color: '#ffffff',
-              fontSize: '0.88rem',
-              fontWeight: 900,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
-              transition: 'all 0.2s'
-            }}
-          >
-            <span>▶ LIHAT MATERI &amp; VIDEO YOUTUBE</span>
-          </button>
-        </div>
-      </div>
-
-      {/* =====================================================================
-          PETA PANDUAN CEPAT MEMILIH PROSES HEAT TREATMENT (KLIK LANGSUNG MENUJU MATERI)
-      ===================================================================== */}
-      <div style={{
-        background: '#ffffff',
-        borderRadius: '14px',
-        padding: '18px 20px',
-        marginBottom: '20px',
-        border: '1px solid #fed7aa',
-        boxShadow: '0 4px 14px rgba(234, 88, 12, 0.08)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🗺️</span>
-            <div>
-              <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#9a3412' }}>
-                Panduan Kilat: Pilih Proses Heat Treatment Berdasarkan Masalah Bengkel
-              </h3>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Klik salah satu kartu di bawah ini untuk langsung membuka materi &amp; simulator proses tersebut:
-              </span>
-            </div>
-          </div>
-          <span style={{ background: '#ffedd5', color: '#c2410c', padding: '3px 10px', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 800 }}>
-            7 MODUL PRAKTIKUM UTAMA
-          </span>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
-          {[
-            {
-              id: 'hardening',
-              icon: '⚡',
-              title: 'Hardening (Pemanasan)',
-              need: 'Bikin Keras & Tajam',
-              target: 'Pahat bubut, pisau frais, mata bor, pisau cukur (65 HRC)',
-              color: '#dc2626',
-              bg: '#fef2f2'
-            },
-            {
-              id: 'quenching',
-              icon: '💧',
-              title: 'Quenching (Media Dingin)',
-              need: 'Pendinginan Kilat Martensit',
-              target: 'Air Garam (Brine), Air Bersih, Oli Khusus, Udara Tekan',
-              color: '#0284c7',
-              bg: '#f0f9ff'
-            },
-            {
-              id: 'tempering',
-              icon: '🌡️',
-              title: 'Tempering (Warna Oksida)',
-              need: 'Hilangkan Kerapuhan',
-              target: 'Straw Yellow (62 HRC), Bronze (58 HRC), Spring Blue (50 HRC)',
-              color: '#ea580c',
-              bg: '#fff7ed'
-            },
-            {
-              id: 'annealing',
-              icon: '🧘',
-              title: 'Full Annealing',
-              need: 'Baja Keras Dilunakkan',
-              target: 'Baja tempa/las yang mau dibubut empuk di mesin CNC (~12 HRC)',
-              color: '#2563eb',
-              bg: '#eff6ff'
-            },
-            {
-              id: 'normalizing',
-              icon: '🌱',
-              title: 'Normalizing',
-              need: 'Ratakan Butir Las/Tempa',
-              target: 'Rel kereta, poros engkol mesin kapal, pipa tekanan tinggi',
-              color: '#16a34a',
-              bg: '#f0fdf4'
-            },
-            {
-              id: 'case-hardening',
-              icon: '🛡️',
-              title: 'Case Hardening',
-              need: 'Kulit 62 HRC, Inti Ulet',
-              target: 'Roda gigi transmisi truk, pin piston mesin, poros nok cam',
-              color: '#9333ea',
-              bg: '#faf5ff'
-            },
-            {
-              id: 'blackening',
-              icon: '⚗️',
-              title: 'Blackening (0.000 mm)',
-              need: 'Tahan Karat & Anti-Silau',
-              target: 'Ulir baut presisi, senjata api, pelat ragum, mikroskop',
-              color: '#475569',
-              bg: '#f8fafc'
-            }
-          ].map((card) => {
-            const isSelected = activeTab === card.id;
-            return (
-              <button
-                key={card.id}
-                onClick={() => switchTab(card.id)}
-                style={{
-                  background: isSelected ? card.bg : '#ffffff',
-                  border: isSelected ? `2px solid ${card.color}` : '1px solid #e2e8f0',
-                  borderRadius: '10px',
-                  padding: '12px',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: isSelected ? `0 4px 12px ${card.color}25` : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>{card.icon}</span>
-                  <span style={{
-                    fontSize: '0.65rem',
-                    fontWeight: 800,
-                    background: isSelected ? card.color : '#f1f5f9',
-                    color: isSelected ? '#ffffff' : '#475569',
-                    padding: '2px 6px',
-                    borderRadius: '4px'
-                  }}>
-                    {isSelected ? 'SEDANG DIBUKA' : 'KLIK BUKA'}
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: card.color, marginBottom: '2px' }}>
-                  {card.title}
-                </div>
-                <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#1e293b', marginBottom: '3px' }}>
-                  🎯 {card.need}
-                </div>
-                <div style={{ fontSize: '0.68rem', color: '#64748b', lineHeight: 1.35 }}>
-                  {card.target}
-                </div>
-              </button>
-            );
-          })}
         </div>
       </div>
 

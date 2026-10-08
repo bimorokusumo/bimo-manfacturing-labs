@@ -979,27 +979,49 @@ html, body {
    ACCESSIBILITY & INCLUSION STYLES (WCAG 2.1 AAA & UDL SUPPORT)
    ============================================================================= */
 
-/* 1. Font Size Scaling */
+/* 1. Font Size Scaling (Root & Body Scaling for full rem and dynamic scaling) */
+html.a11y-font-small,
+html.a11y-font-small body {
+  font-size: 85% !important;
+  --a11y-font-scale: 0.85;
+}
+
+html.a11y-font-normal,
+html.a11y-font-normal body {
+  font-size: 100% !important;
+  --a11y-font-scale: 1.0;
+}
+
+html.a11y-font-large,
 html.a11y-font-large body {
-  font-size: 112% !important;
+  font-size: 120% !important;
+  --a11y-font-scale: 1.2;
 }
 
 html.a11y-font-large p, 
-html.a11y-font-large span, 
-html.a11y-font-large button,
-html.a11y-font-large div {
-  line-height: 1.6 !important;
+html.a11y-font-large li,
+html.a11y-font-large label,
+html.a11y-font-large h1,
+html.a11y-font-large h2,
+html.a11y-font-large h3,
+html.a11y-font-large h4 {
+  line-height: 1.5 !important;
 }
 
+html.a11y-font-xlarge,
 html.a11y-font-xlarge body {
-  font-size: 125% !important;
+  font-size: 138% !important;
+  --a11y-font-scale: 1.38;
 }
 
 html.a11y-font-xlarge p, 
-html.a11y-font-xlarge span, 
-html.a11y-font-xlarge button,
-html.a11y-font-xlarge div {
-  line-height: 1.75 !important;
+html.a11y-font-xlarge li,
+html.a11y-font-xlarge label,
+html.a11y-font-xlarge h1,
+html.a11y-font-xlarge h2,
+html.a11y-font-xlarge h3,
+html.a11y-font-xlarge h4 {
+  line-height: 1.55 !important;
 }
 
 /* 2. Dyslexia-Friendly Font & Letter Spacing (Lexend) */

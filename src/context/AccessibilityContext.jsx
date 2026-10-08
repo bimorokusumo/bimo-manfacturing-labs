@@ -93,13 +93,24 @@ export const AccessibilityProvider = ({ children }) => {
     }
   }, [fontSize, isDyslexicFont, isHighContrast, isReducedMotion, showCaptions, speechRate]);
 
-  // Terapkan class accessibility pada elemen root HTML
+  // Terapkan class accessibility pada elemen root HTML & root style font size
   useEffect(() => {
     const root = document.documentElement;
 
-    // Font scaling
-    root.classList.remove('a11y-font-normal', 'a11y-font-large', 'a11y-font-xlarge');
+    // Font scaling classes
+    root.classList.remove('a11y-font-small', 'a11y-font-normal', 'a11y-font-large', 'a11y-font-xlarge');
     root.classList.add(`a11y-font-${fontSize}`);
+
+    // Set font-size langsung pada documentElement (root HTML) agar semua rem unit di seluruh website berskala presisi
+    const FONT_MAP = {
+      small: '85%',
+      normal: '100%',
+      large: '120%',
+      xlarge: '138%'
+    };
+    const scale = FONT_MAP[fontSize] || '100%';
+    root.style.fontSize = scale;
+    root.style.setProperty('--a11y-font-scale', fontSize === 'small' ? '0.85' : fontSize === 'large' ? '1.2' : fontSize === 'xlarge' ? '1.38' : '1.0');
 
     // Dyslexic font
     if (isDyslexicFont) {
@@ -227,6 +238,27 @@ export const AccessibilityProvider = ({ children }) => {
     }
   }, [isSpeaking, isPaused, currentNarrativeTitle, resumeSpeech, stopSpeech, speakText]);
 
+  // Font Size Steps & Quick Helpers
+  const FONT_STEPS = ['small', 'normal', 'large', 'xlarge'];
+
+  const increaseFontSize = useCallback(() => {
+    setFontSize(curr => {
+      const idx = FONT_STEPS.indexOf(curr);
+      if (idx !== -1 && idx < FONT_STEPS.length - 1) return FONT_STEPS[idx + 1];
+      if (idx === -1) return 'normal';
+      return curr;
+    });
+  }, []);
+
+  const decreaseFontSize = useCallback(() => {
+    setFontSize(curr => {
+      const idx = FONT_STEPS.indexOf(curr);
+      if (idx > 0) return FONT_STEPS[idx - 1];
+      if (idx === -1) return 'normal';
+      return curr;
+    });
+  }, []);
+
   // Bersihkan audio saat unmount
   useEffect(() => {
     return () => {
@@ -240,6 +272,8 @@ export const AccessibilityProvider = ({ children }) => {
     // Accessibility state
     fontSize,
     setFontSize,
+    increaseFontSize,
+    decreaseFontSize,
     isDyslexicFont,
     setIsDyslexicFont,
     isHighContrast,

@@ -186,18 +186,18 @@ const AccessibilityModal = () => {
           <label style={{ fontSize: '0.9rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
             <span>🔤</span> Ukuran Teks (Zoom Tipografi)
           </label>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
             {[
+              { id: 'small', label: 'Kecil (85%)', icon: 'A-' },
               { id: 'normal', label: 'Standar (100%)', icon: 'A' },
-              { id: 'large', label: 'Besar (115%)', icon: 'A+' },
-              { id: 'xlarge', label: 'Sangat Besar (130%)', icon: 'A++' }
+              { id: 'large', label: 'Besar (120%)', icon: 'A+' },
+              { id: 'xlarge', label: 'Ekstra (138%)', icon: 'A++' }
             ].map(sz => (
               <button
                 key={sz.id}
                 onClick={() => setFontSize(sz.id)}
                 style={{
-                  flex: 1,
-                  padding: '10px 8px',
+                  padding: '10px 4px',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   border: fontSize === sz.id ? '2px solid #3b82f6' : isHighContrast ? '1px solid #444' : '1px solid #cbd5e1',
@@ -206,13 +206,39 @@ const AccessibilityModal = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '4px'
+                  gap: '4px',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <span style={{ fontSize: '1.2rem', fontWeight: 900 }}>{sz.icon}</span>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700 }}>{sz.label}</span>
+                <span style={{ fontSize: '1.25rem', fontWeight: 900 }}>{sz.icon}</span>
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, whiteSpace: 'nowrap' }}>{sz.label}</span>
               </button>
             ))}
+          </div>
+
+          {/* Pratinjau Langsung Tipografi */}
+          <div style={{
+            marginTop: '10px',
+            padding: '10px 14px',
+            borderRadius: '10px',
+            background: isHighContrast ? '#111' : '#f8fafc',
+            border: isHighContrast ? '1px solid #333' : '1px solid #e2e8f0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '10px'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.68rem', color: isHighContrast ? '#94a3b8' : '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                Pratinjau Langsung ({fontSize === 'small' ? 'Kecil 85%' : fontSize === 'large' ? 'Besar 120%' : fontSize === 'xlarge' ? 'Ekstra Besar 138%' : 'Standar 100%'}):
+              </div>
+              <div style={{ fontWeight: 800, color: isHighContrast ? '#fff' : '#0f172a', marginTop: '2px', fontSize: '0.92rem' }}>
+                Teknik Pemesinan: Bubut, Frais, CNC &amp; Fabrikasi Logam
+              </div>
+            </div>
+            <span style={{ fontSize: '1.3rem' }}>
+              {fontSize === 'small' ? '🔍' : fontSize === 'xlarge' ? '🔎' : '👀'}
+            </span>
           </div>
         </div>
 

@@ -5,6 +5,9 @@ const AccessibilityFloatingWidget = () => {
   const {
     isModalOpen,
     setIsModalOpen,
+    fontSize,
+    increaseFontSize,
+    decreaseFontSize,
     isSpeaking,
     isPaused,
     currentNarrativeTitle,
@@ -26,6 +29,80 @@ const AccessibilityFloatingWidget = () => {
         gap: '8px'
       }}
     >
+      {/* QUICK ZOOM CONTROLS (A- & A+) */}
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+          border: '1.5px solid rgba(255, 255, 255, 0.18)',
+          borderRadius: '30px',
+          padding: '3px 6px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '2px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.25)'
+        }}
+      >
+        <button
+          onClick={decreaseFontSize}
+          title="Perkecil Ukuran Teks (A-)"
+          aria-label="Perkecil Ukuran Teks"
+          disabled={fontSize === 'small'}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: fontSize === 'small' ? '#64748b' : '#ffffff',
+            cursor: fontSize === 'small' ? 'not-allowed' : 'pointer',
+            padding: '5px 8px',
+            borderRadius: '20px',
+            fontWeight: 900,
+            fontSize: '0.78rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: fontSize === 'small' ? 0.45 : 1,
+            transition: 'opacity 0.2s ease'
+          }}
+        >
+          A-
+        </button>
+        <span
+          style={{
+            fontSize: '0.68rem',
+            color: '#94a3b8',
+            fontWeight: 800,
+            padding: '0 4px',
+            userSelect: 'none',
+            minWidth: '38px',
+            textAlign: 'center'
+          }}
+        >
+          {fontSize === 'small' ? '85%' : fontSize === 'normal' ? '100%' : fontSize === 'large' ? '120%' : '138%'}
+        </span>
+        <button
+          onClick={increaseFontSize}
+          title="Perbesar Ukuran Teks (A+)"
+          aria-label="Perbesar Ukuran Teks"
+          disabled={fontSize === 'xlarge'}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: fontSize === 'xlarge' ? '#64748b' : '#ffffff',
+            cursor: fontSize === 'xlarge' ? 'not-allowed' : 'pointer',
+            padding: '5px 8px',
+            borderRadius: '20px',
+            fontWeight: 900,
+            fontSize: '0.78rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: fontSize === 'xlarge' ? 0.45 : 1,
+            transition: 'opacity 0.2s ease'
+          }}
+        >
+          A+
+        </button>
+      </div>
+
       {/* TOMBOL MODAL INKLUSI UTAMA */}
       <button
         onClick={() => setIsModalOpen(!isModalOpen)}

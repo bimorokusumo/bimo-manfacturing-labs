@@ -330,20 +330,16 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
             <span style={{ fontSize: '3.6rem' }}>MANUFACTURING LAB</span>
           </h1>
           
-          <p style={{ color: '#94a3b8', fontSize: '1.2rem', lineHeight: 1.7, marginBottom: '45px', maxWidth: '540px', fontWeight: 400 }}>
-            Tingkatkan kompetensi permesinan melalui simulasi 3D interaktif, modul cerdas bersuara, dan simulasi Keselamatan Kerja yang sangat realistis.
-          </p>
-
-          <div style={{ display: 'flex', gap: '24px' }}>
+          <div style={{ marginTop: '32px' }}>
             <button 
               onClick={onStart}
               style={{
-                padding: '18px 40px',
+                padding: '18px 44px',
                 background: 'linear-gradient(135deg, #f59e0b, #d97706)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '12px',
-                fontSize: '1.1rem',
+                fontSize: '1.15rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 fontFamily: "'Chakra Petch', sans-serif",
@@ -351,9 +347,10 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
                 letterSpacing: '1.5px',
                 animation: 'pulseGlow 2s infinite',
                 transition: 'transform 0.2s',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '12px'
+                gap: '12px',
+                boxShadow: '0 8px 24px rgba(245, 158, 11, 0.4)'
               }}
               onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
               onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
@@ -363,120 +360,8 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
-            <button style={{
-              padding: '18px 40px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(10px)',
-              color: '#fff',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              borderRadius: '12px',
-              fontSize: '1.1rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              fontFamily: "'Chakra Petch', sans-serif",
-              textTransform: 'uppercase',
-              letterSpacing: '1.5px',
-              transition: 'all 0.3s'
-            }}
-            onMouseOver={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.1)'; e.target.style.borderColor = 'rgba(255,255,255,0.3)'; }}
-            onMouseOut={(e) => { e.target.style.background = 'rgba(255, 255, 255, 0.03)'; e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-            >
-              LIHAT CARA KERJA
-            </button>
           </div>
         </div>
-      </div>
-
-      {/* FLOATING FEATURE BAR */}
-      <div style={{
-        position: 'absolute',
-        bottom: '50px',
-        left: '80px',
-        right: '80px',
-        background: 'rgba(30, 41, 59, 0.65)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-        borderRadius: '24px',
-        padding: '24px 32px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        zIndex: 10,
-        animation: 'float 6s ease-in-out infinite'
-      }}>
-        
-        {/* Feature 1 */}
-        <div className="feature-card">
-          <div style={{ 
-            width: '56px', height: '56px', borderRadius: '14px', 
-            background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid rgba(59, 130, 246, 0.3)'
-          }}>
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, color: '#f8fafc', fontSize: '1.05rem', marginBottom: '6px' }}>Belajar Interaktif</div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.85rem', maxWidth: '200px', lineHeight: 1.4 }}>Modul ajar dilengkapi fitur Text-to-Speech otomatis</div>
-          </div>
-        </div>
-
-        {/* Feature 2 */}
-        <div className="feature-card">
-          <div style={{ 
-            width: '56px', height: '56px', borderRadius: '14px', 
-            background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid rgba(16, 185, 129, 0.3)'
-          }}>
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, color: '#f8fafc', fontSize: '1.05rem', marginBottom: '6px' }}>Simulasi Realistis</div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.85rem', maxWidth: '200px', lineHeight: 1.4 }}>Pengalaman 3D permesinan layaknya di bengkel nyata</div>
-          </div>
-        </div>
-
-        {/* Feature 3 */}
-        <div className="feature-card">
-          <div style={{ 
-            width: '56px', height: '56px', borderRadius: '14px', 
-            background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid rgba(245, 158, 11, 0.3)'
-          }}>
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-            </svg>
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, color: '#f8fafc', fontSize: '1.05rem', marginBottom: '6px' }}>Safety Lab (K3)</div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.85rem', maxWidth: '200px', lineHeight: 1.4 }}>Simulasi pemilihan APD pintar berbasis jenis pekerjaan</div>
-          </div>
-        </div>
-
-        {/* Feature 4 */}
-        <div className="feature-card">
-          <div style={{ 
-            width: '56px', height: '56px', borderRadius: '14px', 
-            background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid rgba(239, 68, 68, 0.3)'
-          }}>
-            <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-            </svg>
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, color: '#f8fafc', fontSize: '1.05rem', marginBottom: '6px' }}>Tantangan Gamifikasi</div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.85rem', maxWidth: '200px', lineHeight: 1.4 }}>Raih XP, naik level, dan dapatkan badge prestasi bergengsi</div>
-          </div>
-        </div>
-
       </div>
 
     </div>

@@ -7,7 +7,7 @@ const DOCUMENTARY_DATA = {
   hardening: {
     title: 'Dokumentasi Riil Industri: Quenching Oli Baja S45C / AISI 1045',
     cameraFeed: 'KAMERA 01: LINE QUENCH OTOMATIS BENGKEL PANAS',
-    mainImage: '/assets/images/heat_treatment/quench_fire_glow.jpg',
+    mainImage: '/assets/images/heat_treatment/heat_treatment_lab_real.jpg',
     subImage: '/assets/images/heat_treatment/hardening_gear_quench.jpg',
     standard: 'ASTM A255 / JIS G4051 S45C',
     equipment: 'Tungku Muffle Kanthal A1 1200°C • Bak Quench Oli ISO VG 32 Pompa Sirkulasi 1.5 m/s • Tester Rockwell C (Kerucut Intan 150 kgf)',

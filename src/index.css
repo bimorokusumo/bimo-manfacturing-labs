@@ -99,72 +99,79 @@ html, body {
    DASHBOARD RESPONSIVE GRID & LAB CARDS SYSTEM
    ========================================================================== */
 
-/* 1. STATS ROW GRID */
+/* 1. STATS ROW GRID (COMPACT) */
 .dashboard-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 12px;
   width: 100%;
 }
 
 @media (max-width: 1080px) and (min-height: 551px) {
   .dashboard-stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 10px;
   }
 }
 
 @media (max-width: 580px) and (min-height: 551px) {
   .dashboard-stats-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 8px;
   }
 }
 
-/* 2. PILIH LAB CARDS GRID (EXPANDED TO FULL WIDTH - NO EMPTY SPACE) */
+/* 2. PILIH LAB CARDS GRID (5 KOLOM = 2 BARIS PAS UNTUK 10 LABS, MUAT 1 LAYAR) */
 .dashboard-labs-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
   width: 100%;
 }
 
 @media (max-width: 1200px) and (min-height: 551px) {
   .dashboard-labs-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 960px) and (min-height: 551px) {
+  .dashboard-labs-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 }
 
 @media (max-width: 620px) and (min-height: 551px) {
   .dashboard-labs-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 }
 
 .dashboard-lab-card {
   background: var(--bg-card);
-  border-radius: 14px;
+  border-radius: 10px;
   border: 1.5px solid #e2e8f0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   cursor: pointer;
   width: 100%;
 }
 
 .dashboard-lab-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.09);
   border-color: #cbd5e1;
 }
 
 .dashboard-lab-card-img {
-  height: 145px;
+  height: 94px;
   position: relative;
   overflow: hidden;
   background: #f1f5f9;
@@ -202,20 +209,22 @@ html, body {
 }
 
 .dashboard-lab-card-body {
-  padding: 16px 16px 14px 16px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
   flex: 1;
-  justifyContent: space-between;
-  gap: 10px;
+  justifyContent: center;
+  align-items: center;
+  min-height: 40px;
 }
 
 .dashboard-lab-card-body h4 {
   color: var(--text-main);
-  font-size: 1.05rem;
+  font-size: 0.86rem;
   font-weight: 800;
-  margin-bottom: 6px;
+  margin: 0;
   line-height: 1.25;
+  text-align: center;
 }
 
 .dashboard-lab-card-body p {

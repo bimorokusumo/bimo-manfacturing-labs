@@ -211,99 +211,99 @@ const DashboardView = ({
   };
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '28px', width: '100%', maxWidth: '100%' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', maxWidth: '100%' }}>
       
-      {/* STATS ROW */}
+      {/* STATS ROW (COMPACT) */}
       <div className="dashboard-stats-grid">
         
         {/* Level Card */}
-        <div className="dashboard-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div className="dashboard-card" style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             LEVEL KOMPETENSI
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div className="stat-value" style={{ color: 'var(--game-primary)', fontSize: '2.4rem', fontWeight: 900, lineHeight: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="stat-value" style={{ color: 'var(--game-primary)', fontSize: '1.5rem', fontWeight: 900, lineHeight: 1 }}>
               {levelInfo.level.toString().padStart(2, '0')}
             </div>
-            <div>
-              <div style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 800, lineHeight: 1.2 }}>
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ color: 'var(--text-main)', fontSize: '0.82rem', fontWeight: 800, lineHeight: 1.1, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                 {levelInfo.title}
               </div>
-              <div style={{ color: 'var(--text-subtle)', fontSize: '0.74rem', marginTop: '3px' }}>
-                Tingkat {levelInfo.level} dari 10
+              <div style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', marginTop: '1px' }}>
+                Tingkat {levelInfo.level}/10
               </div>
             </div>
           </div>
-          <div style={{ height: '5px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: '2px' }}>
-            <div style={{ height: '100%', width: `${(levelInfo.level / 10) * 100}%`, background: 'var(--game-primary)', borderRadius: '3px' }} />
+          <div style={{ height: '4px', width: '100%', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden', marginTop: '1px' }}>
+            <div style={{ height: '100%', width: `${(levelInfo.level / 10) * 100}%`, background: 'var(--game-primary)', borderRadius: '2px' }} />
           </div>
         </div>
 
         {/* XP Card */}
-        <div className="dashboard-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div className="dashboard-card" style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             TOTAL PENGALAMAN (XP)
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ fontSize: '2.2rem', lineHeight: 1 }}>💰</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>💰</div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: 900, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {globalXP.toLocaleString('id-ID')}
-                <span style={{ fontSize: '0.95rem', color: 'var(--text-subtle)', fontWeight: 700, marginLeft: '6px' }}>
+                <span style={{ fontSize: '0.76rem', color: 'var(--text-subtle)', fontWeight: 700, marginLeft: '4px' }}>
                   / {levelInfo.nextLevelXP.toLocaleString('id-ID')}
                 </span>
               </div>
-              <div style={{ color: 'var(--text-subtle)', fontSize: '0.74rem', marginTop: '3px' }}>
-                +{levelInfo.xpInCurrentLevel} XP di level ini ({xpPct}%)
+              <div style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', marginTop: '1px' }}>
+                +{levelInfo.xpInCurrentLevel} XP ({xpPct}%)
               </div>
             </div>
           </div>
-          <div style={{ height: '5px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: '2px' }}>
-            <div style={{ height: '100%', width: `${xpPct}%`, background: '#3b82f6', borderRadius: '3px' }} />
+          <div style={{ height: '4px', width: '100%', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden', marginTop: '1px' }}>
+            <div style={{ height: '100%', width: `${xpPct}%`, background: '#3b82f6', borderRadius: '2px' }} />
           </div>
         </div>
 
         {/* Badge Card */}
-        <div className="dashboard-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div className="dashboard-card" style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             LENCANA PRESTASI
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ fontSize: '2.2rem', lineHeight: 1 }}>⭐</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>⭐</div>
             <div>
-              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: 900, lineHeight: 1 }}>
-                12 <span style={{ fontSize: '0.95rem', color: 'var(--text-subtle)', fontWeight: 700 }}>Badge</span>
+              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>
+                12 <span style={{ fontSize: '0.76rem', color: 'var(--text-subtle)', fontWeight: 700 }}>Badge</span>
               </div>
-              <div style={{ color: '#10b981', fontSize: '0.74rem', fontWeight: 700, marginTop: '3px' }}>
-                ✓ Terverifikasi Bengkel
+              <div style={{ color: '#10b981', fontSize: '0.68rem', fontWeight: 700, marginTop: '1px' }}>
+                ✓ Terverifikasi
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
-            <span style={{ fontSize: '0.68rem', background: '#fef3c7', color: '#b45309', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>Safety</span>
-            <span style={{ fontSize: '0.68rem', background: '#dbeafe', color: '#1d4ed8', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>Bubut</span>
-            <span style={{ fontSize: '0.68rem', background: '#fee2e2', color: '#b91c1c', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>Las</span>
+          <div style={{ display: 'flex', gap: '4px', marginTop: '1px' }}>
+            <span style={{ fontSize: '0.62rem', background: '#fef3c7', color: '#b45309', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>Safety</span>
+            <span style={{ fontSize: '0.62rem', background: '#dbeafe', color: '#1d4ed8', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>Bubut</span>
+            <span style={{ fontSize: '0.62rem', background: '#fee2e2', color: '#b91c1c', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>Las</span>
           </div>
         </div>
 
         {/* Misi Card */}
-        <div className="dashboard-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div className="dashboard-card" style={{ padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.68rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             MISI PRAKTIK SELESAI
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ fontSize: '2.2rem', lineHeight: 1 }}>🎯</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>🎯</div>
             <div>
-              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.75rem', fontWeight: 900, lineHeight: 1 }}>
-                {completedMissions} <span style={{ fontSize: '1.1rem', color: 'var(--text-subtle)', fontWeight: 700 }}>/ {totalMissions}</span>
+              <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>
+                {completedMissions} <span style={{ fontSize: '0.82rem', color: 'var(--text-subtle)', fontWeight: 700 }}>/ {totalMissions}</span>
               </div>
-              <div style={{ color: missionPct > 0 ? '#10b981' : 'var(--text-subtle)', fontSize: '0.74rem', fontWeight: 700, marginTop: '3px' }}>
+              <div style={{ color: missionPct > 0 ? '#10b981' : 'var(--text-subtle)', fontSize: '0.68rem', fontWeight: 700, marginTop: '1px' }}>
                 {missionPct}% Target Misi
               </div>
             </div>
           </div>
-          <div style={{ height: '5px', width: '100%', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: '2px' }}>
-            <div style={{ height: '100%', width: `${missionPct}%`, background: '#10b981', borderRadius: '3px' }} />
+          <div style={{ height: '4px', width: '100%', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden', marginTop: '1px' }}>
+            <div style={{ height: '100%', width: `${missionPct}%`, background: '#10b981', borderRadius: '2px' }} />
           </div>
         </div>
       </div>
@@ -312,31 +312,31 @@ const DashboardView = ({
       <div style={{
         width: '100%',
         background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)',
-        borderRadius: '12px',
-        padding: '10px 18px',
+        borderRadius: '10px',
+        padding: '7px 14px',
         color: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '12px',
-        marginBottom: '20px',
-        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
+        gap: '8px',
+        marginBottom: '4px',
+        boxShadow: '0 3px 10px rgba(15, 23, 42, 0.12)',
         border: '1px solid rgba(255, 255, 255, 0.1)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{
             background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
             color: '#000',
-            fontSize: '0.66rem',
+            fontSize: '0.62rem',
             fontWeight: 900,
-            padding: '3px 8px',
-            borderRadius: '6px',
+            padding: '2px 6px',
+            borderRadius: '4px',
             letterSpacing: '0.5px'
           }}>
             📋 DIAGNOSTIK
           </span>
-          <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#f8fafc' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f8fafc' }}>
             Asesmen Diagnostik Kognitif Awal Siswa (10 Soal K3, Gambar Teknik &amp; Pemesinan)
           </span>
         </div>
@@ -347,17 +347,17 @@ const DashboardView = ({
             background: '#ffffff',
             color: '#1e3a8a',
             border: 'none',
-            padding: '7px 16px',
-            borderRadius: '8px',
+            padding: '5px 12px',
+            borderRadius: '6px',
             fontWeight: 800,
-            fontSize: '0.8rem',
+            fontSize: '0.74rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             whiteSpace: 'nowrap',
             transition: 'all 0.15s',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+            boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
           }}
         >
           <span>Mulai Tes (10 Soal)</span>
@@ -365,15 +365,15 @@ const DashboardView = ({
         </button>
       </div>
 
-      {/* PILIH LAB SECTION (CARDS DIBESARKAN AGAR TIDAK ADA RUANG KOSONG) */}
+      {/* PILIH LAB SECTION (COMPACT 5 KOLOM, TAMPIL 1 LAYAR) */}
       <div style={{ width: '100%' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
           <div>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '0.5px' }}>
+            <h3 style={{ fontSize: '1.02rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '0.4px' }}>
               PILIH LABORATORIUM PEMBELAJARAN
             </h3>
-            <p style={{ margin: '3px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
-              8 Modul Simulasi Interaktif & Bengkel Virtual SMK Teknik Mesin & Fabrikasi Logam
+            <p style={{ margin: '1px 0 0 0', fontSize: '0.74rem', color: '#64748b' }}>
+              10 Modul Simulasi Interaktif & Bengkel Virtual SMK Teknik Mesin & Fabrikasi Logam
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -383,30 +383,30 @@ const DashboardView = ({
                 background: isSpeakingAllLabs ? '#fff7ed' : '#ffffff',
                 border: isSpeakingAllLabs ? '1.5px solid #f59e0b' : '1px solid #cbd5e1',
                 color: isSpeakingAllLabs ? '#c2410c' : '#475569',
-                padding: '6px 14px',
-                borderRadius: '8px',
-                fontSize: '0.74rem',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontSize: '0.7rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: isSpeakingAllLabs ? '0 2px 8px rgba(245, 158, 11, 0.25)' : 'none',
+                gap: '5px',
+                boxShadow: isSpeakingAllLabs ? '0 2px 6px rgba(245, 158, 11, 0.2)' : 'none',
                 transition: 'all 0.15s ease'
               }}
               title="Dengarkan Pengenalan Suara Seluruh Laboratorium"
             >
               <span>{isSpeakingAllLabs ? '⏹️' : '🔊'}</span>
-              <span>{isSpeakingAllLabs ? 'Hentikan Suara' : 'Dengarkan Ringkasan Lab'}</span>
+              <span>{isSpeakingAllLabs ? 'Hentikan' : 'Dengarkan Lab'}</span>
             </button>
 
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#475569', background: '#f1f5f9', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-              8 Laboratorium Tersedia
+            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', background: '#f1f5f9', padding: '4px 10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              10 Lab Tersedia
             </span>
           </div>
         </div>
 
-        {/* 4 Kolom Penuh di Desktop, 2 Kolom di Tablet, 4 Kolom Teratur di HP Landscape */}
+        {/* 5 Kolom di Desktop = Pas 2 Baris untuk 10 Lab (Muat 1 Layar Penuh) */}
         <div className="dashboard-labs-grid">
           {LABS_CONFIG.map((lab) => {
             const isSpeakingThisLab = isSpeaking && currentNarrativeTitle === `Lab: ${lab.title}`;
@@ -417,7 +417,7 @@ const DashboardView = ({
                 className="dashboard-lab-card"
                 style={{
                   border: isSpeakingThisLab ? '2px solid #f59e0b' : undefined,
-                  boxShadow: isSpeakingThisLab ? '0 8px 24px rgba(245, 158, 11, 0.25)' : undefined
+                  boxShadow: isSpeakingThisLab ? '0 6px 18px rgba(245, 158, 11, 0.25)' : undefined
                 }}
               >
                 {/* Gambar Cover Lab */}
@@ -438,8 +438,11 @@ const DashboardView = ({
                     style={{ 
                       background: lab.badgeBg, 
                       color: lab.badgeColor,
-                      left: '10px',
-                      right: 'auto'
+                      left: '8px',
+                      right: 'auto',
+                      top: '8px',
+                      fontSize: '0.58rem',
+                      padding: '2px 6px'
                     }}
                   >
                     {lab.category}
@@ -450,26 +453,26 @@ const DashboardView = ({
                     onClick={(e) => handleSpeakLab(e, lab)}
                     style={{
                       position: 'absolute',
-                      top: '10px',
-                      right: '10px',
+                      top: '6px',
+                      right: '6px',
                       zIndex: 4,
                       background: isSpeakingThisLab ? '#ea580c' : 'rgba(15, 23, 42, 0.78)',
                       backdropFilter: 'blur(6px)',
-                      border: '1.5px solid rgba(255,255,255,0.3)',
+                      border: '1px solid rgba(255,255,255,0.3)',
                       color: '#ffffff',
-                      width: '32px',
-                      height: '32px',
+                      width: '24px',
+                      height: '24px',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       cursor: 'pointer',
-                      boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                       transition: 'all 0.15s ease'
                     }}
                     title={`Dengarkan penjelasan suara materi ${lab.title}`}
                   >
-                    <span style={{ fontSize: '13px' }}>{isSpeakingThisLab ? '⏹️' : '🔊'}</span>
+                    <span style={{ fontSize: '10px' }}>{isSpeakingThisLab ? '⏹️' : '🔊'}</span>
                   </button>
                 </div>
 
@@ -477,14 +480,14 @@ const DashboardView = ({
               <div 
                 className="dashboard-lab-card-body" 
                 style={{ 
-                  padding: '16px 14px', 
+                  padding: '8px 6px', 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center',
-                  minHeight: '56px'
+                  minHeight: '38px'
                 }}
               >
-                <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.3 }}>
+                <h4 style={{ margin: 0, fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.25 }}>
                   {lab.title}
                 </h4>
               </div>

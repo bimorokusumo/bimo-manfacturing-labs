@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 
 const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
-  const [activeTab, setActiveTab] = useState('alat'); // Start at 1. Pengenalan Alat
+  const [activeTab, setActiveTab] = useState('garis'); // Default: 2. Standarisasi Garis (ISO 128)
   const [projectionSystem, setProjectionSystem] = useState('amerika'); // 'eropa' or 'amerika'
   const [dimensionMethod, setDimensionMethod] = useState('aligned'); // 'aligned' or 'unidirectional'
   const [selectedPencil, setSelectedPencil] = useState('HB');

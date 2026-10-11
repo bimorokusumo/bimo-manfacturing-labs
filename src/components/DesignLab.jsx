@@ -47,11 +47,11 @@ const DesignLab = ({ onOpenDiagnostic }) => {
             <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               LAB DESAIN & GAMBAR TEKNIK MESIN
               <span style={{ fontSize: '0.65rem', background: '#e0f2fe', color: '#0369a1', padding: '2px 8px', borderRadius: '12px', fontWeight: 800 }}>
-                ISO CERTIFIED
+                ISO CERTIFIED • AUTOCAD WORKBENCH
               </span>
             </h2>
             <p style={{ fontSize: '0.74rem', color: '#64748b', margin: 0 }}>
-              Simulator CAD Parametrik 2D/3D • Proyeksi Ortogonal • Standarisasi ISO 128 / 129 / 5456
+              Simulator AutoCAD Parametrik 2D/3D • Proyeksi Ortogonal • Etiket Gambar Kerja A4 • Standarisasi ISO 128 / 5456
             </p>
           </div>
         </div>
@@ -76,7 +76,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>🛠️</span> CAD Studio (Fitur 3D)
+            <span>🖥️</span> AutoCAD Workbench (2D ➡️ 3D)
           </button>
 
           <button

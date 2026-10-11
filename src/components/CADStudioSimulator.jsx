@@ -2,11 +2,12 @@ import React, { useState, useRef, useMemo, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Grid, Center } from '@react-three/drei';
 import * as THREE from 'three';
+import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 
 // =============================================================================
-// 1. DATA KATALOG SKETSA 2D (2D SKETCH PROFILES)
+// 1. DATA KATALOG SKETSA 2D (2D SKETCH PROFILES - ISO 128)
 // =============================================================================
 export const SKETCH_PROFILES = [
   {
@@ -14,56 +15,63 @@ export const SKETCH_PROFILES = [
     name: 'Persegi Balok (Rectangle)',
     desc: 'Profil 2D empat persegi berukuran 40 x 40 mm. Dasar balok kotak, pelat baja, dan komponen prismatik mesin.',
     icon: '🟦',
-    dimensions: '40 x 40 mm'
+    dimensions: '40 x 40 mm',
+    shortcut: 'REC'
   },
   {
     id: 'l_shape',
     name: 'Profil Bertingkat L (L-Profile)',
     desc: 'Profil penampang berundak/bertingkat dua level (40 x 40 mm dengan takik 20 mm). Dasar braket siku dan puli flensa.',
     icon: '🪜',
-    dimensions: '40 x 40 mm (Undak 20)'
+    dimensions: '40 x 40 mm (Undak 20)',
+    shortcut: 'L'
   },
   {
     id: 'circle',
     name: 'Lingkaran (Circle / Disc)',
     desc: 'Profil bundar berdiameter 40 mm. Dasar komponen silindris poros transmisi, pipa, puli, dan roda gigi.',
     icon: '⭕',
-    dimensions: 'Diameter 40 mm'
+    dimensions: 'Diameter 40 mm',
+    shortcut: 'C'
   },
   {
     id: 'hexagon',
     name: 'Heksagon / Segi Enam (Hexagon)',
     desc: 'Profil 6 sisi beraturan beradius 22 mm. Standar ISO kepala baut (hex bolt), mur penahan, dan batang heksagonal.',
     icon: '⬡',
-    dimensions: 'Radius 22 mm (6 Sisi)'
+    dimensions: 'Radius 22 mm (6 Sisi)',
+    shortcut: 'POL'
   },
   {
     id: 'trapezoid',
     name: 'Trapesium / Baji (Trapezoid)',
     desc: 'Profil trapesium dengan lebar dasar 44 mm dan puncak 24 mm. Dasar baji peluncur, rel ekor burung, dan alur V-belt.',
     icon: '📐',
-    dimensions: 'Alas 44, Puncak 24 mm'
+    dimensions: 'Alas 44, Puncak 24 mm',
+    shortcut: 'TRAP'
   },
   {
     id: 'star',
     name: 'Bintang / Roda Beralur (Star / Spline)',
     desc: 'Profil beralur bintang 5 lekukan beradius luar 24 mm dan dalam 14 mm. Dasar poros spline dan roda sirip pendingin.',
     icon: '⭐',
-    dimensions: 'R_luar 24, R_dalam 14 mm'
+    dimensions: 'R_luar 24, R_dalam 14 mm',
+    shortcut: 'SPL'
   }
 ];
 
 // =============================================================================
-// 2. DATA FITUR PEMODELAN UTAMA (CREATE FEATURES)
+// 2. DATA FITUR PEMODELAN UTAMA (3D MODELING OPERATIONS)
 // =============================================================================
 export const CREATE_OPERATIONS = {
   extrude: {
     id: 'extrude',
-    name: 'EXTRUDE (Ekstrusi Linier)',
+    name: 'EXTRUDE (Ekstrusi Linier Z)',
     icon: '⬆️',
-    color: '#2563eb',
-    bgActive: '#eff6ff',
-    borderActive: '#2563eb',
+    shortcut: 'EXT',
+    color: '#0284c7',
+    bgActive: '#0c2340',
+    borderActive: '#38bdf8',
     summary: 'Menarik profil sketsa 2D secara linier tegak lurus membentuk benda padat berketebalan seragam.',
     definition: 'Operasi dasar CAD paling vital. Profil 2D ditarik tegak lurus bidang sketsa sepanjang vektor sumbu Z (+).',
     useCase: 'Membuat balok mesin, pelat baja berlubang, braket siku, poros heksagonal, dan komponen prismatik.',
@@ -72,15 +80,16 @@ export const CREATE_OPERATIONS = {
     paramMin: 15,
     paramMax: 80,
     defaultParam: 45,
-    animationHelp: 'Animasi menunjukkan sketsa 2D di dasar ditarik perlahan ke atas seiring bertambahnya ketinggian Z.'
+    animationHelp: 'Sketsa 2D di dasar ditarik perlahan ke atas seiring bertambahnya ketinggian Z.'
   },
   revolve: {
     id: 'revolve',
-    name: 'REVOLVE (Putar / Revolusi Sumbu)',
+    name: 'REVOLVE (Putar Sumbu 360°)',
     icon: '🔄',
+    shortcut: 'REV',
     color: '#ea580c',
-    bgActive: '#fff7ed',
-    borderActive: '#ea580c',
+    bgActive: '#381a07',
+    borderActive: '#fb923c',
     summary: 'Memutar penampang sketsa 2D mengelilingi sumbu poros pusat untuk menghasilkan benda silindris/aksisimetris.',
     definition: 'Memutar penampang 2D mengitari garis sumbu (Centerline Axis) sebesar sudut putar (0° hingga 360°).',
     useCase: 'Membuat poros transmisi bertingkat, puli V-belt, flensa pipa, cincin O-ring, roda gila (flywheel), dan bodi tabung.',
@@ -89,15 +98,16 @@ export const CREATE_OPERATIONS = {
     paramMin: 60,
     paramMax: 360,
     defaultParam: 360,
-    animationHelp: 'Animasi menunjukkan penampang 2D berputar menyapu ruang 360° mengelilingi garis sumbu putar merah.'
+    animationHelp: 'Penampang 2D berputar menyapu ruang 360° mengelilingi garis sumbu putar merah.'
   },
   sweep: {
     id: 'sweep',
     name: 'SWEEP (Sapuan Sepanjang Lintasan)',
     icon: '〰️',
-    color: '#9333ea',
-    bgActive: '#faf5ff',
-    borderActive: '#9333ea',
+    shortcut: 'SWEEP',
+    color: '#a855f7',
+    bgActive: '#260f38',
+    borderActive: '#c084fc',
     summary: 'Menggerakkan profil penampang 2D meluncur menyusuri kurva lintasan 3D (Guide Path) berbelok/berliku.',
     definition: 'Penampang profil 2D digerakkan menyapu sepanjang jalur kurva pemandu tanpa memutar orientasinya.',
     useCase: 'Membuat pipa leher angsa, saluran knalpot, pegas spiral (spring), pegangan pintu, dan jalur kabel hidrolik.',
@@ -106,15 +116,16 @@ export const CREATE_OPERATIONS = {
     paramMin: 20,
     paramMax: 100,
     defaultParam: 100,
-    animationHelp: 'Animasi menunjukkan profil 2D meluncur menyusuri kurva lintasan 3D, meninggalkan padatan pipa di sepanjang jalurnya.'
+    animationHelp: 'Profil 2D meluncur menyusuri kurva lintasan 3D, meninggalkan padatan pipa di sepanjang jalurnya.'
   },
   loft: {
     id: 'loft',
-    name: 'LOFT (Transisi Dua Penampang Berbeda)',
+    name: 'LOFT (Transisi 2 Penampang)',
     icon: '🌪️',
-    color: '#0891b2',
-    bgActive: '#ecfeff',
-    borderActive: '#0891b2',
+    shortcut: 'LOFT',
+    color: '#06b6d4',
+    bgActive: '#082530',
+    borderActive: '#22d3ee',
     summary: 'Menghubungkan dua atau lebih penampang berbeda bentuk/ukuran secara bertahap dengan kurva peralihan mulus.',
     definition: 'Menciptakan bentuk transisi organik antara profil bawah dan profil atas yang terletak pada bidang kerja terpisah.',
     useCase: 'Membuat nosel turbin roket, corong transisi pipa bulat ke kotak, ducting pendingin AC, dan bodi aerodinamis.',
@@ -123,12 +134,141 @@ export const CREATE_OPERATIONS = {
     paramMin: 25,
     paramMax: 70,
     defaultParam: 46,
-    animationHelp: 'Animasi menunjukkan kulit transisi yang menghubungkan profil bawah dan profil atas tumbuh dari bawah ke atas.'
+    animationHelp: 'Kulit transisi yang menghubungkan profil bawah dan profil atas tumbuh dari bawah ke atas.'
   }
 };
 
 // =============================================================================
-// 3. JENDELA VISUALISASI SKETSA 2D (AUTOCAD DRAFTING CANVAS)
+// 3. DATA TEMPLATE KOMPONEN MESIN NYATA (1-KLIK CONTOH INDUSTRI)
+// =============================================================================
+export const MACHINE_TEMPLATES = [
+  {
+    id: 'shaft',
+    name: 'Poros Bubut Bertingkat (Shaft)',
+    shortName: 'Poros Bubut',
+    icon: '🪵',
+    category: 'Mesin Bubut',
+    sketch: 'circle',
+    operation: 'revolve',
+    param: 360,
+    hasChamfer: true,
+    chamferSize: 3,
+    hasHole: true,
+    holeRadius: 5,
+    hasFillet: false,
+    hasShell: false,
+    hasDraft: false,
+    desc: 'Poros transmisi daya silindris dengan chamfer perakitan dan lubang senter bubut ISO.',
+    commandLog: 'LOAD_PRESET: POROS BUBUT (Revolve 360° + Chamfer C3 + Lubang Senter Ø10 mm)'
+  },
+  {
+    id: 'flange',
+    name: 'Flensa Pipa 4 Lubang PCD (Pipe Flange)',
+    shortName: 'Flensa Pipa',
+    icon: '🔘',
+    category: 'Fabrikasi Pipa',
+    sketch: 'circle',
+    operation: 'extrude',
+    param: 32,
+    hasFillet: true,
+    filletRadius: 4,
+    hasHole: true,
+    holeRadius: 9,
+    hasChamfer: false,
+    hasShell: false,
+    hasDraft: false,
+    desc: 'Flensa sambungan pipa bertekanan dengan lubang poros dan fillet penguat transisi.',
+    commandLog: 'LOAD_PRESET: FLENSA PIPA (Extrude 32mm + Fillet R4 + Lubang Poros Ø18 mm)'
+  },
+  {
+    id: 'milling_block',
+    name: 'Balok Dudukan Pasak Frais (Milling Block)',
+    shortName: 'Balok Frais',
+    icon: '🧱',
+    category: 'Mesin Frais',
+    sketch: 'rect',
+    operation: 'extrude',
+    param: 45,
+    hasChamfer: true,
+    chamferSize: 4,
+    hasShell: true,
+    shellThickness: 3,
+    hasFillet: false,
+    hasHole: false,
+    hasDraft: false,
+    desc: 'Benda kerja prismatik balok mesin frais dengan chamfer deburring dan rongga kantong ringan.',
+    commandLog: 'LOAD_PRESET: BALOK FRAIS (Extrude 45mm + Chamfer C4 + Shell Rongga t3 mm)'
+  },
+  {
+    id: 'hex_nut',
+    name: 'Mur Heksagonal ISO M12 (Hex Nut)',
+    shortName: 'Mur Heksagon',
+    icon: '🔩',
+    category: 'Standar ISO',
+    sketch: 'hexagon',
+    operation: 'extrude',
+    param: 26,
+    hasChamfer: true,
+    chamferSize: 2,
+    hasHole: true,
+    holeRadius: 8,
+    hasFillet: false,
+    hasShell: false,
+    hasDraft: false,
+    desc: 'Mur pengikat heksagonal standar ISO dengan lubang ulir silindris dan chamfer tepi sudut.',
+    commandLog: 'LOAD_PRESET: MUR HEKSAGONAL M12 (Extrude 26mm + Hexagon R22 + Hole Ø16 mm)'
+  },
+  {
+    id: 'bracket',
+    name: 'Braket Siku Mesin L (L-Bracket)',
+    shortName: 'Braket Siku',
+    icon: '🪜',
+    category: 'Konstruksi Mesin',
+    sketch: 'l_shape',
+    operation: 'extrude',
+    param: 40,
+    hasFillet: true,
+    filletRadius: 5,
+    hasHole: true,
+    holeRadius: 6,
+    hasChamfer: false,
+    hasShell: false,
+    hasDraft: false,
+    desc: 'Braket siku penahan rangka mesin dengan fillet radius untuk menghilangkan konsentrasi tegangan.',
+    commandLog: 'LOAD_PRESET: BRAKET SIKU L (Extrude 40mm + Fillet R5 + Lubang Baut Ø12 mm)'
+  },
+  {
+    id: 'reducer',
+    name: 'Nosel Reducer Pipa Transisi (Loft Reducer)',
+    shortName: 'Nosel Reducer',
+    icon: '🌪️',
+    category: 'Sistem Fluida',
+    sketch: 'circle',
+    topSketch: 'rect',
+    operation: 'loft',
+    param: 48,
+    hasShell: true,
+    shellThickness: 3,
+    hasFillet: false,
+    hasChamfer: false,
+    hasHole: false,
+    hasDraft: false,
+    desc: 'Peralihan aerodinamis penampang lingkaran ke persegi untuk nosel turbin atau ducting fluida.',
+    commandLog: 'LOAD_PRESET: NOSEL REDUCER LOFT (Loft Lingkaran ke Kotak + Shell Dinding t3 mm)'
+  }
+];
+
+// Material Preset Definitions with Physical Density
+const MATERIALS_CONFIG = {
+  steel: { name: 'Baja ST37 (Polished Steel)', color: '#94a3b8', metalness: 0.8, roughness: 0.25, density: 7.85 },
+  brass: { name: 'Kuningan Cor (Cast Brass)', color: '#f59e0b', metalness: 0.82, roughness: 0.22, density: 8.50 },
+  aluminium: { name: 'Aluminium 6061 (Anodized)', color: '#cbd5e1', metalness: 0.55, roughness: 0.32, density: 2.70 },
+  copper: { name: 'Tembaga Murni (Pure Copper)', color: '#ea580c', metalness: 0.85, roughness: 0.26, density: 8.96 },
+  chrome: { name: 'Krom Kilap Tinggi (Chrome)', color: '#ffffff', metalness: 0.98, roughness: 0.05, density: 7.19 }
+};
+
+// =============================================================================
+// 4. JENDELA VISUALISASI SKETSA 2D (AUTOCAD DRAFTING CANVAS)
 // =============================================================================
 const Sketch2DViewer = ({
   sketchId,
@@ -142,10 +282,17 @@ const Sketch2DViewer = ({
   hasShell,
   shellThickness,
   hasHole,
-  holeRadius
+  holeRadius,
+  theme = 'dark'
 }) => {
   const cx = 140;
   const cy = 130;
+  const isDark = theme === 'dark';
+
+  const strokeColor = isDark ? '#38bdf8' : '#0284c7';
+  const fillColor = isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.12)';
+  const dimColor = isDark ? '#facc15' : '#0f172a';
+  const centerLineColor = '#ef4444';
 
   const renderProfileSVG = () => {
     switch (sketchId) {
@@ -170,8 +317,8 @@ const Sketch2DViewer = ({
           ].join(' ');
           return (
             <g>
-              <polygon points={points} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-              <text x={left + w - c} y={top - 6} fontSize="10" fontWeight="800" fill="#b45309">Chamfer C{chamferSize} x 45°</text>
+              <polygon points={points} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+              <text x={left + w - c} y={top - 6} fontSize="10" fontWeight="800" fill="#fb923c">Chamfer C{chamferSize} x 45°</text>
             </g>
           );
         }
@@ -184,18 +331,18 @@ const Sketch2DViewer = ({
               width={w}
               height={h}
               rx={hasFillet ? filletRadius * 2.5 : 0}
-              fill="rgba(37, 99, 235, 0.12)"
-              stroke="#2563eb"
+              fill={fillColor}
+              stroke={strokeColor}
               strokeWidth="2.8"
             />
             {hasFillet && (
-              <text x={left + w + 4} y={top + 10} fontSize="10" fontWeight="800" fill="#1d4ed8">Fillet R{filletRadius}</text>
+              <text x={left + w + 4} y={top + 10} fontSize="10" fontWeight="800" fill="#60a5fa">Fillet R{filletRadius}</text>
             )}
             {/* Dimensi Lebar & Tinggi */}
-            <line x1={left} y1={top + h + 18} x2={left + w} y2={top + h + 18} stroke="#0f172a" strokeWidth="1.2" markerStart="url(#arrow)" markerEnd="url(#arrow)" />
-            <text x={cx} y={top + h + 32} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">40 mm</text>
-            <line x1={left + w + 18} y1={top} x2={left + w + 18} y2={top + h} stroke="#0f172a" strokeWidth="1.2" />
-            <text x={left + w + 32} y={cy + 4} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">40</text>
+            <line x1={left} y1={top + h + 18} x2={left + w} y2={top + h + 18} stroke={dimColor} strokeWidth="1.2" markerStart="url(#cadArrow)" markerEnd="url(#cadArrow)" />
+            <text x={cx} y={top + h + 32} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>40 mm</text>
+            <line x1={left + w + 18} y1={top} x2={left + w + 18} y2={top + h} stroke={dimColor} strokeWidth="1.2" />
+            <text x={left + w + 32} y={cy + 4} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>40</text>
           </g>
         );
       }
@@ -212,10 +359,10 @@ const Sketch2DViewer = ({
 
         return (
           <g>
-            <polygon points={points} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-            <text x={cx - 15} y={cy - 12} fontSize="10" fontWeight="800" fill="#2563eb">Undak 20</text>
-            <line x1={cx - 40} y1={cy + 55} x2={cx + 40} y2={cy + 55} stroke="#0f172a" strokeWidth="1.2" />
-            <text x={cx} y={cy + 68} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">40 mm</text>
+            <polygon points={points} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+            <text x={cx - 15} y={cy - 12} fontSize="10" fontWeight="800" fill={strokeColor}>Undak 20</text>
+            <line x1={cx - 40} y1={cy + 55} x2={cx + 40} y2={cy + 55} stroke={dimColor} strokeWidth="1.2" />
+            <text x={cx} y={cy + 68} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>40 mm</text>
           </g>
         );
       }
@@ -229,9 +376,9 @@ const Sketch2DViewer = ({
         }
         return (
           <g>
-            <polygon points={pts.join(' ')} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-            <circle cx={cx} cy={cy} r={r} fill="none" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
-            <text x={cx} y={cy + r + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">Radius R 22 mm (6 Sisi)</text>
+            <polygon points={pts.join(' ')} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="3 3" />
+            <text x={cx} y={cy + r + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>Radius R 22 mm (6 Sisi)</text>
           </g>
         );
       }
@@ -248,9 +395,9 @@ const Sketch2DViewer = ({
         ].join(' ');
         return (
           <g>
-            <polygon points={pts} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-            <text x={cx} y={cy - h - 8} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">Puncak: 24 mm</text>
-            <text x={cx} y={cy + h + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">Alas: 44 mm</text>
+            <polygon points={pts} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+            <text x={cx} y={cy - h - 8} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>Puncak: 24 mm</text>
+            <text x={cx} y={cy + h + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>Alas: 44 mm</text>
           </g>
         );
       }
@@ -266,8 +413,8 @@ const Sketch2DViewer = ({
         }
         return (
           <g>
-            <polygon points={pts.join(' ')} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-            <text x={cx} y={cy + rOut + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill="#0f172a">Spline / Bintang 5 Lekukan</text>
+            <polygon points={pts.join(' ')} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+            <text x={cx} y={cy + rOut + 18} fontSize="11" fontWeight="800" textAnchor="middle" fill={dimColor}>Spline / Bintang 5 Lekukan</text>
           </g>
         );
       }
@@ -277,11 +424,11 @@ const Sketch2DViewer = ({
         const r = 40;
         return (
           <g>
-            <circle cx={cx} cy={cy} r={r} fill="rgba(37, 99, 235, 0.12)" stroke="#2563eb" strokeWidth="2.8" />
-            <line x1={cx - r - 15} y1={cy} x2={cx + r + 15} y2={cy} stroke="#dc2626" strokeWidth="1.2" strokeDasharray="10 3 2 3" />
-            <line x1={cx} y1={cy - r - 15} x2={cx} y2={cy + r + 15} stroke="#dc2626" strokeWidth="1.2" strokeDasharray="10 3 2 3" />
-            <line x1={cx - r * 0.7} y1={cy - r * 0.7} x2={cx + r * 0.7} y2={cy + r * 0.7} stroke="#0f172a" strokeWidth="1.5" />
-            <text x={cx + 15} y={cy - 12} fontSize="11" fontWeight="800" fill="#0f172a">Ø 40 mm</text>
+            <circle cx={cx} cy={cy} r={r} fill={fillColor} stroke={strokeColor} strokeWidth="2.8" />
+            <line x1={cx - r - 15} y1={cy} x2={cx + r + 15} y2={cy} stroke={centerLineColor} strokeWidth="1.2" strokeDasharray="10 3 2 3" />
+            <line x1={cx} y1={cy - r - 15} x2={cx} y2={cy + r + 15} stroke={centerLineColor} strokeWidth="1.2" strokeDasharray="10 3 2 3" />
+            <line x1={cx - r * 0.7} y1={cy - r * 0.7} x2={cx + r * 0.7} y2={cy + r * 0.7} stroke={dimColor} strokeWidth="1.5" />
+            <text x={cx + 15} y={cy - 12} fontSize="11" fontWeight="800" fill={dimColor}>Ø 40 mm</text>
           </g>
         );
       }
@@ -289,44 +436,44 @@ const Sketch2DViewer = ({
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#ffffff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: isDark ? '#11141d' : '#ffffff', display: 'flex', flexDirection: 'column' }}>
       
-      {/* SVG Canvas Sheet with Millimeter Grid */}
+      {/* SVG Canvas Sheet with AutoCAD Millimeter Grid */}
       <div style={{ flex: 1, width: '100%', minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <svg viewBox="0 0 280 260" width="100%" height="100%" style={{ maxHeight: '360px' }}>
           <defs>
-            <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
-              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#f1f5f9" strokeWidth="0.8" />
+            <pattern id="cadSmallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke={isDark ? '#1a2233' : '#f1f5f9'} strokeWidth="0.8" />
             </pattern>
-            <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <rect width="50" height="50" fill="url(#smallGrid)" />
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e2e8f0" strokeWidth="1.2" />
+            <pattern id="cadGrid" width="50" height="50" patternUnits="userSpaceOnUse">
+              <rect width="50" height="50" fill="url(#cadSmallGrid)" />
+              <path d="M 50 0 L 0 0 0 50" fill="none" stroke={isDark ? '#26344d' : '#e2e8f0'} strokeWidth="1.2" />
             </pattern>
-            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#0f172a" />
+            <marker id="cadArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill={dimColor} />
             </marker>
           </defs>
 
           {/* Background Grid */}
-          <rect width="280" height="260" fill="url(#grid)" />
+          <rect width="280" height="260" fill="url(#cadGrid)" />
 
           {/* Sumbu Koordinat Bidang Sketsa (Sketch Plane XY) */}
-          <line x1="20" y1={cy} x2="260" y2={cy} stroke="#cbd5e1" strokeWidth="1.5" />
-          <line x1={cx} y1="15" x2={cx} y2="245" stroke="#cbd5e1" strokeWidth="1.5" />
+          <line x1="20" y1={cy} x2="260" y2={cy} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1.5" />
+          <line x1={cx} y1="15" x2={cx} y2="245" stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1.5" />
 
-          {/* Sumbu X Merah */}
+          {/* Sumbu X Merah (+X) */}
           <line x1={cx} y1={cy} x2="265" y2={cy} stroke="#ef4444" strokeWidth="2" />
           <polygon points="265,130 257,126 257,134" fill="#ef4444" />
           <text x="268" y="134" fontSize="10" fontWeight="900" fill="#ef4444">+X</text>
 
-          {/* Sumbu Y Hijau */}
+          {/* Sumbu Y Hijau (+Y) */}
           <line x1={cx} y1={cy} x2={cx} y2="15" stroke="#10b981" strokeWidth="2" />
           <polygon points="140,15 136,23 144,23" fill="#10b981" />
           <text x="146" y="20" fontSize="10" fontWeight="900" fill="#10b981">+Y</text>
 
           {/* Titik Pusat Origin (0,0) */}
-          <circle cx={cx} cy={cy} r="4" fill="#2563eb" />
-          <text x={cx + 6} y={cy + 14} fontSize="9" fontWeight="800" fill="#64748b">(0,0)</text>
+          <circle cx={cx} cy={cy} r="4" fill="#38bdf8" />
+          <text x={cx + 6} y={cy + 14} fontSize="9" fontWeight="800" fill={isDark ? '#94a3b8' : '#64748b'}>(0,0)</text>
 
           {/* KONTUR PROFIL 2D UTAMA */}
           {renderProfileSVG()}
@@ -334,55 +481,54 @@ const Sketch2DViewer = ({
           {/* OVERLAY HOLE PADA SKETSA 2D */}
           {hasHole && (
             <g>
-              <circle cx={cx} cy={cy} r={holeRadius * 1.8} fill="#ffffff" stroke="#dc2626" strokeWidth="2" />
-              <line x1={cx - holeRadius * 2.2} y1={cy} x2={cx + holeRadius * 2.2} y2={cy} stroke="#dc2626" strokeWidth="1" strokeDasharray="4 2" />
-              <line x1={cx} y1={cy - holeRadius * 2.2} x2={cx} y2={cy + holeRadius * 2.2} stroke="#dc2626" strokeWidth="1" strokeDasharray="4 2" />
-              <text x={cx} y={cy + 4} fontSize="9" fontWeight="900" textAnchor="middle" fill="#dc2626">Ø{holeRadius * 2}</text>
+              <circle cx={cx} cy={cy} r={holeRadius * 1.8} fill={isDark ? '#11141d' : '#ffffff'} stroke="#ef4444" strokeWidth="2" />
+              <line x1={cx - holeRadius * 2.2} y1={cy} x2={cx + holeRadius * 2.2} y2={cy} stroke="#ef4444" strokeWidth="1" strokeDasharray="4 2" />
+              <line x1={cx} y1={cy - holeRadius * 2.2} x2={cx} y2={cy + holeRadius * 2.2} stroke="#ef4444" strokeWidth="1" strokeDasharray="4 2" />
+              <text x={cx} y={cy + 4} fontSize="9" fontWeight="900" textAnchor="middle" fill="#ef4444">Ø{holeRadius * 2}</text>
             </g>
           )}
 
           {/* OVERLAY SHELL PADA SKETSA 2D */}
           {hasShell && (
             <g>
-              <rect x={cx - 28} y={cy - 28} width="56" height="56" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeDasharray="5 3" />
-              <text x={cx} y={cy - 34} fontSize="9" fontWeight="800" textAnchor="middle" fill="#7c3aed">Rongga Shell (t={shellThickness} mm)</text>
+              <rect x={cx - 28} y={cy - 28} width="56" height="56" fill="none" stroke="#c084fc" strokeWidth="1.8" strokeDasharray="5 3" />
+              <text x={cx} y={cy - 34} fontSize="9" fontWeight="800" textAnchor="middle" fill="#c084fc">Rongga Shell (t={shellThickness} mm)</text>
             </g>
           )}
 
           {/* INDIKATOR OPERASI 3D PADA SKETSA */}
           {operation === 'revolve' && (
             <g>
-              {/* Sumbu Putar Y */}
-              <line x1={cx - 48} y1="20" x2={cx - 48} y2="240" stroke="#dc2626" strokeWidth="2.5" strokeDasharray="12 3 3 3" />
-              <text x={cx - 48} y="15" fontSize="9" fontWeight="900" textAnchor="middle" fill="#dc2626">SUMBU PUTAR (AXIS)</text>
-              <path d="M 115 65 A 25 25 0 0 1 165 65" fill="none" stroke="#ea580c" strokeWidth="2.5" />
-              <polygon points="165,65 159,59 159,69" fill="#ea580c" />
-              <text x="140" y="55" fontSize="10" fontWeight="900" textAnchor="middle" fill="#ea580c">⟳ Putar 360°</text>
+              <line x1={cx - 48} y1="20" x2={cx - 48} y2="240" stroke="#ef4444" strokeWidth="2.5" strokeDasharray="12 3 3 3" />
+              <text x={cx - 48} y="15" fontSize="9" fontWeight="900" textAnchor="middle" fill="#ef4444">SUMBU PUTAR (AXIS)</text>
+              <path d="M 115 65 A 25 25 0 0 1 165 65" fill="none" stroke="#fb923c" strokeWidth="2.5" />
+              <polygon points="165,65 159,59 159,69" fill="#fb923c" />
+              <text x="140" y="55" fontSize="10" fontWeight="900" textAnchor="middle" fill="#fb923c">⟳ Putar 360°</text>
             </g>
           )}
 
           {operation === 'extrude' && (
             <g>
-              <circle cx="230" cy="45" r="14" fill="#dbeafe" stroke="#2563eb" strokeWidth="1.5" />
-              <circle cx="230" cy="45" r="4" fill="#2563eb" />
-              <text x="230" y="72" fontSize="9" fontWeight="800" textAnchor="middle" fill="#1e40af">Tarik Sumbu +Z</text>
+              <circle cx="230" cy="45" r="14" fill={isDark ? '#1e293b' : '#dbeafe'} stroke="#38bdf8" strokeWidth="1.5" />
+              <circle cx="230" cy="45" r="4" fill="#38bdf8" />
+              <text x="230" y="72" fontSize="9" fontWeight="800" textAnchor="middle" fill={isDark ? '#7dd3fc' : '#1e40af'}>Tarik Sumbu +Z</text>
             </g>
           )}
 
           {operation === 'sweep' && (
             <g>
-              <path d="M 90 140 Q 140 60 200 100 T 250 190" fill="none" stroke="#9333ea" strokeWidth="2.5" strokeDasharray="6 4" />
-              <text x="180" y="75" fontSize="10" fontWeight="900" fill="#9333ea">Lintasan Path 〰️</text>
+              <path d="M 90 140 Q 140 60 200 100 T 250 190" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeDasharray="6 4" />
+              <text x="180" y="75" fontSize="10" fontWeight="900" fill="#c084fc">Lintasan Path 〰️</text>
             </g>
           )}
 
           {operation === 'loft' && (
             <g>
-              <rect x={cx - 24} y="25" width="48" height="30" fill="none" stroke="#0891b2" strokeWidth="1.8" strokeDasharray="4 2" />
-              <text x={cx} y="44" fontSize="9" fontWeight="900" textAnchor="middle" fill="#0891b2">Profil Atas ({topSketchId || 'rect'})</text>
-              <text x={cx} y="225" fontSize="9" fontWeight="900" textAnchor="middle" fill="#2563eb">Profil Bawah ({sketchId})</text>
-              <line x1={cx - 24} y1="55" x2={cx - 40} y2="90" stroke="#0891b2" strokeWidth="1.2" strokeDasharray="3 3" />
-              <line x1={cx + 24} y1="55" x2={cx + 40} y2="90" stroke="#0891b2" strokeWidth="1.2" strokeDasharray="3 3" />
+              <rect x={cx - 24} y="25" width="48" height="30" fill="none" stroke="#22d3ee" strokeWidth="1.8" strokeDasharray="4 2" />
+              <text x={cx} y="44" fontSize="9" fontWeight="900" textAnchor="middle" fill="#22d3ee">Profil Atas ({topSketchId || 'rect'})</text>
+              <text x={cx} y="225" fontSize="9" fontWeight="900" textAnchor="middle" fill="#38bdf8">Profil Bawah ({sketchId})</text>
+              <line x1={cx - 24} y1="55" x2={cx - 40} y2="90" stroke="#22d3ee" strokeWidth="1.2" strokeDasharray="3 3" />
+              <line x1={cx + 24} y1="55" x2={cx + 40} y2="90" stroke="#22d3ee" strokeWidth="1.2" strokeDasharray="3 3" />
             </g>
           )}
         </svg>
@@ -390,20 +536,20 @@ const Sketch2DViewer = ({
 
       {/* Footer Info Sketsa 2D */}
       <div style={{
-        padding: '10px 14px',
-        background: '#f8fafc',
-        borderTop: '1px solid #e2e8f0',
+        padding: '8px 14px',
+        background: isDark ? '#0b0e14' : '#f8fafc',
+        borderTop: isDark ? '1px solid #1e293b' : '1px solid #e2e8f0',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         fontSize: '0.74rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16a34a' }} />
-          <span style={{ fontWeight: 800, color: '#0f172a' }}>Status Sketsa:</span>
-          <span style={{ color: '#16a34a', fontWeight: 700 }}>Closed Loop (Siap 3D)</span>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }} />
+          <span style={{ fontWeight: 800, color: isDark ? '#f8fafc' : '#0f172a' }}>Status Sketsa:</span>
+          <span style={{ color: '#22c55e', fontWeight: 700 }}>Closed Loop (Siap 3D)</span>
         </div>
-        <span style={{ color: '#64748b' }}>
+        <span style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
           Transformasi: <strong>{Math.round(animProgress * 100)}%</strong>
         </span>
       </div>
@@ -413,7 +559,7 @@ const Sketch2DViewer = ({
 };
 
 // =============================================================================
-// 4. GENERATOR GEOMETRI TIGA DIMENSI PARAMETRIK & ANIMATIF
+// 5. GENERATOR GEOMETRI TIGA DIMENSI PARAMETRIK & ANIMATIF (THREE.JS)
 // =============================================================================
 const createParametricCADGeometry = ({
   sketchId,
@@ -481,10 +627,9 @@ const createParametricCADGeometry = ({
       case 'star': {
         const rOut = 24 * scale;
         const rIn = 14 * scale;
-        const points = 5;
-        for (let i = 0; i < points * 2; i++) {
+        for (let i = 0; i < 10; i++) {
           const r = i % 2 === 0 ? rOut : rIn;
-          const a = (i * Math.PI) / points;
+          const a = (i * Math.PI) / 5 - Math.PI / 2;
           const x = r * Math.cos(a);
           const y = r * Math.sin(a);
           if (i === 0) shape.moveTo(x, y);
@@ -500,202 +645,130 @@ const createParametricCADGeometry = ({
         break;
       }
     }
-    return shape;
-  };
 
-  // ---------------------------------------------------------------------------
-  // 1. EXTRUDE (Tumbuh linier ke atas sesuai animProgress)
-  // ---------------------------------------------------------------------------
-  if (operation === 'extrude') {
-    const maxDepth = opParam || 45;
-    const depth = Math.max(1.0, maxDepth * Math.max(0.01, animProgress));
-    const shape = get2DShape(1);
-
-    if (hasHole && !hasShell) {
+    // Add Central Hole if activated
+    if (hasHole && holeRadius > 0) {
       const hole = new THREE.Path();
-      hole.absarc(0, 0, holeRadius, 0, Math.PI * 2, true);
+      hole.absarc(0, 0, Math.min(holeRadius, 14), 0, Math.PI * 2, true);
       shape.holes.push(hole);
     }
 
-    if (hasShell) {
-      const innerScale = Math.max(0.2, 1 - (shellThickness * 2) / 40);
-      const innerHole = get2DShape(innerScale);
-      shape.holes.push(innerHole);
-    }
+    return shape;
+  };
 
-    let bevelEnabled = false;
-    let bevelSize = 0;
-    let bevelThickness = 0;
-    let bevelSegments = 1;
+  // --- A. OPERASI EXTRUDE ---
+  if (operation === 'extrude') {
+    const depth = Math.max(2, opParam * Math.max(0.02, animProgress));
+    const shape = get2DShape(1.0);
 
-    if (animProgress > 0.5) {
-      if (hasFillet) {
-        bevelEnabled = true;
-        bevelSize = Math.min(depth * 0.25, filletRadius);
-        bevelThickness = Math.min(depth * 0.25, filletRadius);
-        bevelSegments = 6;
-      } else if (hasChamfer) {
-        bevelEnabled = true;
-        bevelSize = Math.min(depth * 0.25, chamferSize);
-        bevelThickness = Math.min(depth * 0.25, chamferSize);
-        bevelSegments = 1;
-      }
-    }
+    const bevelEn = hasFillet || hasChamfer;
+    const bSize = hasFillet ? Math.min(filletRadius, 6) : hasChamfer ? Math.min(chamferSize, 5) : 0;
+    const bSegments = hasFillet ? 5 : hasChamfer ? 1 : 0;
 
-    const geom = new THREE.ExtrudeGeometry(shape, {
-      depth,
-      bevelEnabled,
-      bevelSize,
-      bevelThickness,
-      bevelSegments,
-      steps: 1
-    });
+    const extrudeSettings = {
+      depth: depth,
+      bevelEnabled: bevelEn,
+      bevelSegments: bSegments,
+      steps: 1,
+      bevelSize: bSize,
+      bevelThickness: bSize
+    };
+
+    let geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
     geom.center();
 
-    if (hasDraft) {
+    if (hasDraft && draftAngle > 0) {
       const pos = geom.attributes.position;
-      const taperFactor = Math.tan((draftAngle * Math.PI) / 180) * (depth / 35);
+      const tanA = Math.tan((draftAngle * Math.PI) / 180);
       for (let i = 0; i < pos.count; i++) {
-        const z = pos.getZ(i);
-        const factor = 1 - ((z + depth / 2) / depth) * taperFactor * 0.45;
-        pos.setX(i, pos.getX(i) * factor);
-        pos.setY(i, pos.getY(i) * factor);
+        const y = pos.getY(i);
+        const factor = 1 - (y / depth) * tanA * 0.8;
+        pos.setX(i, pos.getX(i) * Math.max(0.4, factor));
+        pos.setZ(i, pos.getZ(i) * Math.max(0.4, factor));
       }
-      pos.needsUpdate = true;
       geom.computeVertexNormals();
     }
 
     return geom;
   }
 
-  // ---------------------------------------------------------------------------
-  // 2. REVOLVE (Memutar mengelilingi sumbu Z sesuai animProgress)
-  // ---------------------------------------------------------------------------
+  // --- B. OPERASI REVOLVE ---
   if (operation === 'revolve') {
-    const maxAngle = opParam || 360;
-    const angleDeg = Math.max(8, maxAngle * Math.max(0.02, animProgress));
-    const phiLength = (angleDeg / 360) * Math.PI * 2;
-    const points = [];
-    const h = 34;
+    const sweepAngle = ((opParam * Math.PI) / 180) * Math.max(0.05, animProgress);
+    const segments = Math.max(6, Math.floor(48 * Math.max(0.1, animProgress)));
 
-    switch (sketchId) {
-      case 'l_shape': {
-        const rIn = hasHole ? Math.max(4, holeRadius) : 8;
-        const rFlange = 28;
-        const rStep = 18;
-        const yBot = -h / 2;
-        const yMid = -2;
-        const yTop = h / 2;
-        points.push(new THREE.Vector2(rIn, yBot));
-        points.push(new THREE.Vector2(rFlange, yBot));
-        points.push(new THREE.Vector2(rFlange, yMid));
-        points.push(new THREE.Vector2(rStep, yMid));
-        points.push(new THREE.Vector2(rStep, yTop));
-        points.push(new THREE.Vector2(rIn, yTop));
-        points.push(new THREE.Vector2(rIn, yBot));
-        break;
-      }
-      case 'circle': {
-        const rCenter = 20;
-        const rCircle = hasShell ? 8 : (hasHole ? 9 : 10);
-        const numPts = 24;
-        for (let i = 0; i <= numPts; i++) {
-          const a = (i / numPts) * Math.PI * 2;
-          points.push(new THREE.Vector2(rCenter + rCircle * Math.cos(a), rCircle * Math.sin(a)));
-        }
-        break;
-      }
-      case 'trapezoid': {
-        const rIn = hasHole ? Math.max(4, holeRadius) : 8;
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        points.push(new THREE.Vector2(26, -h / 2));
-        points.push(new THREE.Vector2(16, h / 2));
-        points.push(new THREE.Vector2(rIn, h / 2));
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        break;
-      }
-      case 'hexagon': {
-        const rIn = hasHole ? Math.max(4, holeRadius) : 8;
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        points.push(new THREE.Vector2(24, -h / 2));
-        points.push(new THREE.Vector2(28, -h / 4));
-        points.push(new THREE.Vector2(28, h / 4));
-        points.push(new THREE.Vector2(24, h / 2));
-        points.push(new THREE.Vector2(rIn, h / 2));
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        break;
-      }
-      case 'star': {
-        const rIn = hasHole ? Math.max(4, holeRadius) : 8;
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        points.push(new THREE.Vector2(28, -h / 2));
-        points.push(new THREE.Vector2(22, -h / 4));
-        points.push(new THREE.Vector2(28, 0));
-        points.push(new THREE.Vector2(22, h / 4));
-        points.push(new THREE.Vector2(28, h / 2));
-        points.push(new THREE.Vector2(rIn, h / 2));
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        break;
-      }
-      case 'rect':
-      default: {
-        const rIn = hasHole ? Math.max(4, holeRadius) : (hasShell ? 18 : 8);
-        const rOut = 26;
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        points.push(new THREE.Vector2(rOut, -h / 2));
-        points.push(new THREE.Vector2(rOut, h / 2));
-        points.push(new THREE.Vector2(rIn, h / 2));
-        points.push(new THREE.Vector2(rIn, -h / 2));
-        break;
-      }
+    let rInner = 8;
+    let rOuter = 24;
+    let h = 36;
+
+    if (sketchId === 'l_shape') {
+      const pts = [
+        new THREE.Vector2(rInner, -h / 2),
+        new THREE.Vector2(rOuter, -h / 2),
+        new THREE.Vector2(rOuter, 0),
+        new THREE.Vector2(rInner + 8, 0),
+        new THREE.Vector2(rInner + 8, h / 2),
+        new THREE.Vector2(rInner, h / 2)
+      ];
+      const geom = new THREE.LatheGeometry(pts, segments, 0, sweepAngle);
+      geom.center();
+      return geom;
     }
 
-    const segments = Math.max(12, Math.floor((angleDeg / 360) * 48));
-    const geom = new THREE.LatheGeometry(points, segments, 0, phiLength);
+    if (sketchId === 'hexagon') {
+      rOuter = 22;
+    } else if (sketchId === 'trapezoid') {
+      const pts = [
+        new THREE.Vector2(rInner, -h / 2),
+        new THREE.Vector2(26, -h / 2),
+        new THREE.Vector2(16, h / 2),
+        new THREE.Vector2(rInner, h / 2)
+      ];
+      const geom = new THREE.LatheGeometry(pts, segments, 0, sweepAngle);
+      geom.center();
+      return geom;
+    }
+
+    const pts = [
+      new THREE.Vector2(hasHole ? Math.min(holeRadius + 2, 12) : rInner, -h / 2),
+      new THREE.Vector2(rOuter, -h / 2),
+      new THREE.Vector2(rOuter, h / 2),
+      new THREE.Vector2(hasHole ? Math.min(holeRadius + 2, 12) : rInner, h / 2)
+    ];
+
+    const geom = new THREE.LatheGeometry(pts, segments, 0, sweepAngle);
     geom.center();
-    geom.computeVertexNormals();
     return geom;
   }
 
-  // ---------------------------------------------------------------------------
-  // 3. SWEEP (Tumbuh menyusuri kurva lintasan 3D sesuai animProgress)
-  // ---------------------------------------------------------------------------
+  // --- C. OPERASI SWEEP ---
   if (operation === 'sweep') {
-    const fullCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-28, -16, 0),
-      new THREE.Vector3(-14, -8, 12),
-      new THREE.Vector3(0, 10, 16),
-      new THREE.Vector3(16, 20, 8),
-      new THREE.Vector3(28, 22, -6)
-    ]);
+    const tMax = Math.max(0.08, animProgress);
+    const curvePoints = [];
+    const fullSteps = 30;
+    const activeSteps = Math.max(3, Math.floor(fullSteps * tMax));
 
-    const totalSteps = 48;
-    const currentSteps = Math.max(3, Math.floor(totalSteps * Math.max(0.04, animProgress)));
-    const subPoints = [];
-    for (let i = 0; i <= currentSteps; i++) {
-      const u = i / totalSteps;
-      subPoints.push(fullCurve.getPoint(u));
+    for (let i = 0; i <= activeSteps; i++) {
+      const t = (i / fullSteps) * Math.PI;
+      const x = 32 * Math.sin(t);
+      const y = -28 + (i / fullSteps) * 56;
+      const z = 18 * Math.cos(t * 1.5);
+      curvePoints.push(new THREE.Vector3(x, y, z));
     }
-    const subCurve = new THREE.CatmullRomCurve3(subPoints);
 
-    let radius = 10;
-    if (sketchId === 'rect') radius = 11;
-    else if (sketchId === 'l_shape') radius = 12;
-    else if (sketchId === 'star') radius = 13;
+    const path = new THREE.CatmullRomCurve3(curvePoints);
+    const shapeRadius = sketchId === 'circle' ? 7 : sketchId === 'hexagon' ? 8 : 6;
+    const tubularSegments = Math.max(8, activeSteps * 3);
+    const radialSegments = sketchId === 'hexagon' ? 6 : sketchId === 'rect' ? 4 : 16;
 
-    const radialSegments = sketchId === 'rect' ? 4 : (sketchId === 'hexagon' ? 6 : 24);
-
-    const geom = new THREE.TubeGeometry(subCurve, currentSteps, radius, radialSegments, false);
+    const geom = new THREE.TubeGeometry(path, tubularSegments, shapeRadius, radialSegments, false);
     geom.center();
-    geom.computeVertexNormals();
     return geom;
   }
 
-  // ---------------------------------------------------------------------------
-  // 4. LOFT (Transisi organik antara Profil Bawah dan Profil Atas)
-  // ---------------------------------------------------------------------------
+  // --- D. OPERASI LOFT ---
   if (operation === 'loft') {
-    const H = opParam || 46;
+    const H = Math.max(10, opParam);
     const radialSegments = 36;
     const heightSegments = 24;
     const activeHeightSegments = Math.max(2, Math.floor(heightSegments * Math.max(0.04, animProgress)));
@@ -775,7 +848,7 @@ const createParametricCADGeometry = ({
 };
 
 // =============================================================================
-// 5. KOMPONEN MESH 3D & X-RAY SECTION
+// 6. KOMPONEN MESH 3D & X-RAY SECTION
 // =============================================================================
 const CADSolidMesh = ({ geometry, materialMode, isCrossSection }) => {
   const edgesGeom = useMemo(() => {
@@ -783,19 +856,7 @@ const CADSolidMesh = ({ geometry, materialMode, isCrossSection }) => {
     return new THREE.EdgesGeometry(geometry, 20);
   }, [geometry]);
 
-  const matProps = useMemo(() => {
-    switch (materialMode) {
-      case 'brass':
-        return { color: '#f59e0b', metalness: 0.8, roughness: 0.25 };
-      case 'aluminium':
-        return { color: '#cbd5e1', metalness: 0.5, roughness: 0.3 };
-      case 'blueprint':
-        return { color: '#2563eb', metalness: 0.1, roughness: 0.7 };
-      case 'steel':
-      default:
-        return { color: '#94a3b8', metalness: 0.7, roughness: 0.25 };
-    }
-  }, [materialMode]);
+  const matProps = MATERIALS_CONFIG[materialMode] || MATERIALS_CONFIG.steel;
 
   if (!geometry) return null;
 
@@ -803,28 +864,26 @@ const CADSolidMesh = ({ geometry, materialMode, isCrossSection }) => {
     <group>
       <mesh geometry={geometry} castShadow receiveShadow>
         <meshStandardMaterial
-          {...matProps}
+          color={matProps.color}
+          metalness={matProps.metalness}
+          roughness={matProps.roughness}
           side={THREE.DoubleSide}
           transparent={isCrossSection}
-          opacity={isCrossSection ? 0.78 : 1.0}
-          wireframe={false}
+          opacity={isCrossSection ? 0.72 : 1.0}
         />
       </mesh>
       {edgesGeom && (
         <lineSegments geometry={edgesGeom}>
-          <lineBasicMaterial color={isCrossSection ? '#0284c7' : '#0f172a'} linewidth={2.5} />
+          <lineBasicMaterial color={isCrossSection ? '#38bdf8' : '#0f172a'} linewidth={2} />
         </lineSegments>
       )}
     </group>
   );
 };
 
-// =============================================================================
-// 6. 3D VISUAL HELPER OVERLAYS (Sumbu, Vektor Tarik, Lintasan Curve)
-// =============================================================================
+// Visual Helper Overlays (Axis, Extrusion Arrow)
 const CADVisualHelpers = ({ operation, animProgress }) => {
   if (operation === 'revolve') {
-    // Sumbu Putar Merah Tegak
     return (
       <group>
         <mesh position={[0, 0, 0]}>
@@ -836,16 +895,15 @@ const CADVisualHelpers = ({ operation, animProgress }) => {
   }
 
   if (operation === 'extrude') {
-    // Vektor panah arah ekstrusi Z
     return (
       <group position={[0, 24 * animProgress, 0]}>
         <mesh position={[0, 6, 0]}>
           <coneGeometry args={[2.5, 6, 16]} />
-          <meshBasicMaterial color="#2563eb" />
+          <meshBasicMaterial color="#38bdf8" />
         </mesh>
         <mesh position={[0, 0, 0]}>
           <cylinderGeometry args={[0.8, 0.8, 8, 12]} />
-          <meshBasicMaterial color="#2563eb" />
+          <meshBasicMaterial color="#38bdf8" />
         </mesh>
       </group>
     );
@@ -854,9 +912,7 @@ const CADVisualHelpers = ({ operation, animProgress }) => {
   return null;
 };
 
-// =============================================================================
-// 7. ANIMATOR KAMERA ORBIT
-// =============================================================================
+// Camera Controller for ViewCube Animation
 const CameraRig = ({ targetCamPos, controlsRef }) => {
   useFrame((state) => {
     if (targetCamPos && controlsRef.current) {
@@ -869,14 +925,243 @@ const CameraRig = ({ targetCamPos, controlsRef }) => {
 };
 
 // =============================================================================
-// 8. KOMPONEN UTAMA CAD STUDIO SIMULATOR
+// 7. KOMPONEN LAYOUT KERTAS A4 & ETIKET RESMI (PAPER SPACE ISO 5456 / 128)
+// =============================================================================
+const LayoutA4Paper = ({
+  sketchData,
+  opData,
+  opParam,
+  hasFillet,
+  filletRadius,
+  hasChamfer,
+  chamferSize,
+  hasHole,
+  holeRadius,
+  hasShell,
+  shellThickness,
+  materialMode,
+  metrics,
+  onBackToModel
+}) => {
+  const currentDate = new Date().toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '16px',
+      padding: '20px 10px',
+      background: '#1e293b',
+      borderRadius: '16px',
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
+      {/* Paper Space Action Bar */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: '920px',
+        background: '#0f172a',
+        padding: '10px 16px',
+        borderRadius: '10px',
+        border: '1px solid #334155'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1.2rem' }}>📄</span>
+          <div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#f8fafc' }}>
+              LAYOUT GAMBAR KERJA A4 (ISO 5456 / ISO 128)
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+              Skala 1:1 • Proyeksi Sudut Pertama (Eropa) • Satuan: Milimeter (mm)
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={onBackToModel}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              border: '1px solid #475569',
+              background: '#1e293b',
+              color: '#f8fafc',
+              fontSize: '0.76rem',
+              fontWeight: 800,
+              cursor: 'pointer'
+            }}
+          >
+            🔙 Kembali ke Model Space (AutoCAD 3D)
+          </button>
+          <button
+            onClick={() => { sound.playClick(); window.print(); }}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              border: 'none',
+              background: '#0284c7',
+              color: '#ffffff',
+              fontSize: '0.76rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>🖨️</span> Cetak / Simpan PDF
+          </button>
+        </div>
+      </div>
+
+      {/* Lembar Kertas Gambar A4 (297 x 210 mm Landscape) */}
+      <div style={{
+        width: '100%',
+        maxWidth: '920px',
+        background: '#ffffff',
+        color: '#0f172a',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+        padding: '24px',
+        boxSizing: 'border-box',
+        borderRadius: '4px',
+        fontFamily: "'Courier New', Courier, monospace",
+        position: 'relative'
+      }}>
+        {/* Garis Tepi Standar ISO (Kiri 20mm, Lainnya 10mm) */}
+        <div style={{
+          border: '2.5px solid #0f172a',
+          padding: '16px',
+          minHeight: '520px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative'
+        }}>
+          {/* Header Gambar Kerja */}
+          <div style={{ borderBottom: '1.5px solid #0f172a', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 900, letterSpacing: '1px' }}>
+                SMK NEGERI 2 DEPOK • JURUSAN TEKNIK PEMESINAN
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#475569' }}>
+                JOB SHEET GAMBAR MANUFAKTUR &amp; PERANCANGAN CAD/CAM
+              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800 }}>SIMBOL PROYEKSI:</span>
+              {/* Simbol Proyeksi Eropa ISO */}
+              <svg width="45" height="22" viewBox="0 0 50 25">
+                <circle cx="12" cy="12.5" r="5" fill="none" stroke="#0f172a" strokeWidth="1.2" />
+                <circle cx="12" cy="12.5" r="9" fill="none" stroke="#0f172a" strokeWidth="1.2" />
+                <polygon points="28,6 44,2 44,23 28,19" fill="none" stroke="#0f172a" strokeWidth="1.2" />
+                <line x1="2" y1="12.5" x2="48" y2="12.5" stroke="#ef4444" strokeWidth="0.8" strokeDasharray="6 2 1 2" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Area Gambar (Drawing Viewports) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px', padding: '20px 0', flex: 1 }}>
+            {/* Viewport 1: Tampak 2D Proyeksi Depan */}
+            <div style={{ border: '1px dashed #cbd5e1', padding: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, marginBottom: '8px', color: '#0284c7' }}>
+                TAMPAK DEPAN (FRONT VIEW) • SKALA 1:1
+              </div>
+              <div style={{ width: '220px', height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sketch2DViewer
+                  sketchId={sketchData.id}
+                  operation={opData.id}
+                  animProgress={1.0}
+                  hasFillet={hasFillet}
+                  filletRadius={filletRadius}
+                  hasChamfer={hasChamfer}
+                  chamferSize={chamferSize}
+                  hasShell={hasShell}
+                  shellThickness={shellThickness}
+                  hasHole={hasHole}
+                  holeRadius={holeRadius}
+                  theme="light"
+                />
+              </div>
+              <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '6px' }}>
+                Semua ukuran dalam milimeter (mm). Toleransi umum ISO 2768-m.
+              </div>
+            </div>
+
+            {/* Viewport 2: Parameter & Proyeksi Isometri */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ border: '1px dashed #cbd5e1', padding: '10px', flex: 1, background: '#f8fafc' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, marginBottom: '6px', color: '#0f172a' }}>
+                  TABEL DATA PARAMETER TEKNIS:
+                </div>
+                <div style={{ fontSize: '0.72rem', display: 'flex', flexDirection: 'column', gap: '4px', lineHeight: 1.5 }}>
+                  <div>• Operasi CAD: <strong>{opData.name.split('(')[0]}</strong></div>
+                  <div>• Sketsa Dasar: <strong>{sketchData.name.split('(')[0]}</strong></div>
+                  <div>• Ukuran Utama: <strong>{opParam} {opData.paramUnit}</strong></div>
+                  <div>• Fillet / Radius: <strong>{hasFillet ? `R = ${filletRadius} mm` : 'None'}</strong></div>
+                  <div>• Chamfer Perakitan: <strong>{hasChamfer ? `C = ${chamferSize} mm x 45°` : 'None'}</strong></div>
+                  <div>• Lubang Senter/Baut: <strong>{hasHole ? `Ø = ${holeRadius * 2} mm (Tembus)` : 'None'}</strong></div>
+                  <div>• Rongga Shell: <strong>{hasShell ? `Tebal t = ${shellThickness} mm` : 'Padat (Solid)'}</strong></div>
+                  <div>• Bahan (Material): <strong>{MATERIALS_CONFIG[materialMode]?.name || 'Baja ST37'}</strong></div>
+                  <div>• Volume Estimasi: <strong>{metrics.volume} cm³</strong></div>
+                  <div>• Berat (Massa): <strong>{metrics.mass} gram</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ETIKET KEPALA GAMBAR RESMI (TITLE BLOCK STANDAR ISO) */}
+          <div style={{ border: '2px solid #0f172a', marginTop: '12px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', fontSize: '0.72rem' }}>
+            {/* Kolom Judul & Instansi */}
+            <div style={{ borderRight: '1.5px solid #0f172a', padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <div style={{ color: '#64748b', fontSize: '0.62rem' }}>JUDUL GAMBAR KERJA:</div>
+              <div style={{ fontWeight: 900, fontSize: '0.88rem', color: '#0f172a' }}>
+                {sketchData.name.split('(')[0].toUpperCase()} - {opData.name.split('(')[0]}
+              </div>
+              <div style={{ fontSize: '0.68rem', fontWeight: 700, color: '#0284c7' }}>
+                SMK NEGERI 2 DEPOK (KAMPUS DUDI)
+              </div>
+            </div>
+
+            {/* Kolom Skala & Tanggal */}
+            <div style={{ borderRight: '1.5px solid #0f172a', padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <div>SKALA: <strong>1 : 1</strong></div>
+              <div>SATUAN: <strong>mm</strong></div>
+              <div>TANGGAL: <strong>{currentDate}</strong></div>
+              <div>UKURAN: <strong>A4 (297x210)</strong></div>
+            </div>
+
+            {/* Kolom Drafter & Pemeriksa */}
+            <div style={{ padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <div>DIGAMBAR: <strong>X-TP.A (SISWA)</strong></div>
+              <div>DIPERIKSA: <strong>GURU PENGAMPU</strong></div>
+              <div>NO. GAMBAR: <strong>CAD-TP-01</strong></div>
+              <div>STATUS: <strong style={{ color: '#16a34a' }}>DISETUJUI ✅</strong></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// =============================================================================
+// 8. KOMPONEN UTAMA AUTOCAD MECHANICAL WORKBENCH
 // =============================================================================
 const CADStudioSimulator = () => {
-  // Langkah 1: Sketsa 2D Awal
+  // State 1: Sketsa 2D Awal
   const [selectedSketch, setSelectedSketch] = useState('rect');
-  const [selectedTopSketch, setSelectedTopSketch] = useState('circle'); // Khusus Loft
+  const [selectedTopSketch, setSelectedTopSketch] = useState('circle');
 
-  // Langkah 2: Operasi 3D
+  // State 2: Operasi 3D
   const [selectedOperation, setSelectedOperation] = useState('extrude');
   const [opParam, setOpParam] = useState(45);
 
@@ -886,7 +1171,7 @@ const CADStudioSimulator = () => {
   const [isAutoLoop, setIsAutoLoop] = useState(false);
   const [animSpeed, setAnimSpeed] = useState(1.0);
 
-  // Langkah 3: Modifiers (Fillet, Chamfer, Shell, Draft, Hole)
+  // State 3: Modifiers (Fillet, Chamfer, Shell, Draft, Hole)
   const [hasFillet, setHasFillet] = useState(false);
   const [filletRadius, setFilletRadius] = useState(4);
 
@@ -905,18 +1190,26 @@ const CADStudioSimulator = () => {
   // Cross section / X-Ray mode
   const [isCrossSection, setIsCrossSection] = useState(false);
 
-  // Layout View Mode
+  // Display Mode ('split', '2d_only', '3d_only', 'layout')
   const [displayMode, setDisplayMode] = useState('split');
+
+  // Ribbon Navigation Tab ('draw', 'solid', 'modify', 'templates', 'materials', 'layout')
+  const [ribbonTab, setRibbonTab] = useState('draw');
+
+  // AutoCAD Command Prompt Line
+  const [commandLine, setCommandLine] = useState('Command: AUTOCAD_START -> Siap mendesain. Klik profil 2D atau tombol 3D di Ribbon.');
+  const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
 
   // Camera & Visual
   const [materialMode, setMaterialMode] = useState('steel');
   const [autoRotate, setAutoRotate] = useState(false);
   const [activeViewAngle, setActiveViewAngle] = useState('iso');
+  const [cadTheme, setCadTheme] = useState('dark');
 
   const controlsRef = useRef(null);
 
   // ---------------------------------------------------------------------------
-  // ANIMATION LOOP ENGINE (Smooth 60 FPS RequestAnimationFrame)
+  // ANIMATION LOOP ENGINE (Smooth RequestAnimationFrame)
   // ---------------------------------------------------------------------------
   useEffect(() => {
     if (!isPlayingAnim) return;
@@ -949,20 +1242,54 @@ const CADStudioSimulator = () => {
     return () => cancelAnimationFrame(animId);
   }, [isPlayingAnim, isAutoLoop, animSpeed]);
 
-  // Handler Ganti Operasi (Langsung memicu animasi transformasi)
+  // Handler Ganti Sketsa
+  const handleSelectSketch = (sketchId) => {
+    sound.playClick();
+    setSelectedSketch(sketchId);
+    setAnimProgress(0.0);
+    setIsPlayingAnim(true);
+    const sk = SKETCH_PROFILES.find(s => s.id === sketchId);
+    setCommandLine(`Command: SKETCH_SELECT -> Profil [${sk?.name?.split('(')[0]}] aktif. Dimensi: ${sk?.dimensions}`);
+  };
+
+  // Handler Ganti Operasi
   const handleSelectOperation = (opId) => {
     sound.playClick();
     setSelectedOperation(opId);
     setOpParam(CREATE_OPERATIONS[opId].defaultParam);
-    // Reset dan mulai animasi otomatis dari 0% ke 100%
     setAnimProgress(0.0);
     setIsPlayingAnim(true);
+    const op = CREATE_OPERATIONS[opId];
+    setCommandLine(`Command: ${op.shortcut} -> Operasi [${op.name.split('(')[0]}] aktif. Parameter awal: ${op.defaultParam} ${op.paramUnit}`);
+  };
+
+  // Handler Load Template Mesin
+  const handleLoadTemplate = (tpl) => {
+    sound.playClick();
+    setSelectedSketch(tpl.sketch);
+    if (tpl.topSketch) setSelectedTopSketch(tpl.topSketch);
+    setSelectedOperation(tpl.operation);
+    setOpParam(tpl.param);
+    setHasChamfer(!!tpl.hasChamfer);
+    if (tpl.chamferSize) setChamferSize(tpl.chamferSize);
+    setHasFillet(!!tpl.hasFillet);
+    if (tpl.filletRadius) setFilletRadius(tpl.filletRadius);
+    setHasHole(!!tpl.hasHole);
+    if (tpl.holeRadius) setHoleRadius(tpl.holeRadius);
+    setHasShell(!!tpl.hasShell);
+    if (tpl.shellThickness) setShellThickness(tpl.shellThickness);
+    setHasDraft(!!tpl.hasDraft);
+
+    setAnimProgress(0.0);
+    setIsPlayingAnim(true);
+    setCommandLine(`Command: ${tpl.commandLog}`);
   };
 
   const handleReplayAnim = () => {
     sound.playClick();
     setAnimProgress(0.0);
     setIsPlayingAnim(true);
+    setCommandLine('Command: REPLAY_ANIM -> Memutar ulang simulasi transformasi 2D ke 3D.');
   };
 
   const handleTogglePlayPause = () => {
@@ -981,6 +1308,7 @@ const CADStudioSimulator = () => {
     const nextVal = !hasFillet;
     setHasFillet(nextVal);
     if (nextVal) setHasChamfer(false);
+    setCommandLine(nextVal ? `Command: FILLET -> Radius R=${filletRadius} mm (Mencegah konsentrasi tegangan).` : 'Command: FILLET_OFF -> Fillet dinonaktifkan.');
   };
 
   const handleToggleChamfer = () => {
@@ -988,6 +1316,7 @@ const CADStudioSimulator = () => {
     const nextVal = !hasChamfer;
     setHasChamfer(nextVal);
     if (nextVal) setHasFillet(false);
+    setCommandLine(nextVal ? `Command: CHAMFER -> Ukuran C=${chamferSize} mm x 45° (Mempermudah perakitan).` : 'Command: CHAMFER_OFF -> Chamfer dinonaktifkan.');
   };
 
   // Integrasi Audio Narator Inklusi
@@ -1001,10 +1330,10 @@ const CADStudioSimulator = () => {
     if (isSpeaking && currentNarrativeTitle === title) {
       stopSpeech();
     } else {
-      const filletDesc = hasFillet ? 'Fitur Fillet lengkung aktif dengan radius 4 milimeter.' : hasChamfer ? 'Fitur Chamfer sudut miring aktif 3 milimeter.' : 'Tanpa fillet maupun chamfer.';
-      const holeDesc = hasHole ? 'Fitur lubang silindris Hole aktif menembus sumbu pusat benda.' : '';
-      const shellDesc = hasShell ? 'Fitur rongga dinding tipis Shell aktif dengan ketebalan 3 milimeter.' : '';
-      const text = `Anda sedang berada di CAD Feature Lab. Pada Langkah 1, sketsa 2D mula-mula yang dipilih adalah ${activeSketchData.name}. Pada Langkah 2, operasi pembentukan yang aktif adalah ${activeOpData.name}. ${activeOpData.definition} ${activeOpData.animationHelp} Pada Langkah 3, fitur modifikasi: ${filletDesc} ${holeDesc} ${shellDesc} Anda dapat memutar animasi transformasi dan memutar benda 3D secara bebas.`;
+      const filletDesc = hasFillet ? `Fitur Fillet lengkung aktif dengan radius ${filletRadius} milimeter.` : hasChamfer ? `Fitur Chamfer sudut miring aktif ${chamferSize} milimeter.` : 'Tanpa fillet maupun chamfer.';
+      const holeDesc = hasHole ? `Fitur lubang silindris Hole aktif berdiameter ${holeRadius * 2} milimeter.` : '';
+      const shellDesc = hasShell ? `Fitur rongga dinding tipis Shell aktif dengan ketebalan ${shellThickness} milimeter.` : '';
+      const text = `Selamat datang di AutoCAD Mechanical Studio. Sketsa 2D aktif adalah ${activeSketchData.name}. Operasi pembentukan 3D aktif adalah ${activeOpData.name}. ${activeOpData.definition} Modifikasi: ${filletDesc} ${holeDesc} ${shellDesc} Anda dapat melihat hasil di kanvas atau membuka Layout Kertas A4 untuk melihat etiket gambar kerja standar SMK.`;
       speakText(text, title);
     }
   };
@@ -1046,354 +1375,741 @@ const CADStudioSimulator = () => {
     holeRadius
   ]);
 
+  // Metrologi Fisik (Volume, Luas, Massa)
+  const inspectionMetrics = useMemo(() => {
+    if (!cadGeometry) return { volume: '0.0', area: '0.0', mass: '0.0' };
+    if (!cadGeometry.boundingBox) cadGeometry.computeBoundingBox();
+    const bb = cadGeometry.boundingBox;
+    const dx = Math.abs(bb.max.x - bb.min.x);
+    const dy = Math.abs(bb.max.y - bb.min.y);
+    const dz = Math.abs(bb.max.z - bb.min.z);
+    const vol = (dx * dy * dz * 0.7) / 1000;
+    const area = (2 * (dx * dy + dy * dz + dz * dx)) / 100;
+    const density = MATERIALS_CONFIG[materialMode]?.density || 7.85;
+    const mass = vol * density;
+    return {
+      volume: vol.toFixed(1),
+      area: area.toFixed(1),
+      mass: mass.toFixed(1)
+    };
+  }, [cadGeometry, materialMode]);
+
+  // Export File STL untuk 3D Printing
+  const handleExportSTL = () => {
+    try {
+      if (!cadGeometry) return;
+      const exporter = new STLExporter();
+      const mesh = new THREE.Mesh(cadGeometry, new THREE.MeshStandardMaterial());
+      const result = exporter.parse(mesh, { binary: true });
+      const blob = new Blob([result], { type: 'application/octet-stream' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `CAD_Part_${selectedSketch}_${selectedOperation}.stl`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      sound.playSuccess();
+      setCommandLine(`Command: EXPORT_STL -> Berhasil mengunduh CAD_Part_${selectedSketch}_${selectedOperation}.stl untuk 3D Printing!`);
+    } catch (err) {
+      console.error('Gagal export STL:', err);
+    }
+  };
+
   const targetCamPos = useMemo(() => {
     const dist = 85;
     switch (activeViewAngle) {
-      case 'depan':
-        return new THREE.Vector3(0, 0, dist);
-      case 'kanan':
-        return new THREE.Vector3(dist, 0, 0);
-      case 'atas':
-        return new THREE.Vector3(0, dist, 0);
+      case 'depan': return new THREE.Vector3(0, 0, dist);
+      case 'kanan': return new THREE.Vector3(dist, 0, 0);
+      case 'atas': return new THREE.Vector3(0, dist, 0);
       case 'iso':
-      default:
-        return new THREE.Vector3(60, 50, 60);
+      default: return new THREE.Vector3(60, 50, 60);
     }
   }, [activeViewAngle]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', fontFamily: 'inherit', background: '#f8fafc', padding: '16px', borderRadius: '16px' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      background: '#0f172a',
+      color: '#f8fafc',
+      borderRadius: '16px',
+      overflow: 'hidden',
+      border: '1px solid #1e293b',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+      boxSizing: 'border-box'
+    }}>
       
       {/* =====================================================================
-          HEADER SECTION & CONTROLS
+          1. AUTOCAD APPLICATION TOP BAR
           ===================================================================== */}
       <div style={{
-        background: '#ffffff',
-        padding: '18px 22px',
-        borderRadius: '16px',
-        border: '1px solid #cbd5e1',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.04)',
+        background: '#090d16',
+        borderBottom: '1px solid #1e293b',
+        padding: '10px 18px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: '14px'
+        gap: '12px'
       }}>
+        {/* Title & Branding */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '2.2rem' }}>🛠️</span>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 900,
+            fontSize: '1.2rem',
+            color: '#fff',
+            boxShadow: '0 2px 10px rgba(239, 68, 68, 0.4)'
+          }}>
+            A
+          </div>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              CAD Feature Lab: Visualisasi Sketsa 2D ➡️ Transformasi Benda 3D
-            </h2>
-            <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
-              Pelajari mekanisme pembentukan <strong>Extrude, Revolve, Sweep, Loft</strong> serta modifikasi <strong>Fillet, Chamfer, Shell, Draft, Hole</strong> disertai animasi proses 3D real-time.
-            </p>
+            <div style={{ fontSize: '0.98rem', fontWeight: 900, letterSpacing: '0.5px', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              AUTOCAD MECHANICAL WORKBENCH 2026
+              <span style={{ fontSize: '0.62rem', background: '#0284c7', color: '#ffffff', padding: '1px 7px', borderRadius: '4px', fontWeight: 800 }}>
+                ISO 128 / 5456
+              </span>
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+              Studio Gambar Teknik Manufaktur • Sketsa 2D ➡️ Pemodelan 3D • Kertas Etiket A4
+            </div>
           </div>
         </div>
 
+        {/* Right Tools: Audio Narrator, Guide Toggle, Viewport Switcher */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          {/* Tombol Audio Narator CAD Studio */}
+          {/* Tombol Audio Narator Inklusi */}
           <button
             onClick={handleToggleCADAudio}
             style={{
-              padding: '7px 14px',
-              borderRadius: '8px',
-              border: isSpeakingCAD ? '1.5px solid #2563eb' : '1.5px solid #bfdbfe',
-              background: isSpeakingCAD ? '#2563eb' : '#eff6ff',
-              color: isSpeakingCAD ? '#ffffff' : '#1d4ed8',
+              padding: '6px 12px',
+              borderRadius: '6px',
+              border: isSpeakingCAD ? '1px solid #38bdf8' : '1px solid #334155',
+              background: isSpeakingCAD ? '#0284c7' : '#1e293b',
+              color: '#ffffff',
+              fontSize: '0.72rem',
               fontWeight: 800,
-              fontSize: '0.78rem',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              boxShadow: isSpeakingCAD ? '0 4px 12px rgba(37, 99, 235, 0.3)' : 'none',
-              transition: 'all 0.2s'
+              gap: '6px'
             }}
-            title="Dengarkan penjelasan suara materi dan fitur CAD ini (Inklusi)"
+            title="Dengarkan penjelasan suara materi dan alat CAD ini (Inklusi)"
           >
-            <span style={{ fontSize: '0.95rem' }}>{isSpeakingCAD ? '⏹️' : '🔊'}</span>
-            <span>{isSpeakingCAD ? 'Hentikan Audio' : 'Dengarkan Penjelasan CAD'}</span>
+            <span>{isSpeakingCAD ? '⏹️' : '🔊'}</span>
+            <span>{isSpeakingCAD ? 'Hentikan Audio' : 'Penjelasan Suara'}</span>
           </button>
 
-          {/* Display Mode Switcher */}
-          <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '10px', gap: '4px', border: '1px solid #e2e8f0' }}>
+          {/* Toggle Panduan Siswa */}
+          <button
+            onClick={() => setShowWorkflowGuide(!showWorkflowGuide)}
+            style={{
+              padding: '6px 10px',
+              borderRadius: '6px',
+              border: '1px solid #334155',
+              background: showWorkflowGuide ? '#1e3a8a' : '#1e293b',
+              color: '#f8fafc',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            {showWorkflowGuide ? '📖 Panduan: ON' : '📖 Panduan: OFF'}
+          </button>
+
+          {/* Viewport Workspace Switcher */}
+          <div style={{ display: 'flex', background: '#1e293b', padding: '3px', borderRadius: '8px', gap: '3px' }}>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('split'); }}
               style={{
-                padding: '6px 14px',
-                borderRadius: '7px',
+                padding: '5px 10px',
+                borderRadius: '6px',
                 border: 'none',
-                background: displayMode === 'split' ? '#2563eb' : 'transparent',
-                color: displayMode === 'split' ? '#fff' : '#334155',
+                background: displayMode === 'split' ? '#0284c7' : 'transparent',
+                color: displayMode === 'split' ? '#fff' : '#94a3b8',
+                fontSize: '0.72rem',
                 fontWeight: 800,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+                cursor: 'pointer'
               }}
+              title="Tampilkan sketsa 2D dan model 3D berdampingan"
             >
-              <span>🖥️</span> Berdampingan (2D & 3D)
+              🖥️ Berdampingan (2D & 3D)
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('2d_only'); }}
               style={{
-                padding: '6px 14px',
-                borderRadius: '7px',
+                padding: '5px 10px',
+                borderRadius: '6px',
                 border: 'none',
-                background: displayMode === '2d_only' ? '#2563eb' : 'transparent',
-                color: displayMode === '2d_only' ? '#fff' : '#334155',
+                background: displayMode === '2d_only' ? '#0284c7' : 'transparent',
+                color: displayMode === '2d_only' ? '#fff' : '#94a3b8',
+                fontSize: '0.72rem',
                 fontWeight: 800,
-                fontSize: '0.78rem',
                 cursor: 'pointer'
               }}
             >
-              📐 Sketsa 2D Saja
+              📐 2D Saja
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('3d_only'); }}
               style={{
-                padding: '6px 14px',
-                borderRadius: '7px',
+                padding: '5px 10px',
+                borderRadius: '6px',
                 border: 'none',
-                background: displayMode === '3d_only' ? '#2563eb' : 'transparent',
-                color: displayMode === '3d_only' ? '#fff' : '#334155',
+                background: displayMode === '3d_only' ? '#0284c7' : 'transparent',
+                color: displayMode === '3d_only' ? '#fff' : '#94a3b8',
+                fontSize: '0.72rem',
                 fontWeight: 800,
-                fontSize: '0.78rem',
                 cursor: 'pointer'
               }}
             >
-              🧊 Benda 3D Saja
+              🧊 3D Saja
+            </button>
+            <button
+              onClick={() => { sound.playClick(); setDisplayMode('layout'); }}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                border: 'none',
+                background: displayMode === 'layout' ? '#10b981' : 'transparent',
+                color: displayMode === 'layout' ? '#fff' : '#94a3b8',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+              title="Lihat dalam format kertas A4 lengkap dengan Etiket Gambar Resmi SMK"
+            >
+              📄 Layout Kertas A4 &amp; Etiket
             </button>
           </div>
         </div>
       </div>
 
       {/* =====================================================================
-          LANGKAH 1: PILIHAN SKETSA 2D AWAL
+          2. COLLAPSIBLE STUDENT WORKFLOW GUIDE (ALUR CEPAT 4 LANGKAH)
           ===================================================================== */}
-      <div style={{
-        background: '#ffffff',
-        padding: '16px 20px',
-        borderRadius: '14px',
-        border: '1px solid #cbd5e1',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-          <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ background: '#2563eb', color: '#fff', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>1</span>
-            Langkah 1: Tentukan Sketsa 2D Awal (2D Closed Profile):
+      {showWorkflowGuide && (
+        <div style={{
+          background: 'linear-gradient(90deg, #0b192c 0%, #172554 100%)',
+          borderBottom: '1px solid #1e3a8a',
+          padding: '10px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '10px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1rem' }}>💡</span>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8' }}>
+              ALUR KERJA CAD SISWA:
+            </span>
           </div>
-          <span style={{ fontSize: '0.75rem', color: '#64748b', background: '#f1f5f9', padding: '4px 10px', borderRadius: '6px' }}>
-            {activeSketchData.desc}
-          </span>
-        </div>
 
-        {/* 6 Pilihan Profil 2D */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '10px' }}>
-          {SKETCH_PROFILES.map((sk) => {
-            const isSelected = selectedSketch === sk.id;
-            return (
-              <button
-                key={sk.id}
-                onClick={() => {
-                  sound.playClick();
-                  setSelectedSketch(sk.id);
-                  // Memicu ulang animasi jika sedang melihat operasi
-                  setAnimProgress(0.0);
-                  setIsPlayingAnim(true);
-                }}
-                style={{
-                  padding: '10px 12px',
-                  borderRadius: '10px',
-                  border: isSelected ? '2.5px solid #2563eb' : '1px solid #cbd5e1',
-                  background: isSelected ? '#eff6ff' : '#ffffff',
-                  color: isSelected ? '#1d4ed8' : '#334155',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  transition: 'all 0.15s',
-                  boxShadow: isSelected ? '0 4px 12px rgba(37, 99, 235, 0.15)' : 'none'
-                }}
-              >
-                <span style={{ fontSize: '1.3rem' }}>{sk.icon}</span>
-                <div style={{ overflow: 'hidden' }}>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {sk.name.split('(')[0]}
-                  </div>
-                  <div style={{ fontSize: '0.66rem', color: isSelected ? '#3b82f6' : '#94a3b8' }}>
-                    {sk.dimensions}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* JIKA OPERASI LOFT AKTIF: Tampilkan Pemilihan Profil Target (Atas) */}
-        {selectedOperation === 'loft' && (
-          <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px dashed #cbd5e1' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0891b2', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span>🌪️</span> Pilih Profil Target Atas untuk Operasi Loft:
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1, justifyContent: 'center' }}>
+            <div style={{ background: ribbonTab === 'draw' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>1️⃣</span> <span>Pilih Profil 2D</span>
             </div>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {SKETCH_PROFILES.map((sk) => {
-                const isSelected = selectedTopSketch === sk.id;
-                return (
+            <span style={{ color: '#64748b' }}>➔</span>
+            <div style={{ background: ribbonTab === 'solid' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>2️⃣</span> <span>Bentuk Padatan 3D</span>
+            </div>
+            <span style={{ color: '#64748b' }}>➔</span>
+            <div style={{ background: ribbonTab === 'modify' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>3️⃣</span> <span>Beri Fillet / Lubang</span>
+            </div>
+            <span style={{ color: '#64748b' }}>➔</span>
+            <div style={{ background: ribbonTab === 'layout' ? '#10b981' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>4️⃣</span> <span>Cetak Kertas Etiket A4</span>
+            </div>
+          </div>
+
+          <div style={{ fontSize: '0.7rem', color: '#93c5fd' }}>
+            Atau klik tab <strong>"TEMPLATE MESIN"</strong> untuk memuat benda jadi 1-klik!
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================================
+          3. AUTOCAD RIBBON TABS & TOOLBAR
+          ===================================================================== */}
+      <div style={{ background: '#141c2e', borderBottom: '1px solid #1e293b' }}>
+        {/* Ribbon Tab Headers */}
+        <div style={{ display: 'flex', background: '#090d16', padding: '0 12px', borderBottom: '1px solid #1e293b', overflowX: 'auto' }}>
+          {[
+            { id: 'draw', label: '✏️ DRAW (Sketsa 2D)', desc: 'Pilihan profil sketsa awal' },
+            { id: 'solid', label: '🧊 3D SOLID (Benda Padat)', desc: 'Extrude, Revolve, Sweep, Loft' },
+            { id: 'modify', label: '🛠️ MODIFY (Fitur Bengkel)', desc: 'Fillet, Chamfer, Shell, Hole' },
+            { id: 'templates', label: '📦 TEMPLATE MESIN (1-Klik)', desc: 'Poros, Flensa, Balok, Mur' },
+            { id: 'materials', label: '🎨 MATERIAL & FISIK', desc: 'Metrologi & Export STL' },
+            { id: 'layout', label: '📄 LAYOUT A4 (Kertas Kerja)', desc: 'Etiket Kepala Gambar ISO' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => {
+                sound.playClick();
+                setRibbonTab(tab.id);
+                if (tab.id === 'layout') setDisplayMode('layout');
+                else if (displayMode === 'layout') setDisplayMode('split');
+              }}
+              style={{
+                padding: '9px 16px',
+                background: ribbonTab === tab.id ? '#141c2e' : 'transparent',
+                color: ribbonTab === tab.id ? '#38bdf8' : '#94a3b8',
+                border: 'none',
+                borderBottom: ribbonTab === tab.id ? '2.5px solid #38bdf8' : '2.5px solid transparent',
+                fontSize: '0.78rem',
+                fontWeight: ribbonTab === tab.id ? 800 : 600,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Ribbon Content Panel for Active Tab */}
+        <div style={{ padding: '12px 18px', minHeight: '80px', display: 'flex', alignItems: 'center' }}>
+          
+          {/* TAB 1: DRAW (SKETSA 2D) */}
+          {ribbonTab === 'draw' && (
+            <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', minWidth: '110px' }}>
+                PROFIL SKETSA:
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
+                {SKETCH_PROFILES.map((sk) => {
+                  const isSel = selectedSketch === sk.id;
+                  return (
+                    <button
+                      key={sk.id}
+                      onClick={() => handleSelectSketch(sk.id)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: isSel ? '2px solid #38bdf8' : '1px solid #334155',
+                        background: isSel ? '#0369a1' : '#1e293b',
+                        color: '#f8fafc',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{sk.icon}</span>
+                      <div style={{ textAlign: 'left' }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>{sk.name.split('(')[0]}</div>
+                        <div style={{ fontSize: '0.65rem', color: isSel ? '#e0f2fe' : '#94a3b8' }}>{sk.dimensions}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedOperation === 'loft' && (
+                <div style={{ borderLeft: '1px solid #334155', paddingLeft: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 800 }}>Profil Atas Loft:</span>
+                  {SKETCH_PROFILES.slice(0, 3).map((sk) => (
+                    <button
+                      key={`top-${sk.id}`}
+                      onClick={() => { sound.playClick(); setSelectedTopSketch(sk.id); }}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        border: selectedTopSketch === sk.id ? '1.5px solid #22d3ee' : '1px solid #334155',
+                        background: selectedTopSketch === sk.id ? '#0891b2' : '#1e293b',
+                        color: '#fff',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {sk.icon} {sk.name.split('(')[0]}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 2: 3D SOLID (OPERASI PADAT) */}
+          {ribbonTab === 'solid' && (
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              {/* 4 Operasi */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {Object.values(CREATE_OPERATIONS).map((op) => {
+                  const isSel = selectedOperation === op.id;
+                  return (
+                    <button
+                      key={op.id}
+                      onClick={() => handleSelectOperation(op.id)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: isSel ? `2px solid ${op.borderActive}` : '1px solid #334155',
+                        background: isSel ? op.bgActive : '#1e293b',
+                        color: isSel ? '#f8fafc' : '#cbd5e1',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <span style={{ fontSize: '1.2rem' }}>{op.icon}</span>
+                      <div style={{ textAlign: 'left' }}>
+                        <div style={{ fontSize: '0.76rem', fontWeight: 900 }}>{op.name.split('(')[0]}</div>
+                        <div style={{ fontSize: '0.65rem', color: isSel ? op.borderActive : '#94a3b8' }}>
+                          Shortcut: [{op.shortcut}]
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Slider Parameter */}
+              <div style={{
+                background: '#1e293b',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                border: '1px solid #334155',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f8fafc' }}>
+                  {activeOpData.paramName}:
+                </span>
+                <input
+                  type="range"
+                  min={activeOpData.paramMin}
+                  max={activeOpData.paramMax}
+                  value={opParam}
+                  onChange={(e) => setOpParam(Number(e.target.value))}
+                  style={{ width: '100px', cursor: 'pointer', accentColor: activeOpData.color }}
+                />
+                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: activeOpData.borderActive, minWidth: '45px' }}>
+                  {opParam} {activeOpData.paramUnit}
+                </span>
+              </div>
+
+              {/* Kontrol Animasi Transformasi */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#1e293b', padding: '6px 12px', borderRadius: '8px', border: '1px solid #334155' }}>
+                <button
+                  onClick={handleTogglePlayPause}
+                  style={{
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: isPlayingAnim ? '#ef4444' : '#16a34a',
+                    color: '#fff',
+                    fontWeight: 800,
+                    fontSize: '0.72rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {isPlayingAnim ? '⏸️ Jeda' : '▶️ Putar Animasi'}
+                </button>
+                <button
+                  onClick={handleReplayAnim}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    border: '1px solid #475569',
+                    background: '#0f172a',
+                    color: '#f8fafc',
+                    fontWeight: 700,
+                    fontSize: '0.72rem',
+                    cursor: 'pointer'
+                  }}
+                  title="Mulai Ulang Animasi Dari Sketsa 2D"
+                >
+                  🔄 Ulang
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={animProgress}
+                  onChange={(e) => {
+                    setIsPlayingAnim(false);
+                    setAnimProgress(parseFloat(e.target.value));
+                  }}
+                  style={{ width: '80px', accentColor: activeOpData.color, cursor: 'pointer' }}
+                  title="Geser progres transformasi 2D ke 3D"
+                />
+                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: activeOpData.borderActive }}>
+                  {Math.round(animProgress * 100)}%
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: MODIFY (FITUR BENGKEL) */}
+          {ribbonTab === 'modify' && (
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              {/* FILLET */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasFillet ? '#0c2e59' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasFillet ? '1.5px solid #38bdf8' : '1px solid #334155' }}>
+                <button
+                  onClick={handleToggleFillet}
+                  style={{
+                    border: 'none',
+                    background: hasFillet ? '#0284c7' : '#334155',
+                    color: '#fff',
+                    padding: '4px 8px',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {hasFillet ? '✅ FILLET R' : '🔘 FILLET'}
+                </button>
+                {hasFillet && (
+                  <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    value={filletRadius}
+                    onChange={(e) => setFilletRadius(Number(e.target.value))}
+                    style={{ width: '55px', accentColor: '#38bdf8', cursor: 'pointer' }}
+                  />
+                )}
+                {hasFillet && <span style={{ fontSize: '0.7rem', color: '#7dd3fc', fontWeight: 800 }}>R={filletRadius}</span>}
+              </div>
+
+              {/* CHAMFER */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasChamfer ? '#422006' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasChamfer ? '1.5px solid #fb923c' : '1px solid #334155' }}>
+                <button
+                  onClick={handleToggleChamfer}
+                  style={{
+                    border: 'none',
+                    background: hasChamfer ? '#ea580c' : '#334155',
+                    color: '#fff',
+                    padding: '4px 8px',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {hasChamfer ? '✅ CHAMFER C' : '🔘 CHAMFER'}
+                </button>
+                {hasChamfer && (
+                  <input
+                    type="range"
+                    min="1"
+                    max="8"
+                    value={chamferSize}
+                    onChange={(e) => setChamferSize(Number(e.target.value))}
+                    style={{ width: '55px', accentColor: '#fb923c', cursor: 'pointer' }}
+                  />
+                )}
+                {hasChamfer && <span style={{ fontSize: '0.7rem', color: '#fed7aa', fontWeight: 800 }}>C={chamferSize}</span>}
+              </div>
+
+              {/* HOLE */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasHole ? '#450a0a' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasHole ? '1.5px solid #f87171' : '1px solid #334155' }}>
+                <button
+                  onClick={() => { sound.playClick(); setHasHole(!hasHole); }}
+                  style={{
+                    border: 'none',
+                    background: hasHole ? '#dc2626' : '#334155',
+                    color: '#fff',
+                    padding: '4px 8px',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {hasHole ? '✅ HOLE Ø' : '🔘 HOLE'}
+                </button>
+                {hasHole && (
+                  <input
+                    type="range"
+                    min="4"
+                    max="14"
+                    value={holeRadius}
+                    onChange={(e) => setHoleRadius(Number(e.target.value))}
+                    style={{ width: '55px', accentColor: '#ef4444', cursor: 'pointer' }}
+                  />
+                )}
+                {hasHole && <span style={{ fontSize: '0.7rem', color: '#fca5a5', fontWeight: 800 }}>Ø={holeRadius * 2}</span>}
+              </div>
+
+              {/* SHELL */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasShell ? '#2e1065' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasShell ? '1.5px solid #c084fc' : '1px solid #334155' }}>
+                <button
+                  onClick={() => { sound.playClick(); setHasShell(!hasShell); }}
+                  style={{
+                    border: 'none',
+                    background: hasShell ? '#7c3aed' : '#334155',
+                    color: '#fff',
+                    padding: '4px 8px',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {hasShell ? '✅ SHELL (RONGGA)' : '🔘 SHELL'}
+                </button>
+                {hasShell && (
+                  <input
+                    type="range"
+                    min="1"
+                    max="6"
+                    value={shellThickness}
+                    onChange={(e) => setShellThickness(Number(e.target.value))}
+                    style={{ width: '50px', accentColor: '#a855f7', cursor: 'pointer' }}
+                  />
+                )}
+                {hasShell && <span style={{ fontSize: '0.7rem', color: '#e9d5ff', fontWeight: 800 }}>t={shellThickness}</span>}
+              </div>
+
+              {/* DRAFT */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasDraft ? '#064e3b' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasDraft ? '1.5px solid #34d399' : '1px solid #334155' }}>
+                <button
+                  onClick={() => { sound.playClick(); setHasDraft(!hasDraft); }}
+                  style={{
+                    border: 'none',
+                    background: hasDraft ? '#059669' : '#334155',
+                    color: '#fff',
+                    padding: '4px 8px',
+                    borderRadius: '5px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {hasDraft ? '✅ DRAFT (TIRUS)' : '🔘 DRAFT'}
+                </button>
+                {hasDraft && (
+                  <input
+                    type="range"
+                    min="2"
+                    max="15"
+                    value={draftAngle}
+                    onChange={(e) => setDraftAngle(Number(e.target.value))}
+                    style={{ width: '50px', accentColor: '#10b981', cursor: 'pointer' }}
+                  />
+                )}
+                {hasDraft && <span style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 800 }}>{draftAngle}°</span>}
+              </div>
+
+              {/* X-Ray Section View */}
+              <button
+                onClick={() => setIsCrossSection(!isCrossSection)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: isCrossSection ? '1.5px solid #38bdf8' : '1px solid #334155',
+                  background: isCrossSection ? '#0c4a6e' : '#1e293b',
+                  color: '#fff',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  cursor: 'pointer'
+                }}
+                title="Melihat rongga dalam dan lubang tembus"
+              >
+                {isCrossSection ? '🔍 X-Ray ON' : '👁️ X-Ray (Potongan)'}
+              </button>
+            </div>
+          )}
+
+          {/* TAB 4: TEMPLATE KOMPONEN MESIN (1-KLIK) */}
+          {ribbonTab === 'templates' && (
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', minWidth: '100px' }}>
+                PILIH BENDA MESIN:
+              </span>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
+                {MACHINE_TEMPLATES.map((tpl) => (
                   <button
-                    key={`top-${sk.id}`}
-                    onClick={() => {
-                      sound.playClick();
-                      setSelectedTopSketch(sk.id);
-                      setAnimProgress(0.0);
-                      setIsPlayingAnim(true);
-                    }}
+                    key={tpl.id}
+                    onClick={() => handleLoadTemplate(tpl)}
                     style={{
                       padding: '6px 12px',
                       borderRadius: '8px',
-                      border: isSelected ? '2px solid #0891b2' : '1px solid #cbd5e1',
-                      background: isSelected ? '#ecfeff' : '#ffffff',
-                      color: isSelected ? '#0e7490' : '#475569',
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
+                      border: '1px solid #334155',
+                      background: '#1e293b',
+                      color: '#f8fafc',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '6px'
+                      gap: '6px',
+                      fontSize: '0.74rem',
+                      fontWeight: 800,
+                      transition: 'all 0.15s'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.borderColor = '#38bdf8'}
+                    onMouseOut={(e) => e.currentTarget.style.borderColor = '#334155'}
+                  >
+                    <span style={{ fontSize: '1.1rem' }}>{tpl.icon}</span>
+                    <div style={{ textAlign: 'left' }}>
+                      <div>{tpl.shortName}</div>
+                      <div style={{ fontSize: '0.62rem', color: '#94a3b8' }}>{tpl.category}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: MATERIAL & METROLOGI */}
+          {ribbonTab === 'materials' && (
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
+              {/* Material Switcher */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8' }}>Bahan:</span>
+                {Object.entries(MATERIALS_CONFIG).map(([key, mat]) => (
+                  <button
+                    key={key}
+                    onClick={() => { sound.playClick(); setMaterialMode(key); }}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      border: materialMode === key ? '1.5px solid #38bdf8' : '1px solid #334155',
+                      background: materialMode === key ? '#0284c7' : '#1e293b',
+                      color: '#ffffff',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
                     }}
                   >
-                    <span>{sk.icon}</span>
-                    <span>{sk.name.split('(')[0]}</span>
+                    {mat.name.split('(')[0]}
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
+                ))}
+              </div>
 
-      {/* =====================================================================
-          LANGKAH 2: PILIHAN OPERASI 3D (DENGAN ANIMASI TRANSFORMASI)
-          ===================================================================== */}
-      <div style={{
-        background: '#ffffff',
-        padding: '18px 20px',
-        borderRadius: '16px',
-        border: '1px solid #cbd5e1',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.04)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '14px'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-          <div>
-            <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ background: '#16a34a', color: '#fff', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>2</span>
-              Langkah 2: Pilih Operasi 3D (Klik salah satu untuk memutar animasi transformasi):
-            </div>
-            <p style={{ margin: '3px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-              Lihat bagaimana sketsa 2D mula-mula ditarik linier (Extrude), diputar mengitari sumbu (Revolve), meluncur di jalur kurva (Sweep), atau bertransisi (Loft).
-            </p>
-          </div>
-          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '4px 10px', borderRadius: '6px' }}>
-            ⚡ Animasi Interaktif Aktif
-          </span>
-        </div>
+              {/* Physical Readout */}
+              <div style={{ display: 'flex', gap: '12px', background: '#090d16', padding: '6px 14px', borderRadius: '8px', border: '1px solid #1e293b', fontSize: '0.72rem' }}>
+                <div>Vol: <strong style={{ color: '#38bdf8' }}>{inspectionMetrics.volume} cm³</strong></div>
+                <div>Luas: <strong style={{ color: '#f8fafc' }}>{inspectionMetrics.area} cm²</strong></div>
+                <div>Berat: <strong style={{ color: '#f59e0b' }}>{inspectionMetrics.mass} gram</strong></div>
+              </div>
 
-        {/* 4 Kartu Operasi 3D */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '12px' }}>
-          {Object.values(CREATE_OPERATIONS).map((op) => {
-            const isSelected = selectedOperation === op.id;
-            return (
+              {/* Export STL Button */}
               <button
-                key={op.id}
-                onClick={() => handleSelectOperation(op.id)}
+                onClick={handleExportSTL}
                 style={{
-                  padding: '14px',
-                  borderRadius: '12px',
-                  border: isSelected ? `2.5px solid ${op.borderActive}` : '1px solid #cbd5e1',
-                  background: isSelected ? op.bgActive : '#ffffff',
-                  color: isSelected ? op.color : '#334155',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                  transition: 'all 0.15s ease',
-                  boxShadow: isSelected ? `0 6px 18px rgba(0,0,0,0.08)` : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 900 }}>{op.name.split('(')[0]}</span>
-                  <span style={{ fontSize: '1.4rem' }}>{op.icon}</span>
-                </div>
-                <div style={{ fontSize: '0.72rem', color: isSelected ? '#1e293b' : '#64748b', lineHeight: 1.45 }}>
-                  {op.summary}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                  <span style={{
-                    fontSize: '0.65rem',
-                    background: isSelected ? op.color : '#f1f5f9',
-                    color: isSelected ? '#ffffff' : '#64748b',
-                    padding: '2px 8px',
-                    borderRadius: '4px',
-                    fontWeight: 800
-                  }}>
-                    {isSelected ? '▶️ SEDANG ANIMASI 3D' : 'KLIK UNTUK ANIMASI'}
-                  </span>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 700, color: op.color }}>
-                    {op.defaultParam} {op.paramUnit}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* BILAH KONTROL ANIMASI TRANSFORMASI 3D (INTERACTIVE ANIMATION CONTROLLER) */}
-        <div style={{
-          background: '#f8fafc',
-          borderRadius: '12px',
-          border: '1.5px solid #e2e8f0',
-          padding: '14px 18px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px'
-        }}>
-          {/* Header Bar Kontrol Animasi */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.1rem' }}>🎬</span>
-              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
-                Kontrol Animasi Transformasi 2D ➡️ 3D:
-              </span>
-              <span style={{
-                fontSize: '0.72rem',
-                fontWeight: 900,
-                color: activeOpData.color,
-                background: activeOpData.bgActive,
-                border: `1px solid ${activeOpData.borderActive}`,
-                padding: '2px 8px',
-                borderRadius: '6px'
-              }}>
-                {activeOpData.name.split('(')[0]} ({Math.round(animProgress * 100)}%)
-              </span>
-            </div>
-
-            {/* Tombol Play/Pause, Replay, Auto-Loop */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <button
-                onClick={handleTogglePlayPause}
-                style={{
-                  background: isPlayingAnim ? '#ef4444' : '#16a34a',
-                  color: '#fff',
-                  border: 'none',
                   padding: '6px 14px',
-                  borderRadius: '8px',
-                  fontSize: '0.75rem',
+                  borderRadius: '6px',
+                  border: '1px solid #38bdf8',
+                  background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                  color: '#ffffff',
+                  fontSize: '0.74rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
@@ -1401,716 +2117,408 @@ const CADStudioSimulator = () => {
                   gap: '6px'
                 }}
               >
-                <span>{isPlayingAnim ? '⏸️ Jeda' : '▶️ Putar Animasi'}</span>
-              </button>
-
-              <button
-                onClick={handleReplayAnim}
-                style={{
-                  background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  color: '#1e293b',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-                title="Mulai Ulang Animasi Dari Sketsa 2D"
-              >
-                <span>🔄 Ulangi</span>
-              </button>
-
-              <button
-                onClick={() => setIsAutoLoop(!isAutoLoop)}
-                style={{
-                  background: isAutoLoop ? '#8b5cf6' : '#ffffff',
-                  border: isAutoLoop ? '1px solid #7c3aed' : '1px solid #cbd5e1',
-                  color: isAutoLoop ? '#ffffff' : '#475569',
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-                title="Loop berulang terus-menerus bolak-balik"
-              >
-                🔁 Auto-Loop: {isAutoLoop ? 'ON' : 'OFF'}
+                <span>📥</span> Export File STL (3D Print)
               </button>
             </div>
-          </div>
+          )}
 
-          {/* Slider Progress Animasi (Siswa dapat menggeser manual dari 0% ke 100%) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, minWidth: '85px' }}>
-              0% (Sketsa 2D)
-            </span>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={animProgress}
-              onChange={(e) => {
-                setIsPlayingAnim(false);
-                setAnimProgress(parseFloat(e.target.value));
-              }}
-              style={{
-                flex: 1,
-                accentColor: activeOpData.color,
-                cursor: 'pointer',
-                height: '6px'
-              }}
-            />
-            <span style={{ fontSize: '0.72rem', color: activeOpData.color, fontWeight: 900, minWidth: '95px', textAlign: 'right' }}>
-              100% (Benda 3D Jadi)
-            </span>
-          </div>
+          {/* TAB 6: LAYOUT A4 (KERTAS GAMBAR) */}
+          {ribbonTab === 'layout' && (
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: '0.76rem', color: '#94a3b8' }}>
+                Mode Gambar Kerja Kertas A4 Standar ISO 5456/128 lengkap dengan Garis Tepi &amp; Etiket Kepala Gambar SMK Negeri 2 Depok.
+              </div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => { sound.playClick(); setDisplayMode('layout'); }}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: '#10b981',
+                    color: '#ffffff',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  📄 Tampilkan Kertas A4 Penuh
+                </button>
+                <button
+                  onClick={() => { sound.playClick(); window.print(); }}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    border: '1px solid #334155',
+                    background: '#1e293b',
+                    color: '#ffffff',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  🖨️ Cetak / Unduh PDF
+                </button>
+              </div>
+            </div>
+          )}
 
-          {/* Teks Penjelasan Animasi Real-Time */}
-          <div style={{
-            fontSize: '0.75rem',
-            color: '#334155',
-            background: '#ffffff',
-            padding: '8px 12px',
-            borderRadius: '8px',
-            border: '1px solid #e2e8f0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <span style={{ fontSize: '0.9rem' }}>💡</span>
-            <span>
-              {animProgress < 0.15 ? (
-                <><strong>Tahap 1 (Sketsa 2D):</strong> Bentuk profil datar tertutup terletak di atas bidang gambar teknis.</>
-              ) : animProgress < 0.9 ? (
-                <><strong>Tahap 2 (Transformasi Berlangsung):</strong> {activeOpData.animationHelp}</>
-              ) : (
-                <><strong>Tahap 3 (Benda Padat 3D):</strong> Operasi selesai sempurna membentuk volume padatan 3D.</>
-              )}
-            </span>
-          </div>
-        </div>
-
-        {/* Parameter Geometri Slider */}
-        <div style={{
-          padding: '10px 16px',
-          background: '#f1f5f9',
-          borderRadius: '10px',
-          border: '1px solid #e2e8f0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px',
-          flexWrap: 'wrap'
-        }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
-            ⚙️ Ukuran {activeOpData.paramName}:
-          </span>
-          <input
-            type="range"
-            min={activeOpData.paramMin}
-            max={activeOpData.paramMax}
-            value={opParam}
-            onChange={(e) => setOpParam(Number(e.target.value))}
-            style={{ flex: 1, minWidth: '160px', cursor: 'pointer', accentColor: activeOpData.color }}
-          />
-          <span style={{ fontSize: '0.85rem', fontWeight: 900, color: activeOpData.color, minWidth: '70px', textAlign: 'right' }}>
-            {opParam} {activeOpData.paramUnit}
-          </span>
         </div>
       </div>
 
       {/* =====================================================================
-          DUAL VIEWPORT WORKSPACE: 2D SKETCH (LEFT) & 3D SOLID (RIGHT)
+          4. CENTRAL AUTOCAD VIEWPORT (MODEL SPACE / PAPER SPACE)
           ===================================================================== */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: displayMode === 'split' ? 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))' : '1fr',
-        gap: '20px'
-      }}>
-        
-        {/* PANEL KIRI: JENDELA SKETSA 2D */}
-        {(displayMode === 'split' || displayMode === '2d_only') && (
-          <div style={{
-            background: '#ffffff',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #cbd5e1',
-            position: 'relative'
-          }}>
+      {displayMode === 'layout' ? (
+        /* PAPER SPACE VIEW (A4 DRAWING SHEET) */
+        <LayoutA4Paper
+          sketchData={activeSketchData}
+          opData={activeOpData}
+          opParam={opParam}
+          hasFillet={hasFillet}
+          filletRadius={filletRadius}
+          hasChamfer={hasChamfer}
+          chamferSize={chamferSize}
+          hasHole={hasHole}
+          holeRadius={holeRadius}
+          hasShell={hasShell}
+          shellThickness={shellThickness}
+          materialMode={materialMode}
+          metrics={inspectionMetrics}
+          onBackToModel={() => setDisplayMode('split')}
+        />
+      ) : (
+        /* MODEL SPACE VIEW (SPLIT OR FULL VIEWPORT) */
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: displayMode === 'split' ? 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))' : '1fr',
+          gap: '1px',
+          background: '#1e293b',
+          minHeight: '420px'
+        }}>
+          
+          {/* PANEL KIRI: JENDELA SKETSA 2D AUTOCAD */}
+          {(displayMode === 'split' || displayMode === '2d_only') && (
             <div style={{
-              padding: '12px 16px',
-              background: '#f8fafc',
-              borderBottom: '1px solid #e2e8f0',
+              background: '#11141d',
+              position: 'relative',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              flexDirection: 'column',
+              overflow: 'hidden'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1rem' }}>📐</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
-                  Jendela Sketsa 2D: {activeSketchData.name.split('(')[0]}
-                </span>
-                <span style={{ fontSize: '0.7rem', background: '#dbeafe', color: '#1e40af', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
-                  BIDANG XY (SKETCH PLANE)
-                </span>
-              </div>
-              <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                ISO 128 / 129
-              </span>
-            </div>
-
-            <div style={{ height: '380px', width: '100%', position: 'relative' }}>
-              <Sketch2DViewer
-                sketchId={selectedSketch}
-                topSketchId={selectedTopSketch}
-                operation={selectedOperation}
-                animProgress={animProgress}
-                hasFillet={hasFillet}
-                filletRadius={filletRadius}
-                hasChamfer={hasChamfer}
-                chamferSize={chamferSize}
-                hasShell={hasShell}
-                shellThickness={shellThickness}
-                hasHole={hasHole}
-                holeRadius={holeRadius}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* PANEL KANAN: JENDELA 3D SOLID DENGAN ANIMASI INTERAKTIF */}
-        {(displayMode === 'split' || displayMode === '3d_only') && (
-          <div style={{
-            background: '#ffffff',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-            border: '1px solid #cbd5e1',
-            position: 'relative'
-          }}>
-            {/* Top Bar 3D */}
-            <div style={{
-              padding: '12px 16px',
-              background: '#f8fafc',
-              borderBottom: '1px solid #e2e8f0',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '10px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1rem' }}>🧊</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
-                  Viewport 3D: {activeOpData.name.split('(')[0]}
-                </span>
-                <span style={{ fontSize: '0.68rem', background: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
-                  WEBGL OPENGL
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {/* Tombol Cross-Section / X-Ray */}
-                <button
-                  onClick={() => setIsCrossSection(!isCrossSection)}
-                  style={{
-                    padding: '5px 10px',
-                    borderRadius: '6px',
-                    border: isCrossSection ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
-                    background: isCrossSection ? '#eff6ff' : '#ffffff',
-                    color: isCrossSection ? '#1d4ed8' : '#334155',
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                  title="Lihat rongga dalam Shell dan lubang Hole (Potongan X-Ray)"
-                >
-                  <span>{isCrossSection ? '🔍 X-Ray ON' : '👁️ X-Ray'}</span>
-                </button>
-
-                {/* Material Switcher */}
-                <div style={{ display: 'flex', background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '6px', overflow: 'hidden' }}>
-                  {[
-                    { id: 'steel', label: 'Baja' },
-                    { id: 'brass', label: 'Kuningan' },
-                    { id: 'aluminium', label: 'Alum' }
-                  ].map((m) => (
-                    <button
-                      key={m.id}
-                      onClick={() => setMaterialMode(m.id)}
-                      style={{
-                        padding: '4px 8px',
-                        border: 'none',
-                        background: materialMode === m.id ? '#1e293b' : 'transparent',
-                        color: materialMode === m.id ? '#fff' : '#64748b',
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* 3D WebGL Canvas */}
-            <div style={{ height: '380px', width: '100%', position: 'relative' }}>
-              <Suspense fallback={
-                <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#0284c7', fontWeight: 700, background: '#ffffff' }}>
-                  MEMUAT ENGINE 3D...
-                </div>
-              }>
-                <Canvas
-                  shadows
-                  camera={{ position: [60, 50, 60], fov: 42 }}
-                  gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-                  style={{ background: '#ffffff' }}
-                >
-                  <ambientLight intensity={1.3} />
-                  <directionalLight position={[60, 80, 50]} intensity={1.8} castShadow />
-                  <directionalLight position={[-60, 40, -50]} intensity={0.8} />
-
-                  <CameraRig targetCamPos={targetCamPos} controlsRef={controlsRef} />
-
-                  <Center>
-                    <CADSolidMesh
-                      geometry={cadGeometry}
-                      materialMode={materialMode}
-                      isCrossSection={isCrossSection}
-                    />
-                    <CADVisualHelpers
-                      operation={selectedOperation}
-                      animProgress={animProgress}
-                    />
-                  </Center>
-
-                  <Grid
-                    position={[0, -26, 0]}
-                    args={[140, 140]}
-                    cellSize={10}
-                    cellThickness={1}
-                    cellColor="#e2e8f0"
-                    sectionSize={30}
-                    sectionThickness={1.5}
-                    sectionColor="#cbd5e1"
-                    fadeDistance={110}
-                  />
-
-                  <OrbitControls
-                    ref={controlsRef}
-                    enablePan={true}
-                    enableZoom={true}
-                    enableRotate={true}
-                    autoRotate={autoRotate}
-                    autoRotateSpeed={1.5}
-                  />
-                </Canvas>
-              </Suspense>
-
-              {/* View Angle Switchers & Auto Rotate */}
+              {/* Header Canvas 2D */}
               <div style={{
-                position: 'absolute',
-                bottom: '12px',
-                left: '12px',
-                right: '12px',
+                padding: '8px 14px',
+                background: '#090d16',
+                borderBottom: '1px solid #1e293b',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                pointerEvents: 'none'
+                fontSize: '0.74rem'
               }}>
-                <div style={{
-                  pointerEvents: 'auto',
-                  display: 'flex',
-                  gap: '6px',
-                  background: 'rgba(255, 255, 255, 0.94)',
-                  backdropFilter: 'blur(8px)',
-                  padding: '6px',
-                  borderRadius: '10px',
-                  border: '1px solid #cbd5e1',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#38bdf8', fontWeight: 900 }}>[TOP] [2D WIREFRAME]</span>
+                  <span style={{ color: '#94a3b8' }}>• Bidang XY: {activeSketchData.name.split('(')[0]}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                   <button
-                    onClick={() => { sound.playClick(); setActiveViewAngle('depan'); }}
+                    onClick={() => setCadTheme(cadTheme === 'dark' ? 'light' : 'dark')}
                     style={{
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      border: 'none',
-                      background: activeViewAngle === 'depan' ? '#2563eb' : '#f1f5f9',
-                      color: activeViewAngle === 'depan' ? '#fff' : '#334155',
-                      fontWeight: 800,
-                      fontSize: '0.72rem',
+                      background: 'transparent',
+                      border: '1px solid #334155',
+                      color: '#94a3b8',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      fontSize: '0.65rem',
                       cursor: 'pointer'
                     }}
+                    title="Ganti tema kanvas (AutoCAD Gelap / Blueprint Terang)"
                   >
-                    Depan
+                    {cadTheme === 'dark' ? '🌙 Dark Grid' : '☀️ Light Sheet'}
                   </button>
-                  <button
-                    onClick={() => { sound.playClick(); setActiveViewAngle('atas'); }}
-                    style={{
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      border: 'none',
-                      background: activeViewAngle === 'atas' ? '#2563eb' : '#f1f5f9',
-                      color: activeViewAngle === 'atas' ? '#fff' : '#334155',
-                      fontWeight: 800,
-                      fontSize: '0.72rem',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Atas
-                  </button>
-                  <button
-                    onClick={() => { sound.playClick(); setActiveViewAngle('kanan'); }}
-                    style={{
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      border: activeViewAngle === 'kanan' ? 'none' : '1px solid #86efac',
-                      background: activeViewAngle === 'kanan' ? '#16a34a' : '#f0fdf4',
-                      color: activeViewAngle === 'kanan' ? '#fff' : '#166534',
-                      fontWeight: 900,
-                      fontSize: '0.72rem',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    👉 Kanan
-                  </button>
-                  <button
-                    onClick={() => { sound.playClick(); setActiveViewAngle('iso'); }}
-                    style={{
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      border: 'none',
-                      background: activeViewAngle === 'iso' ? '#7c3aed' : '#f1f5f9',
-                      color: activeViewAngle === 'iso' ? '#fff' : '#334155',
-                      fontWeight: 800,
-                      fontSize: '0.72rem',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Isometri
-                  </button>
+                  <span style={{ color: '#64748b', fontSize: '0.68rem' }}>ISO 128 / 129</span>
+                </div>
+              </div>
+
+              {/* 2D Canvas Viewport */}
+              <div style={{ flex: 1, minHeight: '360px', width: '100%', position: 'relative' }}>
+                <Sketch2DViewer
+                  sketchId={selectedSketch}
+                  topSketchId={selectedTopSketch}
+                  operation={selectedOperation}
+                  animProgress={animProgress}
+                  hasFillet={hasFillet}
+                  filletRadius={filletRadius}
+                  hasChamfer={hasChamfer}
+                  chamferSize={chamferSize}
+                  hasShell={hasShell}
+                  shellThickness={shellThickness}
+                  hasHole={hasHole}
+                  holeRadius={holeRadius}
+                  theme={cadTheme}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* PANEL KANAN: JENDELA 3D AUTODESK WEBGL */}
+          {(displayMode === 'split' || displayMode === '3d_only') && (
+            <div style={{
+              background: '#0b0f19',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
+            }}>
+              {/* Header Canvas 3D */}
+              <div style={{
+                padding: '8px 14px',
+                background: '#090d16',
+                borderBottom: '1px solid #1e293b',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '0.74rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: '#10b981', fontWeight: 900 }}>[3D ORBIT VIEW]</span>
+                  <span style={{ color: '#94a3b8' }}>• {activeOpData.name.split('(')[0]}</span>
+                  <span style={{ color: isCrossSection ? '#38bdf8' : '#64748b', fontSize: '0.68rem' }}>
+                    {isCrossSection ? '(Mode X-Ray Aktif)' : '(Shaded Edges)'}
+                  </span>
                 </div>
 
-                <div style={{ pointerEvents: 'auto' }}>
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                   <button
                     onClick={() => setAutoRotate(!autoRotate)}
                     style={{
-                      padding: '6px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
-                      background: autoRotate ? '#16a34a' : 'rgba(255, 255, 255, 0.94)',
-                      color: autoRotate ? '#fff' : '#334155',
-                      fontSize: '0.72rem',
+                      background: autoRotate ? '#10b981' : '#1e293b',
+                      border: '1px solid #334155',
+                      color: '#ffffff',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      fontSize: '0.66rem',
                       fontWeight: 700,
-                      cursor: 'pointer',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                      cursor: 'pointer'
                     }}
                   >
-                    {autoRotate ? '⏸ Stop' : '🔄 Putar 360°'}
+                    {autoRotate ? '⏸ Stop Rotasi' : '🔄 Putar 360°'}
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Quick Notice */}
-            <div style={{ padding: '8px 16px', background: '#f8fafc', borderTop: '1px solid #e2e8f0', fontSize: '0.75rem', color: '#64748b' }}>
-              💡 <em>Tips:</em> Klik & seret mouse untuk memutar 360°, scroll untuk zoom in/out benda 3D.
-            </div>
-          </div>
-        )}
+              {/* Three.js Canvas Viewport */}
+              <div style={{ flex: 1, minHeight: '360px', width: '100%', position: 'relative' }}>
+                <Suspense fallback={
+                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#38bdf8', fontWeight: 800 }}>
+                    MEMUAT ENGINE 3D...
+                  </div>
+                }>
+                  <Canvas
+                    shadows
+                    camera={{ position: [60, 50, 60], fov: 42 }}
+                    gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
+                    style={{ background: '#090d16' }}
+                  >
+                    <ambientLight intensity={1.2} />
+                    <directionalLight position={[60, 80, 50]} intensity={1.8} castShadow />
+                    <directionalLight position={[-60, 40, -50]} intensity={0.8} />
 
+                    <CameraRig targetCamPos={targetCamPos} controlsRef={controlsRef} />
+
+                    <Center>
+                      <CADSolidMesh
+                        geometry={cadGeometry}
+                        materialMode={materialMode}
+                        isCrossSection={isCrossSection}
+                      />
+                      <CADVisualHelpers
+                        operation={selectedOperation}
+                        animProgress={animProgress}
+                      />
+                    </Center>
+
+                    <Grid
+                      position={[0, -26, 0]}
+                      args={[140, 140]}
+                      cellSize={10}
+                      cellThickness={1}
+                      cellColor="#1e293b"
+                      sectionSize={30}
+                      sectionThickness={1.5}
+                      sectionColor="#38bdf8"
+                      fadeDistance={120}
+                    />
+
+                    <OrbitControls
+                      ref={controlsRef}
+                      enablePan={true}
+                      enableZoom={true}
+                      enableRotate={true}
+                      autoRotate={autoRotate}
+                      autoRotateSpeed={1.5}
+                    />
+                  </Canvas>
+                </Suspense>
+
+                {/* AutoCAD ViewCube Floating Presets */}
+                <div style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  display: 'flex',
+                  gap: '4px',
+                  background: 'rgba(9, 13, 22, 0.88)',
+                  backdropFilter: 'blur(6px)',
+                  padding: '4px',
+                  borderRadius: '6px',
+                  border: '1px solid #334155',
+                  zIndex: 10
+                }}>
+                  {[
+                    { id: 'depan', label: 'Depan' },
+                    { id: 'atas', label: 'Atas' },
+                    { id: 'kanan', label: 'Kanan' },
+                    { id: 'iso', label: 'Isometri' }
+                  ].map((v) => (
+                    <button
+                      key={v.id}
+                      onClick={() => { sound.playClick(); setActiveViewAngle(v.id); }}
+                      style={{
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        background: activeViewAngle === v.id ? '#0284c7' : 'transparent',
+                        color: activeViewAngle === v.id ? '#ffffff' : '#94a3b8',
+                        fontSize: '0.68rem',
+                        fontWeight: 800,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {v.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Tips Navigasi */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '12px',
+                  background: 'rgba(9, 13, 22, 0.85)',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  fontSize: '0.68rem',
+                  color: '#94a3b8',
+                  pointerEvents: 'none'
+                }}>
+                  💡 Klik &amp; geser mouse untuk memutar orbit 3D • Scroll untuk zoom
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {/* =====================================================================
+          5. AUTOCAD COMMAND LINE BAR (COMMAND: _)
+          ===================================================================== */}
+      <div style={{
+        background: '#090d16',
+        borderTop: '1px solid #1e293b',
+        borderBottom: '1px solid #1e293b',
+        padding: '8px 14px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '8px'
+      }}>
+        {/* Command Line Prompt */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          fontFamily: "'Courier New', Courier, monospace",
+          fontSize: '0.78rem',
+          flex: 1,
+          minWidth: '280px'
+        }}>
+          <span style={{ color: '#22c55e', fontWeight: 900 }}>AutoCAD &gt;</span>
+          <span style={{ color: '#38bdf8', fontWeight: 700 }}>{commandLine}</span>
+        </div>
+
+        {/* Quick Shortcut Command Chips */}
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+          {[
+            { label: 'REC', action: () => handleSelectSketch('rect') },
+            { label: 'CIRC', action: () => handleSelectSketch('circle') },
+            { label: 'HEX', action: () => handleSelectSketch('hexagon') },
+            { label: 'EXT', action: () => handleSelectOperation('extrude') },
+            { label: 'REV', action: () => handleSelectOperation('revolve') },
+            { label: 'SWEEP', action: () => handleSelectOperation('sweep') },
+            { label: 'FILLET', action: handleToggleFillet },
+            { label: 'CHAMFER', action: handleToggleChamfer },
+            { label: 'HOLE', action: () => { sound.playClick(); setHasHole(!hasHole); } },
+            { label: 'XRAY', action: () => setIsCrossSection(!isCrossSection) },
+            { label: 'LAYOUT', action: () => setDisplayMode('layout') }
+          ].map((chip) => (
+            <button
+              key={chip.label}
+              onClick={chip.action}
+              style={{
+                background: '#1e293b',
+                border: '1px solid #334155',
+                color: '#94a3b8',
+                padding: '2px 7px',
+                borderRadius: '4px',
+                fontSize: '0.64rem',
+                fontFamily: "'Courier New', Courier, monospace",
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.color = '#38bdf8'; e.currentTarget.style.borderColor = '#38bdf8'; }}
+              onMouseOut={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#334155'; }}
+            >
+              [{chip.label}]
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* =====================================================================
-          LANGKAH 3: FITUR MODIFIKASI 3D (MODIFY / PLACED FEATURES)
+          6. AUTOCAD STATUS BAR AT THE BOTTOM (F-KEYS & COORDINATES)
           ===================================================================== */}
       <div style={{
-        background: '#ffffff',
-        padding: '20px',
-        borderRadius: '16px',
-        border: '1px solid #cbd5e1',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.04)',
+        background: '#040711',
+        padding: '6px 14px',
         display: 'flex',
-        flexDirection: 'column',
-        gap: '14px'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '10px',
+        fontSize: '0.7rem',
+        color: '#64748b',
+        fontFamily: "'Courier New', Courier, monospace"
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ background: '#d97706', color: '#fff', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>3</span>
-              Langkah 3: Uji Fitur Modifikasi 3D (Fillet, Chamfer, Shell, Draft, Hole):
-            </h3>
-            <p style={{ margin: '3px 0 0 0', fontSize: '0.78rem', color: '#64748b' }}>
-              Klik tombol di bawah ini untuk melihat benda 3D di atas langsung berubah berfillet, berchamfer, bershell, berdraft, atau berlubang:
-            </p>
-          </div>
-
-          <button
-            onClick={() => setIsCrossSection(!isCrossSection)}
-            style={{
-              background: isCrossSection ? '#eff6ff' : '#f8fafc',
-              border: isCrossSection ? '2px solid #2563eb' : '1px solid #cbd5e1',
-              color: isCrossSection ? '#1d4ed8' : '#334155',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              fontWeight: 800,
-              fontSize: '0.75rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <span>{isCrossSection ? '🔍 Potongan X-Ray Aktif' : '🔍 Lihat Rongga Dalam (X-Ray)'}</span>
-          </button>
+        {/* Live Coordinate readout */}
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <span>X: <strong style={{ color: '#ef4444' }}>40.00 mm</strong></span>
+          <span>Y: <strong style={{ color: '#22c55e' }}>40.00 mm</strong></span>
+          <span>Z: <strong style={{ color: '#38bdf8' }}>{opParam}.00 mm</strong></span>
+          <span style={{ color: '#334155' }}>|</span>
+          <span>SKALA: <strong style={{ color: '#f8fafc' }}>1 : 1 (ISO 5455)</strong></span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '12px' }}>
-          
-          {/* 1. FILLET */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: hasFillet ? '2px solid #2563eb' : '1px solid #e2e8f0',
-            background: hasFillet ? '#eff6ff' : '#f8fafc',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button
-                onClick={handleToggleFillet}
-                style={{
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: hasFillet ? '#2563eb' : '#cbd5e1',
-                  color: hasFillet ? '#fff' : '#334155',
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {hasFillet ? '✅ FILLET AKTIF' : '🔘 AKTIFKAN FILLET'}
-              </button>
-              {hasFillet && <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1d4ed8' }}>Radius R = {filletRadius} mm</span>}
-            </div>
-            <div style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.4 }}>
-              <strong>Fillet:</strong> Membulatkan tepi sudut tajam untuk <strong>mencegah konsentrasi tegangan (*stress concentration*)</strong> agar benda tidak mudah patah dan aman disentuh tangan.
-            </div>
-            {hasFillet && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Radius:</span>
-                <input
-                  type="range"
-                  min="1"
-                  max="8"
-                  value={filletRadius}
-                  onChange={(e) => setFilletRadius(Number(e.target.value))}
-                  style={{ flex: 1, accentColor: '#2563eb', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* 2. CHAMFER */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: hasChamfer ? '2px solid #d97706' : '1px solid #e2e8f0',
-            background: hasChamfer ? '#fffbeb' : '#f8fafc',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button
-                onClick={handleToggleChamfer}
-                style={{
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: hasChamfer ? '#d97706' : '#cbd5e1',
-                  color: hasChamfer ? '#fff' : '#334155',
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {hasChamfer ? '✅ CHAMFER AKTIF' : '🔘 AKTIFKAN CHAMFER'}
-              </button>
-              {hasChamfer && <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b45309' }}>Ukuran C = {chamferSize} mm</span>}
-            </div>
-            <div style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.4 }}>
-              <strong>Chamfer:</strong> Memotong sudut miring rata 45° untuk <strong>mempermudah proses perakitan baut/poros (*lead-in chamfer*)</strong> dan membersihkan bram tajam (*deburring*).
-            </div>
-            {hasChamfer && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Ukuran:</span>
-                <input
-                  type="range"
-                  min="1"
-                  max="8"
-                  value={chamferSize}
-                  onChange={(e) => setChamferSize(Number(e.target.value))}
-                  style={{ flex: 1, accentColor: '#d97706', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* 3. SHELL */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: hasShell ? '2px solid #7c3aed' : '1px solid #e2e8f0',
-            background: hasShell ? '#faf5ff' : '#f8fafc',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button
-                onClick={() => { sound.playClick(); setHasShell(!hasShell); }}
-                style={{
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: hasShell ? '#7c3aed' : '#cbd5e1',
-                  color: hasShell ? '#fff' : '#334155',
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {hasShell ? '✅ SHELL AKTIF' : '🔘 AKTIFKAN SHELL'}
-              </button>
-              {hasShell && <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#6d28d9' }}>Tebal Dinding t = {shellThickness} mm</span>}
-            </div>
-            <div style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.4 }}>
-              <strong>Shell:</strong> Mengikis dan mengosongkan bagian dalam padatan benda menjadi <strong>berdinding tipis berongga (*hollow*)</strong> berketebalan seragam (seperti wadah plastik, casing).
-            </div>
-            {hasShell && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Tebal t:</span>
-                <input
-                  type="range"
-                  min="1"
-                  max="6"
-                  value={shellThickness}
-                  onChange={(e) => setShellThickness(Number(e.target.value))}
-                  style={{ flex: 1, accentColor: '#7c3aed', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* 4. DRAFT */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: hasDraft ? '2px solid #059669' : '1px solid #e2e8f0',
-            background: hasDraft ? '#ecfdf5' : '#f8fafc',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button
-                onClick={() => { sound.playClick(); setHasDraft(!hasDraft); }}
-                style={{
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: hasDraft ? '#059669' : '#cbd5e1',
-                  color: hasDraft ? '#fff' : '#334155',
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {hasDraft ? '✅ DRAFT AKTIF' : '🔘 AKTIFKAN DRAFT'}
-              </button>
-              {hasDraft && <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#047857' }}>Sudut α = {draftAngle}°</span>}
-            </div>
-            <div style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.4 }}>
-              <strong>Draft:</strong> Memberikan sudut kemiringan tirus pada dinding vertikal agar benda hasil <strong>cetakan cor logam (*casting*) atau cetakan plastik injeksi mudah dilepas (*mold release*)</strong>.
-            </div>
-            {hasDraft && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Sudut α:</span>
-                <input
-                  type="range"
-                  min="2"
-                  max="15"
-                  value={draftAngle}
-                  onChange={(e) => setDraftAngle(Number(e.target.value))}
-                  style={{ flex: 1, accentColor: '#059669', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* 5. HOLE */}
-          <div style={{
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: hasHole ? '2px solid #dc2626' : '1px solid #e2e8f0',
-            background: hasHole ? '#fef2f2' : '#f8fafc',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button
-                onClick={() => { sound.playClick(); setHasHole(!hasHole); }}
-                style={{
-                  padding: '5px 12px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: hasHole ? '#dc2626' : '#cbd5e1',
-                  color: hasHole ? '#fff' : '#334155',
-                  fontWeight: 800,
-                  fontSize: '0.75rem',
-                  cursor: 'pointer'
-                }}
-              >
-                {hasHole ? '✅ HOLE AKTIF' : '🔘 AKTIFKAN HOLE'}
-              </button>
-              {hasHole && <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b91c1c' }}>Diameter Ø = {holeRadius * 2} mm</span>}
-            </div>
-            <div style={{ fontSize: '0.73rem', color: '#475569', lineHeight: 1.4 }}>
-              <strong>Hole:</strong> Membuat lubang silindris tembus atau berulir pada sumbu pusat untuk <strong>dudukan poros transmisi, pasak, atau lubang baut pengikat</strong>.
-            </div>
-            {hasHole && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Diameter:</span>
-                <input
-                  type="range"
-                  min="4"
-                  max="14"
-                  value={holeRadius}
-                  onChange={(e) => setHoleRadius(Number(e.target.value))}
-                  style={{ flex: 1, accentColor: '#dc2626', cursor: 'pointer' }}
-                />
-              </div>
-            )}
-          </div>
-
+        {/* F-Key Drafting Status Toggles */}
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <span style={{ color: '#38bdf8', fontWeight: 800 }}>MODEL</span>
+          <span style={{ color: '#334155' }}>|</span>
+          <span style={{ color: '#22c55e' }}>GRID [F7]: ON</span>
+          <span style={{ color: '#22c55e' }}>ORTHO [F8]: ON</span>
+          <span style={{ color: '#22c55e' }}>OSNAP [F3]: ON</span>
+          <span style={{ color: '#22c55e' }}>DYN [F12]: ON</span>
         </div>
       </div>
 

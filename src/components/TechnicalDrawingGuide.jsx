@@ -30,81 +30,6 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
     { grade: '2B-9B', type: 'Lunak (Soft)', uses: 'Sketsa bebas artistik, rendering bayangan piktorial', color: '#000000' }
   ];
 
-  // Line Types ISO 128 Database
-  const LINE_TYPES = [
-    {
-      id: 'A',
-      name: 'Garis Tebal Kontinu',
-      thick: '0.5 - 0.7 mm',
-      dash: 'Solid',
-      color: '#0f172a',
-      usage: 'Garis nyata (terlihat) dari benda, garis tepi kertas gambar, garis bingkai etiket.',
-      example: 'Membatasi kontur luar benda kerja yang terlihat langsung oleh pengamat.'
-    },
-    {
-      id: 'B',
-      name: 'Garis Tipis Kontinu',
-      thick: '0.25 - 0.35 mm',
-      dash: 'Solid',
-      color: '#64748b',
-      usage: 'Garis ukur, garis bantu ukuran, garis penunjuk notasi, garis arsir potongan, garis sumbu pendek.',
-      example: 'Garis ukur beserta anak panahnya, garis proyeksi dimensi dan arsiran penampang.'
-    },
-    {
-      id: 'C',
-      name: 'Garis Tipis Bebas (Freehand)',
-      thick: '0.25 - 0.35 mm',
-      dash: 'Bebas Gelombang',
-      color: '#475569',
-      usage: 'Garis batas pemotongan sebagian bila batasnya tidak berimpit dengan garis sumbu simetri.',
-      example: 'Potongan lokal (sobekan) untuk memperlihatkan lubang baut di dalam poros.'
-    },
-    {
-      id: 'D',
-      name: 'Garis Tipis Zig-zag',
-      thick: '0.25 - 0.35 mm',
-      dash: 'Zig-zag',
-      color: '#475569',
-      usage: 'Garis batas pemotongan yang panjang pada benda yang diperpendek (digambar dengan mistar).',
-      example: 'Batas pemendekan poros panjang atau pipa konstruksi pada kertas terbatas.'
-    },
-    {
-      id: 'E',
-      name: 'Garis Gores Tebal (Putus-putus)',
-      thick: '0.5 - 0.7 mm',
-      dash: 'Gores 3-5mm, Celah 1mm',
-      color: '#0f172a',
-      usage: 'Garis nyata terhalang (jarang dipakai, diutamakan tipe F).',
-      example: 'Batas kontur penting yang tertutup bagian depan benda.'
-    },
-    {
-      id: 'F',
-      name: 'Garis Gores Tipis (Putus-putus)',
-      thick: '0.25 - 0.35 mm',
-      dash: 'Gores 3-5mm, Celah 1mm',
-      color: '#64748b',
-      usage: 'Garis benda terhalang / garis tidak terlihat (hidden outline) dan tepi tersembunyi.',
-      example: 'Lubang bor tembus di dalam benda silinder yang tidak tampak dari luar.'
-    },
-    {
-      id: 'G',
-      name: 'Garis Gores Titik Tipis (Center Line)',
-      thick: '0.25 - 0.35 mm',
-      dash: 'Gores 10-15mm, Titik, Celah 1mm',
-      color: '#2563eb',
-      usage: 'Garis sumbu simetri, lingkaran jarak gigi pada roda gigi, lintasan gerak mekanis.',
-      example: 'Sumbu pusat lingkaran, sumbu simetri benda silindris, garis lintasan pegas.'
-    },
-    {
-      id: 'H',
-      name: 'Garis Gores Titik dengan Ujung Tebal',
-      thick: 'Tipis di tengah, Tebal (0.7mm) di ujung & belokan',
-      dash: 'Kombinasi Gores Titik',
-      color: '#dc2626',
-      usage: 'Garis bidang pemotongan penampang (cutting plane line) dilengkapi tanda panah arah pandang.',
-      example: 'Menunjukkan letak dan orientasi bidang potong penampang A-A atau B-B.'
-    }
-  ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', paddingBottom: '30px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box', overflowX: 'hidden' }}>
@@ -413,131 +338,781 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
       {/* =================================================================== */}
       {/* TAB 2: STANDARISASI GARIS GAMBAR (ISO 128)                         */}
       {/* =================================================================== */}
+      {/* =================================================================== */}
+      {/* TAB 2: STANDARISASI GARIS (ISO 128) - INTERAKTIF & ILUSTRASI BENDA   */}
+      {/* =================================================================== */}
       {activeTab === 'garis' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
+          {/* Header Card */}
           <div className="dashboard-card" style={{ padding: '24px', background: 'linear-gradient(135deg, #065f46, #064e3b)', color: '#ffffff' }}>
             <span style={{ background: '#10b981', color: '#fff', fontSize: '0.7rem', fontWeight: 800, padding: '4px 10px', borderRadius: '4px', textTransform: 'uppercase' }}>
               MODUL 2 • STANDARISASI GARIS (ISO 128)
             </span>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 800, margin: '12px 0 8px 0', color: '#fff' }}>
-              Klasifikasi Jenis Garis, Ketebalan, & Tata Penerapan
+              Klasifikasi Jenis Garis, Ketebalan, & Tata Penerapan Nyata
             </h2>
             <p style={{ fontSize: '0.9rem', color: '#a7f3d0', lineHeight: 1.6, maxWidth: '900px' }}>
-              Setiap jenis garis dalam gambar teknik memiliki makna teknis khusus yang diatur secara ketat oleh ISO 128. Rasio ketebalan garis standar adalah <strong>2 : 1</strong> antara garis tebal (misal 0.7 mm) dan garis tipis (0.35 mm).
+              Setiap jenis garis dalam gambar teknik memiliki makna teknis khusus yang diatur secara ketat oleh ISO 128. Rasio ketebalan garis standar adalah <strong>2 : 1</strong> antara garis tebal (misal 0.7 mm) dan garis tipis (0.35 mm). Pilih salah satu jenis garis di bawah ini untuk melihat contoh penerapannya langsung pada gambar kerja mekanik!
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '20px' }}>
+          {/* INTERACTIVE WORKPIECE ILLUSTRATION CARD */}
+          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            <div className="dashboard-card" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>
-                PILIH TIPE GARIS ISO 128:
+            {/* Header with Title & Instruction */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                  🔍 Contoh Penerapan Nyata Jenis Garis pada Gambar Kerja Benda Mesin (ISO 128)
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                  Klik tombol jenis garis di bawah ini atau klik langsung pada bagian gambar kerja untuk memfokuskan penerapan garis tersebut.
+                </p>
               </div>
-              {LINE_TYPES.map(l => (
-                <button
-                  key={l.id}
-                  onClick={() => setSelectedLineType(l.id)}
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: '8px',
-                    border: selectedLineType === l.id ? '2px solid var(--game-success)' : '1px solid var(--border-light)',
-                    background: selectedLineType === l.id ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-card)',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    transition: 'all 0.15s'
-                  }}
-                >
-                  <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-                      Tipe {l.id} : {l.name}
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      Tebal: {l.thick}
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '1rem', color: selectedLineType === l.id ? 'var(--game-success)' : '#cbd5e1' }}>▶</span>
-                </button>
-              ))}
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#065f46' }}>📐 Standar Rasio:</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#047857', background: '#d1fae5', padding: '2px 8px', borderRadius: '4px' }}>Tebal 2 : Tipis 1</span>
+              </div>
             </div>
 
+            {/* FEATURE SELECTOR BUTTONS */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxWidth: '100%' }}>
+              {[
+                { id: 'A', label: 'Tipe A: Garis Benda (0.7 mm)', icon: '━', color: '#0f172a' },
+                { id: 'B', label: 'Tipe B: Garis Ukur & Arsir (0.35 mm)', icon: '─', color: '#0284c7' },
+                { id: 'C', label: 'Tipe C: Batas Sobekan (Bebas)', icon: '〰', color: '#10b981' },
+                { id: 'D', label: 'Tipe D: Pemendekan Poros (Zig-zag)', icon: '⚡', color: '#d97706' },
+                { id: 'F', label: 'Tipe E/F: Kontur Terhalang (Gores)', icon: '╌', color: '#ea580c' },
+                { id: 'G', label: 'Tipe G: Sumbu Simetri (Gores Titik)', icon: '⸺·', color: '#2563eb' },
+                { id: 'H', label: 'Tipe H: Bidang Potong A-A (Ujung Tebal)', icon: '✂️', color: '#dc2626' },
+                { id: 'all', label: 'Semua Garis Terpadu', icon: '👁️', color: '#475569' }
+              ].map(item => {
+                const isSelected = selectedLineType === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => { sound.playClick(); setSelectedLineType(item.id); }}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      border: isSelected ? `2px solid ${item.color}` : '1px solid var(--border-light)',
+                      background: isSelected ? item.color : '#ffffff',
+                      color: isSelected ? '#ffffff' : 'var(--text-main)',
+                      fontWeight: isSelected ? 800 : 600,
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      whiteSpace: 'nowrap',
+                      boxShadow: isSelected ? `0 4px 12px ${item.color}40` : 'none',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* SVG WORKPIECE ILLUSTRATION CANVAS */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderRadius: '12px',
+              padding: '18px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              
+              {/* Feature Active Badge in Canvas */}
+              <div style={{
+                alignSelf: 'flex-start',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                padding: '4px 12px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: '#475569',
+                marginBottom: '10px'
+              }}>
+                <span>STATUS SOROTAN:</span>
+                <span style={{
+                  color: selectedLineType === 'A' ? '#0f172a' :
+                         selectedLineType === 'B' ? '#0284c7' :
+                         selectedLineType === 'C' ? '#10b981' :
+                         selectedLineType === 'D' ? '#d97706' :
+                         selectedLineType === 'F' || selectedLineType === 'E' ? '#ea580c' :
+                         selectedLineType === 'G' ? '#2563eb' :
+                         selectedLineType === 'H' ? '#dc2626' : '#0f172a',
+                  fontWeight: 900
+                }}>
+                  {selectedLineType === 'A' ? '━ Tipe A: Garis Benda Nyata (Tebal Kontinu 0.7 mm)' :
+                   selectedLineType === 'B' ? '─ Tipe B: Garis Ukur, Bantu, & Arsir Penampang 45° (Tipis Kontinu 0.35 mm)' :
+                   selectedLineType === 'C' ? '〰 Tipe C: Garis Tipis Bebas (Batas Sobekan Lokal / Broken-out Section)' :
+                   selectedLineType === 'D' ? '⚡ Tipe D: Garis Tipis Zig-zag (Batas Pemendekan Poros Panjang)' :
+                   selectedLineType === 'F' || selectedLineType === 'E' ? '╌ Tipe E/F: Garis Gores Putus-putus (Lubang Tersembunyi)' :
+                   selectedLineType === 'G' ? '⸺· Tipe G: Garis Sumbu Simetri & Pusat Lingkaran (Gores Titik Tipis)' :
+                   selectedLineType === 'H' ? '✂️ Tipe H: Garis Bidang Pemotongan A-A (Gores Titik dengan Ujung Tebal)' :
+                   '👁️ Seluruh 8 Jenis Garis ISO 128 Terpadu pada Gambar Kerja'}
+                </span>
+              </div>
+
+              {/* TECHNICAL DRAWING SVG CANVAS */}
+              {(() => {
+                const isA = selectedLineType === 'A' || selectedLineType === 'all';
+                const isB = selectedLineType === 'B' || selectedLineType === 'all';
+                const isC = selectedLineType === 'C' || selectedLineType === 'all';
+                const isD = selectedLineType === 'D' || selectedLineType === 'all';
+                const isF = selectedLineType === 'F' || selectedLineType === 'E' || selectedLineType === 'all';
+                const isG = selectedLineType === 'G' || selectedLineType === 'all';
+                const isH = selectedLineType === 'H' || selectedLineType === 'all';
+
+                return (
+                  <svg viewBox="0 0 880 390" style={{ width: '100%', maxWidth: '100%', height: 'auto', maxHeight: '350px', userSelect: 'none', display: 'block' }}>
+                    <defs>
+                      <marker id="arrow-iso-blue" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                        <path d="M 0 2 L 10 5 L 0 8 z" fill="#0284c7" />
+                      </marker>
+                      <marker id="arrow-rev-blue" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                        <path d="M 10 2 L 0 5 L 10 8 z" fill="#0284c7" />
+                      </marker>
+                      <marker id="arrow-cut-red" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+                        <path d="M 0 2 L 10 5 L 0 8 z" fill="#dc2626" />
+                      </marker>
+                    </defs>
+
+                    {/* Sheet Grid / Paper background styling */}
+                    <rect x="10" y="10" width="860" height="370" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" rx="8" />
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 1. TIPE G: GARIS SUMBU SIMETRI (Gores Titik Tipis)         */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('G'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isG ? 1 : 0.22}
+                    >
+                      {/* Main Horizontal Axis */}
+                      <line
+                        x1="50"
+                        y1="200"
+                        x2="810"
+                        y2="200"
+                        stroke={isG && selectedLineType === 'G' ? '#2563eb' : '#2563eb'}
+                        strokeWidth={isG && selectedLineType === 'G' ? 2.8 : 1.4}
+                        strokeDasharray="24 4 4 4"
+                      />
+                      {/* Vertical Hole Axis */}
+                      <line
+                        x1="280"
+                        y1="120"
+                        x2="280"
+                        y2="280"
+                        stroke={isG && selectedLineType === 'G' ? '#2563eb' : '#2563eb'}
+                        strokeWidth={isG && selectedLineType === 'G' ? 2.8 : 1.4}
+                        strokeDasharray="20 4 4 4"
+                      />
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 2. TIPE F / E: GARIS GORES PUTUS-PUTUS (Benda Terhalang)   */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('F'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isF ? 1 : 0.2}
+                    >
+                      {/* Blind hole drilled into left collar: ⌀28, depth 110mm */}
+                      <line
+                        x1="110"
+                        y1="186"
+                        x2="220"
+                        y2="186"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                      <line
+                        x1="110"
+                        y1="214"
+                        x2="220"
+                        y2="214"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                      {/* Drill tip cone 118 degrees */}
+                      <line
+                        x1="220"
+                        y1="186"
+                        x2="232"
+                        y2="200"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                      <line
+                        x1="220"
+                        y1="214"
+                        x2="232"
+                        y2="200"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                      {/* Counterbore step at x=145 */}
+                      <line
+                        x1="145"
+                        y1="178"
+                        x2="145"
+                        y2="186"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                      <line
+                        x1="145"
+                        y1="214"
+                        x2="145"
+                        y2="222"
+                        stroke="#ea580c"
+                        strokeWidth={isF && (selectedLineType === 'F' || selectedLineType === 'E') ? 2.6 : 1.6}
+                        strokeDasharray="8 3"
+                      />
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 3. TIPE B: ARSIRAN POTONGAN 45° (Garis Tipis Kontinu)      */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('B'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isB ? 1 : 0.2}
+                    >
+                      {/* Hatching 45° inside local section breakout */}
+                      {[265, 275, 285, 295, 305, 315, 325, 335, 345].map((hx, hi) => (
+                        <line
+                          key={hi}
+                          x1={hx}
+                          y1="150"
+                          x2={hx + 28}
+                          y2="178"
+                          stroke="#0284c7"
+                          strokeWidth={isB && selectedLineType === 'B' ? 2.0 : 1.2}
+                        />
+                      ))}
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 4. TIPE C: GARIS TIPIS BEBAS (Batas Sobekan Lokal)         */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('C'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isC ? 1 : 0.2}
+                    >
+                      {/* Freehand local break boundary curve */}
+                      <path
+                        d="M 260 150 Q 275 168 290 164 T 325 180 T 355 150"
+                        fill="none"
+                        stroke="#10b981"
+                        strokeWidth={isC && selectedLineType === 'C' ? 3.0 : 1.6}
+                      />
+                      {/* Pocket inside cutout */}
+                      <rect
+                        x="285"
+                        y="158"
+                        width="36"
+                        height="14"
+                        fill="#f8fafc"
+                        stroke="#0f172a"
+                        strokeWidth="1.5"
+                        rx="2"
+                      />
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 5. TIPE A: KONTUR BENDA NYATA (Garis Tebal Kontinu 0.7mm)   */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('A'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isA ? 1 : 0.25}
+                    >
+                      {/* Left Collar (⌀60) */}
+                      <path
+                        d="
+                          M 110 176
+                          L 116 170
+                          L 170 170
+                          L 170 150
+                          L 360 150
+                          L 360 165
+                          L 500 165
+                          L 500 178
+                          L 620 178
+                          M 650 178
+                          L 744 178
+                          L 750 184
+                          L 750 216
+                          L 744 222
+                          L 650 222
+                          M 620 222
+                          L 500 222
+                          L 500 235
+                          L 360 235
+                          L 360 250
+                          L 170 250
+                          L 170 230
+                          L 116 230
+                          L 110 224
+                          Z
+                        "
+                        fill="none"
+                        stroke="#0f172a"
+                        strokeWidth={isA && selectedLineType === 'A' ? 4.5 : 3.2}
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                      />
+
+                      {/* Internal step boundaries */}
+                      <line x1="170" y1="170" x2="170" y2="230" stroke="#0f172a" strokeWidth={isA && selectedLineType === 'A' ? 4.5 : 3.2} />
+                      <line x1="360" y1="165" x2="360" y2="235" stroke="#0f172a" strokeWidth={isA && selectedLineType === 'A' ? 4.5 : 3.2} />
+                      <line x1="500" y1="178" x2="500" y2="222" stroke="#0f172a" strokeWidth={isA && selectedLineType === 'A' ? 4.5 : 3.2} />
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 6. TIPE D: GARIS TIPIS ZIG-ZAG (Pemendekan Poros Panjang)  */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('D'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isD ? 1 : 0.2}
+                    >
+                      {/* Left Zig-zag break at x=620 */}
+                      <path
+                        d="M 620 174 L 620 193 L 613 197 L 627 203 L 620 207 L 620 226"
+                        fill="none"
+                        stroke="#d97706"
+                        strokeWidth={isD && selectedLineType === 'D' ? 2.8 : 1.6}
+                      />
+                      {/* Right Zig-zag break at x=650 */}
+                      <path
+                        d="M 650 174 L 650 193 L 643 197 L 657 203 L 650 207 L 650 226"
+                        fill="none"
+                        stroke="#d97706"
+                        strokeWidth={isD && selectedLineType === 'D' ? 2.8 : 1.6}
+                      />
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 7. TIPE B: GARIS UKUR & GARIS BANTU (Tipis Kontinu 0.35mm) */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('B'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isB ? 1 : 0.2}
+                    >
+                      {/* Top Horizontal Dimension (190 mm) */}
+                      <line x1="170" y1="145" x2="170" y2="85" stroke="#0284c7" strokeWidth="1.2" />
+                      <line x1="360" y1="145" x2="360" y2="85" stroke="#0284c7" strokeWidth="1.2" />
+                      <line
+                        x1="170"
+                        y1="95"
+                        x2="360"
+                        y2="95"
+                        stroke="#0284c7"
+                        strokeWidth={isB && selectedLineType === 'B' ? 2.4 : 1.4}
+                        markerStart="url(#arrow-rev-blue)"
+                        markerEnd="url(#arrow-iso-blue)"
+                      />
+                      <text x="265" y="89" fontSize="12" fontWeight="900" fill="#0284c7" textAnchor="middle">
+                        190
+                      </text>
+
+                      {/* Left Vertical Dimension (⌀60 mm) */}
+                      <line x1="105" y1="170" x2="65" y2="170" stroke="#0284c7" strokeWidth="1.2" />
+                      <line x1="105" y1="230" x2="65" y2="230" stroke="#0284c7" strokeWidth="1.2" />
+                      <line
+                        x1="75"
+                        y1="170"
+                        x2="75"
+                        y2="230"
+                        stroke="#0284c7"
+                        strokeWidth={isB && selectedLineType === 'B' ? 2.4 : 1.4}
+                        markerStart="url(#arrow-rev-blue)"
+                        markerEnd="url(#arrow-iso-blue)"
+                      />
+                      <text x="70" y="204" fontSize="11" fontWeight="900" fill="#0284c7" textAnchor="end">
+                        ⌀60
+                      </text>
+
+                      {/* Leader Line for Chamfer C2 */}
+                      <path
+                        d="M 112 173 L 80 135 L 35 135"
+                        fill="none"
+                        stroke="#0284c7"
+                        strokeWidth={isB && selectedLineType === 'B' ? 2.2 : 1.2}
+                      />
+                      <text x="35" y="130" fontSize="11" fontWeight="800" fill="#0284c7">
+                        C2 (2×45°)
+                      </text>
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* 8. TIPE H: GARIS BIDANG POTONG (Ujung Tebal Panah A-A)      */}
+                    {/* ----------------------------------------------------------- */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('H'); }}
+                      style={{ cursor: 'pointer' }}
+                      opacity={isH ? 1 : 0.2}
+                    >
+                      {/* Cutting plane line at x=440 */}
+                      {/* Top Thick Bar */}
+                      <line x1="440" y1="95" x2="440" y2="125" stroke="#dc2626" strokeWidth={isH && selectedLineType === 'H' ? 4.8 : 3.8} />
+                      {/* Chain thin middle */}
+                      <line x1="440" y1="125" x2="440" y2="275" stroke="#dc2626" strokeWidth={isH && selectedLineType === 'H' ? 2.0 : 1.2} strokeDasharray="18 4 4 4" />
+                      {/* Bottom Thick Bar */}
+                      <line x1="440" y1="275" x2="440" y2="305" stroke="#dc2626" strokeWidth={isH && selectedLineType === 'H' ? 4.8 : 3.8} />
+                      
+                      {/* Top Viewing Arrow A */}
+                      <line x1="440" y1="105" x2="465" y2="105" stroke="#dc2626" strokeWidth="2.4" markerEnd="url(#arrow-cut-red)" />
+                      <text x="472" y="110" fontSize="14" fontWeight="900" fill="#dc2626">A</text>
+
+                      {/* Bottom Viewing Arrow A */}
+                      <line x1="440" y1="295" x2="465" y2="295" stroke="#dc2626" strokeWidth="2.4" markerEnd="url(#arrow-cut-red)" />
+                      <text x="472" y="300" fontSize="14" fontWeight="900" fill="#dc2626">A</text>
+                    </g>
+
+                    {/* ----------------------------------------------------------- */}
+                    {/* CALLOUT BADGES POINTING TO LINES IN THE DRAWING             */}
+                    {/* ----------------------------------------------------------- */}
+                    {/* Tipe A Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('A'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(180, 275)"
+                    >
+                      <rect x="0" y="0" width="165" height="24" rx="5" fill={selectedLineType === 'A' ? '#0f172a' : '#ffffff'} stroke="#0f172a" strokeWidth="1.5" />
+                      <text x="82" y="16" fontSize="10" fontWeight="900" fill={selectedLineType === 'A' ? '#ffffff' : '#0f172a'} textAnchor="middle">
+                        [Tipe A: Garis Benda 0.7mm]
+                      </text>
+                    </g>
+
+                    {/* Tipe B Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('B'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(200, 48)"
+                    >
+                      <rect x="0" y="0" width="170" height="24" rx="5" fill={selectedLineType === 'B' ? '#0284c7' : '#ffffff'} stroke="#0284c7" strokeWidth="1.5" />
+                      <text x="85" y="16" fontSize="10" fontWeight="900" fill={selectedLineType === 'B' ? '#ffffff' : '#0284c7'} textAnchor="middle">
+                        [Tipe B: Garis Ukur & Arsir]
+                      </text>
+                    </g>
+
+                    {/* Tipe C Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('C'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(265, 122)"
+                    >
+                      <rect x="0" y="0" width="130" height="22" rx="4" fill={selectedLineType === 'C' ? '#10b981' : '#ffffff'} stroke="#10b981" strokeWidth="1.5" />
+                      <text x="65" y="15" fontSize="9.5" fontWeight="900" fill={selectedLineType === 'C' ? '#ffffff' : '#10b981'} textAnchor="middle">
+                        [Tipe C: Sobekan Bebas]
+                      </text>
+                    </g>
+
+                    {/* Tipe D Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('D'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(565, 245)"
+                    >
+                      <rect x="0" y="0" width="150" height="24" rx="5" fill={selectedLineType === 'D' ? '#d97706' : '#ffffff'} stroke="#d97706" strokeWidth="1.5" />
+                      <text x="75" y="16" fontSize="9.5" fontWeight="900" fill={selectedLineType === 'D' ? '#ffffff' : '#d97706'} textAnchor="middle">
+                        [Tipe D: Pemendekan Poros]
+                      </text>
+                    </g>
+
+                    {/* Tipe F Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('F'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(95, 245)"
+                    >
+                      <rect x="0" y="0" width="150" height="24" rx="5" fill={selectedLineType === 'F' || selectedLineType === 'E' ? '#ea580c' : '#ffffff'} stroke="#ea580c" strokeWidth="1.5" />
+                      <text x="75" y="16" fontSize="9.5" fontWeight="900" fill={selectedLineType === 'F' || selectedLineType === 'E' ? '#ffffff' : '#ea580c'} textAnchor="middle">
+                        [Tipe F: Lubang Terhalang]
+                      </text>
+                    </g>
+
+                    {/* Tipe G Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('G'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(680, 160)"
+                    >
+                      <rect x="0" y="0" width="145" height="24" rx="5" fill={selectedLineType === 'G' ? '#2563eb' : '#ffffff'} stroke="#2563eb" strokeWidth="1.5" />
+                      <text x="72" y="16" fontSize="9.5" fontWeight="900" fill={selectedLineType === 'G' ? '#ffffff' : '#2563eb'} textAnchor="middle">
+                        [Tipe G: Sumbu Simetri]
+                      </text>
+                    </g>
+
+                    {/* Tipe H Badge */}
+                    <g
+                      onClick={() => { sound.playClick(); setSelectedLineType('H'); }}
+                      style={{ cursor: 'pointer' }}
+                      transform="translate(420, 318)"
+                    >
+                      <rect x="0" y="0" width="150" height="24" rx="5" fill={selectedLineType === 'H' ? '#dc2626' : '#ffffff'} stroke="#dc2626" strokeWidth="1.5" />
+                      <text x="75" y="16" fontSize="9.5" fontWeight="900" fill={selectedLineType === 'H' ? '#ffffff' : '#dc2626'} textAnchor="middle">
+                        [Tipe H: Bidang Potong A-A]
+                      </text>
+                    </g>
+
+                    {/* Physical stroke scale comparison at canvas bottom-left */}
+                    <g transform="translate(35, 345)">
+                      <rect x="0" y="0" width="310" height="32" rx="6" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="1" />
+                      <text x="10" y="20" fontSize="9" fontWeight="800" fill="#475569">Skala Ketebalan ISO 128 (2:1):</text>
+                      <line x1="165" y1="20" x2="215" y2="20" stroke="#0f172a" strokeWidth="3.5" />
+                      <text x="190" y="12" fontSize="7.5" fontWeight="800" fill="#0f172a" textAnchor="middle">0.7 mm</text>
+                      <line x1="240" y1="20" x2="290" y2="20" stroke="#64748b" strokeWidth="1.4" />
+                      <text x="265" y="12" fontSize="7.5" fontWeight="800" fill="#64748b" textAnchor="middle">0.35 mm</text>
+                    </g>
+                  </svg>
+                );
+              })()}
+
+            </div>
+
+            {/* DYNAMIC DETAIL & KAIDAH PANEL */}
             {(() => {
-              const line = LINE_TYPES.find(l => l.id === selectedLineType) || LINE_TYPES[0];
+              const LINE_DETAILS = {
+                A: {
+                  title: 'Kaidah Garis Tebal Kontinu - Tipe A (ISO 128)',
+                  tag: 'STANDAR GARIS NYATA',
+                  color: '#0f172a',
+                  bg: '#f1f5f9',
+                  thick: '0.5 – 0.7 mm (Tebal Penuh)',
+                  pencil: 'Pensil B / 2B (0.7 mm) atau Rapido 0.70 mm',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis kontinu tebal padat tanpa putus. Memiliki ketebalan nominal 0.5 – 0.7 mm (wajib konsisten 2× lipat dibanding garis tipis Tipe B).' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis kontur luar benda kerja yang terlihat langsung oleh mata, batas pertemuan permukaan nyata, garis tepi kertas gambar (border), dan garis bingkai etiket.' },
+                    { label: 'Standar CAD / Software', val: 'Pada AutoCAD / Fusion 360: Diatur Lineweight 0.70 mm (Continuous). Tampil tegas dan paling dominan di lembar cetak (plotting).' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Menggambar garis benda dengan ketebalan yang sama dengan garis ukur/arsir, atau garis tidak rata (putus-nyambung/berbulu).' },
+                    { label: 'Fungsi Manufaktur', val: 'Batas acuan absolut bagi operator bubut/milling untuk memastikan geometri fisik komponen mesin yang harus dibentuk dari bongkahan logam mentah.' }
+                  ]
+                },
+                B: {
+                  title: 'Kaidah Garis Tipis Kontinu - Tipe B (ISO 128)',
+                  tag: 'GARIS UKUR, BANTU, & ARSIR',
+                  color: '#0284c7',
+                  bg: '#e0f2fe',
+                  thick: '0.25 – 0.35 mm (Tipis 1/2 Tipe A)',
+                  pencil: 'Pensil 2H / 3H (0.35 mm) atau Rapido 0.35 mm',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis kontinu tipis lurus sempurna tanpa putus. Ketebalan nominal 0.25 – 0.35 mm (tepat setengah dari garis Tipe A).' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis ukur (dimension lines), garis bantu ukur (extension lines), garis penunjuk notasi (leader lines), garis arsir penampang 45° (hatching), dan garis akar/dasar ulir baut.' },
+                    { label: 'Aturan Celah (Gap)', val: 'Garis bantu ukur TIDAK BOLEH menempel rapat ke garis benda nyata Tipe A; wajib diberi jarak celah (gap) 1 – 2 mm agar tidak membingungkan operator.' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Mengarsir potongan dengan garis tebal atau menggambar garis ukur yang saling memotong garis ukur lainnya.' },
+                    { label: 'Fungsi Manufaktur', val: 'Menyampaikan nilai ukuran presisi, suaian toleransi, dan memperjelas area pemotongan logam tanpa mengaburkan batas kontur fisik benda.' }
+                  ]
+                },
+                C: {
+                  title: 'Kaidah Garis Tipis Bebas (Freehand) - Tipe C (ISO 128)',
+                  tag: 'BATAS SOBEKAN LOKAL',
+                  color: '#10b981',
+                  bg: '#d1fae5',
+                  thick: '0.25 – 0.35 mm (Tangan Bebas)',
+                  pencil: 'Pensil 2H / H digambar santai tanpa mistar',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis tipis bergelombang alami yang digambar dengan tangan bebas (freehand) tanpa bantuan penggaris. Tebal nominal 0.25 – 0.35 mm.' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis batas potongan sebagian (sobekan lokal / broken-out section) bila batas pemotongan tidak berimpit dengan garis sumbu simetri.' },
+                    { label: 'Kaidah Penggambaran', val: 'Gelombang tidak boleh dibuat terlalu kaku atau beraturan seperti ombak; ditarik mengelilingi fitur internal yang ingin ditampakkan lalu diisi arsiran Tipe B.' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Menggambar garis sobekan menggunakan penggaris lurus, atau menarik garis melintasi bagian luar benda.' },
+                    { label: 'Fungsi Manufaktur', val: 'Memperlihatkan detail bagian dalam (seperti alur pasak, lubang buntu, atau bantalan) secara hemat gambar tanpa perlu membuat gambar pandangan potongan penuh.' }
+                  ]
+                },
+                D: {
+                  title: 'Kaidah Garis Tipis Zig-zag - Tipe D (ISO 128)',
+                  tag: 'PEMENDEKAN POROS PANJANG',
+                  color: '#d97706',
+                  bg: '#fef3c7',
+                  thick: '0.25 – 0.35 mm (Garis Mistar Zig-zag)',
+                  pencil: 'Pensil 2H + mistar segitiga (mal sudut)',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis lurus tipis yang diselingi tekukan zig-zag simetris tajam setinggi 5 – 7 mm, digambar menggunakan mistar penggaris. Tebal 0.25 – 0.35 mm.' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis batas pemotongan / pemendekan benda kerja yang panjang dan berpenampang konstan (misal: poros transmisi 2 meter, rel pemandu, pipa tubular).' },
+                    { label: 'Aturan Angka Ukuran', val: 'Meskipun gambar fisik poros dipendekkan di kertas, angka ukuran dimensi yang tercantum WAJIB TETAP nilai panjang sebenarnya (contoh: tetap ditulis 1800 mm).' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Ikut memotong angka ukuran atau menggambar zig-zag tidak simetris melebihi batas badan poros.' },
+                    { label: 'Fungsi Manufaktur', val: 'Menghemat area kertas gambar sehingga poros panjang dapat digambar pada format A4/A3 standar dengan skala detail ujung-ujung yang tetap proporsional dan jelas.' }
+                  ]
+                },
+                E: {
+                  title: 'Kaidah Garis Gores Tebal - Tipe E (ISO 128)',
+                  tag: 'PERLAKUAN PERMUKAAN KHUSUS',
+                  color: '#c2410c',
+                  bg: '#ffedd5',
+                  thick: '0.5 – 0.7 mm (Strip Tebal)',
+                  pencil: 'Pensil B / 2B (0.7 mm, garis gores)',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis putus-putus tebal dengan panjang gores 3 – 5 mm dan celah 1 mm. Tebal nominal 0.5 – 0.7 mm.' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Penunjukan indikasi permukaan khusus yang menerima perlakuan panas (heat treatment seperti hardening/nitriding) atau pelapisan kimia (electroplating).' },
+                    { label: 'Prioritas Standar', val: 'Dalam ISO 128 modern, untuk garis terhalang biasa diutamakan menggunakan Tipe F (tipis), sedangkan Tipe E dikhususkan untuk zona perlakuan khusus.' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Tertukar dengan Tipe F sehingga operator bengkel mengira seluruh rongga dalam harus disepuh keras (hardening).' },
+                    { label: 'Fungsi Manufaktur', val: 'Instruksi bagi teknisi heat treatment di bengkel perlakuan panas mengenai zona permukaan poros yang wajib dikeraskan.' }
+                  ]
+                },
+                F: {
+                  title: 'Kaidah Garis Gores Tipis - Tipe F (ISO 128)',
+                  tag: 'KONTUR & TEPI TERHALANG',
+                  color: '#ea580c',
+                  bg: '#ffedd5',
+                  thick: '0.25 – 0.35 mm (Strip Tipis)',
+                  pencil: 'Pensil H / 2H (0.35 mm, gores seragam)',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis putus-putus tipis (gores 3 – 5 mm, celah 1 mm). Tebal nominal 0.25 – 0.35 mm (setengah dari garis nyata Tipe A).' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Menunjukkan tepi, rusuk, lubang bor silinder, atau alur yang terhalang dari pandangan mata pengamat (hidden lines).' },
+                    { label: 'Aturan Pertemuan Sudut', val: 'Garis gores WAJIB BERAWAL DAN BERAKHIR DENGAN STRIP GORES di titik pertemuan sudut (dilarang bertemu pada celah kosong!).' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Panjang strip gores tidak beraturan (ada yang panjang 10 mm, ada yang 2 mm) atau menabrak garis nyata tanpa aturan.' },
+                    { label: 'Fungsi Manufaktur', val: 'Memberi informasi keberadaan lubang bor tembus, rongga baut, atau alur di bagian dalam tanpa harus selalu memotong benda.' }
+                  ]
+                },
+                G: {
+                  title: 'Kaidah Garis Gores Titik Tipis - Tipe G (ISO 128)',
+                  tag: 'SUMBU SIMETRI & CENTER LINE',
+                  color: '#2563eb',
+                  bg: '#dbeafe',
+                  thick: '0.25 – 0.35 mm (Gores Titik Rantai)',
+                  pencil: 'Pensil 2H (0.35 mm) berujung runcing',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis rantai tipis berselang-seling: strip panjang 10 – 15 mm, celah 1 mm, titik/dot, celah 1 mm. Tebal nominal 0.25 – 0.35 mm.' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis sumbu simetri poros silinder, pusat lingkaran lubang bor, lingkaran pitch jarak bagi gigi (PCD), dan lintasan gerak mekanisme.' },
+                    { label: 'Aturan Pusat Lingkaran (+)', val: 'Titik pusat lingkaran WAJIB DITANDAI DENGAN PERPOTONGAN DUA STRIP PANJANG (+), dilarang keras berpotongan pada titik atau celah kosong!' },
+                    { label: 'Aturan Lewatan Sumbu', val: 'Garis sumbu wajib dilebihkan keluar dari tepi benda kerja sebesar 2 – 5 mm (tidak boleh berhenti tepat di garis benda).' },
+                    { label: 'Fungsi Manufaktur', val: 'Menjadi titik referensi nol (datum/origin) bagi juru bubut saat membuat lubang senter (center drill) dan bagi programmer CNC saat menetapkan Work Coordinate System (WCS).' }
+                  ]
+                },
+                H: {
+                  title: 'Kaidah Garis Gores Titik Ujung Tebal - Tipe H (ISO 128)',
+                  tag: 'BIDANG POTONG PENAMPANG A-A',
+                  color: '#dc2626',
+                  bg: '#fee2e2',
+                  thick: 'Tipis (0.35 mm) di tengah, Tebal (0.7 mm) di ujung',
+                  pencil: 'Rapido / Pensil B di ujung, 2H di tengah',
+                  items: [
+                    { label: 'Definisi & Karakteristik', val: 'Garis gores titik yang tipis (0.35 mm) di sepanjang jalurnya, tetapi DIPERTEBAL (0.7 mm) sepanjang 10-15 mm di kedua ujung dan setiap belokan arah.' },
+                    { label: 'Penerapan pada Gambar Mesin', val: 'Garis lintasan bidang pemotongan penampang benda kerja (cutting plane line), dilengkapi anak panah arah pandang tegak lurus dan huruf kapital pengenal (A – A).' },
+                    { label: 'Arah Anak Panah', val: 'Anak panah menunjuk ke arah bagian benda yang DIPERTAHANKAN dan DILIHAT oleh mata pengamat saat gambar potongan digambar.' },
+                    { label: 'Kesalahan Fatal Siswa', val: 'Arah panah terbalik (mengarah keluar) atau lupa mempertebal kedua ujung garis sehingga dikira garis sumbu biasa.' },
+                    { label: 'Fungsi Manufaktur', val: 'Panduan utama bagi operator untuk memahami struktur rongga internal yang rumit dengan melihat gambar proyeksi penampang A-A.' }
+                  ]
+                },
+                all: {
+                  title: 'Sintesis Penerapan Terpadu Seluruh Jenis Garis (ISO 128)',
+                  tag: 'SISTEM GAMBAR TEKNIK TERPADU',
+                  color: '#0f172a',
+                  bg: '#f8fafc',
+                  thick: 'Kombinasi Garis Tebal (0.7 mm) & Tipis (0.35 mm)',
+                  pencil: 'Set Lengkap Pensil 2B, HB, H, 2H, 3H',
+                  items: [
+                    { label: 'Rasio Kontras 2 : 1', val: 'Kunci keindahan dan kejelasan gambar teknik adalah rasio tegas 2:1 antara garis tebal (Tipe A, E, ujung H) dan garis tipis (Tipe B, C, D, F, G, tengah H).' },
+                    { label: 'Hirarki Visual Mata', val: 'Mata pembaca langsung mengenali wujud fisik benda lewat garis Tipe A, memahami dimensi lewat Tipe B, dan mengetahui sumbu lewat Tipe G.' },
+                    { label: 'Urutan Garis Berimpit', val: '1. Garis Benda (Tipe A) > 2. Garis Terhalang (Tipe F) > 3. Garis Potong (Tipe H) > 4. Garis Sumbu (Tipe G) > 5. Garis Ukur/Bantu (Tipe B).' },
+                    { label: 'Standar Internasional', val: 'Mengikuti standar ISO 128 menjamin gambar kerja yang dibuat di Indonesia dapat dibaca dan diproduksi tanpa salah paham di seluruh bengkel manufaktur dunia.' },
+                    { label: 'Fungsi Manufaktur', val: 'Menjadi jembatan komunikasi presisi dan legal antara divisi perancangan teknik (engineering) dan lini produksi bengkel pemesinan.' }
+                  ]
+                }
+              };
+
+              const currentDetail = LINE_DETAILS[selectedLineType] || LINE_DETAILS.A;
+
               return (
-                <div className="dashboard-card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border-light)', paddingBottom: '16px' }}>
+                <div style={{
+                  background: '#ffffff',
+                  border: `1.5px solid ${currentDetail.color}30`,
+                  borderRadius: '12px',
+                  padding: '20px 24px',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px'
+                }}>
+                  {/* Panel Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px', borderBottom: '1px solid #e2e8f0', paddingBottom: '14px' }}>
                     <div>
-                      <span style={{ background: '#e2e8f0', color: '#334155', fontWeight: 800, fontSize: '0.75rem', padding: '3px 8px', borderRadius: '4px' }}>
-                        KODE ISO 128 - TIPE {line.id}
+                      <span style={{
+                        background: currentDetail.bg,
+                        color: currentDetail.color,
+                        fontWeight: 900,
+                        fontSize: '0.72rem',
+                        padding: '3px 10px',
+                        borderRadius: '4px',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {currentDetail.tag}
                       </span>
-                      <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                        {line.name}
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
-                        Standar Pola Garis: <strong>{line.dash}</strong> • Rentang Ketebalan Nominal: <strong>{line.thick}</strong>
-                      </p>
+                      <h4 style={{ margin: '8px 0 2px 0', fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                        {currentDetail.title}
+                      </h4>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        Rekomendasi Alat: <strong>{currentDetail.pencil}</strong> • Standar Ketebalan: <strong>{currentDetail.thick}</strong>
+                      </div>
                     </div>
                   </div>
 
-                  <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '24px 20px', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.03)' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, marginBottom: '14px', textTransform: 'uppercase' }}>
-                      SIMULASI PENAMPANG GARIS PADA KERTAS GAMBAR (SKALA 1:1 RESOLUSI TINGGI):
-                    </div>
-                    <svg viewBox="0 0 500 50" width="100%" height="50">
-                      {line.id === 'A' && (
-                        <line x1="10" y1="25" x2="490" y2="25" stroke="#0f172a" strokeWidth="5" strokeLinecap="round" />
-                      )}
-                      {line.id === 'B' && (
-                        <line x1="10" y1="25" x2="490" y2="25" stroke="#64748b" strokeWidth="2" />
-                      )}
-                      {line.id === 'C' && (
-                        <path d="M 10 25 Q 70 10 130 25 T 250 25 T 370 25 T 490 25" fill="none" stroke="#475569" strokeWidth="2" />
-                      )}
-                      {line.id === 'D' && (
-                        <path d="M 10 25 L 120 25 L 130 15 L 140 35 L 150 25 L 300 25 L 310 15 L 320 35 L 330 25 L 490 25" fill="none" stroke="#475569" strokeWidth="2" />
-                      )}
-                      {line.id === 'E' && (
-                        <line x1="10" y1="25" x2="490" y2="25" stroke="#0f172a" strokeWidth="5" strokeDasharray="14 6" />
-                      )}
-                      {line.id === 'F' && (
-                        <line x1="10" y1="25" x2="490" y2="25" stroke="#64748b" strokeWidth="2" strokeDasharray="10 4" />
-                      )}
-                      {line.id === 'G' && (
-                        <line x1="10" y1="25" x2="490" y2="25" stroke="#2563eb" strokeWidth="2" strokeDasharray="25 4 4 4" />
-                      )}
-                      {line.id === 'H' && (
-                        <g>
-                          <line x1="10" y1="25" x2="60" y2="25" stroke="#dc2626" strokeWidth="5" />
-                          <line x1="60" y1="25" x2="440" y2="25" stroke="#dc2626" strokeWidth="2" strokeDasharray="25 4 4 4" />
-                          <line x1="440" y1="25" x2="490" y2="25" stroke="#dc2626" strokeWidth="5" />
-                          <polygon points="35,10 40,25 30,25" fill="#dc2626" />
-                          <polygon points="465,10 470,25 460,25" fill="#dc2626" />
-                          <text x="30" y="5" fontSize="10" fontWeight="900" fill="#dc2626">A</text>
-                          <text x="460" y="5" fontSize="10" fontWeight="900" fill="#dc2626">A</text>
-                        </g>
-                      )}
-                    </svg>
+                  {/* Feature Rules Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+                    {currentDetail.items.map((it, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          background: '#f8fafc',
+                          padding: '12px 14px',
+                          borderRadius: '8px',
+                          borderLeft: `4px solid ${currentDetail.color}`,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '4px'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: currentDetail.color, textTransform: 'uppercase' }}>
+                          {it.label}
+                        </span>
+                        <span style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.5 }}>
+                          {it.val}
+                        </span>
+                      </div>
+                    ))}
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div style={{ padding: '16px', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
-                      <strong style={{ color: '#1e3a8a', fontSize: '0.85rem', display: 'block', marginBottom: '4px' }}>Fungsi & Penerapan Utama:</strong>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.5 }}>{line.usage}</span>
+                  {/* LINE PRECEDENCE ALERT BOX */}
+                  <div style={{ padding: '12px 16px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fef3c7', color: '#92400e', fontSize: '0.8rem', lineHeight: 1.6 }}>
+                    <strong>⚠️ Urutan Prioritas Garis Berimpit (Line Precedence ISO 128):</strong><br />
+                    Jika dua atau lebih garis bertumpuk pada posisi yang sama, urutan yang wajib dimenangkan adalah:<br />
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px', fontWeight: 800, fontSize: '0.75rem' }}>
+                      <span style={{ background: '#0f172a', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>1. Garis Nyata (Tipe A)</span>
+                      <span>&gt;</span>
+                      <span style={{ background: '#ea580c', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>2. Garis Terhalang (Tipe F)</span>
+                      <span>&gt;</span>
+                      <span style={{ background: '#dc2626', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>3. Garis Bidang Potong (Tipe H)</span>
+                      <span>&gt;</span>
+                      <span style={{ background: '#2563eb', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>4. Garis Sumbu (Tipe G)</span>
+                      <span>&gt;</span>
+                      <span style={{ background: '#0284c7', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>5. Garis Ukur / Bantu (Tipe B)</span>
                     </div>
-
-                    <div style={{ padding: '16px', background: 'rgba(16, 185, 129, 0.05)', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
-                      <strong style={{ color: '#065f46', fontSize: '0.85rem', display: 'block', marginBottom: '4px' }}>Contoh Kasus Gambar Nyata:</strong>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.5 }}>{line.example}</span>
-                    </div>
-                  </div>
-
-                  <div style={{ padding: '14px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fef3c7', color: '#92400e', fontSize: '0.8rem', lineHeight: 1.6 }}>
-                    ⚠️ <strong>Urutan Prioritas Garis Berimpit (Line Precedence):</strong><br />
-                    Jika dua atau lebih garis bertumpuk di posisi yang sama, urutan yang wajib digambar adalah:<br />
-                    <strong>1. Garis Nyata (Tipe A)</strong> &gt; <strong>2. Garis Terhalang (Tipe F)</strong> &gt; <strong>3. Garis Bidang Potong (Tipe H)</strong> &gt; <strong>4. Garis Sumbu (Tipe G)</strong> &gt; <strong>5. Garis Bantu Ukur (Tipe B)</strong>.
                   </div>
                 </div>
               );
@@ -763,16 +1338,21 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
               
               {/* Card Simbol Amerika (Third Angle) */}
-              <div style={{
-                background: '#ffffff',
-                borderRadius: '12px',
-                border: projectionSystem === 'amerika' ? '3px solid #2563eb' : '1px solid #cbd5e1',
-                padding: '24px',
-                boxShadow: projectionSystem === 'amerika' ? '0 8px 25px rgba(37, 99, 235, 0.15)' : 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px'
-              }}>
+              <div
+                onClick={() => { sound.playClick(); setProjectionSystem('amerika'); }}
+                style={{
+                  background: '#ffffff',
+                  borderRadius: '12px',
+                  border: projectionSystem === 'amerika' ? '3px solid #2563eb' : '1px solid #cbd5e1',
+                  padding: '24px',
+                  boxShadow: projectionSystem === 'amerika' ? '0 8px 25px rgba(37, 99, 235, 0.15)' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#2563eb', textTransform: 'uppercase' }}>
                     🇺🇸 PROYEKSI AMERIKA (SUDUT KETIGA)
@@ -815,16 +1395,21 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               </div>
 
               {/* Card Simbol Eropa (First Angle) */}
-              <div style={{
-                background: '#ffffff',
-                borderRadius: '12px',
-                border: projectionSystem === 'eropa' ? '3px solid #d97706' : '1px solid #cbd5e1',
-                padding: '24px',
-                boxShadow: projectionSystem === 'eropa' ? '0 8px 25px rgba(217, 119, 6, 0.15)' : 'none',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px'
-              }}>
+              <div
+                onClick={() => { sound.playClick(); setProjectionSystem('eropa'); }}
+                style={{
+                  background: '#ffffff',
+                  borderRadius: '12px',
+                  border: projectionSystem === 'eropa' ? '3px solid #d97706' : '1px solid #cbd5e1',
+                  padding: '24px',
+                  boxShadow: projectionSystem === 'eropa' ? '0 8px 25px rgba(217, 119, 6, 0.15)' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#d97706', textTransform: 'uppercase' }}>
                     🇪🇺 PROYEKSI EROPA (SUDUT PERTAMA)

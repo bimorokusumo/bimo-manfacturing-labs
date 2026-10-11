@@ -1333,27 +1333,26 @@ const OrthogonalMultiViewSimulator = () => {
         </div>
       </div>
 
-      {/* OBJECT SELECTION GRID (8 BENDA STANDAR PROYEK SMK) */}
+      {/* VISUAL THUMBNAIL OBJECT PICKER — 4 cols × 2 rows grid */}
       <div style={{
         background: '#fff',
-        padding: '18px 20px',
+        padding: '14px 16px',
         borderRadius: '14px',
         border: '1px solid #e2e8f0',
         boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>📦</span> Pilih Benda Latihan Ortogonal (8 Model Standar Mesin):
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>📐</span> Pilih Benda — Klik bentuk untuk lihat proyeksi ortogonal:
           </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0369a1', background: '#e0f2fe', padding: '4px 10px', borderRadius: '6px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#0369a1', background: '#e0f2fe', padding: '3px 8px', borderRadius: '6px' }}>
             {activeObject.category} • {activeObject.dimensions}
           </span>
         </div>
-
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 230px), 1fr))',
-          gap: '10px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))',
+          gap: '8px'
         }}>
           {Object.values(OBJECT_CATALOG).map((obj) => {
             const isSelected = selectedObjectId === obj.id;
@@ -1361,32 +1360,50 @@ const OrthogonalMultiViewSimulator = () => {
               <button
                 key={obj.id}
                 onClick={() => handleSelectObject(obj.id)}
+                title={obj.name}
                 style={{
-                  padding: '12px 14px',
+                  padding: '8px 6px 6px',
                   borderRadius: '10px',
-                  border: isSelected ? '2px solid #2563eb' : '1px solid #cbd5e1',
+                  border: isSelected ? '2.5px solid #2563eb' : '1.5px solid #cbd5e1',
                   background: isSelected ? '#eff6ff' : '#f8fafc',
-                  color: isSelected ? '#1d4ed8' : '#334155',
                   cursor: 'pointer',
-                  textAlign: 'left',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '4px',
+                  alignItems: 'center',
+                  gap: '5px',
                   transition: 'all 0.15s',
-                  boxShadow: isSelected ? '0 4px 12px rgba(37, 99, 235, 0.15)' : 'none'
+                  boxShadow: isSelected ? '0 4px 12px rgba(37, 99, 235, 0.18)' : '0 1px 3px rgba(0,0,0,0.06)'
                 }}
               >
-                <div style={{ fontSize: '0.82rem', fontWeight: 800, lineHeight: 1.3 }}>
-                  {obj.name}
+                {/* SVG Thumbnail — front view of the object */}
+                <div style={{
+                  width: '80px',
+                  height: '80px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '6px',
+                  background: isSelected ? '#dbeafe' : '#f1f5f9',
+                  overflow: 'hidden'
+                }}>
+                  {renderOrthogonal2DView(obj.id, 'depan', 76, false)}
                 </div>
-                <div style={{ fontSize: '0.7rem', color: isSelected ? '#2563eb' : '#64748b' }}>
-                  {obj.difficulty}
+                <div style={{
+                  fontSize: '0.64rem',
+                  fontWeight: 800,
+                  color: isSelected ? '#1d4ed8' : '#475569',
+                  textAlign: 'center',
+                  lineHeight: 1.25,
+                  maxWidth: '100px'
+                }}>
+                  {obj.shortName}
                 </div>
               </button>
             );
           })}
         </div>
       </div>
+
 
       {/* MAIN TWO-COLUMN WORKSPACE: 3D VIEWPORT (LEFT) & ORTHOGONAL PROJECTION MAP (RIGHT) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 460px), 1fr))', gap: '20px' }}>

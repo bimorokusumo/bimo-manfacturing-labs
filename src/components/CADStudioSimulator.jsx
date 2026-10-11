@@ -1197,14 +1197,14 @@ const CADStudioSimulator = () => {
   const [ribbonTab, setRibbonTab] = useState('draw');
 
   // AutoCAD Command Prompt Line
-  const [commandLine, setCommandLine] = useState('Command: AUTOCAD_START -> Siap mendesain. Klik profil 2D atau tombol 3D di Ribbon.');
+  const [commandLine, setCommandLine] = useState('Fusion 360 CAD: Siap mendesain model 3D parametrik standar teknik mesin.');
   const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
 
   // Camera & Visual
   const [materialMode, setMaterialMode] = useState('steel');
   const [autoRotate, setAutoRotate] = useState(false);
   const [activeViewAngle, setActiveViewAngle] = useState('iso');
-  const [cadTheme, setCadTheme] = useState('dark');
+  const [cadTheme, setCadTheme] = useState('light'); // Default: Light sheet (Fusion 360 style)
 
   const controlsRef = useRef(null);
 
@@ -1430,21 +1430,22 @@ const CADStudioSimulator = () => {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
-      background: '#0f172a',
-      color: '#f8fafc',
+      background: '#f5f7fa',
+      color: '#1e293b',
       borderRadius: '16px',
       overflow: 'hidden',
-      border: '1px solid #1e293b',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+      border: '1px solid #e2e8f0',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
       boxSizing: 'border-box'
     }}>
+
       
       {/* =====================================================================
-          1. AUTOCAD APPLICATION TOP BAR
+          1. FUSION 360 APPLICATION TOP BAR (White)
           ===================================================================== */}
       <div style={{
-        background: '#090d16',
-        borderBottom: '1px solid #1e293b',
+        background: '#ffffff',
+        borderBottom: '1px solid #e2e8f0',
         padding: '10px 18px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -1458,26 +1459,26 @@ const CADStudioSimulator = () => {
             width: '36px',
             height: '36px',
             borderRadius: '8px',
-            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+            background: 'linear-gradient(135deg, #ff6914 0%, #e55a0f 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 900,
             fontSize: '1.2rem',
             color: '#fff',
-            boxShadow: '0 2px 10px rgba(239, 68, 68, 0.4)'
+            boxShadow: '0 2px 10px rgba(255, 105, 20, 0.35)'
           }}>
-            A
+            F
           </div>
           <div>
-            <div style={{ fontSize: '0.98rem', fontWeight: 900, letterSpacing: '0.5px', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              AUTOCAD MECHANICAL WORKBENCH 2026
+            <div style={{ fontSize: '0.98rem', fontWeight: 900, letterSpacing: '0.5px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Fusion 360 — CAD Studio Mesin
               <span style={{ fontSize: '0.62rem', background: '#0284c7', color: '#ffffff', padding: '1px 7px', borderRadius: '4px', fontWeight: 800 }}>
                 ISO 128 / 5456
               </span>
             </div>
-            <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-              Studio Gambar Teknik Manufaktur • Sketsa 2D ➡️ Pemodelan 3D • Kertas Etiket A4
+            <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+              Pemodelan Parametrik 2D/3D • Sketsa ➡️ Padatan 3D • Cetak Etiket A4
             </div>
           </div>
         </div>
@@ -1490,9 +1491,9 @@ const CADStudioSimulator = () => {
             style={{
               padding: '6px 12px',
               borderRadius: '6px',
-              border: isSpeakingCAD ? '1px solid #38bdf8' : '1px solid #334155',
-              background: isSpeakingCAD ? '#0284c7' : '#1e293b',
-              color: '#ffffff',
+              border: isSpeakingCAD ? '1px solid #0284c7' : '1px solid #cbd5e1',
+              background: isSpeakingCAD ? '#0284c7' : '#f1f5f9',
+              color: isSpeakingCAD ? '#ffffff' : '#334155',
               fontSize: '0.72rem',
               fontWeight: 800,
               cursor: 'pointer',
@@ -1512,9 +1513,9 @@ const CADStudioSimulator = () => {
             style={{
               padding: '6px 10px',
               borderRadius: '6px',
-              border: '1px solid #334155',
-              background: showWorkflowGuide ? '#1e3a8a' : '#1e293b',
-              color: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              background: showWorkflowGuide ? '#dbeafe' : '#f1f5f9',
+              color: showWorkflowGuide ? '#1d4ed8' : '#475569',
               fontSize: '0.72rem',
               fontWeight: 700,
               cursor: 'pointer'
@@ -1524,7 +1525,7 @@ const CADStudioSimulator = () => {
           </button>
 
           {/* Viewport Workspace Switcher */}
-          <div style={{ display: 'flex', background: '#1e293b', padding: '3px', borderRadius: '8px', gap: '3px' }}>
+          <div style={{ display: 'flex', background: '#f1f5f9', padding: '3px', borderRadius: '8px', gap: '3px', border: '1px solid #e2e8f0' }}>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('split'); }}
               style={{
@@ -1532,14 +1533,14 @@ const CADStudioSimulator = () => {
                 borderRadius: '6px',
                 border: 'none',
                 background: displayMode === 'split' ? '#0284c7' : 'transparent',
-                color: displayMode === 'split' ? '#fff' : '#94a3b8',
+                color: displayMode === 'split' ? '#fff' : '#64748b',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
               title="Tampilkan sketsa 2D dan model 3D berdampingan"
             >
-              🖥️ Berdampingan (2D & 3D)
+              🖥️ 2D & 3D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('2d_only'); }}
@@ -1548,13 +1549,13 @@ const CADStudioSimulator = () => {
                 borderRadius: '6px',
                 border: 'none',
                 background: displayMode === '2d_only' ? '#0284c7' : 'transparent',
-                color: displayMode === '2d_only' ? '#fff' : '#94a3b8',
+                color: displayMode === '2d_only' ? '#fff' : '#64748b',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
             >
-              📐 2D Saja
+              📐 2D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('3d_only'); }}
@@ -1563,13 +1564,13 @@ const CADStudioSimulator = () => {
                 borderRadius: '6px',
                 border: 'none',
                 background: displayMode === '3d_only' ? '#0284c7' : 'transparent',
-                color: displayMode === '3d_only' ? '#fff' : '#94a3b8',
+                color: displayMode === '3d_only' ? '#fff' : '#64748b',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
             >
-              🧊 3D Saja
+              🧊 3D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('layout'); }}
@@ -1578,26 +1579,27 @@ const CADStudioSimulator = () => {
                 borderRadius: '6px',
                 border: 'none',
                 background: displayMode === 'layout' ? '#10b981' : 'transparent',
-                color: displayMode === 'layout' ? '#fff' : '#94a3b8',
+                color: displayMode === 'layout' ? '#fff' : '#64748b',
                 fontSize: '0.72rem',
                 fontWeight: 800,
                 cursor: 'pointer'
               }}
               title="Lihat dalam format kertas A4 lengkap dengan Etiket Gambar Resmi SMK"
             >
-              📄 Layout Kertas A4 &amp; Etiket
+              📄 Layout A4
             </button>
           </div>
         </div>
       </div>
+
 
       {/* =====================================================================
           2. COLLAPSIBLE STUDENT WORKFLOW GUIDE (ALUR CEPAT 4 LANGKAH)
           ===================================================================== */}
       {showWorkflowGuide && (
         <div style={{
-          background: 'linear-gradient(90deg, #0b192c 0%, #172554 100%)',
-          borderBottom: '1px solid #1e3a8a',
+          background: 'linear-gradient(90deg, #eff6ff 0%, #dbeafe 100%)',
+          borderBottom: '1px solid #bfdbfe',
           padding: '10px 18px',
           display: 'flex',
           alignItems: 'center',
@@ -1607,48 +1609,49 @@ const CADStudioSimulator = () => {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '1rem' }}>💡</span>
-            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1d4ed8' }}>
               ALUR KERJA CAD SISWA:
             </span>
           </div>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1, justifyContent: 'center' }}>
-            <div style={{ background: ribbonTab === 'draw' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div style={{ background: ribbonTab === 'draw' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'draw' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>1️⃣</span> <span>Pilih Profil 2D</span>
             </div>
-            <span style={{ color: '#64748b' }}>➔</span>
-            <div style={{ background: ribbonTab === 'solid' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ color: '#94a3b8' }}>➔</span>
+            <div style={{ background: ribbonTab === 'solid' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'solid' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>2️⃣</span> <span>Bentuk Padatan 3D</span>
             </div>
-            <span style={{ color: '#64748b' }}>➔</span>
-            <div style={{ background: ribbonTab === 'modify' ? '#0284c7' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ color: '#94a3b8' }}>➔</span>
+            <div style={{ background: ribbonTab === 'modify' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'modify' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>3️⃣</span> <span>Beri Fillet / Lubang</span>
             </div>
-            <span style={{ color: '#64748b' }}>➔</span>
-            <div style={{ background: ribbonTab === 'layout' ? '#10b981' : 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ color: '#94a3b8' }}>➔</span>
+            <div style={{ background: ribbonTab === 'layout' ? '#10b981' : 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'layout' ? '#fff' : '#059669', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>4️⃣</span> <span>Cetak Kertas Etiket A4</span>
             </div>
           </div>
 
-          <div style={{ fontSize: '0.7rem', color: '#93c5fd' }}>
+          <div style={{ fontSize: '0.7rem', color: '#3b82f6' }}>
             Atau klik tab <strong>"TEMPLATE MESIN"</strong> untuk memuat benda jadi 1-klik!
           </div>
         </div>
       )}
 
+
       {/* =====================================================================
-          3. AUTOCAD RIBBON TABS & TOOLBAR
+          3. FUSION 360 TOOLBAR TABS (Light Theme)
           ===================================================================== */}
-      <div style={{ background: '#141c2e', borderBottom: '1px solid #1e293b' }}>
-        {/* Ribbon Tab Headers */}
-        <div style={{ display: 'flex', background: '#090d16', padding: '0 12px', borderBottom: '1px solid #1e293b', overflowX: 'auto' }}>
+      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
+        {/* Tab Headers */}
+        <div style={{ display: 'flex', background: '#f8fafc', padding: '0 12px', borderBottom: '1px solid #e2e8f0', overflowX: 'auto' }}>
           {[
-            { id: 'draw', label: '✏️ DRAW (Sketsa 2D)', desc: 'Pilihan profil sketsa awal' },
-            { id: 'solid', label: '🧊 3D SOLID (Benda Padat)', desc: 'Extrude, Revolve, Sweep, Loft' },
-            { id: 'modify', label: '🛠️ MODIFY (Fitur Bengkel)', desc: 'Fillet, Chamfer, Shell, Hole' },
-            { id: 'templates', label: '📦 TEMPLATE MESIN (1-Klik)', desc: 'Poros, Flensa, Balok, Mur' },
-            { id: 'materials', label: '🎨 MATERIAL & FISIK', desc: 'Metrologi & Export STL' },
-            { id: 'layout', label: '📄 LAYOUT A4 (Kertas Kerja)', desc: 'Etiket Kepala Gambar ISO' }
+            { id: 'draw', label: '✏️ SKETCH (Profil 2D)' },
+            { id: 'solid', label: '🧊 CREATE (Benda 3D)' },
+            { id: 'modify', label: '🛠️ MODIFY (Fillet/Lubang)' },
+            { id: 'templates', label: '📦 TEMPLATE (1-Klik)' },
+            { id: 'materials', label: '🎨 MATERIAL & FISIK' },
+            { id: 'layout', label: '📄 LAYOUT A4' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1660,10 +1663,10 @@ const CADStudioSimulator = () => {
               }}
               style={{
                 padding: '9px 16px',
-                background: ribbonTab === tab.id ? '#141c2e' : 'transparent',
-                color: ribbonTab === tab.id ? '#38bdf8' : '#94a3b8',
+                background: ribbonTab === tab.id ? '#ffffff' : 'transparent',
+                color: ribbonTab === tab.id ? '#0284c7' : '#64748b',
                 border: 'none',
-                borderBottom: ribbonTab === tab.id ? '2.5px solid #38bdf8' : '2.5px solid transparent',
+                borderBottom: ribbonTab === tab.id ? '2.5px solid #ff6914' : '2.5px solid transparent',
                 fontSize: '0.78rem',
                 fontWeight: ribbonTab === tab.id ? 800 : 600,
                 cursor: 'pointer',
@@ -1677,12 +1680,12 @@ const CADStudioSimulator = () => {
         </div>
 
         {/* Ribbon Content Panel for Active Tab */}
-        <div style={{ padding: '12px 18px', minHeight: '80px', display: 'flex', alignItems: 'center' }}>
+        <div style={{ padding: '12px 18px', minHeight: '80px', display: 'flex', alignItems: 'center', background: '#ffffff' }}>
           
-          {/* TAB 1: DRAW (SKETSA 2D) */}
+          {/* TAB 1: SKETCH (SKETSA 2D) */}
           {ribbonTab === 'draw' && (
             <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', minWidth: '110px' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', minWidth: '100px' }}>
                 PROFIL SKETSA:
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
@@ -1695,20 +1698,21 @@ const CADStudioSimulator = () => {
                       style={{
                         padding: '8px 12px',
                         borderRadius: '8px',
-                        border: isSel ? '2px solid #38bdf8' : '1px solid #334155',
-                        background: isSel ? '#0369a1' : '#1e293b',
-                        color: '#f8fafc',
+                        border: isSel ? '2px solid #ff6914' : '1px solid #e2e8f0',
+                        background: isSel ? '#fff7ed' : '#f8fafc',
+                        color: isSel ? '#c2410c' : '#334155',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        transition: 'all 0.15s'
+                        transition: 'all 0.15s',
+                        boxShadow: isSel ? '0 2px 8px rgba(255,105,20,0.2)' : 'none'
                       }}
                     >
                       <span style={{ fontSize: '1.2rem' }}>{sk.icon}</span>
                       <div style={{ textAlign: 'left' }}>
                         <div style={{ fontSize: '0.75rem', fontWeight: 800 }}>{sk.name.split('(')[0]}</div>
-                        <div style={{ fontSize: '0.65rem', color: isSel ? '#e0f2fe' : '#94a3b8' }}>{sk.dimensions}</div>
+                        <div style={{ fontSize: '0.65rem', color: isSel ? '#ea580c' : '#94a3b8' }}>{sk.dimensions}</div>
                       </div>
                     </button>
                   );
@@ -1716,8 +1720,8 @@ const CADStudioSimulator = () => {
               </div>
 
               {selectedOperation === 'loft' && (
-                <div style={{ borderLeft: '1px solid #334155', paddingLeft: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 800 }}>Profil Atas Loft:</span>
+                <div style={{ borderLeft: '1px solid #e2e8f0', paddingLeft: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 800 }}>Profil Atas Loft:</span>
                   {SKETCH_PROFILES.slice(0, 3).map((sk) => (
                     <button
                       key={`top-${sk.id}`}
@@ -1725,9 +1729,9 @@ const CADStudioSimulator = () => {
                       style={{
                         padding: '4px 8px',
                         borderRadius: '6px',
-                        border: selectedTopSketch === sk.id ? '1.5px solid #22d3ee' : '1px solid #334155',
-                        background: selectedTopSketch === sk.id ? '#0891b2' : '#1e293b',
-                        color: '#fff',
+                        border: selectedTopSketch === sk.id ? '1.5px solid #0284c7' : '1px solid #e2e8f0',
+                        background: selectedTopSketch === sk.id ? '#0284c7' : '#f8fafc',
+                        color: selectedTopSketch === sk.id ? '#fff' : '#334155',
                         fontSize: '0.68rem',
                         fontWeight: 700,
                         cursor: 'pointer'
@@ -1741,10 +1745,10 @@ const CADStudioSimulator = () => {
             </div>
           )}
 
-          {/* TAB 2: 3D SOLID (OPERASI PADAT) */}
+          {/* TAB 2: CREATE 3D (OPERASI PADAT) */}
           {ribbonTab === 'solid' && (
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
-              {/* 4 Operasi */}
+              {/* 4 Operasi — large icon buttons, Fusion 360 style */}
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {Object.values(CREATE_OPERATIONS).map((op) => {
                   const isSel = selectedOperation === op.id;
@@ -1753,22 +1757,24 @@ const CADStudioSimulator = () => {
                       key={op.id}
                       onClick={() => handleSelectOperation(op.id)}
                       style={{
-                        padding: '8px 12px',
+                        padding: '8px 14px',
                         borderRadius: '8px',
-                        border: isSel ? `2px solid ${op.borderActive}` : '1px solid #334155',
-                        background: isSel ? op.bgActive : '#1e293b',
-                        color: isSel ? '#f8fafc' : '#cbd5e1',
+                        border: isSel ? `2px solid ${op.color}` : '1px solid #e2e8f0',
+                        background: isSel ? op.color : '#f8fafc',
+                        color: isSel ? '#ffffff' : '#334155',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px'
+                        gap: '8px',
+                        boxShadow: isSel ? `0 2px 8px ${op.color}55` : 'none',
+                        transition: 'all 0.15s'
                       }}
                     >
-                      <span style={{ fontSize: '1.2rem' }}>{op.icon}</span>
+                      <span style={{ fontSize: '1.4rem' }}>{op.icon}</span>
                       <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '0.76rem', fontWeight: 900 }}>{op.name.split('(')[0]}</div>
-                        <div style={{ fontSize: '0.65rem', color: isSel ? op.borderActive : '#94a3b8' }}>
-                          Shortcut: [{op.shortcut}]
+                        <div style={{ fontSize: '0.76rem', fontWeight: 900 }}>{op.name.split('(')[0].trim()}</div>
+                        <div style={{ fontSize: '0.63rem', color: isSel ? 'rgba(255,255,255,0.8)' : '#94a3b8' }}>
+                          [{op.shortcut}]
                         </div>
                       </div>
                     </button>
@@ -1778,15 +1784,15 @@ const CADStudioSimulator = () => {
 
               {/* Slider Parameter */}
               <div style={{
-                background: '#1e293b',
+                background: '#f1f5f9',
                 padding: '6px 12px',
                 borderRadius: '8px',
-                border: '1px solid #334155',
+                border: '1px solid #e2e8f0',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px'
               }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#f8fafc' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#334155' }}>
                   {activeOpData.paramName}:
                 </span>
                 <input
@@ -1797,13 +1803,13 @@ const CADStudioSimulator = () => {
                   onChange={(e) => setOpParam(Number(e.target.value))}
                   style={{ width: '100px', cursor: 'pointer', accentColor: activeOpData.color }}
                 />
-                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: activeOpData.borderActive, minWidth: '45px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 900, color: activeOpData.color, minWidth: '45px' }}>
                   {opParam} {activeOpData.paramUnit}
                 </span>
               </div>
 
               {/* Kontrol Animasi Transformasi */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#1e293b', padding: '6px 12px', borderRadius: '8px', border: '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#f1f5f9', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <button
                   onClick={handleTogglePlayPause}
                   style={{
@@ -1817,16 +1823,16 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {isPlayingAnim ? '⏸️ Jeda' : '▶️ Putar Animasi'}
+                  {isPlayingAnim ? '⏸️ Jeda' : '▶️ Animasi'}
                 </button>
                 <button
                   onClick={handleReplayAnim}
                   style={{
                     padding: '4px 8px',
                     borderRadius: '6px',
-                    border: '1px solid #475569',
-                    background: '#0f172a',
-                    color: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    background: '#ffffff',
+                    color: '#334155',
                     fontWeight: 700,
                     fontSize: '0.72rem',
                     cursor: 'pointer'
@@ -1848,24 +1854,25 @@ const CADStudioSimulator = () => {
                   style={{ width: '80px', accentColor: activeOpData.color, cursor: 'pointer' }}
                   title="Geser progres transformasi 2D ke 3D"
                 />
-                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: activeOpData.borderActive }}>
+                <span style={{ fontSize: '0.68rem', fontWeight: 800, color: activeOpData.color }}>
                   {Math.round(animProgress * 100)}%
                 </span>
               </div>
             </div>
           )}
 
+
           {/* TAB 3: MODIFY (FITUR BENGKEL) */}
           {ribbonTab === 'modify' && (
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
               {/* FILLET */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasFillet ? '#0c2e59' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasFillet ? '1.5px solid #38bdf8' : '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasFillet ? '#eff6ff' : '#f8fafc', padding: '6px 10px', borderRadius: '8px', border: hasFillet ? '1.5px solid #0284c7' : '1px solid #e2e8f0' }}>
                 <button
                   onClick={handleToggleFillet}
                   style={{
                     border: 'none',
-                    background: hasFillet ? '#0284c7' : '#334155',
-                    color: '#fff',
+                    background: hasFillet ? '#0284c7' : '#e2e8f0',
+                    color: hasFillet ? '#fff' : '#475569',
                     padding: '4px 8px',
                     borderRadius: '5px',
                     fontSize: '0.72rem',
@@ -1882,20 +1889,20 @@ const CADStudioSimulator = () => {
                     max="8"
                     value={filletRadius}
                     onChange={(e) => setFilletRadius(Number(e.target.value))}
-                    style={{ width: '55px', accentColor: '#38bdf8', cursor: 'pointer' }}
+                    style={{ width: '55px', accentColor: '#0284c7', cursor: 'pointer' }}
                   />
                 )}
-                {hasFillet && <span style={{ fontSize: '0.7rem', color: '#7dd3fc', fontWeight: 800 }}>R={filletRadius}</span>}
+                {hasFillet && <span style={{ fontSize: '0.7rem', color: '#0284c7', fontWeight: 800 }}>R={filletRadius}</span>}
               </div>
 
               {/* CHAMFER */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasChamfer ? '#422006' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasChamfer ? '1.5px solid #fb923c' : '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasChamfer ? '#fff7ed' : '#f8fafc', padding: '6px 10px', borderRadius: '8px', border: hasChamfer ? '1.5px solid #ea580c' : '1px solid #e2e8f0' }}>
                 <button
                   onClick={handleToggleChamfer}
                   style={{
                     border: 'none',
-                    background: hasChamfer ? '#ea580c' : '#334155',
-                    color: '#fff',
+                    background: hasChamfer ? '#ea580c' : '#e2e8f0',
+                    color: hasChamfer ? '#fff' : '#475569',
                     padding: '4px 8px',
                     borderRadius: '5px',
                     fontSize: '0.72rem',
@@ -1912,20 +1919,20 @@ const CADStudioSimulator = () => {
                     max="8"
                     value={chamferSize}
                     onChange={(e) => setChamferSize(Number(e.target.value))}
-                    style={{ width: '55px', accentColor: '#fb923c', cursor: 'pointer' }}
+                    style={{ width: '55px', accentColor: '#ea580c', cursor: 'pointer' }}
                   />
                 )}
-                {hasChamfer && <span style={{ fontSize: '0.7rem', color: '#fed7aa', fontWeight: 800 }}>C={chamferSize}</span>}
+                {hasChamfer && <span style={{ fontSize: '0.7rem', color: '#ea580c', fontWeight: 800 }}>C={chamferSize}</span>}
               </div>
 
               {/* HOLE */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasHole ? '#450a0a' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasHole ? '1.5px solid #f87171' : '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasHole ? '#fef2f2' : '#f8fafc', padding: '6px 10px', borderRadius: '8px', border: hasHole ? '1.5px solid #ef4444' : '1px solid #e2e8f0' }}>
                 <button
                   onClick={() => { sound.playClick(); setHasHole(!hasHole); }}
                   style={{
                     border: 'none',
-                    background: hasHole ? '#dc2626' : '#334155',
-                    color: '#fff',
+                    background: hasHole ? '#ef4444' : '#e2e8f0',
+                    color: hasHole ? '#fff' : '#475569',
                     padding: '4px 8px',
                     borderRadius: '5px',
                     fontSize: '0.72rem',
@@ -1945,17 +1952,17 @@ const CADStudioSimulator = () => {
                     style={{ width: '55px', accentColor: '#ef4444', cursor: 'pointer' }}
                   />
                 )}
-                {hasHole && <span style={{ fontSize: '0.7rem', color: '#fca5a5', fontWeight: 800 }}>Ø={holeRadius * 2}</span>}
+                {hasHole && <span style={{ fontSize: '0.7rem', color: '#ef4444', fontWeight: 800 }}>Ø={holeRadius * 2}</span>}
               </div>
 
               {/* SHELL */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasShell ? '#2e1065' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasShell ? '1.5px solid #c084fc' : '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasShell ? '#faf5ff' : '#f8fafc', padding: '6px 10px', borderRadius: '8px', border: hasShell ? '1.5px solid #a855f7' : '1px solid #e2e8f0' }}>
                 <button
                   onClick={() => { sound.playClick(); setHasShell(!hasShell); }}
                   style={{
                     border: 'none',
-                    background: hasShell ? '#7c3aed' : '#334155',
-                    color: '#fff',
+                    background: hasShell ? '#a855f7' : '#e2e8f0',
+                    color: hasShell ? '#fff' : '#475569',
                     padding: '4px 8px',
                     borderRadius: '5px',
                     fontSize: '0.72rem',
@@ -1975,17 +1982,17 @@ const CADStudioSimulator = () => {
                     style={{ width: '50px', accentColor: '#a855f7', cursor: 'pointer' }}
                   />
                 )}
-                {hasShell && <span style={{ fontSize: '0.7rem', color: '#e9d5ff', fontWeight: 800 }}>t={shellThickness}</span>}
+                {hasShell && <span style={{ fontSize: '0.7rem', color: '#a855f7', fontWeight: 800 }}>t={shellThickness}</span>}
               </div>
 
               {/* DRAFT */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasDraft ? '#064e3b' : '#1e293b', padding: '6px 10px', borderRadius: '8px', border: hasDraft ? '1.5px solid #34d399' : '1px solid #334155' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: hasDraft ? '#f0fdf4' : '#f8fafc', padding: '6px 10px', borderRadius: '8px', border: hasDraft ? '1.5px solid #10b981' : '1px solid #e2e8f0' }}>
                 <button
                   onClick={() => { sound.playClick(); setHasDraft(!hasDraft); }}
                   style={{
                     border: 'none',
-                    background: hasDraft ? '#059669' : '#334155',
-                    color: '#fff',
+                    background: hasDraft ? '#10b981' : '#e2e8f0',
+                    color: hasDraft ? '#fff' : '#475569',
                     padding: '4px 8px',
                     borderRadius: '5px',
                     fontSize: '0.72rem',
@@ -2005,7 +2012,7 @@ const CADStudioSimulator = () => {
                     style={{ width: '50px', accentColor: '#10b981', cursor: 'pointer' }}
                   />
                 )}
-                {hasDraft && <span style={{ fontSize: '0.7rem', color: '#a7f3d0', fontWeight: 800 }}>{draftAngle}°</span>}
+                {hasDraft && <span style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 800 }}>{draftAngle}°</span>}
               </div>
 
               {/* X-Ray Section View */}
@@ -2014,9 +2021,9 @@ const CADStudioSimulator = () => {
                 style={{
                   padding: '6px 12px',
                   borderRadius: '8px',
-                  border: isCrossSection ? '1.5px solid #38bdf8' : '1px solid #334155',
-                  background: isCrossSection ? '#0c4a6e' : '#1e293b',
-                  color: '#fff',
+                  border: isCrossSection ? '1.5px solid #0284c7' : '1px solid #e2e8f0',
+                  background: isCrossSection ? '#eff6ff' : '#f8fafc',
+                  color: isCrossSection ? '#0284c7' : '#475569',
                   fontSize: '0.72rem',
                   fontWeight: 800,
                   cursor: 'pointer'
@@ -2031,7 +2038,7 @@ const CADStudioSimulator = () => {
           {/* TAB 4: TEMPLATE KOMPONEN MESIN (1-KLIK) */}
           {ribbonTab === 'templates' && (
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', minWidth: '100px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0284c7', minWidth: '100px' }}>
                 PILIH BENDA MESIN:
               </span>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
@@ -2042,9 +2049,9 @@ const CADStudioSimulator = () => {
                     style={{
                       padding: '6px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #334155',
-                      background: '#1e293b',
-                      color: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      background: '#f8fafc',
+                      color: '#334155',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -2053,8 +2060,8 @@ const CADStudioSimulator = () => {
                       fontWeight: 800,
                       transition: 'all 0.15s'
                     }}
-                    onMouseOver={(e) => e.currentTarget.style.borderColor = '#38bdf8'}
-                    onMouseOut={(e) => e.currentTarget.style.borderColor = '#334155'}
+                    onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ff6914'; e.currentTarget.style.background = '#fff7ed'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }}
                   >
                     <span style={{ fontSize: '1.1rem' }}>{tpl.icon}</span>
                     <div style={{ textAlign: 'left' }}>
@@ -2072,7 +2079,7 @@ const CADStudioSimulator = () => {
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
               {/* Material Switcher */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8' }}>Bahan:</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b' }}>Bahan:</span>
                 {Object.entries(MATERIALS_CONFIG).map(([key, mat]) => (
                   <button
                     key={key}
@@ -2080,9 +2087,9 @@ const CADStudioSimulator = () => {
                     style={{
                       padding: '5px 10px',
                       borderRadius: '6px',
-                      border: materialMode === key ? '1.5px solid #38bdf8' : '1px solid #334155',
-                      background: materialMode === key ? '#0284c7' : '#1e293b',
-                      color: '#ffffff',
+                      border: materialMode === key ? '1.5px solid #0284c7' : '1px solid #e2e8f0',
+                      background: materialMode === key ? '#0284c7' : '#f8fafc',
+                      color: materialMode === key ? '#ffffff' : '#334155',
                       fontSize: '0.7rem',
                       fontWeight: 700,
                       cursor: 'pointer'
@@ -2094,10 +2101,10 @@ const CADStudioSimulator = () => {
               </div>
 
               {/* Physical Readout */}
-              <div style={{ display: 'flex', gap: '12px', background: '#090d16', padding: '6px 14px', borderRadius: '8px', border: '1px solid #1e293b', fontSize: '0.72rem' }}>
-                <div>Vol: <strong style={{ color: '#38bdf8' }}>{inspectionMetrics.volume} cm³</strong></div>
-                <div>Luas: <strong style={{ color: '#f8fafc' }}>{inspectionMetrics.area} cm²</strong></div>
-                <div>Berat: <strong style={{ color: '#f59e0b' }}>{inspectionMetrics.mass} gram</strong></div>
+              <div style={{ display: 'flex', gap: '12px', background: '#f1f5f9', padding: '6px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.72rem', color: '#334155' }}>
+                <div>Vol: <strong style={{ color: '#0284c7' }}>{inspectionMetrics.volume} cm³</strong></div>
+                <div>Luas: <strong style={{ color: '#334155' }}>{inspectionMetrics.area} cm²</strong></div>
+                <div>Berat: <strong style={{ color: '#ea580c' }}>{inspectionMetrics.mass} gram</strong></div>
               </div>
 
               {/* Export STL Button */}
@@ -2106,7 +2113,7 @@ const CADStudioSimulator = () => {
                 style={{
                   padding: '6px 14px',
                   borderRadius: '6px',
-                  border: '1px solid #38bdf8',
+                  border: '1px solid #0284c7',
                   background: 'linear-gradient(135deg, #0284c7, #0369a1)',
                   color: '#ffffff',
                   fontSize: '0.74rem',
@@ -2125,7 +2132,7 @@ const CADStudioSimulator = () => {
           {/* TAB 6: LAYOUT A4 (KERTAS GAMBAR) */}
           {ribbonTab === 'layout' && (
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-              <div style={{ fontSize: '0.76rem', color: '#94a3b8' }}>
+              <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
                 Mode Gambar Kerja Kertas A4 Standar ISO 5456/128 lengkap dengan Garis Tepi &amp; Etiket Kepala Gambar SMK Negeri 2 Depok.
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -2149,9 +2156,9 @@ const CADStudioSimulator = () => {
                   style={{
                     padding: '6px 14px',
                     borderRadius: '6px',
-                    border: '1px solid #334155',
-                    background: '#1e293b',
-                    color: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    background: '#f8fafc',
+                    color: '#334155',
                     fontSize: '0.74rem',
                     fontWeight: 800,
                     cursor: 'pointer'
@@ -2167,7 +2174,7 @@ const CADStudioSimulator = () => {
       </div>
 
       {/* =====================================================================
-          4. CENTRAL AUTOCAD VIEWPORT (MODEL SPACE / PAPER SPACE)
+          4. FUSION 360 VIEWPORT (MODEL SPACE / PAPER SPACE)
           ===================================================================== */}
       {displayMode === 'layout' ? (
         /* PAPER SPACE VIEW (A4 DRAWING SHEET) */
@@ -2193,14 +2200,14 @@ const CADStudioSimulator = () => {
           display: 'grid',
           gridTemplateColumns: displayMode === 'split' ? 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))' : '1fr',
           gap: '1px',
-          background: '#1e293b',
+          background: '#e2e8f0',
           minHeight: '420px'
         }}>
           
-          {/* PANEL KIRI: JENDELA SKETSA 2D AUTOCAD */}
+          {/* PANEL KIRI: JENDELA SKETSA 2D FUSION 360 */}
           {(displayMode === 'split' || displayMode === '2d_only') && (
             <div style={{
-              background: '#11141d',
+              background: '#ffffff',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
@@ -2209,30 +2216,31 @@ const CADStudioSimulator = () => {
               {/* Header Canvas 2D */}
               <div style={{
                 padding: '8px 14px',
-                background: '#090d16',
-                borderBottom: '1px solid #1e293b',
+                background: '#f8fafc',
+                borderBottom: '1px solid #e2e8f0',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 fontSize: '0.74rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ color: '#38bdf8', fontWeight: 900 }}>[TOP] [2D WIREFRAME]</span>
-                  <span style={{ color: '#94a3b8' }}>• Bidang XY: {activeSketchData.name.split('(')[0]}</span>
+                  <span style={{ color: '#0284c7', fontWeight: 900 }}>[TOP] [2D SKETCH]</span>
+                  <span style={{ color: '#475569' }}>• Bidang XY: {activeSketchData.name.split('(')[0]}</span>
                 </div>
                 <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                   <button
                     onClick={() => setCadTheme(cadTheme === 'dark' ? 'light' : 'dark')}
                     style={{
-                      background: 'transparent',
-                      border: '1px solid #334155',
-                      color: '#94a3b8',
-                      padding: '2px 6px',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      color: '#475569',
+                      padding: '2px 8px',
                       borderRadius: '4px',
                       fontSize: '0.65rem',
+                      fontWeight: 700,
                       cursor: 'pointer'
                     }}
-                    title="Ganti tema kanvas (AutoCAD Gelap / Blueprint Terang)"
+                    title="Ganti tema kanvas (Light Sheet / Dark Grid)"
                   >
                     {cadTheme === 'dark' ? '🌙 Dark Grid' : '☀️ Light Sheet'}
                   </button>
@@ -2261,10 +2269,10 @@ const CADStudioSimulator = () => {
             </div>
           )}
 
-          {/* PANEL KANAN: JENDELA 3D AUTODESK WEBGL */}
+          {/* PANEL KANAN: JENDELA 3D FUSION 360 WEBGL */}
           {(displayMode === 'split' || displayMode === '3d_only') && (
             <div style={{
-              background: '#0b0f19',
+              background: '#f8fafc',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
@@ -2273,17 +2281,17 @@ const CADStudioSimulator = () => {
               {/* Header Canvas 3D */}
               <div style={{
                 padding: '8px 14px',
-                background: '#090d16',
-                borderBottom: '1px solid #1e293b',
+                background: '#f8fafc',
+                borderBottom: '1px solid #e2e8f0',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 fontSize: '0.74rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ color: '#10b981', fontWeight: 900 }}>[3D ORBIT VIEW]</span>
-                  <span style={{ color: '#94a3b8' }}>• {activeOpData.name.split('(')[0]}</span>
-                  <span style={{ color: isCrossSection ? '#38bdf8' : '#64748b', fontSize: '0.68rem' }}>
+                  <span style={{ color: '#ff6914', fontWeight: 900 }}>[3D ORBIT VIEW]</span>
+                  <span style={{ color: '#475569' }}>• {activeOpData.name.split('(')[0]}</span>
+                  <span style={{ color: isCrossSection ? '#0284c7' : '#64748b', fontSize: '0.68rem' }}>
                     {isCrossSection ? '(Mode X-Ray Aktif)' : '(Shaded Edges)'}
                   </span>
                 </div>
@@ -2292,9 +2300,9 @@ const CADStudioSimulator = () => {
                   <button
                     onClick={() => setAutoRotate(!autoRotate)}
                     style={{
-                      background: autoRotate ? '#10b981' : '#1e293b',
-                      border: '1px solid #334155',
-                      color: '#ffffff',
+                      background: autoRotate ? '#ff6914' : '#ffffff',
+                      border: autoRotate ? '1px solid #ff6914' : '1px solid #cbd5e1',
+                      color: autoRotate ? '#ffffff' : '#334155',
                       padding: '2px 8px',
                       borderRadius: '4px',
                       fontSize: '0.66rem',
@@ -2310,7 +2318,7 @@ const CADStudioSimulator = () => {
               {/* Three.js Canvas Viewport */}
               <div style={{ flex: 1, minHeight: '360px', width: '100%', position: 'relative' }}>
                 <Suspense fallback={
-                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#38bdf8', fontWeight: 800 }}>
+                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#ff6914', fontWeight: 800 }}>
                     MEMUAT ENGINE 3D...
                   </div>
                 }>
@@ -2318,11 +2326,11 @@ const CADStudioSimulator = () => {
                     shadows
                     camera={{ position: [60, 50, 60], fov: 42 }}
                     gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-                    style={{ background: '#090d16' }}
+                    style={{ background: '#f8fafc' }}
                   >
-                    <ambientLight intensity={1.2} />
+                    <ambientLight intensity={1.5} />
                     <directionalLight position={[60, 80, 50]} intensity={1.8} castShadow />
-                    <directionalLight position={[-60, 40, -50]} intensity={0.8} />
+                    <directionalLight position={[-60, 40, -50]} intensity={0.9} />
 
                     <CameraRig targetCamPos={targetCamPos} controlsRef={controlsRef} />
 
@@ -2343,10 +2351,10 @@ const CADStudioSimulator = () => {
                       args={[140, 140]}
                       cellSize={10}
                       cellThickness={1}
-                      cellColor="#1e293b"
+                      cellColor="#e2e8f0"
                       sectionSize={30}
                       sectionThickness={1.5}
-                      sectionColor="#38bdf8"
+                      sectionColor="#cbd5e1"
                       fadeDistance={120}
                     />
 
@@ -2361,18 +2369,19 @@ const CADStudioSimulator = () => {
                   </Canvas>
                 </Suspense>
 
-                {/* AutoCAD ViewCube Floating Presets */}
+                {/* Fusion 360 ViewCube Floating Presets */}
                 <div style={{
                   position: 'absolute',
                   top: '12px',
                   right: '12px',
                   display: 'flex',
                   gap: '4px',
-                  background: 'rgba(9, 13, 22, 0.88)',
+                  background: 'rgba(255, 255, 255, 0.92)',
                   backdropFilter: 'blur(6px)',
                   padding: '4px',
                   borderRadius: '6px',
-                  border: '1px solid #334155',
+                  border: '1px solid #cbd5e1',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   zIndex: 10
                 }}>
                   {[
@@ -2388,8 +2397,8 @@ const CADStudioSimulator = () => {
                         padding: '3px 8px',
                         borderRadius: '4px',
                         border: 'none',
-                        background: activeViewAngle === v.id ? '#0284c7' : 'transparent',
-                        color: activeViewAngle === v.id ? '#ffffff' : '#94a3b8',
+                        background: activeViewAngle === v.id ? '#ff6914' : 'transparent',
+                        color: activeViewAngle === v.id ? '#ffffff' : '#64748b',
                         fontSize: '0.68rem',
                         fontWeight: 800,
                         cursor: 'pointer'
@@ -2405,12 +2414,14 @@ const CADStudioSimulator = () => {
                   position: 'absolute',
                   bottom: '10px',
                   left: '12px',
-                  background: 'rgba(9, 13, 22, 0.85)',
+                  background: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid #e2e8f0',
                   padding: '4px 10px',
                   borderRadius: '6px',
                   fontSize: '0.68rem',
-                  color: '#94a3b8',
-                  pointerEvents: 'none'
+                  color: '#64748b',
+                  pointerEvents: 'none',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
                 }}>
                   💡 Klik &amp; geser mouse untuk memutar orbit 3D • Scroll untuk zoom
                 </div>
@@ -2422,12 +2433,12 @@ const CADStudioSimulator = () => {
       )}
 
       {/* =====================================================================
-          5. AUTOCAD COMMAND LINE BAR (COMMAND: _)
+          5. FUSION 360 PROMPT & QUICK ACTION BAR
           ===================================================================== */}
       <div style={{
-        background: '#090d16',
-        borderTop: '1px solid #1e293b',
-        borderBottom: '1px solid #1e293b',
+        background: '#ffffff',
+        borderTop: '1px solid #e2e8f0',
+        borderBottom: '1px solid #e2e8f0',
         padding: '8px 14px',
         display: 'flex',
         alignItems: 'center',
@@ -2440,13 +2451,12 @@ const CADStudioSimulator = () => {
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          fontFamily: "'Courier New', Courier, monospace",
           fontSize: '0.78rem',
           flex: 1,
           minWidth: '280px'
         }}>
-          <span style={{ color: '#22c55e', fontWeight: 900 }}>AutoCAD &gt;</span>
-          <span style={{ color: '#38bdf8', fontWeight: 700 }}>{commandLine}</span>
+          <span style={{ color: '#ff6914', fontWeight: 900 }}>Fusion 360 &gt;</span>
+          <span style={{ color: '#0284c7', fontWeight: 700 }}>{commandLine}</span>
         </div>
 
         {/* Quick Shortcut Command Chips */}
@@ -2468,18 +2478,18 @@ const CADStudioSimulator = () => {
               key={chip.label}
               onClick={chip.action}
               style={{
-                background: '#1e293b',
-                border: '1px solid #334155',
-                color: '#94a3b8',
+                background: '#f8fafc',
+                border: '1px solid #cbd5e1',
+                color: '#475569',
                 padding: '2px 7px',
                 borderRadius: '4px',
                 fontSize: '0.64rem',
-                fontFamily: "'Courier New', Courier, monospace",
                 fontWeight: 800,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.15s'
               }}
-              onMouseOver={(e) => { e.currentTarget.style.color = '#38bdf8'; e.currentTarget.style.borderColor = '#38bdf8'; }}
-              onMouseOut={(e) => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = '#334155'; }}
+              onMouseOver={(e) => { e.currentTarget.style.color = '#ff6914'; e.currentTarget.style.borderColor = '#ff6914'; e.currentTarget.style.background = '#fff7ed'; }}
+              onMouseOut={(e) => { e.currentTarget.style.color = '#475569'; e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = '#f8fafc'; }}
             >
               [{chip.label}]
             </button>
@@ -2488,10 +2498,11 @@ const CADStudioSimulator = () => {
       </div>
 
       {/* =====================================================================
-          6. AUTOCAD STATUS BAR AT THE BOTTOM (F-KEYS & COORDINATES)
+          6. FUSION 360 STATUS BAR AT THE BOTTOM (COORDINATES & DRAFTING)
           ===================================================================== */}
       <div style={{
-        background: '#040711',
+        background: '#f8fafc',
+        borderTop: '1px solid #e2e8f0',
         padding: '6px 14px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -2499,26 +2510,24 @@ const CADStudioSimulator = () => {
         flexWrap: 'wrap',
         gap: '10px',
         fontSize: '0.7rem',
-        color: '#64748b',
-        fontFamily: "'Courier New', Courier, monospace"
+        color: '#64748b'
       }}>
         {/* Live Coordinate readout */}
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <span>X: <strong style={{ color: '#ef4444' }}>40.00 mm</strong></span>
-          <span>Y: <strong style={{ color: '#22c55e' }}>40.00 mm</strong></span>
-          <span>Z: <strong style={{ color: '#38bdf8' }}>{opParam}.00 mm</strong></span>
-          <span style={{ color: '#334155' }}>|</span>
-          <span>SKALA: <strong style={{ color: '#f8fafc' }}>1 : 1 (ISO 5455)</strong></span>
+          <span>Y: <strong style={{ color: '#16a34a' }}>40.00 mm</strong></span>
+          <span>Z: <strong style={{ color: '#0284c7' }}>{opParam}.00 mm</strong></span>
+          <span style={{ color: '#cbd5e1' }}>|</span>
+          <span>SKALA: <strong style={{ color: '#0f172a' }}>1 : 1 (ISO 5455)</strong></span>
         </div>
 
-        {/* F-Key Drafting Status Toggles */}
+        {/* Drafting Status Toggles */}
         <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <span style={{ color: '#38bdf8', fontWeight: 800 }}>MODEL</span>
-          <span style={{ color: '#334155' }}>|</span>
-          <span style={{ color: '#22c55e' }}>GRID [F7]: ON</span>
-          <span style={{ color: '#22c55e' }}>ORTHO [F8]: ON</span>
-          <span style={{ color: '#22c55e' }}>OSNAP [F3]: ON</span>
-          <span style={{ color: '#22c55e' }}>DYN [F12]: ON</span>
+          <span style={{ color: '#ff6914', fontWeight: 800 }}>MODEL</span>
+          <span style={{ color: '#cbd5e1' }}>|</span>
+          <span style={{ color: '#16a34a', fontWeight: 700 }}>GRID: ON</span>
+          <span style={{ color: '#16a34a', fontWeight: 700 }}>ORTHO: ON</span>
+          <span style={{ color: '#16a34a', fontWeight: 700 }}>SNAP: ON</span>
         </div>
       </div>
 

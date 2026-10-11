@@ -7,7 +7,7 @@ import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
 
 const DesignLab = ({ onOpenDiagnostic }) => {
-  const [labTab, setLabTab] = useState('cad'); // Default to CAD studio for direct access
+  const [labTab, setLabTab] = useState('materi'); // Default: Modul & Standarisasi (alur belajar)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', minHeight: '100%', boxSizing: 'border-box' }}>
@@ -58,48 +58,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
 
         {/* 4 Main Mode Switchers */}
         <div style={{ display: 'flex', background: '#f1f5f9', padding: '4px', borderRadius: '10px', gap: '4px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
-          <button
-            onClick={() => { sound.playClick(); setLabTab('cad'); }}
-            style={{
-              padding: '7px 16px',
-              borderRadius: '7px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 800,
-              fontSize: '0.82rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: labTab === 'cad' ? '#0284c7' : 'transparent',
-              color: labTab === 'cad' ? '#ffffff' : '#334155',
-              boxShadow: labTab === 'cad' ? '0 2px 8px rgba(2, 132, 199, 0.3)' : 'none',
-              transition: 'all 0.15s'
-            }}
-          >
-            <span>🖥️</span> AutoCAD Workbench (2D ➡️ 3D)
-          </button>
-
-          <button
-            onClick={() => { sound.playClick(); setLabTab('ortogonal'); }}
-            style={{
-              padding: '7px 16px',
-              borderRadius: '7px',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 800,
-              fontSize: '0.82rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: labTab === 'ortogonal' ? '#6366f1' : 'transparent',
-              color: labTab === 'ortogonal' ? '#ffffff' : '#334155',
-              boxShadow: labTab === 'ortogonal' ? '0 2px 8px rgba(99, 102, 241, 0.3)' : 'none',
-              transition: 'all 0.15s'
-            }}
-          >
-            <span>🧭</span> Simulator Ortogonal (3D)
-          </button>
-
+        {/* STEP 1: MODUL & STANDARISASI ISO */}
           <button
             onClick={() => { sound.playClick(); setLabTab('materi'); }}
             style={{
@@ -118,9 +77,54 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>📚</span> Modul & Standarisasi ISO
+            <span>📚</span> 1. Modul & Standarisasi ISO
           </button>
 
+          {/* STEP 2: SIMULATOR ORTOGONAL */}
+          <button
+            onClick={() => { sound.playClick(); setLabTab('ortogonal'); }}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '7px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 800,
+              fontSize: '0.82rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: labTab === 'ortogonal' ? '#6366f1' : 'transparent',
+              color: labTab === 'ortogonal' ? '#ffffff' : '#334155',
+              boxShadow: labTab === 'ortogonal' ? '0 2px 8px rgba(99, 102, 241, 0.3)' : 'none',
+              transition: 'all 0.15s'
+            }}
+          >
+            <span>🧭</span> 2. Simulator Ortogonal
+          </button>
+
+          {/* STEP 3: AUTOCAD / CAD STUDIO */}
+          <button
+            onClick={() => { sound.playClick(); setLabTab('cad'); }}
+            style={{
+              padding: '7px 16px',
+              borderRadius: '7px',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 800,
+              fontSize: '0.82rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: labTab === 'cad' ? '#0284c7' : 'transparent',
+              color: labTab === 'cad' ? '#ffffff' : '#334155',
+              boxShadow: labTab === 'cad' ? '0 2px 8px rgba(2, 132, 199, 0.3)' : 'none',
+              transition: 'all 0.15s'
+            }}
+          >
+            <span>🖥️</span> 3. AutoCAD Studio (2D→3D)
+          </button>
+
+          {/* STEP 4: KUIS ASESMEN */}
           <button
             onClick={() => { sound.playClick(); setLabTab('quiz'); }}
             style={{
@@ -139,7 +143,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>🎯</span> Kuis Asesmen (1000 XP)
+            <span>🎯</span> 4. Kuis Asesmen (1000 XP)
           </button>
         </div>
       </div>

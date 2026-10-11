@@ -388,9 +388,8 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
   const solidColor = "#0f172a";
   const hiddenColor = "#ea580c";
   const centerColor = "#dc2626";
-  const fillColor = "#f8fafc";
-  const highlightFill = "#eff6ff";
-  const fillAccent = "#e0e7ff";
+  const fillColor = "#ffffff";
+  const fillAccent = "#f8fafc";
 
   switch (objectId) {
     // ----------------------------------------
@@ -430,7 +429,7 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
             <line x1="70" y1="65" x2="70" y2="130" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
             <line x1="59" y1="75" x2="59" y2="120" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="81" y1="75" x2="81" y2="120" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
-            {showDetails && <text x="70" y="55" fontSize="9" fontWeight="800" textAnchor="middle" fill="#1e40af">Tampak Atas</text>}
+            {showDetails && <text x="70" y="55" fontSize="9" fontWeight="800" textAnchor="middle" fill="#1e40af">Undak Atas</text>}
           </svg>
         );
       }
@@ -503,22 +502,30 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
         return (
           <svg viewBox={vb} width={size} height={size}>
             <rect x="25" y="30" width="90" height="80" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
-            <line x1="25" y1="70" x2="115" y2="70" stroke={solidColor} strokeWidth="2.4" />
-            <line x1="25" y1="48" x2="115" y2="48" stroke={solidColor} strokeWidth="1.5" />
-            <line x1="25" y1="92" x2="115" y2="92" stroke={solidColor} strokeWidth="1.5" />
-            <line x1="35" y1="30" x2="35" y2="110" stroke={solidColor} strokeWidth="1.5" />
-            <line x1="105" y1="30" x2="105" y2="110" stroke={solidColor} strokeWidth="1.5" />
+            {/* Kedua bibir atas takik V searah sumbu Z dari depan ke belakang */}
+            <line x1="48" y1="30" x2="48" y2="110" stroke={solidColor} strokeWidth="2.0" />
+            <line x1="92" y1="30" x2="92" y2="110" stroke={solidColor} strokeWidth="2.0" />
+            {/* Dasar lembah takik V di sumbu tengah */}
+            <line x1="70" y1="30" x2="70" y2="110" stroke={solidColor} strokeWidth="2.2" />
             <line x1="70" y1="20" x2="70" y2="120" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
-            {showDetails && <text x="70" y="66" fontSize="8" fontWeight="900" textAnchor="middle" fill="#16a34a">Dasar Lembah V</text>}
+            {/* Alur jepit klem samping tersembunyi di bawah */}
+            <line x1="35" y1="30" x2="35" y2="110" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            <line x1="105" y1="30" x2="105" y2="110" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            {showDetails && <text x="70" y="72" fontSize="8" fontWeight="900" textAnchor="middle" fill="#16a34a">Dasar Lembah V</text>}
           </svg>
         );
       }
       // kanan & kiri
       return (
         <svg viewBox={vb} width={size} height={size}>
-          <polygon points="30,35 110,35 110,115 30,115 30,82 40,82 40,62 30,62" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
+          <rect x="30" y="35" width="80" height="80" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
+          {/* Alur jepit klem samping terlihat melintang nyata */}
+          <line x1="30" y1="62" x2="110" y2="62" stroke={solidColor} strokeWidth="2.0" />
+          <line x1="30" y1="82" x2="110" y2="82" stroke={solidColor} strokeWidth="2.0" />
+          {/* Dasar lembah takik V di tengah tersembunyi */}
           <line x1="30" y1="68" x2="110" y2="68" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
-          {showDetails && <text x="70" y="63" fontSize="8" fontWeight="800" textAnchor="middle" fill="#c2410c">Lembah V (Gores)</text>}
+          {showDetails && <text x="70" y="55" fontSize="8" fontWeight="800" textAnchor="middle" fill="#c2410c">Dasar V (Gores)</text>}
+          {showDetails && <text x="70" y="74" fontSize="8" fontWeight="800" textAnchor="middle" fill="#0f172a">Alur Klem</text>}
         </svg>
       );
     }
@@ -530,15 +537,11 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
       if (viewName === 'depan') {
         return (
           <svg viewBox={vb} width={size} height={size}>
-            {/* Tapak base */}
             <rect x="18" y="85" width="104" height="28" rx="4" fill={fillColor} stroke={solidColor} strokeWidth="2.4" />
-            {/* Kubah silinder tengah */}
             <path d="M 45,85 A 25 25 0 0 1 95,85 Z" fill={fillAccent} stroke={solidColor} strokeWidth="2.4" />
-            {/* Lubang poros */}
             <circle cx="70" cy="74" r="13" fill="#ffffff" stroke={solidColor} strokeWidth="2.4" />
             <line x1="52" y1="74" x2="88" y2="74" stroke={centerColor} strokeWidth="1.2" strokeDasharray="6 2 2 2" />
             <line x1="70" y1="56" x2="70" y2="92" stroke={centerColor} strokeWidth="1.2" strokeDasharray="6 2 2 2" />
-            {/* Lubang baut tapak */}
             <line x1="30" y1="85" x2="30" y2="113" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="38" y1="85" x2="38" y2="113" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="34" y1="80" x2="34" y2="118" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
@@ -554,15 +557,15 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
           <svg viewBox={vb} width={size} height={size}>
             <rect x="18" y="45" width="104" height="50" rx="8" fill={fillColor} stroke={solidColor} strokeWidth="2.4" />
             <rect x="45" y="40" width="50" height="60" rx="3" fill={fillAccent} stroke={solidColor} strokeWidth="2.2" />
-            {/* Baut tapak */}
             <circle cx="34" cy="70" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
             <circle cx="106" cy="70" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
             <line x1="25" y1="70" x2="43" y2="70" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
             <line x1="97" y1="70" x2="115" y2="70" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
-            {/* Poros tembus hidden */}
-            <line x1="45" y1="57" x2="95" y2="57" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
-            <line x1="45" y1="83" x2="95" y2="83" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
-            <line x1="38" y1="70" x2="102" y2="70" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
+            {/* Lubang poros tembus dari depan ke belakang (vertikal di pandangan atas) */}
+            <line x1="57" y1="40" x2="57" y2="100" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
+            <line x1="83" y1="40" x2="83" y2="100" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
+            <line x1="70" y1="30" x2="70" y2="110" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
+            {showDetails && <text x="70" y="73" fontSize="8" fontWeight="800" textAnchor="middle" fill="#c2410c">Ø18 Tembus</text>}
           </svg>
         );
       }
@@ -573,6 +576,11 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
           <line x1="52" y1="61" x2="88" y2="61" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
           <line x1="52" y1="87" x2="88" y2="87" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
           <line x1="40" y1="74" x2="100" y2="74" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
+          {/* Lubang baut tapak tersembunyi vertikal di sumbu tengah tapak */}
+          <line x1="66" y1="85" x2="66" y2="113" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+          <line x1="74" y1="85" x2="74" y2="113" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+          <line x1="70" y1="80" x2="70" y2="118" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
+          {showDetails && <text x="70" y="60" fontSize="8" fontWeight="800" textAnchor="middle" fill="#0f172a">Poros Melintang</text>}
         </svg>
       );
     }
@@ -586,11 +594,9 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
           <svg viewBox={vb} width={size} height={size}>
             <polygon points="25,25 45,25 45,95 115,95 115,115 25,115" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
             <polygon points="45,95 95,95 45,45" fill={fillAccent} stroke={solidColor} strokeWidth="2.2" />
-            {/* Lubang baut tegak */}
             <line x1="25" y1="52" x2="45" y2="52" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="25" y1="68" x2="45" y2="68" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="18" y1="60" x2="52" y2="60" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
-            {/* Lubang baut dasar */}
             <line x1="72" y1="95" x2="72" y2="115" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="88" y1="95" x2="88" y2="115" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="80" y1="90" x2="80" y2="120" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
@@ -607,6 +613,11 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
             <circle cx="80" cy="70" r="6" fill="#ffffff" stroke={solidColor} strokeWidth="2.0" />
             <line x1="68" y1="70" x2="92" y2="70" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
             <line x1="80" y1="58" x2="80" y2="82" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
+            {/* Lubang pada pelat tegak tembus horizontal di pandangan atas */}
+            <line x1="25" y1="64" x2="45" y2="64" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            <line x1="25" y1="76" x2="45" y2="76" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            <line x1="18" y1="70" x2="52" y2="70" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
+            {showDetails && <text x="70" y="58" fontSize="8" fontWeight="800" textAnchor="middle" fill="#0f172a">Sirip 6mm</text>}
           </svg>
         );
       }
@@ -614,11 +625,18 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
         return (
           <svg viewBox={vb} width={size} height={size}>
             <rect x="40" y="25" width="60" height="90" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
+            {/* Pelat dasar menonjol di bawah */}
+            <line x1="40" y1="95" x2="100" y2="95" stroke={solidColor} strokeWidth="2.2" />
+            {/* Sirip penguat di tengah */}
+            <line x1="66" y1="45" x2="66" y2="95" stroke={solidColor} strokeWidth="1.8" />
+            <line x1="74" y1="45" x2="74" y2="95" stroke={solidColor} strokeWidth="1.8" />
             <circle cx="70" cy="60" r="6" fill="#ffffff" stroke={solidColor} strokeWidth="2.0" />
             <line x1="58" y1="60" x2="82" y2="60" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
             <line x1="70" y1="48" x2="70" y2="72" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
-            <line x1="66" y1="95" x2="66" y2="115" stroke={solidColor} strokeWidth="2.0" />
-            <line x1="74" y1="95" x2="74" y2="115" stroke={solidColor} strokeWidth="2.0" />
+            {/* Lubang pelat dasar tersembunyi di bawah */}
+            <line x1="64" y1="95" x2="64" y2="115" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+            <line x1="76" y1="95" x2="76" y2="115" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+            {showDetails && <text x="70" y="40" fontSize="8" fontWeight="800" textAnchor="middle" fill="#1e40af">Tampak Kanan</text>}
           </svg>
         );
       }
@@ -627,7 +645,13 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
         <svg viewBox={vb} width={size} height={size}>
           <rect x="40" y="25" width="60" height="90" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
           <circle cx="70" cy="60" r="6" fill="#ffffff" stroke={solidColor} strokeWidth="2.0" />
+          <line x1="58" y1="60" x2="82" y2="60" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
+          <line x1="70" y1="48" x2="70" y2="72" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
+          {/* Garis pelat dasar di belakang tersembunyi */}
           <line x1="40" y1="95" x2="100" y2="95" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
+          <line x1="64" y1="95" x2="64" y2="115" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+          <line x1="76" y1="95" x2="76" y2="115" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
+          {showDetails && <text x="70" y="40" fontSize="8" fontWeight="800" textAnchor="middle" fill="#64748b">Punggung Rata</text>}
         </svg>
       );
     }
@@ -639,15 +663,11 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
       if (viewName === 'depan' || viewName === 'kanan' || viewName === 'kiri') {
         return (
           <svg viewBox={vb} width={size} height={size}>
-            {/* Base piringan */}
             <rect x="20" y="88" width="100" height="24" rx="2" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
-            {/* Leher pipa */}
             <rect x="44" y="32" width="52" height="56" fill={fillAccent} stroke={solidColor} strokeWidth="2.5" />
-            {/* Lubang pipa tengah hidden */}
             <line x1="57" y1="32" x2="57" y2="112" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="83" y1="32" x2="83" y2="112" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
             <line x1="70" y1="20" x2="70" y2="124" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
-            {/* Baut samping hidden */}
             <line x1="28" y1="88" x2="28" y2="112" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
             <line x1="36" y1="88" x2="36" y2="112" stroke={hiddenColor} strokeWidth="1.5" strokeDasharray="4 3" />
             <line x1="32" y1="82" x2="32" y2="118" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
@@ -661,20 +681,14 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
       // atas
       return (
         <svg viewBox={vb} width={size} height={size}>
-          {/* Flange outer */}
           <circle cx="70" cy="70" r="48" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
-          {/* PCD circle */}
           <circle cx="70" cy="70" r="36" fill="none" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
-          {/* 4 bolt holes */}
           <circle cx="70" cy="34" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
           <circle cx="70" cy="106" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
           <circle cx="34" cy="70" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
           <circle cx="106" cy="70" r="5" fill="#ffffff" stroke={solidColor} strokeWidth="1.8" />
-          {/* Neck circle */}
           <circle cx="70" cy="70" r="26" fill={fillAccent} stroke={solidColor} strokeWidth="2.2" />
-          {/* Bore circle */}
           <circle cx="70" cy="70" r="14" fill="#ffffff" stroke={solidColor} strokeWidth="2.2" />
-          {/* Cross lines */}
           <line x1="16" y1="70" x2="124" y2="70" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
           <line x1="70" y1="16" x2="70" y2="124" stroke={centerColor} strokeWidth="1.0" strokeDasharray="6 2 2 2" />
           {showDetails && <text x="70" y="73" fontSize="8" fontWeight="900" textAnchor="middle" fill="#0f172a">PCD Ø36</text>}
@@ -729,6 +743,7 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
           <rect x="66" y="41" width="8" height="7" fill="none" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
           <line x1="20" y1="70" x2="120" y2="70" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
           <line x1="70" y1="20" x2="70" y2="120" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
+          {showDetails && <text x="70" y="88" fontSize="8" fontWeight="800" textAnchor="middle" fill="#64748b">Tampak Kiri</text>}
         </svg>
       );
     }
@@ -751,12 +766,17 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
         return (
           <svg viewBox={vb} width={size} height={size}>
             <rect x="20" y="35" width="100" height="70" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
-            <line x1="20" y1="48" x2="120" y2="48" stroke={solidColor} strokeWidth="2.0" />
-            <line x1="20" y1="92" x2="120" y2="92" stroke={solidColor} strokeWidth="2.0" />
-            <line x1="20" y1="67" x2="120" y2="67" stroke={solidColor} strokeWidth="1.5" />
-            <line x1="20" y1="73" x2="120" y2="73" stroke={solidColor} strokeWidth="1.5" />
-            <line x1="10" y1="70" x2="130" y2="70" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
-            {showDetails && <text x="70" y="62" fontSize="8" fontWeight="800" textAnchor="middle" fill="#2563eb">Lidah Rel</text>}
+            {/* Bibir terlebar ekor burung di atas (x=32 dan x=108 searah sumbu Z) */}
+            <line x1="32" y1="35" x2="32" y2="105" stroke={solidColor} strokeWidth="2.2" />
+            <line x1="108" y1="35" x2="108" y2="105" stroke={solidColor} strokeWidth="2.2" />
+            {/* Alur oli di sumbu tengah */}
+            <line x1="66" y1="35" x2="66" y2="105" stroke={solidColor} strokeWidth="1.8" />
+            <line x1="74" y1="35" x2="74" y2="105" stroke={solidColor} strokeWidth="1.8" />
+            <line x1="70" y1="25" x2="70" y2="115" stroke={centerColor} strokeWidth="1.2" strokeDasharray="8 2 2 2" />
+            {/* Pangkal leher ekor burung tersembunyi di bawah baji miring (x=40 dan x=100) */}
+            <line x1="40" y1="35" x2="40" y2="105" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            <line x1="100" y1="35" x2="100" y2="105" stroke={hiddenColor} strokeWidth="1.6" strokeDasharray="4 3" />
+            {showDetails && <text x="70" y="65" fontSize="8" fontWeight="800" textAnchor="middle" fill="#2563eb">Rel Ekor Burung</text>}
           </svg>
         );
       }
@@ -766,6 +786,7 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
           <rect x="30" y="42" width="80" height="70" fill={fillColor} stroke={solidColor} strokeWidth="2.5" />
           <line x1="30" y1="72" x2="110" y2="72" stroke={solidColor} strokeWidth="2.2" />
           <line x1="30" y1="48" x2="110" y2="48" stroke={hiddenColor} strokeWidth="1.8" strokeDasharray="4 3" />
+          <line x1="20" y1="72" x2="120" y2="72" stroke={centerColor} strokeWidth="1.0" strokeDasharray="8 2 2 2" />
           {showDetails && <text x="70" y="60" fontSize="8" fontWeight="800" textAnchor="middle" fill="#0f172a">Lidah 60°</text>}
           {showDetails && <text x="70" y="94" fontSize="8" fontWeight="800" textAnchor="middle" fill="#64748b">Landasan Bawah</text>}
         </svg>
@@ -775,7 +796,7 @@ export const renderOrthogonal2DView = (objectId, viewName, size = 120, showDetai
     default:
       return (
         <svg viewBox={vb} width={size} height={size}>
-          <rect x="25" y="25" width="90" height="90" fill="#f8fafc" stroke="#1e293b" strokeWidth="2.5" rx="4" />
+          <rect x="25" y="25" width="90" height="90" fill="#ffffff" stroke="#1e293b" strokeWidth="2.5" rx="4" />
           <line x1="70" y1="20" x2="70" y2="120" stroke="#dc2626" strokeWidth="1.2" strokeDasharray="8 2 2 2" />
           <text x="70" y="75" fontSize="10" fontWeight="800" textAnchor="middle" fill="#0f172a">2D View</text>
         </svg>
@@ -1094,8 +1115,8 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
   // 7. STEPPED SHAFT WITH KEYWAY
   if (objectId === 'stepped_shaft') {
     return (
-      <group rotation={[0, 0, Math.PI / 2]}>
-        {/* Poros Besar Ø32 */}
+      <group rotation={[0, 0, -Math.PI / 2]}>
+        {/* Poros Besar Ø32 (di sebelah kiri) */}
         <mesh position={[0, -13, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[16, 16, 26, 48]} />
           <meshStandardMaterial {...matProps} />
@@ -1105,7 +1126,7 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
           <lineBasicMaterial color="#0f172a" linewidth={1.6} />
         </lineSegments>
 
-        {/* Poros Kecil Ø20 */}
+        {/* Poros Kecil Ø20 (di sebelah kanan) */}
         <mesh position={[0, 13, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[10, 10, 26, 48]} />
           <meshStandardMaterial {...matProps} />
@@ -1115,8 +1136,8 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
           <lineBasicMaterial color="#0f172a" linewidth={1.6} />
         </lineSegments>
 
-        {/* Alur Pasak (Keyway) */}
-        <mesh position={[8.5, 14, 0]} castShadow>
+        {/* Alur Pasak (Keyway di atas poros kecil) */}
+        <mesh position={[-8.5, 14, 0]} castShadow>
           <boxGeometry args={[3, 16, 5]} />
           <meshStandardMaterial color="#0f172a" metalness={0.2} roughness={0.8} />
         </mesh>
@@ -1149,9 +1170,14 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
 // ==========================================
 // 4. CONTROLLER ANIMASI KAMERA HALUS
 // ==========================================
-const CameraAnimator = ({ targetPosition, controlsRef }) => {
+const CameraAnimator = ({ targetPosition, controlsRef, activeView }) => {
   useFrame((state) => {
     if (targetPosition && controlsRef.current) {
+      if (activeView === 'atas') {
+        state.camera.up.set(0, 0, -1);
+      } else {
+        state.camera.up.set(0, 1, 0);
+      }
       state.camera.position.lerp(targetPosition, 0.08);
       controlsRef.current.target.set(0, 0, 0);
       controlsRef.current.update();
@@ -1250,7 +1276,7 @@ const OrthogonalMultiViewSimulator = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: isSelected ? 'rgba(255,255,255,0.85)' : '#f8fafc',
+          background: '#ffffff',
           borderRadius: '8px',
           border: '1px solid #e2e8f0',
           padding: '2px'
@@ -1502,7 +1528,7 @@ const OrthogonalMultiViewSimulator = () => {
                 <directionalLight position={[-60, 40, -50]} intensity={0.8} />
 
                 {/* Animated Camera Rig */}
-                <CameraAnimator targetPosition={targetCamPos} controlsRef={controlsRef} />
+                <CameraAnimator targetPosition={targetCamPos} controlsRef={controlsRef} activeView={activeView} />
 
                 {/* 3D Model Centered */}
                 <Center>
@@ -1802,7 +1828,7 @@ const OrthogonalMultiViewSimulator = () => {
             <div style={{
               width: '150px',
               height: '150px',
-              background: '#f8fafc',
+              background: '#ffffff',
               borderRadius: '12px',
               border: '2px dashed #94a3b8',
               display: 'flex',

@@ -46,12 +46,12 @@ const DesignLab = ({ onOpenDiagnostic }) => {
           <div>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               LAB DESAIN & GAMBAR TEKNIK MESIN
-              <span style={{ fontSize: '0.65rem', background: '#e0f2fe', color: '#0369a1', padding: '2px 8px', borderRadius: '12px', fontWeight: 800 }}>
-                ISO CERTIFIED • AUTOCAD WORKBENCH
+              <span style={{ fontSize: '0.65rem', background: '#fff7ed', color: '#ea580c', padding: '2px 8px', borderRadius: '12px', fontWeight: 800, border: '1px solid #fed7aa' }}>
+                ISO CERTIFIED • FUSION 360 CAD
               </span>
             </h2>
             <p style={{ fontSize: '0.74rem', color: '#64748b', margin: 0 }}>
-              Simulator AutoCAD Parametrik 2D/3D • Proyeksi Ortogonal • Etiket Gambar Kerja A4 • Standarisasi ISO 128 / 5456
+              Simulator Fusion 360 Parametrik 2D/3D • Proyeksi Ortogonal • Etiket Gambar Kerja A4 • Standarisasi ISO 128 / 5456
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
             <span>🧭</span> 2. Simulator Ortogonal
           </button>
 
-          {/* STEP 3: AUTOCAD / CAD STUDIO */}
+          {/* STEP 3: FUSION 360 CAD STUDIO */}
           <button
             onClick={() => { sound.playClick(); setLabTab('cad'); }}
             style={{
@@ -115,13 +115,13 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              background: labTab === 'cad' ? '#0284c7' : 'transparent',
+              background: labTab === 'cad' ? '#ea580c' : 'transparent',
               color: labTab === 'cad' ? '#ffffff' : '#334155',
-              boxShadow: labTab === 'cad' ? '0 2px 8px rgba(2, 132, 199, 0.3)' : 'none',
+              boxShadow: labTab === 'cad' ? '0 2px 8px rgba(234, 88, 12, 0.3)' : 'none',
               transition: 'all 0.15s'
             }}
           >
-            <span>🖥️</span> 3. AutoCAD Studio (2D→3D)
+            <span>🖥️</span> 3. Fusion 360 CAD (2D→3D)
           </button>
 
           {/* STEP 4: KUIS ASESMEN */}

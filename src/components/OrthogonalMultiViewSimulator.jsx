@@ -1351,52 +1351,58 @@ const OrthogonalMultiViewSimulator = () => {
         </div>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))',
-          gap: '8px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 96px), 1fr))',
+          gap: '10px'
         }}>
-          {Object.values(OBJECT_CATALOG).map((obj) => {
+          {Object.values(OBJECT_CATALOG).map((obj, idx) => {
             const isSelected = selectedObjectId === obj.id;
             return (
               <button
                 key={obj.id}
                 onClick={() => handleSelectObject(obj.id)}
-                title={obj.name}
+                title={`${idx + 1}. ${obj.shortName}`}
                 style={{
-                  padding: '8px 6px 6px',
-                  borderRadius: '10px',
+                  padding: '8px',
+                  borderRadius: '12px',
                   border: isSelected ? '2.5px solid #2563eb' : '1.5px solid #cbd5e1',
-                  background: isSelected ? '#eff6ff' : '#f8fafc',
+                  background: isSelected ? '#eff6ff' : '#ffffff',
                   cursor: 'pointer',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '5px',
+                  justifyContent: 'center',
+                  position: 'relative',
                   transition: 'all 0.15s',
-                  boxShadow: isSelected ? '0 4px 12px rgba(37, 99, 235, 0.18)' : '0 1px 3px rgba(0,0,0,0.06)'
+                  boxShadow: isSelected ? '0 4px 14px rgba(37, 99, 235, 0.22)' : '0 1px 3px rgba(0,0,0,0.05)'
                 }}
               >
-                {/* SVG Thumbnail — front view of the object */}
+                {/* Index badge */}
+                <span style={{
+                  position: 'absolute',
+                  top: '5px',
+                  left: '6px',
+                  fontSize: '0.62rem',
+                  fontWeight: 900,
+                  color: isSelected ? '#1d4ed8' : '#94a3b8',
+                  background: isSelected ? '#dbeafe' : '#f1f5f9',
+                  padding: '1px 5px',
+                  borderRadius: '4px'
+                }}>
+                  #{idx + 1}
+                </span>
+
+                {/* SVG Visual Shape — Front Profile Projection */}
                 <div style={{
-                  width: '80px',
-                  height: '80px',
+                  width: '84px',
+                  height: '84px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '6px',
-                  background: isSelected ? '#dbeafe' : '#f1f5f9',
+                  borderRadius: '8px',
+                  background: isSelected ? '#ffffff' : '#f8fafc',
                   overflow: 'hidden'
                 }}>
-                  {renderOrthogonal2DView(obj.id, 'depan', 76, false)}
-                </div>
-                <div style={{
-                  fontSize: '0.64rem',
-                  fontWeight: 800,
-                  color: isSelected ? '#1d4ed8' : '#475569',
-                  textAlign: 'center',
-                  lineHeight: 1.25,
-                  maxWidth: '100px'
-                }}>
-                  {obj.shortName}
+                  {renderOrthogonal2DView(obj.id, 'depan', 82, false)}
                 </div>
               </button>
             );

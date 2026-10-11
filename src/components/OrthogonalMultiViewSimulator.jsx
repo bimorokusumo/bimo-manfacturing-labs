@@ -1442,7 +1442,7 @@ const OrthogonalMultiViewSimulator = () => {
           {/* Top Canvas Bar */}
           <div style={{
             padding: '12px 16px',
-            background: '#f8fafc',
+            background: '#ffffff',
             borderBottom: '1px solid #e2e8f0',
             display: 'flex',
             justifyContent: 'space-between',
@@ -1484,7 +1484,7 @@ const OrthogonalMultiViewSimulator = () => {
           </div>
 
           {/* 3D WebGL Canvas Container */}
-          <div style={{ height: '390px', width: '100%', position: 'relative' }}>
+          <div style={{ height: '390px', width: '100%', position: 'relative', background: '#ffffff' }}>
             <Suspense fallback={
               <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#0284c7', fontWeight: 700, background: '#ffffff' }}>
                 MEMUAT ENGINE 3D...
@@ -1496,6 +1496,7 @@ const OrthogonalMultiViewSimulator = () => {
                 gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
                 style={{ background: '#ffffff' }}
               >
+                <color attach="background" args={['#ffffff']} />
                 <ambientLight intensity={1.3} />
                 <directionalLight position={[60, 80, 50]} intensity={1.8} castShadow />
                 <directionalLight position={[-60, 40, -50]} intensity={0.8} />

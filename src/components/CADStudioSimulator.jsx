@@ -2272,7 +2272,7 @@ const CADStudioSimulator = () => {
           {/* PANEL KANAN: JENDELA 3D FUSION 360 WEBGL */}
           {(displayMode === 'split' || displayMode === '3d_only') && (
             <div style={{
-              background: '#f8fafc',
+              background: '#ffffff',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
@@ -2281,7 +2281,7 @@ const CADStudioSimulator = () => {
               {/* Header Canvas 3D */}
               <div style={{
                 padding: '8px 14px',
-                background: '#f8fafc',
+                background: '#ffffff',
                 borderBottom: '1px solid #e2e8f0',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -2316,9 +2316,9 @@ const CADStudioSimulator = () => {
               </div>
 
               {/* Three.js Canvas Viewport */}
-              <div style={{ flex: 1, minHeight: '360px', width: '100%', position: 'relative' }}>
+              <div style={{ flex: 1, minHeight: '360px', width: '100%', position: 'relative', background: '#ffffff' }}>
                 <Suspense fallback={
-                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#ff6914', fontWeight: 800 }}>
+                  <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#ff6914', fontWeight: 800, background: '#ffffff' }}>
                     MEMUAT ENGINE 3D...
                   </div>
                 }>
@@ -2326,8 +2326,9 @@ const CADStudioSimulator = () => {
                     shadows
                     camera={{ position: [60, 50, 60], fov: 42 }}
                     gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-                    style={{ background: '#f8fafc' }}
+                    style={{ background: '#ffffff' }}
                   >
+                    <color attach="background" args={['#ffffff']} />
                     <ambientLight intensity={1.5} />
                     <directionalLight position={[60, 80, 50]} intensity={1.8} castShadow />
                     <directionalLight position={[-60, 40, -50]} intensity={0.9} />

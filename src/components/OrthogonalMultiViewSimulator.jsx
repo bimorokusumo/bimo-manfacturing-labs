@@ -801,6 +801,71 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
     }
   }, [materialMode]);
 
+  // Single unconditional useMemo for custom geometries to comply with React Rules of Hooks
+  const customGeom = useMemo(() => {
+    if (objectId === 't_slot_base') {
+      const s = new THREE.Shape();
+      s.moveTo(-20, -14);
+      s.lineTo(20, -14);
+      s.lineTo(20, 14);
+      s.lineTo(6, 14);
+      s.lineTo(6, 4);
+      s.lineTo(12, 4);
+      s.lineTo(12, -4);
+      s.lineTo(-12, -4);
+      s.lineTo(-12, 4);
+      s.lineTo(-6, 4);
+      s.lineTo(-6, 14);
+      s.lineTo(-20, 14);
+      s.closePath();
+      const g = new THREE.ExtrudeGeometry(s, { depth: 36, bevelEnabled: false });
+      g.center();
+      return g;
+    }
+    if (objectId === 'v_block') {
+      const s = new THREE.Shape();
+      s.moveTo(-22, -16);
+      s.lineTo(22, -16);
+      s.lineTo(22, -6);
+      s.lineTo(17, -6);
+      s.lineTo(17, 2);
+      s.lineTo(22, 2);
+      s.lineTo(22, 16);
+      s.lineTo(13, 16);
+      s.lineTo(0, 1); // Takik V 90°
+      s.lineTo(-13, 16);
+      s.lineTo(-22, 16);
+      s.lineTo(-22, 2);
+      s.lineTo(-17, 2);
+      s.lineTo(-17, -6);
+      s.lineTo(-22, -6);
+      s.closePath();
+      const g = new THREE.ExtrudeGeometry(s, { depth: 34, bevelEnabled: false });
+      g.center();
+      return g;
+    }
+    if (objectId === 'dovetail_block') {
+      const s = new THREE.Shape();
+      s.moveTo(-22, -14);
+      s.lineTo(22, -14);
+      s.lineTo(22, 0);
+      s.lineTo(13, 0);
+      s.lineTo(18, 14);
+      s.lineTo(2, 14);
+      s.lineTo(2, 11); // alur oli
+      s.lineTo(-2, 11);
+      s.lineTo(-2, 14);
+      s.lineTo(-18, 14);
+      s.lineTo(-13, 0);
+      s.lineTo(-22, 0);
+      s.closePath();
+      const g = new THREE.ExtrudeGeometry(s, { depth: 35, bevelEnabled: false });
+      g.center();
+      return g;
+    }
+    return null;
+  }, [objectId]);
+
   // 1. STEPPED L-BLOCK WITH BORE HOLE
   if (objectId === 'stepped_l') {
     return (
@@ -836,73 +901,38 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
 
   // 2. T-SLOT BASE PLATE
   if (objectId === 't_slot_base') {
-    const geom = useMemo(() => {
-      const s = new THREE.Shape();
-      s.moveTo(-20, -14);
-      s.lineTo(20, -14);
-      s.lineTo(20, 14);
-      s.lineTo(6, 14);
-      s.lineTo(6, 4);
-      s.lineTo(12, 4);
-      s.lineTo(12, -4);
-      s.lineTo(-12, -4);
-      s.lineTo(-12, 4);
-      s.lineTo(-6, 4);
-      s.lineTo(-6, 14);
-      s.lineTo(-20, 14);
-      s.closePath();
-      const g = new THREE.ExtrudeGeometry(s, { depth: 36, bevelEnabled: false });
-      g.center();
-      return g;
-    }, []);
-
     return (
       <group>
-        <mesh geometry={geom} castShadow receiveShadow>
-          <meshStandardMaterial {...matProps} />
-        </mesh>
-        <lineSegments>
-          <edgesGeometry args={[geom, 20]} />
-          <lineBasicMaterial color="#0f172a" linewidth={2} />
-        </lineSegments>
+        {customGeom && (
+          <>
+            <mesh geometry={customGeom} castShadow receiveShadow>
+              <meshStandardMaterial {...matProps} />
+            </mesh>
+            <lineSegments>
+              <edgesGeometry args={[customGeom, 20]} />
+              <lineBasicMaterial color="#0f172a" linewidth={2} />
+            </lineSegments>
+          </>
+        )}
       </group>
     );
   }
 
   // 3. PRECISION V-BLOCK
   if (objectId === 'v_block') {
-    const geom = useMemo(() => {
-      const s = new THREE.Shape();
-      s.moveTo(-22, -16);
-      s.lineTo(22, -16);
-      s.lineTo(22, -6);
-      s.lineTo(17, -6);
-      s.lineTo(17, 2);
-      s.lineTo(22, 2);
-      s.lineTo(22, 16);
-      s.lineTo(13, 16);
-      s.lineTo(0, 1); // Takik V 90°
-      s.lineTo(-13, 16);
-      s.lineTo(-22, 16);
-      s.lineTo(-22, 2);
-      s.lineTo(-17, 2);
-      s.lineTo(-17, -6);
-      s.lineTo(-22, -6);
-      s.closePath();
-      const g = new THREE.ExtrudeGeometry(s, { depth: 34, bevelEnabled: false });
-      g.center();
-      return g;
-    }, []);
-
     return (
       <group>
-        <mesh geometry={geom} castShadow receiveShadow>
-          <meshStandardMaterial {...matProps} />
-        </mesh>
-        <lineSegments>
-          <edgesGeometry args={[geom, 20]} />
-          <lineBasicMaterial color="#0f172a" linewidth={2} />
-        </lineSegments>
+        {customGeom && (
+          <>
+            <mesh geometry={customGeom} castShadow receiveShadow>
+              <meshStandardMaterial {...matProps} />
+            </mesh>
+            <lineSegments>
+              <edgesGeometry args={[customGeom, 20]} />
+              <lineBasicMaterial color="#0f172a" linewidth={2} />
+            </lineSegments>
+          </>
+        )}
       </group>
     );
   }
@@ -1096,35 +1126,19 @@ const CADObjectMesh = ({ objectId, materialMode }) => {
 
   // 8. DOVETAIL SLIDE GUIDE
   if (objectId === 'dovetail_block') {
-    const geom = useMemo(() => {
-      const s = new THREE.Shape();
-      s.moveTo(-22, -14);
-      s.lineTo(22, -14);
-      s.lineTo(22, 0);
-      s.lineTo(13, 0);
-      s.lineTo(18, 14);
-      s.lineTo(2, 14);
-      s.lineTo(2, 11); // alur oli
-      s.lineTo(-2, 11);
-      s.lineTo(-2, 14);
-      s.lineTo(-18, 14);
-      s.lineTo(-13, 0);
-      s.lineTo(-22, 0);
-      s.closePath();
-      const g = new THREE.ExtrudeGeometry(s, { depth: 35, bevelEnabled: false });
-      g.center();
-      return g;
-    }, []);
-
     return (
       <group>
-        <mesh geometry={geom} castShadow receiveShadow>
-          <meshStandardMaterial {...matProps} />
-        </mesh>
-        <lineSegments>
-          <edgesGeometry args={[geom, 20]} />
-          <lineBasicMaterial color="#0f172a" linewidth={2} />
-        </lineSegments>
+        {customGeom && (
+          <>
+            <mesh geometry={customGeom} castShadow receiveShadow>
+              <meshStandardMaterial {...matProps} />
+            </mesh>
+            <lineSegments>
+              <edgesGeometry args={[customGeom, 20]} />
+              <lineBasicMaterial color="#0f172a" linewidth={2} />
+            </lineSegments>
+          </>
+        )}
       </group>
     );
   }

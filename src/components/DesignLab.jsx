@@ -162,10 +162,10 @@ const DesignLab = ({ onOpenDiagnostic }) => {
         </div>
       )}
 
-      {/* VIEW: 3. MATERI & STANDARISASI GAMBAR */}
+      {/* VIEW: 1. MATERI & STANDARISASI GAMBAR */}
       {labTab === 'materi' && (
         <div className="animate-fade-in" style={{ padding: '0', flex: 1, width: '100%', maxWidth: '100%', minWidth: 0, overflowX: 'hidden' }}>
-          <TechnicalDrawingGuide />
+          <TechnicalDrawingGuide onNavigateToOrtogonal={() => { sound.playClick(); setLabTab('ortogonal'); }} />
         </div>
       )}
 

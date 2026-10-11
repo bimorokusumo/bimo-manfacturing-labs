@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
-import OrthogonalMultiViewSimulator from './OrthogonalMultiViewSimulator';
 
-const TechnicalDrawingGuide = () => {
-  const [activeTab, setActiveTab] = useState('dimensi'); // Open directly on proyeksi for review
+const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
+  const [activeTab, setActiveTab] = useState('alat'); // Start at 1. Pengenalan Alat
   const [projectionSystem, setProjectionSystem] = useState('amerika'); // 'eropa' or 'amerika'
   const [dimensionMethod, setDimensionMethod] = useState('aligned'); // 'aligned' or 'unidirectional'
   const [selectedPencil, setSelectedPencil] = useState('HB');
@@ -882,8 +881,50 @@ const TechnicalDrawingGuide = () => {
             </div>
           </div>
 
-          {/* BAGIAN KEDUA: TATA LETAK MULTI-PANDANGAN INTERAKTIF 3D */}
-          <OrthogonalMultiViewSimulator />
+          {/* BANNER TRANSISI MENUJU SIMULATOR ORTOGONAL 3D DEDIKASI */}
+          <div style={{
+            padding: '24px',
+            background: 'linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%)',
+            borderRadius: '16px',
+            color: '#ffffff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px',
+            boxShadow: '0 8px 24px rgba(2, 132, 199, 0.25)'
+          }}>
+            <div style={{ maxWidth: '650px' }}>
+              <div style={{ fontSize: '1.15rem', fontWeight: 900, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🧭</span> Praktikkan Langsung di Step 2: Simulator Ortogonal 3D!
+              </div>
+              <div style={{ fontSize: '0.85rem', opacity: 0.95, lineHeight: 1.6 }}>
+                Setelah memahami simbol proyeksi Eropa &amp; Amerika di atas, coba putar orbit 3D dan bandingkan 4 proyeksi ortogonal dari 8 model komponen standar permesinan.
+              </div>
+            </div>
+            {onNavigateToOrtogonal && (
+              <button
+                onClick={onNavigateToOrtogonal}
+                style={{
+                  padding: '12px 22px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: '#ffffff',
+                  color: '#1e3a8a',
+                  fontWeight: 900,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  transition: 'all 0.15s'
+                }}
+              >
+                <span>🚀</span> Buka 2. Simulator Ortogonal ➔
+              </button>
+            )}
+          </div>
 
           {/* BAGIAN KETIGA: PROYEKSI PIKTORIAL (3D) */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>

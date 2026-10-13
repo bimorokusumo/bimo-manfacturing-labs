@@ -30,8 +30,9 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   // Sub-menu interaktif untuk masing-masing lab di sidebar, termasuk Tes Diagnostik (10 Soal Pilgan)
   const LAB_SUBMENUS = {
     machine: [
-      { id: 'machine', label: 'Praktik Mesin Bubut & CNC', icon: '⚙️' },
-      { id: 'machine-cutting-tools', label: 'Cutting Tools Lab (Alat Potong)', icon: '🔪' },
+      { id: 'machine', label: 'Praktik Mesin Bubut & Frais', icon: '⚙️' },
+      { id: 'machine-milling-tools', label: 'Katalog Pisau Frais (8 Jenis)', icon: '🌀' },
+      { id: 'machine-cutting-tools', label: 'Cutting Tools Lab (Lengkap)', icon: '🔪' },
       { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: '📋', isDiag: true }
     ],
     'cutting-tools': [
@@ -86,7 +87,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const isLabActive = (menuId) => {
     if (activeMenu === menuId) return true;
     if (activeMenu === `${menuId}-diagnostic`) return true;
-    if (menuId === 'machine' && (activeMenu === 'machine' || activeMenu === 'machine-cutting-tools' || activeMenu === 'machine-diagnostic')) return true;
+    if (menuId === 'machine' && (activeMenu === 'machine' || activeMenu === 'machine-cutting-tools' || activeMenu === 'machine-milling-tools' || activeMenu === 'machine-diagnostic')) return true;
     if (menuId === 'measuring' && (activeMenu === 'measuring' || activeMenu === 'measuring-anatomy' || activeMenu === 'measuring-diagnostic')) return true;
     if (menuId === 'heat-treatment' && activeMenu.startsWith('heat-treatment-')) return true;
     if (menuId === 'mechanics' && activeMenu.startsWith('mechanics-')) return true;

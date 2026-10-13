@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
 
@@ -491,6 +491,207 @@ const MillingCutterThumbnail = ({ toolId, isSelected }) => {
           <circle cx="32" cy="32" r="14" stroke="#475569" strokeWidth="1" fill="none" />
           <circle cx="32" cy="32" r="6" fill="#0f172a" />
           <rect x="31" y="24" width="2" height="5" fill="#0f172a" />
+        </g>
+      )}
+    </svg>
+  );
+};
+
+// =============================================================================
+// KOMPONEN KARTU VISUAL REALISTIS PISAU FRAIS (200x110 PX UNTUK SETIAP KARTU)
+// =============================================================================
+const MillingCutterCardVisual = ({ toolId, isSelected = false }) => {
+  return (
+    <svg viewBox="0 0 200 110" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', filter: isSelected ? 'drop-shadow(0 4px 8px rgba(2, 132, 199, 0.28))' : 'none' }}>
+      <defs>
+        <linearGradient id={`cardSteelShank_${toolId}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#475569" />
+          <stop offset="30%" stopColor="#94a3b8" />
+          <stop offset="70%" stopColor="#cbd5e1" />
+          <stop offset="100%" stopColor="#334155" />
+        </linearGradient>
+        <linearGradient id={`cardGunmetal_${toolId}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#1e293b" />
+          <stop offset="50%" stopColor="#334155" />
+          <stop offset="100%" stopColor="#0f172a" />
+        </linearGradient>
+        <linearGradient id={`cardTiNGold_${toolId}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="50%" stopColor="#eab308" />
+          <stop offset="100%" stopColor="#ca8a04" />
+        </linearGradient>
+        <linearGradient id={`cardTiAlNViolet_${toolId}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#1e1b4b" />
+          <stop offset="35%" stopColor="#4338ca" />
+          <stop offset="70%" stopColor="#6366f1" />
+          <stop offset="100%" stopColor="#312e81" />
+        </linearGradient>
+      </defs>
+
+      {/* Grid background samar */}
+      <line x1="100" y1="5" x2="100" y2="105" stroke="#94a3b8" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.3" />
+
+      {/* 1. FACE MILL */}
+      {toolId === 'facemill' && (
+        <g>
+          {/* Arbor shank */}
+          <rect x="85" y="8" width="30" height="20" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <rect x="74" y="28" width="52" height="8" rx="1" fill="#334155" stroke="#1e293b" strokeWidth="1" />
+          {/* Cutter head body */}
+          <polygon points="56,36 144,36 158,74 42,74" fill={`url(#cardGunmetal_${toolId})`} stroke="#0f172a" strokeWidth="1.5" />
+          {/* Center bore and socket bolt */}
+          <circle cx="100" cy="55" r="14" fill="#0f172a" />
+          <circle cx="100" cy="55" r="9" fill="#475569" stroke="#334155" strokeWidth="1" />
+          <polygon points="97,52 103,52 106,55 103,58 97,58 94,55" fill="#0f172a" />
+          {/* Left 45° insert */}
+          <polygon points="36,70 48,58 58,68 46,80" fill={`url(#cardTiNGold_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <circle cx="47" cy="69" r="2" fill="#78350f" />
+          {/* Center inserts */}
+          <polygon points="68,74 84,74 84,86 68,86" fill={`url(#cardTiNGold_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <circle cx="76" cy="80" r="1.8" fill="#78350f" />
+          <polygon points="116,74 132,74 132,86 116,86" fill={`url(#cardTiNGold_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <circle cx="124" cy="80" r="1.8" fill="#78350f" />
+          {/* Right 45° insert */}
+          <polygon points="164,70 152,58 142,68 154,80" fill={`url(#cardTiNGold_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <circle cx="153" cy="69" r="2" fill="#78350f" />
+          {/* 45° lead label */}
+          <text x="24" y="66" fill="#0284c7" fontSize="8" fontWeight="900">45°</text>
+          <text x="100" y="102" fill="#0369a1" fontSize="9" fontWeight="900" textAnchor="middle">45° FACE MILL • INSERT TiN</text>
+        </g>
+      )}
+
+      {/* 2. SQUARE END MILL */}
+      {toolId === 'endmill' && (
+        <g>
+          {/* Shank */}
+          <rect x="85" y="8" width="30" height="36" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="24" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">Ø16 DIN 844</text>
+          <text x="100" y="34" fill="#64748b" fontSize="6.5" fontWeight="800" textAnchor="middle">HSS-Co8</text>
+          {/* Neck transition */}
+          <polygon points="85,44 115,44 113,50 87,50" fill="#475569" />
+          {/* Helical flutes body */}
+          <rect x="85" y="50" width="30" height="40" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.5" />
+          {/* 30° helix curves */}
+          <path d="M 85,56 Q 100,68 115,80" fill="none" stroke="#a5b4fc" strokeWidth="2.5" />
+          <path d="M 85,68 Q 100,80 115,90" fill="none" stroke="#a5b4fc" strokeWidth="2.5" />
+          {/* Sharp 90° square bottom edge */}
+          <line x1="85" y1="90" x2="115" y2="90" stroke="#ffffff" strokeWidth="2.2" />
+          <path d="M 85,83 L 92,83 L 92,90" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+          <path d="M 115,83 L 108,83 L 108,90" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+          <text x="76" y="88" fill="#ef4444" fontSize="8" fontWeight="900">90°</text>
+          <text x="100" y="103" fill="#4338ca" fontSize="9" fontWeight="900" textAnchor="middle">SQUARE END MILL (90° SIKU)</text>
+        </g>
+      )}
+
+      {/* 3. BALL NOSE END MILL */}
+      {toolId === 'ballmill' && (
+        <g>
+          {/* Shank */}
+          <rect x="85" y="8" width="30" height="38" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="26" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">R8 / Ø16</text>
+          {/* Helical flutes body */}
+          <rect x="85" y="46" width="30" height="26" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.2" />
+          <path d="M 85,52 Q 100,60 115,68" fill="none" stroke="#67e8f9" strokeWidth="2.2" />
+          {/* Hemispherical ball nose tip */}
+          <path d="M 85,72 A 15 15 0 0 0 115,72 Z" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#818cf8" strokeWidth="1.5" />
+          <path d="M 88,72 Q 100,86 112,72" fill="none" stroke="#38bdf8" strokeWidth="2" />
+          <circle cx="100" cy="87" r="2.2" fill="#ef4444" />
+          {/* Radius label */}
+          <line x1="100" y1="72" x2="114" y2="78" stroke="#ef4444" strokeWidth="1" />
+          <text x="122" y="80" fill="#ef4444" fontSize="8" fontWeight="900">R=D/2</text>
+          <text x="100" y="103" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">BALL NOSE (KONTUR 3D)</text>
+        </g>
+      )}
+
+      {/* 4. BULL NOSE / CORNER RADIUS */}
+      {toolId === 'bullnose' && (
+        <g>
+          {/* Shank */}
+          <rect x="85" y="8" width="30" height="38" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="26" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">Ø16 r1.5</text>
+          {/* Flute body */}
+          <rect x="85" y="46" width="30" height="36" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.2" />
+          <path d="M 85,54 Q 100,64 115,74" fill="none" stroke="#38bdf8" strokeWidth="2" />
+          {/* Corner radius fillets at bottom */}
+          <path d="M 85,76 Q 85,86 91,86 L 109,86 Q 115,86 115,76" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <line x1="91" y1="86" x2="109" y2="86" stroke="#ffffff" strokeWidth="1.5" />
+          <text x="72" y="83" fill="#f59e0b" fontSize="7.5" fontWeight="900">r=1.5</text>
+          <text x="118" y="83" fill="#f59e0b" fontSize="7.5" fontWeight="900">r=1.5</text>
+          <text x="100" y="103" fill="#d97706" fontSize="9" fontWeight="900" textAnchor="middle">BULL NOSE (CORNER RADIUS)</text>
+        </g>
+      )}
+
+      {/* 5. T-SLOT CUTTER */}
+      {toolId === 'tslot' && (
+        <g>
+          {/* Shank */}
+          <rect x="88" y="8" width="24" height="24" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          {/* Relieved neck (narrow neck) */}
+          <rect x="94" y="32" width="12" height="30" fill="#64748b" stroke="#334155" strokeWidth="1" />
+          <line x1="94" y1="34" x2="94" y2="60" stroke="#94a3b8" strokeWidth="1" />
+          {/* Wide disc cutting head */}
+          <rect x="62" y="62" width="76" height="24" rx="2" fill={`url(#cardGunmetal_${toolId})`} stroke="#0f172a" strokeWidth="1.5" />
+          {/* Staggered cutting teeth */}
+          <line x1="62" y1="74" x2="138" y2="74" stroke="#f59e0b" strokeWidth="1.8" strokeDasharray="5 3" />
+          <rect x="62" y="62" width="8" height="24" fill={`url(#cardTiNGold_${toolId})`} />
+          <rect x="130" y="62" width="8" height="24" fill={`url(#cardTiNGold_${toolId})`} />
+          {/* Leher sempit indicator */}
+          <text x="110" y="48" fill="#64748b" fontSize="7" fontWeight="800">Leher Bebas</text>
+          <text x="100" y="103" fill="#b45309" fontSize="9" fontWeight="900" textAnchor="middle">T-SLOT CUTTER (ALUR T DIN 650)</text>
+        </g>
+      )}
+
+      {/* 6. DOVETAIL CUTTER */}
+      {toolId === 'dovetail' && (
+        <g>
+          {/* Shank */}
+          <rect x="88" y="8" width="24" height="24" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          {/* Relieved neck */}
+          <rect x="93" y="32" width="14" height="18" fill="#64748b" stroke="#334155" strokeWidth="1" />
+          {/* Inverted cone 60° dovetail head */}
+          <polygon points="90,50 110,50 144,84 56,84" fill={`url(#cardGunmetal_${toolId})`} stroke="#0f172a" strokeWidth="1.5" />
+          {/* Angular teeth */}
+          <line x1="68" y1="80" x2="88" y2="58" stroke="#38bdf8" strokeWidth="2.2" />
+          <line x1="132" y1="80" x2="112" y2="58" stroke="#38bdf8" strokeWidth="2.2" />
+          <line x1="56" y1="84" x2="144" y2="84" stroke="#f59e0b" strokeWidth="1.8" />
+          {/* 60° arc indicator */}
+          <path d="M 68,84 A 12 12 0 0 1 75,75" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+          <text x="56" y="78" fill="#ef4444" fontSize="8" fontWeight="900">60°</text>
+          <text x="100" y="103" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">DOVETAIL 60° (EKOR BURUNG)</text>
+        </g>
+      )}
+
+      {/* 7. CHAMFER MILL */}
+      {toolId === 'chamfermill' && (
+        <g>
+          {/* Shank */}
+          <rect x="86" y="8" width="28" height="34" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="24" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">45° / 90° Point</text>
+          {/* Conical bevel head */}
+          <polygon points="76,42 124,42 100,84" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.5" />
+          {/* Bevel cutting edges */}
+          <line x1="76" y1="42" x2="100" y2="84" stroke="#f59e0b" strokeWidth="2.8" />
+          <line x1="124" y1="42" x2="100" y2="84" stroke="#f59e0b" strokeWidth="2.8" />
+          <line x1="100" y1="42" x2="100" y2="80" stroke="#bae6fd" strokeWidth="1.2" strokeDasharray="3 2" />
+          {/* 45° angle text */}
+          <text x="110" y="72" fill="#ef4444" fontSize="8" fontWeight="900">45°</text>
+          <text x="100" y="103" fill="#0369a1" fontSize="9" fontWeight="900" textAnchor="middle">CHAMFER MILL (BEVEL 45°)</text>
+        </g>
+      )}
+
+      {/* 8. SLITTING SAW */}
+      {toolId === 'slittingsaw' && (
+        <g>
+          {/* Metallic disc saw */}
+          <circle cx="100" cy="50" r="35" fill={`url(#cardGunmetal_${toolId})`} stroke="#475569" strokeWidth="1.2" />
+          <circle cx="100" cy="50" r="35" stroke="#e2e8f0" strokeWidth="3.5" strokeDasharray="3.5 3.5" fill="none" />
+          <circle cx="100" cy="50" r="22" stroke="#334155" strokeWidth="1.2" fill="none" />
+          {/* Center bore and DIN keyway */}
+          <circle cx="100" cy="50" r="9" fill="#0f172a" />
+          <rect x="98.5" y="38" width="3" height="7" fill="#0f172a" />
+          {/* Thin blade kerf label */}
+          <text x="100" y="30" fill="#38bdf8" fontSize="7.5" fontWeight="800" textAnchor="middle">Tebal: 1.5–3 mm</text>
+          <text x="100" y="103" fill="#64748b" fontSize="9" fontWeight="900" textAnchor="middle">SLITTING SAW (GERGAJI FRAIS)</text>
         </g>
       )}
     </svg>
@@ -1429,10 +1630,16 @@ const CUTTING_TOOLS_QUIZ = [
 // =============================================================================
 // KOMPONEN UTAMA: MachineCuttingToolsLab
 // =============================================================================
-const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigateToMilling }) => {
-  const [activeTab, setActiveTab] = useState('pahat'); // 'pahat', 'milling', 'insert', 'hole-thread', 'kalkulator', 'quiz'
+const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigateToMilling, initialTab = 'milling' }) => {
+  const [activeTab, setActiveTab] = useState(initialTab || 'milling'); // 'milling', 'pahat', 'insert', 'hole-thread', 'kalkulator', 'quiz'
   const [selectedIsoCat, setSelectedIsoCat] = useState('P');
   const [selectedMillingId, setSelectedMillingId] = useState('facemill');
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
   const [millingMode, setMillingMode] = useState('anatomy'); // 'anatomy' | 'simulation' | 'profile'
   const [activeMillingPinId, setActiveMillingPinId] = useState(1);
   const [activeInsertPos, setActiveInsertPos] = useState(1);
@@ -1597,8 +1804,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
         boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
       }}>
         {[
-          { id: 'pahat', label: '1. Pahat Bubut (HSS & Karbida)', icon: '🪓', color: '#2563eb' },
-          { id: 'milling', label: '2. Pisau Frais / Milling (6 Jenis)', icon: '🌀', color: '#0284c7' },
+          { id: 'milling', label: '1. Pisau Frais / Milling (8 Jenis Real)', icon: '🌀', color: '#0284c7' },
+          { id: 'pahat', label: '2. Pahat Bubut (HSS & Karbida)', icon: '🪓', color: '#2563eb' },
           { id: 'insert', label: '3. Insert Karbida & Sudut Geometri', icon: '📐', color: '#ea580c' },
           { id: 'hole-thread', label: '4. Mata Bor, Tap & Snei', icon: '🔩', color: '#16a34a' },
           { id: 'kalkulator', label: '5. Kalkulator Kecepatan Potong', icon: '🧮', color: '#7c3aed' },
@@ -1903,16 +2110,16 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
-          {/* Quick Selector Grid Pisau Frais dengan Thumbnail Kontur Nyata */}
+          {/* Quick Selector Grid Pisau Frais dengan Kartu Visual Kontur & Geometri Nyata */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '12px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '16px'
           }}>
             {MILLING_CUTTERS_CATALOG.map(tool => {
               const isSelected = selectedMillingId === tool.id;
               return (
-                <button
+                <div
                   key={tool.id}
                   onClick={() => {
                     sound.playClick();
@@ -1920,49 +2127,95 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     setActiveMillingPinId(1);
                   }}
                   style={{
-                    padding: '12px 14px',
-                    borderRadius: '12px',
+                    background: isSelected ? '#ffffff' : '#f8fafc',
+                    borderRadius: '14px',
                     border: isSelected ? '2.5px solid #0284c7' : '1px solid #cbd5e1',
-                    background: isSelected ? '#f0f9ff' : '#ffffff',
-                    color: isSelected ? '#0369a1' : '#1e293b',
+                    overflow: 'hidden',
                     cursor: 'pointer',
-                    textAlign: 'left',
+                    boxShadow: isSelected ? '0 8px 24px rgba(2, 132, 199, 0.22)' : '0 2px 6px rgba(0,0,0,0.04)',
+                    transition: 'all 0.2s ease',
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    boxShadow: isSelected ? '0 4px 14px rgba(2, 132, 199, 0.2)' : '0 1px 3px rgba(0,0,0,0.04)',
-                    transition: 'all 0.15s'
+                    flexDirection: 'column'
                   }}
                 >
-                  {/* Thumbnail SVG Kontur Nyata Alat */}
-                  <MillingCutterThumbnail toolId={tool.id} isSelected={isSelected} />
+                  {/* Kanvas Ilustrasi Visual Realistis 115px */}
+                  <div style={{
+                    height: '115px',
+                    background: isSelected ? 'linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%)' : 'linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%)',
+                    borderBottom: '1px solid #e2e8f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    padding: '6px'
+                  }}>
+                    <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />
+                    <span style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      fontSize: '0.65rem',
+                      fontWeight: 800,
+                      background: isSelected ? '#0284c7' : '#e2e8f0',
+                      color: isSelected ? '#ffffff' : '#334155',
+                      padding: '2px 7px',
+                      borderRadius: '4px'
+                    }}>
+                      {tool.category}
+                    </span>
+                    <span style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      fontSize: '0.65rem',
+                      fontWeight: 800,
+                      background: 'rgba(255,255,255,0.9)',
+                      color: '#64748b',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      border: '1px solid #cbd5e1'
+                    }}>
+                      {tool.isoStandard?.split(' ')[0]}
+                    </span>
+                  </div>
 
-                  {/* Informasi Teks Pisau */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px', marginBottom: '2px' }}>
-                      <span style={{
-                        fontSize: '0.65rem',
-                        fontWeight: 800,
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        background: isSelected ? '#0284c7' : '#f1f5f9',
-                        color: isSelected ? '#ffffff' : '#475569',
-                        whiteSpace: 'nowrap'
-                      }}>
-                        {tool.category}
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 800 }}>
-                        {tool.isoStandard?.split(' ')[0]}
-                      </span>
+                  {/* Informasi & Parameter Pisau */}
+                  <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ fontWeight: 900, fontSize: '0.96rem', color: isSelected ? '#0369a1' : '#0f172a', marginBottom: '2px', lineHeight: 1.3 }}>
+                        {tool.name}
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic', marginBottom: '8px' }}>
+                        {tool.englishName}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0369a1', background: '#e0f2fe', padding: '2px 6px', borderRadius: '4px' }}>
+                          📐 {tool.diaRange}
+                        </span>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                          ⚙️ {tool.fluteOrInserts}
+                        </span>
+                      </div>
                     </div>
-                    <div style={{ fontWeight: 900, fontSize: '0.88rem', color: isSelected ? '#0369a1' : '#0f172a', lineHeight: 1.3 }}>
-                      {tool.name.split('(')[0].trim()}
-                    </div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px' }}>
-                      {tool.diaRange}
+                    
+                    <div style={{
+                      padding: '7px 10px',
+                      borderRadius: '6px',
+                      background: isSelected ? '#0284c7' : '#f1f5f9',
+                      color: isSelected ? '#ffffff' : '#334155',
+                      fontWeight: 800,
+                      fontSize: '0.74rem',
+                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s'
+                    }}>
+                      {isSelected ? '✓ Sedang Diinspeksi di Bawah' : 'Buka Anatomi & Simulasi →'}
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -1977,20 +2230,23 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 
                 {/* Header Detail Pisau */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '4px' }}>
-                        {current.category}
-                      </span>
-                      <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#f1f5f9', color: '#475569', padding: '3px 8px', borderRadius: '4px' }}>
-                        Standar: {current.isoStandard}
-                      </span>
-                    </div>
-                    <h3 style={{ margin: '4px 0 2px 0', fontSize: '1.45rem', fontWeight: 900, color: '#0f172a' }}>
-                      {current.name}
-                    </h3>
-                    <div style={{ fontSize: '0.82rem', color: '#64748b', fontStyle: 'italic' }}>
-                      {current.englishName}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <MillingCutterThumbnail toolId={current.id} isSelected={true} />
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '4px' }}>
+                          {current.category}
+                        </span>
+                        <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#f1f5f9', color: '#475569', padding: '3px 8px', borderRadius: '4px' }}>
+                          Standar: {current.isoStandard}
+                        </span>
+                      </div>
+                      <h3 style={{ margin: '4px 0 2px 0', fontSize: '1.45rem', fontWeight: 900, color: '#0f172a' }}>
+                        {current.name}
+                      </h3>
+                      <div style={{ fontSize: '0.82rem', color: '#64748b', fontStyle: 'italic' }}>
+                        {current.englishName}
+                      </div>
                     </div>
                   </div>
 

@@ -22,7 +22,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
   }
 
   // If Cutting Tools Lab is selected, render it
-  if (selectedMachine === 'cutting-tools') {
+  if (selectedMachine === 'cutting-tools' || selectedMachine === 'milling-tools') {
     return (
       <div className="animate-fade-in" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <button 
@@ -33,6 +33,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
         </button>
         <div style={{ flex: 1 }}>
           <MachineCuttingToolsLab
+            initialTab={selectedMachine === 'milling-tools' ? 'milling' : 'milling'}
             addXP={addXP}
             onNavigateToLathe={() => { sound.playClick(); setSelectedMachine('lathe'); }}
             onNavigateToMilling={() => { sound.playClick(); setSelectedMachine('milling'); }}
@@ -351,11 +352,38 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           </div>
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-tflm)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Frais (Milling)</h3>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.15)', color: '#0284c7' }}>🔪 8 Pisau Frais Visual</span>
               <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🪵 Test Frais</span>
               <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
             </div>
-            <button className="btn-game btn-game-tflm" style={{ width: '100%' }}>OPERASIKAN MESIN</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <button className="btn-game btn-game-tflm" style={{ width: '100%' }}>OPERASIKAN MESIN</button>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  sound.playClick();
+                  setSelectedMachine('milling-tools');
+                }}
+                style={{
+                  width: '100%',
+                  padding: '7px 10px',
+                  borderRadius: '6px',
+                  border: '1.5px solid #0284c7',
+                  background: '#f0f9ff',
+                  color: '#0369a1',
+                  fontWeight: 800,
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>🌀</span> Buka Katalog 8 Pisau Frais
+              </button>
+            </div>
           </div>
         </div>
 

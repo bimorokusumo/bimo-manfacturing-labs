@@ -3,10 +3,11 @@ import { sound } from '../utils/audio';
 import Milling3D from './Milling3D';
 import PreparationModal from './PreparationModal';
 import MillingTestView from './MillingTestView';
+import MachineCuttingToolsLab from './MachineCuttingToolsLab';
 import { millingJobsheets } from '../data/millingJobsheets';
 
 const MillingModule = ({ addXP }) => {
-  const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test'
+  const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test' | 'tools'
   const [isPrepared, setIsPrepared] = useState(false);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
@@ -52,7 +53,7 @@ const MillingModule = ({ addXP }) => {
 
   // Audio Engine Hook
   useEffect(() => {
-    if (activeTab === 'test') {
+    if (activeTab === 'test' || activeTab === 'tools') {
       sound.stopMotorSound();
       sound.stopCuttingSound();
       setIsCutting(false);
@@ -385,10 +386,39 @@ const MillingModule = ({ addXP }) => {
         >
           <span>📝</span> 2. Soal Test Teori Frais (25 Soal & Esai)
         </button>
+
+        <button
+          onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+          style={{
+            flex: 1,
+            padding: '12px 18px',
+            borderRadius: '8px',
+            border: activeTab === 'tools' ? '2px solid #0284c7' : '1px solid transparent',
+            background: activeTab === 'tools' ? 'rgba(2, 132, 199, 0.15)' : 'transparent',
+            color: activeTab === 'tools' ? '#0284c7' : 'var(--text-muted)',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            fontSize: '0.95rem'
+          }}
+        >
+          <span>🔪</span> 3. Katalog Pisau Frais (8 Jenis Real)
+        </button>
       </div>
 
       {activeTab === 'test' ? (
         <MillingTestView addXP={addXP} onStartPractical={() => setActiveTab('simulator')} />
+      ) : activeTab === 'tools' ? (
+        <div style={{ marginTop: '12px' }}>
+          <MachineCuttingToolsLab
+            initialTab="milling"
+            addXP={addXP}
+            onNavigateToMilling={() => setActiveTab('simulator')}
+          />
+        </div>
       ) : (
         <>
           {!isPrepared && <PreparationModal machineName="MESIN FRAIS" onComplete={() => setIsPrepared(true)} />}
@@ -454,6 +484,25 @@ const MillingModule = ({ addXP }) => {
               {idx + 1}. {sheet.title.split('(')[0]}
             </button>
           ))}
+            <button
+              onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
+              }}
+            >
+              <span>🔪</span> Katalog 8 Pisau Frais Real
+            </button>
         </div>
       </div>
 

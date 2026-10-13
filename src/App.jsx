@@ -107,16 +107,27 @@ function AppInner() {
         return <ModulesView />;
       case 'machine':
       case 'machine-cutting-tools':
+      case 'machine-milling-tools':
         return (
           <MachineLab
-            initialTab={activeMenu === 'machine-cutting-tools' ? 'cutting-tools' : null}
+            initialTab={
+              activeMenu === 'machine-milling-tools' ? 'milling-tools' :
+              activeMenu === 'machine-cutting-tools' ? 'cutting-tools' : null
+            }
             addXP={addXP}
             addMissionCompleted={addMissionCompleted}
             onOpenDiagnostic={() => setActiveMenu('machine-diagnostic')}
           />
         );
       case 'cutting-tools':
-        return <CuttingToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('cutting-tools-diagnostic')} />;
+        return (
+          <CuttingToolsLab
+            addXP={addXP}
+            addMissionCompleted={addMissionCompleted}
+            onOpenDiagnostic={() => setActiveMenu('cutting-tools-diagnostic')}
+            onNavigateToMilling={() => setActiveMenu('machine-milling-tools')}
+          />
+        );
       case 'heat-treatment':
       case 'heat-treatment-hardening':
       case 'heat-treatment-quenching':

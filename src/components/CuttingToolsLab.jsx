@@ -1172,7 +1172,7 @@ export const QUIZ_QUESTIONS = [
   }
 ];
 
-const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null }) => {
+const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null, onNavigateToMilling = null }) => {
   const [labTab, setLabTab] = useState('katalog'); // 'katalog', 'materi', 'safety', 'quiz'
   const [selectedToolId, setSelectedToolId] = useState('kikir-bengkel');
   const [typeFilter, setTypeFilter] = useState('all'); // 'all', 'manual', 'power'
@@ -1324,6 +1324,54 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
           onOpenDiagnostic={onOpenDiagnostic}
         />
       </div>
+ 
+      {/* Shortcut banner to Milling Cutters Lab if user came here looking for machine cutters */}
+      {onNavigateToMilling && (
+        <div style={{ padding: '0 20px', marginTop: '12px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%)',
+            borderRadius: '10px',
+            padding: '12px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+            color: '#ffffff',
+            boxShadow: '0 4px 12px rgba(3, 105, 161, 0.2)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '1.6rem' }}>🌀</span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '0.92rem' }}>
+                  Mencari Alat Potong Mesin Frais (8 Jenis Pisau Real)?
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#bae6fd' }}>
+                  Katalog interaktif Face Mill, End Mill, Ball Mill, dll. beserta anatomi &amp; simulasi sayatan tersedia di Machine Lab.
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => { sound.playClick(); onNavigateToMilling(); }}
+              style={{
+                background: '#ffffff',
+                color: '#0369a1',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontWeight: 800,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <span>🔪</span> Buka Katalog Pisau Frais →
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* =====================================================================
           HEADER MODUL PEMBELAJARAN PERKAKAS

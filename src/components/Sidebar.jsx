@@ -31,7 +31,10 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const LAB_SUBMENUS = {
     machine: [
       { id: 'machine', label: 'Praktik Mesin Bubut & Frais', icon: '⚙️' },
-      { id: 'machine-milling-tools', label: 'Katalog Pisau Frais (8 Jenis)', icon: '🌀' },
+      { id: 'machine-milling-tools', label: 'Pisau Frais / Milling (8 Jenis)', icon: '🌀' },
+      { id: 'machine-lathe-tools', label: 'Pahat Bubut (6 Jenis Real)', icon: '🪓' },
+      { id: 'machine-carbide-tools', label: 'Insert Karbida (7 Bentuk ISO)', icon: '📐' },
+      { id: 'machine-hole-tools', label: 'Mata Bor, Set Tap & Snei', icon: '🔩' },
       { id: 'machine-cutting-tools', label: 'Cutting Tools Lab (Lengkap)', icon: '🔪' },
       { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: '📋', isDiag: true }
     ],
@@ -87,7 +90,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const isLabActive = (menuId) => {
     if (activeMenu === menuId) return true;
     if (activeMenu === `${menuId}-diagnostic`) return true;
-    if (menuId === 'machine' && (activeMenu === 'machine' || activeMenu === 'machine-cutting-tools' || activeMenu === 'machine-milling-tools' || activeMenu === 'machine-diagnostic')) return true;
+    if (menuId === 'machine' && (activeMenu.startsWith('machine-') || activeMenu === 'machine')) return true;
     if (menuId === 'measuring' && (activeMenu === 'measuring' || activeMenu === 'measuring-anatomy' || activeMenu === 'measuring-diagnostic')) return true;
     if (menuId === 'heat-treatment' && activeMenu.startsWith('heat-treatment-')) return true;
     if (menuId === 'mechanics' && activeMenu.startsWith('mechanics-')) return true;

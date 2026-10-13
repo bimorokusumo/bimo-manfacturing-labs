@@ -22,7 +22,20 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
   }
 
   // If Cutting Tools Lab is selected, render it
-  if (selectedMachine === 'cutting-tools' || selectedMachine === 'milling-tools') {
+  if (
+    selectedMachine === 'cutting-tools' ||
+    selectedMachine === 'milling-tools' ||
+    selectedMachine === 'lathe-tools' ||
+    selectedMachine === 'carbide-tools' ||
+    selectedMachine === 'hole-tools'
+  ) {
+    const defaultCuttingTab =
+      selectedMachine === 'lathe-tools' ? 'pahat' :
+      selectedMachine === 'carbide-tools' ? 'insert' :
+      selectedMachine === 'hole-tools' ? 'hole-thread' :
+      selectedMachine === 'milling-tools' ? 'milling' :
+      'milling';
+
     return (
       <div className="animate-fade-in" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <button 
@@ -33,7 +46,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
         </button>
         <div style={{ flex: 1 }}>
           <MachineCuttingToolsLab
-            initialTab={selectedMachine === 'milling-tools' ? 'milling' : 'milling'}
+            initialTab={defaultCuttingTab}
             addXP={addXP}
             onNavigateToLathe={() => { sound.playClick(); setSelectedMachine('lathe'); }}
             onNavigateToMilling={() => { sound.playClick(); setSelectedMachine('milling'); }}

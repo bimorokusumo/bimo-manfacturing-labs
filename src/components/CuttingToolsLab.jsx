@@ -1172,7 +1172,15 @@ export const QUIZ_QUESTIONS = [
   }
 ];
 
-const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic = null, onNavigateToMilling = null }) => {
+const CuttingToolsLab = ({
+  addXP = () => {},
+  addMissionCompleted = () => {},
+  onOpenDiagnostic = null,
+  onNavigateToMilling = null,
+  onNavigateToLatheTools = null,
+  onNavigateToCarbideTools = null,
+  onNavigateToHoleTools = null
+}) => {
   const [labTab, setLabTab] = useState('katalog'); // 'katalog', 'materi', 'safety', 'quiz'
   const [selectedToolId, setSelectedToolId] = useState('kikir-bengkel');
   const [typeFilter, setTypeFilter] = useState('all'); // 'all', 'manual', 'power'
@@ -1325,50 +1333,116 @@ const CuttingToolsLab = ({ addXP = () => {}, addMissionCompleted = () => {}, onO
         />
       </div>
  
-      {/* Shortcut banner to Milling Cutters Lab if user came here looking for machine cutters */}
-      {onNavigateToMilling && (
+      {/* Shortcut banner to Machine Cutting Tools Lab (Frais, Bubut, Insert, Bor/Tap/Snei) */}
+      {(onNavigateToMilling || onNavigateToLatheTools) && (
         <div style={{ padding: '0 20px', marginTop: '12px' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%)',
-            borderRadius: '10px',
-            padding: '12px 18px',
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%)',
+            borderRadius: '12px',
+            padding: '14px 20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '12px',
+            gap: '14px',
             color: '#ffffff',
-            boxShadow: '0 4px 12px rgba(3, 105, 161, 0.2)'
+            boxShadow: '0 4px 14px rgba(3, 105, 161, 0.25)',
+            border: '1px solid #334155'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '1.6rem' }}>🌀</span>
+              <span style={{ fontSize: '1.8rem' }}>🔪</span>
               <div>
-                <div style={{ fontWeight: 800, fontSize: '0.92rem' }}>
-                  Mencari Alat Potong Mesin Frais (8 Jenis Pisau Real)?
+                <div style={{ fontWeight: 800, fontSize: '0.94rem', color: '#ffffff' }}>
+                  Mencari Alat Potong Mesin (Bubut, Frais, Insert Karbida, Bor/Tap/Snei)?
                 </div>
-                <div style={{ fontSize: '0.78rem', color: '#bae6fd' }}>
-                  Katalog interaktif Face Mill, End Mill, Ball Mill, dll. beserta anatomi &amp; simulasi sayatan tersedia di Machine Lab.
+                <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
+                  Katalog visual interaktif 2D CAD teknis, simulasi penyayatan real-time, dan geometri ISO tersedia di Machine Lab.
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => { sound.playClick(); onNavigateToMilling(); }}
-              style={{
-                background: '#ffffff',
-                color: '#0369a1',
-                border: 'none',
-                padding: '8px 16px',
-                borderRadius: '8px',
-                fontWeight: 800,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <span>🔪</span> Buka Katalog Pisau Frais →
-            </button>
+
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              {onNavigateToMilling && (
+                <button
+                  onClick={() => { sound.playClick(); onNavigateToMilling(); }}
+                  style={{
+                    background: '#0284c7',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>🌀</span> Pisau Frais (8 Real)
+                </button>
+              )}
+              {onNavigateToLatheTools && (
+                <button
+                  onClick={() => { sound.playClick(); onNavigateToLatheTools(); }}
+                  style={{
+                    background: '#2563eb',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>🪓</span> Pahat Bubut (6 Real)
+                </button>
+              )}
+              {onNavigateToCarbideTools && (
+                <button
+                  onClick={() => { sound.playClick(); onNavigateToCarbideTools(); }}
+                  style={{
+                    background: '#ea580c',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>📐</span> 7 Insert Karbida
+                </button>
+              )}
+              {onNavigateToHoleTools && (
+                <button
+                  onClick={() => { sound.playClick(); onNavigateToHoleTools(); }}
+                  style={{
+                    background: '#16a34a',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <span>🔩</span> Bor, Tap &amp; Snei
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

@@ -108,10 +108,16 @@ function AppInner() {
       case 'machine':
       case 'machine-cutting-tools':
       case 'machine-milling-tools':
+      case 'machine-lathe-tools':
+      case 'machine-carbide-tools':
+      case 'machine-hole-tools':
         return (
           <MachineLab
             initialTab={
               activeMenu === 'machine-milling-tools' ? 'milling-tools' :
+              activeMenu === 'machine-lathe-tools' ? 'lathe-tools' :
+              activeMenu === 'machine-carbide-tools' ? 'carbide-tools' :
+              activeMenu === 'machine-hole-tools' ? 'hole-tools' :
               activeMenu === 'machine-cutting-tools' ? 'cutting-tools' : null
             }
             addXP={addXP}
@@ -126,6 +132,9 @@ function AppInner() {
             addMissionCompleted={addMissionCompleted}
             onOpenDiagnostic={() => setActiveMenu('cutting-tools-diagnostic')}
             onNavigateToMilling={() => setActiveMenu('machine-milling-tools')}
+            onNavigateToLatheTools={() => setActiveMenu('machine-lathe-tools')}
+            onNavigateToCarbideTools={() => setActiveMenu('machine-carbide-tools')}
+            onNavigateToHoleTools={() => setActiveMenu('machine-hole-tools')}
           />
         );
       case 'heat-treatment':

@@ -372,6 +372,218 @@ const MILLING_CUTTERS_CATALOG = [
 ];
 
 // =============================================================================
+// DATABASE 2B: 6 JENIS UTAMA PAHAT BUBUT (LATHE TURNING TOOLS)
+// =============================================================================
+const LATHE_TOOLS_CATALOG = [
+  {
+    id: 'pahat-rata-kanan',
+    name: 'Pahat Bubut Rata Kanan (Right-Hand Turning)',
+    englishName: 'Right-Hand External Turning Tool (ISO 6 / DIN 4980)',
+    arahSayat: 'Kanan ke Kiri (Menuju Chuck)',
+    isoDIN: 'ISO 6 / DIN 4980',
+    tipe: 'Pembubutan Memanjang Luar (Longitudinal)',
+    leadAngle: '75° / 45°',
+    color: '#2563eb',
+    deskripsi: 'Pahat bubut luar utama yang menyayat dari arah kanan ke kiri (mendekati kepala tetap / cekam). Menghasilkan diameter silinder yang rata, lurus, dan berdimensi presisi tinggi sepanjang poros kerja.',
+    aplikasi: 'Pembubutan muka luar silinder (roughing & finishing poros memanjang, pembuatan diameter bertingkat).',
+    keunggulan: 'Sisi potong utama di sebelah kiri mengalirkan tatal menjauhi permukaan hasil sayatan sehingga benda tetap mulus.',
+    tipsTeknis: 'Setel ketinggian ujung mata potong tepat setinggi senter kepala lepas (±0.05 mm) agar sudut bebas asli tidak berubah menjadi negatif.',
+    pins: [
+      { id: 1, label: 'Tangkai Pahat Baja (Tool Shank 25×25)', desc: 'Badan baja perkakas kokoh berpenampang kotak yang dicekam kuat pada tool post eretan mesin bubut.', tip: 'Pencekaman tangkai harus sependek mungkin (overhang < 1.5× tebal shank) untuk mencegah chatter.' },
+      { id: 2, label: 'Insert Karbida Rhombic 80° (CNMG)', desc: 'Sisipan tungsten karbida berlapis TiN emas pemotong utama berdaya tahan panas di atas 900°C.', tip: 'Putar sisi insert jika salah satu sudut hidung sudah aus lebih dari 0.3 mm.' },
+      { id: 3, label: 'Sisi Potong Utama (Major Cutting Edge)', desc: 'Tepi tajam di sisi kiri pahat yang menyayat ketebalan geram utama saat gerak makan memanjang.', tip: 'Pastikan sudut potong tidak terbentur kerak keras coran tanpa perlakuan chamfer.' },
+      { id: 4, label: 'Radius Hidung (Nose Radius rε = 0.8 mm)', desc: 'Ujung lengkung yang menghasilkan kehalusan permukaan Ra dan menahan beban potong radial.', tip: 'Gunakan rε = 0.4 mm untuk poros ramping dan rε = 0.8-1.2 mm untuk pengasaran berat.' },
+      { id: 5, label: 'Alur Pemecah Tatal (Chipbreaker)', desc: 'Cekungan khusus yang melipat dan mematahkan tatal kontinu menjadi serpihan C/6 yang aman.', tip: 'Pilih alur chipbreaker tipe finishing untuk kedalaman potong dangkal (ap < 1 mm).' }
+    ]
+  },
+  {
+    id: 'pahat-rata-kiri',
+    name: 'Pahat Bubut Rata Kiri (Left-Hand Turning)',
+    englishName: 'Left-Hand External Turning Tool (ISO 5 / DIN 4977)',
+    arahSayat: 'Kiri ke Kanan (Menjauhi Chuck)',
+    isoDIN: 'ISO 5 / DIN 4977',
+    tipe: 'Pembubutan Memanjang Mundur',
+    leadAngle: '75° / 45° Kiri',
+    color: '#ea580c',
+    deskripsi: 'Pahat bubut dengan sisi potong di sebelah kanan, menyayat dari arah kiri ke kanan (menjauhi cekam spindel). Digunakan untuk membubut bidang bertingkat dari sisi dalam atau pembubutan mundur.',
+    aplikasi: 'Pembubutan mundur pada poros bertingkat atau sudut bahu kiri benda kerja yang dekat dengan rahang cekam.',
+    keunggulan: 'Dapat menyelesaikan pembubutan bahu yang berbatasan dekat dengan chuck tanpa risiko rumah pahat menabrak rahang cekam.',
+    tipsTeknis: 'Pastikan eretan digerakkan mundur secara konstan dengan backlash ulir yang telah dieliminasi.',
+    pins: [
+      { id: 1, label: 'Tangkai Kiri (Left-Hand Shank)', desc: 'Geometri shank dimiringkan ke kanan untuk memfasilitasi gerak pemakanan menjauhi cekam.', tip: 'Gunakan baut penjepit toolpost paling depan dengan torsi merata.' },
+      { id: 2, label: 'Sisi Potong Kanan (Right Cutting Edge)', desc: 'Tepi potong utama berada di sebelah kanan kepala pahat untuk gerak makan ke kanan.', tip: 'Periksa keausan kawah pada sisi potong kanan secara periodik.' },
+      { id: 3, label: 'Sudut Bebas Flank Kiri', desc: 'Sudut bebas samping mencegah gesekan dengan dinding bahu silinder yang sudah jadi.', tip: 'Beri ruang gerak bebas minimal 2 mm saat berhenti di ujung bahu.' }
+    ]
+  },
+  {
+    id: 'pahat-muka',
+    name: 'Pahat Bubut Muka / Facing (Facing Tool)',
+    englishName: 'Facing Turning Tool (ISO 2 / DIN 4972)',
+    arahSayat: 'Luar ke Sumbu Pusat (Melintang)',
+    isoDIN: 'ISO 2 / DIN 4972',
+    tipe: 'Pembubutan Muka Ujung Poros (Facing)',
+    leadAngle: '45°',
+    color: '#16a34a',
+    deskripsi: 'Pahat khusus dengan sudut potong miring 45° untuk meratakan permukaan bidang ujung penampang silinder dengan gerakan melintang eretan lintang (cross-slide feed).',
+    aplikasi: 'Facing ujung benda kerja untuk menentukan panjang absolut dan bidang referensi titik nol (datum face).',
+    keunggulan: 'Sudut masuk 45° memotong secara bertahap dari diameter terluar ke pusat tanpa menimbulkan getaran benturan.',
+    tipsTeknis: 'Ketinggian pahat WAJIB 100% tepat di senter pusat; jika terlalu rendah atau tinggi akan menyisakan tonjolan pentil di pusat poros!',
+    pins: [
+      { id: 1, label: 'Kepala Sudut Potong 45°', desc: 'Sudut potong miring 45° ideal untuk pemakanan melintang dari luar ke pusat poros.', tip: 'Sudut 45° membagi gaya dorong menjadi 50% aksial dan 50% radial.' },
+      { id: 2, label: 'Mata Potong Karbida Facing', desc: 'Menghadapi kecepatan potong (Vc) yang menurun drastis dari tepi luar maksimum ke titik pusat nol RPM.', tip: 'Kurangi gerak makan fz saat mendekati titik pusat diameter nol.' },
+      { id: 3, label: 'Bidang Bebas Ujung', desc: 'Memberikan ruang bebas saat menyentuh titik senter silinder agar tidak menggosok.', tip: 'Pastikan eretan memanjang terkunci erat (carriage lock) saat membubut muka.' }
+    ]
+  },
+  {
+    id: 'pahat-alur-potong',
+    name: 'Pahat Alur & Potong (Parting & Grooving)',
+    englishName: 'Parting-Off & External Grooving Tool (ISO 7 / DIN 4981)',
+    arahSayat: 'Tegak Lurus Melintang Radial ke Pusat',
+    isoDIN: 'ISO 7 / DIN 4981',
+    tipe: 'Pembuatan Alur & Pemotongan Putus',
+    leadAngle: '90° (Bilah Lebar 2 – 4 mm)',
+    color: '#d97706',
+    deskripsi: 'Pahat bilah tipis panjang dengan sisi potong lurus di ujungnya dan sudut bebas samping ganda untuk membuat celah alur pasak/O-ring atau memotong putus benda kerja.',
+    aplikasi: 'Alur penahan snap ring, alur seal karet O-ring, alur pembebas ulir, dan pemotongan putus batang bahan silinder.',
+    keunggulan: 'Bilah kaku berkepala insert self-clamping tipis meminimalkan volume logam yang terbuang menjadi bram.',
+    tipsTeknis: 'Gunakan cairan pendingin berlimpah langsung ke celah potong dan kurangi RPM hingga 50% saat mendekati pemotongan putus akhir!',
+    pins: [
+      { id: 1, label: 'Bilah Tipis (Blade Shank 3 mm)', desc: 'Bilah baja paduan tipis berdaya tahan lentur tinggi dengan dudukan insert jepit.', tip: 'Bilah harus dipasang tegak lurus absolut 90° terhadap sumbu silinder.' },
+      { id: 2, label: 'Insert Alur Lurus (Grooving Insert)', desc: 'Mata potong lurus bertepi siku 90° dengan cekungan pembentuk geram melipat.', tip: 'Jangan menghentikan pendingin saat memotong alur dalam karena geram bisa mengelas panas.' },
+      { id: 3, label: 'Sudut Bebas Ganda Samping (Side Relief)', desc: 'Celah bebas 1.5° di kedua sisi bilah agar bilah tidak terjepit oleh dinding alur.', tip: 'Jika timbul suara berdecit, segera tarik mundur pahat dan bersihkan serpihan geram.' }
+    ]
+  },
+  {
+    id: 'pahat-ulir-luar',
+    name: 'Pahat Ulir Luar Metrik 60° (Threading Tool)',
+    englishName: 'External Threading Tool 60° (ISO Metric DIN 282)',
+    arahSayat: 'Longitudinal Sinkron Spindel (Lead Screw Pitch)',
+    isoDIN: 'DIN 282 / ISO Metrik 60°',
+    tipe: 'Pembuatan Ulir Baut Luar',
+    leadAngle: 'Sudut Puncak Profil 60°',
+    color: '#7c3aed',
+    deskripsi: 'Pahat dengan ujung baji segitiga presisi sudut 60° (Metrik) atau 55° (Whitworth) yang digerakkan secara sinkron oleh poros transportir untuk menyayat alur spiral ulir baut.',
+    aplikasi: 'Pembuatan ulir luar segitiga metrik (M6 s.d. M30), ulir trapesium gerak, dan ulir modul presisi.',
+    keunggulan: 'Insert ulir penuh (full-profile) sekaligus membentuk puncak dan dasar ulir berstandar toleransi ISO 6g.',
+    tipsTeknis: 'Gunakan mal ulir (center gauge) saat memasang pahat ke rumah pahat agar sumbu simetri pahat tegak lurus sempurna terhadap sumbu benda kerja!',
+    pins: [
+      { id: 1, label: 'Ujung Baji Segitiga 60°', desc: 'Sudut profil presisi 60° standar Metrik ISO yang membentuk sudut ulir baut.', tip: 'Periksa keausan ujung dengan mal ulir sebelum memulai pembuatan ulir kelas presisi.' },
+      { id: 2, label: 'Radius Puncak Ulir (Crest Radius)', desc: 'Radius ujung kecil sesuai kisar ulir baut (misal pitch 1.5 mm).', tip: 'Pemakanan ulir sebaiknya dilakukan dengan metode miring 29° eretan atas (compound rest).' },
+      { id: 3, label: 'Pelat Landasan Shim (Anvil)', desc: 'Pelat miring di bawah insert untuk mengompensasi sudut heliks kisar ulir.', tip: 'Ganti shim anvil bila membuat ulir berpitch sangat kasar (P > 3 mm).' }
+    ]
+  },
+  {
+    id: 'pahat-dalam-boring',
+    name: 'Pahat Bubut Dalam / Boring Bar (Internal Boring)',
+    englishName: 'Internal Boring Bar Tool (ISO 8 / DIN 4973)',
+    arahSayat: 'Aksial Masuk ke Dalam Lubang Silinder',
+    isoDIN: 'ISO 8 / DIN 4973',
+    tipe: 'Pembubutan Lubang Silinder Dalam',
+    leadAngle: '95° (CCMT / WCMT)',
+    color: '#0284c7',
+    deskripsi: 'Pahat berbentuk silinder pejal panjang (sering berbahan karbida anti-getar) dengan kepala insert offset untuk memperbesar, meratakan, dan menghaluskan lubang dalam silindris.',
+    aplikasi: 'Perbesaran lubang hasil bor, pembuatan dudukan bearing H7 presisi, pembubutan rumah silinder rem dan blok mesin.',
+    keunggulan: 'Batang silindris kokoh meminimalkan defleksi lentur pada kedalaman lubang (L/D hingga 4× untuk baja, 7× untuk karbida).',
+    tipsTeknis: 'Pilih diameter batang boring bar sebesar mungkin yang masih muat di dalam lubang untuk meminimalkan getaran getar (vibration chatter).',
+    pins: [
+      { id: 1, label: 'Batang Silindris (Boring Bar)', desc: 'Batang baja paduan pejal peredam getaran chatter saat menjangkau kedalaman lubang.', tip: 'Jaga overhang batang seminimal mungkin sesuai kedalaman lubang kerja.' },
+      { id: 2, label: 'Kepala Offset Insert (CCMT)', desc: 'Dudukan insert menghadap keluar dinding dalam lubang dengan sudut potong 95° bebas bahu.', tip: 'Pastikan bidang bebas insert tidak menggesek kurva kelengkungan dinding dalam.' },
+      { id: 3, label: 'Saluran Pendingin Internal', desc: 'Lubang tembus di dalam batang untuk menyemprot cairan pendingin dan meniup geram keluar.', tip: 'Tekanan pendingin tinggi membantu memecah geram yang bersarang di lubang buntu.' }
+    ]
+  }
+];
+
+// =============================================================================
+// DATABASE 2C: 7 BENTUK GEOMETRI INSERT KARBIDA STANDAR ISO 1832
+// =============================================================================
+const CARBIDE_INSERTS_CATALOG = [
+  {
+    shape: 'C',
+    name: 'Bentuk C: Rhombic 80° (CNMG / CCMT)',
+    sudutHidung: '80° (Belah Ketupat 80°)',
+    sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
+    kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
+    fleksibilitas: '⭐⭐⭐ (Sedang)',
+    color: '#2563eb',
+    deskripsi: 'Bentuk paling populer dan standar utama di bengkel mesin bubut seluruh dunia. Sudut hidung 80° memberikan ketahanan luar biasa terhadap beban pemakanan berat tanpa mudah gompal.',
+    fungsi: 'Pembubutan rata memanjang luar & dalam, facing muka, pengasaran (roughing) hingga medium finishing.',
+    keunggulan: 'Dapat melakukan pembubutan muka dan memanjang tanpa perlu mengganti pahat.'
+  },
+  {
+    shape: 'D',
+    name: 'Bentuk D: Rhombic 55° (DNMG / DCMT)',
+    sudutHidung: '55° (Belah Ketupat 55°)',
+    sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
+    kekuatanTepi: '⭐⭐⭐⭐ (Kuat)',
+    fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
+    color: '#ea580c',
+    deskripsi: 'Bentuk belah ketupat sudut 55° yang memungkinkan pahat masuk ke sudut bahu 90° dan membubut profil kontur tirus tanpa mengalami interferensi dinding.',
+    fungsi: 'Pembubutan kontur luar/dalam, profil tirus, pembubutan bahu siku 90°, dan finishing presisi.',
+    keunggulan: 'Aksesibilitas sudut profil jauh lebih lincah dibanding bentuk C.'
+  },
+  {
+    shape: 'S',
+    name: 'Bentuk S: Square 90° (SNMG / SCMT)',
+    sudutHidung: '90° (Bujur Sangkar)',
+    sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
+    kekuatanTepi: '⭐⭐⭐⭐⭐ (Kekuatan Maksimum)',
+    fleksibilitas: '⭐⭐ (Terbatas)',
+    color: '#16a34a',
+    deskripsi: 'Bentuk bujur sangkar dengan sudut hidung 90° terkuat. Sangat hemat karena memiliki total 8 sisi potong aktif (pada tipe negatif SNMG bolak-balik).',
+    fungsi: 'Pengasaran berat (heavy roughing), pemotongan logam berkerak cor kasar, dan chamfering 45°.',
+    keunggulan: 'Ketahanan puncak terhadap beban tumbukan intermiten dan pemotongan terputus.'
+  },
+  {
+    shape: 'T',
+    name: 'Bentuk T: Triangular 60° (TNMG / TCMT)',
+    sudutHidung: '60° (Segitiga Sama Sisi)',
+    sisiPotong: '3 Sisi (Positif) / 6 Sisi (Negatif)',
+    kekuatanTepi: '⭐⭐⭐ (Sedang)',
+    fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
+    color: '#d97706',
+    deskripsi: 'Bentuk segitiga sama sisi yang sangat ekonomis dengan harga per sisi potong termurah. Sudut baji 60° tajam dan gaya potong relatif ringan.',
+    fungsi: 'Pembubutan umum serbaguna, pembubutan dalam lubang kecil, dan pembuatan alur V.',
+    keunggulan: 'Ekonomis dengan 6 sisi potong dan gaya potong aksial yang rendah.'
+  },
+  {
+    shape: 'W',
+    name: 'Bentuk W: Trigon 80° (WNMG / WCMT)',
+    sudutHidung: '80° (Trigon 3 Sudut)',
+    sisiPotong: '6 Sisi Potong Aktif Bolak-Balik',
+    kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
+    fleksibilitas: '⭐⭐⭐ (Sedang)',
+    color: '#7c3aed',
+    deskripsi: 'Pengembangan modern dari perpaduan bentuk C dan T. Memiliki sudut hidung 80° sekokoh bentuk C, tetapi memiliki 6 sisi potong aktif bolak-balik seperti bentuk segitiga!',
+    fungsi: 'Pilihan paling ekonomis dan efisien untuk produksi massal pembubutan luar dan facing mesin CNC.',
+    keunggulan: 'Kekuatan setara bentuk C tetapi hemat 50% lebih banyak sisi potong.'
+  },
+  {
+    shape: 'V',
+    name: 'Bentuk V: Rhombic 35° (VNMG / VCMT)',
+    sudutHidung: '35° (Sangat Lancip)',
+    sisiPotong: '4 Sisi (Positif) / 4 Sisi (Negatif)',
+    kekuatanTepi: '⭐⭐ (Rentan Beban Berat)',
+    fleksibilitas: '⭐⭐⭐⭐⭐ (Aksesibilitas Maksimum)',
+    color: '#db2777',
+    deskripsi: 'Bentuk belah ketupat sangat lancip 35° yang dapat menjangkau ceruk sempit, alur kontur kurva tajam, dan pembubutan undercut.',
+    fungsi: 'Finishing profil kurva kompleks CNC, salinan kontur tirus sempit, dan pembuatan pola ornamen halus.',
+    keunggulan: 'Dapat memotong profil undercut dengan sudut hingga 30° tanpa gesekan bodi.'
+  },
+  {
+    shape: 'R',
+    name: 'Bentuk R: Round / Bulat (RNMG / RCMT)',
+    sudutHidung: 'Bulat Melingkar (Lingkaran Penuh)',
+    sisiPotong: 'Dapat Diputar Berkeliling (Tak Terhingga)',
+    kekuatanTepi: '⭐⭐⭐⭐⭐ (Paling Tahan Benturan)',
+    fleksibilitas: '⭐⭐⭐ (Khusus Kontur Radius)',
+    color: '#0284c7',
+    deskripsi: 'Sisipan berbentuk piringan lingkaran penuh tanpa sudut tajam. Menghilangkan titik konsentrasi tegangan sehingga tahan terhadap beban kejut pemotongan terputus.',
+    fungsi: 'Pembubutan permukaan cekung bulat, pembuatan alur radius besar, pemotongan cetakan (die & mold).',
+    keunggulan: 'Sisi potong dapat diindeks (diputar) berkali-kali hingga seluruh keliling lingkaran terpakai.'
+  }
+];
+
+// =============================================================================
 // KOMPONEN MINIATUR THUMBNAIL PISAU FRAIS (SVG KONTUR NYATA)
 // =============================================================================
 const MillingCutterThumbnail = ({ toolId, isSelected }) => {
@@ -1349,6 +1561,705 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
 };
 
 // =============================================================================
+// KOMPONEN KARTU VISUAL REALISTIS PAHAT BUBUT (200x110 PX)
+// =============================================================================
+const LatheToolCardVisual = ({ toolId, isSelected = false }) => {
+  return (
+    <svg viewBox="0 0 200 110" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', filter: isSelected ? 'drop-shadow(0 4px 8px rgba(37, 99, 235, 0.28))' : 'none' }}>
+      <defs>
+        <linearGradient id={`latheShank_${toolId}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#475569" />
+          <stop offset="35%" stopColor="#94a3b8" />
+          <stop offset="70%" stopColor="#cbd5e1" />
+          <stop offset="100%" stopColor="#334155" />
+        </linearGradient>
+        <linearGradient id={`latheTiN_${toolId}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="50%" stopColor="#eab308" />
+          <stop offset="100%" stopColor="#ca8a04" />
+        </linearGradient>
+        <marker id={`arrow_${toolId}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563eb" />
+        </marker>
+        <marker id={`arrowOr_${toolId}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ea580c" />
+        </marker>
+      </defs>
+
+      {/* Grid background garis tengah */}
+      <line x1="10" y1="55" x2="190" y2="55" stroke="#94a3b8" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.25" />
+
+      {/* 1. PAHAT RATA KANAN (ISO 6) */}
+      {toolId === 'pahat-rata-kanan' && (
+        <g>
+          <rect x="70" y="38" width="120" height="40" rx="2" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="130" y="62" fill="#475569" fontSize="8" fontWeight="900" letterSpacing="0.5">25×25 mm</text>
+          <polygon points="70,38 35,52 35,78 70,78" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+          <polygon points="35,52 68,52 56,78 23,78" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1.2" />
+          <circle cx="45" cy="65" r="4" fill="#78350f" />
+          <circle cx="45" cy="65" r="2" fill="#0f172a" />
+          <line x1="23" y1="78" x2="35" y2="52" stroke="#ef4444" strokeWidth="2.2" />
+          <line x1="150" y1="22" x2="80" y2="22" stroke="#2563eb" strokeWidth="2.5" markerEnd={`url(#arrow_${toolId})`} />
+          <text x="115" y="16" fill="#2563eb" fontSize="8" fontWeight="900" textAnchor="middle">vf ← (KE ARAH CHUCK)</text>
+          <text x="100" y="102" fill="#2563eb" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT RATA KANAN (ISO 6)</text>
+        </g>
+      )}
+
+      {/* 2. PAHAT RATA KIRI (ISO 5) */}
+      {toolId === 'pahat-rata-kiri' && (
+        <g>
+          <rect x="10" y="38" width="120" height="40" rx="2" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="65" y="62" fill="#475569" fontSize="8" fontWeight="900" letterSpacing="0.5">25×25 mm</text>
+          <polygon points="130,38 165,52 165,78 130,78" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+          <polygon points="132,52 165,52 177,78 144,78" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1.2" />
+          <circle cx="155" cy="65" r="4" fill="#78350f" />
+          <line x1="165" y1="52" x2="177" y2="78" stroke="#ef4444" strokeWidth="2.2" />
+          <line x1="50" y1="22" x2="120" y2="22" stroke="#ea580c" strokeWidth="2.5" markerEnd={`url(#arrowOr_${toolId})`} />
+          <text x="85" y="16" fill="#ea580c" fontSize="8" fontWeight="900" textAnchor="middle">vf → (MENJAUHI CHUCK)</text>
+          <text x="100" y="102" fill="#ea580c" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT RATA KIRI (ISO 5)</text>
+        </g>
+      )}
+
+      {/* 3. PAHAT MUKA / FACING (ISO 2) */}
+      {toolId === 'pahat-muka' && (
+        <g>
+          <rect x="50" y="46" width="115" height="38" rx="2" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <polygon points="50,46 16,22 32,8 75,46" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+          <polygon points="16,22 40,4 58,22 34,40" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1.2" />
+          <circle cx="37" cy="22" r="3.5" fill="#78350f" />
+          <text x="70" y="24" fill="#16a34a" fontSize="8.5" fontWeight="900">45° FACING</text>
+          <line x1="20" y1="50" x2="20" y2="82" stroke="#16a34a" strokeWidth="2.5" markerEnd={`url(#arrow_${toolId})`} />
+          <text x="25" y="70" fill="#16a34a" fontSize="7.5" fontWeight="900">vf ↓</text>
+          <text x="100" y="102" fill="#16a34a" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT MUKA / FACING (ISO 2)</text>
+        </g>
+      )}
+
+      {/* 4. PAHAT ALUR & POTONG (ISO 7) */}
+      {toolId === 'pahat-alur-potong' && (
+        <g>
+          <rect x="75" y="40" width="110" height="38" rx="2" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <rect x="22" y="50" width="55" height="20" rx="1" fill="#475569" stroke="#1e293b" strokeWidth="1" />
+          <rect x="12" y="50" width="12" height="20" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <line x1="12" y1="50" x2="12" y2="70" stroke="#ef4444" strokeWidth="2" />
+          <text x="18" y="42" fill="#d97706" fontSize="8" fontWeight="900" textAnchor="middle">W=3 mm</text>
+          <line x1="18" y1="18" x2="18" y2="35" stroke="#d97706" strokeWidth="2.5" markerEnd={`url(#arrowOr_${toolId})`} />
+          <text x="100" y="102" fill="#d97706" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT ALUR & POTONG (ISO 7)</text>
+        </g>
+      )}
+
+      {/* 5. PAHAT ULIR LUAR 60° (DIN 282) */}
+      {toolId === 'pahat-ulir-luar' && (
+        <g>
+          <rect x="60" y="42" width="125" height="38" rx="2" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <polygon points="60,42 28,42 40,80 60,80" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+          <polygon points="16,52 38,34 38,70" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1.2" />
+          <circle cx="31" cy="52" r="3.5" fill="#78350f" />
+          <path d="M 28,47 A 8 8 0 0 1 28,57" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+          <text x="44" y="55" fill="#ef4444" fontSize="8" fontWeight="900">60°</text>
+          <text x="100" y="102" fill="#7c3aed" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT ULIR METRIK 60° (DIN 282)</text>
+        </g>
+      )}
+
+      {/* 6. PAHAT BUBUT DALAM / BORING BAR (ISO 8) */}
+      {toolId === 'pahat-dalam-boring' && (
+        <g>
+          <rect x="35" y="48" width="150" height="26" rx="4" fill={`url(#latheShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <circle cx="172" cy="61" r="3.5" fill="#0284c7" />
+          <text x="145" y="42" fill="#64748b" fontSize="7" fontWeight="800">Internal Coolant</text>
+          <polygon points="35,48 12,38 12,62 35,74" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+          <polygon points="12,38 24,28 28,44 16,54" fill={`url(#latheTiN_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          <circle cx="20" cy="41" r="2" fill="#78350f" />
+          <line x1="5" y1="24" x2="40" y2="24" stroke="#0284c7" strokeWidth="1.5" strokeDasharray="3 2" />
+          <text x="22" y="20" fill="#0284c7" fontSize="7" fontWeight="900">Lubang Ø</text>
+          <text x="100" y="102" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">PAHAT DALAM / BORING BAR (ISO 8)</text>
+        </g>
+      )}
+    </svg>
+  );
+};
+
+// =============================================================================
+// KOMPONEN BESAR MASTER PAHAT BUBUT (ANATOMI & SIMULASI PENYAYATAN BUBUT)
+// =============================================================================
+const LatheToolMasterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinClick = () => {} }) => {
+  return (
+    <div style={{ position: 'relative', width: '100%', background: mode === 'simulation' ? '#0f172a' : '#f8fafc', borderRadius: '12px', border: '1.5px solid #cbd5e1', overflow: 'hidden' }}>
+      <svg viewBox="0 0 800 320" style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '360px' }}>
+        <defs>
+          <linearGradient id="visLatheShank" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#475569" />
+            <stop offset="25%" stopColor="#94a3b8" />
+            <stop offset="65%" stopColor="#cbd5e1" />
+            <stop offset="100%" stopColor="#334155" />
+          </linearGradient>
+          <linearGradient id="visLatheWorkpiece" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#64748b" />
+            <stop offset="35%" stopColor="#cbd5e1" />
+            <stop offset="70%" stopColor="#94a3b8" />
+            <stop offset="100%" stopColor="#334155" />
+          </linearGradient>
+          <linearGradient id="visLatheTurned" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="50%" stopColor="#bae6fd" />
+            <stop offset="100%" stopColor="#0284c7" />
+          </linearGradient>
+          <linearGradient id="visLatheTiN" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="40%" stopColor="#eab308" />
+            <stop offset="100%" stopColor="#ca8a04" />
+          </linearGradient>
+          <marker id="visArrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38bdf8" />
+          </marker>
+          <marker id="visArrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#22c55e" />
+          </marker>
+        </defs>
+
+        {/* MODE 1: ANATOMI FISIK */}
+        {mode === 'anatomy' && (
+          <g>
+            <rect width="800" height="320" fill="#f8fafc" />
+            <line x1="400" y1="10" x2="400" y2="310" stroke="#cbd5e1" strokeWidth="1" strokeDasharray="6 4" />
+
+            {/* Tangkai Pahat Baja 25x25 mm */}
+            <rect x="250" y="70" width="480" height="150" rx="6" fill="url(#visLatheShank)" stroke="#1e293b" strokeWidth="2.5" />
+            <text x="490" y="150" fill="#334155" fontSize="18" fontWeight="900" letterSpacing="3">
+              TANGKAI BAJA (TOOL SHANK 25×25 mm)
+            </text>
+            <text x="490" y="175" fill="#64748b" fontSize="11" fontWeight="800">
+              STANDAR DIN 4980 / ISO KOTAK KAKU
+            </text>
+
+            {/* Dudukan Pocket Baja Sepuhan */}
+            <polygon points="120,50 260,50 260,190 170,230 90,140" fill="#1e293b" stroke="#0f172a" strokeWidth="2.5" />
+
+            {/* Insert Karbida Emas Sesuai Jenis */}
+            {tool.id === 'pahat-alur-potong' ? (
+              <g>
+                <rect x="40" y="110" width="120" height="40" fill="url(#visLatheTiN)" stroke="#ca8a04" strokeWidth="2" />
+                <rect x="30" y="110" width="18" height="40" fill="#ca8a04" />
+                <text x="100" y="135" fill="#78350f" fontSize="12" fontWeight="900">W = 3 mm</text>
+              </g>
+            ) : tool.id === 'pahat-ulir-luar' ? (
+              <g>
+                <polygon points="60,130 180,60 180,200" fill="url(#visLatheTiN)" stroke="#ca8a04" strokeWidth="2.5" />
+                <circle cx="140" cy="130" r="16" fill="#78350f" />
+                <text x="100" y="135" fill="#ffffff" fontSize="14" fontWeight="900">60°</text>
+              </g>
+            ) : (
+              <g>
+                <polygon points="110,55 220,55 175,185 65,185" fill="url(#visLatheTiN)" stroke="#ca8a04" strokeWidth="2.5" />
+                <circle cx="145" cy="120" r="15" fill="#78350f" stroke="#451a03" strokeWidth="2" />
+                <circle cx="145" cy="120" r="8" fill="#1e293b" />
+                <path d="M 100,66 Q 145,78 200,66" fill="none" stroke="#b45309" strokeWidth="3.5" />
+                <path d="M 80,174 Q 125,162 170,174" fill="none" stroke="#b45309" strokeWidth="3.5" />
+                <circle cx="65" cy="185" r="7" fill="#dc2626" opacity="0.85" />
+              </g>
+            )}
+
+            {/* Pins Hotspot */}
+            {tool.pins?.map(pin => {
+              const isPinActive = pin.id === activePinId;
+              const coords = [
+                { x: 530, y: 70 },
+                { x: 145, y: 80 },
+                { x: 80, y: 185 },
+                { x: 50, y: 200 },
+                { x: 125, y: 65 }
+              ][pin.id - 1] || { x: 200, y: 150 };
+
+              return (
+                <g
+                  key={pin.id}
+                  onClick={() => onPinClick(pin.id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <circle cx={coords.x} cy={coords.y} r={isPinActive ? 15 : 12} fill={isPinActive ? '#2563eb' : '#0f172a'} stroke="#ffffff" strokeWidth="2.5" />
+                  <text x={coords.x} y={coords.y + 4} fill="#ffffff" fontSize="11" fontWeight="900" textAnchor="middle">{pin.id}</text>
+                </g>
+              );
+            })}
+          </g>
+        )}
+
+        {/* MODE 2: SIMULASI PENYAYATAN BUBUT */}
+        {mode === 'simulation' && (
+          <g>
+            <rect width="800" height="320" fill="#0f172a" />
+            <rect x="30" y="50" width="70" height="220" rx="4" fill="#1e293b" stroke="#334155" strokeWidth="2" />
+            <rect x="85" y="65" width="30" height="35" rx="2" fill="#64748b" stroke="#94a3b8" />
+            <rect x="85" y="220" width="30" height="35" rx="2" fill="#64748b" stroke="#94a3b8" />
+            <path d="M 50,40 A 25,12 0 0,1 90,40" fill="none" stroke="#38bdf8" strokeWidth="2.5" markerEnd="url(#visArrowBlue)" />
+            <text x="65" y="32" fill="#38bdf8" fontSize="10" fontWeight="800" textAnchor="middle">n = 850 RPM</text>
+
+            {/* Benda Kerja Poros Mentah S45C */}
+            <rect x="115" y="85" width="280" height="150" fill="url(#visLatheWorkpiece)" stroke="#475569" strokeWidth="2" />
+            <text x="210" y="165" fill="#1e293b" fontSize="13" fontWeight="900">Ø60 mm (BAJA S45C)</text>
+
+            {/* Bagian Sudah Terbubut Halus */}
+            <rect x="395" y="100" width="280" height="120" fill="url(#visLatheTurned)" stroke="#38bdf8" strokeWidth="2" />
+            <text x="500" y="165" fill="#0369a1" fontSize="12" fontWeight="900">HASIL BUBUT Ø54 mm (Ra 1.6 µm)</text>
+
+            {/* Pahat Sedang Menyayat di Pertemuan Bahu */}
+            <rect x="395" y="200" width="160" height="80" rx="3" fill="url(#visLatheShank)" stroke="#0f172a" strokeWidth="2" />
+            <polygon points="380,200 415,200 405,240 370,240" fill="url(#visLatheTiN)" stroke="#ca8a04" strokeWidth="2" />
+            
+            {/* Bram Terlempar Menggulung Emas */}
+            <path d="M 390,200 Q 365,160 335,175 Q 315,145 285,165" fill="none" stroke="#fef08a" strokeWidth="4" />
+            <path d="M 385,205 Q 360,170 340,195" fill="none" stroke="#f59e0b" strokeWidth="3" />
+
+            {/* Indikator Depth of Cut ap = 3 mm */}
+            <line x1="395" y1="85" x2="395" y2="100" stroke="#ef4444" strokeWidth="2.5" />
+            <text x="402" y="95" fill="#ef4444" fontSize="10" fontWeight="900">ap = 3 mm</text>
+
+            {/* Panah Gerak Makan Eretan vf */}
+            <line x1="560" y1="290" x2="420" y2="290" stroke="#22c55e" strokeWidth="3" markerEnd="url(#visArrowGreen)" />
+            <text x="575" y="294" fill="#22c55e" fontSize="11" fontWeight="900">Gerak Makan vf (f = 0.15 mm/put)</text>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+};
+
+// =============================================================================
+// KOMPONEN KARTU VISUAL BENTUK INSERT KARBIDA ISO 1832 (140x95 PX)
+// =============================================================================
+const CarbideInsertCardVisual = ({ shape, isSelected = false }) => {
+  return (
+    <svg viewBox="0 0 140 95" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', filter: isSelected ? 'drop-shadow(0 4px 8px rgba(234, 88, 12, 0.35))' : 'none' }}>
+      <defs>
+        <linearGradient id={`insGold_${shape}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="35%" stopColor="#eab308" />
+          <stop offset="80%" stopColor="#ca8a04" />
+          <stop offset="100%" stopColor="#a16207" />
+        </linearGradient>
+      </defs>
+
+      {/* SHAPE C: RHOMBIC 80° */}
+      {shape === 'C' && (
+        <g>
+          <polygon points="70,10 115,35 70,85 25,60" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="47" r="9" fill="#78350f" />
+          <circle cx="70" cy="47" r="5" fill="#1e293b" />
+          <path d="M 64,18 L 105,40" stroke="#713f12" strokeWidth="1.5" />
+          <path d="M 32,58 L 72,80" stroke="#713f12" strokeWidth="1.5" />
+          <text x="18" y="60" fill="#dc2626" fontSize="8" fontWeight="900">80°</text>
+        </g>
+      )}
+
+      {/* SHAPE D: RHOMBIC 55° */}
+      {shape === 'D' && (
+        <g>
+          <polygon points="70,8 112,45 70,87 28,50" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="47" r="9" fill="#78350f" />
+          <circle cx="70" cy="47" r="5" fill="#1e293b" />
+          <path d="M 64,16 L 103,48" stroke="#713f12" strokeWidth="1.5" />
+          <path d="M 37,48 L 76,80" stroke="#713f12" strokeWidth="1.5" />
+          <text x="20" y="52" fill="#dc2626" fontSize="8" fontWeight="900">55°</text>
+        </g>
+      )}
+
+      {/* SHAPE S: SQUARE 90° */}
+      {shape === 'S' && (
+        <g>
+          <rect x="40" y="17" width="60" height="60" rx="3" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="47" r="9" fill="#78350f" />
+          <circle cx="70" cy="47" r="5" fill="#1e293b" />
+          <path d="M 45,25 Q 52,32 52,42" fill="none" stroke="#713f12" strokeWidth="1.5" />
+          <path d="M 95,25 Q 88,32 88,42" fill="none" stroke="#713f12" strokeWidth="1.5" />
+          <text x="32" y="26" fill="#dc2626" fontSize="8" fontWeight="900">90°</text>
+        </g>
+      )}
+
+      {/* SHAPE T: TRIANGLE 60° */}
+      {shape === 'T' && (
+        <g>
+          <polygon points="70,12 118,80 22,80" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="52" r="9" fill="#78350f" />
+          <circle cx="70" cy="52" r="5" fill="#1e293b" />
+          <path d="M 65,22 L 108,76" stroke="#713f12" strokeWidth="1.5" />
+          <path d="M 32,76 L 70,22" stroke="#713f12" strokeWidth="1.5" />
+          <text x="65" y="8" fill="#dc2626" fontSize="8" fontWeight="900">60°</text>
+        </g>
+      )}
+
+      {/* SHAPE W: TRIGON 80° */}
+      {shape === 'W' && (
+        <g>
+          <polygon points="70,12 114,36 100,78 40,78 26,36" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="48" r="9" fill="#78350f" />
+          <circle cx="70" cy="48" r="5" fill="#1e293b" />
+          <text x="65" y="8" fill="#dc2626" fontSize="8" fontWeight="900">80°</text>
+          <text x="70" y="90" fill="#7c3aed" fontSize="7" fontWeight="900" textAnchor="middle">6 SISI POTONG</text>
+        </g>
+      )}
+
+      {/* SHAPE V: RHOMBIC 35° */}
+      {shape === 'V' && (
+        <g>
+          <polygon points="70,8 96,48 70,88 44,48" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="48" r="8" fill="#78350f" />
+          <circle cx="70" cy="48" r="4.5" fill="#1e293b" />
+          <path d="M 65,16 L 90,48" stroke="#713f12" strokeWidth="1.5" />
+          <path d="M 50,48 L 75,80" stroke="#713f12" strokeWidth="1.5" />
+          <text x="70" y="6" fill="#dc2626" fontSize="8" fontWeight="900" textAnchor="middle">35°</text>
+        </g>
+      )}
+
+      {/* SHAPE R: ROUND BULAT */}
+      {shape === 'R' && (
+        <g>
+          <circle cx="70" cy="47" r="33" fill={`url(#insGold_${shape})`} stroke="#854d0e" strokeWidth="1.5" />
+          <circle cx="70" cy="47" r="9" fill="#78350f" />
+          <circle cx="70" cy="47" r="5" fill="#1e293b" />
+          <circle cx="70" cy="47" r="23" fill="none" stroke="#713f12" strokeWidth="1.5" strokeDasharray="6 3" />
+          <text x="70" y="90" fill="#0284c7" fontSize="7.5" fontWeight="900" textAnchor="middle">RADIUS PENUH</text>
+        </g>
+      )}
+    </svg>
+  );
+};
+
+// =============================================================================
+// KOMPONEN VISUAL 4 SUDUT GEOMETRI KRITIS (760x220 PX)
+// =============================================================================
+const CarbideGeometryVisual = ({ activeAngleId = 'rake', onSelectAngle = () => {} }) => {
+  return (
+    <div style={{ background: '#0f172a', borderRadius: '12px', border: '1.5px solid #334155', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {[
+          { id: 'rake', label: '1. Sudut Tatal (Rake Angle γ)', color: '#38bdf8' },
+          { id: 'clearance', label: '2. Sudut Bebas (Clearance Angle α)', color: '#4ade80' },
+          { id: 'nose', label: '3. Radius Hidung (Nose Radius rε)', color: '#fb923c' },
+          { id: 'lead', label: '4. Sudut Masuk (Lead Angle κr)', color: '#c084fc' }
+        ].map(ang => (
+          <button
+            key={ang.id}
+            onClick={() => onSelectAngle(ang.id)}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '6px',
+              border: activeAngleId === ang.id ? `2px solid ${ang.color}` : '1px solid #334155',
+              background: activeAngleId === ang.id ? `${ang.color}25` : 'transparent',
+              color: activeAngleId === ang.id ? ang.color : '#94a3b8',
+              fontWeight: 800,
+              fontSize: '0.78rem',
+              cursor: 'pointer'
+            }}
+          >
+            {ang.label}
+          </button>
+        ))}
+      </div>
+
+      <svg viewBox="0 0 760 180" style={{ width: '100%', height: 'auto', display: 'block' }}>
+        {activeAngleId === 'rake' && (
+          <g>
+            <rect width="760" height="180" fill="#1e293b" rx="8" />
+            <g transform="translate(40, 20)">
+              <text x="140" y="20" fill="#38bdf8" fontSize="13" fontWeight="900" textAnchor="middle">SUDUT TATAL POSITIF (+10°)</text>
+              <rect x="20" y="40" width="100" height="90" fill="#475569" stroke="#64748b" />
+              <polygon points="120,40 240,40 240,130 140,130 120,60" fill="#ca8a04" stroke="#fef08a" strokeWidth="2" />
+              <line x1="120" y1="25" x2="120" y2="70" stroke="#94a3b8" strokeDasharray="3 3" />
+              <path d="M 120,40 Q 130,45 140,40" fill="none" stroke="#ef4444" strokeWidth="2" />
+              <text x="145" y="35" fill="#ef4444" fontSize="10" fontWeight="900">+γ</text>
+              <path d="M 115,40 Q 135,20 160,35 Q 180,50 165,70" fill="none" stroke="#fde047" strokeWidth="3" />
+              <text x="140" y="150" fill="#94a3b8" fontSize="10" textAnchor="middle">Gaya potong ringan, tajam, cocok utk aluminium & baja ulet</text>
+            </g>
+
+            <g transform="translate(420, 20)">
+              <text x="140" y="20" fill="#f87171" fontSize="13" fontWeight="900" textAnchor="middle">SUDUT TATAL NEGATIF (-6°)</text>
+              <rect x="20" y="40" width="100" height="90" fill="#475569" stroke="#64748b" />
+              <polygon points="120,40 240,40 240,130 130,130 110,40" fill="#ca8a04" stroke="#fef08a" strokeWidth="2" />
+              <line x1="120" y1="25" x2="120" y2="70" stroke="#94a3b8" strokeDasharray="3 3" />
+              <path d="M 120,38 Q 115,35 110,40" fill="none" stroke="#ef4444" strokeWidth="2" />
+              <text x="100" y="32" fill="#ef4444" fontSize="10" fontWeight="900">-γ</text>
+              <text x="140" y="150" fill="#94a3b8" fontSize="10" textAnchor="middle">Mata potong sangat kokoh, tahan beban kejut & pengasaran berat</text>
+            </g>
+          </g>
+        )}
+
+        {activeAngleId === 'clearance' && (
+          <g>
+            <rect width="760" height="180" fill="#1e293b" rx="8" />
+            <text x="380" y="30" fill="#4ade80" fontSize="14" fontWeight="900" textAnchor="middle">SUDUT BEBAS (CLEARANCE ANGLE α = 7°)</text>
+            <circle cx="260" cy="90" r="60" fill="#475569" stroke="#64748b" strokeWidth="2" />
+            <text x="260" y="95" fill="#cbd5e1" fontSize="11" fontWeight="800" textAnchor="middle">Benda Kerja</text>
+            <polygon points="320,90 480,90 480,150 340,150 325,100" fill="#ca8a04" stroke="#fef08a" strokeWidth="2" />
+            <line x1="320" y1="90" x2="320" y2="160" stroke="#94a3b8" strokeDasharray="3 3" />
+            <path d="M 320,130 Q 328,130 335,140" fill="none" stroke="#4ade80" strokeWidth="2.5" />
+            <text x="345" y="135" fill="#4ade80" fontSize="12" fontWeight="900">α = 7°</text>
+            <text x="380" y="168" fill="#94a3b8" fontSize="11" textAnchor="middle">
+              Mencegah bidang bebas (flank) menggesek permukaan benda kerja yang telah terpotong halus.
+            </text>
+          </g>
+        )}
+
+        {activeAngleId === 'nose' && (
+          <g>
+            <rect width="760" height="180" fill="#1e293b" rx="8" />
+            <text x="380" y="25" fill="#fb923c" fontSize="13" fontWeight="900" textAnchor="middle">PENGARUH RADIUS HIDUNG (rε) TERHADAP KEHALUSAN PERMUKAAN (Ra)</text>
+            <g transform="translate(60, 45)">
+              <text x="80" y="20" fill="#94a3b8" fontSize="11" fontWeight="900" textAnchor="middle">rε = 0.4 mm</text>
+              <path d="M 40,70 Q 80,45 120,70" fill="none" stroke="#ef4444" strokeWidth="3" />
+              <text x="80" y="95" fill="#ef4444" fontSize="10" textAnchor="middle">Gaya radial kecil (Anti-chatter)</text>
+            </g>
+            <g transform="translate(290, 45)">
+              <text x="80" y="20" fill="#22c55e" fontSize="11" fontWeight="900" textAnchor="middle">rε = 0.8 mm (Standar)</text>
+              <path d="M 30,70 Q 80,35 130,70" fill="none" stroke="#22c55e" strokeWidth="4" />
+              <text x="80" y="95" fill="#22c55e" fontSize="10" textAnchor="middle">Kekuatan &amp; kehalusan optimal</text>
+            </g>
+            <g transform="translate(520, 45)">
+              <text x="80" y="20" fill="#38bdf8" fontSize="11" fontWeight="900" textAnchor="middle">rε = 1.2 mm</text>
+              <path d="M 20,70 Q 80,25 140,70" fill="none" stroke="#38bdf8" strokeWidth="5" />
+              <text x="80" y="95" fill="#38bdf8" fontSize="10" textAnchor="middle">Sangat halus Ra &amp; tahan benturan</text>
+            </g>
+            <text x="380" y="165" fill="#fde047" fontSize="11" fontWeight="800" textAnchor="middle">
+              Rumus Hubungan: Ra ≈ (f² / 32·rε) × 1000 µm • Semakin besar rε, permukaan semakin halus!
+            </text>
+          </g>
+        )}
+
+        {activeAngleId === 'lead' && (
+          <g>
+            <rect width="760" height="180" fill="#1e293b" rx="8" />
+            <text x="380" y="25" fill="#c084fc" fontSize="13" fontWeight="900" textAnchor="middle">SUDUT MASUK (LEAD ANGLE κr): 90° VS 45° CHIP THINNING</text>
+            <g transform="translate(80, 45)">
+              <text x="120" y="20" fill="#38bdf8" fontSize="12" fontWeight="900" textAnchor="middle">κr = 90° (Bahu Siku Tegak)</text>
+              <rect x="40" y="35" width="160" height="60" fill="#475569" stroke="#64748b" />
+              <polygon points="120,35 180,35 180,95 120,95" fill="#ca8a04" stroke="#fef08a" strokeWidth="2" />
+              <text x="120" y="115" fill="#94a3b8" fontSize="10" textAnchor="middle">Gaya potong murni radial, tatal tebal h = fz</text>
+            </g>
+            <g transform="translate(440, 45)">
+              <text x="120" y="20" fill="#c084fc" fontSize="12" fontWeight="900" textAnchor="middle">κr = 45° (Chip Thinning Effect)</text>
+              <rect x="40" y="35" width="160" height="60" fill="#475569" stroke="#64748b" />
+              <polygon points="100,35 180,35 180,95 140,95" fill="#ca8a04" stroke="#fef08a" strokeWidth="2" />
+              <text x="120" y="115" fill="#c084fc" fontSize="10" textAnchor="middle">Tatal menipis h = 0.7×fz → Feed rate naik 40%!</text>
+            </g>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+};
+
+// =============================================================================
+// KOMPONEN KARTU VISUAL MATA BOR, TAP, DAN SNEI (200x110 PX)
+// =============================================================================
+const HoleThreadCardVisual = ({ toolId, isSelected = false }) => {
+  return (
+    <svg viewBox="0 0 200 110" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible', filter: isSelected ? 'drop-shadow(0 4px 8px rgba(22, 163, 74, 0.3))' : 'none' }}>
+      <defs>
+        <linearGradient id={`holeSteel_${toolId}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#475569" />
+          <stop offset="35%" stopColor="#cbd5e1" />
+          <stop offset="70%" stopColor="#94a3b8" />
+          <stop offset="100%" stopColor="#334155" />
+        </linearGradient>
+      </defs>
+
+      {/* 1. MATA BOR SPIRAL (TWIST DRILL) */}
+      {toolId === 'twist-drill' && (
+        <g>
+          <rect x="25" y="44" width="60" height="22" rx="2" fill={`url(#holeSteel_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="55" y="58" fill="#475569" fontSize="7" fontWeight="900" textAnchor="middle">DIN 338</text>
+          <rect x="85" y="44" width="75" height="22" fill="#334155" stroke="#1e293b" strokeWidth="1.2" />
+          <path d="M 85,48 Q 105,62 125,48 Q 145,34 160,48" stroke="#38bdf8" strokeWidth="3" fill="none" />
+          <path d="M 85,58 Q 105,72 125,58 Q 145,44 160,58" stroke="#94a3b8" strokeWidth="2.5" fill="none" />
+          <polygon points="160,44 182,55 160,66" fill={`url(#holeSteel_${toolId})`} stroke="#0284c7" strokeWidth="1.5" />
+          <line x1="160" y1="55" x2="182" y2="55" stroke="#ef4444" strokeWidth="1" strokeDasharray="2 1" />
+          <text x="175" y="40" fill="#0284c7" fontSize="8" fontWeight="900">118°</text>
+          <text x="100" y="102" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">MATA BOR SPIRAL 118° (DIN 338)</text>
+        </g>
+      )}
+
+      {/* 2. BOR SENTER 60° (CENTER DRILL) */}
+      {toolId === 'center-drill' && (
+        <g>
+          <rect x="40" y="38" width="75" height="34" rx="2" fill={`url(#holeSteel_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="77" y="58" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">DIN 333 A</text>
+          <polygon points="115,38 140,49 140,61 115,72" fill="#475569" stroke="#334155" strokeWidth="1.2" />
+          <rect x="140" y="51" width="24" height="8" fill="#334155" stroke="#1e293b" strokeWidth="1" />
+          <polygon points="164,51 172,55 164,59" fill="#cbd5e1" />
+          <text x="130" y="34" fill="#f59e0b" fontSize="8" fontWeight="900">60°</text>
+          <text x="100" y="102" fill="#d97706" fontSize="9" fontWeight="900" textAnchor="middle">BOR SENTER 60° (DIN 333 TIPE A)</text>
+        </g>
+      )}
+
+      {/* 3. SET HAND TAP (3 BUAH) */}
+      {toolId === 'hand-tap-set' && (
+        <g>
+          <g transform="translate(25, 14)">
+            <rect x="0" y="24" width="30" height="12" fill={`url(#holeSteel_${toolId})`} stroke="#334155" />
+            <rect x="0" y="24" width="6" height="12" fill="#1e293b" />
+            <rect x="12" y="24" width="3" height="12" fill="#ef4444" />
+            <rect x="30" y="24" width="38" height="12" fill="#334155" stroke="#1e293b" />
+            <polygon points="68,24 78,28 78,32 68,36" fill="#cbd5e1" />
+            <text x="95" y="33" fill="#ef4444" fontSize="8" fontWeight="900">No. 1 Taper (1 Ring)</text>
+          </g>
+          <g transform="translate(25, 36)">
+            <rect x="0" y="24" width="30" height="12" fill={`url(#holeSteel_${toolId})`} stroke="#334155" />
+            <rect x="0" y="24" width="6" height="12" fill="#1e293b" />
+            <rect x="10" y="24" width="2.5" height="12" fill="#f59e0b" />
+            <rect x="15" y="24" width="2.5" height="12" fill="#f59e0b" />
+            <rect x="30" y="24" width="42" height="12" fill="#334155" stroke="#1e293b" />
+            <polygon points="72,24 78,27 78,33 72,36" fill="#cbd5e1" />
+            <text x="95" y="33" fill="#f59e0b" fontSize="8" fontWeight="900">No. 2 Plug (2 Ring)</text>
+          </g>
+          <g transform="translate(25, 58)">
+            <rect x="0" y="24" width="30" height="12" fill={`url(#holeSteel_${toolId})`} stroke="#334155" />
+            <rect x="0" y="24" width="6" height="12" fill="#1e293b" />
+            <rect x="30" y="24" width="46" height="12" fill="#334155" stroke="#1e293b" />
+            <line x1="76" y1="24" x2="76" y2="36" stroke="#22c55e" strokeWidth="2" />
+            <text x="95" y="33" fill="#22c55e" fontSize="8" fontWeight="900">No. 3 Bottoming (Finis)</text>
+          </g>
+          <text x="100" y="103" fill="#16a34a" fontSize="9" fontWeight="900" textAnchor="middle">SET 3 HAND TAP MANUAL (DIN 352)</text>
+        </g>
+      )}
+
+      {/* 4. SNEI BULAT TERBELAH (ROUND DIE) */}
+      {toolId === 'snei-dies' && (
+        <g>
+          <circle cx="100" cy="48" r="35" fill="#334155" stroke="#64748b" strokeWidth="2" />
+          <circle cx="100" cy="48" r="28" fill="#1e293b" stroke="#475569" strokeWidth="1" />
+          <circle cx="85" cy="36" r="6" fill="#0f172a" />
+          <circle cx="115" cy="36" r="6" fill="#0f172a" />
+          <circle cx="85" cy="60" r="6" fill="#0f172a" />
+          <circle cx="115" cy="60" r="6" fill="#0f172a" />
+          <circle cx="100" cy="48" r="14" fill="#0f172a" stroke="#ca8a04" strokeWidth="2" strokeDasharray="3 2" />
+          <text x="100" y="52" fill="#ca8a04" fontSize="8" fontWeight="900" textAnchor="middle">M10</text>
+          <rect x="98.5" y="13" width="3" height="10" fill="#0f172a" />
+          <text x="100" y="102" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">SNEI BULAT TERBELAH (DIN 22568)</text>
+        </g>
+      )}
+    </svg>
+  );
+};
+
+// =============================================================================
+// KOMPONEN BESAR MASTER MATA BOR, TAP, DAN SNEI (800x300 PX)
+// =============================================================================
+const HoleThreadMasterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinClick = () => {} }) => {
+  return (
+    <div style={{ position: 'relative', width: '100%', background: mode === 'simulation' ? '#0f172a' : '#f8fafc', borderRadius: '12px', border: '1.5px solid #cbd5e1', overflow: 'hidden' }}>
+      <svg viewBox="0 0 800 300" style={{ width: '100%', height: 'auto', display: 'block', maxHeight: '340px' }}>
+        <defs>
+          <linearGradient id="visHoleSteel" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#475569" />
+            <stop offset="30%" stopColor="#94a3b8" />
+            <stop offset="70%" stopColor="#cbd5e1" />
+            <stop offset="100%" stopColor="#334155" />
+          </linearGradient>
+        </defs>
+
+        {mode === 'anatomy' && (
+          <g>
+            <rect width="800" height="300" fill="#f8fafc" />
+            {tool.id === 'twist-drill' && (
+              <g>
+                <rect x="80" y="110" width="220" height="80" rx="4" fill="url(#visHoleSteel)" stroke="#334155" strokeWidth="2" />
+                <text x="190" y="155" fill="#475569" fontSize="13" fontWeight="900" textAnchor="middle">TANGKAI SILINDRIS (SHANK DIN 338)</text>
+                <rect x="300" y="110" width="300" height="80" fill="#334155" stroke="#1e293b" strokeWidth="2" />
+                <path d="M 300,120 Q 360,165 420,120 Q 480,75 540,120 Q 600,165 600,120" stroke="#38bdf8" strokeWidth="8" fill="none" />
+                <path d="M 300,160 Q 360,205 420,160 Q 480,115 540,160 Q 600,205 600,160" stroke="#94a3b8" strokeWidth="6" fill="none" />
+                <polygon points="600,110 680,150 600,190" fill="url(#visHoleSteel)" stroke="#0284c7" strokeWidth="2.5" />
+                <line x1="680" y1="145" x2="680" y2="155" stroke="#ef4444" strokeWidth="4" />
+                <text x="690" y="135" fill="#ef4444" fontSize="11" fontWeight="900">Chisel Edge</text>
+                <text x="645" y="95" fill="#0284c7" fontSize="14" fontWeight="900">118° Point Angle</text>
+              </g>
+            )}
+
+            {tool.id === 'center-drill' && (
+              <g>
+                <rect x="150" y="90" width="300" height="120" rx="6" fill="url(#visHoleSteel)" stroke="#334155" strokeWidth="2" />
+                <text x="300" y="155" fill="#475569" fontSize="14" fontWeight="900" textAnchor="middle">BADAN TEBAL KAKU (DIN 333 TIPE A)</text>
+                <polygon points="450,90 540,130 540,170 450,210" fill="#475569" stroke="#334155" strokeWidth="2" />
+                <rect x="540" y="135" width="80" height="30" fill="#334155" stroke="#1e293b" strokeWidth="2" />
+                <polygon points="620,135 645,150 620,165" fill="#cbd5e1" stroke="#334155" />
+                <text x="500" y="80" fill="#f59e0b" fontSize="14" fontWeight="900">60° Kerucut Senter</text>
+              </g>
+            )}
+
+            {tool.id === 'hand-tap-set' && (
+              <g>
+                <text x="400" y="45" fill="#16a34a" fontSize="14" fontWeight="900" textAnchor="middle">PERBANDINGAN PANJANG KETIRUSAN 3 SET HAND TAP (DIN 352)</text>
+                <g transform="translate(100, 60)">
+                  <rect x="0" y="15" width="120" height="25" fill="url(#visHoleSteel)" />
+                  <rect x="25" y="15" width="6" height="25" fill="#ef4444" />
+                  <rect x="120" y="15" width="360" height="25" fill="#334155" />
+                  <polygon points="430,15 480,22 480,33 430,40" fill="#94a3b8" />
+                  <text x="500" y="32" fill="#ef4444" fontSize="11" fontWeight="900">No. 1 Taper: Tirus 8-10 ulir (4°)</text>
+                </g>
+                <g transform="translate(100, 120)">
+                  <rect x="0" y="15" width="120" height="25" fill="url(#visHoleSteel)" />
+                  <rect x="20" y="15" width="5" height="25" fill="#f59e0b" />
+                  <rect x="30" y="15" width="5" height="25" fill="#f59e0b" />
+                  <rect x="120" y="15" width="360" height="25" fill="#334155" />
+                  <polygon points="455,15 480,20 480,35 455,40" fill="#94a3b8" />
+                  <text x="500" y="32" fill="#f59e0b" fontSize="11" fontWeight="900">No. 2 Plug: Tirus 4-5 ulir (10°)</text>
+                </g>
+                <g transform="translate(100, 180)">
+                  <rect x="0" y="15" width="120" height="25" fill="url(#visHoleSteel)" />
+                  <rect x="120" y="15" width="360" height="25" fill="#334155" />
+                  <polygon points="472,15 480,18 480,37 472,40" fill="#94a3b8" />
+                  <text x="500" y="32" fill="#22c55e" fontSize="11" fontWeight="900">No. 3 Bottoming: Tirus 1.5 ulir (Finishing)</text>
+                </g>
+              </g>
+            )}
+
+            {tool.id === 'snei-dies' && (
+              <g>
+                <circle cx="400" cy="150" r="105" fill="#334155" stroke="#64748b" strokeWidth="4" />
+                <circle cx="400" cy="150" r="85" fill="#1e293b" stroke="#475569" strokeWidth="2" />
+                <circle cx="360" cy="115" r="18" fill="#0f172a" />
+                <circle cx="440" cy="115" r="18" fill="#0f172a" />
+                <circle cx="360" cy="185" r="18" fill="#0f172a" />
+                <circle cx="440" cy="185" r="18" fill="#0f172a" />
+                <circle cx="400" cy="150" r="42" fill="#0f172a" stroke="#ca8a04" strokeWidth="3" strokeDasharray="5 3" />
+                <text x="400" y="156" fill="#ca8a04" fontSize="18" fontWeight="900" textAnchor="middle">M12 × 1.75</text>
+                <rect x="396" y="45" width="8" height="28" fill="#0f172a" />
+                <text x="530" y="60" fill="#38bdf8" fontSize="11" fontWeight="800">Celah Belah Penyetel Ukuran</text>
+              </g>
+            )}
+          </g>
+        )}
+
+        {mode === 'simulation' && (
+          <g>
+            <rect width="800" height="300" fill="#0f172a" />
+            <text x="400" y="35" fill="#22c55e" fontSize="14" fontWeight="900" textAnchor="middle">
+              SIMULASI PEMESINAN PENGEBORAN &amp; PEMBUATAN ULIR
+            </text>
+            <rect x="180" y="80" width="440" height="170" rx="4" fill="#334155" stroke="#475569" strokeWidth="2" />
+            <text x="400" y="235" fill="#94a3b8" fontSize="12" fontWeight="800" textAnchor="middle">BENDA KERJA BAJA ST37</text>
+
+            {tool.id === 'twist-drill' ? (
+              <g>
+                <rect x="360" y="80" width="80" height="90" fill="#0f172a" />
+                <rect x="370" y="30" width="60" height="90" fill="url(#visHoleSteel)" stroke="#38bdf8" />
+                <polygon points="370,120 400,140 430,120" fill="#0284c7" />
+                <path d="M 360,110 Q 330,80 345,50" fill="none" stroke="#fde047" strokeWidth="4" />
+                <path d="M 440,110 Q 470,80 455,50" fill="none" stroke="#fde047" strokeWidth="4" />
+                <text x="400" y="25" fill="#38bdf8" fontSize="11" fontWeight="800" textAnchor="middle">Bor Berputar n RPM &amp; Gerak Makan Turun ↓</text>
+              </g>
+            ) : (
+              <g>
+                <rect x="365" y="80" width="70" height="110" fill="#0f172a" stroke="#ca8a04" strokeWidth="2" strokeDasharray="6 3" />
+                <text x="400" y="140" fill="#ca8a04" fontSize="12" fontWeight="900" textAnchor="middle">Ulir Metrik 60°</text>
+                <text x="400" y="270" fill="#22c55e" fontSize="11" fontWeight="800" textAnchor="middle">Kaidah Tap: Putar 1/2 putaran CW sayat, putar balik 1/4 CCW patahkan geram!</text>
+              </g>
+            )}
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+};
+
+// =============================================================================
 // DATABASE 3: SISTEM DEKODER KODE STANDAR ISO 1832 INSERT KARBIDA
 // =============================================================================
 const INSERT_ISO_SYSTEM = {
@@ -1459,6 +2370,20 @@ const HOLE_THREAD_TOOLS = [
       { bagian: 'Mata Senter (Chisel Edge)', fungsi: 'Garis penghubung di ujung pusat; pada 135° split point garis ini ditipiskan agar bor tidak lari saat start.' }
     ],
     tipsPraktik: 'Selalu awali pengeboran logam dengan Center Drill (bor senter) untuk membuat titik pemusat akurat sebelum menggunakan twist drill berdiameter besar.'
+  },
+  {
+    id: 'center-drill',
+    name: 'Mata Bor Senter (Center Drill DIN 333 Tipe A 60°)',
+    icon: '📍',
+    standar: 'DIN 333 Tipe A (Sudut 60°)',
+    sudutPuncak: 'Sudut Kerucut 60° dengan Bor Perintis Kecil',
+    anatomi: [
+      { bagian: 'Tangkai Tebal Silindris (Heavy Body)', fungsi: 'Diameter badan besar yang sangat kaku, mencegah bor melengkung atau meliuk saat start pengeboran awal.' },
+      { bagian: 'Ujung Bor Perintis (Pilot Drill)', fungsi: 'Ujung silinder kecil bertingkat yang membuat lubang awal pembebas tatal.' },
+      { bagian: 'Tirus Kerucut 60° (Countersink Chamfer)', fungsi: 'Membentuk dudukan kerucut 60° yang presisi untuk senter putar (revolving center) kepala lepas mesin bubut.' },
+      { bagian: 'Muka Potong Ganda (Double Ended)', fungsi: 'Memiliki dua ujung mata potong bolak-balik; bila salah satu tumpul, bor dapat dibalik.' }
+    ],
+    tipsPraktik: 'Kedalaman pengeboran bor senter hanya boleh sampai 2/3 dari tinggi tirus 60°. Jangan terlalu dalam karena leher bor senter rentan patah bila tertekan berlebih!'
   },
   {
     id: 'hand-tap-set',
@@ -1644,6 +2569,18 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
   const [activeMillingPinId, setActiveMillingPinId] = useState(1);
   const [activeInsertPos, setActiveInsertPos] = useState(1);
   const [activeHoleToolId, setActiveHoleToolId] = useState('twist-drill');
+
+  // State Pahat Bubut Showcase
+  const [selectedLatheId, setSelectedLatheId] = useState('pahat-rata-kanan');
+  const [latheMode, setLatheMode] = useState('anatomy'); // 'anatomy' | 'simulation'
+  const [activeLathePinId, setActiveLathePinId] = useState(1);
+
+  // State Insert Karbida Visual
+  const [selectedInsertShape, setSelectedInsertShape] = useState('C');
+  const [activeAngleId, setActiveAngleId] = useState('rake');
+
+  // State Hole & Thread Visual Showcase
+  const [holeViewMode, setHoleViewMode] = useState('anatomy'); // 'anatomy' | 'simulation'
 
   // State Kalkulator Kecepatan Potong
   const [calcMaterialVc, setCalcMaterialVc] = useState(120); // m/min
@@ -1845,7 +2782,298 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
       {activeTab === 'pahat' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          {/* Card Visual Anatomi Pahat Bubut */}
+          {/* KATALOG 6 JENIS PAHAT BUBUT (LATHE CUTTING TOOLS) */}
+          <div className="dashboard-card" style={{ padding: '24px', background: 'linear-gradient(135deg, #1e3a8a, #172554)', color: '#ffffff' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+              <span style={{ background: '#38bdf8', color: '#082f49', fontSize: '0.72rem', fontWeight: 900, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                KATALOG 6 PAHAT BUBUT MESIN (LATHE TOOLS)
+              </span>
+              <span style={{ background: 'rgba(255,255,255,0.18)', color: '#e0f2fe', fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '4px' }}>
+                ILUSTRASI TEKNIK REAL-TIME &amp; SIMULASI PENYAYATAN
+              </span>
+            </div>
+            <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
+              🪓 Jenis-Jenis Pahat Bubut (Lathe Tools) Standar ISO &amp; DIN
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.88rem', color: '#e0f2fe', lineHeight: 1.5, maxWidth: '850px' }}>
+              Pekerjaan membubut menggunakan alat potong bermata tunggal (single-point tool) untuk membentuk silinder luar, bidang muka, alur, ulir baut, hingga lubang tembus dalam. Pilih jenis pahat di bawah ini untuk melihat ilustrasi CAD nyata, arah sayat, dan simulasi pemesinannya.
+            </p>
+          </div>
+
+          {/* Quick Selector Grid 6 Jenis Pahat Bubut dengan Ilustrasi Kontur Nyata */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '16px'
+          }}>
+            {LATHE_TOOLS_CATALOG.map(tool => {
+              const isSelected = selectedLatheId === tool.id;
+              return (
+                <div
+                  key={tool.id}
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedLatheId(tool.id);
+                    setActiveLathePinId(1);
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    borderRadius: '14px',
+                    border: isSelected ? `2.5px solid ${tool.color}` : '1.5px solid #cbd5e1',
+                    padding: '14px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    boxShadow: isSelected ? `0 8px 20px ${tool.color}35` : '0 2px 6px rgba(0,0,0,0.04)',
+                    transform: isSelected ? 'translateY(-2px)' : 'none',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                >
+                  {/* Kartu Visual Kontur Nyata Pahat Bubut */}
+                  <div style={{
+                    width: '100%',
+                    height: '110px',
+                    borderRadius: '10px',
+                    background: isSelected ? `${tool.color}08` : '#f8fafc',
+                    border: `1px solid ${isSelected ? tool.color + '40' : '#e2e8f0'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '6px',
+                    boxSizing: 'border-box'
+                  }}>
+                    <LatheToolCardVisual toolId={tool.id} isSelected={isSelected} />
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, color: tool.color, textTransform: 'uppercase' }}>
+                        {tool.isoDIN}
+                      </span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 800, background: `${tool.color}15`, color: tool.color, padding: '2px 6px', borderRadius: '4px' }}>
+                        {tool.leadAngle}
+                      </span>
+                    </div>
+                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
+                      {tool.name}
+                    </div>
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic', marginTop: '1px' }}>
+                      {tool.englishName}
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {tool.deskripsi}
+                  </div>
+
+                  <div style={{ marginTop: 'auto', paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
+                      📍 {tool.arahSayat.split('(')[0]}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: tool.color }}>
+                      {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Master Showcase Pahat Bubut Terpilih */}
+          {(() => {
+            const current = LATHE_TOOLS_CATALOG.find(t => t.id === selectedLatheId) || LATHE_TOOLS_CATALOG[0];
+            const activePin = current.pins?.find(p => p.id === activeLathePinId) || current.pins?.[0];
+
+            return (
+              <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', borderTop: `5px solid ${current.color}` }}>
+                
+                {/* Header Kontrol Mode Visual */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, background: `${current.color}15`, color: current.color, padding: '3px 8px', borderRadius: '4px' }}>
+                        {current.isoDIN} • {current.tipe}
+                      </span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
+                        Arah Sayat: <strong>{current.arahSayat}</strong>
+                      </span>
+                    </div>
+                    <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
+                      {current.name}
+                    </h3>
+                  </div>
+
+                  {/* Mode Toggles */}
+                  <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setLatheMode('anatomy'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: latheMode === 'anatomy' ? current.color : 'transparent',
+                        color: latheMode === 'anatomy' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>🔍</span> Anatomi Detail
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setLatheMode('simulation'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: latheMode === 'simulation' ? current.color : 'transparent',
+                        color: latheMode === 'simulation' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>⚙️</span> Simulasi Pembubutan
+                    </button>
+                  </div>
+                </div>
+
+                {/* SVG Visual Kanvas Realistis */}
+                <LatheToolMasterVisual
+                  tool={current}
+                  mode={latheMode}
+                  activePinId={activeLathePinId}
+                  onPinClick={(id) => {
+                    sound.playClick();
+                    setActiveLathePinId(id);
+                  }}
+                />
+
+                {/* Interactive Hotspot Inspector */}
+                {latheMode === 'anatomy' && activePin && (
+                  <div style={{
+                    background: '#f8fafc',
+                    border: '1.5px solid #cbd5e1',
+                    borderRadius: '12px',
+                    padding: '16px 20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                      <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>
+                        PILIH TITIK ANATOMI UNTUK DIPERIKSA:
+                      </span>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {current.pins.map(p => {
+                          const isPinSelected = p.id === activeLathePinId;
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => { sound.playClick(); setActiveLathePinId(p.id); }}
+                              style={{
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '50%',
+                                border: isPinSelected ? `2px solid ${current.color}` : '1px solid #cbd5e1',
+                                background: isPinSelected ? current.color : '#ffffff',
+                                color: isPinSelected ? '#ffffff' : '#334155',
+                                fontWeight: 900,
+                                fontSize: '0.78rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.15s'
+                              }}
+                            >
+                              {p.id}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', background: '#ffffff', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: current.color,
+                        color: '#ffffff',
+                        fontWeight: 900,
+                        fontSize: '1.1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0
+                      }}>
+                        {activePin.id}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 900, fontSize: '0.98rem', color: '#0f172a', marginBottom: '4px' }}>
+                          {activePin.label}
+                        </div>
+                        <div style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.5, marginBottom: '6px' }}>
+                          {activePin.desc}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: current.color, background: `${current.color}10`, padding: '6px 10px', borderRadius: '6px', borderLeft: `3px solid ${current.color}` }}>
+                          <strong>💡 Tips Praktik Bengkel:</strong> {activePin.tip}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Deskripsi & Ringkasan Pahat */}
+                <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  {current.deskripsi}
+                </div>
+
+                {/* 3 Kolom Penjelasan Aplikasi, Keunggulan & Tips Bengkel */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
+                  <div style={{ background: '#eff6ff', padding: '14px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#1e40af', marginBottom: '6px' }}>
+                      🎯 Aplikasi Pekerjaan Utama
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#1e3a8a', lineHeight: 1.5 }}>
+                      {current.aplikasi}
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#166534', marginBottom: '6px' }}>
+                      ⚡ Keunggulan Geometri &amp; Mekanik
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
+                      {current.keunggulan}
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#92400e', marginBottom: '6px' }}>
+                      💡 Pedoman Penyetelan &amp; Operasi
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
+                      {current.tipsTeknis}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            );
+          })()}
+
+          {/* Card Visual Anatomi Pahat Bubut Umum */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
               <div>
@@ -2521,6 +3749,173 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
       {activeTab === 'insert' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
+          {/* BANNER 7 BENTUK GEOMETRI INSERT ISO */}
+          <div className="dashboard-card" style={{ padding: '24px', background: 'linear-gradient(135deg, #c2410c, #7c2d12)', color: '#ffffff' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+              <span style={{ background: '#fdba74', color: '#7c2d12', fontSize: '0.72rem', fontWeight: 900, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                STANDAR INTERNASIONAL ISO 1832
+              </span>
+              <span style={{ background: 'rgba(255,255,255,0.18)', color: '#ffedd5', fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '4px' }}>
+                KATALOG 7 BENTUK GEOMETRI INSERT KARBIDA
+              </span>
+            </div>
+            <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
+              📐 Visualisasi 7 Bentuk Geometri Insert Karbida (C, D, S, T, W, V, R)
+            </h2>
+            <p style={{ margin: 0, fontSize: '0.88rem', color: '#ffedd5', lineHeight: 1.5, maxWidth: '850px' }}>
+              Setiap bentuk insert karbida dirancang dengan kompromi antara <strong>Kekuatan Sisi Potong (Edge Strength)</strong> dan <strong>Fleksibilitas Menjangkau Kontur (Accessibility)</strong>. Klik bentuk insert di bawah untuk melihat geometri CAD nyata dan karakteristik teknisnya.
+            </p>
+          </div>
+
+          {/* Grid 7 Bentuk Insert Karbida dengan Kartu Visual Kontur Nyata */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+            gap: '12px'
+          }}>
+            {CARBIDE_INSERTS_CATALOG.map(ins => {
+              const isSelected = selectedInsertShape === ins.shape;
+              return (
+                <div
+                  key={ins.shape}
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedInsertShape(ins.shape);
+                  }}
+                  style={{
+                    background: '#ffffff',
+                    borderRadius: '12px',
+                    border: isSelected ? `2.5px solid ${ins.color}` : '1.5px solid #cbd5e1',
+                    padding: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    boxShadow: isSelected ? `0 6px 16px ${ins.color}35` : '0 2px 4px rgba(0,0,0,0.03)',
+                    transform: isSelected ? 'translateY(-2px)' : 'none',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  {/* Kartu Visual Kontur Nyata Insert */}
+                  <div style={{
+                    width: '100%',
+                    height: '95px',
+                    borderRadius: '8px',
+                    background: isSelected ? `${ins.color}08` : '#f8fafc',
+                    border: `1px solid ${isSelected ? ins.color + '40' : '#e2e8f0'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '4px',
+                    boxSizing: 'border-box'
+                  }}>
+                    <CarbideInsertCardVisual shape={ins.shape} isSelected={isSelected} />
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: ins.color,
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 900,
+                      fontSize: '0.85rem'
+                    }}>
+                      {ins.shape}
+                    </span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: ins.color, background: `${ins.color}15`, padding: '2px 6px', borderRadius: '4px' }}>
+                      {ins.sudutHidung.split('(')[0].trim()}
+                    </span>
+                  </div>
+
+                  <div style={{ fontWeight: 800, fontSize: '0.82rem', color: '#0f172a', lineHeight: 1.3 }}>
+                    {ins.name.split(':')[1]?.trim() || ins.name}
+                  </div>
+
+                  <div style={{ marginTop: 'auto', paddingTop: '4px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
+                      Kekuatan: {ins.kekuatanTepi.split(' ')[0]}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 900, color: ins.color }}>
+                      {isSelected ? '✓ Terpilih' : 'Pilih'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Master Showcase Bentuk Insert Karbida Terpilih */}
+          {(() => {
+            const currentIns = CARBIDE_INSERTS_CATALOG.find(i => i.shape === selectedInsertShape) || CARBIDE_INSERTS_CATALOG[0];
+            return (
+              <div className="dashboard-card" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: `6px solid ${currentIns.color}` }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      background: currentIns.color,
+                      color: '#ffffff',
+                      fontSize: '1.3rem',
+                      fontWeight: 900,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      {currentIns.shape}
+                    </span>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
+                        {currentIns.name}
+                      </h3>
+                      <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                        Sudut Hidung: <strong>{currentIns.sudutHidung}</strong> • Kapasitas: <strong>{currentIns.sisiPotong}</strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#f1f5f9', color: '#334155', padding: '4px 8px', borderRadius: '6px' }}>
+                      Kekuatan Sisi: <strong>{currentIns.kekuatanTepi}</strong>
+                    </span>
+                    <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#f1f5f9', color: '#334155', padding: '4px 8px', borderRadius: '6px' }}>
+                      Aksesibilitas Kontur: <strong>{currentIns.fleksibilitas}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.6, background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  {currentIns.deskripsi}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
+                  <div style={{ background: '#f0fdf4', padding: '12px 14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.83rem', color: '#166534', marginBottom: '4px' }}>
+                      🎯 Fungsi Utama Pengerjaan
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
+                      {currentIns.fungsi}
+                    </div>
+                  </div>
+                  <div style={{ background: '#fffbeb', padding: '12px 14px', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.83rem', color: '#92400e', marginBottom: '4px' }}>
+                      ⚡ Keunggulan Mekanik &amp; Efisiensi
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
+                      {currentIns.keunggulan}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* DEKODER KODE STANDAR ISO 1832 INSERT */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
@@ -2641,10 +4036,27 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           </div>
 
           {/* GEOMETRI SUDUT MATA POTONG (RAKE, CLEARANCE, NOSE RADIUS, CHIPBREAKER) */}
-          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              📐 4 Sudut Geometri Kritis &amp; Fungsinya pada Pembentukan Tatal
-            </h3>
+          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div>
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#dbeafe', color: '#1e40af', padding: '3px 8px', borderRadius: '4px' }}>
+                DIAGRAM TEKNIK REAL-TIME
+              </span>
+              <h3 style={{ margin: '6px 0 2px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
+                📐 4 Sudut Geometri Kritis &amp; Fungsinya pada Pembentukan Tatal
+              </h3>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
+                Klik tombol tab sudut di bawah untuk melihat simulasi visual efek sudut baji terhadap arah aliran geram dan gaya pemotongan:
+              </p>
+            </div>
+
+            {/* Visual Interaktif 4 Sudut Geometri Kritis */}
+            <CarbideGeometryVisual
+              activeAngleId={activeAngleId}
+              onSelectAngle={(id) => {
+                sound.playClick();
+                setActiveAngleId(id);
+              }}
+            />
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
               {/* Sudut Tatal */}
@@ -2718,55 +4130,153 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
-          {/* 3 Tool Switcher Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+          {/* Quick Selector Grid 4 Alat Pengeboran & Pembuatan Ulir dengan Ilustrasi Kontur Nyata */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '16px'
+          }}>
             {HOLE_THREAD_TOOLS.map(t => {
               const isSelected = activeHoleToolId === t.id;
               return (
-                <button
+                <div
                   key={t.id}
-                  onClick={() => { sound.playClick(); setActiveHoleToolId(t.id); }}
+                  onClick={() => {
+                    sound.playClick();
+                    setActiveHoleToolId(t.id);
+                  }}
                   style={{
-                    padding: '16px',
-                    borderRadius: '12px',
-                    border: isSelected ? '2.5px solid #16a34a' : '1px solid #cbd5e1',
-                    background: isSelected ? '#f0fdf4' : '#ffffff',
-                    color: isSelected ? '#15803d' : '#1e293b',
+                    background: '#ffffff',
+                    borderRadius: '14px',
+                    border: isSelected ? '2.5px solid #16a34a' : '1.5px solid #cbd5e1',
+                    padding: '14px',
                     cursor: 'pointer',
-                    textAlign: 'left',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '6px',
-                    boxShadow: isSelected ? '0 4px 14px rgba(22, 163, 74, 0.2)' : 'none',
-                    transition: 'all 0.15s'
+                    gap: '10px',
+                    boxShadow: isSelected ? '0 8px 20px rgba(22, 163, 74, 0.25)' : '0 2px 6px rgba(0,0,0,0.04)',
+                    transform: isSelected ? 'translateY(-2px)' : 'none',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  <div style={{ fontSize: '1.8rem' }}>{t.icon}</div>
-                  <div style={{ fontWeight: 900, fontSize: '1rem' }}>{t.name}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{t.standar}</div>
-                </button>
+                  {/* Kartu Visual Kontur Nyata Mata Bor / Tap / Snei */}
+                  <div style={{
+                    width: '100%',
+                    height: '110px',
+                    borderRadius: '10px',
+                    background: isSelected ? '#f0fdf4' : '#f8fafc',
+                    border: `1px solid ${isSelected ? '#86efac' : '#e2e8f0'}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '6px',
+                    boxSizing: 'border-box'
+                  }}>
+                    <HoleThreadCardVisual toolId={t.id} isSelected={isSelected} />
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                      <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#16a34a', textTransform: 'uppercase' }}>
+                        {t.standar.split('/')[0]}
+                      </span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '2px 6px', borderRadius: '4px' }}>
+                        {t.sudutPuncak.split('(')[0].trim()}
+                      </span>
+                    </div>
+                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
+                      {t.name}
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 'auto', paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
+                      Standar DIN / ISO
+                    </span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#16a34a' }}>
+                      {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
+                    </span>
+                  </div>
+                </div>
               );
             })}
           </div>
 
-          {/* Showcase Alat Terpilih */}
+          {/* Master Showcase Alat Terpilih dengan Visual Realistis & Mode Toggles */}
           {(() => {
             const current = HOLE_THREAD_TOOLS.find(t => t.id === activeHoleToolId) || HOLE_THREAD_TOOLS[0];
             return (
-              <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px', borderLeft: '6px solid #16a34a' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: '#0f172a' }}>
-                    {current.icon} {current.name}
-                  </h3>
-                  <span style={{ background: '#dcfce7', color: '#166534', padding: '4px 10px', borderRadius: '6px', fontWeight: 800, fontSize: '0.78rem' }}>
-                    {current.sudutPuncak}
-                  </span>
+              <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', borderTop: '5px solid #16a34a' }}>
+                
+                {/* Header Kontrol Mode Visual */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '3px 8px', borderRadius: '4px' }}>
+                        {current.standar}
+                      </span>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
+                        Profil: <strong>{current.sudutPuncak}</strong>
+                      </span>
+                    </div>
+                    <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
+                      {current.icon} {current.name}
+                    </h3>
+                  </div>
+
+                  {/* Mode Toggles */}
+                  <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setHoleViewMode('anatomy'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: holeViewMode === 'anatomy' ? '#16a34a' : 'transparent',
+                        color: holeViewMode === 'anatomy' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>🔍</span> Anatomi &amp; Dimensi Standar
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setHoleViewMode('simulation'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: holeViewMode === 'simulation' ? '#16a34a' : 'transparent',
+                        color: holeViewMode === 'simulation' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>⚙️</span> Simulasi Proses Kerja
+                    </button>
+                  </div>
                 </div>
+
+                {/* SVG Visual Kanvas Realistis */}
+                <HoleThreadMasterVisual
+                  tool={current}
+                  mode={holeViewMode}
+                />
 
                 {/* Anatomi Komponen */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
                   {current.anatomi.map((a, idx) => (
-                    <div key={idx} style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                    <div key={idx} style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '8px', border: '1px solid #e2e8f0', borderLeft: '4px solid #16a34a' }}>
                       <div style={{ fontWeight: 800, fontSize: '0.84rem', color: '#15803d', marginBottom: '4px' }}>
                         • {a.bagian}
                       </div>

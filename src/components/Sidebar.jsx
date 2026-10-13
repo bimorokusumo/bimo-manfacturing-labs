@@ -31,6 +31,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const LAB_SUBMENUS = {
     machine: [
       { id: 'machine', label: 'Praktik Mesin Bubut & CNC', icon: '⚙️' },
+      { id: 'machine-cutting-tools', label: 'Cutting Tools Lab (Alat Potong)', icon: '🔪' },
       { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: '📋', isDiag: true }
     ],
     'cutting-tools': [
@@ -85,6 +86,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
   const isLabActive = (menuId) => {
     if (activeMenu === menuId) return true;
     if (activeMenu === `${menuId}-diagnostic`) return true;
+    if (menuId === 'machine' && (activeMenu === 'machine' || activeMenu === 'machine-cutting-tools' || activeMenu === 'machine-diagnostic')) return true;
     if (menuId === 'measuring' && (activeMenu === 'measuring' || activeMenu === 'measuring-anatomy' || activeMenu === 'measuring-diagnostic')) return true;
     if (menuId === 'heat-treatment' && activeMenu.startsWith('heat-treatment-')) return true;
     if (menuId === 'mechanics' && activeMenu.startsWith('mechanics-')) return true;

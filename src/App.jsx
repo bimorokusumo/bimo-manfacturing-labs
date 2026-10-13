@@ -106,7 +106,15 @@ function AppInner() {
       case 'modules':
         return <ModulesView />;
       case 'machine':
-        return <MachineLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('machine-diagnostic')} />;
+      case 'machine-cutting-tools':
+        return (
+          <MachineLab
+            initialTab={activeMenu === 'machine-cutting-tools' ? 'cutting-tools' : null}
+            addXP={addXP}
+            addMissionCompleted={addMissionCompleted}
+            onOpenDiagnostic={() => setActiveMenu('machine-diagnostic')}
+          />
+        );
       case 'cutting-tools':
         return <CuttingToolsLab addXP={addXP} addMissionCompleted={addMissionCompleted} onOpenDiagnostic={() => setActiveMenu('cutting-tools-diagnostic')} />;
       case 'heat-treatment':

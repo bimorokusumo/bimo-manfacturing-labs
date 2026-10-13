@@ -3,16 +3,44 @@ import LatheModule from './LatheModule';
 import MillingModule from './MillingModule';
 import CNCModule from './CNCModule';
 import CNCLatheModule from './CNCLatheModule';
+import MachineCuttingToolsLab from './MachineCuttingToolsLab';
 import MachinePreTest from './MachinePreTest';
 import CNCTheoryGuide from './CNCTheoryGuide';
 import CNCQuiz from './CNCQuiz';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
 
-const MachineLab = ({ addXP, onOpenDiagnostic }) => {
-  const [selectedMachine, setSelectedMachine] = useState(null); // 'lathe', 'milling', 'cnc'
+const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
+  const [selectedMachine, setSelectedMachine] = useState(initialTab); // 'lathe', 'milling', 'cnc', 'cutting-tools'
+  const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
   const [pendingMachine, setPendingMachine] = useState(null);
   const [cncMode, setCncMode] = useState('materi'); // 'materi', 'simulasi', 'quiz'
+
+  if (initialTab !== prevInitialTab) {
+    setPrevInitialTab(initialTab);
+    setSelectedMachine(initialTab);
+  }
+
+  // If Cutting Tools Lab is selected, render it
+  if (selectedMachine === 'cutting-tools') {
+    return (
+      <div className="animate-fade-in" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <button 
+          onClick={() => { sound.playClick(); setSelectedMachine(null); }}
+          style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '20px', alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700 }}
+        >
+          ← Kembali ke Garasi Mesin
+        </button>
+        <div style={{ flex: 1 }}>
+          <MachineCuttingToolsLab
+            addXP={addXP}
+            onNavigateToLathe={() => { sound.playClick(); setSelectedMachine('lathe'); }}
+            onNavigateToMilling={() => { sound.playClick(); setSelectedMachine('milling'); }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   // If a machine is selected, render it
   if (selectedMachine === 'lathe') {
@@ -348,6 +376,62 @@ const MachineLab = ({ addXP, onOpenDiagnostic }) => {
               <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🎯 Kuis CNC</span>
             </div>
             <button className="btn-game btn-game-success" style={{ width: '100%' }}>PELAJARI & OPERASIKAN</button>
+          </div>
+        </div>
+
+        {/* CUTTING TOOLS LAB (ALAT POTONG MESIN BUBUT, FRAIS, BOR, TAP, SNEI & INSERT) */}
+        <div 
+          onClick={() => { sound.playClick(); setSelectedMachine('cutting-tools'); }}
+          className="game-card game-card-hover" 
+          style={{
+            cursor: 'pointer',
+            border: '2px solid rgba(2, 132, 199, 0.4)',
+            background: 'linear-gradient(180deg, var(--bg-card) 0%, rgba(2, 132, 199, 0.04) 100%)',
+            boxShadow: '0 6px 20px rgba(2, 132, 199, 0.15)'
+          }}
+        >
+          <div style={{
+            height: '170px',
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0369a1 100%)',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            <div style={{ fontSize: '3.8rem', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.35))' }}>
+              🔪
+            </div>
+            <span style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              fontSize: '0.65rem',
+              fontWeight: 900,
+              background: '#0284c7',
+              color: '#ffffff',
+              padding: '2px 8px',
+              borderRadius: '4px',
+              letterSpacing: '0.5px'
+            }}>
+              ISO 1832 &amp; DIN
+            </span>
+          </div>
+          <div style={{ padding: '20px' }}>
+            <h3 style={{ color: '#0284c7', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>
+              Cutting Tools Lab
+            </h3>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.1)', color: '#0284c7' }}>🪓 HSS &amp; Karbida</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(234, 88, 12, 0.1)', color: '#ea580c' }}>🌀 6+ Pisau Frais</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(22, 163, 74, 0.1)', color: '#16a34a' }}>🔩 Bor, Tap &amp; Snei</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(124, 58, 237, 0.1)', color: '#7c3aed' }}>📐 Geometri &amp; Insert</span>
+            </div>
+            <button className="btn-game" style={{ width: '100%', background: '#0284c7', color: '#ffffff', border: 'none' }}>
+              EKSPLORASI ALAT POTONG
+            </button>
           </div>
         </div>
 

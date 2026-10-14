@@ -468,7 +468,7 @@ const LatheModule = ({ addXP }) => {
                   gap: '6px'
                 }}
               >
-                <span>🎬</span> Video Demonstrasi Pemotongan (13 Operasi)
+                <span>🎬</span> Video Demonstrasi Pemotongan
               </button>
 
               <button

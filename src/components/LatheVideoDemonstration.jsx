@@ -2,140 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/assets';
 
-// 13 Tahapan Operasi Pemotongan Mesin Bubut (Berdasarkan Video Chip Atlas Ø60 Steel Bar)
-const LATHE_OPERATIONS = [
-  {
-    step: '01',
-    name: 'Facing (Membubut Muka)',
-    subtitle: 'Bidang Rata Referensi Sumbu Z0',
-    icon: '🪓',
-    timeSec: 0,
-    desc: 'Penyayatan tegak lurus sumbu putar dari tepi luar ke pusat benda untuk menghasilkan permukaan rata presisi sebagai datum referensi panjang.',
-    tool: 'Pahat Rata Kanan / Facing Tool',
-    tip: 'Pastikan ujung mata pahat tepat setinggi senter spindel agar tidak meninggalkan tonjolan puting di tengah.'
-  },
-  {
-    step: '02',
-    name: 'Turning (Membubut Rata Bertingkat)',
-    subtitle: 'Ø60 → Ø52 → Ø42 mm',
-    icon: '📏',
-    timeSec: 4,
-    desc: 'Penyayatan memanjang sejajar sumbu spindel untuk mengurangi diameter luar benda secara bertingkat dengan kedalaman sayat aman.',
-    tool: 'Pahat Bubut Luar ISO 6 / CNMG',
-    tip: 'Gunakan cairan pendingin (coolant) untuk menjaga ketajaman pahat dan membuang serpihan tatal gram.'
-  },
-  {
-    step: '03',
-    name: 'Taper Turning (Membubut Tirus)',
-    subtitle: 'Kemiringan Sudut 14° (Half-Angle)',
-    icon: '📐',
-    timeSec: 8,
-    desc: 'Pembubutan bidang kerucut dengan memiringkan eretan atas (compound slide) sebesar sudut tirus tg α = (D - d) / (2l).',
-    tool: 'Pahat Bubut Rata / Top Slide Feed',
-    tip: 'Kunci eretan memanjang (carriage lock) dan lakukan pemakanan manual hanya memutar handel eretan atas.'
-  },
-  {
-    step: '04',
-    name: 'Contouring (Membubut Profil Alur)',
-    subtitle: 'Profil Cekung Radius Ø46 Cove',
-    icon: '〰️',
-    timeSec: 12,
-    desc: 'Pembentukan profil kontur melengkung menggunakan pahat radius (form tool / round insert) untuk estetika dan pengurang konsentrasi tegangan.',
-    tool: 'Pahat Profil Radius R3',
-    tip: 'Gunakan putaran spindel lebih rendah untuk meminimalkan getaran (chatter) pada bidang kontak pahat yang lebar.'
-  },
-  {
-    step: '05',
-    name: 'Chamfering (Membuat Chamfer)',
-    subtitle: 'Penyudutan Sisi 2 × 45°',
-    icon: '✂️',
-    timeSec: 16,
-    desc: 'Menghilangkan sudut tajam pada ujung silinder untuk keselamatan operator serta mempermudah pemasangan bantalan atau komponen pasangannya.',
-    tool: 'Pahat Chamfer 45°',
-    tip: 'Kedalaman chamfer 2 mm diukur dari muka silinder ke pangkal kemiringan.'
-  },
-  {
-    step: '06',
-    name: 'Grooving (Membubut Alur)',
-    subtitle: 'Alur Pembebas Ulir ke Ø39 mm',
-    icon: '⛏️',
-    timeSec: 20,
-    desc: 'Pembuatan celah sempit tegak lurus sumbu sebagai pembebas ujung pahat ulir (thread relief) agar pahat tidak menabrak undakan bahu.',
-    tool: 'Pahat Alur Lebar 3 mm',
-    tip: 'Lakukan pemakanan tegak lurus (plunge cut) secara bertahap dan tarik pahat keluar secara berkala untuk membersihkan tatal.'
-  },
-  {
-    step: '07',
-    name: 'Threading (Membubut Ulir Luar)',
-    subtitle: 'Ulir Metris M42 × 2 mm',
-    icon: '🔩',
-    timeSec: 24,
-    desc: 'Pemotongan alur heliks berulir sudut profil 60° dengan menyinkronkan putaran spindel terhadap poros transportir (lead screw).',
-    tool: 'Pahat Ulir Metris Sudut 60°',
-    tip: 'Perhatikan tabel gearbox transportir untuk kisar pitch 2.0 mm dan gunakan skala pembagi ulir saat mengembalikan eretan.'
-  },
-  {
-    step: '08',
-    name: 'Knurling (Mengkartel)',
-    subtitle: 'Pola Diamond Pitch 1.2 mm',
-    icon: '🧇',
-    timeSec: 28,
-    desc: 'Proses penekanan rol baja beralur keras ke permukaan silinder untuk membentuk pola belah ketupat kasar sebagai pegangan tangan anti-slip.',
-    tool: 'Alat Kartel Roda Ganda (Knurling Tool)',
-    tip: 'Gunakan RPM rendah (100 - 150 RPM) dan lumuri banyak oli pelumas saat rol menekan benda kerja.'
-  },
-  {
-    step: '09',
-    name: 'Drilling (Mengebor Sumbu Pusat)',
-    subtitle: 'Mata Bor Ø8.5 mm (Sudut 118°)',
-    icon: '🎯',
-    timeSec: 32,
-    desc: 'Pembuatan lubang awal tepat pada sumbu pusat silinder berputar menggunakan mata bor spiral yang dicekam pada kepala lepas (tailstock).',
-    tool: 'Center Drill lalu Twist Drill Ø8.5',
-    tip: 'Selalu awali dengan bor senter (center drill) agar mata bor spiral tidak melenceng dari titik sumbu putar.'
-  },
-  {
-    step: '10',
-    name: 'Boring (Membubut Dalam / Korter)',
-    subtitle: 'Perluas Lubang Ø8.5 → Ø19.8 mm',
-    icon: '🕳️',
-    timeSec: 36,
-    desc: 'Memperbesar diameter lubang bor dan meluruskan ketegaklurusan dinding silinder dalam menggunakan batang pahat korter (boring bar).',
-    tool: 'Pahat Bubut Dalam (Boring Bar)',
-    tip: 'Gunakan boring bar dengan juluran sependek mungkin untuk mencegah lendutan dan gelombang permukaan lubang.'
-  },
-  {
-    step: '11',
-    name: 'Reaming (Meluaskan Presisi)',
-    subtitle: 'Finishing Presisi Ø20 H7 (Ra 0.8 µm)',
-    icon: '✨',
-    timeSec: 40,
-    desc: 'Penyayatan halus lubang dalam toleransi sangat teliti (H7) dan kehalusan permukaan tinggi menggunakan alat reamer mesin.',
-    tool: 'Machine Reamer Ø20 H7 Fluted',
-    tip: 'RPM reaming adalah 1/3 dari RPM pengeboran, dan beri pelumasan melimpah. DILARANG memutar balik spindel saat reamer berada di dalam lubang!'
-  },
-  {
-    step: '12',
-    name: 'Tapping (Mengetap Ulir Dalam)',
-    subtitle: 'Ulir Dalam Metris M10 × 1.5 mm',
-    icon: '🪛',
-    timeSec: 44,
-    desc: 'Pembuatan ulir dalam metris standar menggunakan tap mesin yang dituntun titik senter kepala lepas agar sejajar sempurna.',
-    tool: 'Tap Mesin Spiral Point M10 × 1.5',
-    tip: 'Putar balik handel setiap setengah putaran sayat untuk memutuskan tatal gram di dalam lubang buntu.'
-  },
-  {
-    step: '13',
-    name: 'Parting (Memotong Benda Jadi)',
-    subtitle: 'Pisau Potong Lebar 3 mm',
-    icon: '🔪',
-    timeSec: 48,
-    desc: 'Pemisahan benda kerja yang telah selesai dikerjakan dari batang bahan sisa menggunakan bilah pisau potong (parting-off blade).',
-    tool: 'Pisau Potong (Parting Tool 3 mm)',
-    tip: 'Ketinggian pisau potong harus benar-benar presisi setinggi titik senter. Kurangi kecepatan saat mendekati inti putus agar benda tidak terbanting.'
-  }
-];
-
 const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
@@ -147,7 +13,6 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [selectedOperation, setSelectedOperation] = useState(LATHE_OPERATIONS[0]);
 
   const videoUrl = getAssetUrl('/videos/lathe-cutting.mp4');
 
@@ -217,17 +82,6 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
     }
   };
 
-  const jumpToOperation = (op) => {
-    sound.playClick();
-    setSelectedOperation(op);
-    if (videoRef.current) {
-      videoRef.current.currentTime = op.timeSec;
-      if (videoRef.current.paused) {
-        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-      }
-    }
-  };
-
   // Format mm:ss
   const formatTime = (timeInSec) => {
     const m = Math.floor(timeInSec / 60);
@@ -268,14 +122,14 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h2 style={{ fontSize: '1.3rem', fontWeight: 900, margin: 0, color: '#ffffff' }}>
-                VIDEO PROSES PEMOTONGAN BUBUT (13 OPERASI INTI)
+                VIDEO PROSES PEMOTONGAN MESIN BUBUT
               </h2>
               <span style={{ fontSize: '0.72rem', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', border: '1px solid #10b981', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
                 1080p HD
               </span>
             </div>
             <p style={{ margin: '4px 0 0 0', fontSize: '0.84rem', color: '#94a3b8' }}>
-              Demonstrasi pembubutan batang baja Ø60 mm menjadi produk jadi melalui 13 proses pemesinan berstandar industri
+              Demonstrasi pemesinan dan pembubutan batang baja presisi berstandar industri
             </p>
           </div>
         </div>
@@ -398,9 +252,6 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800 }}>
-              {selectedOperation ? `${selectedOperation.step} ${selectedOperation.name}` : ''}
-            </span>
             <button
               onClick={handleFullscreen}
               style={{
@@ -616,124 +467,6 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
           </div>
         </div>
       </div>
-
-      {/* 13 CORE OPERATIONS CARDS (INTERACTIVE TIMELINE) */}
-      <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-          <div>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#38bdf8', margin: 0 }}>
-              📋 13 Tahapan Operasi Pemotongan Mesin Bubut (Chip Atlas)
-            </h3>
-            <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#94a3b8' }}>
-              Klik tahapan berikut untuk melihat penjelasan teknik, geometri pahat, dan langsung lompat ke videonya
-            </p>
-          </div>
-        </div>
-
-        {/* Selected Operation Detail Card */}
-        {selectedOperation && (
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(15, 23, 42, 0.9))',
-            border: '1.5px solid #38bdf8',
-            borderRadius: '12px',
-            padding: '18px 22px',
-            marginBottom: '20px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '2rem' }}>{selectedOperation.icon}</span>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
-                    TAHAP {selectedOperation.step}
-                  </div>
-                  <h4 style={{ margin: '2px 0 0 0', fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
-                    {selectedOperation.name}
-                  </h4>
-                  <div style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 700 }}>
-                    {selectedOperation.subtitle}
-                  </div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => jumpToOperation(selectedOperation)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  background: '#0284c7',
-                  border: 'none',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                ▶ Tonton Bagian Ini ({formatTime(selectedOperation.timeSec)})
-              </button>
-            </div>
-
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1', lineHeight: 1.5, margin: '8px 0 14px 0' }}>
-              {selectedOperation.desc}
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', background: 'rgba(0,0,0,0.25)', padding: '12px', borderRadius: '8px' }}>
-              <div>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>Alat Potong / Pahat:</span>
-                <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#38bdf8' }}>{selectedOperation.tool}</div>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase' }}>Tips & Keselamatan Operasi:</span>
-                <div style={{ fontSize: '0.85rem', color: '#fed7aa' }}>💡 {selectedOperation.tip}</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Horizontal / Grid Cards of 13 Steps */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '10px'
-        }}>
-          {LATHE_OPERATIONS.map((op) => {
-            const isCurrent = selectedOperation?.step === op.step;
-            return (
-              <div
-                key={op.step}
-                onClick={() => jumpToOperation(op)}
-                style={{
-                  padding: '12px',
-                  borderRadius: '10px',
-                  background: isCurrent ? 'rgba(56, 189, 248, 0.15)' : '#1e293b',
-                  border: isCurrent ? '1.5px solid #38bdf8' : '1px solid #334155',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: isCurrent ? '#38bdf8' : '#94a3b8' }}>
-                    {op.step}
-                  </span>
-                  <span style={{ fontSize: '1.2rem' }}>{op.icon}</span>
-                </div>
-                <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#ffffff', lineHeight: 1.3 }}>
-                  {op.name.split(' ')[0]} {op.name.split(' ')[1] || ''}
-                </div>
-                <div style={{ fontSize: '0.72rem', color: isCurrent ? '#6ee7b7' : '#94a3b8' }}>
-                  {op.subtitle}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
     </div>
   );
 };

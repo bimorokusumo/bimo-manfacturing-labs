@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="209.76376pt"
+   height="297.63779pt"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docbase="/home/dcrochet"
+   sodipodi:docname="Fraise plaquette ronde.svg"
+   version="1.0">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.4081621"
+     inkscape:cx="131.30803"
+     inkscape:cy="279.34602"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1280"
+     inkscape:window-height="997"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="vertical"
+       position="-118.76277"
+       id="guide6851" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.0/" />
+        <dc:description>Schéma d'une fraise à plaquette ronde</dc:description>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Crochet.david</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date>28 février 2008</dc:date>
+        <dc:language>fr</dc:language>
+        <dc:title>Fraise plaquette ronde</dc:title>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.0/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <g
+       id="g6818"
+       transform="matrix(0.407848,0,0,0.407848,-29.67895,-23.53702)">
+      <g
+         id="g5922">
+        <path
+           sodipodi:type="arc"
+           style="opacity:1;fill:#fff400;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;display:inline"
+           id="path5043"
+           sodipodi:cx="267"
+           sodipodi:cy="721.36218"
+           sodipodi:rx="141"
+           sodipodi:ry="141"
+           d="M 408 721.36218 A 141 141 0 1 1  126,721.36218 A 141 141 0 1 1  408 721.36218 z"
+           transform="translate(-10,23)" />
+        <path
+           transform="matrix(0.8,0,0,0.8,43.4,167.2724)"
+           d="M 408 721.36218 A 141 141 0 1 1  126,721.36218 A 141 141 0 1 1  408 721.36218 z"
+           sodipodi:ry="141"
+           sodipodi:rx="141"
+           sodipodi:cy="721.36218"
+           sodipodi:cx="267"
+           id="path5920"
+           style="opacity:1;fill:#fff400;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;display:inline"
+           sodipodi:type="arc" />
+      </g>
+      <rect
+         y="164.78188"
+         x="169.06035"
+         height="604.16058"
+         width="468.8793"
+         id="rect4168"
+         style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <g
+         id="g3284">
+        <path
+           sodipodi:type="arc"
+           style="opacity:1;fill:#faf70b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:11.01292992;stroke-linecap:round;stroke-linejoin:miter;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path1352"
+           sodipodi:cx="561.5"
+           sodipodi:cy="752.86218"
+           sodipodi:rx="151.5"
+           sodipodi:ry="130.5"
+           d="M 713 752.86218 A 151.5 130.5 0 1 1  410,752.86218 A 151.5 130.5 0 1 1  713 752.86218 z"
+           transform="matrix(0.868851,0,0,1.072282,52.64025,-63.9181)" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:1;fill:#faf70b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:11.01292992;stroke-linecap:round;stroke-linejoin:miter;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path3282"
+           sodipodi:cx="561.5"
+           sodipodi:cy="752.86218"
+           sodipodi:rx="151.5"
+           sodipodi:ry="130.5"
+           d="M 713 752.86218 A 151.5 130.5 0 1 1  410,752.86218 A 151.5 130.5 0 1 1  713 752.86218 z"
+           transform="matrix(0.360394,0,0,0.444776,337.6391,410.5076)" />
+        <path
+           sodipodi:type="star"
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:10.62992096;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path2407"
+           sodipodi:sides="6"
+           sodipodi:cx="786"
+           sodipodi:cy="454.36218"
+           sodipodi:r1="156.83665"
+           sodipodi:r2="209.11555"
+           sodipodi:arg1="0.78070335"
+           sodipodi:arg2="1.3043022"
+           inkscape:flatsided="false"
+           inkscape:rounded="0.4"
+           inkscape:randomized="0"
+           d="M 897.41969,564.74057 C 867.20336,595.24196 882.48959,644.78916 841.07078,656.09598 C 799.65198,667.40279 787.6425,616.96108 746.11936,606.04366 C 704.59621,595.12624 669.33019,633.13811 638.8288,602.92177 C 608.32741,572.70545 646.00648,537.08408 634.69967,495.66528 C 623.39285,454.24647 572.8406,442.71113 583.75802,401.18798 C 594.67543,359.66484 644.36398,374.48518 674.58031,343.9838 C 704.79664,313.48241 689.51041,263.9352 730.92922,252.62839 C 772.34802,241.32157 784.3575,291.76329 825.88064,302.6807 C 867.40379,313.59812 902.66981,275.58626 933.1712,305.80259 C 963.67259,336.01892 925.99352,371.64029 937.30033,413.05909 C 948.60715,454.4779 999.1594,466.01324 988.24198,507.53639 C 977.32457,549.05953 927.63602,534.23918 897.41969,564.74057 z "
+           transform="matrix(0.235624,0,0,0.230915,355.9754,638.943)" />
+      </g>
+      <g
+         id="g6811">
+        <path
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;display:inline"
+           d="M 171,161.36218 L 171,689.36218 C 90,878.36218 471,929.36218 447,690.36218 L 431,459.36218 C 426,296.36218 645,301.36218 645,301.36218 L 645,160.36218 L 171,161.36218 z "
+           id="path5926"
+           sodipodi:nodetypes="ccccccc" />
+        <path
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 176,688.36218 L 444,688.36218"
+           id="path6803" />
+        <path
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8.28866959;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 172.29388,776.36218 L 426.70612,776.36218"
+           id="path6805" />
+        <path
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8.19562817;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 196.19802,812.36218 L 399.80198,812.36218"
+           id="path6807" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:8;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path6809"
+           sodipodi:cx="252.5"
+           sodipodi:cy="737.86218"
+           sodipodi:rx="30.5"
+           sodipodi:ry="30.5"
+           d="M 283 737.86218 A 30.5 30.5 0 1 1  222,737.86218 A 30.5 30.5 0 1 1  283 737.86218 z" />
+      </g>
+      <path
+         id="path3289"
+         d="M 407,116.36218 L 407,942.36218"
+         style="opacity:1;fill:#0090ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:15;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:120, 30, 15, 30;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

@@ -530,6 +530,8 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
         <img
           src={getAssetUrl(currentImage)}
           alt={currentTitle}
+          loading="lazy"
+          decoding="async"
           style={{
             maxWidth: '100%',
             height: 'auto',

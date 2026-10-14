@@ -1692,6 +1692,8 @@ const CuttingToolsLab = ({
                       <img
                         src={t.images[0]?.url}
                         alt={t.nama}
+                        loading="lazy"
+                        decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       />
                     </div>
@@ -2019,6 +2021,8 @@ const CuttingToolsLab = ({
                 <img
                   src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url}
                   alt={currentTool.nama}
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     maxHeight: '460px',

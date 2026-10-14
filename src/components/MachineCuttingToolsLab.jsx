@@ -2580,7 +2580,7 @@ const CUTTING_TOOLS_QUIZ = [
 // =============================================================================
 // KOMPONEN VISUAL KARTU UNIVERSAL (SPLIT / CAD / REAL PHOTO DUAL-VIEW)
 // =============================================================================
-const UniversalToolCardVisual = ({
+const UniversalToolCardVisual = React.memo(({
   type = 'milling', // 'milling' | 'lathe' | 'insert' | 'hole'
   tool,
   isSelected = false,
@@ -2656,6 +2656,8 @@ const UniversalToolCardVisual = ({
             <img
               src={tool.fotoReal}
               alt={tool.name}
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',
@@ -2700,6 +2702,8 @@ const UniversalToolCardVisual = ({
           <img
             src={tool.fotoReal}
             alt={tool.name}
+            loading="lazy"
+            decoding="async"
             style={{
               width: '100%',
               height: '100%',
@@ -2741,12 +2745,12 @@ const UniversalToolCardVisual = ({
       </button>
     </div>
   );
-};
+});
 
 // =============================================================================
 // KOMPONEN INSPEKSI FOTO ASLI BENGKEL & ANALISIS GEOMETRI FISIK
 // =============================================================================
-const RealPhotoShowcase = ({ tool, category = 'milling' }) => {
+const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
   return (
     <div style={{
       background: 'linear-gradient(135deg, #090d16 0%, #0f172a 100%)',
@@ -2775,6 +2779,8 @@ const RealPhotoShowcase = ({ tool, category = 'milling' }) => {
         <img
           src={tool.fotoReal}
           alt={tool.name}
+          loading="lazy"
+          decoding="async"
           style={{
             maxWidth: '100%',
             maxHeight: '100%',
@@ -2856,7 +2862,7 @@ const RealPhotoShowcase = ({ tool, category = 'milling' }) => {
       </div>
     </div>
   );
-};
+});
 
 // =============================================================================
 // KOMPONEN UTAMA: MachineCuttingToolsLab
@@ -3277,6 +3283,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
+                        loading="lazy"
+                        decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
@@ -3912,6 +3920,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
+                        loading="lazy"
+                        decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
@@ -4403,6 +4413,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={currentIns.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
                         alt={currentIns.name}
+                        loading="lazy"
+                        decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '3px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
@@ -4465,6 +4477,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={currentIns.fotoReal}
                         alt={currentIns.name}
+                        loading="lazy"
+                        decoding="async"
                         style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '4px', display: 'block', filter: 'brightness(1.1) saturate(1.15)' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
@@ -4857,6 +4871,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
+                        loading="lazy"
+                        decoding="async"
                         style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />

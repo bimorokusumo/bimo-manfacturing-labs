@@ -92,7 +92,30 @@ const PreparationModal = ({ machineName, onComplete }) => {
       }}>
         
         {/* HEADER */}
-        <div style={{ textAlign: 'center', marginBottom: '20px', borderBottom: '1px solid #1e293b', paddingBottom: '16px' }}>
+        <div style={{ position: 'relative', textAlign: 'center', marginBottom: '20px', borderBottom: '1px solid #1e293b', paddingBottom: '16px' }}>
+          <button
+            onClick={() => { sound.playClick(); onComplete(); }}
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              background: 'rgba(56, 189, 248, 0.15)',
+              border: '1px solid #38bdf8',
+              color: '#38bdf8',
+              borderRadius: '8px',
+              padding: '6px 12px',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'all 0.2s'
+            }}
+            title="Langsung ke simulator 3D"
+          >
+            <span>✕</span> Lewati ke Simulator 3D
+          </button>
           <div style={{ fontSize: '0.8rem', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 800, marginBottom: '6px' }}>
             TAHAP PERSIAPAN: {machineName}
           </div>

@@ -1,8 +1,6 @@
 import React, { Suspense, useState, useEffect, useMemo, Component } from 'react';
-import { Canvas, useLoader } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html, GizmoHelper, GizmoViewcube } from '@react-three/drei';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import * as THREE from 'three';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 
@@ -641,191 +639,7 @@ const LatheFallback = () => (
   </group>
 );
 
-const LatheLoadingFallback = () => (
-  <group position={[0, 0, 0]}>
-    <Html position={[0, 2.7, 0]} center distanceFactor={14}>
-      <div
-        style={{
-          background: 'rgba(15, 23, 42, 0.95)',
-          color: '#ffffff',
-          padding: '10px 18px',
-          borderRadius: '12px',
-          border: '1.5px solid #38bdf8',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
-          backdropFilter: 'blur(10px)',
-          pointerEvents: 'none',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '6px',
-          minWidth: '240px'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '12px', color: '#38bdf8' }}>
-          <span>⏳ Memuat Model Mesin Bubut Presisi...</span>
-        </div>
-        <span style={{ fontSize: '10px', color: '#94a3b8' }}>
-          Sedang mengunduh model 3D HD (~21 MB), mohon tunggu...
-        </span>
-      </div>
-    </Html>
-    <LatheFallback />
-  </group>
-);
-
-class LatheErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-  componentDidCatch(err) {
-    console.warn('Lathe model fallback active:', err);
-  }
-  render() {
-    if (this.state.hasError) {
-      return (
-        <group>
-          <Html position={[0, 2.7, 0]} center distanceFactor={14}>
-            <div
-              style={{
-                background: 'rgba(30, 41, 59, 0.95)',
-                color: '#ffffff',
-                padding: '8px 16px',
-                borderRadius: '10px',
-                border: '1.5px solid #f59e0b',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
-                backdropFilter: 'blur(8px)',
-                pointerEvents: 'none',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '3px',
-                minWidth: '220px'
-              }}
-            >
-              <div style={{ fontWeight: 700, fontSize: '12px', color: '#fbbf24' }}>
-                ⚠️ Mode Visual Cadangan Aktif
-              </div>
-              <span style={{ fontSize: '10px', color: '#94a3b8' }}>
-                Mesin Bubut Standar (Mode Kompatibilitas)
-              </span>
-            </div>
-          </Html>
-          <LatheFallback />
-        </group>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-const RealisticLatheOBJ = () => {
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const cleanBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
-  const mtlUrl = `${cleanBase}Knuth_v28.mtl`;
-  const objUrl = `${cleanBase}Knuth_v28.obj`;
-
-  const materials = useLoader(MTLLoader, mtlUrl);
-  const obj = useLoader(OBJLoader, objUrl, (loader) => {
-    if (materials) {
-      materials.preload();
-      loader.setMaterials(materials);
-    }
-  });
-
-  useMemo(() => {
-    if (!obj) return;
-    obj.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-        const name = child.name || '';
-
-        // Skema warna cerah industri mesin (terlihat jelas, tidak gelap)
-        if (name.includes('Body1:77')) {
-          // Chuck 3 Rahang -> Baja Chrome Mengkilap Terang
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#f8fafc'),
-            roughness: 0.15,
-            metalness: 0.95
-          });
-        } else if (name.includes('Body1:3')) {
-          // Bed & Slideways -> Baja Presisi Halus Terang
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#e2e8f0'),
-            roughness: 0.2,
-            metalness: 0.85
-          });
-        } else if (name.includes('Body1:88') || name.includes('Body1:89')) {
-          // Poros Transportir & Pembawa -> Baja Terang Mengkilap
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#ffffff'),
-            roughness: 0.25,
-            metalness: 0.9
-          });
-        } else if (name.includes('Body1:24')) {
-          // Pelindung Percikan Bram -> Lembaran Logam Slate Bersih
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#94a3b8'),
-            roughness: 0.4,
-            metalness: 0.5
-          });
-        } else if (name === 'Body1' || name === 'Body1:1' || name === 'Body1:2') {
-          // Kaki & Bak Penampung Bram -> Slate Industri Abu-Abu Bersih
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#64748b'),
-            roughness: 0.5,
-            metalness: 0.5
-          });
-        } else if (
-          name.includes('Body1:47') ||
-          name.includes('Body1:48') ||
-          name.includes('Body1:49') ||
-          name.includes('Body1:50')
-        ) {
-          // Rumah Pahat & Compound Rest -> Baja Terang
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#cbd5e1'),
-            roughness: 0.25,
-            metalness: 0.85
-          });
-        } else if (
-          name.includes('Body1:25') ||
-          name.includes('Body1:26') ||
-          name.includes('Body1:60') ||
-          name.includes('Body1:63')
-        ) {
-          // Tuas & Handel Operasi -> Merah & Kuning K3 Terang
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#ef4444'),
-            roughness: 0.3,
-            metalness: 0.5
-          });
-        } else {
-          // Bodi Utama (Headstock, Tailstock, Eretan) -> Biru Industri Cerah Standar Mesin (RAL 5015)
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color('#0284c7'),
-            roughness: 0.35,
-            metalness: 0.45,
-            side: THREE.DoubleSide
-          });
-        }
-      }
-    });
-  }, [obj]);
-
-  return (
-    <primitive
-      object={obj}
-      position={[-3.69, 2.40, 60.0]}
-    />
-  );
-};
+const RealisticLatheOBJ = LatheFallback;
 
 // ==========================================
 // 3D MESIN FRAIS INDUSTRI LENGKAP
@@ -2456,17 +2270,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           <group>
             {/* 1. MESIN BUBUT REALISTIS & KOMPONEN KLIK LANGSUNG */}
             <group position={[-5.0, 0, 0]}>
-              <LatheErrorBoundary>
-                <Suspense fallback={<LatheLoadingFallback />}>
-                  <group
-                    scale={[0.022, 0.022, 0.022]}
-                    rotation={[-Math.PI / 2, 0, 0]}
-                    position={[0, 0, 0]}
-                  >
-                    <RealisticLatheOBJ />
-                  </group>
-                </Suspense>
-              </LatheErrorBoundary>
+              <LatheFallback />
 
               {/* Komponen-Komponen Mesin Bubut yang Langsung Bisa Diklik */}
               <InteractivePart

@@ -4,7 +4,7 @@ import CNC3D from './CNC3D';
 import PreparationModal from './PreparationModal';
 
 const CNCModule = ({ addXP }) => {
-  const [isPrepared, setIsPrepared] = useState(false);
+  const [isPrepared, setIsPrepared] = useState(true);
   const [activeTab, setActiveTab] = useState('4');
   const [workpieceSize, setWorkpieceSize] = useState({ x: 50, y: 50, z: 20 });
   const [toolDiameter, setToolDiameter] = useState(10);
@@ -161,7 +161,28 @@ const CNCModule = ({ addXP }) => {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
       {!isPrepared && <PreparationModal machineName="MESIN CNC" onComplete={() => setIsPrepared(true)} />}
       
-      <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '1px' }}>VIRTUAL CNC SIMULATION</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>VIRTUAL CNC SIMULATION</h2>
+        <button
+          onClick={() => { sound.playClick(); setIsPrepared(false); }}
+          style={{
+            padding: '8px 14px',
+            borderRadius: '8px',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            background: 'rgba(16, 185, 129, 0.15)',
+            color: '#10b981',
+            border: '1px solid #10b981',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+          title="Buka panduan K3 & SOP"
+        >
+          <span>🛡️</span> SOP & K3
+        </button>
+      </div>
 
       <div style={{ display: 'flex', gap: '20px', flex: 1, minHeight: '600px' }}>
         

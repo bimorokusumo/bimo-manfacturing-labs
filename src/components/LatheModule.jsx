@@ -9,7 +9,7 @@ import { latheJobsheets } from '../data/latheJobsheets';
 
 const LatheModule = ({ addXP }) => {
   const [activeLatheTab, setActiveLatheTab] = useState('pemotongan'); // 'rumus', 'test', 'pemotongan'
-  const [cuttingSubMode, setCuttingSubMode] = useState('video'); // 'video', 'simulator'
+  const [cuttingSubMode, setCuttingSubMode] = useState('simulator'); // 'video', 'simulator'
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = latheJobsheets[activeJobsheetIndex] || latheJobsheets[0];

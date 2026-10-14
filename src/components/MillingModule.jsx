@@ -8,7 +8,7 @@ import { millingJobsheets } from '../data/millingJobsheets';
 
 const MillingModule = ({ addXP }) => {
   const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test' | 'tools'
-  const [isPrepared, setIsPrepared] = useState(false);
+  const [isPrepared, setIsPrepared] = useState(true);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
 
@@ -502,6 +502,25 @@ const MillingModule = ({ addXP }) => {
               }}
             >
               <span>🔪</span> Katalog 8 Pisau Frais Real
+            </button>
+            <button
+              onClick={() => { sound.playClick(); setIsPrepared(false); }}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                background: 'rgba(16, 185, 129, 0.15)',
+                color: '#10b981',
+                border: '1px solid #10b981',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Buka panduan K3 & SOP"
+            >
+              <span>🛡️</span> SOP & K3
             </button>
         </div>
       </div>

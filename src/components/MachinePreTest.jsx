@@ -308,8 +308,26 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
         {/* Footer Navigation */}
         <div style={{ padding: '20px 24px', borderTop: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)' }}>
           {stage === 'intro' && (
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-               <button 
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+              <button 
+                onClick={() => { sound.playClick(); onPass(100); }}
+                style={{
+                  padding: '12px 20px',
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid #10b981',
+                  color: '#10b981',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                title="Langsung akses simulator 3D tanpa pre-test"
+              >
+                <span>🎮</span> Lewati ke Simulator 3D
+              </button>
+              <button 
                 onClick={startMcq}
                 style={{ padding: '12px 32px', background: 'var(--game-primary)', border: 'none', color: '#000', borderRadius: '8px', cursor: 'pointer', fontWeight: 800 }}
               >

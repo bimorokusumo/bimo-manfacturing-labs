@@ -165,7 +165,7 @@ M30`;
 };
 
 const CNCLatheModule = ({ addXP }) => {
-  const [isPrepared, setIsPrepared] = useState(false);
+  const [isPrepared, setIsPrepared] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
   const [activeTab, setActiveTab] = useState('4'); // '1': Benda Kerja, '2': Tooling, '3': Spindel, '4': Program, '5': Proses, '6': Hasil
   
@@ -446,6 +446,25 @@ const CNCLatheModule = ({ addXP }) => {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => { sound.playClick(); setIsPrepared(false); }}
+            style={{
+              padding: '8px 14px',
+              borderRadius: '8px',
+              fontSize: '0.78rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              background: 'rgba(16, 185, 129, 0.15)',
+              color: '#10b981',
+              border: '1px solid #10b981',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Buka panduan K3 & SOP"
+          >
+            <span>🛡️</span> SOP & K3
+          </button>
           <button
             onClick={() => { sound.playClick(); setShowCalculator(true); }}
             style={{

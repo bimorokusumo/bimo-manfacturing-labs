@@ -3,6 +3,7 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import { useStudent } from '../context/StudentContext';
 import { getAllStoredScores } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
+import { MASTER_STUDENTS_LIST } from '../data/studentsData';
 
 const LABS_CONFIG = [
   {
@@ -129,6 +130,61 @@ const DashboardView = ({
 
   const { speakText, stopSpeech, isSpeaking, currentNarrativeTitle } = useAccessibility();
   const { student, isTeacher } = useStudent();
+
+  // State Monitoring Siswa Aktif (Khusus Pengajar)
+  const [selectedStudentAbsen, setSelectedStudentAbsen] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem('bimo_student_session');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name && parsed.name.toLowerCase() !== 'bimoro kusumo') {
+          const found = MASTER_STUDENTS_LIST.find(
+            s => s.name.toLowerCase() === parsed.name.toLowerCase() || String(s.absen) === String(parsed.studentNumber)
+          );
+          if (found) return found.absen;
+        }
+      }
+    } catch {}
+    return 1;
+  });
+
+  const monitoredStudent = React.useMemo(() => {
+    return MASTER_STUDENTS_LIST.find(s => s.absen === selectedStudentAbsen) || MASTER_STUDENTS_LIST[0];
+  }, [selectedStudentAbsen]);
+
+  const monitoredStudentStats = React.useMemo(() => {
+    let scores = [];
+    try {
+      scores = getAllStoredScores();
+    } catch {
+      scores = [];
+    }
+    const studentScores = scores.filter(s => {
+      if (!s || !s.namaSiswa) return false;
+      const sName = String(s.namaSiswa).trim().toLowerCase();
+      const mName = monitoredStudent.name.trim().toLowerCase();
+      return sName === mName || (s.absen && String(s.absen) === String(monitoredStudent.absen));
+    });
+
+    const totalXP = studentScores.reduce((acc, curr) => acc + (Number(curr.skorAngka || curr.nilai || 0) * 10), 0);
+    const completedCount = studentScores.length;
+    const avgScore = completedCount > 0
+      ? Math.round(studentScores.reduce((acc, curr) => acc + Number(curr.skorAngka || curr.nilai || 0), 0) / completedCount)
+      : 0;
+    const currentLevel = Math.floor(totalXP / 500) + 1;
+    const xpInLevel = totalXP % 500;
+    const xpPercent = Math.min(100, Math.round((xpInLevel / 500) * 100));
+
+    return {
+      scores: studentScores,
+      totalXP,
+      completedCount,
+      avgScore,
+      currentLevel,
+      xpInLevel,
+      xpPercent
+    };
+  }, [monitoredStudent]);
 
   const leaderboardData = React.useMemo(() => {
     let scores = [];
@@ -497,54 +553,120 @@ const DashboardView = ({
         </div>
       </div>
 
-      {/* MIDDLE ROW (Profil Siswa, Badges/Aktivitas, Leaderboard Kelas) */}
-      <div className="dashboard-middle-grid">
+      {/* MIDDLE ROW (Profil Siswa / Monitoring Pengajar, Badges/Aktivitas, Leaderboard Kelas) */}
+      <div className={`dashboard-middle-grid ${!isTeacher ? 'is-student' : ''}`}>
         
-        {/* PROFIL SISWA */}
-        <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
-            PROFIL SISWA
-          </h3>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f59e0b', overflow: 'hidden', flexShrink: 0, boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)' }}>
-              <img src="https://ui-avatars.com/api/?name=Siswa&background=f59e0b&color=fff&bold=true" alt="Avatar" style={{ width: '100%', height: '100%' }} />
-            </div>
-            <div>
-              <div style={{ color: 'var(--text-main)', fontWeight: 900, fontSize: '1.15rem' }}>Siswa</div>
-              <div style={{ color: '#0284c7', fontSize: '0.82rem', fontWeight: 700 }}>Kelas X TPM • SMK Negeri</div>
-              <span style={{ fontSize: '0.68rem', background: '#ecfdf5', color: '#059669', padding: '2px 6px', borderRadius: '4px', fontWeight: 800, display: 'inline-block', marginTop: '4px' }}>
-                ● Sedang Aktif Belajar
+        {/* MONITORING SISWA AKTIF (KHUSUS PENGAJAR) */}
+        {isTeacher && (
+          <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
+                MONITORING SISWA
+              </h3>
+              <span style={{ fontSize: '0.68rem', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '3px 8px', borderRadius: '12px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                👨‍🏫 Khusus Pengajar
               </span>
             </div>
-          </div>
 
-          <div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '6px' }}>
-              TINGKAT PENGUASAAN
-            </div>
-            <div style={{ color: 'var(--game-primary)', fontSize: '2.2rem', fontWeight: 900, lineHeight: 1, marginBottom: '4px' }}>
-              {levelInfo.level.toString().padStart(2, '0')}
-            </div>
-            <div style={{ color: 'var(--text-main)', fontSize: '0.88rem', fontWeight: 800, marginBottom: '14px' }}>
-              {levelInfo.title}
+            {/* Dropdown Selector Siswa */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                PILIH SISWA YANG DIMONITOR:
+              </label>
+              <select
+                value={selectedStudentAbsen}
+                onChange={(e) => setSelectedStudentAbsen(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  borderRadius: '8px',
+                  border: '1.5px solid #cbd5e1',
+                  background: 'var(--bg-main, #ffffff)',
+                  color: 'var(--text-main, #0f172a)',
+                  fontWeight: 700,
+                  fontSize: '0.84rem',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                }}
+              >
+                {MASTER_STUDENTS_LIST.map((s) => (
+                  <option key={s.absen} value={s.absen}>
+                    Absen {String(s.absen).padStart(2, '0')} - {s.name} ({s.nis})
+                  </option>
+                ))}
+              </select>
             </div>
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-              <div style={{ color: 'var(--text-main)', fontSize: '0.82rem', fontWeight: 800 }}>
-                XP: {globalXP.toLocaleString('id-ID')} <span style={{ color: 'var(--text-subtle)', fontWeight: 600 }}>/ {levelInfo.nextLevelXP.toLocaleString('id-ID')}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'var(--bg-card-alt, #f8fafc)', padding: '12px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: '#0284c7', overflow: 'hidden', flexShrink: 0, boxShadow: '0 4px 12px rgba(2, 132, 199, 0.25)' }}>
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(monitoredStudent.name)}&background=0284c7&color=fff&bold=true`} 
+                  alt={monitoredStudent.name} 
+                  style={{ width: '100%', height: '100%' }} 
+                />
               </div>
-              <span style={{ fontSize: '0.78rem', color: '#ea580c', fontWeight: 800 }}>{xpPct}%</span>
-            </div>
-            <div style={{ height: '8px', width: '100%', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '20px' }}>
-              <div style={{ height: '100%', width: `${xpPct}%`, background: 'linear-gradient(90deg, #f59e0b, #ea580c)', borderRadius: '4px' }} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ color: 'var(--text-main)', fontWeight: 900, fontSize: '0.98rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {monitoredStudent.name}
+                </div>
+                <div style={{ color: '#0284c7', fontSize: '0.78rem', fontWeight: 700 }}>
+                  NIS: {monitoredStudent.nis} • {monitoredStudent.class || 'Kelas X-TP.A'}
+                </div>
+                <span style={{ fontSize: '0.66rem', background: '#ecfdf5', color: '#059669', padding: '2px 6px', borderRadius: '4px', fontWeight: 800, display: 'inline-block', marginTop: '3px' }}>
+                  ● Siswa Terdaftar di Kelas
+                </span>
+              </div>
             </div>
 
-            <button style={{ width: '100%', padding: '10px', background: '#f8fafc', border: '1.5px solid #cbd5e1', color: '#0f172a', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s', fontSize: '0.82rem' }}>
-              Lihat Rapor Kompetensi
-            </button>
+            <div>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>
+                PROGRES & PENGUASAAN
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '2px' }}>
+                <div style={{ color: 'var(--game-primary, #ea580c)', fontSize: '1.8rem', fontWeight: 900, lineHeight: 1 }}>
+                  Lvl {monitoredStudentStats.currentLevel.toString().padStart(2, '0')}
+                </div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>
+                  ({monitoredStudentStats.completedCount} Kuis Selesai)
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', marginTop: '8px' }}>
+                <div style={{ color: 'var(--text-main)', fontSize: '0.78rem', fontWeight: 800 }}>
+                  XP: {monitoredStudentStats.totalXP.toLocaleString('id-ID')} <span style={{ color: 'var(--text-subtle)', fontWeight: 600 }}>/ Rata-rata: {monitoredStudentStats.avgScore}</span>
+                </div>
+                <span style={{ fontSize: '0.76rem', color: '#ea580c', fontWeight: 800 }}>{monitoredStudentStats.xpPercent}%</span>
+              </div>
+              <div style={{ height: '7px', width: '100%', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '16px' }}>
+                <div style={{ height: '100%', width: `${monitoredStudentStats.xpPercent}%`, background: 'linear-gradient(90deg, #f59e0b, #ea580c)', borderRadius: '4px' }} />
+              </div>
+
+              <button 
+                onClick={() => onSelectLab('gradebook')}
+                style={{ 
+                  width: '100%', 
+                  padding: '10px 14px', 
+                  background: 'linear-gradient(135deg, #1e293b, #0f172a)', 
+                  border: 'none', 
+                  color: '#ffffff', 
+                  borderRadius: '8px', 
+                  fontWeight: 800, 
+                  cursor: 'pointer', 
+                  transition: 'all 0.2s', 
+                  fontSize: '0.82rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 10px rgba(15, 23, 42, 0.15)'
+                }}
+              >
+                <span>📊 Buka Rapor & Gradebook Lengkap</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* CENTER COLUMN: ACTIVITIES */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

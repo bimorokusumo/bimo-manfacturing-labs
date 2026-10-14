@@ -280,6 +280,16 @@ html, body {
   width: 100%;
 }
 
+.dashboard-middle-grid.is-student {
+  grid-template-columns: minmax(340px, 1.4fr) minmax(290px, 1.1fr);
+}
+
+@media (max-width: 900px) and (min-height: 551px) {
+  .dashboard-middle-grid.is-student {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1200px) and (min-height: 551px) {
   .dashboard-middle-grid {
     grid-template-columns: 1fr 1fr;

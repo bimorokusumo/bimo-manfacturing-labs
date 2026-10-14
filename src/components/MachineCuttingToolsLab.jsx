@@ -78,7 +78,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Face Milling Cutter / Indexable Shell Mill',
     category: 'Milling Permukaan Datar',
     icon: '🥞',
-    fotoReal: '/assets/images/machine_cutting_tools/face_mill.png',
+    fotoReal: '/assets/images/machine_cutting_tools/face_mill.jpg',
     isoStandard: 'DIN 8030 / ISO 6462 (Lead Angle 45° & 90°)',
     materialBadan: 'Baja Paduan Perkakas 42CrMo4 Sepuh + Sisipan Karbida Sintered',
     pelapis: 'TiN (Emas) / TiAlN (Violet Gelap) pada Insert Karbida',
@@ -189,41 +189,40 @@ const MILLING_CUTTERS_CATALOG = [
     ]
   },
   {
-    id: 'bullnose',
-    name: 'Corner Radius / Bull Nose End Mill',
-    englishName: 'Corner Radius End Mill / Bull Nose (Toroidal Cutter)',
-    category: 'Milling Pengasaran Berat & Fillet',
-    icon: '🛡️',
-    fotoReal: '/assets/images/machine_cutting_tools/milling_cutters_samples.jpg',
-    isoStandard: 'DIN 6527 Standard Corner Radius',
-    materialBadan: 'Solid Sub-Micrograin Tungsten Carbide',
-    pelapis: 'TiAlN / AlCrN Berlapis Multi-Layer (Sangat Tahan Aus Abrasif)',
-    diaRange: 'Ø6 – Ø20 mm (Radius Pojok R0.5 – R3.0 mm)',
-    fluteOrInserts: '3 – 5 Helical Flutes',
-    leadAngle: '90° dengan Radius Sudut Pengaman',
-    deskripsi: 'Pisau frais ujung datar yang bagian sudut tajam luarnya diberi pembulatan radius kecil (Corner Radius). Menggabungkan kelebihan Square End Mill dan Ball Mill.',
-    fungsiUtama: 'Operasi pengasaran berat (heavy roughing), penggalian kantong berdinding tegak dengan fillet bawah, serta pemotongan material keras (Hard Milling).',
-    keunggulan: 'Sudut yang dibulatkan menghilangkan konsentrasi tegangan tajam pada ujung pisau, sehingga mata potong jauh lebih tahan terhadap gompal (chipping) dan usia pahat meningkat hingga 2-3 kali lipat.',
-    tipsTeknis: 'Sangat direkomendasikan untuk pemrograman High-Efficiency Milling (HEM) atau pemakanan trochoidal dengan kedalaman aksial dalam (Ap besar) dan radial tipis (Ae kecil).',
+    id: 'roughing',
+    name: 'Roughing End Mill (Pisau Frais Kasar / Ripper)',
+    englishName: 'Roughing End Mill / Corn Cob Ripper (DIN 844 NR/HR)',
+    category: 'Milling Pengasaran Berat & Pembuangan Bram',
+    icon: '⚡',
+    fotoReal: '/assets/images/machine_cutting_tools/roughing_mill.jpg',
+    isoStandard: 'DIN 844 NR (Profil Knuckle Kasar) & HR (Profil Halus)',
+    materialBadan: 'Baja Paduan HSS-Co8 / Solid Sub-Micrograin Tungsten Carbide',
+    pelapis: 'TiAlN / AlCrN Multi-Layer (Sangat Tahan Aus Suhu Tinggi 900°C)',
+    diaRange: 'Ø6 – Ø32 mm (Knuckle Profile Wave)',
+    fluteOrInserts: '3 – 5 Helical Flutes Bergerigi',
+    leadAngle: '90° dengan Gerigi Pemecah Tatal (Knuckle Profile)',
+    deskripsi: 'Pisau frais jari silindris dengan profil gerigi bergelombang (scalloped teeth) di sekeliling alur heliksnya. Setiap puncak gerigi menyayat serpihan kecil terpisah sehingga tatal tidak menggulung panjang.',
+    fungsiUtama: 'Pemesinan pengasaran berat (heavy roughing) untuk membuang volume logam mentah dalam jumlah besar (MRR tinggi) dengan konsumsi daya spindel yang jauh lebih efisien.',
+    keunggulan: 'Gaya potong aksial dan getaran chatter berkurang hingga 40% dibanding Square End Mill biasa, meminimalkan risiko pisau patah saat memotong balok tebal.',
+    tipsTeknis: 'Gunakan kedalaman potong aksial dalam (Ap = 1.5 – 2.5 × Dia). Karena meninggalkan jejak garis bergelombang pada dinding, selalu sisakan stok 0.5–0.8 mm untuk lintasan finishing akhir.',
     rekomendasiMaterial: ['P', 'M', 'K', 'S', 'H'],
-    params: { vc: '120 – 280 m/min', fz: '0.08 – 0.18 mm/gigi', ap: '1.0 – 2.0 × Dia', ae: '10% – 30% Diameter' },
-    kesalahanBengkel: 'Memprogram radius pojok pisau lebih besar daripada radius sudut gambar kerja produk. Ini akan memotong material berlebih (gouging) di sudut dalam kantong!',
+    params: { vc: '90 – 240 m/min', fz: '0.10 – 0.25 mm/gigi', ap: '1.5 – 2.5 × Dia', ae: '25% – 50% Diameter' },
+    kesalahanBengkel: 'Menggunakan pisau roughing untuk lintasan akhir (finishing pass). Permukaan produk akan bergelombang kasar dan tidak memenuhi toleransi dimensi Ra!',
     simulasi: {
-      judul: 'Pengasaran Kantong Cepat (High-Efficiency Roughing)',
-      aksi: 'Pisau Ø16 mm R1.5 menyayat kantong balok baja dengan pemakanan aksial dalam dan kecepatan tinggi.',
-      hasil: 'Menghasilkan dinding tegak dengan fillet sudut dasar R1.5 mm tanpa risiko patah sudut pisau.'
+      judul: 'Penyayatan Kasar Cepat Pemecah Geram (Heavy Roughing)',
+      aksi: 'Pisau Ø20 mm berputar menyayat balok baja dengan kedalaman besar, memecah tatal menjadi butiran pendek yang mudah dievakuasi.',
+      hasil: 'Membuang volume logam tebal dalam waktu singkat dengan temperatur pisau tetap dingin.'
     },
     blueprint: {
-      judul: 'Standar Fillet Pojok Kantong Bawah',
-      profil: 'Kantong Berdinding Tegak dengan Radius Sudut R1.5 mm',
-      toleransi: 'Toleransi Radius Fillet: R1.5 ± 0.05 mm'
+      judul: 'Standar Kedalaman Pengasaran & Sisa Stok',
+      profil: 'Alur Kasar Cepat dengan Sisa Toleransi Finishing 0.8 mm',
+      toleransi: 'Sisa Stok Dinding Finishing (Finishing Allowance): +0.80 ± 0.10 mm'
     },
     pins: [
-      { id: 1, label: 'Tangkai Pengikat Kokoh (Tool Shank)', x: 400, y: 80, desc: 'Tangkai karbida bervolume tebal untuk menyerap gaya potong radial dinamis.', tip: 'Pilihlah holder sistem Weldon atau Hydraulic chuck untuk mencegah pisau tertarik keluar (pull-out).' },
-      { id: 2, label: 'Alur Heliks Inti Tebal (Flutes with Thick Core)', x: 375, y: 220, desc: 'Desain inti (core web) dipertebal 10% dibanding end mill biasa untuk mencegah patah.', tip: 'Alur heliks bervariasi (variable pitch) membantu memutus resonansi getaran mesin.' },
-      { id: 3, label: 'Sisi Potong Samping 90° (Peripheral Flute)', x: 440, y: 260, desc: 'Menyayat dinding tegak vertikal 90° dengan laju pembuangan tatal tinggi.', tip: 'Gunakan teknik trochoidal milling untuk memaksimalkan panjang kontak sisi samping.' },
-      { id: 4, label: 'Radius Sudut Pengaman (Corner Radius R1.5 mm)', x: 360, y: 312, desc: 'Sudut luar yang dibulatkan untuk mendistribusikan panas dan tegangan mekanik.', tip: 'Fitur inilah yang membuat pisau ini jauh lebih awet daripada Square End Mill berujung tajam.' },
-      { id: 5, label: 'Muka Ujung Datar Tengah (Flat Bottom Face)', x: 400, y: 326, desc: 'Bagian dasar rata yang menyayat lantai kantong datar dengan efisiensi tinggi.', tip: 'Mampu menghasilkan lantai kantong yang rata mulus dalam satu kali lintasan penyayatan.' }
+      { id: 1, label: 'Tangkai Silindris Pengikat (Tool Shank)', x: 400, y: 75, desc: 'Tangkai baja karbida/HSS berpresisi h6 untuk pencekaman collet atau Weldon.', tip: 'Gunakan pemegang sistem Weldon untuk mengunci pisau dari risiko tertarik keluar (pull-out).' },
+      { id: 2, label: 'Inti Pisau Tebal (Thick Core Web)', x: 375, y: 195, desc: 'Diameter inti dipertebal untuk menahan beban kejut pemotongan intermiten.', tip: 'Inti tebal meredam getaran lentur saat menyayat logam keras.' },
+      { id: 3, label: 'Profil Gerigi Bergelombang (Scalloped Teeth DIN 844)', x: 440, y: 250, desc: 'Gerigi melingkar bergelombang yang memotong tatal menjadi kepingan kecil pendek.', tip: 'Kepingan tatal pendek mudah disembur keluar oleh pendingin dan tidak menyumbat alur.' },
+      { id: 4, label: 'Sisi Potong Muka Ujung (End Cutting Teeth)', x: 400, y: 326, desc: 'Mata potong dasar untuk pemakanan vertikal bertahap.', tip: 'Tipe center-cutting memungkinkan penetrasi plunging bertahap ke dalam balok logam.' }
     ]
   },
   {
@@ -270,7 +269,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Dovetail Milling Cutter (Machine Slideway & Gib Slot)',
     category: 'Milling Pemandu Luncur Mesin',
     icon: '🕊️',
-    fotoReal: '/assets/images/machine_cutting_tools/dovetail_treatise.png',
+    fotoReal: '/assets/images/machine_cutting_tools/dovetail_cutter.jpg',
     isoStandard: 'DIN 1833 Standard Dovetail Cutters',
     materialBadan: 'Baja HSS-Co8 / Solid Tungsten Carbide',
     pelapis: 'TiAlN / Uncoated Polished Ground',
@@ -375,6 +374,117 @@ const MILLING_CUTTERS_CATALOG = [
       { id: 3, label: 'Alur Pasak Pengunci (Drive Keyway DIN 6885)', x: 400, y: 165, desc: 'Alur pasak pengunci transmisi torsi agar piringan tidak slip saat memotong logam.', tip: 'Jangan mengoperasikan gergaji tanpa pasak pengunci terpasang dengan pas.' },
       { id: 4, label: 'Gigi Potong Keliling Berjarak Rapat (Peripheral Teeth)', x: 535, y: 200, desc: 'Puluhan gigi baji pemotong cepat di sekeliling piringan.', tip: 'Gigi tipe A (rapat) untuk material tipis, tipe B (jarang) untuk material padat tebal.' },
       { id: 5, label: 'Sisi Bebas Samping (Side Clearance Grinding)', x: 475, y: 285, desc: 'Ketebalan bilah di dekat poros lebih tipis dibanding di gigi untuk mencegah jepitan.', tip: 'Jika bilah terjepit gesek, segera hentikan putaran spindel dan tambahkan oli pendingin.' }
+    ]
+  },
+  {
+    id: 'threadmill',
+    name: 'Thread Mill (Pisau Frais Pembuat Ulir)',
+    englishName: 'Thread Milling Cutter / Helical Thread Mill',
+    category: 'Pembuatan Ulir Presisi CNC',
+    icon: '🔩',
+    fotoReal: '/assets/images/machine_cutting_tools/thread_mill.jpg',
+    isoStandard: 'ISO 68-1 / DIN 13 (Profil Ulir Metrik 60°)',
+    materialBadan: 'Solid Sub-Micrograin Tungsten Carbide',
+    pelapis: 'TiAlN / AlCrN Violet Gelap (Sangat Tahan Panas 900°C)',
+    diaRange: 'M3 s.d. M36 (Single-Point / Multi-Rib Flute)',
+    fluteOrInserts: '3 – 4 Helical Thread Flutes',
+    leadAngle: 'Profil Ulir Metrik 60° Presisi',
+    deskripsi: 'Pisau frais karbida padat dengan profil ulir 60° di sepanjang alur heliksnya. Bergerak interpolasi heliks 3D (lingkaran X-Y sambil turun sumbu Z) untuk memotong ulir internal maupun eksternal.',
+    fungsiUtama: 'Membuat ulir dalam (internal thread) pada lubang buntu atau tembus benda kerja berharga mahal tanpa risiko tap patah di dalam lubang.',
+    keunggulan: 'Jika alat aus/patah, pisau thread mill berdiameter lebih kecil dari lubang sehingga dapat langsung diangkat keluar tanpa merusak benda kerja, berbeda dengan hand tap yang langsung macet total!',
+    tipsTeknis: 'Gunakan pemrograman CNC interpolasi heliks (G02/G03 dengan perintah X, Y, Z dan pitch I, J). Satu pisau dapat membuat ulir kanan (RH) maupun ulir kiri (LH).',
+    rekomendasiMaterial: ['P', 'M', 'K', 'N', 'S', 'H'],
+    params: { vc: '100 – 250 m/min', fz: '0.03 – 0.08 mm/gigi', ap: 'Sesuai Pitch Ulir', ae: 'Interpolasi Melingkar' },
+    kesalahanBengkel: 'Melupakan kompensasi radius alat (cutter radius compensation G41/G42) saat interpolasi heliks, menyebabkan profil ulir terlalu longgar atau terlalu sempit!',
+    simulasi: {
+      judul: 'Interpolasi Heliks Pembuatan Ulir Dalam (Helical Threading)',
+      aksi: 'Pisau berputar cepat mengitari dinding lubang silinder sambil bergerak turun sesuai pitch 1.75 mm per putaran.',
+      hasil: 'Membentuk alur ulir presisi tinggi M12x1.75 dengan toleransi kelas 6H tanpa sisa bram terjepit.'
+    },
+    blueprint: {
+      judul: 'Standar Profil Ulir Metrik ISO 68-1',
+      profil: 'Ulir Dalam Metrik M12 × Pitch 1.75 mm Kelas 6H',
+      toleransi: 'Toleransi Diameter Efektif Ulir: 6H (+0.16 / 0 mm)'
+    },
+    pins: [
+      { id: 1, label: 'Tangkai Silindris Pengikat (Tool Shank)', x: 400, y: 75, desc: 'Tangkai karbida silindris presisi h6 untuk hydraulic chuck.', tip: 'Runout tangkai wajib < 0.003 mm untuk menjaga akurasi pitch ulir.' },
+      { id: 2, label: 'Leher Bebas (Relieved Neck)', x: 400, y: 175, desc: 'Diameter leher lebih ramping dari lubang ulir untuk ruang gerak interpolasi.', tip: 'Pastikan kedalaman lubang mencukupi panjang leher pisau.' },
+      { id: 3, label: 'Alur Spiral Evakuasi Bram (Helical Flutes)', x: 375, y: 220, desc: 'Alur spiral yang mendorong bram halus keluar ke atas.', tip: 'Gunakan semprotan pendingin cairan atau udara bertekanan tinggi.' },
+      { id: 4, label: 'Gigi Profil Ulir Metrik 60° (60° Thread Ribs)', x: 440, y: 270, desc: 'Deretan profil gigi segitiga 60° yang serentak membentuk puncak dan lembah ulir.', tip: 'Periksa profil gigi secara visual sebelum proses threading massal.' }
+    ]
+  },
+  {
+    id: 'concavemill',
+    name: 'Concave Milling Cutter (Pisau Frais Cembung-Cekung)',
+    englishName: 'Concave Form Relieved Milling Cutter (Convex Radius Cutter)',
+    category: 'Pemesinan Bentuk Khusus (Form Milling)',
+    icon: '⭕',
+    fotoReal: '/assets/images/machine_cutting_tools/concave_mill.jpg',
+    isoStandard: 'DIN 856 Concave Milling Cutters',
+    materialBadan: 'Baja Paduan Perkakas HSS-Co5 / HSS-Co8 Tempa',
+    pelapis: 'TiN Emas / Uncoated Precision Ground',
+    diaRange: 'Radius R1.0 – R20 mm (Ø50 – Ø125 mm)',
+    fluteOrInserts: '10 – 18 Gigi Form Relieved',
+    leadAngle: 'Profil Cekung Setengah Lingkaran (Concave Arc)',
+    deskripsi: 'Pisau frais piringan yang memiliki profil gigi melengkung cekung ke dalam. Saat menyayat sisi luar benda kerja, pisau ini membentuk profil tepi cembung (convex half-round) yang halus sempurna.',
+    fungsiUtama: 'Membuat pembulatan tepi luar (convex full-radius) pada pelat logam, profil rel pemandu, sudu mekanis, dan komponen mesin bertepi bulat.',
+    keunggulan: 'Gigi tipe Form Relieved dapat diasah ulang berkali-kali pada bidang mukanya saja tanpa mengubah bentuk radius kelengkungan aslinya!',
+    tipsTeknis: 'Pasang pisau pada arbor horizontal dengan penahan ring spacer kokoh. Berikan cairan pendingin melimpah karena area kontak busur sayat cukup lebar.',
+    rekomendasiMaterial: ['P', 'M', 'K', 'N'],
+    params: { vc: '25 – 45 m/min', fz: '0.04 – 0.08 mm/gigi', ap: 'Sesuai Radius R', ae: 'Penyayatan Penuh Profil' },
+    kesalahanBengkel: 'Mengasah bidang samping lengkung profil saat menajamkan pisau tumpul. Ini akan merusak toleransi radius lengkung; pengasahan HANYA boleh pada muka gigi radial!',
+    simulasi: {
+      judul: 'Penyayatan Tepi Bulat Cembung (Convex Edge Milling)',
+      aksi: 'Pisau cekung R10 mm berputar pada arbor horizontal menyayat sudut tajam balok logam.',
+      hasil: 'Menghasilkan tepi memanjang berbentuk setengah lingkaran cembung R10 yang mulus merata.'
+    },
+    blueprint: {
+      judul: 'Standar Kelengkungan Tepi DIN 856',
+      profil: 'Tepi Luar Cembung Setengah Lingkaran Radius R10.0 mm',
+      toleransi: 'Toleransi Radius: R10.0 ± 0.03 mm'
+    },
+    pins: [
+      { id: 1, label: 'Lubang Poros Arbor Spindel (Center Arbor Bore)', x: 400, y: 190, desc: 'Lubang tengah pas presisi untuk pemasangan di poros arbor mesin frais.', tip: 'Bersihkan lubang dan poros arbor sebelum pemasangan agar tidak oleng.' },
+      { id: 2, label: 'Alur Pasak Penahan Torsi (Drive Keyway)', x: 400, y: 155, desc: 'Mengunci piringan dengan pasak poros agar tidak selip saat sayatan berat.', tip: 'Gunakan pasak standar DIN 6885 yang pas tanpa goyang.' },
+      { id: 3, label: 'Profil Gigi Cekung Radius (Concave Cutting Arc)', x: 480, y: 130, desc: 'Lekukan setengah bola cekung yang membentuk tepi cembung pada logam.', tip: 'Asah hanya muka depan gigi saat tumpul agar profil radius tidak berubah.' },
+      { id: 4, label: 'Sudut Bebas Form Relieved (Relief Angle)', x: 535, y: 220, desc: 'Punggung gigi dibentuk melengkung eksentrik untuk ruang bebas gesek.', tip: 'Menjaga pisau tidak panas akibat gesekan samping pada dinding balok.' }
+    ]
+  },
+  {
+    id: 'flycutter',
+    name: 'Fly Cutter (Pemotong Muka Spindel Tunggal)',
+    englishName: 'Fly Cutter (Single-Point Sweep Facing Tool)',
+    category: 'Finishing Permukaan Cermin Super Rata',
+    icon: '🪶',
+    fotoReal: '/assets/images/machine_cutting_tools/fly_cutter.jpg',
+    isoStandard: 'Toolroom Machinist Facing Standard',
+    materialBadan: 'Baja Paduan Karbon 40Cr Sepuh + Tool Bit Karbida',
+    pelapis: 'Black Oxide Badan + Insert Karbida Polished',
+    diaRange: 'Radius Sapuan Efektif Ø50 – Ø150 mm',
+    fluteOrInserts: '1 Single-Point Tool Bit / Insert Karbida',
+    leadAngle: 'Sudut Sayat Sapuan Melingkar Lebar',
+    deskripsi: 'Kepala pemotong yang memegang satu buah mata potong pahat bubut / insert karbida dengan radius sapuan yang dapat disetel. Berputar menyapu bidang permukaan dengan lintasan lingkaran lebar.',
+    fungsiUtama: 'Menghasilkan bidang permukaan logam yang sangat datar dengan tingkat kehalusan sangat tinggi (mirror finish / efek cermin) pada mesin frais manual maupun CNC.',
+    keunggulan: 'Hanya menggunakan satu mata potong sehingga tidak ada variasi ketinggian gigi (zero tooth height error), menghasilkan bidang yang bebas undakan mikro.',
+    tipsTeknis: 'Gunakan kecepatan potong Vc tinggi dengan kecepatan pemakanan feed rate sangat lambat (fine feed) dan sedikit pelumas minyak kelapa/parafin untuk aluminium.',
+    rekomendasiMaterial: ['P', 'M', 'K', 'N'],
+    params: { vc: '120 – 300 m/min', fz: '0.02 – 0.05 mm/rev', ap: '0.05 – 0.20 mm (Finishing)', ae: 'Sapuan Penuh Bidang' },
+    kesalahanBengkel: 'Mengambil kedalaman potong tebal (Ap > 0.5 mm) dengan fly cutter. Konstruksi satu mata potong tidak didesain untuk pengasaran berat; spindel dan batang pahat akan bergetar hebat!',
+    simulasi: {
+      judul: 'Penyayatan Sapuan Cermin Muka Datar (Mirror Sweep Facing)',
+      aksi: 'Satu mata pahat berputar menyapu lapisan tipis 0.1 mm pada balok aluminium mesin.',
+      hasil: 'Menghasilkan bidang permukaan super rata mengkilap cermin (mirror finish Ra 0.2).'
+    },
+    blueprint: {
+      judul: 'Standar Kerataan Sapuan Cermin',
+      profil: 'Bidang Atas Rata Cermin dengan Kekasaran Ra 0.2 µm',
+      toleransi: 'Kerataan Bidang (Surface Flatness): 0.005 mm / 100 mm'
+    },
+    pins: [
+      { id: 1, label: 'Tangkai Pengikat Poros (Tool Shank R8 / MT / ISO)', x: 400, y: 70, desc: 'Tangkai silindris atau tirus Morse/R8 yang langsung dipasang ke collet spindel.', tip: 'Pastikan tangkai terkunci kencang karena momen putar sapuan radius luar cukup besar.' },
+      { id: 2, label: 'Badan Blok Pemegang (Cutter Head Body)', x: 400, y: 170, desc: 'Blok silinder baja seimbang yang memiliki slot miring tempat menaruh batang pahat.', tip: 'Jaga kebersihan alur lubang baut pengunci dari bram halus.' },
+      { id: 3, label: 'Baut Pengunci Batang Pahat (Locking Set Screws)', x: 370, y: 235, desc: 'Deretan baut tanam soket hex yang mengunci batang pahat pada radius yang disetel.', tip: 'Kencangkan semua baut pengunci secara bertahap dan merata.' },
+      { id: 4, label: 'Pahat Sayat Tunggal (Single-Point Tool Bit)', x: 440, y: 285, desc: 'Mata potong karbida atau HSS tunggal yang menyayat logam dengan radius sapuan lebar.', tip: 'Gunakan radius hidung pahat rε = 0.8–1.2 mm yang diasah halus cermin.' }
     ]
   }
 ];
@@ -836,7 +946,27 @@ const MillingCutterCardVisual = ({ toolId, isSelected = false }) => {
         </g>
       )}
 
-      {/* 4. BULL NOSE / CORNER RADIUS */}
+      {/* 4. ROUGHING END MILL */}
+      {toolId === 'roughing' && (
+        <g>
+          {/* Shank */}
+          <rect x="85" y="8" width="30" height="36" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="24" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">Ø20 DIN 844 NR</text>
+          <text x="100" y="34" fill="#64748b" fontSize="6.5" fontWeight="800" textAnchor="middle">KNUCKLE HSS-Co8</text>
+          {/* Neck */}
+          <polygon points="85,44 115,44 113,50 87,50" fill="#475569" />
+          {/* Scalloped wavy teeth flute body */}
+          <rect x="85" y="50" width="30" height="40" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.5" />
+          {/* Knuckle wavy profile paths */}
+          <path d="M 85,55 Q 92,58 100,55 Q 108,52 115,55" fill="none" stroke="#f59e0b" strokeWidth="2.2" />
+          <path d="M 85,65 Q 92,68 100,65 Q 108,62 115,65" fill="none" stroke="#f59e0b" strokeWidth="2.2" />
+          <path d="M 85,75 Q 92,78 100,75 Q 108,72 115,75" fill="none" stroke="#f59e0b" strokeWidth="2.2" />
+          <path d="M 85,85 Q 92,88 100,85 Q 108,82 115,85" fill="none" stroke="#f59e0b" strokeWidth="2.2" />
+          <text x="100" y="103" fill="#ea580c" fontSize="9" fontWeight="900" textAnchor="middle">ROUGHING END MILL (KASAR)</text>
+        </g>
+      )}
+
+      {/* BULL NOSE / CORNER RADIUS (LEGACY / ALIAS) */}
       {toolId === 'bullnose' && (
         <g>
           {/* Shank */}
@@ -925,6 +1055,64 @@ const MillingCutterCardVisual = ({ toolId, isSelected = false }) => {
           {/* Thin blade kerf label */}
           <text x="100" y="30" fill="#38bdf8" fontSize="7.5" fontWeight="800" textAnchor="middle">Tebal: 1.5–3 mm</text>
           <text x="100" y="103" fill="#64748b" fontSize="9" fontWeight="900" textAnchor="middle">SLITTING SAW (GERGAJI FRAIS)</text>
+        </g>
+      )}
+
+      {/* 9. THREAD MILL */}
+      {toolId === 'threadmill' && (
+        <g>
+          {/* Shank */}
+          <rect x="86" y="8" width="28" height="34" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          <text x="100" y="24" fill="#475569" fontSize="7.5" fontWeight="900" textAnchor="middle">M12×1.75 ISO</text>
+          {/* Neck */}
+          <rect x="91" y="42" width="18" height="14" fill="#64748b" stroke="#334155" strokeWidth="1" />
+          {/* Thread teeth body */}
+          <rect x="87" y="56" width="26" height="34" fill={`url(#cardTiAlNViolet_${toolId})`} stroke="#1e1b4b" strokeWidth="1.2" />
+          {/* Multi-rib 60° thread teeth */}
+          <path d="M 87,60 L 83,63 L 87,66 L 83,69 L 87,72 L 83,75 L 87,78 L 83,81 L 87,84" fill="none" stroke="#38bdf8" strokeWidth="2" />
+          <path d="M 113,60 L 117,63 L 113,66 L 117,69 L 113,72 L 117,75 L 113,78 L 117,81 L 113,84" fill="none" stroke="#38bdf8" strokeWidth="2" />
+          <line x1="87" y1="63" x2="113" y2="63" stroke="#fef08a" strokeWidth="1" strokeDasharray="3 2" />
+          <line x1="87" y1="75" x2="113" y2="75" stroke="#fef08a" strokeWidth="1" strokeDasharray="3 2" />
+          <text x="100" y="103" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">THREAD MILL (PEMBUAT ULIR)</text>
+        </g>
+      )}
+
+      {/* 10. CONCAVE MILL */}
+      {toolId === 'concavemill' && (
+        <g>
+          {/* Disc body */}
+          <circle cx="100" cy="50" r="34" fill={`url(#cardGunmetal_${toolId})`} stroke="#475569" strokeWidth="1.2" />
+          <circle cx="100" cy="50" r="22" stroke="#334155" strokeWidth="1" fill="none" />
+          <circle cx="100" cy="50" r="9" fill="#0f172a" />
+          <rect x="98.5" y="38" width="3" height="7" fill="#0f172a" />
+          {/* Concave cutout teeth on perimeter */}
+          <path d="M 85,18 A 8 8 0 0 0 97,18" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <path d="M 103,18 A 8 8 0 0 0 115,18" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <path d="M 66,50 A 8 8 0 0 0 66,62" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <path d="M 134,50 A 8 8 0 0 1 134,62" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+          <text x="100" y="32" fill="#38bdf8" fontSize="7.5" fontWeight="900" textAnchor="middle">R10 DIN 856</text>
+          <text x="100" y="103" fill="#0369a1" fontSize="9" fontWeight="900" textAnchor="middle">CONCAVE MILL (CEMBUNG-CEKUNG)</text>
+        </g>
+      )}
+
+      {/* 11. FLY CUTTER */}
+      {toolId === 'flycutter' && (
+        <g>
+          {/* Spindle arbor shank */}
+          <rect x="88" y="8" width="24" height="26" rx="2" fill={`url(#cardSteelShank_${toolId})`} stroke="#334155" strokeWidth="1.2" />
+          {/* Horizontal cross block */}
+          <rect x="55" y="34" width="90" height="22" rx="3" fill={`url(#cardGunmetal_${toolId})`} stroke="#0f172a" strokeWidth="1.5" />
+          {/* Clamping set screws */}
+          <circle cx="80" cy="45" r="3" fill="#475569" stroke="#94a3b8" strokeWidth="0.8" />
+          <circle cx="120" cy="45" r="3" fill="#475569" stroke="#94a3b8" strokeWidth="0.8" />
+          {/* Downward tool bit holder arm */}
+          <polygon points="128,45 142,45 138,82 130,82" fill="#64748b" stroke="#334155" strokeWidth="1" />
+          {/* Single carbide tool bit */}
+          <polygon points="130,82 142,82 146,90 128,90" fill={`url(#cardTiNGold_${toolId})`} stroke="#ca8a04" strokeWidth="1" />
+          {/* Sweep radius arc */}
+          <path d="M 65,88 A 60 20 0 0 0 146,88" fill="none" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 2" />
+          <text x="100" y="76" fill="#38bdf8" fontSize="7.5" fontWeight="800" textAnchor="middle">Sweep Ø100 mm</text>
+          <text x="100" y="103" fill="#0284c7" fontSize="9" fontWeight="900" textAnchor="middle">FLY CUTTER (FACING CERMIN)</text>
         </g>
       )}
     </svg>
@@ -1120,7 +1308,32 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
               </g>
             )}
 
-            {/* 4. BULL NOSE / CORNER RADIUS ANATOMI */}
+            {/* 4. ROUGHING END MILL ANATOMI */}
+            {tool.id === 'roughing' && (
+              <g>
+                <rect x="360" y="30" width="80" height="135" rx="4" fill="url(#visSteelShank)" stroke="#334155" strokeWidth="2" />
+                <text x="400" y="85" fill="#475569" fontSize="11" fontWeight="900" textAnchor="middle" letterSpacing="1">
+                  Ø20 DIN 844 NR
+                </text>
+                <text x="400" y="105" fill="#64748b" fontSize="9" fontWeight="800" textAnchor="middle">
+                  KNUCKLE FORM ROUGHER
+                </text>
+                <polygon points="360,165 440,165 435,185 365,185" fill="#475569" />
+                <rect x="360" y="185" width="80" height="142" rx="1" fill="url(#visTiAlNViolet)" stroke="#1e1b4b" strokeWidth="2" />
+                {/* Wavy knuckle serrations along flutes */}
+                {[200, 225, 250, 275, 300].map((yVal, i) => (
+                  <path key={i} d={`M 360,${yVal} Q 380,${yVal + 12} 400,${yVal} Q 420,${yVal - 12} 440,${yVal}`} fill="none" stroke="#f59e0b" strokeWidth="3.5" />
+                ))}
+                <path d="M 360,200 Q 400,230 440,260" fill="none" stroke="#a5b4fc" strokeWidth="2" strokeDasharray="4 3" />
+                <path d="M 360,250 Q 400,280 440,310" fill="none" stroke="#a5b4fc" strokeWidth="2" strokeDasharray="4 3" />
+                <line x1="360" y1="327" x2="440" y2="327" stroke="#e0e7ff" strokeWidth="3" />
+                <text x="400" y="350" fill="#ea580c" fontSize="11" fontWeight="900" textAnchor="middle">
+                  Profil Knuckle Scalloped DIN 844 NR
+                </text>
+              </g>
+            )}
+
+            {/* BULL NOSE / CORNER RADIUS ANATOMI (LEGACY / ALIAS) */}
             {tool.id === 'bullnose' && (
               <g>
                 {/* Tangkai Silindris */}
@@ -1254,6 +1467,72 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
               </g>
             )}
 
+            {/* 9. THREAD MILL ANATOMI */}
+            {tool.id === 'threadmill' && (
+              <g>
+                <rect x="365" y="30" width="70" height="120" rx="4" fill="url(#visSteelShank)" stroke="#334155" strokeWidth="2" />
+                <text x="400" y="85" fill="#475569" fontSize="11" fontWeight="900" textAnchor="middle">
+                  M12 × 1.75 ISO THREAD
+                </text>
+                <rect x="382" y="150" width="36" height="50" fill="url(#visSteelShank)" stroke="#334155" strokeWidth="1.5" />
+                <rect x="370" y="200" width="60" height="120" fill="url(#visTiAlNViolet)" stroke="#1e1b4b" strokeWidth="2" />
+                {/* 60° thread teeth rows */}
+                {[210, 228, 246, 264, 282, 300].map((ty, idx) => (
+                  <g key={idx}>
+                    <polygon points={`370,${ty} 355,${ty + 9} 370,${ty + 18}`} fill="#38bdf8" stroke="#0284c7" strokeWidth="1" />
+                    <polygon points={`430,${ty} 445,${ty + 9} 430,${ty + 18}`} fill="#38bdf8" stroke="#0284c7" strokeWidth="1" />
+                    <line x1="370" y1={ty + 9} x2="430" y2={ty + 9} stroke="#a5b4fc" strokeWidth="1" strokeDasharray="3 3" />
+                  </g>
+                ))}
+                <text x="400" y="345" fill="#0284c7" fontSize="11" fontWeight="900" textAnchor="middle">
+                  Multi-Rib Helical Thread Flutes 60°
+                </text>
+              </g>
+            )}
+
+            {/* 10. CONCAVE MILL ANATOMI */}
+            {tool.id === 'concavemill' && (
+              <g>
+                <circle cx="400" cy="190" r="130" fill="url(#visGunmetal)" stroke="#334155" strokeWidth="2" />
+                <circle cx="400" cy="190" r="85" fill="none" stroke="#475569" strokeWidth="1.5" strokeDasharray="6 4" />
+                <circle cx="400" cy="190" r="35" fill="#0f172a" stroke="#cbd5e1" strokeWidth="2" />
+                <rect x="393" y="150" width="14" height="15" fill="#0f172a" stroke="#cbd5e1" strokeWidth="1.5" />
+                {/* Concave edge profile around rim */}
+                <path d="M 370,60 A 30 30 0 0 1 430,60" fill="none" stroke="#f59e0b" strokeWidth="6" />
+                <path d="M 530,160 A 30 30 0 0 1 530,220" fill="none" stroke="#f59e0b" strokeWidth="6" />
+                <path d="M 270,160 A 30 30 0 0 0 270,220" fill="none" stroke="#f59e0b" strokeWidth="6" />
+                <text x="400" y="195" fill="#cbd5e1" fontSize="11" fontWeight="900" textAnchor="middle">
+                  DIN 856 R10
+                </text>
+                <text x="400" y="345" fill="#f59e0b" fontSize="11" fontWeight="900" textAnchor="middle">
+                  Profil Cekung Form-Relieved (Convex-Producing Arc)
+                </text>
+              </g>
+            )}
+
+            {/* 11. FLY CUTTER ANATOMI */}
+            {tool.id === 'flycutter' && (
+              <g>
+                <rect x="365" y="30" width="70" height="90" rx="4" fill="url(#visSteelShank)" stroke="#334155" strokeWidth="2" />
+                <text x="400" y="75" fill="#475569" fontSize="11" fontWeight="900" textAnchor="middle">
+                  SPINDLE ARBOR
+                </text>
+                {/* Large horizontal fly cutter block */}
+                <rect x="250" y="120" width="300" height="60" rx="6" fill="url(#visGunmetal)" stroke="#0f172a" strokeWidth="2.5" />
+                <circle cx="330" cy="150" r="8" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
+                <circle cx="470" cy="150" r="8" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
+                {/* Single tool bit arm extension */}
+                <polygon points="500,150 540,150 525,270 495,270" fill="url(#visSteelShank)" stroke="#334155" strokeWidth="1.5" />
+                {/* Single indexable carbide insert */}
+                <polygon points="495,270 525,270 535,295 485,295" fill="url(#visTiNGold)" stroke="#ca8a04" strokeWidth="2" />
+                {/* Sweep arc */}
+                <path d="M 270,295 A 130 35 0 0 0 530,295" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 3" />
+                <text x="400" y="335" fill="#0284c7" fontSize="12" fontWeight="900" textAnchor="middle">
+                  Radius Sapuan Facing: Ø 120 mm Single-Point Bit
+                </text>
+              </g>
+            )}
+
             {/* INTERACTIVE ANATOMY CALLOUT PINS */}
             {tool.pins.map(pin => {
               const isPinActive = pin.id === activePinId;
@@ -1365,6 +1644,28 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
               </g>
             )}
 
+            {tool.id === 'roughing' && (
+              <g>
+                {/* Deep roughing slot cut */}
+                <polygon points="180,210 360,210 360,310 180,310" fill="url(#visMachinedFace)" />
+                <line x1="360" y1="210" x2="360" y2="310" stroke="#ef4444" strokeWidth="2.5" />
+                {/* Scalloped wavy bottom & wall */}
+                <path d="M 180,310 Q 210,305 240,310 Q 270,305 300,310 Q 330,305 360,310" fill="none" stroke="#f59e0b" strokeWidth="3" />
+                {/* Roughing cutter active */}
+                <rect x="360" y="70" width="80" height="240" fill="url(#visTiAlNViolet)" stroke="#1e1b4b" strokeWidth="2" />
+                {[90, 120, 150, 180, 210, 240, 270].map((yy, i) => (
+                  <path key={i} d={`M 360,${yy} Q 400,${yy + 15} 440,${yy}`} fill="none" stroke="#f59e0b" strokeWidth="3" />
+                ))}
+                {/* Broken curlicue chips flying */}
+                <circle cx="340" cy="270" r="4" fill="#f59e0b" />
+                <circle cx="330" cy="250" r="3" fill="#ea580c" />
+                <circle cx="320" cy="280" r="3.5" fill="#fef08a" />
+                <circle cx="310" cy="230" r="4" fill="#f59e0b" />
+                <text x="270" y="270" fill="#ea580c" fontSize="11" fontWeight="900">Tatal Pendek Terpecah (No Clogging)</text>
+                <text x="370" y="200" fill="#ef4444" fontSize="11" fontWeight="900">ap = 20 mm (Heavy MRR)</text>
+              </g>
+            )}
+
             {tool.id === 'bullnose' && (
               <g>
                 {/* Kantong dengan Fillet R1.5 */}
@@ -1425,6 +1726,49 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                 <circle cx="400" cy="180" r="130" fill="url(#visGunmetal)" opacity="0.9" />
                 <circle cx="400" cy="180" r="130" stroke="#f59e0b" strokeWidth="4" strokeDasharray="4 4" fill="none" />
                 <text x="430" y="310" fill="#38bdf8" fontSize="11" fontWeight="900">Celah Tembus 1.5 mm</text>
+              </g>
+            )}
+
+            {tool.id === 'threadmill' && (
+              <g>
+                {/* Pre-drilled hole with threaded walls */}
+                <rect x="330" y="210" width="140" height="120" fill="url(#visMachinedFace)" stroke="#38bdf8" strokeWidth="1.5" />
+                {[220, 238, 256, 274, 292, 310].map((gy, i) => (
+                  <g key={i}>
+                    <line x1="330" y1={gy} x2="340" y2={gy + 6} stroke="#ef4444" strokeWidth="2" />
+                    <line x1="470" y1={gy} x2="460" y2={gy + 6} stroke="#ef4444" strokeWidth="2" />
+                  </g>
+                ))}
+                {/* Thread mill interpolating */}
+                <rect x="360" y="110" width="60" height="190" fill="url(#visTiAlNViolet)" stroke="#1e1b4b" strokeWidth="2" />
+                {/* Helical orbit circle */}
+                <ellipse cx="400" cy="210" rx="35" ry="12" fill="none" stroke="#0284c7" strokeWidth="2" strokeDasharray="4 3" />
+                <text x="400" y="195" fill="#0284c7" fontSize="11" fontWeight="900" textAnchor="middle">Interpolasi Heliks 3D (G02/G03)</text>
+              </g>
+            )}
+
+            {tool.id === 'concavemill' && (
+              <g>
+                {/* Rounded edge of workpiece */}
+                <path d="M 280,210 Q 340,210 340,250 L 340,350 L 80,350 L 80,210 Z" fill="url(#visMachinedFace)" stroke="#38bdf8" strokeWidth="2" />
+                {/* Concave cutter contacting edge */}
+                <circle cx="340" cy="180" r="90" fill="url(#visGunmetal)" opacity="0.9" />
+                <path d="M 320,250 A 20 20 0 0 1 360,250" fill="none" stroke="#f59e0b" strokeWidth="4" />
+                <text x="260" y="240" fill="#0284c7" fontSize="11" fontWeight="900">Tepi Cembung R10 mm</text>
+              </g>
+            )}
+
+            {tool.id === 'flycutter' && (
+              <g>
+                {/* Super flat mirrored top face */}
+                <rect x="80" y="215" width="480" height="135" fill="url(#visMachinedFace)" />
+                <line x1="80" y1="215" x2="560" y2="215" stroke="#38bdf8" strokeWidth="3" />
+                <text x="240" y="245" fill="#0369a1" fontSize="11" fontWeight="900">Sapuan Cermin Super Rata (Ra 0.2 µm)</text>
+                {/* Fly cutter sweep */}
+                <rect x="350" y="70" width="160" height="40" fill="url(#visGunmetal)" stroke="#0f172a" strokeWidth="2" />
+                <polygon points="480,110 510,110 500,215 480,215" fill="url(#visSteelShank)" />
+                <polygon points="480,210 505,210 510,225 475,225" fill="url(#visTiNGold)" stroke="#ca8a04" strokeWidth="2" />
+                <ellipse cx="430" cy="215" rx="120" ry="25" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 3" />
               </g>
             )}
 
@@ -1502,6 +1846,19 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                 </g>
               )}
 
+              {tool.id === 'roughing' && (
+                <g>
+                  <rect x="180" y="40" width="280" height="100" fill="#0b1329" stroke="#38bdf8" strokeWidth="2.5" />
+                  <path d="M 180,140 Q 210,135 240,140 Q 270,135 300,140 Q 330,135 360,140 Q 390,135 420,140 Q 440,135 460,140" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+                  <text x="320" y="90" fill="#38bdf8" fontSize="13" fontWeight="900" textAnchor="middle">
+                    ALUR KASAR DENGAN SISA STOK FINISHING
+                  </text>
+                  <text x="320" y="170" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
+                    Finishing Allowance: 0.8 mm disisakan untuk Square End Mill
+                  </text>
+                </g>
+              )}
+
               {tool.id === 'bullnose' && (
                 <g>
                   <path d="M 200,40 L 200,120 Q 200,135 215,135 L 465,135 Q 480,135 480,120 L 480,40 Z" fill="#0b1329" stroke="#38bdf8" strokeWidth="2.5" />
@@ -1561,6 +1918,48 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                   </text>
                   <text x="440" y="115" fill="#fef08a" fontSize="12" fontWeight="800">
                     Lebar Celah: 1.5 mm (+0.05 / -0.02)
+                  </text>
+                </g>
+              )}
+
+              {tool.id === 'threadmill' && (
+                <g>
+                  <rect x="220" y="40" width="200" height="140" fill="#0b1329" stroke="#38bdf8" strokeWidth="2" />
+                  {[50, 70, 90, 110, 130, 150].map((py, idx) => (
+                    <g key={idx}>
+                      <polygon points={`220,${py} 210,${py + 7} 220,${py + 14}`} fill="#38bdf8" />
+                      <polygon points={`420,${py} 430,${py + 7} 420,${py + 14}`} fill="#38bdf8" />
+                    </g>
+                  ))}
+                  <text x="320" y="95" fill="#38bdf8" fontSize="13" fontWeight="900" textAnchor="middle">
+                    PROFIL ULIR DALAM METRIK M12 × 1.75
+                  </text>
+                  <text x="320" y="165" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
+                    Standar ISO 68-1 • Kelas Toleransi 6H • Sudut Puncak 60°
+                  </text>
+                </g>
+              )}
+
+              {tool.id === 'concavemill' && (
+                <g>
+                  <path d="M 40,40 L 220,40 A 60 60 0 0 1 220,160 L 40,160 Z" fill="#0b1329" stroke="#38bdf8" strokeWidth="2.5" />
+                  <text x="340" y="95" fill="#38bdf8" fontSize="13" fontWeight="900" textAnchor="middle">
+                    TEPI LUAR CEMBUNG FULL-RADIUS (CONVEX R10 mm)
+                  </text>
+                  <text x="340" y="150" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
+                    Standar DIN 856 • Radius R10.0 ± 0.03 mm Mulus Sempurna
+                  </text>
+                </g>
+              )}
+
+              {tool.id === 'flycutter' && (
+                <g>
+                  <rect x="40" y="40" width="600" height="25" fill="#0b1329" stroke="#38bdf8" strokeWidth="2.5" />
+                  <text x="340" y="58" fill="#38bdf8" fontSize="14" fontWeight="900" textAnchor="middle">
+                    BIDANG ATAS SAPUAN CERMIN (MIRROR FACING FINISH)
+                  </text>
+                  <text x="340" y="110" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
+                    Kekasaran Permukaan: Ra 0.2 µm • Kerataan Total: ⏥ 0.005 mm
                   </text>
                 </g>
               )}
@@ -2639,7 +3038,7 @@ const UniversalToolCardVisual = React.memo(({
             flex: '1 1 50%',
             height: '100%',
             position: 'relative',
-            background: '#020617',
+            background: type === 'milling' ? '#ffffff' : '#020617',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -2647,8 +3046,8 @@ const UniversalToolCardVisual = React.memo(({
           }}>
             <span style={{
               position: 'absolute', top: '4px', right: '6px',
-              fontSize: '0.55rem', fontWeight: 900, color: '#4ade80',
-              background: 'rgba(34, 197, 94, 0.25)', padding: '1px 5px',
+              fontSize: '0.55rem', fontWeight: 900, color: type === 'milling' ? '#15803d' : '#4ade80',
+              background: type === 'milling' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.25)', padding: '1px 5px',
               borderRadius: '3px', letterSpacing: '0.5px', zIndex: 2
             }}>
               📷 FOTO ASLI
@@ -2664,7 +3063,7 @@ const UniversalToolCardVisual = React.memo(({
                 objectFit: 'contain',
                 padding: '4px',
                 display: 'block',
-                filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.92)'
+                filter: isSelected ? 'brightness(1.05) saturate(1.1)' : 'brightness(1)'
               }}
               onError={(e) => { e.target.style.display = 'none'; }}
             />
@@ -2690,11 +3089,19 @@ const UniversalToolCardVisual = React.memo(({
       )}
 
       {isPhoto && (
-        <div style={{ width: '100%', height: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: type === 'milling' ? '#ffffff' : '#090d16'
+        }}>
           <span style={{
             position: 'absolute', top: '6px', left: '8px',
-            fontSize: '0.58rem', fontWeight: 900, color: '#4ade80',
-            background: 'rgba(34, 197, 94, 0.25)', padding: '2px 6px',
+            fontSize: '0.58rem', fontWeight: 900, color: type === 'milling' ? '#15803d' : '#4ade80',
+            background: type === 'milling' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.25)', padding: '2px 6px',
             borderRadius: '4px', zIndex: 2
           }}>
             📷 FOTO ASLI BENGKEL
@@ -2710,7 +3117,7 @@ const UniversalToolCardVisual = React.memo(({
               objectFit: 'contain',
               padding: '6px',
               display: 'block',
-              filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.92)'
+              filter: isSelected ? 'brightness(1.05) saturate(1.1)' : 'brightness(1)'
             }}
             onError={(e) => { e.target.style.display = 'none'; }}
           />
@@ -2765,7 +3172,7 @@ const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
     }}>
       {/* Frame Foto Asli Nyata */}
       <div style={{
-        background: '#020617',
+        background: category === 'milling' ? '#ffffff' : '#020617',
         borderRadius: '12px',
         border: '2px solid rgba(255, 255, 255, 0.12)',
         overflow: 'hidden',
@@ -2774,7 +3181,7 @@ const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
-        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)'
+        boxShadow: category === 'milling' ? 'inset 0 0 10px rgba(0,0,0,0.06)' : 'inset 0 0 20px rgba(0,0,0,0.8)'
       }}>
         <img
           src={tool.fotoReal}
@@ -2871,6 +3278,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
   const [activeTab, setActiveTab] = useState(initialTab || 'milling'); // 'milling', 'pahat', 'insert', 'hole-thread', 'kalkulator', 'quiz'
   const [selectedIsoCat, setSelectedIsoCat] = useState('P');
   const [selectedMillingId, setSelectedMillingId] = useState('facemill');
+  const [showMillingRefModal, setShowMillingRefModal] = useState(false);
 
   useEffect(() => {
     if (initialTab) {
@@ -3747,7 +4155,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           <div className="dashboard-card" style={{ padding: '24px', background: 'linear-gradient(135deg, #0369a1, #0c4a6e)', color: '#ffffff' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
               <span style={{ background: '#38bdf8', color: '#082f49', fontSize: '0.72rem', fontWeight: 900, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
-                KATALOG 8 PISAU FRAIS MESIN (MILLING CUTTERS)
+                KATALOG 11 PISAU FRAIS MESIN STANDAR INDUSTRI (ISO &amp; DIN)
               </span>
               <span style={{ background: 'rgba(255,255,255,0.18)', color: '#e0f2fe', fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '4px' }}>
                 ILUSTRASI TEKNIK REAL-TIME &amp; CAD CROSS-SECTION
@@ -3757,8 +4165,86 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               🌀 Jenis-Jenis Alat Potong Pekerjaan Frais (Milling)
             </h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#e0f2fe', lineHeight: 1.5, maxWidth: '850px' }}>
-              Mesin frais menggunakan alat potong multi-gigi yang berputar menyayat benda kerja yang bergerak translasi. Di bawah ini ditampilkan visual fisik nyata, geometri heliks, sudut potong, simulasi sayatan ke logam, dan blueprint penampang hasil pemesinannya.
+              Mesin frais menggunakan alat potong multi-gigi yang berputar menyayat benda kerja yang bergerak translasi. Di bawah ini ditampilkan visual fisik nyata, geometri heliks, sudut potong, simulasi sayatan ke logam, dan blueprint penampang hasil pemesinannya sesuai standar bengkel presisi.
             </p>
+          </div>
+
+          {/* Reference Poster Banner (Want.net / EngineeringLearn Reference) */}
+          <div style={{
+            background: 'linear-gradient(90deg, #0f172a 0%, #1e293b 100%)',
+            border: '1.5px solid #38bdf8',
+            borderRadius: '12px',
+            padding: '14px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '14px',
+            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.15)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  background: '#ffffff',
+                  border: '1.5px solid #38bdf8',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}
+                onClick={() => { sound.playClick(); setShowMillingRefModal(true); }}
+                title="Klik untuk memperbesar bagan referensi teknik"
+              >
+                <img
+                  src="/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg"
+                  alt="Poster Referensi Alat Frais"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px', flexWrap: 'wrap' }}>
+                  <span style={{ background: '#0284c7', color: '#ffffff', fontSize: '0.68rem', fontWeight: 900, padding: '2px 6px', borderRadius: '4px' }}>
+                    POSTER REFERENSI RESMI
+                  </span>
+                  <span style={{ color: '#38bdf8', fontSize: '0.78rem', fontWeight: 800 }}>
+                    Standard Types of Milling Cutters Chart
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.92rem', fontWeight: 900, color: '#ffffff' }}>
+                  Bagan Standar Industri Visual Asli: 9 Jenis Pisau Frais Terpopuler
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#94a3b8' }}>
+                  Berdasarkan standar manufaktur presisi want.net &amp; engineeringlearn.com
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => { sound.playClick(); setShowMillingRefModal(true); }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'linear-gradient(135deg, #0284c7, #0369a1)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '9px 16px',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(2, 132, 199, 0.35)',
+                transition: 'all 0.15s'
+              }}
+            >
+              🔍 Buka Poster Bagan Referensi Lengkap
+            </button>
           </div>
 
           {/* Toolbar Pengendali Tampilan Visual Kartu */}
@@ -5361,6 +5847,148 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             )}
           </div>
 
+        </div>
+      )}
+
+      {/* MODAL POSTER BAGAN REFERENSI JENIS PISAU FRAIS */}
+      {showMillingRefModal && (
+        <div
+          onClick={() => setShowMillingRefModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(2, 6, 23, 0.85)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 99999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#0f172a',
+              borderRadius: '16px',
+              border: '2px solid #38bdf8',
+              maxWidth: '980px',
+              width: '100%',
+              maxHeight: '92vh',
+              overflowY: 'auto',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75)',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            {/* Header Modal */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '16px 20px',
+              borderBottom: '1px solid #334155',
+              background: '#1e293b',
+              position: 'sticky',
+              top: 0,
+              zIndex: 10
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.4rem' }}>📖</span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>
+                    Bagan Standar Industri: Types of Milling Cutters
+                  </h3>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '0.74rem', color: '#94a3b8' }}>
+                    Dokumentasi Referensi Pemesinan Presisi Bengkel Mesin Perkakas (Want.net / EngineeringLearn)
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowMillingRefModal(false)}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: 'none',
+                  color: '#ffffff',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  fontSize: '1rem',
+                  fontWeight: 900,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Poster Gambar Asli */}
+            <div style={{
+              padding: '16px',
+              background: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <img
+                src="/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg"
+                alt="Standard Types of Milling Cutters Poster Reference"
+                loading="lazy"
+                decoding="async"
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  borderRadius: '8px',
+                  display: 'block',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.12)'
+                }}
+              />
+            </div>
+
+            {/* Footer Penjelasan & Quick Guide */}
+            <div style={{ padding: '16px 20px', background: '#0f172a', borderTop: '1px solid #334155' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', marginBottom: '8px' }}>
+                ⚡ 9 Jenis Pisau Frais Standar pada Bagan Referensi:
+              </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '8px',
+                fontSize: '0.75rem',
+                color: '#cbd5e1'
+              }}>
+                <div>1. <strong>Face Milling Cutter:</strong> Facing muka rata insert</div>
+                <div>2. <strong>Roughing End Mill:</strong> Pengasaran gerigi wavy</div>
+                <div>3. <strong>End Mill Cutter:</strong> Kontur, alur &amp; dinding 90°</div>
+                <div>4. <strong>Ball Cutter:</strong> Permukaan kurva 3D &amp; cetakan</div>
+                <div>5. <strong>Side Milling Cutter:</strong> Celah sempit &amp; pembelahan</div>
+                <div>6. <strong>Fly Cutter:</strong> Sapuan facing cermin ultra-rata</div>
+                <div>7. <strong>T-Slot Cutter:</strong> Alur kepala baut T mesin</div>
+                <div>8. <strong>Thread Mill Cutter:</strong> Interpolasi ulir CNC</div>
+                <div>9. <strong>Concave Milling Cutter:</strong> Tepi lengkung cembung</div>
+              </div>
+              <div style={{ textAlign: 'right', marginTop: '12px' }}>
+                <button
+                  onClick={() => setShowMillingRefModal(false)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '8px',
+                    background: '#0284c7',
+                    border: 'none',
+                    color: '#ffffff',
+                    fontWeight: 800,
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Tutup Poster
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

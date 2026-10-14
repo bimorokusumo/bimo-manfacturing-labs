@@ -194,7 +194,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Corner Radius End Mill / Bull Nose (Toroidal Cutter)',
     category: 'Milling Pengasaran Berat & Fillet',
     icon: '🛡️',
-    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/milling_cutters_samples.jpg',
     isoStandard: 'DIN 6527 Standard Corner Radius',
     materialBadan: 'Solid Sub-Micrograin Tungsten Carbide',
     pelapis: 'TiAlN / AlCrN Berlapis Multi-Layer (Sangat Tahan Aus Abrasif)',
@@ -232,7 +232,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'T-Slot Milling Cutter (Woodruff & ISO T-Nut Slotter)',
     category: 'Milling Alur Khusus Mesin',
     icon: '⚓',
-    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/t_slot_cutter.jpg',
     isoStandard: 'DIN 851 / ISO 299 (Standar Meja Mesin Perkakas)',
     materialBadan: 'Baja Paduan HSS-E (Cobalt 8%) / Sisipan Karbida Brazed',
     pelapis: 'TiN (Titanium Nitride Kuning Mengkilap) Mencegah Keausan Gesek',
@@ -270,7 +270,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Dovetail Milling Cutter (Machine Slideway & Gib Slot)',
     category: 'Milling Pemandu Luncur Mesin',
     icon: '🕊️',
-    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/dovetail_treatise.png',
     isoStandard: 'DIN 1833 Standard Dovetail Cutters',
     materialBadan: 'Baja HSS-Co8 / Solid Tungsten Carbide',
     pelapis: 'TiAlN / Uncoated Polished Ground',
@@ -308,7 +308,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Chamfering End Mill (Edge Beveling & Deburring 45°/90°)',
     category: 'Finishing & Deburring Tepi',
     icon: '📐',
-    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/chamfer_mill.jpg',
     isoStandard: 'DIN 6527 Chamfer Standard (Sudut Konis 45° / 60°)',
     materialBadan: 'Solid Tungsten Carbide / Sisipan Indexable Insert',
     pelapis: 'TiAlN / AlTiN Ungu-Hitam (Sangat Tajam & Tahan Suhu Tinggi)',
@@ -345,7 +345,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Metal Slitting Saw / Circular Slotting Saw (Thin Disc Cutter)',
     category: 'Pemotongan Celah Tipis & Pembelahan',
     icon: '💿',
-    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/slitting_saw.jpg',
     isoStandard: 'DIN 1837 A (Gigi Halus) / DIN 1838 B (Gigi Kasar)',
     materialBadan: 'Baja Perkakas HSS-DMo5 / HSS-Co5 Tempa Presisi',
     pelapis: 'VAPO (Steam Tempered Hitam Anti-Gesek) / TiN Emas',
@@ -392,7 +392,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Memanjang Luar (Longitudinal)',
     leadAngle: '75° / 45°',
     color: '#2563eb',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_rata_kanan.jpg',
     deskripsi: 'Pahat bubut luar utama yang menyayat dari arah kanan ke kiri (mendekati kepala tetap / cekam). Menghasilkan diameter silinder yang rata, lurus, dan berdimensi presisi tinggi sepanjang poros kerja.',
     aplikasi: 'Pembubutan muka luar silinder (roughing & finishing poros memanjang, pembuatan diameter bertingkat).',
     keunggulan: 'Sisi potong utama di sebelah kiri mengalirkan tatal menjauhi permukaan hasil sayatan sehingga benda tetap mulus.',
@@ -414,7 +414,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Memanjang Mundur',
     leadAngle: '75° / 45° Kiri',
     color: '#ea580c',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_rata_kiri.jpg',
     deskripsi: 'Pahat bubut dengan sisi potong di sebelah kanan, menyayat dari arah kiri ke kanan (menjauhi cekam spindel). Digunakan untuk membubut bidang bertingkat dari sisi dalam atau pembubutan mundur.',
     aplikasi: 'Pembubutan mundur pada poros bertingkat atau sudut bahu kiri benda kerja yang dekat dengan rahang cekam.',
     keunggulan: 'Dapat menyelesaikan pembubutan bahu yang berbatasan dekat dengan chuck tanpa risiko rumah pahat menabrak rahang cekam.',
@@ -434,7 +434,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Muka Ujung Poros (Facing)',
     leadAngle: '45°',
     color: '#16a34a',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_muka.jpg',
     deskripsi: 'Pahat khusus dengan sudut potong miring 45° untuk meratakan permukaan bidang ujung penampang silinder dengan gerakan melintang eretan lintang (cross-slide feed).',
     aplikasi: 'Facing ujung benda kerja untuk menentukan panjang absolut dan bidang referensi titik nol (datum face).',
     keunggulan: 'Sudut masuk 45° memotong secara bertahap dari diameter terluar ke pusat tanpa menimbulkan getaran benturan.',
@@ -454,7 +454,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembuatan Alur & Pemotongan Putus',
     leadAngle: '90° (Bilah Lebar 2 – 4 mm)',
     color: '#d97706',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_set.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_alur.jpg',
     deskripsi: 'Pahat bilah tipis panjang dengan sisi potong lurus di ujungnya dan sudut bebas samping ganda untuk membuat celah alur pasak/O-ring atau memotong putus benda kerja.',
     aplikasi: 'Alur penahan snap ring, alur seal karet O-ring, alur pembebas ulir, dan pemotongan putus batang bahan silinder.',
     keunggulan: 'Bilah kaku berkepala insert self-clamping tipis meminimalkan volume logam yang terbuang menjadi bram.',
@@ -474,7 +474,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembuatan Ulir Baut Luar',
     leadAngle: 'Sudut Puncak Profil 60°',
     color: '#7c3aed',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_ulir.jpg',
     deskripsi: 'Pahat dengan ujung baji segitiga presisi sudut 60° (Metrik) atau 55° (Whitworth) yang digerakkan secara sinkron oleh poros transportir untuk menyayat alur spiral ulir baut.',
     aplikasi: 'Pembuatan ulir luar segitiga metrik (M6 s.d. M30), ulir trapesium gerak, dan ulir modul presisi.',
     keunggulan: 'Insert ulir penuh (full-profile) sekaligus membentuk puncak dan dasar ulir berstandar toleransi ISO 6g.',
@@ -494,7 +494,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Lubang Silinder Dalam',
     leadAngle: '95° (CCMT / WCMT)',
     color: '#0284c7',
-    fotoReal: '/assets/images/machine_cutting_tools/pahat_set.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_dalam.jpg',
     deskripsi: 'Pahat berbentuk silinder pejal panjang (sering berbahan karbida anti-getar) dengan kepala insert offset untuk memperbesar, meratakan, dan menghaluskan lubang dalam silindris.',
     aplikasi: 'Perbesaran lubang hasil bor, pembuatan dudukan bearing H7 presisi, pembubutan rumah silinder rem dan blok mesin.',
     keunggulan: 'Batang silindris kokoh meminimalkan defleksi lentur pada kedalaman lubang (L/D hingga 4× untuk baja, 7× untuk karbida).',
@@ -519,7 +519,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
     fleksibilitas: '⭐⭐⭐ (Sedang)',
     color: '#2563eb',
-    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/insert_c_cnmg.jpg',
     deskripsi: 'Bentuk paling populer dan standar utama di bengkel mesin bubut seluruh dunia. Sudut hidung 80° memberikan ketahanan luar biasa terhadap beban pemakanan berat tanpa mudah gompal.',
     fungsi: 'Pembubutan rata memanjang luar & dalam, facing muka, pengasaran (roughing) hingga medium finishing.',
     keunggulan: 'Dapat melakukan pembubutan muka dan memanjang tanpa perlu mengganti pahat.'
@@ -532,7 +532,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐ (Kuat)',
     fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
     color: '#ea580c',
-    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts_vhm.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/insert_d_dnmg.jpg',
     deskripsi: 'Bentuk belah ketupat sudut 55° yang memungkinkan pahat masuk ke sudut bahu 90° dan membubut profil kontur tirus tanpa mengalami interferensi dinding.',
     fungsi: 'Pembubutan kontur luar/dalam, profil tirus, pembubutan bahu siku 90°, dan finishing presisi.',
     keunggulan: 'Aksesibilitas sudut profil jauh lebih lincah dibanding bentuk C.'
@@ -545,7 +545,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Kekuatan Maksimum)',
     fleksibilitas: '⭐⭐ (Terbatas)',
     color: '#16a34a',
-    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/insert_s_square.svg',
     deskripsi: 'Bentuk bujur sangkar dengan sudut hidung 90° terkuat. Sangat hemat karena memiliki total 8 sisi potong aktif (pada tipe negatif SNMG bolak-balik).',
     fungsi: 'Pengasaran berat (heavy roughing), pemotongan logam berkerak cor kasar, dan chamfering 45°.',
     keunggulan: 'Ketahanan puncak terhadap beban tumbukan intermiten dan pemotongan terputus.'
@@ -558,7 +558,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐ (Sedang)',
     fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
     color: '#d97706',
-    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/insert_t_tnmg.jpg',
     deskripsi: 'Bentuk segitiga sama sisi yang sangat ekonomis dengan harga per sisi potong termurah. Sudut baji 60° tajam dan gaya potong relatif ringan.',
     fungsi: 'Pembubutan umum serbaguna, pembubutan dalam lubang kecil, dan pembuatan alur V.',
     keunggulan: 'Ekonomis dengan 6 sisi potong dan gaya potong aksial yang rendah.'
@@ -597,7 +597,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Paling Tahan Benturan)',
     fleksibilitas: '⭐⭐⭐ (Khusus Kontur Radius)',
     color: '#0284c7',
-    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
+    fotoReal: '/assets/images/machine_cutting_tools/insert_r_round.svg',
     deskripsi: 'Sisipan berbentuk piringan lingkaran penuh tanpa sudut tajam. Menghilangkan titik konsentrasi tegangan sehingga tahan terhadap beban kejut pemotongan terputus.',
     fungsi: 'Pembubutan permukaan cekung bulat, pembuatan alur radius besar, pemotongan cetakan (die & mold).',
     keunggulan: 'Sisi potong dapat diindeks (diputar) berkali-kali hingga seluruh keliling lingkaran terpakai.'
@@ -2578,6 +2578,287 @@ const CUTTING_TOOLS_QUIZ = [
 ];
 
 // =============================================================================
+// KOMPONEN VISUAL KARTU UNIVERSAL (SPLIT / CAD / REAL PHOTO DUAL-VIEW)
+// =============================================================================
+const UniversalToolCardVisual = ({
+  type = 'milling', // 'milling' | 'lathe' | 'insert' | 'hole'
+  tool,
+  isSelected = false,
+  cardViewMode = 'split',
+  onToggle = () => {}
+}) => {
+  const isSplit = cardViewMode === 'split';
+  const isCad = cardViewMode === 'cad';
+  const isPhoto = cardViewMode === 'photo';
+
+  return (
+    <div style={{
+      width: '100%',
+      height: '130px',
+      background: '#090d16',
+      borderBottom: `2px solid ${isSelected ? (tool.color || '#0284c7') : '#1e293b'}`,
+      position: 'relative',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxSizing: 'border-box'
+    }}>
+      {isSplit && (
+        <div style={{ display: 'flex', width: '100%', height: '100%' }}>
+          {/* Sisi Kiri: Profil Geometri CAD */}
+          <div style={{
+            flex: '1 1 50%',
+            height: '100%',
+            position: 'relative',
+            padding: '2px',
+            borderRight: '1px solid rgba(255,255,255,0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #090d16 0%, #0f172a 100%)'
+          }}>
+            <span style={{
+              position: 'absolute', top: '4px', left: '6px',
+              fontSize: '0.55rem', fontWeight: 900, color: '#38bdf8',
+              background: 'rgba(2, 132, 199, 0.25)', padding: '1px 5px',
+              borderRadius: '3px', letterSpacing: '0.5px', zIndex: 2
+            }}>
+              📐 CAD
+            </span>
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {type === 'milling' && <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />}
+              {type === 'lathe' && <LatheToolCardVisual toolId={tool.id} isSelected={isSelected} />}
+              {type === 'insert' && <CarbideInsertCardVisual shape={tool.shape} isSelected={isSelected} />}
+              {type === 'hole' && <HoleThreadCardVisual toolId={tool.id} isSelected={isSelected} />}
+            </div>
+          </div>
+
+          {/* Sisi Kanan: Foto Asli Workshop */}
+          <div style={{
+            flex: '1 1 50%',
+            height: '100%',
+            position: 'relative',
+            background: '#020617',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden'
+          }}>
+            <span style={{
+              position: 'absolute', top: '4px', right: '6px',
+              fontSize: '0.55rem', fontWeight: 900, color: '#4ade80',
+              background: 'rgba(34, 197, 94, 0.25)', padding: '1px 5px',
+              borderRadius: '3px', letterSpacing: '0.5px', zIndex: 2
+            }}>
+              📷 FOTO ASLI
+            </span>
+            <img
+              src={tool.fotoReal}
+              alt={tool.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                padding: '4px',
+                display: 'block',
+                filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.92)'
+              }}
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+          </div>
+        </div>
+      )}
+
+      {isCad && (
+        <div style={{ width: '100%', height: '100%', padding: '4px', position: 'relative' }}>
+          <span style={{
+            position: 'absolute', top: '6px', left: '8px',
+            fontSize: '0.58rem', fontWeight: 900, color: '#38bdf8',
+            background: 'rgba(2, 132, 199, 0.25)', padding: '2px 6px',
+            borderRadius: '4px', zIndex: 2
+          }}>
+            📐 BENTUK GEOMETRI CAD
+          </span>
+          {type === 'milling' && <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />}
+          {type === 'lathe' && <LatheToolCardVisual toolId={tool.id} isSelected={isSelected} />}
+          {type === 'insert' && <CarbideInsertCardVisual shape={tool.shape} isSelected={isSelected} />}
+          {type === 'hole' && <HoleThreadCardVisual toolId={tool.id} isSelected={isSelected} />}
+        </div>
+      )}
+
+      {isPhoto && (
+        <div style={{ width: '100%', height: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{
+            position: 'absolute', top: '6px', left: '8px',
+            fontSize: '0.58rem', fontWeight: 900, color: '#4ade80',
+            background: 'rgba(34, 197, 94, 0.25)', padding: '2px 6px',
+            borderRadius: '4px', zIndex: 2
+          }}>
+            📷 FOTO ASLI BENGKEL
+          </span>
+          <img
+            src={tool.fotoReal}
+            alt={tool.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              padding: '6px',
+              display: 'block',
+              filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.92)'
+            }}
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
+        </div>
+      )}
+
+      {/* Tombol Mini Switcher Mode Kartu */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
+        title="Klik untuk ganti mode visual kartu ini (Split 🔀 -> CAD 📐 -> Foto 📷)"
+        style={{
+          position: 'absolute',
+          bottom: '5px',
+          right: '6px',
+          padding: '2px 7px',
+          borderRadius: '4px',
+          border: '1px solid rgba(255,255,255,0.2)',
+          background: 'rgba(15, 23, 42, 0.88)',
+          color: '#ffffff',
+          fontSize: '0.62rem',
+          fontWeight: 800,
+          cursor: 'pointer',
+          backdropFilter: 'blur(4px)',
+          zIndex: 6,
+          transition: 'all 0.15s'
+        }}
+      >
+        {isSplit ? '🔀 Split' : isCad ? '📐 CAD' : '📷 Foto'}
+      </button>
+    </div>
+  );
+};
+
+// =============================================================================
+// KOMPONEN INSPEKSI FOTO ASLI BENGKEL & ANALISIS GEOMETRI FISIK
+// =============================================================================
+const RealPhotoShowcase = ({ tool, category = 'milling' }) => {
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, #090d16 0%, #0f172a 100%)',
+      borderRadius: '14px',
+      border: '1.5px solid #334155',
+      padding: '20px',
+      color: '#ffffff',
+      display: 'grid',
+      gridTemplateColumns: 'minmax(280px, 1.2fr) minmax(280px, 1fr)',
+      gap: '24px',
+      alignItems: 'center'
+    }}>
+      {/* Frame Foto Asli Nyata */}
+      <div style={{
+        background: '#020617',
+        borderRadius: '12px',
+        border: '2px solid rgba(255, 255, 255, 0.12)',
+        overflow: 'hidden',
+        height: '320px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)'
+      }}>
+        <img
+          src={tool.fotoReal}
+          alt={tool.name}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+            padding: '12px',
+            display: 'block',
+            filter: 'brightness(1.05) contrast(1.05)'
+          }}
+        />
+        <div style={{
+          position: 'absolute', bottom: '10px', left: '12px',
+          background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)',
+          padding: '4px 10px', borderRadius: '6px',
+          fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8',
+          border: '1px solid rgba(56, 189, 248, 0.3)'
+        }}>
+          📷 Foto Dokumentasi Asli Mesin Perkakas
+        </div>
+      </div>
+
+      {/* Panel Analisis Visual & Spesifikasi Fisik */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div>
+          <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            {tool.category || tool.tipe || tool.standar || 'Spesifikasi Fisik'}
+          </div>
+          <h4 style={{ margin: '4px 0 0 0', fontSize: '1.35rem', fontWeight: 900, color: '#ffffff' }}>
+            {tool.name}
+          </h4>
+          {tool.englishName && (
+            <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontStyle: 'italic', marginTop: '2px' }}>
+              {tool.englishName}
+            </div>
+          )}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700 }}>STANDAR / ISO</div>
+            <div style={{ fontSize: '0.85rem', color: '#f8fafc', fontWeight: 800, marginTop: '2px' }}>
+              {tool.isoStandard || tool.isoDIN || tool.standar || 'Standar DIN/ISO'}
+            </div>
+          </div>
+
+          <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700 }}>SUDUT / GEOMETRI</div>
+            <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 800, marginTop: '2px' }}>
+              {tool.leadAngle || tool.sudutHidung || tool.sudutPuncak || 'Geometri Potong'}
+            </div>
+          </div>
+
+          {tool.materialBadan && (
+            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700 }}>MATERIAL BADAN</div>
+              <div style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 700, marginTop: '2px' }}>
+                {tool.materialBadan}
+              </div>
+            </div>
+          )}
+
+          {tool.pelapis && (
+            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700 }}>LAPISAN COATING</div>
+              <div style={{ fontSize: '0.8rem', color: '#a78bfa', fontWeight: 700, marginTop: '2px' }}>
+                {tool.pelapis}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.25)', borderRadius: '10px', padding: '12px 14px' }}>
+          <div style={{ fontSize: '0.74rem', fontWeight: 900, color: '#4ade80', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>💡</span> Panduan Identifikasi Visual di Bengkel Mesin:
+          </div>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.5 }}>
+            {tool.tipsTeknis || tool.keunggulan || tool.tipsPraktik || tool.deskripsi}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// =============================================================================
 // KOMPONEN UTAMA: MachineCuttingToolsLab
 // =============================================================================
 const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigateToMilling, initialTab = 'milling' }) => {
@@ -2590,14 +2871,14 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
       setActiveTab(initialTab);
     }
   }, [initialTab]);
-  const [millingMode, setMillingMode] = useState('anatomy'); // 'anatomy' | 'simulation' | 'profile'
+  const [millingMode, setMillingMode] = useState('anatomy'); // 'anatomy' | 'simulation' | 'profile' | 'realPhoto'
   const [activeMillingPinId, setActiveMillingPinId] = useState(1);
   const [activeInsertPos, setActiveInsertPos] = useState(1);
   const [activeHoleToolId, setActiveHoleToolId] = useState('twist-drill');
 
   // State Pahat Bubut Showcase
   const [selectedLatheId, setSelectedLatheId] = useState('pahat-rata-kanan');
-  const [latheMode, setLatheMode] = useState('anatomy'); // 'anatomy' | 'simulation'
+  const [latheMode, setLatheMode] = useState('anatomy'); // 'anatomy' | 'simulation' | 'realPhoto'
   const [activeLathePinId, setActiveLathePinId] = useState(1);
 
   // State Insert Karbida Visual
@@ -2605,7 +2886,23 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
   const [activeAngleId, setActiveAngleId] = useState('rake');
 
   // State Hole & Thread Visual Showcase
-  const [holeViewMode, setHoleViewMode] = useState('anatomy'); // 'anatomy' | 'simulation'
+  const [holeViewMode, setHoleViewMode] = useState('anatomy'); // 'anatomy' | 'simulation' | 'realPhoto'
+
+  // State Mode Tampilan Kartu Visual ('split' | 'cad' | 'photo')
+  const [millingCardView, setMillingCardView] = useState('split');
+  const [latheCardView, setLatheCardView] = useState('split');
+  const [insertCardView, setInsertCardView] = useState('split');
+  const [holeCardView, setHoleCardView] = useState('split');
+  const [cardOverrides, setCardOverrides] = useState({});
+
+  const toggleCardOverride = (id) => {
+    sound.playClick();
+    setCardOverrides(prev => {
+      const current = prev[id] || 'split';
+      const next = current === 'split' ? 'cad' : current === 'cad' ? 'photo' : 'split';
+      return { ...prev, [id]: next };
+    });
+  };
 
   // State Kalkulator Kecepatan Potong
   const [calcMaterialVc, setCalcMaterialVc] = useState(120); // m/min
@@ -2825,6 +3122,67 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
+          {/* Toolbar Pengendali Tampilan Visual Kartu Pahat Bubut */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            background: '#ffffff',
+            padding: '12px 18px',
+            borderRadius: '12px',
+            border: '1.5px solid #e2e8f0',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
+                👁️ Mode Tampilan Kartu Pahat Bubut:
+              </span>
+              <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <button
+                onClick={() => { sound.playClick(); setLatheCardView('split'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: latheCardView === 'split' ? '#2563eb' : 'transparent',
+                  color: latheCardView === 'split' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🔀 Split (CAD + Foto)
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setLatheCardView('cad'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: latheCardView === 'cad' ? '#2563eb' : 'transparent',
+                  color: latheCardView === 'cad' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📐 Bentuk CAD / Profil
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setLatheCardView('photo'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: latheCardView === 'photo' ? '#2563eb' : 'transparent',
+                  color: latheCardView === 'photo' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📷 Foto Asli Bengkel
+              </button>
+            </div>
+          </div>
+
           {/* Quick Selector Grid 6 Jenis Pahat Bubut dengan Ilustrasi Kontur Nyata */}
           <div style={{
             display: 'grid',
@@ -2833,6 +3191,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             {LATHE_TOOLS_CATALOG.map(tool => {
               const isSelected = selectedLatheId === tool.id;
+              const cardMode = cardOverrides[tool.id] || latheCardView;
               return (
                 <div
                   key={tool.id}
@@ -2845,79 +3204,54 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     background: '#ffffff',
                     borderRadius: '14px',
                     border: isSelected ? `2.5px solid ${tool.color}` : '1.5px solid #cbd5e1',
-                    padding: '14px',
+                    overflow: 'hidden',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px',
                     boxShadow: isSelected ? `0 8px 20px ${tool.color}35` : '0 2px 6px rgba(0,0,0,0.04)',
                     transform: isSelected ? 'translateY(-2px)' : 'none',
                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  {/* Foto Nyata Pahat Bubut */}
-                  <div style={{
-                    width: '100%',
-                    height: '110px',
-                    borderRadius: '10px',
-                    background: '#0f172a',
-                    border: `2px solid ${isSelected ? tool.color : '#e2e8f0'}`,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    boxSizing: 'border-box'
-                  }}>
-                    <img
-                      src={tool.fotoReal}
-                      alt={tool.name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                        filter: isSelected ? 'brightness(1.08) saturate(1.15)' : 'brightness(0.92) saturate(0.9)'
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0,
-                      background: `linear-gradient(transparent, ${tool.color}cc)`,
-                      padding: '4px 8px',
-                      fontSize: '0.6rem', fontWeight: 900, color: '#ffffff',
-                      textTransform: 'uppercase', letterSpacing: '0.5px'
-                    }}>
-                      {tool.isoDIN}
-                    </div>
-                  </div>
+                  {/* Visual Kartu Universal (Split / CAD / Foto Real) */}
+                  <UniversalToolCardVisual
+                    type="lathe"
+                    tool={tool}
+                    isSelected={isSelected}
+                    cardViewMode={cardMode}
+                    onToggle={() => toggleCardOverride(tool.id)}
+                  />
 
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                      <span style={{ fontSize: '0.68rem', fontWeight: 800, color: tool.color, textTransform: 'uppercase' }}>
-                        {tool.isoDIN}
+                  <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 800, color: tool.color, textTransform: 'uppercase' }}>
+                          {tool.isoDIN}
+                        </span>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, background: `${tool.color}15`, color: tool.color, padding: '2px 6px', borderRadius: '4px' }}>
+                          {tool.leadAngle}
+                        </span>
+                      </div>
+                      <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
+                        {tool.name}
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic', marginTop: '1px' }}>
+                        {tool.englishName}
+                      </div>
+                    </div>
+
+                    <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {tool.deskripsi}
+                    </div>
+
+                    <div style={{ paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
+                        📍 {tool.arahSayat.split('(')[0]}
                       </span>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 800, background: `${tool.color}15`, color: tool.color, padding: '2px 6px', borderRadius: '4px' }}>
-                        {tool.leadAngle}
+                      <span style={{ fontSize: '0.75rem', fontWeight: 900, color: tool.color }}>
+                        {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
                       </span>
                     </div>
-                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
-                      {tool.name}
-                    </div>
-                    <div style={{ fontSize: '0.74rem', color: '#64748b', fontStyle: 'italic', marginTop: '1px' }}>
-                      {tool.englishName}
-                    </div>
-                  </div>
-
-                  <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {tool.deskripsi}
-                  </div>
-
-                  <div style={{ marginTop: 'auto', paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
-                      📍 {tool.arahSayat.split('(')[0]}
-                    </span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: tool.color }}>
-                      {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
-                    </span>
                   </div>
                 </div>
               );
@@ -2943,7 +3277,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     </div>
@@ -2984,6 +3318,25 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <span>🔍</span> Anatomi Detail
                     </button>
                     <button
+                      onClick={() => { sound.playClick(); setLatheMode('realPhoto'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: latheMode === 'realPhoto' ? current.color : 'transparent',
+                        color: latheMode === 'realPhoto' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>📷</span> Foto Asli Bengkel
+                    </button>
+                    <button
                       onClick={() => { sound.playClick(); setLatheMode('simulation'); }}
                       style={{
                         padding: '7px 14px',
@@ -3005,16 +3358,20 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   </div>
                 </div>
 
-                {/* SVG Visual Kanvas Realistis */}
-                <LatheToolMasterVisual
-                  tool={current}
-                  mode={latheMode}
-                  activePinId={activeLathePinId}
-                  onPinClick={(id) => {
-                    sound.playClick();
-                    setActiveLathePinId(id);
-                  }}
-                />
+                {/* Konten Showcase Berdasarkan Mode */}
+                {latheMode === 'realPhoto' ? (
+                  <RealPhotoShowcase tool={current} category="lathe" />
+                ) : (
+                  <LatheToolMasterVisual
+                    tool={current}
+                    mode={latheMode}
+                    activePinId={activeLathePinId}
+                    onPinClick={(id) => {
+                      sound.playClick();
+                      setActiveLathePinId(id);
+                    }}
+                  />
+                )}
 
                 {/* Interactive Hotspot Inspector */}
                 {latheMode === 'anatomy' && activePin && (
@@ -3396,6 +3753,67 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
+          {/* Toolbar Pengendali Tampilan Visual Kartu */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            background: '#ffffff',
+            padding: '12px 18px',
+            borderRadius: '12px',
+            border: '1.5px solid #e2e8f0',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
+                👁️ Mode Tampilan Kartu Pisau Frais:
+              </span>
+              <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <button
+                onClick={() => { sound.playClick(); setMillingCardView('split'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: millingCardView === 'split' ? '#0284c7' : 'transparent',
+                  color: millingCardView === 'split' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🔀 Split (CAD + Foto)
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setMillingCardView('cad'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: millingCardView === 'cad' ? '#0284c7' : 'transparent',
+                  color: millingCardView === 'cad' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📐 Bentuk CAD / Profil
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setMillingCardView('photo'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: millingCardView === 'photo' ? '#0284c7' : 'transparent',
+                  color: millingCardView === 'photo' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📷 Foto Asli Bengkel
+              </button>
+            </div>
+          </div>
+
           {/* Quick Selector Grid Pisau Frais dengan Kartu Visual Kontur & Geometri Nyata */}
           <div style={{
             display: 'grid',
@@ -3404,6 +3822,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             {MILLING_CUTTERS_CATALOG.map(tool => {
               const isSelected = selectedMillingId === tool.id;
+              const cardMode = cardOverrides[tool.id] || millingCardView;
               return (
                 <div
                   key={tool.id}
@@ -3424,56 +3843,14 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     flexDirection: 'column'
                   }}
                 >
-                  {/* Foto Nyata Pisau Frais */}
-                  <div style={{
-                    height: '115px',
-                    background: '#0f172a',
-                    borderBottom: `2px solid ${isSelected ? '#0284c7' : '#e2e8f0'}`,
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}>
-                    <img
-                      src={tool.fotoReal}
-                      alt={tool.name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                        filter: isSelected ? 'brightness(1.1) saturate(1.2)' : 'brightness(0.88)'
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                    <span style={{
-                      position: 'absolute',
-                      top: '8px',
-                      left: '8px',
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      background: isSelected ? '#0284c7' : 'rgba(0,0,0,0.55)',
-                      color: '#ffffff',
-                      padding: '2px 7px',
-                      borderRadius: '4px',
-                      backdropFilter: 'blur(4px)'
-                    }}>
-                      {tool.category}
-                    </span>
-                    <span style={{
-                      position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      background: 'rgba(255,255,255,0.9)',
-                      color: '#64748b',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      border: '1px solid #cbd5e1'
-                    }}>
-                      {tool.isoStandard?.split(' ')[0]}
-                    </span>
-                  </div>
+                  {/* Visual Kartu Universal (Split / CAD / Foto Real) */}
+                  <UniversalToolCardVisual
+                    type="milling"
+                    tool={tool}
+                    isSelected={isSelected}
+                    cardViewMode={cardMode}
+                    onToggle={() => toggleCardOverride(tool.id)}
+                  />
 
                   {/* Informasi & Parameter Pisau */}
                   <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
@@ -3535,7 +3912,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     </div>
@@ -3579,6 +3956,25 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <span>🔍</span> Anatomi Fisik
                     </button>
                     <button
+                      onClick={() => { sound.playClick(); setMillingMode('realPhoto'); }}
+                      style={{
+                        padding: '7px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: millingMode === 'realPhoto' ? '#0284c7' : 'transparent',
+                        color: millingMode === 'realPhoto' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>📷</span> Foto Asli Bengkel
+                    </button>
+                    <button
                       onClick={() => { sound.playClick(); setMillingMode('simulation'); }}
                       style={{
                         padding: '7px 12px',
@@ -3619,16 +4015,20 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   </div>
                 </div>
 
-                {/* SVG Visual Kanvas Realistis */}
-                <MillingCutterVisual
-                  tool={current}
-                  mode={millingMode}
-                  activePinId={activeMillingPinId}
-                  onPinClick={(id) => {
-                    sound.playClick();
-                    setActiveMillingPinId(id);
-                  }}
-                />
+                {/* Konten Showcase Berdasarkan Mode */}
+                {millingMode === 'realPhoto' ? (
+                  <RealPhotoShowcase tool={current} category="milling" />
+                ) : (
+                  <MillingCutterVisual
+                    tool={current}
+                    mode={millingMode}
+                    activePinId={activeMillingPinId}
+                    onPinClick={(id) => {
+                      sound.playClick();
+                      setActiveMillingPinId(id);
+                    }}
+                  />
+                )}
 
                 {/* Interactive Hotspot Inspector (Mode Anatomi) */}
                 {millingMode === 'anatomy' && activePin && (
@@ -3846,14 +4246,76 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
+          {/* Toolbar Pengendali Tampilan Visual Kartu Insert Karbida */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            background: '#ffffff',
+            padding: '12px 18px',
+            borderRadius: '12px',
+            border: '1.5px solid #e2e8f0',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
+                👁️ Mode Tampilan Kartu Insert Karbida:
+              </span>
+              <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <button
+                onClick={() => { sound.playClick(); setInsertCardView('split'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: insertCardView === 'split' ? '#c2410c' : 'transparent',
+                  color: insertCardView === 'split' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🔀 Split (CAD + Foto)
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setInsertCardView('cad'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: insertCardView === 'cad' ? '#c2410c' : 'transparent',
+                  color: insertCardView === 'cad' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📐 Bentuk CAD / Profil
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setInsertCardView('photo'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: insertCardView === 'photo' ? '#c2410c' : 'transparent',
+                  color: insertCardView === 'photo' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📷 Foto Asli Bengkel
+              </button>
+            </div>
+          </div>
+
           {/* Grid 7 Bentuk Insert Karbida dengan Kartu Visual Kontur Nyata */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-            gap: '12px'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '14px'
           }}>
             {CARBIDE_INSERTS_CATALOG.map(ins => {
               const isSelected = selectedInsertShape === ins.shape;
+              const cardMode = cardOverrides[ins.shape] || insertCardView;
               return (
                 <div
                   key={ins.shape}
@@ -3865,84 +4327,57 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     background: '#ffffff',
                     borderRadius: '12px',
                     border: isSelected ? `2.5px solid ${ins.color}` : '1.5px solid #cbd5e1',
-                    padding: '12px',
+                    overflow: 'hidden',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px',
                     boxShadow: isSelected ? `0 6px 16px ${ins.color}35` : '0 2px 4px rgba(0,0,0,0.03)',
                     transform: isSelected ? 'translateY(-2px)' : 'none',
                     transition: 'all 0.15s'
                   }}
                 >
-                  {/* Foto Nyata Insert Karbida */}
-                  <div style={{
-                    width: '100%',
-                    height: '95px',
-                    borderRadius: '8px',
-                    background: '#0f172a',
-                    border: `2px solid ${isSelected ? ins.color : '#e2e8f0'}`,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    boxSizing: 'border-box'
-                  }}>
-                    <img
-                      src={ins.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
-                      alt={ins.name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                        filter: isSelected ? 'brightness(1.1) saturate(1.2)' : 'brightness(0.9)'
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                    <div style={{
-                      position: 'absolute', top: '6px', right: '6px',
-                      width: '22px', height: '22px', borderRadius: '4px',
-                      background: ins.color,
-                      color: '#ffffff',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontWeight: 900, fontSize: '0.8rem',
-                      boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
-                    }}>
-                      {ins.shape}
+                  {/* Visual Kartu Universal (Split / CAD / Foto Real) */}
+                  <UniversalToolCardVisual
+                    type="insert"
+                    tool={ins}
+                    isSelected={isSelected}
+                    cardViewMode={cardMode}
+                    onToggle={() => toggleCardOverride(ins.shape)}
+                  />
+
+                  <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '6px',
+                        background: ins.color,
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 900,
+                        fontSize: '0.85rem'
+                      }}>
+                        {ins.shape}
+                      </span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: ins.color, background: `${ins.color}15`, padding: '2px 6px', borderRadius: '4px' }}>
+                        {ins.sudutHidung.split('(')[0].trim()}
+                      </span>
                     </div>
-                  </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '6px',
-                      background: ins.color,
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 900,
-                      fontSize: '0.85rem'
-                    }}>
-                      {ins.shape}
-                    </span>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: ins.color, background: `${ins.color}15`, padding: '2px 6px', borderRadius: '4px' }}>
-                      {ins.sudutHidung.split('(')[0].trim()}
-                    </span>
-                  </div>
+                    <div style={{ fontWeight: 800, fontSize: '0.82rem', color: '#0f172a', lineHeight: 1.3 }}>
+                      {ins.name.split(':')[1]?.trim() || ins.name}
+                    </div>
 
-                  <div style={{ fontWeight: 800, fontSize: '0.82rem', color: '#0f172a', lineHeight: 1.3 }}>
-                    {ins.name.split(':')[1]?.trim() || ins.name}
-                  </div>
-
-                  <div style={{ marginTop: 'auto', paddingTop: '4px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
-                      Kekuatan: {ins.kekuatanTepi.split(' ')[0]}
-                    </span>
-                    <span style={{ fontSize: '0.7rem', fontWeight: 900, color: ins.color }}>
-                      {isSelected ? '✓ Terpilih' : 'Pilih'}
-                    </span>
+                    <div style={{ paddingTop: '4px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
+                        Kekuatan: {ins.kekuatanTepi.split(' ')[0]}
+                      </span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 900, color: ins.color }}>
+                        {isSelected ? '✓ Terpilih' : 'Pilih'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
@@ -3968,7 +4403,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={currentIns.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
                         alt={currentIns.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '3px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     </div>
@@ -4004,6 +4439,36 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#f1f5f9', color: '#334155', padding: '4px 8px', borderRadius: '6px' }}>
                       Aksesibilitas Kontur: <strong>{currentIns.fleksibilitas}</strong>
                     </span>
+                  </div>
+                </div>
+
+                {/* Visual Perbandingan: Bentuk Geometri CAD vs Foto Asli */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '14px',
+                  background: '#090d16',
+                  borderRadius: '12px',
+                  border: '1.5px solid #334155',
+                  padding: '12px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#020617', borderRadius: '8px', padding: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px' }}>📐 BENTUK GEOMETRI CAD & SUDUT HIDUNG</div>
+                    <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CarbideInsertCardVisual shape={currentIns.shape} isSelected={true} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#020617', borderRadius: '8px', padding: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#4ade80', marginBottom: '6px' }}>📷 FOTO ASLI BENGKEL DOKUMENTASI</div>
+                    <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img
+                        src={currentIns.fotoReal}
+                        alt={currentIns.name}
+                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '4px', display: 'block', filter: 'brightness(1.1) saturate(1.15)' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -4247,6 +4712,67 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </p>
           </div>
 
+          {/* Toolbar Pilihan Mode Tampilan Kartu Hole & Thread */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px',
+            background: '#ffffff',
+            padding: '12px 18px',
+            borderRadius: '12px',
+            border: '1.5px solid #e2e8f0',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
+                👁️ Mode Tampilan Kartu Bor & Ulir:
+              </span>
+              <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
+                (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <button
+                onClick={() => { sound.playClick(); setHoleCardView('split'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: holeCardView === 'split' ? '#16a34a' : 'transparent',
+                  color: holeCardView === 'split' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🔀 Split (CAD + Foto)
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setHoleCardView('cad'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: holeCardView === 'cad' ? '#16a34a' : 'transparent',
+                  color: holeCardView === 'cad' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📐 Bentuk CAD / Profil
+              </button>
+              <button
+                onClick={() => { sound.playClick(); setHoleCardView('photo'); }}
+                style={{
+                  padding: '6px 12px', borderRadius: '6px', border: 'none',
+                  background: holeCardView === 'photo' ? '#16a34a' : 'transparent',
+                  color: holeCardView === 'photo' ? '#ffffff' : '#334155',
+                  fontWeight: 800, fontSize: '0.75rem', cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                📷 Foto Asli Bengkel
+              </button>
+            </div>
+          </div>
+
           {/* Quick Selector Grid 4 Alat Pengeboran & Pembuatan Ulir dengan Ilustrasi Kontur Nyata */}
           <div style={{
             display: 'grid',
@@ -4255,6 +4781,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             {HOLE_THREAD_TOOLS.map(t => {
               const isSelected = activeHoleToolId === t.id;
+              const cardMode = cardOverrides[t.id] || holeCardView;
               return (
                 <div
                   key={t.id}
@@ -4266,72 +4793,47 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     background: '#ffffff',
                     borderRadius: '14px',
                     border: isSelected ? '2.5px solid #16a34a' : '1.5px solid #cbd5e1',
-                    padding: '14px',
+                    overflow: 'hidden',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px',
                     boxShadow: isSelected ? '0 8px 20px rgba(22, 163, 74, 0.25)' : '0 2px 6px rgba(0,0,0,0.04)',
                     transform: isSelected ? 'translateY(-2px)' : 'none',
                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  {/* Foto Nyata Mata Bor / Tap / Snei */}
-                  <div style={{
-                    width: '100%',
-                    height: '110px',
-                    borderRadius: '10px',
-                    background: '#0f172a',
-                    border: `2px solid ${isSelected ? '#16a34a' : '#e2e8f0'}`,
-                    overflow: 'hidden',
-                    position: 'relative',
-                    boxSizing: 'border-box'
-                  }}>
-                    <img
-                      src={t.fotoReal}
-                      alt={t.name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                        filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.88)'
-                      }}
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0,
-                      background: 'linear-gradient(transparent, rgba(21,128,61,0.85))',
-                      padding: '4px 8px',
-                      fontSize: '0.62rem', fontWeight: 900, color: '#ffffff',
-                      textTransform: 'uppercase', letterSpacing: '0.5px'
-                    }}>
-                      {t.standar.split('/')[0].trim()}
-                    </div>
-                  </div>
+                  {/* Visual Kartu Universal (Split / CAD / Foto Real) */}
+                  <UniversalToolCardVisual
+                    type="hole"
+                    tool={t}
+                    isSelected={isSelected}
+                    cardViewMode={cardMode}
+                    onToggle={() => toggleCardOverride(t.id)}
+                  />
 
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                      <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#16a34a', textTransform: 'uppercase' }}>
-                        {t.standar.split('/')[0]}
+                  <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#16a34a', textTransform: 'uppercase' }}>
+                          {t.standar.split('/')[0]}
+                        </span>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '2px 6px', borderRadius: '4px' }}>
+                          {t.sudutPuncak.split('(')[0].trim()}
+                        </span>
+                      </div>
+                      <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
+                        {t.name}
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: 'auto', paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
+                        Standar DIN / ISO
                       </span>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '2px 6px', borderRadius: '4px' }}>
-                        {t.sudutPuncak.split('(')[0].trim()}
+                      <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#16a34a' }}>
+                        {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
                       </span>
                     </div>
-                    <div style={{ fontWeight: 900, fontSize: '0.96rem', color: '#0f172a' }}>
-                      {t.name}
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: 'auto', paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
-                      Standar DIN / ISO
-                    </span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#16a34a' }}>
-                      {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
-                    </span>
                   </div>
                 </div>
               );
@@ -4355,7 +4857,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <img
                         src={current.fotoReal}
                         alt={current.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px', display: 'block' }}
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     </div>
@@ -4396,6 +4898,25 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       <span>🔍</span> Anatomi &amp; Dimensi Standar
                     </button>
                     <button
+                      onClick={() => { sound.playClick(); setHoleViewMode('realPhoto'); }}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: holeViewMode === 'realPhoto' ? '#16a34a' : 'transparent',
+                        color: holeViewMode === 'realPhoto' ? '#ffffff' : '#334155',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>📷</span> Foto Asli Bengkel
+                    </button>
+                    <button
                       onClick={() => { sound.playClick(); setHoleViewMode('simulation'); }}
                       style={{
                         padding: '7px 14px',
@@ -4417,11 +4938,15 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   </div>
                 </div>
 
-                {/* SVG Visual Kanvas Realistis */}
-                <HoleThreadMasterVisual
-                  tool={current}
-                  mode={holeViewMode}
-                />
+                {/* Konten Showcase Berdasarkan Mode */}
+                {holeViewMode === 'realPhoto' ? (
+                  <RealPhotoShowcase tool={current} category="hole" />
+                ) : (
+                  <HoleThreadMasterVisual
+                    tool={current}
+                    mode={holeViewMode}
+                  />
+                )}
 
                 {/* Anatomi Komponen */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>

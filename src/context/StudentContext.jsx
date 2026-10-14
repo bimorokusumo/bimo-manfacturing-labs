@@ -11,10 +11,27 @@ const STORAGE_KEY = 'bimo_student_session';
 export const isTeacherUser = (user) => {
   if (!user) return false;
   const name = (user.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
-  const studentNum = (user.studentNumber || '').toString().trim();
+  const studentNum = (user.studentNumber || '').toString().toLowerCase().trim();
 
-  const isNameMatch = name === 'bimoro kusumo';
-  const isNumberMatch = studentNum === '1' || studentNum === '01';
+  const isNameMatch = 
+    name === 'bimoro kusumo' || 
+    name === 'pak bimoro kusumo' ||
+    name === 'pak bimoro' || 
+    name === 'pak bimo' || 
+    name === 'bimoro kusumo, s.pd.' || 
+    name === 'bimoro kusumo spd' ||
+    name === 'bimoro' ||
+    name.startsWith('bimoro');
+
+  // Pengajar valid jika nama cocok (nomor absen boleh 1, 01, "-", "guru", "pengajar", atau kosong)
+  const isNumberMatch = 
+    !studentNum || 
+    studentNum === '1' || 
+    studentNum === '01' || 
+    studentNum === '-' || 
+    studentNum === '0' || 
+    studentNum === 'guru' || 
+    studentNum === 'pengajar';
 
   return isNameMatch && isNumberMatch;
 };

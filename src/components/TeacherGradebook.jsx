@@ -1281,6 +1281,107 @@ function getOrCreateRawSheet(ss) {
 }
 `;
 
+// DEFINISI MODUL LAB & TUGAS-TUGASNYA SESUAI SIDEBAR
+const LAB_CONFIGS = [
+  {
+    id: "safety",
+    tabName: "🛡️ 1. Safety Lab",
+    shortTitle: "Safety Lab (K3LH)",
+    tasks: [
+      { key: "apd", name: "🛡️ Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
+      { key: "jsa_bor", name: "📋 JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
+      { key: "jsa_pahat", name: "📋 JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
+      { key: "apar", name: "🧯 Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
+      { key: "5r", name: "✨ Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
+      { key: "perkakas", name: "🔧 SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
+      { key: "qc", name: "🔍 Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
+      { key: "diag_safety", name: "📝 Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
+    ]
+  },
+  {
+    id: "machine",
+    tabName: "⚙️ 2. Machine Lab",
+    shortTitle: "Machine Lab (Permesinan)",
+    tasks: [
+      { key: "lathe", name: "🔩 Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
+      { key: "milling", name: "🪵 Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
+      { key: "cnc", name: "💻 Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
+      { key: "diag_machine", name: "📝 Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
+    ]
+  },
+  {
+    id: "cutting-tools",
+    tabName: "🛠️ 3. Perkakas Bengkel",
+    shortTitle: "Perkakas Bengkel & RPM",
+    tasks: [
+      { key: "cutting_quiz", name: "🛠️ Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
+      { key: "diag_cutting", name: "📝 Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
+    ]
+  },
+  {
+    id: "heat-treatment",
+    tabName: "🌡️ 4. Heat Treatment",
+    shortTitle: "Heat Treatment & Metalurgi",
+    tasks: [
+      { key: "metallurgy", name: "🌡️ Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
+      { key: "diag_heat", name: "📝 Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
+    ]
+  },
+  {
+    id: "mechanics",
+    tabName: "🔧 5. Mekanika Teknik",
+    shortTitle: "Mekanika Teknik Terapan",
+    tasks: [
+      { key: "torque", name: "⚖️ Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
+      { key: "diag_mechanics", name: "📝 Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
+    ]
+  },
+  {
+    id: "welding",
+    tabName: "⚡ 6. Welding Lab",
+    shortTitle: "Welding Lab (Pengelasan)",
+    tasks: [
+      { key: "smaw", name: "⚡ Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
+      { key: "diag_welding", name: "📝 Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
+    ]
+  },
+  {
+    id: "measuring",
+    tabName: "📏 7. Alat Ukur Presisi",
+    shortTitle: "Alat Ukur Presisi & Metrologi",
+    tasks: [
+      { key: "caliper_micrometer", name: "📏 Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
+      { key: "diag_measuring", name: "📝 Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
+    ]
+  },
+  {
+    id: "design",
+    tabName: "📐 8. Design Lab",
+    shortTitle: "Design Lab & Studio CAD",
+    tasks: [
+      { key: "cad_drawing", name: "📐 Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
+      { key: "diag_design", name: "📝 Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
+    ]
+  },
+  {
+    id: "virtual-bengkel",
+    tabName: "🏭 9. Virtual Bengkel",
+    shortTitle: "Virtual Bengkel 3D",
+    tasks: [
+      { key: "virtual_bengkel", name: "🏭 Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
+      { key: "diag_virtual", name: "📝 Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
+    ]
+  },
+  {
+    id: "evaluasi",
+    tabName: "🎓 10. Evaluasi Akhir",
+    shortTitle: "Evaluasi Akhir Komprehensif",
+    tasks: [
+      { key: "evaluasi_final", name: "🎓 Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+    ]
+  }
+];
+
 // DEFINISI MODUL LAB SESUAI SIDEBAR
 const ALL_LAB_TABS = [
   { id: 'all', label: 'Semua Modul', icon: '📋' },
@@ -1355,18 +1456,18 @@ const SUB_QUIZ_CONFIG = {
   ]
 };
 
-const TeacherGradebook = () => {
+const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
   const [scores, setScores] = useState([]);
   const [webhookUrl, setWebhookUrl] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearch || '');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedQuizName, setSelectedQuizName] = useState('all');
-  const [viewMode, setViewMode] = useState('grouped'); // 'grouped' | 'matrix' | 'flat'
+  const [viewMode, setViewMode] = useState(initialSearch ? 'flat' : 'grouped'); // Jika mencari siswa tertentu, langsung ke mode tabel datar
   const isGroupedByQuiz = viewMode === 'grouped';
   const [sortBy, setSortBy] = useState('quiz_name');
   
   // Tab Navigasi Sesuai Sidebar & Sub-Kuis
-  const [activeTab, setActiveTab] = useState('safety'); // Default langsung ke Safety Lab K3 sesuai permintaan guru
+  const [activeTab, setActiveTab] = useState(initialSearch ? 'all' : initialTab); // Default ke 'all' jika mencari siswa tertentu
   const [activeSubTab, setActiveSubTab] = useState('all');
   const [toastMessage, setToastMessage] = useState('');
   const [activeCell, setActiveCell] = useState('I2');

@@ -643,7 +643,7 @@ const DashboardView = ({
               </div>
 
               <button 
-                onClick={() => onSelectLab('gradebook')}
+                onClick={() => onSelectLab('gradebook', monitoredStudent?.name || '')}
                 style={{ 
                   width: '100%', 
                   padding: '10px 14px', 
@@ -662,7 +662,7 @@ const DashboardView = ({
                   boxShadow: '0 4px 10px rgba(15, 23, 42, 0.15)'
                 }}
               >
-                <span>📊 Buka Rapor & Gradebook Lengkap</span>
+                <span>📊 Buka Rapor & Gradebook Lengkap ({monitoredStudent?.name?.split(' ')[0] || 'Siswa'})</span>
               </button>
             </div>
           </div>

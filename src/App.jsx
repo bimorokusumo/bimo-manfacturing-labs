@@ -32,6 +32,7 @@ function AppInner() {
   const { isLoggedIn, openLoginModal, isTeacher } = useStudent();
   const [isStarted, setIsStarted] = useState(false);
   const [activeMenu, setActiveMenu] = useState('dashboard');
+  const [gradebookInitialSearch, setGradebookInitialSearch] = useState('');
   const [isSoundMuted, setIsSoundMuted] = useState(true);
   
   // Di HP / Mode Landscape, default sidebar tertutup agar tampilan langsung luas & simpel
@@ -102,7 +103,18 @@ function AppInner() {
   const renderContent = () => {
     switch(activeMenu) {
       case 'dashboard':
-        return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
+        return (
+          <DashboardView 
+            onSelectLab={(lab, search = '') => {
+              setGradebookInitialSearch(search);
+              setActiveMenu(lab);
+            }} 
+            globalXP={globalXP} 
+            levelInfo={levelInfo} 
+            completedMissions={completedMissions} 
+            totalMissions={totalMissions} 
+          />
+        );
       case 'modules':
         return <ModulesView />;
       case 'machine':
@@ -293,7 +305,7 @@ function AppInner() {
             </div>
           );
         }
-        return <TeacherGradebook />;
+        return <TeacherGradebook initialSearch={gradebookInitialSearch} />;
       default:
         return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
     }
@@ -311,6 +323,7 @@ function AppInner() {
             }
           }}
           onOpenGradebook={() => {
+            setGradebookInitialSearch('');
             if (isTeacher) {
               setIsStarted(true);
               setActiveMenu('gradebook');
@@ -343,7 +356,10 @@ function AppInner() {
       {/* SIDEBAR */}
       <Sidebar 
         activeMenu={activeMenu} 
-        setActiveMenu={setActiveMenu} 
+        setActiveMenu={(menu) => {
+          if (menu === 'gradebook') setGradebookInitialSearch('');
+          setActiveMenu(menu);
+        }} 
         onLogout={() => setIsStarted(false)} 
         isOpen={isSidebarOpen} 
         closeSidebar={() => setIsSidebarOpen(false)}
@@ -366,7 +382,10 @@ function AppInner() {
       >
         <Header
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          onOpenGradebook={() => setActiveMenu('gradebook')}
+          onOpenGradebook={() => {
+            setGradebookInitialSearch('');
+            setActiveMenu('gradebook');
+          }}
           onLogout={() => setIsStarted(false)}
         />
         

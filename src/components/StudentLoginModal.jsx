@@ -248,6 +248,39 @@ const StudentLoginModal = () => {
             </div>
           )}
 
+          {/* TOMBOL MASUK CEPAT SEBAGAI PENGAJAR */}
+          <button
+            type="button"
+            onClick={() => {
+              sound.playSuccess();
+              login({
+                name: 'Bimoro Kusumo',
+                studentNumber: '1',
+                className: 'Pengajar (Guru)',
+                school: 'SMKN 2 DEPOK'
+              });
+            }}
+            style={{
+              padding: '11px 16px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+              border: '1.5px solid #93c5fd',
+              color: '#1d4ed8',
+              fontWeight: 800,
+              fontSize: '0.86rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              boxShadow: '0 2px 8px rgba(29, 78, 216, 0.1)',
+              transition: 'all 0.15s'
+            }}
+          >
+            <span style={{ fontSize: '1.1rem' }}>👨‍🏫</span>
+            <span>Masuk Cepat sebagai Pengajar (Pak Bimoro Kusumo)</span>
+          </button>
+
           {/* PILIH CEPAT DARI DAFTAR SISWA RESMI KELAS X-TP.A */}
           <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '12px', border: '1.5px dashed #cbd5e1' }}>
             <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#334155', marginBottom: '6px' }}>

@@ -78,6 +78,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Face Milling Cutter / Indexable Shell Mill',
     category: 'Milling Permukaan Datar',
     icon: '🥞',
+    fotoReal: '/assets/images/machine_cutting_tools/face_mill.png',
     isoStandard: 'DIN 8030 / ISO 6462 (Lead Angle 45° & 90°)',
     materialBadan: 'Baja Paduan Perkakas 42CrMo4 Sepuh + Sisipan Karbida Sintered',
     pelapis: 'TiN (Emas) / TiAlN (Violet Gelap) pada Insert Karbida',
@@ -116,6 +117,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Square End Mill (Flat Bottom / 90° Shoulder)',
     category: 'Milling Kontur, Alur & Dinding Siku',
     icon: '📏',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 844 / DIN 6527 (Solid Carbide / HSS-Co8)',
     materialBadan: 'Solid Tungsten Carbide (Mikrograin WC 10% Co) / HSS-Co8',
     pelapis: 'TiAlN / AlTiN Violet Gelap (Tahan Panas s.d. 900°C)',
@@ -154,6 +156,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Ball Nose End Mill (3D Contouring / Mold & Die)',
     category: 'Milling Permukaan 3D & Cetakan',
     icon: '🔮',
+    fotoReal: '/assets/images/machine_cutting_tools/ball_nose_mill.jpg',
     isoStandard: 'DIN 6527 L / ISO Ball Nose Standard',
     materialBadan: 'Solid Micrograin Tungsten Carbide',
     pelapis: 'AlTiN / nACo (Nano-Composite Biru-Ungu) Tahan Panas 1100°C',
@@ -191,6 +194,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Corner Radius End Mill / Bull Nose (Toroidal Cutter)',
     category: 'Milling Pengasaran Berat & Fillet',
     icon: '🛡️',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 6527 Standard Corner Radius',
     materialBadan: 'Solid Sub-Micrograin Tungsten Carbide',
     pelapis: 'TiAlN / AlCrN Berlapis Multi-Layer (Sangat Tahan Aus Abrasif)',
@@ -228,6 +232,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'T-Slot Milling Cutter (Woodruff & ISO T-Nut Slotter)',
     category: 'Milling Alur Khusus Mesin',
     icon: '⚓',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 851 / ISO 299 (Standar Meja Mesin Perkakas)',
     materialBadan: 'Baja Paduan HSS-E (Cobalt 8%) / Sisipan Karbida Brazed',
     pelapis: 'TiN (Titanium Nitride Kuning Mengkilap) Mencegah Keausan Gesek',
@@ -265,6 +270,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Dovetail Milling Cutter (Machine Slideway & Gib Slot)',
     category: 'Milling Pemandu Luncur Mesin',
     icon: '🕊️',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 1833 Standard Dovetail Cutters',
     materialBadan: 'Baja HSS-Co8 / Solid Tungsten Carbide',
     pelapis: 'TiAlN / Uncoated Polished Ground',
@@ -302,6 +308,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Chamfering End Mill (Edge Beveling & Deburring 45°/90°)',
     category: 'Finishing & Deburring Tepi',
     icon: '📐',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 6527 Chamfer Standard (Sudut Konis 45° / 60°)',
     materialBadan: 'Solid Tungsten Carbide / Sisipan Indexable Insert',
     pelapis: 'TiAlN / AlTiN Ungu-Hitam (Sangat Tajam & Tahan Suhu Tinggi)',
@@ -338,6 +345,7 @@ const MILLING_CUTTERS_CATALOG = [
     englishName: 'Metal Slitting Saw / Circular Slotting Saw (Thin Disc Cutter)',
     category: 'Pemotongan Celah Tipis & Pembelahan',
     icon: '💿',
+    fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 1837 A (Gigi Halus) / DIN 1838 B (Gigi Kasar)',
     materialBadan: 'Baja Perkakas HSS-DMo5 / HSS-Co5 Tempa Presisi',
     pelapis: 'VAPO (Steam Tempered Hitam Anti-Gesek) / TiN Emas',
@@ -384,6 +392,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Memanjang Luar (Longitudinal)',
     leadAngle: '75° / 45°',
     color: '#2563eb',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
     deskripsi: 'Pahat bubut luar utama yang menyayat dari arah kanan ke kiri (mendekati kepala tetap / cekam). Menghasilkan diameter silinder yang rata, lurus, dan berdimensi presisi tinggi sepanjang poros kerja.',
     aplikasi: 'Pembubutan muka luar silinder (roughing & finishing poros memanjang, pembuatan diameter bertingkat).',
     keunggulan: 'Sisi potong utama di sebelah kiri mengalirkan tatal menjauhi permukaan hasil sayatan sehingga benda tetap mulus.',
@@ -405,6 +414,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Memanjang Mundur',
     leadAngle: '75° / 45° Kiri',
     color: '#ea580c',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
     deskripsi: 'Pahat bubut dengan sisi potong di sebelah kanan, menyayat dari arah kiri ke kanan (menjauhi cekam spindel). Digunakan untuk membubut bidang bertingkat dari sisi dalam atau pembubutan mundur.',
     aplikasi: 'Pembubutan mundur pada poros bertingkat atau sudut bahu kiri benda kerja yang dekat dengan rahang cekam.',
     keunggulan: 'Dapat menyelesaikan pembubutan bahu yang berbatasan dekat dengan chuck tanpa risiko rumah pahat menabrak rahang cekam.',
@@ -424,6 +434,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Muka Ujung Poros (Facing)',
     leadAngle: '45°',
     color: '#16a34a',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
     deskripsi: 'Pahat khusus dengan sudut potong miring 45° untuk meratakan permukaan bidang ujung penampang silinder dengan gerakan melintang eretan lintang (cross-slide feed).',
     aplikasi: 'Facing ujung benda kerja untuk menentukan panjang absolut dan bidang referensi titik nol (datum face).',
     keunggulan: 'Sudut masuk 45° memotong secara bertahap dari diameter terluar ke pusat tanpa menimbulkan getaran benturan.',
@@ -443,6 +454,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembuatan Alur & Pemotongan Putus',
     leadAngle: '90° (Bilah Lebar 2 – 4 mm)',
     color: '#d97706',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_set.jpg',
     deskripsi: 'Pahat bilah tipis panjang dengan sisi potong lurus di ujungnya dan sudut bebas samping ganda untuk membuat celah alur pasak/O-ring atau memotong putus benda kerja.',
     aplikasi: 'Alur penahan snap ring, alur seal karet O-ring, alur pembebas ulir, dan pemotongan putus batang bahan silinder.',
     keunggulan: 'Bilah kaku berkepala insert self-clamping tipis meminimalkan volume logam yang terbuang menjadi bram.',
@@ -462,6 +474,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembuatan Ulir Baut Luar',
     leadAngle: 'Sudut Puncak Profil 60°',
     color: '#7c3aed',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_bubut.jpg',
     deskripsi: 'Pahat dengan ujung baji segitiga presisi sudut 60° (Metrik) atau 55° (Whitworth) yang digerakkan secara sinkron oleh poros transportir untuk menyayat alur spiral ulir baut.',
     aplikasi: 'Pembuatan ulir luar segitiga metrik (M6 s.d. M30), ulir trapesium gerak, dan ulir modul presisi.',
     keunggulan: 'Insert ulir penuh (full-profile) sekaligus membentuk puncak dan dasar ulir berstandar toleransi ISO 6g.',
@@ -481,6 +494,7 @@ const LATHE_TOOLS_CATALOG = [
     tipe: 'Pembubutan Lubang Silinder Dalam',
     leadAngle: '95° (CCMT / WCMT)',
     color: '#0284c7',
+    fotoReal: '/assets/images/machine_cutting_tools/pahat_set.jpg',
     deskripsi: 'Pahat berbentuk silinder pejal panjang (sering berbahan karbida anti-getar) dengan kepala insert offset untuk memperbesar, meratakan, dan menghaluskan lubang dalam silindris.',
     aplikasi: 'Perbesaran lubang hasil bor, pembuatan dudukan bearing H7 presisi, pembubutan rumah silinder rem dan blok mesin.',
     keunggulan: 'Batang silindris kokoh meminimalkan defleksi lentur pada kedalaman lubang (L/D hingga 4× untuk baja, 7× untuk karbida).',
@@ -505,6 +519,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
     fleksibilitas: '⭐⭐⭐ (Sedang)',
     color: '#2563eb',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Bentuk paling populer dan standar utama di bengkel mesin bubut seluruh dunia. Sudut hidung 80° memberikan ketahanan luar biasa terhadap beban pemakanan berat tanpa mudah gompal.',
     fungsi: 'Pembubutan rata memanjang luar & dalam, facing muka, pengasaran (roughing) hingga medium finishing.',
     keunggulan: 'Dapat melakukan pembubutan muka dan memanjang tanpa perlu mengganti pahat.'
@@ -517,6 +532,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐ (Kuat)',
     fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
     color: '#ea580c',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts_vhm.jpg',
     deskripsi: 'Bentuk belah ketupat sudut 55° yang memungkinkan pahat masuk ke sudut bahu 90° dan membubut profil kontur tirus tanpa mengalami interferensi dinding.',
     fungsi: 'Pembubutan kontur luar/dalam, profil tirus, pembubutan bahu siku 90°, dan finishing presisi.',
     keunggulan: 'Aksesibilitas sudut profil jauh lebih lincah dibanding bentuk C.'
@@ -529,6 +545,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Kekuatan Maksimum)',
     fleksibilitas: '⭐⭐ (Terbatas)',
     color: '#16a34a',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Bentuk bujur sangkar dengan sudut hidung 90° terkuat. Sangat hemat karena memiliki total 8 sisi potong aktif (pada tipe negatif SNMG bolak-balik).',
     fungsi: 'Pengasaran berat (heavy roughing), pemotongan logam berkerak cor kasar, dan chamfering 45°.',
     keunggulan: 'Ketahanan puncak terhadap beban tumbukan intermiten dan pemotongan terputus.'
@@ -541,6 +558,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐ (Sedang)',
     fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
     color: '#d97706',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Bentuk segitiga sama sisi yang sangat ekonomis dengan harga per sisi potong termurah. Sudut baji 60° tajam dan gaya potong relatif ringan.',
     fungsi: 'Pembubutan umum serbaguna, pembubutan dalam lubang kecil, dan pembuatan alur V.',
     keunggulan: 'Ekonomis dengan 6 sisi potong dan gaya potong aksial yang rendah.'
@@ -553,6 +571,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
     fleksibilitas: '⭐⭐⭐ (Sedang)',
     color: '#7c3aed',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Pengembangan modern dari perpaduan bentuk C dan T. Memiliki sudut hidung 80° sekokoh bentuk C, tetapi memiliki 6 sisi potong aktif bolak-balik seperti bentuk segitiga!',
     fungsi: 'Pilihan paling ekonomis dan efisien untuk produksi massal pembubutan luar dan facing mesin CNC.',
     keunggulan: 'Kekuatan setara bentuk C tetapi hemat 50% lebih banyak sisi potong.'
@@ -565,6 +584,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐ (Rentan Beban Berat)',
     fleksibilitas: '⭐⭐⭐⭐⭐ (Aksesibilitas Maksimum)',
     color: '#db2777',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts_vhm.jpg',
     deskripsi: 'Bentuk belah ketupat sangat lancip 35° yang dapat menjangkau ceruk sempit, alur kontur kurva tajam, dan pembubutan undercut.',
     fungsi: 'Finishing profil kurva kompleks CNC, salinan kontur tirus sempit, dan pembuatan pola ornamen halus.',
     keunggulan: 'Dapat memotong profil undercut dengan sudut hingga 30° tanpa gesekan bodi.'
@@ -577,6 +597,7 @@ const CARBIDE_INSERTS_CATALOG = [
     kekuatanTepi: '⭐⭐⭐⭐⭐ (Paling Tahan Benturan)',
     fleksibilitas: '⭐⭐⭐ (Khusus Kontur Radius)',
     color: '#0284c7',
+    fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Sisipan berbentuk piringan lingkaran penuh tanpa sudut tajam. Menghilangkan titik konsentrasi tegangan sehingga tahan terhadap beban kejut pemotongan terputus.',
     fungsi: 'Pembubutan permukaan cekung bulat, pembuatan alur radius besar, pemotongan cetakan (die & mold).',
     keunggulan: 'Sisi potong dapat diindeks (diputar) berkali-kali hingga seluruh keliling lingkaran terpakai.'
@@ -2355,11 +2376,12 @@ const INSERT_ISO_SYSTEM = {
 // =============================================================================
 // DATABASE 4: MATA BOR, SET TAP, DAN SNEI (THREADING & HOLEMAKING)
 // =============================================================================
-const HOLE_THREAD_TOOLS = [
+ const HOLE_THREAD_TOOLS = [
   {
     id: 'twist-drill',
     name: 'Mata Bor Spiral (Twist Drill)',
     icon: '🔩',
+    fotoReal: '/assets/images/machine_cutting_tools/mata_bor.jpg',
     standar: 'DIN 338 / DIN 345 (Morse Taper)',
     sudutPuncak: '118° (Baja Lunak & Umum) vs 135° Split-Point (Baja Keras & Stainless)',
     anatomi: [
@@ -2375,6 +2397,7 @@ const HOLE_THREAD_TOOLS = [
     id: 'center-drill',
     name: 'Mata Bor Senter (Center Drill DIN 333 Tipe A 60°)',
     icon: '📍',
+    fotoReal: '/assets/images/machine_cutting_tools/bor_senter.jpg',
     standar: 'DIN 333 Tipe A (Sudut 60°)',
     sudutPuncak: 'Sudut Kerucut 60° dengan Bor Perintis Kecil',
     anatomi: [
@@ -2389,6 +2412,7 @@ const HOLE_THREAD_TOOLS = [
     id: 'hand-tap-set',
     name: 'Set Hand Tap Manual (3 Buah Pembuat Ulir Dalam ISO)',
     icon: '🧵',
+    fotoReal: '/assets/images/machine_cutting_tools/tap_t_wrench.jpg',
     standar: 'ISO 529 / DIN 352 (Metrik 60°)',
     sudutPuncak: 'Sudut Profil Gigi 60° Standar Metrik ISO',
     anatomi: [
@@ -2403,6 +2427,7 @@ const HOLE_THREAD_TOOLS = [
     id: 'snei-dies',
     name: 'Snei Bulat Terbelah (Split Round Threading Die)',
     icon: '⭕',
+    fotoReal: '/assets/images/machine_cutting_tools/snei_die.jpg',
     standar: 'DIN EN 22568 / ISO Metrik 60°',
     sudutPuncak: 'Sudut Ulir 60° Luar untuk Baut & Poros',
     anatomi: [
@@ -2830,20 +2855,39 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  {/* Kartu Visual Kontur Nyata Pahat Bubut */}
+                  {/* Foto Nyata Pahat Bubut */}
                   <div style={{
                     width: '100%',
                     height: '110px',
                     borderRadius: '10px',
-                    background: isSelected ? `${tool.color}08` : '#f8fafc',
-                    border: `1px solid ${isSelected ? tool.color + '40' : '#e2e8f0'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '6px',
+                    background: '#0f172a',
+                    border: `2px solid ${isSelected ? tool.color : '#e2e8f0'}`,
+                    overflow: 'hidden',
+                    position: 'relative',
                     boxSizing: 'border-box'
                   }}>
-                    <LatheToolCardVisual toolId={tool.id} isSelected={isSelected} />
+                    <img
+                      src={tool.fotoReal}
+                      alt={tool.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block',
+                        filter: isSelected ? 'brightness(1.08) saturate(1.15)' : 'brightness(0.92) saturate(0.9)'
+                      }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      background: `linear-gradient(transparent, ${tool.color}cc)`,
+                      padding: '4px 8px',
+                      fontSize: '0.6rem', fontWeight: 900, color: '#ffffff',
+                      textTransform: 'uppercase', letterSpacing: '0.5px'
+                    }}>
+                      {tool.isoDIN}
+                    </div>
                   </div>
 
                   <div>
@@ -2890,18 +2934,32 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 
                 {/* Header Kontrol Mode Visual */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, background: `${current.color}15`, color: current.color, padding: '3px 8px', borderRadius: '4px' }}>
-                        {current.isoDIN} • {current.tipe}
-                      </span>
-                      <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
-                        Arah Sayat: <strong>{current.arahSayat}</strong>
-                      </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{
+                      width: '64px', height: '64px', borderRadius: '10px',
+                      overflow: 'hidden', border: `2px solid ${current.color}`, flexShrink: 0,
+                      background: '#0f172a'
+                    }}>
+                      <img
+                        src={current.fotoReal}
+                        alt={current.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
                     </div>
-                    <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
-                      {current.name}
-                    </h3>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 800, background: `${current.color}15`, color: current.color, padding: '3px 8px', borderRadius: '4px' }}>
+                          {current.isoDIN} • {current.tipe}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
+                          Arah Sayat: <strong>{current.arahSayat}</strong>
+                        </span>
+                      </div>
+                      <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
+                        {current.name}
+                      </h3>
+                    </div>
                   </div>
 
                   {/* Mode Toggles */}
@@ -3366,28 +3424,38 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     flexDirection: 'column'
                   }}
                 >
-                  {/* Kanvas Ilustrasi Visual Realistis 115px */}
+                  {/* Foto Nyata Pisau Frais */}
                   <div style={{
                     height: '115px',
-                    background: isSelected ? 'linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%)' : 'linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%)',
-                    borderBottom: '1px solid #e2e8f0',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    background: '#0f172a',
+                    borderBottom: `2px solid ${isSelected ? '#0284c7' : '#e2e8f0'}`,
                     position: 'relative',
-                    padding: '6px'
+                    overflow: 'hidden'
                   }}>
-                    <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />
+                    <img
+                      src={tool.fotoReal}
+                      alt={tool.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block',
+                        filter: isSelected ? 'brightness(1.1) saturate(1.2)' : 'brightness(0.88)'
+                      }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
                     <span style={{
                       position: 'absolute',
                       top: '8px',
                       left: '8px',
                       fontSize: '0.65rem',
                       fontWeight: 800,
-                      background: isSelected ? '#0284c7' : '#e2e8f0',
-                      color: isSelected ? '#ffffff' : '#334155',
+                      background: isSelected ? '#0284c7' : 'rgba(0,0,0,0.55)',
+                      color: '#ffffff',
                       padding: '2px 7px',
-                      borderRadius: '4px'
+                      borderRadius: '4px',
+                      backdropFilter: 'blur(4px)'
                     }}>
                       {tool.category}
                     </span>
@@ -3459,7 +3527,18 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 {/* Header Detail Pisau */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                    <MillingCutterThumbnail toolId={current.id} isSelected={true} />
+                    <div style={{
+                      width: '64px', height: '64px', borderRadius: '10px',
+                      overflow: 'hidden', border: '2px solid #0284c7', flexShrink: 0,
+                      background: '#0f172a'
+                    }}>
+                      <img
+                        src={current.fotoReal}
+                        alt={current.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
                         <span style={{ fontSize: '0.74rem', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '4px' }}>
@@ -3796,20 +3875,41 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     transition: 'all 0.15s'
                   }}
                 >
-                  {/* Kartu Visual Kontur Nyata Insert */}
+                  {/* Foto Nyata Insert Karbida */}
                   <div style={{
                     width: '100%',
                     height: '95px',
                     borderRadius: '8px',
-                    background: isSelected ? `${ins.color}08` : '#f8fafc',
-                    border: `1px solid ${isSelected ? ins.color + '40' : '#e2e8f0'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '4px',
+                    background: '#0f172a',
+                    border: `2px solid ${isSelected ? ins.color : '#e2e8f0'}`,
+                    overflow: 'hidden',
+                    position: 'relative',
                     boxSizing: 'border-box'
                   }}>
-                    <CarbideInsertCardVisual shape={ins.shape} isSelected={isSelected} />
+                    <img
+                      src={ins.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
+                      alt={ins.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block',
+                        filter: isSelected ? 'brightness(1.1) saturate(1.2)' : 'brightness(0.9)'
+                      }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <div style={{
+                      position: 'absolute', top: '6px', right: '6px',
+                      width: '22px', height: '22px', borderRadius: '4px',
+                      background: ins.color,
+                      color: '#ffffff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontWeight: 900, fontSize: '0.8rem',
+                      boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                    }}>
+                      {ins.shape}
+                    </div>
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -3855,7 +3955,23 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             return (
               <div className="dashboard-card" style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: `6px solid ${currentIns.color}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      border: `2px solid ${currentIns.color}`,
+                      flexShrink: 0,
+                      background: '#0f172a'
+                    }}>
+                      <img
+                        src={currentIns.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
+                        alt={currentIns.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
                     <span style={{
                       width: '38px',
                       height: '38px',
@@ -3866,7 +3982,8 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       fontWeight: 900,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      flexShrink: 0
                     }}>
                       {currentIns.shape}
                     </span>
@@ -4159,20 +4276,39 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
                   }}
                 >
-                  {/* Kartu Visual Kontur Nyata Mata Bor / Tap / Snei */}
+                  {/* Foto Nyata Mata Bor / Tap / Snei */}
                   <div style={{
                     width: '100%',
                     height: '110px',
                     borderRadius: '10px',
-                    background: isSelected ? '#f0fdf4' : '#f8fafc',
-                    border: `1px solid ${isSelected ? '#86efac' : '#e2e8f0'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '6px',
+                    background: '#0f172a',
+                    border: `2px solid ${isSelected ? '#16a34a' : '#e2e8f0'}`,
+                    overflow: 'hidden',
+                    position: 'relative',
                     boxSizing: 'border-box'
                   }}>
-                    <HoleThreadCardVisual toolId={t.id} isSelected={isSelected} />
+                    <img
+                      src={t.fotoReal}
+                      alt={t.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block',
+                        filter: isSelected ? 'brightness(1.1) saturate(1.15)' : 'brightness(0.88)'
+                      }}
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      background: 'linear-gradient(transparent, rgba(21,128,61,0.85))',
+                      padding: '4px 8px',
+                      fontSize: '0.62rem', fontWeight: 900, color: '#ffffff',
+                      textTransform: 'uppercase', letterSpacing: '0.5px'
+                    }}>
+                      {t.standar.split('/')[0].trim()}
+                    </div>
                   </div>
 
                   <div>
@@ -4210,18 +4346,32 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 
                 {/* Header Kontrol Mode Visual */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '3px 8px', borderRadius: '4px' }}>
-                        {current.standar}
-                      </span>
-                      <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
-                        Profil: <strong>{current.sudutPuncak}</strong>
-                      </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{
+                      width: '64px', height: '64px', borderRadius: '10px',
+                      overflow: 'hidden', border: '2px solid #16a34a', flexShrink: 0,
+                      background: '#0f172a'
+                    }}>
+                      <img
+                        src={current.fotoReal}
+                        alt={current.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
                     </div>
-                    <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
-                      {current.icon} {current.name}
-                    </h3>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#dcfce7', color: '#15803d', padding: '3px 8px', borderRadius: '4px' }}>
+                          {current.standar}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>
+                          Profil: <strong>{current.sudutPuncak}</strong>
+                        </span>
+                      </div>
+                      <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
+                        {current.icon} {current.name}
+                      </h3>
+                    </div>
                   </div>
 
                   {/* Mode Toggles */}

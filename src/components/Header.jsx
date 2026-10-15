@@ -3,7 +3,7 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import { useStudent } from '../context/StudentContext';
 import { getInitialsAvatar } from '../utils/assets';
 
-const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
+const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
   const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
@@ -202,6 +202,32 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout }) => {
                 <img src={getInitialsAvatar(student?.name, isTeacher)} alt="Avatar" style={{ width: '100%', height: '100%', display: 'block' }} />
               </div>
             </div>
+
+            {/* TOMBOL BERANDA / LANDING PAGE */}
+            <button
+              onClick={() => {
+                if (typeof onGoToLanding === 'function') onGoToLanding();
+              }}
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid var(--border-light)',
+                color: 'var(--text-muted)',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.2s',
+                whiteSpace: 'nowrap'
+              }}
+              title="Ke Halaman Utama (Landing Page)"
+            >
+              <span>🏠</span>
+              <span className="app-header-class-text">Beranda</span>
+            </button>
 
             {/* TOMBOL LOGOUT */}
             <button

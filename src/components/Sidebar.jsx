@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
-const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) => {
+const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, closeSidebar }) => {
   const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
   const menus = [
@@ -408,7 +408,13 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, isOpen, closeSidebar }) 
         )}
 
         <button 
-          onClick={onLogout}
+          onClick={() => {
+            if (typeof onGoToLanding === 'function') {
+              onGoToLanding();
+            } else if (typeof onLogout === 'function') {
+              onLogout();
+            }
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',

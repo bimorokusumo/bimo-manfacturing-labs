@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStudent } from '../context/StudentContext';
 
-const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
+const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => {
   const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
 
   const handleLoginClick = () => {
@@ -355,11 +355,83 @@ const LandingPage = ({ onStart, onOpenGradebook, onOpenLogin }) => {
               onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'}
               onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
             >
-              MULAI SEKARANG
+              <span>{isLoggedIn ? 'LANJUTKAN KE LAB DASHBOARD' : 'MULAI SEKARANG'}</span>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
+          </div>
+
+          {/* AKSES CEPAT SIMULATOR 3D (LANGSUNG DARI HALAMAN DEPAN) */}
+          <div style={{ marginTop: '36px' }}>
+            <div style={{
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              letterSpacing: '1px',
+              color: '#38bdf8',
+              textTransform: 'uppercase',
+              marginBottom: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>🎮</span>
+              <span>Akses Cepat Simulator 3D:</span>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gap: '10px'
+            }}>
+              {[
+                { id: 'virtual-bengkel', title: 'Virtual Bengkel 3D', icon: '🏭', color: '#f59e0b' },
+                { id: 'machine', title: 'Mesin Bubut 3D', icon: '⚙️', color: '#3b82f6' },
+                { id: 'machine-milling-tools', title: 'Mesin Frais 3D', icon: '🌀', color: '#10b981' },
+                { id: 'safety', title: 'Operator Visual K3', icon: '🛡️', color: '#ea580c' },
+              ].map(card => (
+                <button
+                  key={card.id}
+                  onClick={() => {
+                    if (typeof onSelectLab === 'function') {
+                      onSelectLab(card.id);
+                    } else if (typeof onStart === 'function') {
+                      onStart(card.id);
+                    }
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    background: 'rgba(15, 23, 42, 0.85)',
+                    border: `1px solid ${card.color}55`,
+                    color: '#f8fafc',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    backdropFilter: 'blur(8px)',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = card.color;
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.95)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = `${card.color}55`;
+                    e.currentTarget.style.transform = 'translateY(0px)';
+                    e.currentTarget.style.background = 'rgba(15, 23, 42, 0.85)';
+                  }}
+                >
+                  <span style={{ fontSize: '1.2rem' }}>{card.icon}</span>
+                  <span style={{ lineHeight: 1.2 }}>{card.title}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

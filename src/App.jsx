@@ -30,8 +30,86 @@ import LiveCaptionsOverlay from './components/LiveCaptionsOverlay';
 
 function AppInner() {
   const { isLoggedIn, openLoginModal, isTeacher } = useStudent();
-  const [isStarted, setIsStarted] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('dashboard');
+
+  // Inisialisasi status mulai: jika sudah login dan tidak eksplisit membuka landing page, langsung masuk ke Dashboard
+  const [isStarted, setIsStarted] = useState(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const explicitLanding = sessionStorage.getItem('bimo_lab_started') === 'false';
+        if (explicitLanding) return false;
+
+        const savedSession = localStorage.getItem('bimo_student_session');
+        if (savedSession) {
+          const parsed = JSON.parse(savedSession);
+          if (parsed && parsed.name && parsed.studentNumber) {
+            return true;
+          }
+        }
+        return sessionStorage.getItem('bimo_lab_started') === 'true';
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  });
+
+  // Inisialisasi activeMenu dari URL hash atau sessionStorage
+  const [activeMenu, setActiveMenu] = useState(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const hash = window.location.hash.replace('#', '').trim();
+        if (hash) return hash;
+        const savedMenu = sessionStorage.getItem('bimo_active_menu');
+        if (savedMenu) return savedMenu;
+      }
+    } catch (e) {}
+    return 'dashboard';
+  });
+
+  // Handler pergantian menu yang sinkron dengan URL hash & sessionStorage
+  const handleSetActiveMenu = (menu) => {
+    try {
+      sessionStorage.setItem('bimo_active_menu', menu);
+      if (typeof window !== 'undefined' && window.location.hash !== `#${menu}`) {
+        window.location.hash = menu;
+      }
+    } catch (e) {}
+    if (menu === 'gradebook') setGradebookInitialSearch('');
+    setActiveMenu(menu);
+  };
+
+  const handleStartLab = (targetLab = null) => {
+    try {
+      sessionStorage.setItem('bimo_lab_started', 'true');
+    } catch (e) {}
+    if (targetLab) {
+      handleSetActiveMenu(targetLab);
+    }
+    setIsStarted(true);
+  };
+
+  const handleLogout = () => {
+    try {
+      sessionStorage.removeItem('bimo_lab_started');
+      sessionStorage.removeItem('bimo_active_menu');
+      if (typeof window !== 'undefined') window.location.hash = '';
+    } catch (e) {}
+    setIsStarted(false);
+  };
+
+  // Dengarkan perubahan hash di URL (misal user klik back / forward di browser)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (hash && hash !== activeMenu) {
+        setActiveMenu(hash);
+        setIsStarted(true);
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [activeMenu]);
+
   const [gradebookInitialSearch, setGradebookInitialSearch] = useState('');
   const [isSoundMuted, setIsSoundMuted] = useState(true);
   
@@ -307,7 +385,18 @@ function AppInner() {
         }
         return <TeacherGradebook initialSearch={gradebookInitialSearch} />;
       default:
-        return <DashboardView onSelectLab={(lab) => setActiveMenu(lab)} globalXP={globalXP} levelInfo={levelInfo} completedMissions={completedMissions} totalMissions={totalMissions} />;
+        return (
+          <DashboardView 
+            onSelectLab={(lab, search = '') => {
+              setGradebookInitialSearch(search);
+              handleSetActiveMenu(lab);
+            }} 
+            globalXP={globalXP} 
+            levelInfo={levelInfo} 
+            completedMissions={completedMissions} 
+            totalMissions={totalMissions} 
+          />
+        );
     }
   };
 
@@ -315,22 +404,27 @@ function AppInner() {
     return (
       <>
         <LandingPage
-          onStart={() => {
+          onStart={(targetLab) => {
             if (isLoggedIn) {
-              setIsStarted(true);
+              handleStartLab(targetLab);
             } else {
-              openLoginModal(() => setIsStarted(true));
+              openLoginModal(() => handleStartLab(targetLab));
+            }
+          }}
+          onSelectLab={(targetLab) => {
+            if (isLoggedIn) {
+              handleStartLab(targetLab);
+            } else {
+              openLoginModal(() => handleStartLab(targetLab));
             }
           }}
           onOpenGradebook={() => {
             setGradebookInitialSearch('');
             if (isTeacher) {
-              setIsStarted(true);
-              setActiveMenu('gradebook');
+              handleStartLab('gradebook');
             } else {
               openLoginModal(() => {
-                setIsStarted(true);
-                setActiveMenu('gradebook');
+                handleStartLab('gradebook');
               });
             }
           }}
@@ -356,11 +450,12 @@ function AppInner() {
       {/* SIDEBAR */}
       <Sidebar 
         activeMenu={activeMenu} 
-        setActiveMenu={(menu) => {
-          if (menu === 'gradebook') setGradebookInitialSearch('');
-          setActiveMenu(menu);
-        }} 
-        onLogout={() => setIsStarted(false)} 
+        setActiveMenu={handleSetActiveMenu} 
+        onLogout={handleLogout} 
+        onGoToLanding={() => {
+          try { sessionStorage.setItem('bimo_lab_started', 'false'); } catch (e) {}
+          setIsStarted(false);
+        }}
         isOpen={isSidebarOpen} 
         closeSidebar={() => setIsSidebarOpen(false)}
       />
@@ -384,9 +479,13 @@ function AppInner() {
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           onOpenGradebook={() => {
             setGradebookInitialSearch('');
-            setActiveMenu('gradebook');
+            handleSetActiveMenu('gradebook');
           }}
-          onLogout={() => setIsStarted(false)}
+          onLogout={handleLogout}
+          onGoToLanding={() => {
+            try { sessionStorage.setItem('bimo_lab_started', 'false'); } catch (e) {}
+            setIsStarted(false);
+          }}
         />
         
         <main className="app-main-body" style={{ padding: '20px 16px', flex: 1, overflowY: 'auto', overflowX: 'hidden', minWidth: 0, maxWidth: '100%' }}>

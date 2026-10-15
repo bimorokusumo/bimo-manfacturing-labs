@@ -10,20 +10,29 @@ const MillingModule = ({ addXP }) => {
   const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test' | 'tools'
   const [isPrepared, setIsPrepared] = useState(true);
   const [showJobsheetModal, setShowJobsheetModal] = useState(false);
-  const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
+  const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && (window.innerWidth <= 850 || window.innerHeight <= 600));
+  const [isPortrait, setIsPortrait] = useState(() => typeof window !== 'undefined' && window.innerHeight > window.innerWidth);
   const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
   const [showJobGuide, setShowJobGuide] = useState(true);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (typeof window !== 'undefined' && window.innerWidth <= 850) {
+    const handleResizeAndOrientation = () => {
+      if (typeof window === 'undefined') return;
+      const portrait = window.innerHeight > window.innerWidth;
+      setIsPortrait(portrait);
+      if (window.innerWidth <= 850 || window.innerHeight <= 600) {
         setIsMobileMode(true);
       }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    handleResizeAndOrientation();
+    window.addEventListener('resize', handleResizeAndOrientation);
+    window.addEventListener('orientationchange', handleResizeAndOrientation);
+    return () => {
+      window.removeEventListener('resize', handleResizeAndOrientation);
+      window.removeEventListener('orientationchange', handleResizeAndOrientation);
+    };
   }, []);
 
   // Workpiece & Tool Dimensions
@@ -476,397 +485,852 @@ const MillingModule = ({ addXP }) => {
             /* ==============================================================
                MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
                ============================================================== */
-            <div className="mobile-game-cockpit">
-              {/* 100% FULLSCREEN VIEWPORT (CANVAS RUNS FULLSCREEN BEHIND TRANSPARENT CONTROLS) */}
-              <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', background: '#0b1120' }}>
-                <Milling3D
-                  isRunning={isSpindleRunning}
-                  tablePosition={tablePosition}
-                  spindlePosition={spindlePosition}
-                  heightmap={heightmap}
-                  workpieceSize={workpieceSize}
-                  toolDiameter={toolDiameter}
-                  rpm={rpm}
-                  isCutting={isCutting}
-                  coolant={coolant}
-                  gridX={gridX}
-                  gridY={gridY}
-                  viewMode={viewMode}
-                  onToggleViewMode={setViewMode}
-                  hideInternalToggle={true}
-                  activeJobsheet={activeJobsheet}
-                  showJobGuide={showJobGuide}
-                  onToggleJobGuide={() => setShowJobGuide(v => !v)}
-                />
-
-                {/* FLOATING TOP GLASS HUD */}
-                <div style={{
-                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 30,
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(10px)',
-                  padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
-                }}>
-                  {/* DRO READOUTS (X, Y, Z) */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
-                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>{droX}</span>
-                      <button
-                        onClick={() => { sound.playClick(); tablePosRef.current.x = 0; setTablePosition({ ...tablePosRef.current }); }}
-                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
-                        title="Zero X"
-                      >
-                        0
-                      </button>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Y:</span>
-                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droY}</span>
-                      <button
-                        onClick={() => { sound.playClick(); tablePosRef.current.y = 0; setTablePosition({ ...tablePosRef.current }); }}
-                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
-                        title="Zero Y"
-                      >
-                        0
-                      </button>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
-                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: spindlePosition.z <= 0 ? '#f59e0b' : '#10b981' }}>{droZ}</span>
-                      <button
-                        onClick={() => setSpindleDepthPreset(0)}
-                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#f59e0b', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
-                        title="Zero Z"
-                      >
-                        0
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* SPINDLE STATUS & RPM */}
+            <div
+              className={`mobile-game-cockpit ${isPortrait ? 'is-portrait' : 'is-landscape'}`}
+              style={{
+                height: isPortrait ? 'calc(100dvh - 65px)' : 'calc(100dvh - 52px)',
+                maxHeight: isPortrait ? 'calc(100dvh - 65px)' : 'calc(100dvh - 52px)',
+                display: 'flex',
+                flexDirection: isPortrait ? 'column' : 'block',
+                position: 'relative',
+                overflow: 'hidden',
+                background: '#070d19'
+              }}
+            >
+              {isPortrait ? (
+                /* -----------------------------------------------------------
+                   LAYOUT 1: HP MODE TEGAK (PORTRAIT) FRAIS
+                   - Top HUD 2-Baris Ramping (DRO X,Y,Z + RPM + 5 Job Selector)
+                   - Middle Viewport Canvas Lega & Jernih
+                   - Bottom Gamepad Deck Nyaman di Jangkauan Dua Jempol
+                   ----------------------------------------------------------- */
+                <>
+                  {/* 1. TOP COMPACT GLASS HUD */}
                   <div style={{
-                    display: 'flex', alignItems: 'center', gap: '4px',
-                    background: isSpindleRunning ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)',
-                    border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
-                    padding: '3px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
-                    color: isSpindleRunning ? '#10b981' : '#fca5a5'
+                    flexShrink: 0,
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                    padding: '6px 8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '5px',
+                    zIndex: 30
                   }}>
-                    <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
-                    <span>{rpm} RPM</span>
-                    {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
-                  </div>
+                    {/* BARIS 1: DRO (X, Y, Z) + SPINDLE RPM + DESKTOP BUTTON */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                        {/* DRO X */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 4px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
+                          <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>{droX}</span>
+                          <button
+                            onClick={() => { sound.playClick(); tablePosRef.current.x = 0; setTablePosition({ ...tablePosRef.current }); }}
+                            style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.50rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                            title="Zero X"
+                          >
+                            0
+                          </button>
+                        </div>
 
-                  {/* 2D / 3D VIEW TOGGLE & QUICK ACTIONS */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {/* 2D / 3D TOGGLE BUTTON */}
-                    <button
-                      onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
-                      style={{
-                        background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
-                        border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
-                        color: '#ffffff',
-                        padding: '3px 8px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 900, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '3px',
-                        boxShadow: viewMode === '2d' ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
-                      }}
-                      title="Beralih antara Mode 3D dan Mode 2D Presisi"
-                    >
-                      <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
-                    </button>
+                        {/* DRO Y */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 4px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800 }}>Y:</span>
+                          <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droY}</span>
+                          <button
+                            onClick={() => { sound.playClick(); tablePosRef.current.y = 0; setTablePosition({ ...tablePosRef.current }); }}
+                            style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.50rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                            title="Zero Y"
+                          >
+                            0
+                          </button>
+                        </div>
 
-                    {/* GARIS TARGET JOB TOGGLE (MOBILE) */}
-                    <button
-                      onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
-                      style={{
-                        background: showJobGuide ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.12)',
-                        border: showJobGuide ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.25)',
-                        color: showJobGuide ? '#34d399' : '#cbd5e1',
-                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '2px'
-                      }}
-                      title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
-                    >
-                      <span>🎯</span>
-                      <span>JOB</span>
-                    </button>
+                        {/* DRO Z */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 4px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
+                          <span style={{ fontSize: '0.74rem', fontFamily: 'monospace', fontWeight: 900, color: spindlePosition.z <= 0 ? '#f59e0b' : '#10b981' }}>{droZ}</span>
+                          <button
+                            onClick={() => setSpindleDepthPreset(0)}
+                            style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#f59e0b', fontSize: '0.50rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
+                            title="Zero Z"
+                          >
+                            0
+                          </button>
+                        </div>
+                      </div>
 
-                    <button
-                      onClick={() => { sound.playClick(); setShowJobsheetModal(true); }}
-                      style={{
-                        background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#fbbf24',
-                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '2px'
-                      }}
-                      title="Ganti Jobsheet Frais"
-                    >
-                      <span>📋</span>
-                      <span>Tugas {activeJobsheetIndex + 1}</span>
-                    </button>
+                      {/* SPINDLE STATUS & DESKTOP SWITCH */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: '3px',
+                          background: isSpindleRunning ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)',
+                          border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
+                          padding: '2px 6px', borderRadius: '14px', fontSize: '0.65rem', fontWeight: 800,
+                          color: isSpindleRunning ? '#10b981' : '#fca5a5'
+                        }}>
+                          <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                          <span>{rpm} RPM</span>
+                          {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.62rem' }}>⚡</span>}
+                        </div>
 
-                    <button
-                      onClick={() => { sound.playClick(); setActiveTab('tools'); }}
-                      style={{
-                        background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
-                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer'
-                      }}
-                      title="Katalog 8 Pisau Frais Real"
-                    >
-                      🔪
-                    </button>
-
-                    <button
-                      onClick={() => { sound.playClick(); setIsMobileMode(false); }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
-                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer'
-                      }}
-                      title="Beralih ke Tampilan Desktop Penuh"
-                    >
-                      🖥️
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* BOTTOM FLOATING VIRTUAL GAMEPAD - 100% TRANSPARENT GLASS OVERLAY */}
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, pointerEvents: 'none',
-                height: '205px',
-                background: 'linear-gradient(to top, rgba(2, 6, 23, 0.70) 0%, rgba(2, 6, 23, 0.15) 70%, transparent 100%)',
-                padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 125px', gap: '6px',
-                alignItems: 'center', boxSizing: 'border-box'
-              }}>
-                {/* LEFT THUMB: XY TABLE D-PAD */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none', pointerEvents: 'auto' }}>
-                  <div />
-                  <button
-                    className="game-dpad-btn"
-                    onMouseDown={() => startHoldTableJog('y', 1)}
-                    onMouseUp={stopHoldJog}
-                    onMouseLeave={stopHoldJog}
-                    onTouchStart={() => startHoldTableJog('y', 1)}
-                    onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-                    title="Meja Mundur (Y+)"
-                  >
-                    ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y+</span>
-                  </button>
-                  <div />
-
-                  <button
-                    className="game-dpad-btn"
-                    onMouseDown={() => startHoldTableJog('x', -1)}
-                    onMouseUp={stopHoldJog}
-                    onMouseLeave={stopHoldJog}
-                    onTouchStart={() => startHoldTableJog('x', -1)}
-                    onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-                    title="Meja Kiri (X-)"
-                  >
-                    ◀<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X-</span>
-                  </button>
-
-                  <div style={{ background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
-                    MEJA
-                  </div>
-
-                  <button
-                    className="game-dpad-btn"
-                    onMouseDown={() => startHoldTableJog('x', 1)}
-                    onMouseUp={stopHoldJog}
-                    onMouseLeave={stopHoldJog}
-                    onTouchStart={() => startHoldTableJog('x', 1)}
-                    onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-                    title="Meja Kanan (X+)"
-                  >
-                    ▶<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X+</span>
-                  </button>
-
-                  <div />
-                  <button
-                    className="game-dpad-btn"
-                    onMouseDown={() => startHoldTableJog('y', -1)}
-                    onMouseUp={stopHoldJog}
-                    onMouseLeave={stopHoldJog}
-                    onTouchStart={() => startHoldTableJog('y', -1)}
-                    onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
-                    title="Meja Maju (Y-)"
-                  >
-                    ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y-</span>
-                  </button>
-                  <div />
-                </div>
-
-                {/* CENTER COLUMN: STEP & QUICK DEPTH PRESETS */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
-                  {/* Step Selector */}
-                  <div style={{ display: 'flex', gap: '3px' }}>
-                    {[0.10, 0.50, 1.00, 2.00].map((v) => (
-                      <button
-                        key={v}
-                        onClick={() => { sound.playClick(); setStepSize(v); }}
-                        style={{
-                          flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
-                          background: stepSize === v ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
-                          color: stepSize === v ? '#000' : '#cbd5e1',
-                          border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.15)',
-                          backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
-                        }}
-                      >
-                        {v}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Quick Depth Presets */}
-                  <div style={{ display: 'flex', gap: '3px' }}>
-                    {[
-                      { l: 'Z=0', v: 0.0, c: '#38bdf8' },
-                      { l: '-1mm', v: -1.0, c: '#f59e0b' },
-                      { l: '-2mm', v: -2.0, c: '#f59e0b' },
-                      { l: '+5mm', v: 5.0, c: '#10b981' }
-                    ].map(dp => (
-                      <button
-                        key={dp.l}
-                        onClick={() => setSpindleDepthPreset(dp.v)}
-                        style={{
-                          flex: 1, padding: '4px 0', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 800, cursor: 'pointer',
-                          background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.4)' : 'rgba(15, 23, 42, 0.75)',
-                          color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.12)'}`,
-                          backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
-                        }}
-                      >
-                        {dp.l}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Rapid & Coolant */}
-                  <div style={{ display: 'flex', gap: '4px' }}>
-                    <button
-                      onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
-                      style={{
-                        flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                        background: rapidMode ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
-                        color: rapidMode ? '#000' : '#cbd5e1',
-                        border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
-                      }}
-                    >
-                      ⚡ RAPID 3X
-                    </button>
-                    <button
-                      onClick={() => { sound.playClick(); setCoolant(!coolant); }}
-                      style={{
-                        flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                        background: coolant ? 'rgba(14, 165, 233, 0.35)' : 'rgba(15, 23, 42, 0.75)',
-                        color: coolant ? '#38bdf8' : '#cbd5e1',
-                        border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
-                      }}
-                    >
-                      💦 {coolant ? 'ON' : 'OFF'}
-                    </button>
-                  </div>
-
-                  {/* Evaluate & Reset Buttons */}
-                  <div style={{ display: 'flex', gap: '4px' }}>
-                    <button
-                      onClick={handleEvaluate}
-                      style={{
-                        flex: 1.3, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 900, cursor: 'pointer',
-                        background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', border: 'none',
-                        boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
-                      }}
-                    >
-                      🏆 CEK HASIL
-                    </button>
-                    <button
-                      onClick={handleReset}
-                      style={{
-                        flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
-                        background: 'rgba(15, 23, 42, 0.75)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
-                      }}
-                    >
-                      🔄 RESET
-                    </button>
-                  </div>
-                </div>
-
-                {/* RIGHT THUMB: SPINDLE Z FEED & SPINDLE POWER */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
-                  {/* Spindle Z Jog buttons */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
-                    <button
-                      className="game-dpad-btn"
-                      onMouseDown={() => startHoldSpindleJog(-1)}
-                      onMouseUp={stopHoldJog}
-                      onMouseLeave={stopHoldJog}
-                      onTouchStart={() => startHoldSpindleJog(-1)}
-                      onTouchEnd={stopHoldJog}
-                      style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
-                      title="Spindel Naik (Z+)"
-                    >
-                      ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+ NAIK</span>
-                    </button>
-                    <button
-                      className="game-dpad-btn"
-                      onMouseDown={() => startHoldSpindleJog(1)}
-                      onMouseUp={stopHoldJog}
-                      onMouseLeave={stopHoldJog}
-                      onTouchStart={() => startHoldSpindleJog(1)}
-                      onTouchEnd={stopHoldJog}
-                      style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
-                      title="Spindel Turun Sayat (Z-)"
-                    >
-                      ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z- SAYAT</span>
-                    </button>
-                  </div>
-
-                  {/* Big Spindle Action Button */}
-                  <button
-                    className="game-action-btn"
-                    onClick={toggleSpindle}
-                    style={{
-                      height: '48px', width: '100%',
-                      background: isSpindleRunning
-                        ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
-                        : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      color: '#ffffff', border: 'none',
-                      boxShadow: isSpindleRunning ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 0 16px rgba(16, 185, 129, 0.5)',
-                      fontSize: '0.74rem'
-                    }}
-                  >
-                    <span style={{ fontSize: '1rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
-                    <span>{isSpindleRunning ? 'STOP' : 'START SPINDEL'}</span>
-                  </button>
-
-                  {/* RPM Stepper */}
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
-                    <button
-                      onClick={() => { sound.playClick(); setRpm(prev => Math.max(300, prev - 150)); }}
-                      style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
-                    >
-                      -
-                    </button>
-                    <div style={{ flex: 1, textAlign: 'center', fontSize: '0.66rem', fontWeight: 800, color: '#f59e0b' }}>
-                      {rpm} RPM
+                        <button
+                          onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
+                            padding: '2px 5px', borderRadius: '5px', fontSize: '0.62rem', fontWeight: 700, cursor: 'pointer'
+                          }}
+                          title="Beralih ke Tampilan Desktop Penuh"
+                        >
+                          🖥️
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => { sound.playClick(); setRpm(prev => Math.min(3000, prev + 150)); }}
-                      style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
-                    >
-                      +
-                    </button>
+
+                    {/* BARIS 2: 2D/3D + GARIS JOB + QUICK 5 JOBS SELECTOR + PISAU */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                          style={{
+                            background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
+                            border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
+                            color: '#ffffff',
+                            padding: '2px 6px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 900, cursor: 'pointer',
+                            boxShadow: viewMode === '2d' ? '0 0 8px rgba(56, 189, 248, 0.4)' : 'none'
+                          }}
+                          title="Beralih antara Mode 3D dan Mode 2D Presisi"
+                        >
+                          {viewMode === '3d' ? '📐 2D' : '🎮 3D'}
+                        </button>
+
+                        <button
+                          onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                          style={{
+                            background: showJobGuide ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.12)',
+                            border: showJobGuide ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.25)',
+                            color: showJobGuide ? '#34d399' : '#cbd5e1',
+                            padding: '2px 5px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '2px'
+                          }}
+                          title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
+                        >
+                          <span>🎯</span>
+                          <span>JOB</span>
+                        </button>
+                      </div>
+
+                      {/* QUICK 5 JOBS SELECTOR KODE ANGKA (PORTRAIT FRAIS) */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(0,0,0,0.35)', padding: '2px 4px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#94a3b8' }}>JOB:</span>
+                        {millingJobsheets.map((sheet, idx) => (
+                          <button
+                            key={sheet.id}
+                            onClick={() => { sound.playClick(); setActiveJobsheetIndex(idx); }}
+                            style={{
+                              minWidth: '22px', height: '20px', padding: '0 2px', borderRadius: '3px',
+                              fontSize: '0.66rem', fontWeight: 900, cursor: 'pointer',
+                              background: activeJobsheetIndex === idx ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                              color: activeJobsheetIndex === idx ? '#000000' : '#94a3b8',
+                              border: activeJobsheetIndex === idx ? '1px solid #fbbf24' : 'none',
+                              boxShadow: activeJobsheetIndex === idx ? '0 0 6px rgba(245, 158, 11, 0.4)' : 'none'
+                            }}
+                            title={`Tugas ${idx + 1}: ${sheet.title}`}
+                          >
+                            {idx + 1}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+                        style={{
+                          background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
+                          padding: '2px 6px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 800, cursor: 'pointer'
+                        }}
+                        title="Katalog 8 Pisau Frais Real"
+                      >
+                        🔪
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 2. MIDDLE VIEWPORT CANVAS (LEGA, TIDAK TERTUTUP TOMBOL) */}
+                  <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#0b1120' }}>
+                    <Milling3D
+                      isRunning={isSpindleRunning}
+                      tablePosition={tablePosition}
+                      spindlePosition={spindlePosition}
+                      heightmap={heightmap}
+                      workpieceSize={workpieceSize}
+                      toolDiameter={toolDiameter}
+                      rpm={rpm}
+                      isCutting={isCutting}
+                      coolant={coolant}
+                      gridX={gridX}
+                      gridY={gridY}
+                      viewMode={viewMode}
+                      onToggleViewMode={setViewMode}
+                      hideInternalToggle={true}
+                      activeJobsheet={activeJobsheet}
+                      showJobGuide={showJobGuide}
+                      onToggleJobGuide={() => setShowJobGuide(v => !v)}
+                    />
+
+                    {/* AUTO-HINT BADGE (PORTRAIT) */}
+                    <div style={{
+                      position: 'absolute', bottom: '6px', right: '8px', zIndex: 10,
+                      background: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(6px)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '12px',
+                      padding: '3px 8px', fontSize: '0.58rem', fontWeight: 700, color: '#94a3b8',
+                      display: 'flex', alignItems: 'center', gap: '4px', pointerEvents: 'none'
+                    }}>
+                      <span>📲</span>
+                      <span>Miringkan HP untuk Layar Penuh</span>
+                    </div>
+                  </div>
+
+                  {/* 3. BOTTOM ERGONOMIC CONTROL DECK (PORTRAIT FRAIS) */}
+                  <div style={{
+                    flexShrink: 0,
+                    background: 'rgba(11, 17, 32, 0.94)',
+                    backdropFilter: 'blur(10px)',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+                    padding: '6px 8px',
+                    display: 'grid',
+                    gridTemplateColumns: '120px 1fr 120px',
+                    gap: '6px',
+                    alignItems: 'center',
+                    boxSizing: 'border-box',
+                    boxShadow: '0 -4px 16px rgba(0,0,0,0.5)'
+                  }}>
+                    {/* LEFT THUMB: XY TABLE D-PAD */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none' }}>
+                      <div />
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('y', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('y', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Mundur (Y+)"
+                      >
+                        ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y+</span>
+                      </button>
+                      <div />
+
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('x', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('x', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Kiri (X-)"
+                      >
+                        ◀<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X-</span>
+                      </button>
+
+                      <div style={{ background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
+                        MEJA
+                      </div>
+
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('x', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('x', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Kanan (X+)"
+                      >
+                        ▶<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X+</span>
+                      </button>
+
+                      <div />
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('y', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('y', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Maju (Y-)"
+                      >
+                        ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y-</span>
+                      </button>
+                      <div />
+                    </div>
+
+                    {/* CENTER COLUMN: STEP & QUICK DEPTH PRESETS */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '0 4px', height: '100%', justifyContent: 'center' }}>
+                      {/* Step Selector */}
+                      <div style={{ display: 'flex', gap: '3px' }}>
+                        {[0.10, 0.50, 1.00, 2.00].map((v) => (
+                          <button
+                            key={v}
+                            onClick={() => { sound.playClick(); setStepSize(v); }}
+                            style={{
+                              flex: 1, padding: '4px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                              background: stepSize === v ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                              color: stepSize === v ? '#000' : '#cbd5e1',
+                              border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                              backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                            }}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Quick Depth Presets */}
+                      <div style={{ display: 'flex', gap: '3px' }}>
+                        {[
+                          { l: 'Z=0', v: 0.0, c: '#38bdf8' },
+                          { l: '-1mm', v: -1.0, c: '#f59e0b' },
+                          { l: '-2mm', v: -2.0, c: '#f59e0b' },
+                          { l: '+5mm', v: 5.0, c: '#10b981' }
+                        ].map(dp => (
+                          <button
+                            key={dp.l}
+                            onClick={() => setSpindleDepthPreset(dp.v)}
+                            style={{
+                              flex: 1, padding: '3px 0', borderRadius: '4px', fontSize: '0.58rem', fontWeight: 800, cursor: 'pointer',
+                              background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.4)' : 'rgba(15, 23, 42, 0.75)',
+                              color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.12)'}`,
+                              backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                            }}
+                          >
+                            {dp.l}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Rapid & Coolant */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
+                          style={{
+                            flex: 1, padding: '4px 2px', borderRadius: '5px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                            background: rapidMode ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                            color: rapidMode ? '#000' : '#cbd5e1',
+                            border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          ⚡ RAPID
+                        </button>
+                        <button
+                          onClick={() => { sound.playClick(); setCoolant(!coolant); }}
+                          style={{
+                            flex: 1, padding: '4px 2px', borderRadius: '5px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                            background: coolant ? 'rgba(14, 165, 233, 0.35)' : 'rgba(15, 23, 42, 0.75)',
+                            color: coolant ? '#38bdf8' : '#cbd5e1',
+                            border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          💦 {coolant ? 'ON' : 'OFF'}
+                        </button>
+                      </div>
+
+                      {/* Evaluate & Reset Buttons */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={handleEvaluate}
+                          style={{
+                            flex: 1.3, padding: '4px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 900, cursor: 'pointer',
+                            background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', border: 'none',
+                            boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+                          }}
+                        >
+                          🏆 CEK
+                        </button>
+                        <button
+                          onClick={handleReset}
+                          style={{
+                            flex: 0.8, padding: '4px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 700, cursor: 'pointer',
+                            background: 'rgba(15, 23, 42, 0.75)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          🔄 RESET
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* RIGHT THUMB: SPINDLE Z FEED & SPINDLE POWER */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', height: '100%', justifyContent: 'center' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3px' }}>
+                        <button
+                          className="game-dpad-btn"
+                          onMouseDown={() => startHoldSpindleJog(-1)}
+                          onMouseUp={stopHoldJog}
+                          onMouseLeave={stopHoldJog}
+                          onTouchStart={() => startHoldSpindleJog(-1)}
+                          onTouchEnd={stopHoldJog}
+                          style={{ height: '34px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.64rem', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+                          title="Spindel Naik (Z+)"
+                        >
+                          ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Z+ NAIK</span>
+                        </button>
+                        <button
+                          className="game-dpad-btn"
+                          onMouseDown={() => startHoldSpindleJog(1)}
+                          onMouseUp={stopHoldJog}
+                          onMouseLeave={stopHoldJog}
+                          onTouchStart={() => startHoldSpindleJog(1)}
+                          onTouchEnd={stopHoldJog}
+                          style={{ height: '34px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.64rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+                          title="Spindel Turun Sayat (Z-)"
+                        >
+                          ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Z- SAYAT</span>
+                        </button>
+                      </div>
+
+                      <button
+                        className="game-action-btn"
+                        onClick={toggleSpindle}
+                        style={{
+                          height: '42px', width: '100%',
+                          background: isSpindleRunning
+                            ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                            : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: '#ffffff', border: 'none',
+                          boxShadow: isSpindleRunning ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 0 16px rgba(16, 185, 129, 0.5)',
+                          fontSize: '0.72rem'
+                        }}
+                      >
+                        <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                        <span>{isSpindleRunning ? 'STOP' : 'START'}</span>
+                      </button>
+
+                      <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.max(300, prev - 150)); }}
+                          style={{ width: '24px', height: '22px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.8rem' }}
+                        >
+                          -
+                        </button>
+                        <div style={{ flex: 1, textAlign: 'center', fontSize: '0.62rem', fontWeight: 800, color: '#f59e0b' }}>
+                          {rpm}
+                        </div>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.min(3000, prev + 150)); }}
+                          style={{ width: '24px', height: '22px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.8rem' }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* -----------------------------------------------------------
+                   LAYOUT 2: HP MODE MIRING / LANDSCAPE (FULLSCREEN GAME COCKPIT)
+                   - 100% Fullscreen Viewport di belakang
+                   - Floating Top Glass HUD
+                   - Bottom Floating Virtual Gamepad Dua Jempol
+                   ----------------------------------------------------------- */
+                <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', background: '#0b1120' }}>
+                  <Milling3D
+                    isRunning={isSpindleRunning}
+                    tablePosition={tablePosition}
+                    spindlePosition={spindlePosition}
+                    heightmap={heightmap}
+                    workpieceSize={workpieceSize}
+                    toolDiameter={toolDiameter}
+                    rpm={rpm}
+                    isCutting={isCutting}
+                    coolant={coolant}
+                    gridX={gridX}
+                    gridY={gridY}
+                    viewMode={viewMode}
+                    onToggleViewMode={setViewMode}
+                    hideInternalToggle={true}
+                    activeJobsheet={activeJobsheet}
+                    showJobGuide={showJobGuide}
+                    onToggleJobGuide={() => setShowJobGuide(v => !v)}
+                  />
+
+                  {/* FLOATING TOP GLASS HUD (LANDSCAPE) */}
+                  <div style={{
+                    position: 'absolute', top: '6px', left: '8px', right: '8px', zIndex: 30,
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(10px)',
+                    padding: '4px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+                  }}>
+                    {/* DRO READOUTS (X, Y, Z) */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
+                        <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>{droX}</span>
+                        <button
+                          onClick={() => { sound.playClick(); tablePosRef.current.x = 0; setTablePosition({ ...tablePosRef.current }); }}
+                          style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                          title="Zero X"
+                        >
+                          0
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Y:</span>
+                        <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droY}</span>
+                        <button
+                          onClick={() => { sound.playClick(); tablePosRef.current.y = 0; setTablePosition({ ...tablePosRef.current }); }}
+                          style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                          title="Zero Y"
+                        >
+                          0
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
+                        <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: spindlePosition.z <= 0 ? '#f59e0b' : '#10b981' }}>{droZ}</span>
+                        <button
+                          onClick={() => setSpindleDepthPreset(0)}
+                          style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#f59e0b', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
+                          title="Zero Z"
+                        >
+                          0
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* SPINDLE STATUS & RPM */}
+                    <div style={{
+                      display: 'flex', alignItems: 'center', gap: '4px',
+                      background: isSpindleRunning ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)',
+                      border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
+                      padding: '2px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
+                      color: isSpindleRunning ? '#10b981' : '#fca5a5'
+                    }}>
+                      <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                      <span>{rpm} RPM</span>
+                      {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
+                    </div>
+
+                    {/* 2D/3D + GARIS JOB + QUICK 5 JOBS SELECTOR + PISAU (LANDSCAPE) */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <button
+                        onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                        style={{
+                          background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
+                          border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
+                          color: '#ffffff',
+                          padding: '3px 8px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 900, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '3px',
+                          boxShadow: viewMode === '2d' ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
+                        }}
+                        title="Beralih antara Mode 3D dan Mode 2D Presisi"
+                      >
+                        <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                        style={{
+                          background: showJobGuide ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.12)',
+                          border: showJobGuide ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.25)',
+                          color: showJobGuide ? '#34d399' : '#cbd5e1',
+                          padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '2px'
+                        }}
+                        title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
+                      >
+                        <span>🎯</span>
+                        <span>JOB</span>
+                      </button>
+
+                      {/* 5 JOBS SELECTOR KODE ANGKA (LANDSCAPE FRAIS) */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(0,0,0,0.3)', padding: '2px 4px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <span style={{ fontSize: '0.60rem', fontWeight: 800, color: '#94a3b8' }}>JOB:</span>
+                        {millingJobsheets.map((sheet, idx) => (
+                          <button
+                            key={sheet.id}
+                            onClick={() => { sound.playClick(); setActiveJobsheetIndex(idx); }}
+                            style={{
+                              minWidth: '22px', height: '20px', padding: '0 2px', borderRadius: '3px',
+                              fontSize: '0.66rem', fontWeight: 900, cursor: 'pointer',
+                              background: activeJobsheetIndex === idx ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'transparent',
+                              color: activeJobsheetIndex === idx ? '#000000' : '#94a3b8',
+                              border: activeJobsheetIndex === idx ? '1px solid #fbbf24' : 'none',
+                              boxShadow: activeJobsheetIndex === idx ? '0 0 6px rgba(245, 158, 11, 0.4)' : 'none'
+                            }}
+                            title={`Tugas ${idx + 1}: ${sheet.title}`}
+                          >
+                            {idx + 1}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+                        style={{
+                          background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
+                          padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer'
+                        }}
+                        title="Katalog 8 Pisau Frais Real"
+                      >
+                        🔪
+                      </button>
+
+                      <button
+                        onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
+                          padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer'
+                        }}
+                        title="Beralih ke Tampilan Desktop Penuh"
+                      >
+                        🖥️
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM FLOATING VIRTUAL GAMEPAD (LANDSCAPE FRAIS) */}
+                  <div style={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, pointerEvents: 'none',
+                    height: '200px',
+                    background: 'linear-gradient(to top, rgba(2, 6, 23, 0.70) 0%, rgba(2, 6, 23, 0.15) 70%, transparent 100%)',
+                    padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 125px', gap: '6px',
+                    alignItems: 'center', boxSizing: 'border-box'
+                  }}>
+                    {/* LEFT THUMB: XY TABLE D-PAD */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none', pointerEvents: 'auto' }}>
+                      <div />
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('y', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('y', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Mundur (Y+)"
+                      >
+                        ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y+</span>
+                      </button>
+                      <div />
+
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('x', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('x', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Kiri (X-)"
+                      >
+                        ◀<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X-</span>
+                      </button>
+
+                      <div style={{ background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
+                        MEJA
+                      </div>
+
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('x', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('x', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Kanan (X+)"
+                      >
+                        ▶<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X+</span>
+                      </button>
+
+                      <div />
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldTableJog('y', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldTableJog('y', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                        title="Meja Maju (Y-)"
+                      >
+                        ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y-</span>
+                      </button>
+                      <div />
+                    </div>
+
+                    {/* CENTER COLUMN: STEP & QUICK DEPTH PRESETS */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
+                      {/* Step Selector */}
+                      <div style={{ display: 'flex', gap: '3px' }}>
+                        {[0.10, 0.50, 1.00, 2.00].map((v) => (
+                          <button
+                            key={v}
+                            onClick={() => { sound.playClick(); setStepSize(v); }}
+                            style={{
+                              flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                              background: stepSize === v ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                              color: stepSize === v ? '#000' : '#cbd5e1',
+                              border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                              backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                            }}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Quick Depth Presets */}
+                      <div style={{ display: 'flex', gap: '3px' }}>
+                        {[
+                          { l: 'Z=0', v: 0.0, c: '#38bdf8' },
+                          { l: '-1mm', v: -1.0, c: '#f59e0b' },
+                          { l: '-2mm', v: -2.0, c: '#f59e0b' },
+                          { l: '+5mm', v: 5.0, c: '#10b981' }
+                        ].map(dp => (
+                          <button
+                            key={dp.l}
+                            onClick={() => setSpindleDepthPreset(dp.v)}
+                            style={{
+                              flex: 1, padding: '4px 0', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 800, cursor: 'pointer',
+                              background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.4)' : 'rgba(15, 23, 42, 0.75)',
+                              color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.12)'}`,
+                              backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                            }}
+                          >
+                            {dp.l}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Rapid & Coolant */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
+                          style={{
+                            flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                            background: rapidMode ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                            color: rapidMode ? '#000' : '#cbd5e1',
+                            border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          ⚡ RAPID 3X
+                        </button>
+                        <button
+                          onClick={() => { sound.playClick(); setCoolant(!coolant); }}
+                          style={{
+                            flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                            background: coolant ? 'rgba(14, 165, 233, 0.35)' : 'rgba(15, 23, 42, 0.75)',
+                            color: coolant ? '#38bdf8' : '#cbd5e1',
+                            border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          💦 {coolant ? 'ON' : 'OFF'}
+                        </button>
+                      </div>
+
+                      {/* Evaluate & Reset Buttons */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={handleEvaluate}
+                          style={{
+                            flex: 1.3, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 900, cursor: 'pointer',
+                            background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', border: 'none',
+                            boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+                          }}
+                        >
+                          🏆 CEK HASIL
+                        </button>
+                        <button
+                          onClick={handleReset}
+                          style={{
+                            flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
+                            background: 'rgba(15, 23, 42, 0.75)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
+                          }}
+                        >
+                          🔄 RESET
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* RIGHT THUMB: SPINDLE Z FEED & SPINDLE POWER */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+                        <button
+                          className="game-dpad-btn"
+                          onMouseDown={() => startHoldSpindleJog(-1)}
+                          onMouseUp={stopHoldJog}
+                          onMouseLeave={stopHoldJog}
+                          onTouchStart={() => startHoldSpindleJog(-1)}
+                          onTouchEnd={stopHoldJog}
+                          style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+                          title="Spindel Naik (Z+)"
+                        >
+                          ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+ NAIK</span>
+                        </button>
+                        <button
+                          className="game-dpad-btn"
+                          onMouseDown={() => startHoldSpindleJog(1)}
+                          onMouseUp={stopHoldJog}
+                          onMouseLeave={stopHoldJog}
+                          onTouchStart={() => startHoldSpindleJog(1)}
+                          onTouchEnd={stopHoldJog}
+                          style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+                          title="Spindel Turun Sayat (Z-)"
+                        >
+                          ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z- SAYAT</span>
+                        </button>
+                      </div>
+
+                      <button
+                        className="game-action-btn"
+                        onClick={toggleSpindle}
+                        style={{
+                          height: '48px', width: '100%',
+                          background: isSpindleRunning
+                            ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                            : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: '#ffffff', border: 'none',
+                          boxShadow: isSpindleRunning ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 0 16px rgba(16, 185, 129, 0.5)',
+                          fontSize: '0.74rem'
+                        }}
+                      >
+                        <span style={{ fontSize: '1rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                        <span>{isSpindleRunning ? 'STOP' : 'START SPINDEL'}</span>
+                      </button>
+
+                      <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.max(300, prev - 150)); }}
+                          style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                        >
+                          -
+                        </button>
+                        <div style={{ flex: 1, textAlign: 'center', fontSize: '0.66rem', fontWeight: 800, color: '#f59e0b' }}>
+                          {rpm} RPM
+                        </div>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.min(3000, prev + 150)); }}
+                          style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           ) : (
             /* ==============================================================

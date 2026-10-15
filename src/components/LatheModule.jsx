@@ -6,6 +6,7 @@ import LatheFormulaView from './LatheFormulaView';
 import LatheTestView from './LatheTestView';
 import LatheVideoDemonstration from './LatheVideoDemonstration';
 import { latheJobsheets } from '../data/latheJobsheets';
+import { PROFILE_RESOLUTION } from '../utils/latheToolpath';
 
 const LatheModule = ({ addXP }) => {
   const [activeLatheTab, setActiveLatheTab] = useState('pemotongan'); // 'rumus', 'test', 'pemotongan'
@@ -49,11 +50,12 @@ const LatheModule = ({ addXP }) => {
   const [score, setScore] = useState(0);
   const [inspectionData, setInspectionData] = useState(null);
 
-  // Workpiece profile in exact mm (30 discrete segments along 100mm length)
-  // Index 0 is Z = 0 (right edge / tailstock), Index 29 is Z = -100 (left edge / chuck)
-  const initialProfile = Array(30).fill(rawDiameter);
+  // Workpiece profile in exact mm (PROFILE_RESOLUTION discrete segments along rawLength)
+  // Index 0 is Z = 0 (right edge / tailstock), Index PROFILE_RESOLUTION - 1 is Z = -rawLength (left edge / chuck)
+  const initialProfile = Array(PROFILE_RESOLUTION).fill(rawDiameter);
   const [profile, setProfile] = useState(initialProfile);
   const profileRef = useRef([...initialProfile]);
+  const lastZRef = useRef(2.0);
 
   // Tool Position in exact mm:
   // z: longitudinal travel (0 = right end, -100 = near chuck, +2 = clear to the right)
@@ -90,13 +92,19 @@ const LatheModule = ({ addXP }) => {
     handleReset();
   }, [activeJobsheetIndex]);
 
-  // INSTANT CUTTING LOGIC - ZERO DELAY & EXACT ALIGNMENT
+  // INSTANT CUTTING LOGIC - ULTRA-SMOOTH PROFILE & EXACT 90-DEGREE STEPS
   const applyInstantCut = useCallback((currZ, currD, spindleActive = isSpindleRef.current) => {
-    // Check if tool tip is along the workpiece length: Z between 0.2mm and -100mm
-    if (currZ <= 0.2 && currZ >= -100.0) {
-      // Direct ratio: currZ = 0 -> index 0, currZ = -100 -> index 29
-      const ratio = Math.max(0, Math.min(1, -currZ / 100.0));
-      const targetIdx = Math.round(ratio * 29);
+    // Check if tool tip is along the workpiece length: Z between 0.2mm and -rawLength
+    if (currZ <= 0.2 && currZ >= -rawLength) {
+      const prevZ = lastZRef.current;
+      lastZRef.current = currZ;
+
+      // Direct ratio: currZ = 0 -> index 0, currZ = -rawLength -> index PROFILE_RESOLUTION - 1
+      const ratio = Math.max(0, Math.min(1, -currZ / rawLength));
+      const targetIdx = Math.round(ratio * (PROFILE_RESOLUTION - 1));
+
+      const prevRatio = Math.max(0, Math.min(1, -prevZ / rawLength));
+      const prevIdx = Math.round(prevRatio * (PROFILE_RESOLUTION - 1));
 
       const currentSegmentDiameter = profileRef.current[targetIdx];
 
@@ -108,16 +116,34 @@ const LatheModule = ({ addXP }) => {
           sound.startCuttingSound();
 
           const updated = [...profileRef.current];
-          // Primary cut slice
-          updated[targetIdx] = Math.min(updated[targetIdx], currD);
 
-          // Tool nose radius effect (r_epsilon = 0.8mm) smooths adjacent slices
-          const noseRadiusMm = 0.8;
-          if (targetIdx > 0) {
-            updated[targetIdx - 1] = Math.min(updated[targetIdx - 1], currD + noseRadiusMm);
-          }
-          if (targetIdx < 29) {
-            updated[targetIdx + 1] = Math.min(updated[targetIdx + 1], currD + noseRadiusMm);
+          if (machineMode === 'alur') {
+            // Grooving / Parting Mode: tool blade width 3mm
+            const halfSpan = Math.max(1, Math.round((1.5 / rawLength) * (PROFILE_RESOLUTION - 1)));
+            const minI = Math.max(0, targetIdx - halfSpan);
+            const maxI = Math.min(PROFILE_RESOLUTION - 1, targetIdx + halfSpan);
+            for (let i = minI; i <= maxI; i++) {
+              updated[i] = Math.min(updated[i], currD);
+            }
+          } else {
+            // Turning (Rata) Mode:
+            // 1. Cut the swept interval between previous position and current position
+            const fromIdx = Math.min(prevIdx, targetIdx);
+            const toIdx = Math.max(prevIdx, targetIdx);
+            for (let i = fromIdx; i <= toIdx; i++) {
+              updated[i] = Math.min(updated[i], currD);
+            }
+
+            // 2. In right-hand turning, when feeding left towards the chuck (currZ <= prevZ):
+            // All swept material from the face (index 0) up to the current tool tip (targetIdx)
+            // is turned down cleanly to currD without leaving any jagged staircases!
+            if (currZ <= prevZ) {
+              for (let i = 0; i <= targetIdx; i++) {
+                if (updated[i] > currD) {
+                  updated[i] = currD;
+                }
+              }
+            }
           }
 
           profileRef.current = updated;
@@ -125,13 +151,15 @@ const LatheModule = ({ addXP }) => {
           return true;
         }
       }
+    } else {
+      lastZRef.current = currZ;
     }
 
     // Outside or retracted
     setIsCutting(false);
     sound.stopCuttingSound();
     return false;
-  }, []);
+  }, [rawLength, machineMode]);
 
   // Jog handler
   const handleJog = useCallback((axis, dir) => {
@@ -241,9 +269,10 @@ const LatheModule = ({ addXP }) => {
     setShowResult(false);
     stopHoldJog();
 
-    const resetProfile = Array(30).fill(activeJobsheet.diameter || 50);
+    const resetProfile = Array(PROFILE_RESOLUTION).fill(activeJobsheet.diameter || 50);
     profileRef.current = [...resetProfile];
     setProfile(resetProfile);
+    lastZRef.current = 2.0;
 
     const resetPos = { z: 2.0, d: (activeJobsheet.diameter || 50) + 1.0 };
     toolPosRef.current = resetPos;
@@ -279,8 +308,9 @@ const LatheModule = ({ addXP }) => {
     const targetDiameter = rawDiameter - 4.0; // 2mm depth of cut = 4mm diameter reduction
     const diameterDiff = Math.abs(minDiameter - targetDiameter);
 
+    const minRequiredCutSegments = Math.max(4, Math.round(profile.length * 0.15));
     let calculatedScore = 0;
-    if (isModeCorrect && isRpmCorrect && cutSegmentsCount > 6) {
+    if (isModeCorrect && isRpmCorrect && cutSegmentsCount >= minRequiredCutSegments) {
       if (diameterDiff <= 1.0) {
         calculatedScore = 100;
       } else {
@@ -525,6 +555,9 @@ const LatheModule = ({ addXP }) => {
                       toolPosition={toolPosition}
                       profile={profile}
                       machineMode={machineMode}
+                      toolType={machineMode === 'alur' ? 'alur' : 'rata'}
+                      rawDiameter={rawDiameter}
+                      rawLength={rawLength}
                       rpm={rpm}
                       isCutting={isCutting}
                       coolant={coolant}
@@ -1012,6 +1045,9 @@ const LatheModule = ({ addXP }) => {
           toolPosition={toolPosition}
           profile={profile}
           machineMode={machineMode}
+          toolType={machineMode === 'alur' ? 'alur' : 'rata'}
+          rawDiameter={rawDiameter}
+          rawLength={rawLength}
           rpm={rpm}
           isCutting={isCutting}
           coolant={coolant}

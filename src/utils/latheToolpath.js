@@ -3,7 +3,7 @@
 // Standar Industri: Sudut 90 Derajat (Perpendicular Shoulder) & G-Code Trajectory
 // =========================================================================
 
-export const PROFILE_RESOLUTION = 100;
+export const PROFILE_RESOLUTION = 200;
 
 /**
  * Mendeteksi segmen silinder konstan dan batas step bertingkat (sudut 90 derajat).
@@ -18,8 +18,8 @@ export const generateSteppedProfileSegments = (profile, rawDiameter = 50) => {
 
   for (let i = 1; i < N; i++) {
     const dia = profile[i] !== undefined ? profile[i] : rawDiameter;
-    // Step boundary jika selisih diameter lebih dari 0.15mm
-    if (Math.abs(dia - currentDia) > 0.15) {
+    // Step boundary jika selisih diameter lebih dari 0.08mm
+    if (Math.abs(dia - currentDia) > 0.08) {
       segments.push({
         startIndex: segStart,
         endIndex: i, // batas step berada di index i

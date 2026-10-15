@@ -109,7 +109,7 @@ const RevolvedWorkpiece = ({ profile, isRunning, rpm = 800, rawDiameter = 50, ra
     // Tip center cap at front face (local y = +halfLen)
     pts.push(new THREE.Vector2(0, halfLen + 0.005));
 
-    return new THREE.LatheGeometry(pts, 36);
+    return new THREE.LatheGeometry(pts, 48);
   }, [profile, rawDiameter, rawLength]);
 
   useFrame((_, delta) => {

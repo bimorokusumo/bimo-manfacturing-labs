@@ -4,7 +4,7 @@
  * terselesaikan dengan benar sesuai base path environment (misal /bimo-manfacturing-labs/)
  */
 export const getAssetUrl = (path) => {
-  if (!path) return '';
+  if (!path || typeof path !== 'string') return '';
   // Abaikan URL eksternal atau data URI
   if (
     path.startsWith('http://') ||

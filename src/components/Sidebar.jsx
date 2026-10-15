@@ -86,13 +86,15 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
     ]
   };
 
+  const safeActiveMenu = (typeof activeMenu === 'string' && activeMenu) ? activeMenu : 'dashboard';
+
   const isLabActive = (menuId) => {
-    if (activeMenu === menuId) return true;
-    if (activeMenu === `${menuId}-diagnostic`) return true;
-    if (menuId === 'machine' && (activeMenu.startsWith('machine-') || activeMenu === 'machine')) return true;
-    if (menuId === 'measuring' && (activeMenu === 'measuring' || activeMenu === 'measuring-anatomy' || activeMenu === 'measuring-diagnostic')) return true;
-    if (menuId === 'heat-treatment' && activeMenu.startsWith('heat-treatment-')) return true;
-    if (menuId === 'mechanics' && activeMenu.startsWith('mechanics-')) return true;
+    if (safeActiveMenu === menuId) return true;
+    if (safeActiveMenu === `${menuId}-diagnostic`) return true;
+    if (menuId === 'machine' && (safeActiveMenu.startsWith('machine-') || safeActiveMenu === 'machine')) return true;
+    if (menuId === 'measuring' && (safeActiveMenu === 'measuring' || safeActiveMenu === 'measuring-anatomy' || safeActiveMenu === 'measuring-diagnostic')) return true;
+    if (menuId === 'heat-treatment' && safeActiveMenu.startsWith('heat-treatment-')) return true;
+    if (menuId === 'mechanics' && safeActiveMenu.startsWith('mechanics-')) return true;
     return false;
   };
 
@@ -169,7 +171,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
       <div className="sidebar-menu-list" style={{ padding: '20px 12px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {menus.map(menu => {
           const hasSubmenus = !!LAB_SUBMENUS[menu.id];
-          const isCurrentActive = isLabActive(menu.id) || activeMenu === menu.id;
+          const isCurrentActive = isLabActive(menu.id) || safeActiveMenu === menu.id;
 
           // Theme accent colors for labs
           const isMechanics = menu.id === 'mechanics';
@@ -245,7 +247,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
                   marginLeft: '20px'
                 }}>
                   {LAB_SUBMENUS[menu.id].map(sub => {
-                    const isSubActive = activeMenu === sub.id;
+                    const isSubActive = safeActiveMenu === sub.id;
 
                     if (sub.isDiag) {
                       return (

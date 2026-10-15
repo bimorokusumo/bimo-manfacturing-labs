@@ -54,14 +54,14 @@ function AppInner() {
     return false;
   });
 
-  // Inisialisasi activeMenu dari URL hash atau sessionStorage
+  // Inisialisasi activeMenu dari URL hash atau sessionStorage (dengan validasi string ketat)
   const [activeMenu, setActiveMenu] = useState(() => {
     try {
       if (typeof window !== 'undefined') {
         const hash = window.location.hash.replace('#', '').trim();
-        if (hash) return hash;
+        if (hash && hash !== '[object Object]') return hash;
         const savedMenu = sessionStorage.getItem('bimo_active_menu');
-        if (savedMenu) return savedMenu;
+        if (savedMenu && savedMenu !== '[object Object]') return savedMenu;
       }
     } catch (e) {}
     return 'dashboard';
@@ -69,22 +69,25 @@ function AppInner() {
 
   // Handler pergantian menu yang sinkron dengan URL hash & sessionStorage
   const handleSetActiveMenu = (menu) => {
+    const validMenu = (typeof menu === 'string' && menu.trim() && menu !== '[object Object]') ? menu.trim() : 'dashboard';
     try {
-      sessionStorage.setItem('bimo_active_menu', menu);
-      if (typeof window !== 'undefined' && window.location.hash !== `#${menu}`) {
-        window.location.hash = menu;
+      sessionStorage.setItem('bimo_active_menu', validMenu);
+      if (typeof window !== 'undefined' && window.location.hash !== `#${validMenu}`) {
+        window.location.hash = validMenu;
       }
     } catch (e) {}
-    if (menu === 'gradebook') setGradebookInitialSearch('');
-    setActiveMenu(menu);
+    if (validMenu === 'gradebook') setGradebookInitialSearch('');
+    setActiveMenu(validMenu);
   };
 
   const handleStartLab = (targetLab = null) => {
     try {
       sessionStorage.setItem('bimo_lab_started', 'true');
     } catch (e) {}
-    if (targetLab) {
-      handleSetActiveMenu(targetLab);
+    if (typeof targetLab === 'string' && targetLab.trim() && targetLab !== '[object Object]') {
+      handleSetActiveMenu(targetLab.trim());
+    } else {
+      handleSetActiveMenu('dashboard');
     }
     setIsStarted(true);
   };
@@ -102,8 +105,8 @@ function AppInner() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '').trim();
-      if (hash && hash !== activeMenu) {
-        setActiveMenu(hash);
+      if (hash && hash !== '[object Object]' && hash !== activeMenu) {
+        handleSetActiveMenu(hash);
         setIsStarted(true);
       }
     };
@@ -186,7 +189,7 @@ function AppInner() {
           <DashboardView 
             onSelectLab={(lab, search = '') => {
               setGradebookInitialSearch(search);
-              setActiveMenu(lab);
+              handleSetActiveMenu(lab);
             }} 
             globalXP={globalXP} 
             levelInfo={levelInfo} 

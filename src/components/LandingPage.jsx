@@ -122,7 +122,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
         <nav className="landing-nav" style={{ display: 'flex', gap: '40px' }}>
           <a href="#" className="landing-nav-link" style={{ color: '#f59e0b' }}>Beranda</a>
           <a href="#" className="landing-nav-link" onClick={(e) => { e.preventDefault(); alert("Fitur: Modul Interaktif, Simulasi 3D, Safety Lab."); }}>Fitur</a>
-          <a href="#" className="landing-nav-link" onClick={(e) => { e.preventDefault(); onStart(); }}>Perpustakaan & Modul</a>
+          <a href="#" className="landing-nav-link" onClick={(e) => { e.preventDefault(); onStart('modules'); }}>Perpustakaan & Modul</a>
           <a href="#" className="landing-nav-link" onClick={(e) => e.preventDefault()}>Tentang</a>
         </nav>
 
@@ -332,7 +332,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
           
           <div style={{ marginTop: '32px' }}>
             <button 
-              onClick={onStart}
+              onClick={() => onStart('dashboard')}
               style={{
                 padding: '18px 44px',
                 background: 'linear-gradient(135deg, #f59e0b, #d97706)',

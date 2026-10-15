@@ -125,8 +125,12 @@ const DashboardView = ({
   completedMissions = 0, 
   totalMissions = 18 
 }) => {
-  const missionPct = Math.round((completedMissions / Math.max(1, totalMissions)) * 100);
-  const xpPct = Math.min(100, Math.round((levelInfo.xpInCurrentLevel / (levelInfo.xpNeededForNextLevel || 500)) * 100));
+  const safeLevelInfo = levelInfo || { level: 1, title: 'Apprentice', nextLevelXP: 500, xpInCurrentLevel: 0, xpNeededForNextLevel: 500 };
+  const safeXP = typeof globalXP === 'number' ? globalXP : 0;
+  const safeXPNeeded = safeLevelInfo.xpNeededForNextLevel || 500;
+  const safeXPInCurrent = safeLevelInfo.xpInCurrentLevel || 0;
+  const missionPct = Math.round(((completedMissions || 0) / Math.max(1, totalMissions || 18)) * 100);
+  const xpPct = Math.min(100, Math.round((safeXPInCurrent / Math.max(1, safeXPNeeded)) * 100));
 
   const { speakText, stopSpeech, isSpeaking, currentNarrativeTitle } = useAccessibility();
   const { student, isTeacher } = useStudent();
@@ -137,8 +141,9 @@ const DashboardView = ({
       const saved = localStorage.getItem('bimo_student_session');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.name && parsed.name.toLowerCase() !== 'bimoro kusumo') {
-          const found = MASTER_STUDENTS_LIST.find(
+        if (parsed && typeof parsed.name === 'string' && parsed.name.toLowerCase() !== 'bimoro kusumo') {
+          const list = Array.isArray(MASTER_STUDENTS_LIST) ? MASTER_STUDENTS_LIST : [];
+          const found = list.find(
             s => s.name.toLowerCase() === parsed.name.toLowerCase() || String(s.absen) === String(parsed.studentNumber)
           );
           if (found) return found.absen;
@@ -149,27 +154,36 @@ const DashboardView = ({
   });
 
   const monitoredStudent = React.useMemo(() => {
-    return MASTER_STUDENTS_LIST.find(s => s.absen === selectedStudentAbsen) || MASTER_STUDENTS_LIST[0];
+    const list = Array.isArray(MASTER_STUDENTS_LIST) ? MASTER_STUDENTS_LIST : [];
+    return (
+      list.find(s => s.absen === selectedStudentAbsen) ||
+      list[0] ||
+      { absen: 1, nis: '22946', name: 'ADITYA MIRZA SUSANTO', className: 'X-TP.A', school: 'SMKN 2 DEPOK' }
+    );
   }, [selectedStudentAbsen]);
 
   const monitoredStudentStats = React.useMemo(() => {
     let scores = [];
     try {
-      scores = getAllStoredScores();
+      scores = getAllStoredScores() || [];
     } catch {
       scores = [];
     }
+    if (!Array.isArray(scores)) scores = [];
+
+    const mName = (monitoredStudent?.name || '').trim().toLowerCase();
+    const mAbsen = monitoredStudent?.absen ? String(monitoredStudent.absen) : '';
+
     const studentScores = scores.filter(s => {
       if (!s || !s.namaSiswa) return false;
       const sName = String(s.namaSiswa).trim().toLowerCase();
-      const mName = monitoredStudent.name.trim().toLowerCase();
-      return sName === mName || (s.absen && String(s.absen) === String(monitoredStudent.absen));
+      return (mName && sName === mName) || (mAbsen && s.absen && String(s.absen) === mAbsen);
     });
 
-    const totalXP = studentScores.reduce((acc, curr) => acc + (Number(curr.skorAngka || curr.nilai || 0) * 10), 0);
+    const totalXP = studentScores.reduce((acc, curr) => acc + (Number(curr?.skorAngka || curr?.nilai || 0) * 10), 0);
     const completedCount = studentScores.length;
     const avgScore = completedCount > 0
-      ? Math.round(studentScores.reduce((acc, curr) => acc + Number(curr.skorAngka || curr.nilai || 0), 0) / completedCount)
+      ? Math.round(studentScores.reduce((acc, curr) => acc + Number(curr?.skorAngka || curr?.nilai || 0), 0) / completedCount)
       : 0;
     const currentLevel = Math.floor(totalXP / 500) + 1;
     const xpInLevel = totalXP % 500;
@@ -225,19 +239,19 @@ const DashboardView = ({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div className="stat-value" style={{ color: 'var(--game-primary)', fontSize: '1.5rem', fontWeight: 900, lineHeight: 1 }}>
-              {levelInfo.level.toString().padStart(2, '0')}
+              {(safeLevelInfo.level || 1).toString().padStart(2, '0')}
             </div>
             <div style={{ minWidth: 0, overflow: 'hidden' }}>
               <div style={{ color: 'var(--text-main)', fontSize: '0.82rem', fontWeight: 800, lineHeight: 1.1, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                {levelInfo.title}
+                {safeLevelInfo.title || 'Apprentice'}
               </div>
               <div style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', marginTop: '1px' }}>
-                Tingkat {levelInfo.level}/10
+                Tingkat {safeLevelInfo.level || 1}/10
               </div>
             </div>
           </div>
           <div style={{ height: '4px', width: '100%', background: '#e2e8f0', borderRadius: '2px', overflow: 'hidden', marginTop: '1px' }}>
-            <div style={{ height: '100%', width: `${(levelInfo.level / 10) * 100}%`, background: 'var(--game-primary)', borderRadius: '2px' }} />
+            <div style={{ height: '100%', width: `${((safeLevelInfo.level || 1) / 10) * 100}%`, background: 'var(--game-primary)', borderRadius: '2px' }} />
           </div>
         </div>
 
@@ -250,13 +264,13 @@ const DashboardView = ({
             <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>💰</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {globalXP.toLocaleString('id-ID')}
+                {safeXP.toLocaleString('id-ID')}
                 <span style={{ fontSize: '0.76rem', color: 'var(--text-subtle)', fontWeight: 700, marginLeft: '4px' }}>
-                  / {levelInfo.nextLevelXP.toLocaleString('id-ID')}
+                  / {(safeLevelInfo.nextLevelXP || 500).toLocaleString('id-ID')}
                 </span>
               </div>
               <div style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', marginTop: '1px' }}>
-                +{levelInfo.xpInCurrentLevel} XP ({xpPct}%)
+                +{safeLevelInfo.xpInCurrentLevel || 0} XP ({xpPct}%)
               </div>
             </div>
           </div>

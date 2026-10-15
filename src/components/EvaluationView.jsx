@@ -5,9 +5,12 @@ import { useStudent } from '../context/StudentContext';
 import { recordQuizResult } from '../services/sheetService';
 
 const EvaluationView = () => {
-  const { student, openLoginModal } = useStudent();
+  const { student, openLoginModal, isTeacher } = useStudent();
   const [activeLevel, setActiveLevel] = useState('c1'); // 'c1' | 'c2' | 'c3' | 'hots'
   
+  const STORAGE_KEY_EVAL_ANSWERS = 'bimo_evaluation_answers_state';
+  const STORAGE_KEY_EVAL_UNLOCKED = 'bimo_evaluation_unlocked_levels';
+
   // Data identitas siswa untuk memudahkan guru mendata
   const [studentInfo, setStudentInfo] = useState({
     name: student?.name || '',
@@ -26,21 +29,177 @@ const EvaluationView = () => {
   }, [student]);
 
   const [copiedToast, setCopiedToast] = useState(false);
+  const [lockedModalInfo, setLockedModalInfo] = useState(null);
 
-  // State tersimpan per level agar perpindahan tab tidak menghapus jawaban
-  const [answersByLevel, setAnswersByLevel] = useState({
-    c1: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    c2: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    c3: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-    hots: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
+  // State tersimpan per level agar perpindahan tab atau refresh tidak menghapus jawaban
+  const [answersByLevel, setAnswersByLevel] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_EVAL_ANSWERS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.c1) return parsed;
+      }
+    } catch (e) {
+      console.error('Gagal memuat answersByLevel dari localStorage:', e);
+    }
+    return {
+      c1: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+      c2: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+      c3: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+      hots: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
+    };
   });
 
+  // Status level terbuka (Scaffolding bertahap C1 -> C2 -> C3 -> HOTS)
+  const [unlockedLevels, setUnlockedLevels] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_EVAL_UNLOCKED);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed.c1 === 'boolean') return parsed;
+      }
+    } catch (e) {
+      console.error('Gagal memuat unlockedLevels dari localStorage:', e);
+    }
+    return {
+      c1: true,
+      c2: false,
+      c3: false,
+      hots: false
+    };
+  });
+
+  // Sinkronisasi otomatis ke LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_EVAL_ANSWERS, JSON.stringify(answersByLevel));
+    } catch (e) {
+      console.error('Gagal menyimpan answersByLevel:', e);
+    }
+  }, [answersByLevel]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_EVAL_UNLOCKED, JSON.stringify(unlockedLevels));
+    } catch (e) {
+      console.error('Gagal menyimpan unlockedLevels:', e);
+    }
+  }, [unlockedLevels]);
+
+  // Pastikan level terbuka jika jawaban level sebelumnya sudah dikirim
+  useEffect(() => {
+    setUnlockedLevels(prev => {
+      const updated = { ...prev, c1: true };
+      if (answersByLevel.c1?.isSubmitted) updated.c2 = true;
+      if (answersByLevel.c2?.isSubmitted) updated.c3 = true;
+      if (answersByLevel.c3?.isSubmitted) updated.hots = true;
+      return updated;
+    });
+  }, [answersByLevel]);
+
   const [showEssayRubric, setShowEssayRubric] = useState({});
+
+  const EVALUATION_LEVELS = [
+    {
+      key: 'c1',
+      stepNumber: 1,
+      badge: 'LEVEL C1',
+      title: 'Mengingat (Dasar)',
+      desc: '25 Pilgan + 5 Essay (Fakta & APD)',
+      color: '#0284c7',
+      border: '#38bdf8',
+      prerequisiteKey: null,
+      prerequisiteName: null
+    },
+    {
+      key: 'c2',
+      stepNumber: 2,
+      badge: 'LEVEL C2',
+      title: 'Memahami (Menengah)',
+      desc: '25 Pilgan + 5 Essay (Prinsip & Konsep)',
+      color: '#059669',
+      border: '#34d399',
+      prerequisiteKey: 'c1',
+      prerequisiteName: 'Level C1 (Mengingat - Dasar)'
+    },
+    {
+      key: 'c3',
+      stepNumber: 3,
+      badge: 'LEVEL C3',
+      title: 'Menerapkan (Lanjut)',
+      desc: '25 Pilgan + 5 Essay (Rumus & Prosedur)',
+      color: '#d97706',
+      border: '#fbbf24',
+      prerequisiteKey: 'c2',
+      prerequisiteName: 'Level C2 (Memahami - Menengah)'
+    },
+    {
+      key: 'hots',
+      stepNumber: 4,
+      badge: 'HOTS FASE E',
+      title: 'Analisis & Kasus (Expert)',
+      desc: '25 Pilgan + 5 Essay (Problem Solving)',
+      color: '#be185d',
+      border: '#f472b6',
+      prerequisiteKey: 'c3',
+      prerequisiteName: 'Level C3 (Menerapkan - Lanjut)'
+    }
+  ];
+
+  const getLevelLockStatus = (levelKey) => {
+    // Mode Guru (Bimoro Kusumo): Bebas akses semua level untuk evaluasi & peninjauan
+    if (isTeacher) {
+      return { isLocked: false, isTeacherBypass: true };
+    }
+    // Level C1 selalu terbuka untuk semua siswa
+    if (levelKey === 'c1') {
+      return { isLocked: false };
+    }
+    // Jika sudah pernah dibuka, tetap terbuka
+    if (unlockedLevels[levelKey]) {
+      return { isLocked: false };
+    }
+
+    const config = EVALUATION_LEVELS.find(l => l.key === levelKey);
+    const prereqKey = config?.prerequisiteKey;
+    const isPrereqDone = prereqKey ? Boolean(answersByLevel[prereqKey]?.isSubmitted) : true;
+
+    if (!isPrereqDone) {
+      return {
+        isLocked: true,
+        prerequisiteKey: prereqKey,
+        prerequisiteName: config?.prerequisiteName,
+        reason: `Selesaikan dan kirim jawaban pada ${config?.prerequisiteName} terlebih dahulu untuk membuka level ini.`
+      };
+    }
+
+    return { isLocked: false };
+  };
 
   const currentLevelData = evaluationData[activeLevel];
   const currentAnswers = answersByLevel[activeLevel];
 
+  const currentLevelIndex = EVALUATION_LEVELS.findIndex(l => l.key === activeLevel);
+  const nextLevelData = currentLevelIndex >= 0 && currentLevelIndex < EVALUATION_LEVELS.length - 1
+    ? EVALUATION_LEVELS[currentLevelIndex + 1]
+    : null;
+
   const handleLevelChange = (levelKey) => {
+    const lockStatus = getLevelLockStatus(levelKey);
+    if (lockStatus.isLocked) {
+      sound.playError();
+      const config = EVALUATION_LEVELS.find(l => l.key === levelKey);
+      setLockedModalInfo({
+        targetKey: levelKey,
+        targetBadge: config?.badge,
+        targetTitle: config?.title,
+        prerequisiteKey: lockStatus.prerequisiteKey,
+        prerequisiteName: lockStatus.prerequisiteName,
+        reason: lockStatus.reason
+      });
+      return;
+    }
+
     sound.playClick();
     setActiveLevel(levelKey);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -116,6 +275,16 @@ const EvaluationView = () => {
         submitTime: timeStr
       }
     }));
+
+    // Buka level berikutnya secara otomatis
+    const nextMapping = { c1: 'c2', c2: 'c3', c3: 'hots' };
+    const nextKey = nextMapping[activeLevel];
+    if (nextKey) {
+      setUnlockedLevels(prev => ({
+        ...prev,
+        [nextKey]: true
+      }));
+    }
 
     // Rekam nilai ke Google Spreadsheet & Local Storage
     recordQuizResult({
@@ -379,6 +548,166 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
       </div>
 
       {/* ==================================================== */}
+      {/* 2.5 ALUR BELAJAR BERTAHAP (ROADMAP STEPPER) */}
+      {/* ==================================================== */}
+      <div style={{
+        background: 'linear-gradient(135deg, #091322 0%, #0f172a 100%)',
+        border: '1px solid rgba(56, 189, 248, 0.2)',
+        borderRadius: '16px',
+        padding: '20px 24px',
+        marginBottom: '20px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.25)'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '10px',
+          marginBottom: '16px'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '18px' }}>🎯</span>
+              <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px' }}>
+                ALUR PENGERJAAN BERTAHAP (SCAFFOLDING KOMPETENSI)
+              </span>
+            </div>
+            <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
+              Selesaikan evaluasi secara berurutan: Kerjakan <strong>C1 (Mengingat)</strong> terlebih dahulu untuk membuka <strong>C2</strong>, <strong>C3</strong>, dan <strong>HOTS Expert</strong>.
+            </p>
+          </div>
+
+          {isTeacher && (
+            <span style={{
+              background: 'rgba(217, 119, 6, 0.2)',
+              color: '#fbbf24',
+              border: '1px solid #d97706',
+              padding: '4px 12px',
+              borderRadius: '9999px',
+              fontSize: '11px',
+              fontWeight: 800,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              👑 Mode Guru Aktif: Akses Seluruh Level Terbuka
+            </span>
+          )}
+        </div>
+
+        {/* Stepper Progress Chain */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+          gap: '12px'
+        }}>
+          {EVALUATION_LEVELS.map((lvl) => {
+            const status = answersByLevel[lvl.key];
+            const lockStatus = getLevelLockStatus(lvl.key);
+            const isCurrent = activeLevel === lvl.key;
+            const isCompleted = status.isSubmitted;
+            const isLocked = lockStatus.isLocked;
+
+            return (
+              <div
+                key={lvl.key}
+                onClick={() => handleLevelChange(lvl.key)}
+                style={{
+                  background: isCurrent
+                    ? 'rgba(2, 132, 199, 0.18)'
+                    : isCompleted
+                    ? 'rgba(16, 185, 129, 0.1)'
+                    : isLocked
+                    ? 'rgba(15, 23, 42, 0.5)'
+                    : 'rgba(255, 255, 255, 0.03)',
+                  border: isCurrent
+                    ? '2px solid #38bdf8'
+                    : isCompleted
+                    ? '1.5px solid #10b981'
+                    : isLocked
+                    ? '1.5px dashed rgba(255,255,255,0.12)'
+                    : '1.5px solid rgba(255,255,255,0.15)',
+                  borderRadius: '12px',
+                  padding: '12px 14px',
+                  cursor: isLocked ? 'not-allowed' : 'pointer',
+                  opacity: isLocked ? 0.6 : 1,
+                  transition: 'all 0.2s ease',
+                  position: 'relative'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <div style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    backgroundColor: isCompleted ? '#10b981' : isCurrent ? '#0284c7' : isLocked ? '#334155' : '#475569',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    fontWeight: 900
+                  }}>
+                    {isCompleted ? '✓' : lvl.stepNumber}
+                  </div>
+
+                  <span style={{
+                    fontSize: '10.5px',
+                    fontWeight: 800,
+                    padding: '2px 7px',
+                    borderRadius: '4px',
+                    backgroundColor: isCompleted
+                      ? 'rgba(16, 185, 129, 0.25)'
+                      : isCurrent
+                      ? 'rgba(56, 189, 248, 0.25)'
+                      : isLocked
+                      ? 'rgba(239, 68, 68, 0.18)'
+                      : 'rgba(255, 255, 255, 0.1)',
+                    color: isCompleted
+                      ? '#34d399'
+                      : isCurrent
+                      ? '#38bdf8'
+                      : isLocked
+                      ? '#fca5a5'
+                      : '#cbd5e1'
+                  }}>
+                    {isCompleted
+                      ? `Nilai: ${status.score}`
+                      : isCurrent
+                      ? '● Aktif'
+                      : isLocked
+                      ? '🔒 Terkunci'
+                      : '🔓 Terbuka'}
+                  </span>
+                </div>
+
+                <div style={{
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  color: isLocked ? '#94a3b8' : '#ffffff',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>
+                  {lvl.badge}
+                </div>
+                <div style={{ fontSize: '11px', color: '#64748b' }}>
+                  {isCompleted
+                    ? 'Tuntas Dikerjakan'
+                    : isCurrent
+                    ? 'Sedang Dikerjakan'
+                    : isLocked
+                    ? `Perlu ${lvl.prerequisiteKey?.toUpperCase() || ''}`
+                    : 'Siap Dikerjakan'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ==================================================== */}
       {/* 3. TAB NAVIGASI TINGKAT KESULITAN (C1, C2, C3, HOTS) */}
       {/* ==================================================== */}
       <div style={{
@@ -387,42 +716,12 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
         gap: '14px',
         marginBottom: '24px'
       }}>
-        {[
-          {
-            key: 'c1',
-            badge: 'LEVEL C1',
-            title: 'Mengingat (Dasar)',
-            desc: '25 Pilgan + 5 Essay (Fakta & APD)',
-            color: '#0284c7',
-            border: '#38bdf8'
-          },
-          {
-            key: 'c2',
-            badge: 'LEVEL C2',
-            title: 'Memahami (Menengah)',
-            desc: '25 Pilgan + 5 Essay (Prinsip & Konsep)',
-            color: '#059669',
-            border: '#34d399'
-          },
-          {
-            key: 'c3',
-            badge: 'LEVEL C3',
-            title: 'Menerapkan (Lanjut)',
-            desc: '25 Pilgan + 5 Essay (Rumus & Prosedur)',
-            color: '#d97706',
-            border: '#fbbf24'
-          },
-          {
-            key: 'hots',
-            badge: 'HOTS FASE E',
-            title: 'Analisis & Kasus (Expert)',
-            desc: '25 Pilgan + 5 Essay (Problem Solving)',
-            color: '#be185d',
-            border: '#f472b6'
-          }
-        ].map(lvl => {
+        {EVALUATION_LEVELS.map(lvl => {
           const isActive = activeLevel === lvl.key;
           const status = answersByLevel[lvl.key];
+          const lockStatus = getLevelLockStatus(lvl.key);
+          const isLocked = lockStatus.isLocked;
+
           return (
             <button
               key={lvl.key}
@@ -430,12 +729,15 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               style={{
                 background: isActive
                   ? `linear-gradient(135deg, ${lvl.color} 0%, #0f172a 100%)`
+                  : isLocked
+                  ? '#090d16'
                   : '#0f172a',
-                border: `2px solid ${isActive ? lvl.border : 'rgba(255,255,255,0.08)'}`,
+                border: `2px solid ${isActive ? lvl.border : isLocked ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: '16px',
                 padding: '18px 20px',
                 textAlign: 'left',
-                cursor: 'pointer',
+                cursor: isLocked ? 'not-allowed' : 'pointer',
+                opacity: isLocked ? 0.6 : 1,
                 color: '#ffffff',
                 boxShadow: isActive ? `0 8px 24px rgba(0,0,0,0.4)` : 'none',
                 transition: 'all 0.2s ease',
@@ -443,7 +745,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 overflow: 'hidden'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px', flexWrap: 'wrap' }}>
                 <span style={{
                   fontSize: '11px',
                   fontWeight: 900,
@@ -455,25 +757,75 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 }}>
                   {lvl.badge}
                 </span>
-                {status.isSubmitted && (
+
+                {isLocked ? (
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 800,
+                    padding: '2px 8px',
+                    borderRadius: '9999px',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    color: '#f87171',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    <span>🔒</span>
+                    <span>Terkunci</span>
+                  </span>
+                ) : status.isSubmitted ? (
                   <span style={{
                     fontSize: '11px',
                     fontWeight: 800,
                     padding: '2px 8px',
                     borderRadius: '9999px',
                     backgroundColor: status.score >= 75 ? '#10b981' : '#f59e0b',
-                    color: '#ffffff'
+                    color: '#ffffff',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}>
-                    Nilai: {status.score}/100
+                    <span>✓</span>
+                    <span>Nilai: {status.score}/100</span>
+                  </span>
+                ) : (
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '2px 8px',
+                    borderRadius: '9999px',
+                    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                    color: '#38bdf8'
+                  }}>
+                    🔓 Terbuka
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: '16px', fontWeight: 800, marginBottom: '4px', color: '#ffffff' }}>
+
+              <div style={{ fontSize: '16px', fontWeight: 800, marginBottom: '4px', color: isLocked ? '#94a3b8' : '#ffffff' }}>
                 {lvl.title}
               </div>
+
               <div style={{ fontSize: '12px', color: isActive ? '#e2e8f0' : '#64748b' }}>
                 {lvl.desc}
               </div>
+
+              {isLocked && (
+                <div style={{
+                  marginTop: '10px',
+                  paddingTop: '8px',
+                  borderTop: '1px solid rgba(255,255,255,0.08)',
+                  fontSize: '11px',
+                  color: '#fca5a5',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}>
+                  <span>🔒</span>
+                  <span>Selesaikan {lvl.prerequisiteKey?.toUpperCase()} untuk membuka</span>
+                </div>
+              )}
             </button>
           );
         })}
@@ -578,8 +930,50 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
             </div>
           </div>
 
-          {/* Tombol Aksi Guru: Salin & Print */}
+          {/* Tombol Aksi Siswa & Guru: Lanjut Level, Salin & Print */}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {nextLevelData && (
+              <button
+                onClick={() => handleLevelChange(nextLevelData.key)}
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '10px',
+                  fontWeight: 900,
+                  fontSize: '13.5px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 16px rgba(16, 185, 129, 0.45)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span>🚀</span>
+                <span>Lanjut Kerjakan {nextLevelData.badge}: {nextLevelData.title} (Telah Terbuka 🔓) ➔</span>
+              </button>
+            )}
+
+            {!nextLevelData && (
+              <div style={{
+                background: 'rgba(236, 72, 153, 0.15)',
+                color: '#f472b6',
+                border: '1.5px solid #db2777',
+                padding: '10px 18px',
+                borderRadius: '10px',
+                fontWeight: 900,
+                fontSize: '13px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <span>🏆</span>
+                <span>Selamat! Anda Telah Menyelesaikan Seluruh Tingkat Evaluasi (C1 - HOTS)!</span>
+              </div>
+            )}
+
             <button
               onClick={handleCopyTeacherReport}
               style={{
@@ -598,7 +992,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               }}
             >
               <span>📋</span>
-              <span>Salin Rekap Nilai Siswa (Untuk Catatan/Excel Guru)</span>
+              <span>Salin Rekap Nilai Siswa (Untuk Excel Guru)</span>
             </button>
 
             <button
@@ -1104,7 +1498,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
           {!currentAnswers.isSubmitted ? (
             <button
               onClick={handleSubmit}
@@ -1128,24 +1522,190 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               <span>Kirim &amp; Munculkan Nilai Siswa</span>
             </button>
           ) : (
-            <button
-              onClick={handleReset}
-              style={{
-                background: '#334155',
-                color: '#ffffff',
-                padding: '12px 24px',
-                borderRadius: '10px',
-                border: 'none',
-                fontWeight: 800,
-                fontSize: '13px',
-                cursor: 'pointer'
-              }}
-            >
-              🔄 Reset &amp; Coba Ujian Ulang
-            </button>
+            <>
+              {nextLevelData && (
+                <button
+                  onClick={() => handleLevelChange(nextLevelData.key)}
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: '#ffffff',
+                    padding: '12px 28px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    fontWeight: 900,
+                    fontSize: '13.5px',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <span>🚀</span>
+                  <span>Lanjut ke {nextLevelData.badge} ({nextLevelData.title}) ➔</span>
+                </button>
+              )}
+
+              <button
+                onClick={handleReset}
+                style={{
+                  background: '#334155',
+                  color: '#ffffff',
+                  padding: '12px 24px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  cursor: 'pointer'
+                }}
+              >
+                🔄 Reset &amp; Coba Ujian Ulang
+              </button>
+            </>
           )}
         </div>
       </div>
+
+      {/* ==================================================== */}
+      {/* 8. MODAL PERINGATAN: LEVEL MASIH TERKUNCI */}
+      {/* ==================================================== */}
+      {lockedModalInfo && (
+        <div
+          onClick={() => setLockedModalInfo(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(5px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+              border: '2px solid #ef4444',
+              borderRadius: '20px',
+              maxWidth: '520px',
+              width: '100%',
+              padding: '30px 32px',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
+              color: '#ffffff',
+              textAlign: 'center'
+            }}
+          >
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(239, 68, 68, 0.15)',
+              border: '2px solid #ef4444',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '30px',
+              margin: '0 auto 18px auto'
+            }}>
+              🔒
+            </div>
+
+            <span style={{
+              background: 'rgba(239, 68, 68, 0.2)',
+              color: '#f87171',
+              padding: '4px 14px',
+              borderRadius: '9999px',
+              fontSize: '11px',
+              fontWeight: 800,
+              letterSpacing: '1px',
+              border: '1px solid rgba(239, 68, 68, 0.4)'
+            }}>
+              LEVEL MASIH TERKUNCI
+            </span>
+
+            <h3 style={{ fontSize: '20px', fontWeight: 900, margin: '14px 0 8px 0', color: '#ffffff' }}>
+              {lockedModalInfo.targetBadge}: {lockedModalInfo.targetTitle}
+            </h3>
+
+            <p style={{ fontSize: '13.5px', color: '#cbd5e1', lineHeight: 1.6, margin: '0 0 20px 0' }}>
+              Untuk menjaga urutan penguasaan kompetensi bertahap (Scaffolding Taksonomi Bloom Fase E SMK), level ini baru dapat dikerjakan setelah Anda menyelesaikan dan mengirim jawaban pada:
+            </p>
+
+            <div style={{
+              background: 'rgba(2, 132, 199, 0.15)',
+              border: '1.5px solid #0284c7',
+              borderRadius: '12px',
+              padding: '14px 18px',
+              marginBottom: '24px',
+              textAlign: 'left',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <span style={{ fontSize: '26px' }}>🔑</span>
+              <div>
+                <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Prasyarat Wajib:
+                </div>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
+                  {lockedModalInfo.prerequisiteName}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              {lockedModalInfo.prerequisiteKey && (
+                <button
+                  onClick={() => {
+                    setLockedModalInfo(null);
+                    sound.playClick();
+                    setActiveLevel(lockedModalInfo.prerequisiteKey);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #0284c7 0%, #059669 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '12px 24px',
+                    borderRadius: '10px',
+                    fontWeight: 800,
+                    fontSize: '13.5px',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(2, 132, 199, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <span>Kerjakan {lockedModalInfo.prerequisiteName?.split(':')[0] || 'Level Prasyarat'} Sekarang ➔</span>
+                </button>
+              )}
+
+              <button
+                onClick={() => setLockedModalInfo(null)}
+                style={{
+                  background: '#334155',
+                  color: '#e2e8f0',
+                  border: 'none',
+                  padding: '12px 20px',
+                  borderRadius: '10px',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  cursor: 'pointer'
+                }}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

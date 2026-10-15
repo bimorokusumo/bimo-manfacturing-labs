@@ -1171,6 +1171,13 @@ html.a11y-reduced-motion *::after {
   }
 }
 
+.game-glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 .game-dpad-btn {
   display: flex;
   flex-direction: column;
@@ -1182,6 +1189,8 @@ html.a11y-reduced-motion *::after {
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: transform 0.05s ease, background-color 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1202,6 +1211,8 @@ html.a11y-reduced-motion *::after {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }

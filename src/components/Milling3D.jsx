@@ -15,9 +15,14 @@ const Milling3D = ({
   isCutting = false,
   coolant = false,
   gridX = 60,
-  gridY = 30
+  gridY = 30,
+  viewMode: controlledViewMode = null,
+  onToggleViewMode = null,
+  hideInternalToggle = false
 }) => {
-  const [viewMode, setViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
+  const [internalViewMode, setInternalViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
+  const viewMode = controlledViewMode !== null && controlledViewMode !== undefined ? controlledViewMode : internalViewMode;
+  const setViewMode = onToggleViewMode || setInternalViewMode;
 
   const render2DEngine = (retryFn = null) => (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -102,29 +107,31 @@ const Milling3D = ({
         render2DEngine()
       )}
 
-      {/* VIEW TOGGLE BUTTON (TOP LEFT) */}
-      <div style={{ position: 'absolute', top: '14px', left: '16px', zIndex: 10 }}>
-        <button
-          onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
-          style={{
-            padding: '6px 14px',
-            background: 'rgba(15, 23, 42, 0.85)',
-            border: '1px solid rgba(56, 189, 248, 0.4)',
-            color: '#38bdf8',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-        >
-          {viewMode === '3d' ? '📐 TAMPILAN 2D PRESISI (TOP-DOWN)' : '🎮 TAMPILAN 3D STUDIO'}
-        </button>
-      </div>
+      {/* VIEW TOGGLE BUTTON (TOP LEFT - Shown when not hidden by parent) */}
+      {!hideInternalToggle && (
+        <div style={{ position: 'absolute', top: '14px', left: '16px', zIndex: 10 }}>
+          <button
+            onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
+            style={{
+              padding: '6px 14px',
+              background: 'rgba(15, 23, 42, 0.85)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              color: '#38bdf8',
+              borderRadius: '6px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+          >
+            {viewMode === '3d' ? '📐 TAMPILAN 2D PRESISI (TOP-DOWN)' : '🎮 TAMPILAN 3D STUDIO'}
+          </button>
+        </div>
+      )}
 
       {/* STATUS BADGES (TOP RIGHT) */}
       <div

@@ -13,6 +13,7 @@ const LatheModule = ({ addXP }) => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [showJobsheetModal, setShowJobsheetModal] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
+  const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = latheJobsheets[activeJobsheetIndex] || latheJobsheets[0];
 
@@ -517,8 +518,8 @@ const LatheModule = ({ addXP }) => {
                    MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
                    ============================================================== */
                 <div className="mobile-game-cockpit">
-                  {/* TOP 3D VIEWPORT WITH FLOATING HUD */}
-                  <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#0b1120' }}>
+                  {/* 100% FULLSCREEN VIEWPORT (CANVAS RUNS FULLSCREEN BEHIND TRANSPARENT CONTROLS) */}
+                  <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', background: '#0b1120' }}>
                     <Lathe3D
                       isRunning={isSpindleRunning}
                       toolPosition={toolPosition}
@@ -528,22 +529,25 @@ const LatheModule = ({ addXP }) => {
                       isCutting={isCutting}
                       coolant={coolant}
                       showTailstock={true}
+                      viewMode={viewMode}
+                      onToggleViewMode={setViewMode}
+                      hideInternalToggle={true}
                     />
 
                     {/* FLOATING TOP GLASS HUD */}
                     <div style={{
-                      position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                      position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 30,
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                      background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(10px)',
                       padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
                       boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
                     }}>
                       {/* DRO READOUTS */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         {/* DRO X */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', background: '#040914', padding: '3px 6px', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                          <span style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
-                          <span style={{ fontSize: '0.82rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>Ø{droDiameter}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
+                          <span style={{ fontSize: '0.80rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>Ø{droDiameter}</span>
                           <button
                             onClick={() => {
                               sound.playClick();
@@ -551,7 +555,7 @@ const LatheModule = ({ addXP }) => {
                               setToolPosition({ ...toolPosRef.current });
                               applyInstantCut(toolPosRef.current.z, rawDiameter);
                             }}
-                            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
+                            style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
                             title="Sentuh Diameter Awal"
                           >
                             0
@@ -559,9 +563,9 @@ const LatheModule = ({ addXP }) => {
                         </div>
 
                         {/* DRO Z */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', background: '#040914', padding: '3px 6px', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                          <span style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
-                          <span style={{ fontSize: '0.82rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droZTravel}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
+                          <span style={{ fontSize: '0.80rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droZTravel}</span>
                           <button
                             onClick={() => {
                               sound.playClick();
@@ -569,7 +573,7 @@ const LatheModule = ({ addXP }) => {
                               setToolPosition({ ...toolPosRef.current });
                               applyInstantCut(0, toolPosRef.current.d);
                             }}
-                            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
+                            style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
                             title="Zero Z"
                           >
                             0
@@ -580,9 +584,9 @@ const LatheModule = ({ addXP }) => {
                       {/* SPINDLE STATUS & RPM */}
                       <div style={{
                         display: 'flex', alignItems: 'center', gap: '4px',
-                        background: isSpindleRunning ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                        background: isSpindleRunning ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)',
                         border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
-                        padding: '3px 8px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800,
+                        padding: '3px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
                         color: isSpindleRunning ? '#10b981' : '#fca5a5'
                       }}>
                         <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
@@ -590,14 +594,30 @@ const LatheModule = ({ addXP }) => {
                         {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
                       </div>
 
-                      {/* QUICK MENU BUTTONS */}
+                      {/* 2D / 3D TOGGLE BUTTON & QUICK MENU BUTTONS */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {/* 2D / 3D VIEW TOGGLE (EXPLICIT USER CHOICE) */}
+                        <button
+                          onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                          style={{
+                            background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
+                            border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
+                            color: '#ffffff',
+                            padding: '3px 8px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 900, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '3px',
+                            boxShadow: viewMode === '2d' ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
+                          }}
+                          title="Beralih antara Mode 3D dan Mode 2D Teknik"
+                        >
+                          <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                        </button>
+
                         <button
                           onClick={() => { sound.playClick(); setShowJobsheetModal(true); }}
                           style={{
                             background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
-                            padding: '3px 7px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: '3px'
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '2px'
                           }}
                           title="Ganti Jobsheet / Tugas"
                         >
@@ -609,7 +629,7 @@ const LatheModule = ({ addXP }) => {
                           onClick={() => { sound.playClick(); setShowCalculator(true); }}
                           style={{
                             background: 'rgba(16, 185, 129, 0.25)', border: '1px solid #10b981', color: '#10b981',
-                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer'
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer'
                           }}
                           title="Buka Kalkulator Rumus"
                         >
@@ -620,7 +640,7 @@ const LatheModule = ({ addXP }) => {
                           onClick={() => { sound.playClick(); setIsMobileMode(false); }}
                           style={{
                             background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
-                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer'
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer'
                           }}
                           title="Beralih ke Tampilan Desktop Penuh"
                         >
@@ -630,14 +650,16 @@ const LatheModule = ({ addXP }) => {
                     </div>
                   </div>
 
-                  {/* BOTTOM DOCKED VIRTUAL GAMEPAD (UNDER THUMBS) */}
+                  {/* BOTTOM FLOATING VIRTUAL GAMEPAD - 100% TRANSPARENT GLASS OVERLAY */}
                   <div style={{
-                    height: '200px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                    position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, pointerEvents: 'none',
+                    height: '195px',
+                    background: 'linear-gradient(to top, rgba(2, 6, 23, 0.70) 0%, rgba(2, 6, 23, 0.15) 70%, transparent 100%)',
                     padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 120px', gap: '6px',
                     alignItems: 'center', boxSizing: 'border-box'
                   }}>
                     {/* LEFT THUMB: CROSS D-PAD */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none', pointerEvents: 'auto' }}>
                       <div />
                       {/* ▲ X+ (Mundur Luar) */}
                       <button
@@ -647,7 +669,7 @@ const LatheModule = ({ addXP }) => {
                         onMouseLeave={stopHoldJog}
                         onTouchStart={() => startHoldJog('x', 1)}
                         onTouchEnd={stopHoldJog}
-                        style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                         title="X+ (Mundur Luar)"
                       >
                         ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>X+</span>
@@ -662,7 +684,7 @@ const LatheModule = ({ addXP }) => {
                         onMouseLeave={stopHoldJog}
                         onTouchStart={() => startHoldJog('z', -1)}
                         onTouchEnd={stopHoldJog}
-                        style={{ background: 'rgba(16, 185, 129, 0.25)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.68rem' }}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                         title="Z- (Sayat Kiri)"
                       >
                         ◀<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z-</span>
@@ -681,9 +703,10 @@ const LatheModule = ({ addXP }) => {
                           setAutoFeed(!autoFeed);
                         }}
                         style={{
-                          background: autoFeed ? '#10b981' : 'rgba(255,255,255,0.08)',
-                          border: autoFeed ? 'none' : '1px solid rgba(255,255,255,0.15)',
-                          color: autoFeed ? '#000' : '#94a3b8', fontSize: '0.58rem'
+                          background: autoFeed ? '#10b981' : 'rgba(15, 23, 42, 0.75)',
+                          border: autoFeed ? 'none' : '1px solid rgba(255,255,255,0.2)',
+                          color: autoFeed ? '#000' : '#cbd5e1', fontSize: '0.58rem',
+                          backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)'
                         }}
                       >
                         AUTO
@@ -697,7 +720,7 @@ const LatheModule = ({ addXP }) => {
                         onMouseLeave={stopHoldJog}
                         onTouchStart={() => startHoldJog('z', 1)}
                         onTouchEnd={stopHoldJog}
-                        style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                         title="Z+ (Mundur Kanan)"
                       >
                         ▶<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+</span>
@@ -712,7 +735,7 @@ const LatheModule = ({ addXP }) => {
                         onMouseLeave={stopHoldJog}
                         onTouchStart={() => startHoldJog('x', -1)}
                         onTouchEnd={stopHoldJog}
-                        style={{ background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem' }}
+                        style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                         title="X- (Makan Potong Ø)"
                       >
                         ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>X-</span>
@@ -721,7 +744,7 @@ const LatheModule = ({ addXP }) => {
                     </div>
 
                     {/* CENTER COLUMN: STEP & MODIFIERS */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
                       {/* Step Selector */}
                       <div style={{ display: 'flex', gap: '3px' }}>
                         {[0.02, 0.05, 0.10, 0.50].map((v) => (
@@ -730,9 +753,10 @@ const LatheModule = ({ addXP }) => {
                             onClick={() => { sound.playClick(); setStepSize(v); }}
                             style={{
                               flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
-                              background: stepSize === v ? '#10b981' : 'rgba(255,255,255,0.06)',
-                              color: stepSize === v ? '#000' : 'var(--text-muted)',
-                              border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                              background: stepSize === v ? '#10b981' : 'rgba(15, 23, 42, 0.75)',
+                              color: stepSize === v ? '#000' : '#cbd5e1',
+                              border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                              backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                             }}
                           >
                             {v}
@@ -746,9 +770,10 @@ const LatheModule = ({ addXP }) => {
                           onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
                           style={{
                             flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                            background: rapidMode ? '#f59e0b' : 'rgba(255,255,255,0.06)',
-                            color: rapidMode ? '#000' : 'var(--text-muted)',
-                            border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                            background: rapidMode ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                            color: rapidMode ? '#000' : '#cbd5e1',
+                            border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
                           ⚡ RAPID
@@ -757,9 +782,10 @@ const LatheModule = ({ addXP }) => {
                           onClick={() => { sound.playClick(); setCoolant(!coolant); }}
                           style={{
                             flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                            background: coolant ? 'rgba(14, 165, 233, 0.3)' : 'rgba(255,255,255,0.06)',
-                            color: coolant ? '#38bdf8' : 'var(--text-muted)',
-                            border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.1)'
+                            background: coolant ? 'rgba(14, 165, 233, 0.35)' : 'rgba(15, 23, 42, 0.75)',
+                            color: coolant ? '#38bdf8' : '#cbd5e1',
+                            border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
                           💦 {coolant ? 'ON' : 'OFF'}
@@ -782,7 +808,8 @@ const LatheModule = ({ addXP }) => {
                           onClick={handleReset}
                           style={{
                             flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
-                            background: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.15)'
+                            background: 'rgba(15, 23, 42, 0.75)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.15)',
+                            backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
                           🔄 RESET
@@ -791,7 +818,7 @@ const LatheModule = ({ addXP }) => {
                     </div>
 
                     {/* RIGHT THUMB: POWER SPINDLE & RPM */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
                       {/* Big Spindle Action Button */}
                       <button
                         className="game-action-btn"
@@ -811,7 +838,7 @@ const LatheModule = ({ addXP }) => {
                       </button>
 
                       {/* RPM Stepper */}
-                      <div style={{ display: 'flex', alignItems: 'center', background: '#040914', borderRadius: '6px', border: '1px solid #1e293b', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                         <button
                           onClick={() => { sound.playClick(); setRpm(prev => Math.max(150, prev - 150)); }}
                           style={{ width: '28px', height: '28px', background: 'transparent', border: 'none', color: '#38bdf8', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
@@ -878,6 +905,28 @@ const LatheModule = ({ addXP }) => {
 
                     {/* JOBSHEET TABS & FORMULA CALCULATOR BUTTON */}
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                      {/* 2D / 3D VIEW TOGGLE BUTTON (DESKTOP) */}
+                      <button
+                        onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          fontSize: '0.8rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.06)',
+                          color: viewMode === '2d' ? '#ffffff' : 'var(--text-main)',
+                          border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid var(--border-light)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: viewMode === '2d' ? '0 0 12px rgba(56, 189, 248, 0.35)' : 'none'
+                        }}
+                        title="Beralih antara Mode 3D Studio dan Mode 2D Teknik"
+                      >
+                        <span>{viewMode === '3d' ? '📐 MODE 2D TEKNIK' : '🎮 MODE 3D STUDIO'}</span>
+                      </button>
+
                       <button
                         onClick={() => { sound.playClick(); setIsMobileMode(true); }}
                         style={{
@@ -967,6 +1016,8 @@ const LatheModule = ({ addXP }) => {
           isCutting={isCutting}
           coolant={coolant}
           showTailstock={true}
+          viewMode={viewMode}
+          onToggleViewMode={setViewMode}
         />
       </div>
 

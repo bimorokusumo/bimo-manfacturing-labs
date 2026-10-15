@@ -11,6 +11,7 @@ const MillingModule = ({ addXP }) => {
   const [isPrepared, setIsPrepared] = useState(true);
   const [showJobsheetModal, setShowJobsheetModal] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
+  const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
 
@@ -441,8 +442,8 @@ const MillingModule = ({ addXP }) => {
                MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
                ============================================================== */
             <div className="mobile-game-cockpit">
-              {/* TOP 3D VIEWPORT WITH FLOATING HUD */}
-              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#0b1120' }}>
+              {/* 100% FULLSCREEN VIEWPORT (CANVAS RUNS FULLSCREEN BEHIND TRANSPARENT CONTROLS) */}
+              <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', background: '#0b1120' }}>
                 <Milling3D
                   isRunning={isSpindleRunning}
                   tablePosition={tablePosition}
@@ -455,48 +456,51 @@ const MillingModule = ({ addXP }) => {
                   coolant={coolant}
                   gridX={gridX}
                   gridY={gridY}
+                  viewMode={viewMode}
+                  onToggleViewMode={setViewMode}
+                  hideInternalToggle={true}
                 />
 
                 {/* FLOATING TOP GLASS HUD */}
                 <div style={{
-                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 30,
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                  background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(10px)',
                   padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
                 }}>
                   {/* DRO READOUTS (X, Y, Z) */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
                       <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>{droX}</span>
                       <button
                         onClick={() => { sound.playClick(); tablePosRef.current.x = 0; setTablePosition({ ...tablePosRef.current }); }}
-                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
                         title="Zero X"
                       >
                         0
                       </button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Y:</span>
                       <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droY}</span>
                       <button
                         onClick={() => { sound.playClick(); tablePosRef.current.y = 0; setTablePosition({ ...tablePosRef.current }); }}
-                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
                         title="Zero Y"
                       >
                         0
                       </button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: 'rgba(4, 9, 20, 0.85)', padding: '2px 5px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
                       <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: spindlePosition.z <= 0 ? '#f59e0b' : '#10b981' }}>{droZ}</span>
                       <button
                         onClick={() => setSpindleDepthPreset(0)}
-                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#f59e0b', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
+                        style={{ background: 'rgba(255,255,255,0.12)', border: 'none', color: '#f59e0b', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
                         title="Zero Z"
                       >
                         0
@@ -507,7 +511,7 @@ const MillingModule = ({ addXP }) => {
                   {/* SPINDLE STATUS & RPM */}
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: '4px',
-                    background: isSpindleRunning ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                    background: isSpindleRunning ? 'rgba(16, 185, 129, 0.25)' : 'rgba(239, 68, 68, 0.25)',
                     border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
                     padding: '3px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
                     color: isSpindleRunning ? '#10b981' : '#fca5a5'
@@ -517,14 +521,30 @@ const MillingModule = ({ addXP }) => {
                     {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
                   </div>
 
-                  {/* QUICK ACTIONS */}
+                  {/* 2D / 3D VIEW TOGGLE & QUICK ACTIONS */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    {/* 2D / 3D TOGGLE BUTTON */}
+                    <button
+                      onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                      style={{
+                        background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
+                        border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
+                        color: '#ffffff',
+                        padding: '3px 8px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 900, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '3px',
+                        boxShadow: viewMode === '2d' ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
+                      }}
+                      title="Beralih antara Mode 3D dan Mode 2D Presisi"
+                    >
+                      <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                    </button>
+
                     <button
                       onClick={() => { sound.playClick(); setShowJobsheetModal(true); }}
                       style={{
                         background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#fbbf24',
-                        padding: '3px 7px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', gap: '3px'
+                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '2px'
                       }}
                       title="Ganti Jobsheet Frais"
                     >
@@ -557,14 +577,16 @@ const MillingModule = ({ addXP }) => {
                 </div>
               </div>
 
-              {/* BOTTOM DOCKED VIRTUAL GAMEPAD */}
+              {/* BOTTOM FLOATING VIRTUAL GAMEPAD - 100% TRANSPARENT GLASS OVERLAY */}
               <div style={{
-                height: '210px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, pointerEvents: 'none',
+                height: '205px',
+                background: 'linear-gradient(to top, rgba(2, 6, 23, 0.70) 0%, rgba(2, 6, 23, 0.15) 70%, transparent 100%)',
                 padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 125px', gap: '6px',
                 alignItems: 'center', boxSizing: 'border-box'
               }}>
                 {/* LEFT THUMB: XY TABLE D-PAD */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none', pointerEvents: 'auto' }}>
                   <div />
                   <button
                     className="game-dpad-btn"
@@ -573,7 +595,7 @@ const MillingModule = ({ addXP }) => {
                     onMouseLeave={stopHoldJog}
                     onTouchStart={() => startHoldTableJog('y', 1)}
                     onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                     title="Meja Mundur (Y+)"
                   >
                     ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y+</span>
@@ -587,13 +609,13 @@ const MillingModule = ({ addXP }) => {
                     onMouseLeave={stopHoldJog}
                     onTouchStart={() => startHoldTableJog('x', -1)}
                     onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                     title="Meja Kiri (X-)"
                   >
                     ◀<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X-</span>
                   </button>
 
-                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800 }}>
+                  <div style={{ background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800, border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                     MEJA
                   </div>
 
@@ -604,7 +626,7 @@ const MillingModule = ({ addXP }) => {
                     onMouseLeave={stopHoldJog}
                     onTouchStart={() => startHoldTableJog('x', 1)}
                     onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                     title="Meja Kanan (X+)"
                   >
                     ▶<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X+</span>
@@ -618,7 +640,7 @@ const MillingModule = ({ addXP }) => {
                     onMouseLeave={stopHoldJog}
                     onTouchStart={() => startHoldTableJog('y', -1)}
                     onTouchEnd={stopHoldJog}
-                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    style={{ background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                     title="Meja Maju (Y-)"
                   >
                     ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y-</span>
@@ -627,7 +649,7 @@ const MillingModule = ({ addXP }) => {
                 </div>
 
                 {/* CENTER COLUMN: STEP & QUICK DEPTH PRESETS */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
                   {/* Step Selector */}
                   <div style={{ display: 'flex', gap: '3px' }}>
                     {[0.10, 0.50, 1.00, 2.00].map((v) => (
@@ -636,9 +658,10 @@ const MillingModule = ({ addXP }) => {
                         onClick={() => { sound.playClick(); setStepSize(v); }}
                         style={{
                           flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
-                          background: stepSize === v ? '#f59e0b' : 'rgba(255,255,255,0.06)',
-                          color: stepSize === v ? '#000' : 'var(--text-muted)',
-                          border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                          background: stepSize === v ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                          color: stepSize === v ? '#000' : '#cbd5e1',
+                          border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                          backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                         }}
                       >
                         {v}
@@ -659,8 +682,9 @@ const MillingModule = ({ addXP }) => {
                         onClick={() => setSpindleDepthPreset(dp.v)}
                         style={{
                           flex: 1, padding: '4px 0', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 800, cursor: 'pointer',
-                          background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255,255,255,0.05)',
-                          color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.08)'}`
+                          background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.4)' : 'rgba(15, 23, 42, 0.75)',
+                          color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.12)'}`,
+                          backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                         }}
                       >
                         {dp.l}
@@ -674,9 +698,10 @@ const MillingModule = ({ addXP }) => {
                       onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
                       style={{
                         flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                        background: rapidMode ? '#f59e0b' : 'rgba(255,255,255,0.06)',
-                        color: rapidMode ? '#000' : 'var(--text-muted)',
-                        border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                        background: rapidMode ? '#f59e0b' : 'rgba(15, 23, 42, 0.75)',
+                        color: rapidMode ? '#000' : '#cbd5e1',
+                        border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                       }}
                     >
                       ⚡ RAPID 3X
@@ -685,9 +710,10 @@ const MillingModule = ({ addXP }) => {
                       onClick={() => { sound.playClick(); setCoolant(!coolant); }}
                       style={{
                         flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
-                        background: coolant ? 'rgba(14, 165, 233, 0.3)' : 'rgba(255,255,255,0.06)',
-                        color: coolant ? '#38bdf8' : 'var(--text-muted)',
-                        border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.1)'
+                        background: coolant ? 'rgba(14, 165, 233, 0.35)' : 'rgba(15, 23, 42, 0.75)',
+                        color: coolant ? '#38bdf8' : '#cbd5e1',
+                        border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.15)',
+                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                       }}
                     >
                       💦 {coolant ? 'ON' : 'OFF'}
@@ -710,7 +736,8 @@ const MillingModule = ({ addXP }) => {
                       onClick={handleReset}
                       style={{
                         flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
-                        background: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.15)'
+                        background: 'rgba(15, 23, 42, 0.75)', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.15)',
+                        backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                       }}
                     >
                       🔄 RESET
@@ -719,7 +746,7 @@ const MillingModule = ({ addXP }) => {
                 </div>
 
                 {/* RIGHT THUMB: SPINDLE Z FEED & SPINDLE POWER */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center', pointerEvents: 'auto' }}>
                   {/* Spindle Z Jog buttons */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
                     <button
@@ -729,7 +756,7 @@ const MillingModule = ({ addXP }) => {
                       onMouseLeave={stopHoldJog}
                       onTouchStart={() => startHoldSpindleJog(-1)}
                       onTouchEnd={stopHoldJog}
-                      style={{ height: '38px', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                      style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
                       title="Spindel Naik (Z+)"
                     >
                       ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+ NAIK</span>
@@ -741,7 +768,7 @@ const MillingModule = ({ addXP }) => {
                       onMouseLeave={stopHoldJog}
                       onTouchStart={() => startHoldSpindleJog(1)}
                       onTouchEnd={stopHoldJog}
-                      style={{ height: '38px', background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)' }}
+                      style={{ height: '38px', background: 'rgba(15, 23, 42, 0.75)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
                       title="Spindel Turun Sayat (Z-)"
                     >
                       ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z- SAYAT</span>
@@ -767,7 +794,7 @@ const MillingModule = ({ addXP }) => {
                   </button>
 
                   {/* RPM Stepper */}
-                  <div style={{ display: 'flex', alignItems: 'center', background: '#040914', borderRadius: '6px', border: '1px solid #1e293b', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(15, 23, 42, 0.75)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                     <button
                       onClick={() => { sound.playClick(); setRpm(prev => Math.max(300, prev - 150)); }}
                       style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
@@ -834,6 +861,28 @@ const MillingModule = ({ addXP }) => {
 
                 {/* JOBSHEET TABS */}
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {/* 2D / 3D VIEW TOGGLE (DESKTOP) */}
+                  <button
+                    onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.06)',
+                      color: viewMode === '2d' ? '#ffffff' : 'var(--text-main)',
+                      border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid var(--border-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: viewMode === '2d' ? '0 0 12px rgba(56, 189, 248, 0.35)' : 'none'
+                    }}
+                    title="Beralih antara Mode 3D Studio dan Mode 2D Presisi (Top-Down)"
+                  >
+                    <span>{viewMode === '3d' ? '📐 MODE 2D PRESISI' : '🎮 MODE 3D STUDIO'}</span>
+                  </button>
+
                   <button
                     onClick={() => { sound.playClick(); setIsMobileMode(true); }}
                     style={{
@@ -941,6 +990,8 @@ const MillingModule = ({ addXP }) => {
           coolant={coolant}
           gridX={gridX}
           gridY={gridY}
+          viewMode={viewMode}
+          onToggleViewMode={setViewMode}
         />
       </div>
 

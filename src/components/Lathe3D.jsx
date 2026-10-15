@@ -388,9 +388,14 @@ const Lathe3D = ({
   gcodeText = '',
   currentLine = -1,
   showToolpath = true,
-  onToggleToolpath = null
+  onToggleToolpath = null,
+  viewMode: controlledViewMode = null,
+  onToggleViewMode = null,
+  hideInternalToggle = false
 }) => {
-  const [viewMode, setViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
+  const [internalViewMode, setInternalViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
+  const viewMode = controlledViewMode !== null && controlledViewMode !== undefined ? controlledViewMode : internalViewMode;
+  const setViewMode = onToggleViewMode || setInternalViewMode;
   const [localShowToolpath, setLocalShowToolpath] = useState(true);
   const effectiveShowToolpath = onToggleToolpath ? showToolpath : localShowToolpath;
   const toggleToolpathHandler = onToggleToolpath || (() => setLocalShowToolpath(v => !v));
@@ -487,53 +492,55 @@ const Lathe3D = ({
         render2DEngine()
       )}
 
-      {/* VIEW & TOOLPATH TOGGLE BUTTONS */}
-      <div style={{ position: 'absolute', top: '14px', left: '16px', display: 'flex', gap: '8px', zIndex: 10 }}>
-        <button
-          onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
-          style={{
-            padding: '6px 14px',
-            background: 'rgba(15, 23, 42, 0.85)',
-            border: '1px solid rgba(56, 189, 248, 0.4)',
-            color: '#38bdf8',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-        >
-          {viewMode === '3d' ? '📐 TAMPILAN 2D TEKNIK' : '🎮 TAMPILAN 3D STUDIO'}
-        </button>
+      {/* VIEW & TOOLPATH TOGGLE BUTTONS (Shown when not hidden by parent) */}
+      {!hideInternalToggle && (
+        <div style={{ position: 'absolute', top: '14px', left: '16px', display: 'flex', gap: '8px', zIndex: 10 }}>
+          <button
+            onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
+            style={{
+              padding: '6px 14px',
+              background: 'rgba(15, 23, 42, 0.85)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              color: '#38bdf8',
+              borderRadius: '6px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+          >
+            {viewMode === '3d' ? '📐 TAMPILAN 2D TEKNIK' : '🎮 TAMPILAN 3D STUDIO'}
+          </button>
 
-        {/* ALUR PAHAT (TOOLPATH) TOGGLE BUTTON */}
-        <button
-          onClick={toggleToolpathHandler}
-          style={{
-            padding: '6px 12px',
-            background: effectiveShowToolpath ? 'rgba(6, 182, 212, 0.22)' : 'rgba(15, 23, 42, 0.85)',
-            border: `1px solid ${effectiveShowToolpath ? '#06b6d4' : 'rgba(148, 163, 184, 0.4)'}`,
-            color: effectiveShowToolpath ? '#22d3ee' : '#94a3b8',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            transition: 'all 0.2s'
-          }}
-          title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
-        >
-          <span>{effectiveShowToolpath ? '👁️' : '🙈'}</span>
-          <span>ALUR PAHAT: {effectiveShowToolpath ? 'ON' : 'OFF'}</span>
-        </button>
-      </div>
+          {/* ALUR PAHAT (TOOLPATH) TOGGLE BUTTON */}
+          <button
+            onClick={toggleToolpathHandler}
+            style={{
+              padding: '6px 12px',
+              background: effectiveShowToolpath ? 'rgba(6, 182, 212, 0.22)' : 'rgba(15, 23, 42, 0.85)',
+              border: `1px solid ${effectiveShowToolpath ? '#06b6d4' : 'rgba(148, 163, 184, 0.4)'}`,
+              color: effectiveShowToolpath ? '#22d3ee' : '#94a3b8',
+              borderRadius: '6px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+            title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
+          >
+            <span>{effectiveShowToolpath ? '👁️' : '🙈'}</span>
+            <span>ALUR PAHAT: {effectiveShowToolpath ? 'ON' : 'OFF'}</span>
+          </button>
+        </div>
+      )}
 
       {/* MINIMAL STATUS HUD (Top Right, non-blocking) */}
       <div

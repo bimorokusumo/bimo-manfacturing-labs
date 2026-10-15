@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { sound } from '../utils/audio';
 import Welding3D from './Welding3D';
+import Welding2D_Engine from './Welding2D_Engine';
 import ErrorBoundary from './ErrorBoundary';
 import WeldingTheoryGuide from './WeldingTheoryGuide';
 import WeldingQuiz from './WeldingQuiz';
@@ -617,6 +618,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
   const [plateThickness, setPlateThickness] = useState('6mm'); // '2mm', '4mm', '6mm', '8mm', '10mm', '12mm'
   const [showMachinePanel, setShowMachinePanel] = useState(true);
   const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
+  const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
   const [showMobileMachineModal, setShowMobileMachineModal] = useState(false);
 
   useEffect(() => {
@@ -1006,49 +1008,69 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
                ============================================================== */
             <div className="mobile-game-cockpit">
-              {/* TOP 3D WELDING VIEWPORT WITH FLOATING HUD */}
-              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#050a14' }}>
-                <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-tflm)' }}>LOADING 3D ENGINE...</div>}>
-                  <ErrorBoundary>
-                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
-                      <Welding3D 
-                        isWelding={isWelding} 
-                        torchPos={torchPos} 
-                        weldProgress={weldProgress} 
-                        weldType={weldType} 
-                        weldPosition={weldPosition} 
-                        defects={defects} 
-                        onDefectClick={handleSelectDefect} 
-                        interactionMode={interactionMode} 
-                        weldingProcess={weldingProcess} 
-                        smawElectrode={smawElectrode} 
-                        oawFlame={oawFlame} 
-                        plateThickness={plateThickness}
-                        amperage={amperage}
-                        voltage={voltage}
-                        wireFeedSpeed={wireFeedSpeed}
-                        gasFlow={gasFlow}
-                        oxygenPressure={oxygenPressure}
-                        acetylenePressure={acetylenePressure}
-                        polarity={polarity}
-                        isMobile={true}
-                        onTorchUpdate={handleTorchUpdate}
-                        onTorchDown={handleMouseDown}
-                        onTorchUp={handleMouseUp}
-                      />
-                    </div>
-                  </ErrorBoundary>
-                </Suspense>
+              {/* 100% FULLSCREEN VIEWPORT (CANVAS RUNS FULLSCREEN BEHIND TRANSPARENT CONTROLS) */}
+              <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden', background: '#050a14' }}>
+                {viewMode === '3d' ? (
+                  <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-tflm)' }}>LOADING 3D ENGINE...</div>}>
+                    <ErrorBoundary>
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
+                        <Welding3D 
+                          isWelding={isWelding} 
+                          torchPos={torchPos} 
+                          weldProgress={weldProgress} 
+                          weldType={weldType} 
+                          weldPosition={weldPosition} 
+                          defects={defects} 
+                          onDefectClick={handleSelectDefect} 
+                          interactionMode={interactionMode} 
+                          weldingProcess={weldingProcess} 
+                          smawElectrode={smawElectrode} 
+                          oawFlame={oawFlame} 
+                          plateThickness={plateThickness}
+                          amperage={amperage}
+                          voltage={voltage}
+                          wireFeedSpeed={wireFeedSpeed}
+                          gasFlow={gasFlow}
+                          oxygenPressure={oxygenPressure}
+                          acetylenePressure={acetylenePressure}
+                          polarity={polarity}
+                          isMobile={true}
+                          onTorchUpdate={handleTorchUpdate}
+                          onTorchDown={handleMouseDown}
+                          onTorchUp={handleMouseUp}
+                        />
+                      </div>
+                    </ErrorBoundary>
+                  </Suspense>
+                ) : (
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
+                    <Welding2D_Engine
+                      isWelding={isWelding}
+                      weldingProcess={weldingProcess}
+                      weldType={weldType}
+                      weldPosition={weldPosition}
+                      plateThickness={plateThickness}
+                      torchPos={torchPos}
+                      weldProgress={weldProgress}
+                      amperage={amperage}
+                      voltage={voltage}
+                      gasFlow={gasFlow}
+                      oawFlame={oawFlame}
+                      defects={defects}
+                      onDefectClick={handleSelectDefect}
+                    />
+                  </div>
+                )}
 
                 {/* FLOATING TOP GLASS HUD */}
                 <div style={{
-                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 30,
                   display: 'flex', flexDirection: 'column', gap: '5px',
-                  background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                  background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(10px)',
                   padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
                   boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
                 }}>
-                  {/* ROW 1: PROCESS SELECTION PILLS & DESKTOP SWITCH */}
+                  {/* ROW 1: PROCESS SELECTION PILLS, 2D/3D TOGGLE & DESKTOP SWITCH */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
                     <div style={{ display: 'flex', gap: '3px', flex: 1 }}>
                       {['SMAW', 'MIG', 'TIG', 'OAW'].map(proc => (
@@ -1067,13 +1089,31 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       ))}
                     </div>
 
-                    <button
-                      onClick={() => { sound.playClick(); setIsMobileMode(false); }}
-                      style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '4px 7px', borderRadius: '5px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer' }}
-                      title="Beralih ke Tampilan Desktop Penuh"
-                    >
-                      🖥️
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {/* 2D / 3D VIEW TOGGLE BUTTON */}
+                      <button
+                        onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                        style={{
+                          background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255, 255, 255, 0.12)',
+                          border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.25)',
+                          color: '#ffffff',
+                          padding: '3px 8px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 900, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '3px',
+                          boxShadow: viewMode === '2d' ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none'
+                        }}
+                        title="Beralih antara Mode 3D Studio dan Mode 2D Makro"
+                      >
+                        <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '3px 6px', borderRadius: '5px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer' }}
+                        title="Beralih ke Tampilan Desktop Penuh"
+                      >
+                        🖥️
+                      </button>
+                    </div>
                   </div>
 
                   {/* ROW 2: THICKNESS, POSITION, MACHINE DRAWER, MODE */}
@@ -1165,7 +1205,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                   <button
                     onClick={() => setSelectedDefect(defects[0])}
                     style={{
-                      position: 'absolute', bottom: '8px', left: '8px', zIndex: 12,
+                      position: 'absolute', bottom: '120px', left: '8px', zIndex: 25,
                       background: 'rgba(239, 68, 68, 0.92)', color: '#fff', border: 'none',
                       padding: '6px 10px', borderRadius: '8px', fontSize: '0.72rem', fontWeight: 800,
                       cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
@@ -1178,29 +1218,31 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                 )}
               </div>
 
-              {/* BOTTOM DOCKED GAMEPAD FOR TOUCH WELDING */}
+              {/* BOTTOM FLOATING GAMEPAD FOR TOUCH WELDING - 100% TRANSPARENT GLASS OVERLAY */}
               <div style={{
-                height: '110px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 20, pointerEvents: 'none',
+                height: '115px',
+                background: 'linear-gradient(to top, rgba(2, 6, 23, 0.70) 0%, rgba(2, 6, 23, 0.15) 70%, transparent 100%)',
                 padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: '6px', boxSizing: 'border-box'
               }}>
                 {/* ROW 1: QUICK PARAMETER ADJUSTMENT & PROGRESS */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem', pointerEvents: 'auto' }}>
                   {/* Parameter Stepper */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {weldingProcess === 'MIG' ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(15, 23, 42, 0.85)', padding: '2px 6px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                         <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Volt:</span>
                         <button onClick={() => setVoltage(prev => Math.max(14, +(prev - 0.5).toFixed(1)))} style={{ background: 'none', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>-</button>
                         <strong style={{ color: '#f59e0b', minWidth: '38px', textAlign: 'center' }}>{voltage}V</strong>
                         <button onClick={() => setVoltage(prev => Math.min(32, +(prev + 0.5).toFixed(1)))} style={{ background: 'none', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>+</button>
                       </div>
                     ) : weldingProcess === 'OAW' ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(15, 23, 42, 0.85)', padding: '2px 6px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                         <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Nyala Api:</span>
                         <strong style={{ color: oawFlame === 'neutral' ? '#10b981' : '#f59e0b' }}>{oawFlame.toUpperCase()}</strong>
                       </div>
                     ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(15, 23, 42, 0.85)', padding: '2px 6px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                         <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Arus:</span>
                         <button onClick={() => setAmperage(prev => Math.max(40, prev - 5))} style={{ background: 'none', border: 'none', color: '#ea580c', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>-</button>
                         <strong style={{ color: '#ea580c', minWidth: '38px', textAlign: 'center' }}>{amperage}A</strong>
@@ -1222,9 +1264,9 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                 </div>
 
                 {/* ROW 2: TOUCH WELDING SLIDER & ACTION TRIGGER */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, pointerEvents: 'auto' }}>
                   {/* Slider to glide torch position */}
-                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px', background: '#040914', padding: '0 8px', borderRadius: '8px', border: '1px solid #1e293b', height: '42px' }}>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(15, 23, 42, 0.85)', padding: '0 8px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.15)', height: '42px', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                     <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700 }}>POSISI:</span>
                     <input
                       type="range"
@@ -1260,7 +1302,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                   {/* Reset Button */}
                   <button
                     onClick={() => { setTorchPos(0); setWeldProgress(0); setDefects([]); setStep(6); }}
-                    style={{ width: '42px', height: '42px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: '42px', height: '42px', background: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
                     title="Reset Posisi Las"
                   >
                     🔄
@@ -1388,6 +1430,23 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                   </div>
 
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    {/* 2D / 3D VIEW TOGGLE BUTTON (DESKTOP) */}
+                    <button 
+                      className="btn-game"
+                      style={{
+                        padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800,
+                        background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.06)',
+                        color: viewMode === '2d' ? '#ffffff' : 'var(--text-main)',
+                        border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid var(--border-light)',
+                        display: 'flex', alignItems: 'center', gap: '6px',
+                        boxShadow: viewMode === '2d' ? '0 0 12px rgba(56, 189, 248, 0.35)' : 'none'
+                      }}
+                      onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
+                      title="Beralih antara Mode 3D Studio dan Mode 2D Makro Penampang"
+                    >
+                      <span>{viewMode === '3d' ? '📐 MODE 2D MAKRO' : '🎮 MODE 3D STUDIO'}</span>
+                    </button>
+
                     <button 
                       className="btn-game"
                       style={{
@@ -1611,36 +1670,56 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
           </div>
         )}
 
-        <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-tflm)' }}>LOADING 3D ENGINE...</div>}>
-          <ErrorBoundary>
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
-              <Welding3D 
-                isWelding={isWelding} 
-                torchPos={torchPos} 
-                weldProgress={weldProgress} 
-                weldType={weldType} 
-                weldPosition={weldPosition} 
-                defects={defects} 
-                onDefectClick={handleSelectDefect} 
-                interactionMode={interactionMode} 
-                weldingProcess={weldingProcess} 
-                smawElectrode={smawElectrode} 
-                oawFlame={oawFlame} 
-                plateThickness={plateThickness}
-                amperage={amperage}
-                voltage={voltage}
-                wireFeedSpeed={wireFeedSpeed}
-                gasFlow={gasFlow}
-                oxygenPressure={oxygenPressure}
-                acetylenePressure={acetylenePressure}
-                polarity={polarity}
-                onTorchUpdate={handleTorchUpdate}
-                onTorchDown={handleMouseDown}
-                onTorchUp={handleMouseUp}
-              />
-            </div>
-          </ErrorBoundary>
-        </Suspense>
+        {viewMode === '2d' ? (
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
+            <Welding2D_Engine
+              isWelding={isWelding}
+              weldingProcess={weldingProcess}
+              weldType={weldType}
+              weldPosition={weldPosition}
+              plateThickness={plateThickness}
+              torchPos={torchPos}
+              weldProgress={weldProgress}
+              amperage={amperage}
+              voltage={voltage}
+              gasFlow={gasFlow}
+              oawFlame={oawFlame}
+              defects={defects}
+              onDefectClick={handleSelectDefect}
+            />
+          </div>
+        ) : (
+          <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-tflm)' }}>LOADING 3D ENGINE...</div>}>
+            <ErrorBoundary>
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
+                <Welding3D 
+                  isWelding={isWelding} 
+                  torchPos={torchPos} 
+                  weldProgress={weldProgress} 
+                  weldType={weldType} 
+                  weldPosition={weldPosition} 
+                  defects={defects} 
+                  onDefectClick={handleSelectDefect} 
+                  interactionMode={interactionMode} 
+                  weldingProcess={weldingProcess} 
+                  smawElectrode={smawElectrode} 
+                  oawFlame={oawFlame} 
+                  plateThickness={plateThickness}
+                  amperage={amperage}
+                  voltage={voltage}
+                  wireFeedSpeed={wireFeedSpeed}
+                  gasFlow={gasFlow}
+                  oxygenPressure={oxygenPressure}
+                  acetylenePressure={acetylenePressure}
+                  polarity={polarity}
+                  onTorchUpdate={handleTorchUpdate}
+                  onTorchDown={handleMouseDown}
+                  onTorchUp={handleMouseUp}
+                />
+              </div>
+            </ErrorBoundary>
+          </Suspense>
+        )}
 
         {/* STEP 7 EVALUATION TOP BANNER OVERLAY */}
         {step === 7 && !selectedDefect && (

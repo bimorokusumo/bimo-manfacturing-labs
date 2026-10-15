@@ -10,6 +10,12 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
   const [userText, setUserText] = useState('GAMBAR TEKNIK MESIN ISO');
   const [selectedLineType, setSelectedLineType] = useState('A');
   const [selectedDimensionFeature, setSelectedDimensionFeature] = useState('chamfer');
+  
+  // State untuk Card 4: Jangka, Mal, & Pelindung Penghapus
+  const [selectedPrecisionTool, setSelectedPrecisionTool] = useState('jangka'); // 'jangka' | 'mal' | 'pelindung'
+  const [selectedMalType, setSelectedMalType] = useState('kurva'); // 'kurva' | 'lingkaran' | 'baut'
+  const [compassRadius, setCompassRadius] = useState(25); // mm
+  const [erasingStep, setErasingStep] = useState('shield'); // 'problem' | 'shield' | 'result'
 
   const tabs = [
     { id: 'alat', label: '1. Pengenalan Alat', icon: '🧰' },
@@ -233,38 +239,615 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               </ul>
             </div>
 
-            {/* Card 4: Jangka Teknik & Mal Khusus */}
+            {/* Card 4: Jangka Teknik, Mal Gambar, & Pelindung Penghapus */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(168, 85, 247, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🧲</div>
-                <div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Jangka, Mal, & Pelindung Penghapus</h3>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Akurasi Lingkaran & Kurva Kompleks</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🧲</div>
+                  <div>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Jangka, Mal, & Pelindung Penghapus</h3>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Contoh Nyata, Diagram Anatomi & SOP Penggunaan Presisi</p>
+                  </div>
+                </div>
+
+                {/* 3 Main Precision Tool Selector */}
+                <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
+                  {[
+                    { id: 'jangka', label: '⭕ Jangka Teknik', icon: '⭕' },
+                    { id: 'mal', label: '〰️ Mal Khusus & Template', icon: '〰️' },
+                    { id: 'pelindung', label: '🛡️ Pelindung Penghapus', icon: '🛡️' }
+                  ].map(tool => (
+                    <button
+                      key={tool.id}
+                      onClick={() => { sound.playClick(); setSelectedPrecisionTool(tool.id); }}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: selectedPrecisionTool === tool.id ? '2px solid #7c3aed' : '1px solid transparent',
+                        background: selectedPrecisionTool === tool.id ? '#ffffff' : 'transparent',
+                        color: selectedPrecisionTool === tool.id ? '#7c3aed' : 'var(--text-main)',
+                        fontWeight: selectedPrecisionTool === tool.id ? 800 : 600,
+                        fontSize: '0.75rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        boxShadow: selectedPrecisionTool === tool.id ? '0 2px 6px rgba(124, 58, 237, 0.15)' : 'none',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <span>{tool.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ padding: '10px', background: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>⭕ Jangka Teknik (Compass)</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    Jangka besar untuk diameter &gt; 50 mm, jangka pegas (*spring bow*) untuk diameter kecil 5-50 mm yang membutuhkan kestabilan tinggi.
+              {/* ============================================================== */}
+              {/* SUB-VIEW 1: JANGKA TEKNIK (COMPASS)                            */}
+              {/* ============================================================== */}
+              {selectedPrecisionTool === 'jangka' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  
+                  {/* Slider Pengaturan Radius Jangka Interaktif */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '10px',
+                    background: '#f8fafc',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0'
+                  }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>
+                      📐 Simulasi Bukaan Jangka: <strong style={{ color: '#2563eb', fontSize: '0.9rem' }}>Radius R = {compassRadius} mm</strong> (Diameter Ø = {compassRadius * 2} mm)
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input
+                        type="range"
+                        min="15"
+                        max="40"
+                        value={compassRadius}
+                        onChange={(e) => setCompassRadius(Number(e.target.value))}
+                        style={{ width: '130px', cursor: 'pointer' }}
+                      />
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        {[15, 25, 38].map(r => (
+                          <button
+                            key={r}
+                            onClick={() => { sound.playClick(); setCompassRadius(r); }}
+                            style={{
+                              fontSize: '0.7rem',
+                              padding: '3px 8px',
+                              borderRadius: '4px',
+                              border: compassRadius === r ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
+                              background: compassRadius === r ? '#2563eb' : '#ffffff',
+                              color: compassRadius === r ? '#ffffff' : '#334155',
+                              cursor: 'pointer',
+                              fontWeight: 800
+                            }}
+                          >
+                            R{r}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div style={{ padding: '10px', background: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>〰️ Mal Lengkung (French Curve) & Mal Bentuk</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    Membantu membuat garis lengkung bebas non-lingkaran (parabola, hiperbola, cam/nok) serta mal lingkaran kecil dan kepala baut standar.
-                  </div>
-                </div>
+                  {/* SVG DIAGRAM ANATOMI JANGKA PEGAS PRESISI */}
+                  <div style={{
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '10px',
+                    padding: '12px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                    <svg viewBox="0 0 380 200" width="100%" height="auto" style={{ maxHeight: '200px' }}>
+                      <defs>
+                        <linearGradient id="metalLegGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#64748b" />
+                          <stop offset="50%" stopColor="#94a3b8" />
+                          <stop offset="100%" stopColor="#475569" />
+                        </linearGradient>
+                        <linearGradient id="brassNutGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#d97706" />
+                          <stop offset="50%" stopColor="#fbbf24" />
+                          <stop offset="100%" stopColor="#b45309" />
+                        </linearGradient>
+                      </defs>
 
-                <div style={{ padding: '10px', background: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>🛡️ Pelindung Penghapus (Erasing Shield)</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    Pelat baja tipis dengan berbagai celah bentuk untuk menghapus garis yang salah tanpa merusak garis gambar lain di dekatnya.
+                      {/* Garis Sumbu Pusat Silang (ISO 128 Tipe G: Dash-Dot Tipis) */}
+                      <line x1="20" y1="150" x2="340" y2="150" stroke="#3b82f6" strokeWidth="1" strokeDasharray="14 3 3 3" />
+                      <line x1="120" y1="40" x2="120" y2="195" stroke="#3b82f6" strokeWidth="1" strokeDasharray="14 3 3 3" />
+                      
+                      {/* Titik Pusat Jarum O (120, 150) */}
+                      <circle cx="120" cy="150" r="3" fill="#dc2626" />
+                      <text x="126" y="165" fontSize="10" fontWeight="800" fill="#dc2626">Titik Pusat (O)</text>
+
+                      {/* Busur Lingkaran yang Dihasilkan Jangka (Garis Nyata Tebal 0.7 mm Tipe A) */}
+                      {(() => {
+                        const rSvg = compassRadius * 2.8;
+                        const leadX = 120 + rSvg;
+                        const leadY = 150;
+                        const topJointX = 120 + (rSvg / 2);
+                        const topJointY = 32;
+
+                        return (
+                          <g>
+                            {/* Lingkaran / Busur Hasil Goresan */}
+                            <path
+                              d={`M ${120} ${150 - rSvg} A ${rSvg} ${rSvg} 0 0 1 ${leadX} ${leadY} A ${rSvg} ${rSvg} 0 0 1 ${120} ${150 + rSvg}`}
+                              fill="none"
+                              stroke="#0f172a"
+                              strokeWidth="2.5"
+                            />
+                            
+                            {/* Garis Ukur Dimensi Radius R */}
+                            <line x1="120" y1="150" x2={120 + rSvg * 0.707} y2={150 - rSvg * 0.707} stroke="#2563eb" strokeWidth="1.2" />
+                            <circle cx={120 + rSvg * 0.707} cy={150 - rSvg * 0.707} r="2.5" fill="#2563eb" />
+                            <rect x={120 + rSvg * 0.35 - 18} y={150 - rSvg * 0.35 - 16} width="38" height="15" rx="3" fill="#ffffff" stroke="#2563eb" strokeWidth="0.8" />
+                            <text x={120 + rSvg * 0.35 + 1} y={150 - rSvg * 0.35 - 5} fontSize="10" fontWeight="900" fill="#2563eb" textAnchor="middle">
+                              R{compassRadius}
+                            </text>
+
+                            {/* JANGKA PEGAS: Kepala Pegas Busur (Ring Spring) & Gagang Pemutar */}
+                            <rect x={topJointX - 3} y="10" width="6" height="15" fill="#334155" rx="1.5" />
+                            <line x1={topJointX - 4} y1="14" x2={topJointX + 4} y2="14" stroke="#94a3b8" strokeWidth="1" />
+                            <line x1={topJointX - 4} y1="18" x2={topJointX + 4} y2="18" stroke="#94a3b8" strokeWidth="1" />
+                            <circle cx={topJointX} cy="30" r="8" fill="none" stroke="#475569" strokeWidth="3" />
+
+                            {/* Batang Berulir Penyetel Mikro (Spindle) & Mur Knurled */}
+                            <line x1={topJointX - (rSvg * 0.38)} y1="78" x2={topJointX + (rSvg * 0.38)} y2="78" stroke="#cbd5e1" strokeWidth="2.5" />
+                            <rect x={topJointX - 5} y="71" width="10" height="14" rx="2" fill="url(#brassNutGrad)" stroke="#78350f" strokeWidth="0.8" />
+                            <line x1={topJointX - 2} y1="72" x2={topJointX - 2} y2="84" stroke="#ffffff" strokeWidth="0.8" opacity="0.6" />
+                            <line x1={topJointX + 2} y1="72" x2={topJointX + 2} y2="84" stroke="#ffffff" strokeWidth="0.8" opacity="0.6" />
+
+                            {/* Kaki Kiri: Jarum Pusat Baja (Needle Leg) */}
+                            <path
+                              d={`M ${topJointX - 3} 33 L ${topJointX - (rSvg * 0.32)} 95 L 120 142`}
+                              fill="none"
+                              stroke="url(#metalLegGrad)"
+                              strokeWidth="5"
+                              strokeLinecap="round"
+                            />
+                            {/* Jarum Runcing Baja Berbahu (Stepped Needle) */}
+                            <line x1="120" y1="142" x2="120" y2="150" stroke="#0f172a" strokeWidth="1.5" />
+                            <rect x="117" y="140" width="6" height="3" fill="#334155" />
+
+                            {/* Kaki Kanan: Pemegang Mata Pensil (Lead Leg) */}
+                            <path
+                              d={`M ${topJointX + 3} 33 L ${topJointX + (rSvg * 0.32)} 95 L ${leadX} 138`}
+                              fill="none"
+                              stroke="url(#metalLegGrad)"
+                              strokeWidth="5"
+                              strokeLinecap="round"
+                            />
+                            {/* Rumah Penjepit Grafit & Mata Pensil Berujung Pahat (Chisel Point) */}
+                            <rect x={leadX - 3.5} y="132" width="7" height="9" fill="#1e293b" rx="1" />
+                            <polygon points={`${leadX - 2},141 ${leadX + 2},141 ${leadX},150`} fill="#0f172a" />
+
+                            {/* Anotasi Komponen Jangka */}
+                            <text x={topJointX + 16} y="22" fontSize="9" fontWeight="800" fill="#475569">Gagang Pemutar</text>
+                            <text x={topJointX + (rSvg * 0.4) + 6} y="81" fontSize="9" fontWeight="800" fill="#b45309">Mur Penyetel Mikro</text>
+                            <text x={leadX + 8} y="144" fontSize="9" fontWeight="800" fill="#0f172a">Mata Pensil Baji (Chisel)</text>
+
+                            {/* Panah Arah Putaran Clockwise */}
+                            <path d={`M ${leadX - 10} 170 Q ${leadX + 15} 175 ${leadX + 25} 155`} fill="none" stroke="#16a34a" strokeWidth="2" strokeDasharray="3 2" />
+                            <polygon points={`${leadX + 25},152 ${leadX + 28},160 ${leadX + 21},158`} fill="#16a34a" />
+                            <text x={leadX + 30} y="170" fontSize="8.5" fontWeight="800" fill="#16a34a">Putar Searah Jarum Jam</text>
+                          </g>
+                        );
+                      })()}
+                    </svg>
                   </div>
+
+                  {/* 3 CONTOH JENIS JANGKA & REKOMENDASI PENGGUNAAN */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#2563eb', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>1️⃣</span> Jangka Pegas (Spring Bow)
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
+                        <strong>Kapasitas:</strong> Ø5 s.d. Ø50 mm.<br />
+                        <strong>Ciri Khas:</strong> Poros tengah berulir dengan mur mikro knurled. Radius <em>terkunci permanen</em>, tidak bergeser saat diputar. Standar wajib gambar mesin presisi.
+                      </div>
+                    </div>
+
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>2️⃣</span> Jangka Besar (Giant Beam)
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
+                        <strong>Kapasitas:</strong> Ø50 s.d. Ø300 mm.<br />
+                        <strong>Ciri Khas:</strong> Memiliki sendi lutut (<em>knee joints</em>) dan batang ekstensi agar jarum & pensil tetap tegak lurus (90°) pada kertas saat bukaan lebar.
+                      </div>
+                    </div>
+
+                    <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#d97706', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>3️⃣</span> Jangka Pembagi (Dividers)
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
+                        <strong>Kapasitas:</strong> Transfer skala ukuran.<br />
+                        <strong>Ciri Khas:</strong> Ujung jarum baja ganda (tanpa pensil). Berfungsi membagi garis menjadi <em>n</em> bagian sama rata dan memindahkan ukuran dari mistar baja.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SOP Industri Penggunaan Jangka */}
+                  <div style={{ background: 'rgba(37, 99, 235, 0.05)', border: '1px solid rgba(37, 99, 235, 0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#1e293b', lineHeight: 1.6 }}>
+                    🎯 <strong>SOP Menggambar Lingkaran Standar ISO:</strong><br />
+                    1. <strong>Asah Mata Pensil:</strong> Buat bentuk baji pahat (<em>chisel edge</em> sudut 75°), bukan runcing kerucut, agar garis lingkaran memiliki ketebalan konstan (0.5 / 0.7 mm).<br />
+                    2. <strong>Teknik Putaran:</strong> Tancapkan jarum pada titik potong garis sumbu, pegang tangkai atas dengan ibu jari & telunjuk, condongkan jangka 10°–15° ke arah putaran, dan putar searah jarum jam dalam 1 tarikan kontinyu.
+                  </div>
+
                 </div>
-              </div>
+              )}
+
+              {/* ============================================================== */}
+              {/* SUB-VIEW 2: MAL KHUSUS (FRENCH CURVES & TEMPLATES)             */}
+              {/* ============================================================== */}
+              {selectedPrecisionTool === 'mal' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  
+                  {/* Selector Tipe Mal */}
+                  <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                    {[
+                      { id: 'kurva', label: '〰️ Mal Lengkung (French Curve)', desc: 'Kurva Nok & Impeller' },
+                      { id: 'lingkaran', label: '⭕ Mal Lingkaran (Circle Template)', desc: 'Ø1 s.d. Ø30 mm' },
+                      { id: 'baut', label: '🔩 Mal Baut, Mur & Simbol', desc: 'Kepala Baut ISO & Las' }
+                    ].map(mal => (
+                      <button
+                        key={mal.id}
+                        onClick={() => { sound.playClick(); setSelectedMalType(mal.id); }}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: selectedMalType === mal.id ? '2px solid #ea580c' : '1px solid #cbd5e1',
+                          background: selectedMalType === mal.id ? '#fff7ed' : '#ffffff',
+                          color: selectedMalType === mal.id ? '#c2410c' : '#334155',
+                          fontWeight: selectedMalType === mal.id ? 800 : 600,
+                          fontSize: '0.75rem',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap',
+                          transition: 'all 0.15s'
+                        }}
+                      >
+                        {mal.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* 2A: MAL LENGKUNG (FRENCH CURVE) */}
+                  {selectedMalType === 'kurva' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '12px', display: 'flex', justifyContent: 'center' }}>
+                        <svg viewBox="0 0 380 180" width="100%" height="auto" style={{ maxHeight: '180px' }}>
+                          <defs>
+                            <linearGradient id="frenchCurveAcrylic" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" stopColor="rgba(249, 115, 22, 0.25)" />
+                              <stop offset="50%" stopColor="rgba(251, 146, 60, 0.18)" />
+                              <stop offset="100%" stopColor="rgba(234, 88, 12, 0.3)" />
+                            </linearGradient>
+                          </defs>
+
+                          {/* Grid Koordinat Referensi */}
+                          <line x1="30" y1="150" x2="350" y2="150" stroke="#e2e8f0" strokeWidth="1" />
+                          <line x1="30" y1="110" x2="350" y2="110" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3 3" />
+                          <line x1="30" y1="70" x2="350" y2="70" stroke="#e2e8f0" strokeWidth="1" strokeDasharray="3 3" />
+
+                          {/* Profil Fisik Mal Lengkung Burmester (Acrylic Orange Plate) */}
+                          <path
+                            d="M 45,135 C 35,90 60,40 110,32 C 160,24 210,48 250,85 C 290,122 315,110 335,92 C 350,75 355,55 348,42 C 335,30 305,35 270,22 C 220,10 160,5 100,16 C 40,28 20,78 25,132 C 30,172 75,182 125,176 C 185,170 235,140 270,146 C 295,150 312,164 300,174 C 288,185 245,185 195,190 C 135,195 60,170 45,135 Z"
+                            fill="url(#frenchCurveAcrylic)"
+                            stroke="#ea580c"
+                            strokeWidth="2"
+                          />
+                          {/* Lubang Pegangan Dalam Mal */}
+                          <path
+                            d="M 120,70 C 160,65 190,80 200,105 C 210,130 185,145 150,140 C 115,135 100,110 105,90 C 110,75 115,70 120,70 Z"
+                            fill="#ffffff"
+                            stroke="#ea580c"
+                            strokeWidth="1.5"
+                          />
+
+                          {/* 5 Titik Koordinat Benda Kerja (Cam Profil / Sudu Impeller) */}
+                          {[
+                            { x: 50, y: 145, label: 'P1' },
+                            { x: 110, y: 88, label: 'P2' },
+                            { x: 195, y: 65, label: 'P3' },
+                            { x: 275, y: 92, label: 'P4' },
+                            { x: 340, y: 140, label: 'P5' }
+                          ].map(pt => (
+                            <g key={pt.label}>
+                              <circle cx={pt.x} cy={pt.y} r="4" fill="#0f172a" stroke="#ffffff" strokeWidth="1.5" />
+                              <text x={pt.x} y={pt.y - 8} fontSize="9.5" fontWeight="900" fill="#0f172a" textAnchor="middle">{pt.label}</text>
+                            </g>
+                          ))}
+
+                          {/* Kurva Tangen Mulus (Smooth Spline Hasil Tarikan Pensil) */}
+                          <path
+                            d="M 50,145 C 80,110 145,65 195,65 C 245,65 295,100 340,140"
+                            fill="none"
+                            stroke="#16a34a"
+                            strokeWidth="3"
+                          />
+
+                          <rect x="180" y="16" width="165" height="18" rx="4" fill="#ffffff" stroke="#16a34a" strokeWidth="1" />
+                          <text x="262" y="29" fontSize="9" fontWeight="800" fill="#16a34a" textAnchor="middle">
+                            ✓ Kurva Mulus Menembus P1 - P5
+                          </text>
+                        </svg>
+                      </div>
+
+                      <div style={{ background: '#fff7ed', border: '1px solid #ffedd5', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#9a3412', lineHeight: 1.6 }}>
+                        💡 <strong>Aturan Wajib "3 Titik Tangen Kontinyu":</strong><br />
+                        Saat menggunakan mal lengkung, jangan pernah menghubungkan hanya dua titik. Tempelkan kurva mal hingga menyinggung minimal <strong>3 titik berturutan sekaligus (P1-P2-P3)</strong>, lalu tarik garis hanya dari <strong>P1 ke P2</strong>. Setelah itu geser mal hingga menyinggung <strong>P2-P3-P4</strong> dan tarik garis <strong>P2 ke P3</strong>. Ini mencegah timbulnya patahan sudut lancip pada kurva nok/cam.
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2B: MAL LINGKARAN (CIRCLE TEMPLATE) */}
+                  {selectedMalType === 'lingkaran' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '12px', display: 'flex', justifyContent: 'center' }}>
+                        <svg viewBox="0 0 380 160" width="100%" height="auto" style={{ maxHeight: '160px' }}>
+                          {/* Pelat Mal Mika Hijau/Oranye Transparan */}
+                          <rect x="20" y="15" width="340" height="130" rx="10" fill="rgba(16, 185, 129, 0.12)" stroke="#059669" strokeWidth="2" />
+                          
+                          {/* Judul Cetakan Standar ISO */}
+                          <text x="35" y="32" fontSize="9" fontWeight="900" fill="#047857">CIRCLE TEMPLATE ISO 1302 • Ø1 - Ø25 mm</text>
+
+                          {/* Deretan Lubang Lingkaran Presisi dengan Garis Sumbu Bidik 4 Arah */}
+                          {[
+                            { cx: 65, cy: 80, r: 8, dia: 'Ø6' },
+                            { cx: 120, cy: 80, r: 12, dia: 'Ø10' },
+                            { cx: 185, cy: 80, r: 16, dia: 'Ø14' },
+                            { cx: 260, cy: 80, r: 21, dia: 'Ø20' },
+                            { cx: 330, cy: 80, r: 10, dia: 'Ø8' }
+                          ].map(h => (
+                            <g key={h.dia}>
+                              {/* 4 Garis Sumbu Bidik Silang (Crosshairs) */}
+                              <line x1={h.cx - h.r - 5} y1={h.cy} x2={h.cx + h.r + 5} y2={h.cy} stroke="#059669" strokeWidth="0.8" />
+                              <line x1={h.cx} y1={h.cy - h.r - 5} x2={h.cx} y2={h.cy + h.r + 5} stroke="#059669" strokeWidth="0.8" />
+                              {/* Lubang Lingkaran */}
+                              <circle cx={h.cx} cy={h.cy} r={h.r} fill="#ffffff" stroke="#0f172a" strokeWidth="1.8" />
+                              {/* Label Diameter */}
+                              <text x={h.cx} y={h.cy + h.r + 14} fontSize="9" fontWeight="900" fill="#047857" textAnchor="middle">{h.dia}</text>
+                            </g>
+                          ))}
+
+                          <text x="190" y="135" fontSize="8.5" fontWeight="700" fill="#475569" textAnchor="middle">
+                            Paskan 4 tanda garis bidik mal ke garis sumbu silang pada gambar kerja
+                          </text>
+                        </svg>
+                      </div>
+
+                      <div style={{ background: '#ecfdf5', border: '1px solid #d1fae5', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#065f46', lineHeight: 1.6 }}>
+                        🎯 <strong>Fungsi Krusial dalam Gambar Manufaktur:</strong><br />
+                        Jangka biasa tidak stabil dan mudah merobek kertas untuk lingkaran berdiameter <strong>&lt; 10 mm</strong>. Mal lingkaran adalah solusi standar bengkel untuk menggambar lubang baut (M3, M4, M5, M6, M8, M10), lubang pasak, radius fillet pojokan (R2, R3, R5), dan kepala paku keling dalam hitungan detik dengan konsistensi 100% presisi.
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2C: MAL BAUT, MUR & SIMBOL */}
+                  {selectedMalType === 'baut' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '12px', display: 'flex', justifyContent: 'center' }}>
+                        <svg viewBox="0 0 380 150" width="100%" height="auto" style={{ maxHeight: '150px' }}>
+                          <rect x="20" y="15" width="340" height="120" rx="8" fill="rgba(59, 130, 246, 0.1)" stroke="#2563eb" strokeWidth="2" />
+                          <text x="35" y="32" fontSize="9" fontWeight="900" fill="#1d4ed8">ISO BOLT & NUT TEMPLATE (DIN 931 / ISO 4014)</text>
+
+                          {/* Profil Kepala Baut Segienam (Hexagon) M8, M10, M12 */}
+                          {[
+                            { cx: 70, cy: 75, r: 18, label: 'M8' },
+                            { cx: 140, cy: 75, r: 23, label: 'M10' },
+                            { cx: 220, cy: 75, r: 28, label: 'M12' }
+                          ].map(hex => {
+                            const pts = [];
+                            for (let i = 0; i < 6; i++) {
+                              const angle = (i * 60) * (Math.PI / 180);
+                              pts.push(`${hex.cx + hex.r * Math.cos(angle)},${hex.cy + hex.r * Math.sin(angle)}`);
+                            }
+                            return (
+                              <g key={hex.label}>
+                                <polygon points={pts.join(' ')} fill="#ffffff" stroke="#0f172a" strokeWidth="2" />
+                                <circle cx={hex.cx} cy={hex.cy} r={hex.r * 0.55} fill="none" stroke="#2563eb" strokeWidth="1" strokeDasharray="3 2" />
+                                <text x={hex.cx} y={hex.cy + 3} fontSize="9" fontWeight="900" fill="#2563eb" textAnchor="middle">{hex.label}</text>
+                              </g>
+                            );
+                          })}
+
+                          {/* Simbol Pengelasan Standar ISO 2553 */}
+                          <g transform="translate(280, 50)">
+                            <rect x="0" y="0" width="70" height="50" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+                            <text x="35" y="14" fontSize="8" fontWeight="800" fill="#64748b" textAnchor="middle">SIMBOL LAS</text>
+                            {/* Simbol Las Fillet Segitiga */}
+                            <polygon points="15,40 30,40 15,25" fill="#0f172a" />
+                            {/* Simbol Las V-Butt */}
+                            <line x1="45" y1="25" x2="55" y2="40" stroke="#0f172a" strokeWidth="2" />
+                            <line x1="65" y1="25" x2="55" y2="40" stroke="#0f172a" strokeWidth="2" />
+                          </g>
+                        </svg>
+                      </div>
+
+                      <div style={{ background: '#eff6ff', border: '1px solid #dbeafe', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#1e40af', lineHeight: 1.6 }}>
+                        🔩 <strong>Efisiensi Studio Gambar Teknik:</strong><br />
+                        Menggambar kepala baut segienam (heksagonal) secara manual memerlukan konstruksi busur derajat dan lingkaran bantu yang memakan waktu 3–5 menit per baut. Dengan mal baut ISO, operator dapat mencetak proyeksi pandangan atas baut segienam lengkap dengan lingkaran ulir hanya dalam 5 detik!
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+              )}
+
+              {/* ============================================================== */}
+              {/* SUB-VIEW 3: PELINDUNG PENGHAPUS (ERASING SHIELD)              */}
+              {/* ============================================================== */}
+              {selectedPrecisionTool === 'pelindung' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  
+                  {/* Selector 3 Tahap Simulasi Interaktif */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', background: '#f8fafc', padding: '8px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>
+                      Simulasi Cara Kerja Pelindung Penghapus:
+                    </div>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      {[
+                        { id: 'problem', label: '1. Masalah: Garis Berlebih' },
+                        { id: 'shield', label: '2. Pasang Pelat Pelindung' },
+                        { id: 'result', label: '3. Hasil: Terhapus Bersih' }
+                      ].map(st => (
+                        <button
+                          key={st.id}
+                          onClick={() => { sound.playClick(); setErasingStep(st.id); }}
+                          style={{
+                            padding: '4px 10px',
+                            borderRadius: '5px',
+                            border: erasingStep === st.id ? '1.5px solid #7c3aed' : '1px solid #cbd5e1',
+                            background: erasingStep === st.id ? '#7c3aed' : '#ffffff',
+                            color: erasingStep === st.id ? '#ffffff' : '#334155',
+                            fontSize: '0.73rem',
+                            fontWeight: 800,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {st.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* SVG DIAGRAM PELAT BAJA & DEMO 3 TAHAPAN */}
+                  <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '12px', display: 'flex', justifyContent: 'center' }}>
+                    <svg viewBox="0 0 380 170" width="100%" height="auto" style={{ maxHeight: '170px' }}>
+                      <defs>
+                        <linearGradient id="shieldStainlessGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#e2e8f0" />
+                          <stop offset="35%" stopColor="#f8fafc" />
+                          <stop offset="70%" stopColor="#cbd5e1" />
+                          <stop offset="100%" stopColor="#94a3b8" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* AREA KIRI: Visual Fisik Pelat Pelindung Penghapus Baja Stainless */}
+                      <g transform="translate(15, 15)">
+                        {/* Lembaran Baja Tipis 0.1 mm berujung Radius */}
+                        <rect x="0" y="0" width="145" height="135" rx="10" fill="url(#shieldStainlessGrad)" stroke="#475569" strokeWidth="1.5" />
+                        <text x="72" y="16" fontSize="7.5" fontWeight="900" fill="#334155" textAnchor="middle">STAINLESS STEEL 0.1 mm</text>
+
+                        {/* Aneka Celah Presisi Beragam Bentuk pada Pelat Baja */}
+                        {/* Celah Garis Panjang Sempit */}
+                        <rect x="15" y="28" width="3" height="45" rx="1.5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        {/* Celah Garis Melengkung */}
+                        <path d="M 32 30 Q 42 50 32 72" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" />
+                        {/* Celah Kotak / Persegi Kecil */}
+                        <rect x="50" y="32" width="18" height="10" rx="1.5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        <rect x="50" y="52" width="14" height="20" rx="1.5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        {/* Deretan Lubang Titik Lingkaran */}
+                        <circle cx="82" cy="35" r="2.5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        <circle cx="82" cy="46" r="3.5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        <circle cx="82" cy="60" r="5" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        {/* Celah Sudut Lancip 30° & Siku 90° */}
+                        <polygon points="102,32 125,32 102,55" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        <polygon points="102,68 128,78 102,88" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+
+                        {/* Celah Bawah Tambahan */}
+                        <rect x="20" y="95" width="55" height="4" rx="2" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+                        <ellipse cx="108" cy="110" rx="18" ry="8" fill="#ffffff" stroke="#475569" strokeWidth="0.8" />
+
+                        <text x="72" y="128" fontSize="7" fontWeight="700" fill="#64748b" textAnchor="middle">Lubang Celah Presisi</text>
+                      </g>
+
+                      {/* PEMBATAS TENGAH */}
+                      <line x1="175" y1="15" x2="175" y2="155" stroke="#e2e8f0" strokeWidth="1.5" strokeDasharray="4 3" />
+
+                      {/* AREA KANAN: Demonstrasi Skenario Gambar Berdasarkan Step */}
+                      <g transform="translate(190, 15)">
+                        <rect x="0" y="0" width="175" height="135" rx="8" fill="#f8fafc" stroke="#e2e8f0" />
+                        
+                        {/* Garis Benda Kerja Utama (Tebal 0.7 mm Tipe A) - TIDAK BOLEH RUSAK! */}
+                        <line x1="20" y1="25" x2="155" y2="25" stroke="#0f172a" strokeWidth="3" />
+                        <line x1="20" y1="25" x2="20" y2="115" stroke="#0f172a" strokeWidth="3" />
+                        <line x1="20" y1="115" x2="155" y2="115" stroke="#0f172a" strokeWidth="3" />
+                        <text x="25" y="40" fontSize="8" fontWeight="800" fill="#0f172a">Garis Benda (0.7 mm)</text>
+
+                        {/* STEP 1: MASALAH - Garis Bantu/Sumbu Melewati Batas */}
+                        {erasingStep === 'problem' && (
+                          <g>
+                            {/* Garis yang benar di dalam */}
+                            <line x1="60" y1="25" x2="60" y2="115" stroke="#0284c7" strokeWidth="1.2" strokeDasharray="8 3" />
+                            {/* Kelebihan Garis yang SALAH (Melewati Batas Luar) */}
+                            <line x1="60" y1="25" x2="60" y2="0" stroke="#dc2626" strokeWidth="2" />
+                            <line x1="60" y1="115" x2="60" y2="135" stroke="#dc2626" strokeWidth="2" />
+                            
+                            <rect x="75" y="55" width="90" height="35" rx="4" fill="#fee2e2" stroke="#ef4444" strokeWidth="1" />
+                            <text x="120" y="70" fontSize="8" fontWeight="900" fill="#dc2626" textAnchor="middle">❌ MASALAH:</text>
+                            <text x="120" y="82" fontSize="7.5" fontWeight="700" fill="#991b1b" textAnchor="middle">Garis sumbu merah</text>
+                            <text x="120" y="91" fontSize="7.5" fontWeight="700" fill="#991b1b" textAnchor="middle">kelebihan panjang</text>
+                          </g>
+                        )}
+
+                        {/* STEP 2: PASANG PELAT PELINDUNG BAJA */}
+                        {erasingStep === 'shield' && (
+                          <g>
+                            {/* Garis sumbu */}
+                            <line x1="60" y1="25" x2="60" y2="115" stroke="#0284c7" strokeWidth="1.2" strokeDasharray="8 3" />
+                            
+                            {/* Pelat Baja Pelindung Menutupi Garis Benda */}
+                            <rect x="15" y="18" width="90" height="40" rx="4" fill="url(#shieldStainlessGrad)" stroke="#475569" strokeWidth="1" opacity="0.9" />
+                            {/* Celah Sempit Pelat Tepat Mengekspos Garis Salah Saja */}
+                            <rect x="58.5" y="0" width="3" height="23" fill="#ffffff" stroke="#dc2626" strokeWidth="1" />
+                            <line x1="60" y1="0" x2="60" y2="23" stroke="#dc2626" strokeWidth="2" />
+
+                            {/* Karet Penghapus Sedang Menggosok di Atas Celah */}
+                            <g transform="translate(48, -5)">
+                              <polygon points="5,0 30,0 25,18 0,18" fill="#ffffff" stroke="#2563eb" strokeWidth="1.2" />
+                              <text x="14" y="12" fontSize="7" fontWeight="900" fill="#2563eb">ERASER</text>
+                            </g>
+
+                            <rect x="75" y="68" width="90" height="38" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                            <text x="120" y="82" fontSize="8" fontWeight="900" fill="#b45309" textAnchor="middle">🛡️ TERLINDUNGI:</text>
+                            <text x="120" y="93" fontSize="7.5" fontWeight="700" fill="#92400e" textAnchor="middle">Hanya garis merah</text>
+                            <text x="120" y="102" fontSize="7.5" fontWeight="700" fill="#92400e" textAnchor="middle">yang terbuka dicelah</text>
+                          </g>
+                        )}
+
+                        {/* STEP 3: HASIL BERSIH SEMPURNA */}
+                        {erasingStep === 'result' && (
+                          <g>
+                            {/* Garis sumbu yang pas sesuai ISO */}
+                            <line x1="60" y1="20" x2="60" y2="120" stroke="#0284c7" strokeWidth="1.2" strokeDasharray="8 3" />
+                            <circle cx="60" cy="20" r="2" fill="#16a34a" />
+                            <circle cx="60" cy="120" r="2" fill="#16a34a" />
+
+                            <rect x="75" y="55" width="90" height="42" rx="4" fill="#dcfce7" stroke="#16a34a" strokeWidth="1" />
+                            <text x="120" y="70" fontSize="8.5" fontWeight="900" fill="#15803d" textAnchor="middle">✅ HASIL BERSIH:</text>
+                            <text x="120" y="82" fontSize="7.5" fontWeight="700" fill="#166534" textAnchor="middle">Garis benda 100% utuh</text>
+                            <text x="120" y="91" fontSize="7.5" fontWeight="700" fill="#166534" textAnchor="middle">Garis lebih terhapus</text>
+                            <text x="120" y="100" fontSize="7" fontWeight="800" fill="#15803d" textAnchor="middle">Kertas tidak lecet!</text>
+                          </g>
+                        )}
+
+                      </g>
+                    </svg>
+                  </div>
+
+                  {/* SOP & Keunggulan Pelindung Penghapus */}
+                  <div style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#5b21b6', lineHeight: 1.6 }}>
+                    🛡️ <strong>Mengapa Pelindung Penghapus Wajib bagi Juru Gambar Mesin?</strong><br />
+                    • <strong>Bahan:</strong> Pelat baja tahan karat (<em>stainless steel</em>) lentur tebal 0.1 mm yang tidak akan tergores atau sobek oleh gesekan penghapus.<br />
+                    • <strong>Cara Pakai:</strong> Tekan pelindung dengan kuat memakai dua jari tangan kiri agar tidak geser. Arahkan gosokan penghapus karet <em>searah panjang celah</em>.<br />
+                    • <strong>Tips Penting:</strong> Bersihkan remah/debu karet penghapus menggunakan <em>kuas pembersih gambar teknik</em> khusus. Jangan ditiup dengan mulut untuk menghindari cipratan air liur yang membuat kertas gambar lembap.
+                  </div>
+
+                </div>
+              )}
+
             </div>
 
           </div>

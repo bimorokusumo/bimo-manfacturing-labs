@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { getAssetUrl } from '../utils/assets';
+
 
 // =============================================================================
 // DATABASE DOKUMENTASI INDUSTRI RIIL & MIKROSKOP METALOGRAFI
@@ -174,7 +176,7 @@ export default function HeatTreatmentRealDocumentary({
               overflow: 'hidden'
             }}>
               <img
-                src={data.mainImage}
+                src={getAssetUrl(data.mainImage)}
                 alt={data.title}
                 style={{
                   width: '100%',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
+import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 
 // =============================================================================
@@ -1690,7 +1691,7 @@ const CuttingToolsLab = ({
                       justifyContent: 'center'
                     }}>
                       <img
-                        src={t.images[0]?.url}
+                        src={getAssetUrl(t.images[0]?.url)}
                         alt={t.nama}
                         loading="lazy"
                         decoding="async"
@@ -2019,7 +2020,7 @@ const CuttingToolsLab = ({
                 }}
               >
                 <img
-                  src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url}
+                  src={getAssetUrl(currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url)}
                   alt={currentTool.nama}
                   loading="lazy"
                   decoding="async"
@@ -3029,7 +3030,7 @@ const CuttingToolsLab = ({
             
             <img
               className="lightbox-img"
-              src={currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url}
+              src={getAssetUrl(currentTool.images[selectedImageIndex]?.url || currentTool.images[0]?.url)}
               alt={currentTool.nama}
               style={{
                 maxWidth: '100%',

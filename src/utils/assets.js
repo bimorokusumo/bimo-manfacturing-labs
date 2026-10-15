@@ -19,6 +19,12 @@ export const getAssetUrl = (path) => {
   const cleanBase = base.endsWith('/') ? base : base + '/';
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
 
+  // Pencegahan duplikasi prefix base URL (misal dipanggil getAssetUrl dua kali)
+  const basePrefix = cleanBase.startsWith('/') ? cleanBase.slice(1) : cleanBase;
+  if (basePrefix && cleanPath.startsWith(basePrefix)) {
+    return '/' + cleanPath;
+  }
+
   return cleanBase + cleanPath;
 };
 

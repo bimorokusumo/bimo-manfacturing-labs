@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/assets';
+
 import Welding3D from './Welding3D';
 import Welding2D_Engine from './Welding2D_Engine';
 import ErrorBoundary from './ErrorBoundary';
@@ -454,7 +456,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
             {activeTab === 'photo' ? (
               <div style={{ width: '100%', position: 'relative' }}>
                 <img 
-                  src={currentPhotoUrl} 
+                  src={getAssetUrl(currentPhotoUrl)} 
                   alt={currentDefect.name}
                   onClick={() => setIsZoomed(!isZoomed)}
                   title="Klik gambar untuk memperbesar"
@@ -1645,7 +1647,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                     onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.35)'}
                   >
                     <img 
-                      src={photo} 
+                      src={getAssetUrl(photo)} 
                       alt={d.name} 
                       style={{
                         width: '44px', height: '44px', borderRadius: '8px',

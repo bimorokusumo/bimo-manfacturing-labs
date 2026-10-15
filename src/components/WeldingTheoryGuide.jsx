@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/assets';
 import { FAQ_CATEGORIES, FAQ_ITEMS } from '../data/weldingFaqData';
+
 
 const WeldingTheoryGuide = () => {
   const [activeTab, setActiveTab] = useState('alat'); // Open on 'alat' so user can see electrode codes immediately
@@ -2227,8 +2229,8 @@ const WeldingTheoryGuide = () => {
                 >
                   <div style={{ position: 'relative', width: '100%', height: '190px', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <img 
-                      src={tool.img} 
-                      alt={tool.name} 
+                      src={getAssetUrl(tool.img)} 
+                      alt={tool.name}  
                       style={{ 
                         width: '100%', 
                         height: '100%', 

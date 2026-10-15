@@ -3054,7 +3054,7 @@ const UniversalToolCardVisual = React.memo(({
               📷 FOTO ASLI
             </span>
             <img
-              src={tool.fotoReal}
+              src={getAssetUrl(tool.fotoReal)}
               alt={tool.name}
               loading="lazy"
               decoding="async"
@@ -3108,7 +3108,7 @@ const UniversalToolCardVisual = React.memo(({
             📷 FOTO ASLI BENGKEL
           </span>
           <img
-            src={tool.fotoReal}
+            src={getAssetUrl(tool.fotoReal)}
             alt={tool.name}
             loading="lazy"
             decoding="async"
@@ -3185,7 +3185,7 @@ const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
         boxShadow: category === 'milling' ? 'inset 0 0 10px rgba(0,0,0,0.06)' : 'inset 0 0 20px rgba(0,0,0,0.8)'
       }}>
         <img
-          src={tool.fotoReal}
+          src={getAssetUrl(tool.fotoReal)}
           alt={tool.name}
           loading="lazy"
           decoding="async"
@@ -3690,7 +3690,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       background: '#0f172a'
                     }}>
                       <img
-                        src={current.fotoReal}
+                        src={getAssetUrl(current.fotoReal)}
                         alt={current.name}
                         loading="lazy"
                         decoding="async"
@@ -4405,7 +4405,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       background: '#0f172a'
                     }}>
                       <img
-                        src={current.fotoReal}
+                        src={getAssetUrl(current.fotoReal)}
                         alt={current.name}
                         loading="lazy"
                         decoding="async"
@@ -4898,7 +4898,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       background: '#0f172a'
                     }}>
                       <img
-                        src={currentIns.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg'}
+                        src={getAssetUrl(currentIns.fotoReal || '/assets/images/machine_cutting_tools/carbide_inserts.jpg')}
                         alt={currentIns.name}
                         loading="lazy"
                         decoding="async"
@@ -4962,7 +4962,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#4ade80', marginBottom: '6px' }}>📷 FOTO ASLI BENGKEL DOKUMENTASI</div>
                     <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <img
-                        src={currentIns.fotoReal}
+                        src={getAssetUrl(currentIns.fotoReal)}
                         alt={currentIns.name}
                         loading="lazy"
                         decoding="async"
@@ -5356,7 +5356,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       background: '#0f172a'
                     }}>
                       <img
-                        src={current.fotoReal}
+                        src={getAssetUrl(current.fotoReal)}
                         alt={current.name}
                         loading="lazy"
                         decoding="async"

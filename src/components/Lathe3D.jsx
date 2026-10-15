@@ -1,5 +1,7 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import Lathe3D_Engine from './Lathe3D_Engine';
+import { CanvasErrorBoundary } from './ErrorBoundary';
+import { isWebGLSupported } from '../utils/webgl';
 import {
   generateSteppedProfilePoints2D,
   parseGcodeToolpath,
@@ -388,55 +390,101 @@ const Lathe3D = ({
   showToolpath = true,
   onToggleToolpath = null
 }) => {
-  const [viewMode, setViewMode] = useState('3d'); // '3d' or '2d'
+  const [viewMode, setViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
   const [localShowToolpath, setLocalShowToolpath] = useState(true);
   const effectiveShowToolpath = onToggleToolpath ? showToolpath : localShowToolpath;
   const toggleToolpathHandler = onToggleToolpath || (() => setLocalShowToolpath(v => !v));
 
+  const render2DEngine = (retryFn = null) => (
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {retryFn && (
+        <div style={{
+          position: 'absolute',
+          top: '14px',
+          right: '180px',
+          zIndex: 20,
+          background: 'rgba(245, 158, 11, 0.95)',
+          color: '#78350f',
+          padding: '5px 12px',
+          borderRadius: '6px',
+          fontSize: '0.72rem',
+          fontWeight: 800,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}>
+          <span>⚠️ 2D CAD Aktif (Fallback GPU)</span>
+          <button
+            onClick={retryFn}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '4px',
+              background: '#ffffff',
+              color: '#d97706',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.7rem',
+              cursor: 'pointer'
+            }}
+          >
+            Coba 3D
+          </button>
+        </div>
+      )}
+      <Lathe2D
+        isRunning={isRunning}
+        toolPosition={toolPosition}
+        profile={profile}
+        rawDiameter={rawDiameter}
+        rawLength={rawLength}
+        toolType={toolType}
+        toolOrientation={toolOrientation}
+        machineMode={machineMode}
+        rpm={rpm}
+        isCutting={isCutting}
+        showTailstock={showTailstock}
+        gcodeText={gcodeText}
+        currentLine={currentLine}
+        showToolpath={effectiveShowToolpath}
+      />
+    </div>
+  );
+
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {viewMode === '3d' ? (
-        <Suspense
-          fallback={
-            <div className="flex-center" style={{ height: '100%', background: '#eef2f6', color: '#0284c7', fontWeight: 'bold' }}>
-              MEMUAT 3D LATHE SIMULATOR ENGINE...
-            </div>
-          }
+        <CanvasErrorBoundary
+          title="Simulator Bubut 3D Memerlukan Alokasi WebGL"
+          fallback={(reset) => render2DEngine(reset)}
         >
-          <Lathe3D_Engine
-            isRunning={isRunning}
-            toolPosition={toolPosition}
-            profile={profile}
-            rawDiameter={rawDiameter}
-            rawLength={rawLength}
-            toolType={toolType}
-            toolOrientation={toolOrientation}
-            rpm={rpm}
-            isCutting={isCutting}
-            coolant={coolant}
-            showTailstock={showTailstock}
-            gcodeText={gcodeText}
-            currentLine={currentLine}
-            showToolpath={effectiveShowToolpath}
-          />
-        </Suspense>
+          <Suspense
+            fallback={
+              <div className="flex-center" style={{ height: '100%', background: '#eef2f6', color: '#0284c7', fontWeight: 'bold' }}>
+                MEMUAT 3D LATHE SIMULATOR ENGINE...
+              </div>
+            }
+          >
+            <Lathe3D_Engine
+              isRunning={isRunning}
+              toolPosition={toolPosition}
+              profile={profile}
+              rawDiameter={rawDiameter}
+              rawLength={rawLength}
+              toolType={toolType}
+              toolOrientation={toolOrientation}
+              rpm={rpm}
+              isCutting={isCutting}
+              coolant={coolant}
+              showTailstock={showTailstock}
+              gcodeText={gcodeText}
+              currentLine={currentLine}
+              showToolpath={effectiveShowToolpath}
+            />
+          </Suspense>
+        </CanvasErrorBoundary>
       ) : (
-        <Lathe2D
-          isRunning={isRunning}
-          toolPosition={toolPosition}
-          profile={profile}
-          rawDiameter={rawDiameter}
-          rawLength={rawLength}
-          toolType={toolType}
-          toolOrientation={toolOrientation}
-          machineMode={machineMode}
-          rpm={rpm}
-          isCutting={isCutting}
-          showTailstock={showTailstock}
-          gcodeText={gcodeText}
-          currentLine={currentLine}
-          showToolpath={effectiveShowToolpath}
-        />
+        render2DEngine()
       )}
 
       {/* VIEW & TOOLPATH TOGGLE BUTTONS */}

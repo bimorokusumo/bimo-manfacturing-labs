@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html, GizmoHelper, GizmoViewcube } from '@react-three/drei';
 import * as THREE from 'three';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import { CanvasErrorBoundary } from './ErrorBoundary';
 
 // ==========================================
 // DATA INFORMASI AREA PEMESINAN (BUBUT & FRAIS)
@@ -2240,24 +2241,66 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
       {/* ==================================================== */}
       {/* 3D CANVAS UTAMA (THREE.JS / REACT THREE FIBER) */}
       {/* ==================================================== */}
-      <Canvas
-        shadows
-        camera={{ position: cameraPreset.pos, fov: 48 }}
-        style={{ width: '100%', height: '100%' }}
+      <CanvasErrorBoundary
+        title="Visualisasi Bengkel 3D Memerlukan Alokasi WebGL"
+        fallback={(reset) => (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '500px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+            color: '#f8fafc',
+            padding: '28px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '3.5rem', marginBottom: '14px' }}>🏭</div>
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', marginBottom: '10px' }}>
+              Virtual Bengkel Mesin & Kerja Bangku
+            </div>
+            <p style={{ color: '#94a3b8', fontSize: '0.88rem', maxWidth: '480px', lineHeight: 1.6, marginBottom: '24px' }}>
+              Grafis 3D bengkel memerlukan alokasi memori WebGL yang sedang dihemat oleh browser. Anda tetap dapat memilih dan membaca informasi teknis mesin/alat secara langsung di panel samping.
+            </p>
+            <button
+              onClick={reset}
+              style={{
+                padding: '10px 22px',
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
+              }}
+            >
+              🔄 Aktifkan Visual 3D Bengkel
+            </button>
+          </div>
+        )}
       >
-        {/* Latar Belakang Abu-Abu Terang Bersih */}
-        <color attach="background" args={['#d5dbe4']} />
+        <Canvas
+          shadows
+          camera={{ position: cameraPreset.pos, fov: 48 }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          {/* Latar Belakang Abu-Abu Terang Bersih */}
+          <color attach="background" args={['#d5dbe4']} />
 
-        {/* Pencahayaan Bengkel Terang & Jelas */}
-        <ambientLight intensity={1.3} />
-        <directionalLight
-          position={[12, 18, 10]}
-          intensity={1.6}
-          castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-bias={-0.0001}
-        />
+          {/* Pencahayaan Bengkel Terang & Jelas */}
+          <ambientLight intensity={1.3} />
+          <directionalLight
+            position={[12, 18, 10]}
+            intensity={1.6}
+            castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
+            shadow-bias={-0.0001}
+          />
         <directionalLight position={[-12, 14, -8]} intensity={0.9} />
         <pointLight position={[0, 9, 2]} intensity={1.5} distance={30} />
         <spotLight position={[5.5, 9, 2]} angle={0.6} penumbra={0.8} intensity={1.4} castShadow />
@@ -2379,6 +2422,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           />
         </GizmoHelper>
       </Canvas>
+    </CanvasErrorBoundary>
 
       {/* ==================================================== */}
       {/* PETUNJUK KONTROL NAVIGASI (KIRI BAWAH) */}

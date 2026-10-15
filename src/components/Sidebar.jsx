@@ -30,12 +30,11 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
   // Sub-menu interaktif untuk masing-masing lab di sidebar, termasuk Tes Diagnostik (10 Soal Pilgan)
   const LAB_SUBMENUS = {
     machine: [
-      { id: 'machine', label: 'Praktik Mesin Bubut & Frais', icon: '⚙️' },
-      { id: 'machine-milling-tools', label: 'Pisau Frais / Milling (8 Jenis)', icon: '🌀' },
-      { id: 'machine-lathe-tools', label: 'Pahat Bubut (6 Jenis Real)', icon: '🪓' },
-      { id: 'machine-carbide-tools', label: 'Insert Karbida (7 Bentuk ISO)', icon: '📐' },
-      { id: 'machine-hole-tools', label: 'Mata Bor, Set Tap & Snei', icon: '🔩' },
-      { id: 'machine-cutting-tools', label: 'Cutting Tools Lab (Lengkap)', icon: '🔪' },
+      { id: 'machine-lathe', label: 'Simulator Mesin Bubut 3D', icon: '⚙️' },
+      { id: 'machine-milling', label: 'Simulator Mesin Frais 3D', icon: '🌀' },
+      { id: 'machine-cnc', label: 'Simulator Mesin CNC 3D', icon: '💻' },
+      { id: 'machine-cutting-tools', label: 'Alat Potong Mesin (Lengkap)', icon: '🔪' },
+      { id: 'machine', label: 'Garasi Semua Mesin', icon: '🏭' },
       { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: '📋', isDiag: true }
     ],
     'cutting-tools': [

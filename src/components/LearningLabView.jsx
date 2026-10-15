@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAssetUrl } from '../utils/assets';
 
 const LearningLabView = ({ onSelectLab }) => {
   return (
@@ -21,7 +22,7 @@ const LearningLabView = ({ onSelectLab }) => {
 
           <div onClick={() => onSelectLab('machine')} className="game-card" style={{ cursor: 'pointer', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
             <div style={{ height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <img src="/assets/images/lathe.png" alt="Machine Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getAssetUrl("/assets/images/lathe.png")} alt="Machine Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{ padding: '16px', borderTop: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 700, marginBottom: '4px' }}>Machine<br/>Lab</h4>
@@ -31,7 +32,7 @@ const LearningLabView = ({ onSelectLab }) => {
 
           <div onClick={() => onSelectLab('welding')} className="game-card" style={{ cursor: 'pointer', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
             <div style={{ height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <img src="/assets/images/labs/welding_lab.jpg" alt="Welding Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getAssetUrl("/assets/images/labs/welding_lab.jpg")} alt="Welding Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{ padding: '16px', borderTop: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 700, marginBottom: '4px' }}>Welding<br/>Lab</h4>
@@ -41,7 +42,7 @@ const LearningLabView = ({ onSelectLab }) => {
 
           <div onClick={() => onSelectLab('design')} className="game-card" style={{ cursor: 'pointer', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
             <div style={{ height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <img src="/assets/images/labs/design_lab.jpg" alt="Design Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getAssetUrl("/assets/images/labs/design_lab.jpg")} alt="Design Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{ padding: '16px', borderTop: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 700, marginBottom: '4px' }}>Design<br/>Lab</h4>
@@ -51,7 +52,7 @@ const LearningLabView = ({ onSelectLab }) => {
 
           <div onClick={() => onSelectLab('safety')} className="game-card" style={{ cursor: 'pointer', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
             <div style={{ height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <img src="/assets/images/labs/safety_lab.jpg" alt="Safety Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={getAssetUrl("/assets/images/labs/safety_lab.jpg")} alt="Safety Lab" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{ padding: '16px', borderTop: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 700, marginBottom: '4px' }}>Safety<br/>Lab</h4>

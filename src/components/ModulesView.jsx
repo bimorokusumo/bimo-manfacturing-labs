@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getAssetUrl } from '../utils/assets';
 
 const ModulesView = () => {
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'books', 'sem1', 'sem2'
@@ -15,8 +16,8 @@ const ModulesView = () => {
       category: "Buku Digital 3D",
       badge: "50 HALAMAN LENGKAP",
       color: "#0284c7",
-      cover: "/books/buku_tflm/assets/images/general/cover_book.jpg",
-      link: "/books/buku_tflm/index.html",
+      cover: getAssetUrl("/books/buku_tflm/assets/images/general/cover_book.jpg"),
+      link: getAssetUrl("/books/buku_tflm/index.html"),
       isFlipbook: true,
       desc: "Buku ajar digital interaktif 50 halaman berfitur 3D Flip Book realistis, Web Audio sound effect, dan lab virtual SMAW. Disusun sesuai dokumen CP & ATP TFLM SMK Negeri 2 Depok Sleman.",
       topics: [
@@ -56,8 +57,8 @@ const ModulesView = () => {
       category: "Buku Digital 3D",
       badge: "50 HALAMAN LENGKAP",
       color: "#f59e0b",
-      cover: "/books/buku_tp/assets/images/general/cover_book.jpg",
-      link: "/books/buku_tp/index.html",
+      cover: getAssetUrl("/books/buku_tp/assets/images/general/cover_book.jpg"),
+      link: getAssetUrl("/books/buku_tp/index.html"),
       isFlipbook: true,
       desc: "Buku ajar digital interaktif 50 halaman berfitur simulator jangka sorong 0,05 mm, kalkulator parameter RPM spindel bubut, dekoder bearing ISO, proyeksi ortogonal, dan sertifikat resmi.",
       topics: [

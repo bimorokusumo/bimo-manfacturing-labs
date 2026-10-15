@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
+import { getAssetUrl } from '../utils/assets';
 
 // =============================================================================
 // DATABASE 1: KATEGORI MATERIAL ISO STANDAR UNTUK INSERT & ALAT POTONG
@@ -4201,7 +4202,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 title="Klik untuk memperbesar bagan referensi teknik"
               >
                 <img
-                  src="/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg"
+                  src={getAssetUrl("/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg")}
                   alt="Poster Referensi Alat Frais"
                   loading="lazy"
                   decoding="async"
@@ -5934,7 +5935,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               justifyContent: 'center'
             }}>
               <img
-                src="/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg"
+                src={getAssetUrl("/assets/images/machine_cutting_tools/milling_cutters_types_reference.jpg")}
                 alt="Standard Types of Milling Cutters Poster Reference"
                 loading="lazy"
                 decoding="async"

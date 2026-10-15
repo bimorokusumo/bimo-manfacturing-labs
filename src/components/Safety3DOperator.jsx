@@ -2,6 +2,7 @@ import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html } from '@react-three/drei';
 import * as THREE from 'three';
+import { CanvasErrorBoundary } from './ErrorBoundary';
 
 // =============================================================================
 // 3D REALISTIC OPERATOR MANNEQUIN COMPONENT
@@ -992,61 +993,102 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
         </div>
       </div>
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas with WebGL Boundary */}
       <div style={{ flex: 1, width: '100%', minHeight: '440px', background: 'radial-gradient(circle at center, #334155 0%, #0f172a 100%)', borderRadius: '12px', overflow: 'hidden' }}>
-        <Canvas
-          camera={{ position: [0, 1.25, 3.2], fov: 42 }}
-          shadows
-          style={{ width: '100%', height: '100%' }}
+        <CanvasErrorBoundary
+          title="Visual Manekin APD 3D Memerlukan Alokasi WebGL"
+          fallback={(reset) => (
+            <div style={{
+              height: '100%',
+              minHeight: '440px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              background: 'linear-gradient(to bottom, #1e293b, #0f172a)',
+              color: '#fff',
+              padding: '24px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '14px' }}>🛡️</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f97316', marginBottom: '8px' }}>
+                Mode Skema APD Interaktif ({equippedItems.length} APD Terpasang)
+              </div>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', maxWidth: '380px', lineHeight: 1.5, marginBottom: '20px' }}>
+                Grafis 3D memerlukan alokasi GPU WebGL. Seluruh fitur simulasi pemasangan APD dan audit bahaya K3 tetap aktif 100%.
+              </p>
+              <button
+                onClick={reset}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer'
+                }}
+              >
+                🔄 Aktifkan Visual 3D
+              </button>
+            </div>
+          )}
         >
-          {/* Lighting */}
-          <ambientLight intensity={0.85} />
-          <directionalLight
-            position={[4, 6, 4]}
-            intensity={1.5}
-            castShadow
-            shadow-mapSize={[1024, 1024]}
-            shadow-camera-near={0.5}
-            shadow-camera-far={15}
-            shadow-camera-left={-2}
-            shadow-camera-right={2}
-            shadow-camera-top={3}
-            shadow-camera-bottom={-1}
-          />
-          <directionalLight position={[-4, 4, -4]} intensity={0.6} color="#93c5fd" />
-          <pointLight position={[0, 2, 2]} intensity={0.5} color="#fed7aa" />
+          <Canvas
+            camera={{ position: [0, 1.25, 3.2], fov: 42 }}
+            shadows
+            style={{ width: '100%', height: '100%' }}
+          >
+            {/* Lighting */}
+            <ambientLight intensity={0.85} />
+            <directionalLight
+              position={[4, 6, 4]}
+              intensity={1.5}
+              castShadow
+              shadow-mapSize={[1024, 1024]}
+              shadow-camera-near={0.5}
+              shadow-camera-far={15}
+              shadow-camera-left={-2}
+              shadow-camera-right={2}
+              shadow-camera-top={3}
+              shadow-camera-bottom={-1}
+            />
+            <directionalLight position={[-4, 4, -4]} intensity={0.6} color="#93c5fd" />
+            <pointLight position={[0, 2, 2]} intensity={0.5} color="#fed7aa" />
 
-          {/* 3D Human Operator Model */}
-          <OperatorModel
-            equippedItems={equippedItems}
-            cameraPreset={activePreset}
-            showHazardLabels={showHazardLabels}
-          />
+            {/* 3D Human Operator Model */}
+            <OperatorModel
+              equippedItems={equippedItems}
+              cameraPreset={activePreset}
+              showHazardLabels={showHazardLabels}
+            />
 
-          {/* Contact Shadows on Floor */}
-          <ContactShadows
-            position={[0, 0, 0]}
-            opacity={0.6}
-            scale={3}
-            blur={2.4}
-            far={2}
-          />
+            {/* Contact Shadows on Floor */}
+            <ContactShadows
+              position={[0, 0, 0]}
+              opacity={0.6}
+              scale={3}
+              blur={2.4}
+              far={2}
+            />
 
-          {/* Orbit Controls */}
-          <OrbitControls
-            ref={controlsRef}
-            makeDefault
-            enableZoom={true}
-            enablePan={false}
-            autoRotate={autoRotate}
-            autoRotateSpeed={1.8}
-            minDistance={1.1}
-            maxDistance={5.0}
-            minPolarAngle={Math.PI / 8}
-            maxPolarAngle={Math.PI / 2 + 0.05}
-            target={[0, 0.95, 0]}
-          />
-        </Canvas>
+            {/* Orbit Controls */}
+            <OrbitControls
+              ref={controlsRef}
+              makeDefault
+              enableZoom={true}
+              enablePan={false}
+              autoRotate={autoRotate}
+              autoRotateSpeed={1.8}
+              minDistance={1.1}
+              maxDistance={5.0}
+              minPolarAngle={Math.PI / 8}
+              maxPolarAngle={Math.PI / 2 + 0.05}
+              target={[0, 0.95, 0]}
+            />
+          </Canvas>
+        </CanvasErrorBoundary>
       </div>
 
       {/* Orbit Tip Footer */}

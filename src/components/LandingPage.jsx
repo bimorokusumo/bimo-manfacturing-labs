@@ -386,8 +386,9 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
             }}>
               {[
                 { id: 'virtual-bengkel', title: 'Virtual Bengkel 3D', icon: '🏭', color: '#f59e0b' },
-                { id: 'machine', title: 'Mesin Bubut 3D', icon: '⚙️', color: '#3b82f6' },
-                { id: 'machine-milling-tools', title: 'Mesin Frais 3D', icon: '🌀', color: '#10b981' },
+                { id: 'machine-lathe', title: 'Mesin Bubut 3D', icon: '⚙️', color: '#3b82f6' },
+                { id: 'machine-milling', title: 'Mesin Frais 3D', icon: '🌀', color: '#10b981' },
+                { id: 'machine-cnc', title: 'Mesin CNC 3D', icon: '💻', color: '#06b6d4' },
                 { id: 'safety', title: 'Operator Visual K3', icon: '🛡️', color: '#ea580c' },
               ].map(card => (
                 <button

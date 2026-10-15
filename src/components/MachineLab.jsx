@@ -9,16 +9,20 @@ import CNCTheoryGuide from './CNCTheoryGuide';
 import CNCQuiz from './CNCQuiz';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/assets';
 
 const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
   const [selectedMachine, setSelectedMachine] = useState(initialTab); // 'lathe', 'milling', 'cnc', 'cutting-tools'
   const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
   const [pendingMachine, setPendingMachine] = useState(null);
-  const [cncMode, setCncMode] = useState('materi'); // 'materi', 'simulasi', 'quiz'
+  const [cncMode, setCncMode] = useState(() => (initialTab === 'cnc' ? 'simulasi' : 'materi'));
 
   if (initialTab !== prevInitialTab) {
     setPrevInitialTab(initialTab);
     setSelectedMachine(initialTab);
+    if (initialTab === 'cnc') {
+      setCncMode('simulasi');
+    }
   }
 
   // If Cutting Tools Lab is selected, render it
@@ -262,7 +266,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                 style={{ cursor: 'pointer', border: '1px solid rgba(59, 130, 246, 0.3)' }}
               >
                 <div style={{ height: '180px', background: 'var(--bg-card-light)', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-                  <img src="/assets/images/lathe.png" alt="CNC Lathe" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  <img src={getAssetUrl("/assets/images/lathe.png")} alt="CNC Lathe" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 </div>
                 <div style={{ padding: '24px' }}>
                   <h3 style={{ color: '#60a5fa', fontSize: '1.4rem', fontWeight: 800, marginBottom: '16px', textTransform: 'uppercase' }}>CNC Lathe (Bubut)</h3>
@@ -276,7 +280,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                 style={{ cursor: 'pointer', border: '1px solid rgba(16, 185, 129, 0.3)' }}
               >
                 <div style={{ height: '180px', background: 'var(--bg-card-light)', padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-                  <img src="/assets/images/cnc.png" alt="CNC Milling" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                  <img src={getAssetUrl("/assets/images/cnc.png")} alt="CNC Milling" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
                 </div>
                 <div style={{ padding: '24px' }}>
                   <h3 style={{ color: 'var(--game-success)', fontSize: '1.4rem', fontWeight: 800, marginBottom: '16px', textTransform: 'uppercase' }}>CNC Milling (Frais)</h3>
@@ -341,7 +345,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           style={{ cursor: 'pointer', border: '1px solid rgba(59, 130, 246, 0.3)' }}
         >
           <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-            <img src="/assets/images/lathe.png" alt="Mesin Bubut" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+            <img src={getAssetUrl("/assets/images/lathe.png")} alt="Mesin Bubut" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
           </div>
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-tp)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Bubut (Lathe)</h3>
@@ -361,7 +365,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           style={{ cursor: 'pointer', border: '1px solid rgba(245, 158, 11, 0.3)' }}
         >
           <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-            <img src="/assets/images/milling.png" alt="Mesin Frais" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', filter: 'brightness(1.1) contrast(1.1)' }} />
+            <img src={getAssetUrl("/assets/images/milling.png")} alt="Mesin Frais" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px', filter: 'brightness(1.1) contrast(1.1)' }} />
           </div>
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-tflm)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Frais (Milling)</h3>
@@ -407,7 +411,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           style={{ cursor: 'pointer', border: '1px solid rgba(16, 185, 129, 0.3)' }}
         >
           <div style={{ height: '170px', background: 'var(--bg-card-light)', padding: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-            <img src="/assets/images/cnc.png" alt="Mesin CNC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+            <img src={getAssetUrl("/assets/images/cnc.png")} alt="Mesin CNC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
           </div>
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-success)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin CNC</h3>

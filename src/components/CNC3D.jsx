@@ -172,23 +172,69 @@ const CoolantParticles = ({ isRunning }) => {
   );
 };
 
+import { CanvasErrorBoundary } from './ErrorBoundary';
+
 const CNC3D = ({ isRunning = false, toolPosRef, heightmapRef, workpieceSize = { x: 50, y: 50, z: 20 }, toolDiameter = 10 }) => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', cursor: 'grab' }}>
-      <Canvas shadows camera={{ position: [0, 2, 6], fov: 50 }}>
-        <color attach="background" args={['#020617']} />
-        
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 10, 5]} intensity={1.5} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
-        <spotLight position={[0, 5, 0]} intensity={2} angle={0.5} penumbra={1} color="#38bdf8" />
-        <pointLight position={[-5, 5, -5]} intensity={0.5} />
+      <CanvasErrorBoundary
+        title="Simulator Mesin CNC Memerlukan Alokasi WebGL"
+        fallback={(reset) => (
+          <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#020617',
+            color: '#f8fafc',
+            padding: '24px',
+            textAlign: 'center',
+            borderRadius: '12px',
+            border: '1px solid rgba(16, 185, 129, 0.4)'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>💻</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', marginBottom: '8px' }}>
+              Simulator 3D Mesin CNC
+            </div>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', maxWidth: '420px', lineHeight: 1.6, marginBottom: '20px' }}>
+              Grafis 3D WebGL membutuhkan alokasi memori grafis. Eksekusi kode G-Code dan editor program tetap berfungsi normal di panel samping.
+            </p>
+            <button
+              onClick={reset}
+              style={{
+                padding: '10px 22px',
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                cursor: 'pointer'
+              }}
+            >
+              🔄 Aktifkan Tampilan 3D CNC
+            </button>
+          </div>
+        )}
+      >
+        <Canvas shadows camera={{ position: [0, 2, 6], fov: 50 }}>
+          <color attach="background" args={['#020617']} />
+          
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 10, 5]} intensity={1.5} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
+          <spotLight position={[0, 5, 0]} intensity={2} angle={0.5} penumbra={1} color="#38bdf8" />
+          <pointLight position={[-5, 5, -5]} intensity={0.5} />
 
-        <CNCMachine isRunning={isRunning} toolPosRef={toolPosRef} heightmapRef={heightmapRef} workpieceSize={workpieceSize} toolDiameter={toolDiameter} />
-        <CoolantParticles isRunning={isRunning} />
+          <CNCMachine isRunning={isRunning} toolPosRef={toolPosRef} heightmapRef={heightmapRef} workpieceSize={workpieceSize} toolDiameter={toolDiameter} />
+          <CoolantParticles isRunning={isRunning} />
 
-        <ContactShadows position={[0, -0.5, 0]} opacity={0.8} scale={20} blur={2} far={4} />
-        <OrbitControls enableZoom={true} enablePan={false} autoRotate={!isRunning} autoRotateSpeed={0.5} maxPolarAngle={Math.PI / 2} />
-      </Canvas>
+          <ContactShadows position={[0, -0.5, 0]} opacity={0.8} scale={20} blur={2} far={4} />
+          <OrbitControls enableZoom={true} enablePan={false} autoRotate={!isRunning} autoRotateSpeed={0.5} maxPolarAngle={Math.PI / 2} />
+        </Canvas>
+      </CanvasErrorBoundary>
       
       {/* HUD OVERLAY */}
       <div style={{ position: 'absolute', bottom: '16px', right: '16px', pointerEvents: 'none', textAlign: 'right' }}>

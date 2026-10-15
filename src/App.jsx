@@ -21,6 +21,7 @@ const TeacherGradebook = lazy(() => import('./components/TeacherGradebook'));
 const DiagnosticTestView = lazy(() => import('./components/DiagnosticTestView'));
 
 import StudentLoginModal from './components/StudentLoginModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import { sound } from './utils/audio';
 import { AccessibilityProvider } from './context/AccessibilityContext';
 import { StudentProvider, useStudent } from './context/StudentContext';
@@ -196,6 +197,11 @@ function AppInner() {
       case 'modules':
         return <ModulesView />;
       case 'machine':
+      case 'machine-lathe':
+      case 'machine-milling':
+      case 'machine-cnc':
+      case 'machine-cnc-milling':
+      case 'machine-cnc-lathe':
       case 'machine-cutting-tools':
       case 'machine-milling-tools':
       case 'machine-lathe-tools':
@@ -204,6 +210,11 @@ function AppInner() {
         return (
           <MachineLab
             initialTab={
+              activeMenu === 'machine-lathe' ? 'lathe' :
+              activeMenu === 'machine-milling' ? 'milling' :
+              activeMenu === 'machine-cnc' ? 'cnc' :
+              activeMenu === 'machine-cnc-milling' ? 'cnc-milling' :
+              activeMenu === 'machine-cnc-lathe' ? 'cnc-lathe' :
               activeMenu === 'machine-milling-tools' ? 'milling-tools' :
               activeMenu === 'machine-lathe-tools' ? 'lathe-tools' :
               activeMenu === 'machine-carbide-tools' ? 'carbide-tools' :
@@ -517,7 +528,9 @@ function AppInner() {
               </div>
             </div>
           }>
-            {renderContent()}
+            <ErrorBoundary key={activeMenu}>
+              {renderContent()}
+            </ErrorBoundary>
           </Suspense>
         </main>
       </div>

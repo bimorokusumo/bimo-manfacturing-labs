@@ -4,6 +4,7 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import HeatTreatmentYouTubeCard from './HeatTreatmentYouTubeCard';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { recordQuizResult } from '../services/sheetService';
+import { getAssetUrl } from '../utils/assets';
 
 // =============================================================================
 // DATABASE SIMULATOR BLACKENING (7-STAGE HOT BLACK OXIDE)
@@ -735,7 +736,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/blackening_before_after.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/blackening_before_after.svg")} 
               alt="Perbandingan Sebelum vs Sesudah Blackening"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -774,7 +775,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               📊 Bagan Visual Alur 7 Bak Celup Pabrik:
             </h4>
             <img 
-              src="/assets/images/heat_treatment/blackening_tank_diagram.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/blackening_tank_diagram.svg")} 
               alt="Diagram 7 Bak Blackening"
               style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
             />
@@ -1011,7 +1012,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/hardening_process_flow.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/hardening_process_flow.svg")} 
               alt="Alur Visual Hardening"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1364,7 +1365,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/tempering_blade_infographic.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/tempering_blade_infographic.svg")} 
               alt="Infografis Rambatan Warna Tempering"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1512,7 +1513,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/annealing_cooling_infographic.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/annealing_cooling_infographic.svg")} 
               alt="Infografis Annealing vs Normalizing"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1531,7 +1532,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               🔬 Struktur Mikro Mikroskop: Perlit Kasar Annealing vs Perlit Halus Normalizing
             </h4>
             <img 
-              src="/assets/images/heat_treatment/annealing_vs_normalizing_diagram.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/annealing_vs_normalizing_diagram.svg")} 
               alt="Perbandingan Mikroskop Annealing vs Normalizing"
               style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
             />
@@ -1573,7 +1574,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/annealing_cooling_infographic.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/annealing_cooling_infographic.svg")} 
               alt="Infografis Normalizing"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1636,7 +1637,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/case_hardening_diagram.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/case_hardening_diagram.svg")} 
               alt="Diagram Case Hardening Gigi Transmisi"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1652,7 +1653,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <img 
-              src="/assets/images/heat_treatment/pack_carburizing_box.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/pack_carburizing_box.svg")} 
               alt="Ilustrasi Kotak Pack Carburizing"
               style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
             />
@@ -1865,7 +1866,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               🎨 Skala Visual Warna Pijar Baja &amp; Suhu (°C):
             </h4>
             <img 
-              src="/assets/images/heat_treatment/steel_color_temperature_chart.svg" 
+              src={getAssetUrl("/assets/images/heat_treatment/steel_color_temperature_chart.svg")} 
               alt="Skala Warna Pijar Baja"
               style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
             />

@@ -1,6 +1,8 @@
 import React, { useState, Suspense } from 'react';
 import Milling2D_Engine from './Milling2D_Engine';
 import Milling3D_Engine from './Milling3D_Engine';
+import { CanvasErrorBoundary } from './ErrorBoundary';
+import { isWebGLSupported } from '../utils/webgl';
 
 const Milling3D = ({
   isRunning = false,
@@ -15,43 +17,89 @@ const Milling3D = ({
   gridX = 60,
   gridY = 30
 }) => {
-  const [viewMode, setViewMode] = useState('3d'); // default '3d'
+  const [viewMode, setViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
+
+  const render2DEngine = (retryFn = null) => (
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {retryFn && (
+        <div style={{
+          position: 'absolute',
+          top: '14px',
+          right: '180px',
+          zIndex: 20,
+          background: 'rgba(245, 158, 11, 0.95)',
+          color: '#78350f',
+          padding: '5px 12px',
+          borderRadius: '6px',
+          fontSize: '0.72rem',
+          fontWeight: 800,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}>
+          <span>⚠️ 2D CAD Aktif (Fallback GPU)</span>
+          <button
+            onClick={retryFn}
+            style={{
+              padding: '2px 8px',
+              borderRadius: '4px',
+              background: '#ffffff',
+              color: '#d97706',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.7rem',
+              cursor: 'pointer'
+            }}
+          >
+            Coba 3D
+          </button>
+        </div>
+      )}
+      <Milling2D_Engine
+        isRunning={isRunning}
+        tablePosition={tablePosition}
+        spindlePosition={spindlePosition}
+        heightmap={heightmap}
+        workpieceSize={workpieceSize}
+        toolDiameter={toolDiameter}
+        rpm={rpm}
+        gridX={gridX}
+        gridY={gridY}
+      />
+    </div>
+  );
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       {viewMode === '3d' ? (
-        <Suspense
-          fallback={
-            <div className="flex-center" style={{ height: '100%', background: '#eef2f6', color: '#0284c7', fontWeight: 'bold' }}>
-              MEMUAT 3D MILLING ENGINE...
-            </div>
-          }
+        <CanvasErrorBoundary
+          title="Simulator Frais 3D Memerlukan Alokasi WebGL"
+          fallback={(reset) => render2DEngine(reset)}
         >
-          <Milling3D_Engine
-            isRunning={isRunning}
-            tablePosition={tablePosition}
-            spindlePosition={spindlePosition}
-            heightmap={heightmap}
-            workpieceSize={workpieceSize}
-            toolDiameter={toolDiameter}
-            isCutting={isCutting}
-            coolant={coolant}
-            gridX={gridX}
-            gridY={gridY}
-          />
-        </Suspense>
+          <Suspense
+            fallback={
+              <div className="flex-center" style={{ height: '100%', background: '#eef2f6', color: '#0284c7', fontWeight: 'bold' }}>
+                MEMUAT 3D MILLING ENGINE...
+              </div>
+            }
+          >
+            <Milling3D_Engine
+              isRunning={isRunning}
+              tablePosition={tablePosition}
+              spindlePosition={spindlePosition}
+              heightmap={heightmap}
+              workpieceSize={workpieceSize}
+              toolDiameter={toolDiameter}
+              isCutting={isCutting}
+              coolant={coolant}
+              gridX={gridX}
+              gridY={gridY}
+            />
+          </Suspense>
+        </CanvasErrorBoundary>
       ) : (
-        <Milling2D_Engine
-          isRunning={isRunning}
-          tablePosition={tablePosition}
-          spindlePosition={spindlePosition}
-          heightmap={heightmap}
-          workpieceSize={workpieceSize}
-          toolDiameter={toolDiameter}
-          rpm={rpm}
-          gridX={gridX}
-          gridY={gridY}
-        />
+        render2DEngine()
       )}
 
       {/* VIEW TOGGLE BUTTON (TOP LEFT) */}

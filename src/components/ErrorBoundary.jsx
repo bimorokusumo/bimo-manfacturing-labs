@@ -1,5 +1,94 @@
 import React from 'react';
 
+export class CanvasErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.warn("CanvasErrorBoundary caught 3D/WebGL error:", error, errorInfo);
+  }
+
+  reset = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) {
+        return typeof this.props.fallback === 'function' ? this.props.fallback(this.reset) : this.props.fallback;
+      }
+      return (
+        <div style={{
+          width: '100%',
+          height: '100%',
+          minHeight: '360px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+          color: '#f8fafc',
+          padding: '24px',
+          textAlign: 'center',
+          borderRadius: '12px',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)'
+        }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>⚙️</div>
+          <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', marginBottom: '8px' }}>
+            {this.props.title || 'Akselerasi Grafis 3D Membutuhkan Muat Ulang'}
+          </div>
+          <div style={{ fontSize: '0.85rem', color: '#94a3b8', maxWidth: '440px', lineHeight: 1.6, marginBottom: '20px' }}>
+            Alokasi memori WebGL browser Anda sempat terhenti atau dibatasi oleh sistem GPU. Klik tombol di bawah untuk mengaktifkan kembali tampilan 3D.
+          </div>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button
+              onClick={this.reset}
+              style={{
+                padding: '10px 20px',
+                borderRadius: '8px',
+                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
+              }}
+            >
+              🔄 Muat Ulang Tampilan 3D
+            </button>
+            {this.props.onFallbackMode && (
+              <button
+                onClick={this.props.onFallbackMode}
+                style={{
+                  padding: '10px 18px',
+                  borderRadius: '8px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#e2e8f0',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer'
+                }}
+              >
+                📐 Beralih ke Mode 2D
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -17,9 +106,10 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      const isInline = this.props.inline;
       return (
         <div style={{
-          minHeight: '100vh',
+          minHeight: isInline ? '50vh' : '100vh',
           backgroundColor: '#0f172a',
           color: '#f8fafc',
           display: 'flex',
@@ -66,7 +156,13 @@ class ErrorBoundary extends React.Component {
             )}
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  try {
+                    sessionStorage.removeItem('bimo_active_menu');
+                    if (typeof window !== 'undefined') window.location.hash = '';
+                  } catch (e) {}
+                  window.location.reload();
+                }}
                 style={{
                   padding: '12px 24px',
                   background: 'linear-gradient(135deg, #f59e0b, #d97706)',
@@ -83,8 +179,31 @@ class ErrorBoundary extends React.Component {
               <button
                 onClick={() => {
                   try {
+                    sessionStorage.removeItem('bimo_active_menu');
+                    if (typeof window !== 'undefined') window.location.hash = '#dashboard';
+                  } catch (e) {}
+                  this.setState({ hasError: false, error: null });
+                  window.location.reload();
+                }}
+                style={{
+                  padding: '12px 20px',
+                  background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontWeight: 700,
+                  fontSize: '0.92rem',
+                  cursor: 'pointer'
+                }}
+              >
+                🏠 Kembali ke Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  try {
                     localStorage.clear();
                     sessionStorage.clear();
+                    if (typeof window !== 'undefined') window.location.hash = '';
                   } catch (e) {}
                   window.location.reload();
                 }}
@@ -111,3 +230,4 @@ class ErrorBoundary extends React.Component {
 }
 
 export default ErrorBoundary;
+

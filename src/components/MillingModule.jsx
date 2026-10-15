@@ -913,95 +913,78 @@ const MillingModule = ({ addXP }) => {
                   </div>
                 </div>
 
-                {/* JOBSHEET TABS */}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                  {/* 2D / 3D VIEW TOGGLE (DESKTOP) */}
-                  <button
-                    onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.06)',
-                      color: viewMode === '2d' ? '#ffffff' : 'var(--text-main)',
-                      border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid var(--border-light)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      boxShadow: viewMode === '2d' ? '0 0 12px rgba(56, 189, 248, 0.35)' : 'none'
-                    }}
-                    title="Beralih antara Mode 3D Studio dan Mode 2D Presisi (Top-Down)"
-                  >
-                    <span>{viewMode === '3d' ? '📐 MODE 2D PRESISI' : '🎮 MODE 3D STUDIO'}</span>
-                  </button>
-
-                  {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE (DESKTOP) */}
-                  <button
-                    onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      background: showJobGuide ? 'rgba(16, 185, 129, 0.22)' : 'rgba(255,255,255,0.06)',
-                      color: showJobGuide ? '#34d399' : 'var(--text-main)',
-                      border: showJobGuide ? '1px solid #10b981' : '1px solid var(--border-light)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      transition: 'all 0.2s',
-                      boxShadow: showJobGuide ? '0 0 10px rgba(16, 185, 129, 0.3)' : 'none'
-                    }}
-                    title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
-                  >
-                    <span>🎯</span>
-                    <span>GARIS JOB: {showJobGuide ? 'ON' : 'OFF'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => { sound.playClick(); setIsMobileMode(true); }}
-                    style={{
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                      color: '#ffffff',
-                      border: '1px solid #34d399',
-                      boxShadow: '0 0 10px rgba(16, 185, 129, 0.35)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                    title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
-                  >
-                    <span>🎮</span>
-                    <span>MODE GAME HP</span>
-                  </button>
-
-                  {millingJobsheets.map((sheet, idx) => (
+                {/* ACTION CONTROLS & COMPACT JOB SELECTOR */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+                  {/* BARIS ATAS: MODE CONTROLS */}
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                    {/* 2D / 3D VIEW TOGGLE (DESKTOP) */}
                     <button
-                      key={sheet.id}
-                      onClick={() => setActiveJobsheetIndex(idx)}
+                      onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
                       style={{
                         padding: '8px 14px',
                         borderRadius: '8px',
                         fontSize: '0.8rem',
-                        fontWeight: 700,
+                        fontWeight: 800,
                         cursor: 'pointer',
-                        background: activeJobsheetIndex === idx ? '#f59e0b' : 'rgba(255,255,255,0.05)',
-                        color: activeJobsheetIndex === idx ? '#000000' : 'var(--text-muted)',
-                        border: activeJobsheetIndex === idx ? '1px solid #f59e0b' : '1px solid var(--border-light)',
-                        transition: 'all 0.2s'
+                        background: viewMode === '2d' ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)' : 'rgba(255,255,255,0.06)',
+                        color: viewMode === '2d' ? '#ffffff' : 'var(--text-main)',
+                        border: viewMode === '2d' ? '1px solid #38bdf8' : '1px solid var(--border-light)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: viewMode === '2d' ? '0 0 12px rgba(56, 189, 248, 0.35)' : 'none'
                       }}
+                      title="Beralih antara Mode 3D Studio dan Mode 2D Presisi (Top-Down)"
                     >
-                      {idx + 1}. {sheet.title.split('(')[0]}
+                      <span>{viewMode === '3d' ? '📐 MODE 2D PRESISI' : '🎮 MODE 3D STUDIO'}</span>
                     </button>
-                  ))}
+
+                    {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE (DESKTOP) */}
+                    <button
+                      onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        background: showJobGuide ? 'rgba(16, 185, 129, 0.22)' : 'rgba(255,255,255,0.06)',
+                        color: showJobGuide ? '#34d399' : 'var(--text-main)',
+                        border: showJobGuide ? '1px solid #10b981' : '1px solid var(--border-light)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        transition: 'all 0.2s',
+                        boxShadow: showJobGuide ? '0 0 10px rgba(16, 185, 129, 0.3)' : 'none'
+                      }}
+                      title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
+                    >
+                      <span>🎯</span>
+                      <span>GARIS JOB: {showJobGuide ? 'ON' : 'OFF'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => { sound.playClick(); setIsMobileMode(true); }}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: '#ffffff',
+                        border: '1px solid #34d399',
+                        boxShadow: '0 0 10px rgba(16, 185, 129, 0.35)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
+                    >
+                      <span>🎮</span>
+                      <span>MODE GAME HP</span>
+                    </button>
+
                     <button
                       onClick={() => { sound.playClick(); setActiveTab('tools'); }}
                       style={{
@@ -1019,8 +1002,9 @@ const MillingModule = ({ addXP }) => {
                         boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
                       }}
                     >
-                      <span>🔪</span> Katalog 8 Pisau Frais Real
+                      <span>🔪</span> Pisau Frais
                     </button>
+
                     <button
                       onClick={() => { sound.playClick(); setIsPrepared(false); }}
                       style={{
@@ -1040,6 +1024,46 @@ const MillingModule = ({ addXP }) => {
                     >
                       <span>🛡️</span> SOP & K3
                     </button>
+                  </div>
+
+                  {/* BARIS BAWAH: PILIHAN 5 JOB DENGAN KODE ANGKA RINGKAS */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                      PILIH JOB:
+                    </span>
+                    <div style={{ display: 'flex', gap: '6px', background: 'rgba(0, 0, 0, 0.2)', padding: '3px 5px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+                      {millingJobsheets.map((sheet, idx) => (
+                        <button
+                          key={sheet.id}
+                          onClick={() => { sound.playClick(); setActiveJobsheetIndex(idx); }}
+                          style={{
+                            minWidth: '34px',
+                            height: '28px',
+                            padding: '0 8px',
+                            borderRadius: '6px',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            background: activeJobsheetIndex === idx ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'rgba(255,255,255,0.05)',
+                            color: activeJobsheetIndex === idx ? '#000000' : 'var(--text-muted)',
+                            border: activeJobsheetIndex === idx ? '1px solid #fbbf24' : '1px solid transparent',
+                            boxShadow: activeJobsheetIndex === idx ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '3px',
+                            transition: 'all 0.15s'
+                          }}
+                          title={`Job ${idx + 1}: ${sheet.title}`}
+                        >
+                          <span>{idx + 1}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '0.76rem', fontWeight: 700, color: '#f59e0b', maxWidth: '240px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      Job {activeJobsheetIndex + 1}: {activeJobsheet.title.split('(')[0].trim()}
+                    </span>
+                  </div>
                 </div>
               </div>
 

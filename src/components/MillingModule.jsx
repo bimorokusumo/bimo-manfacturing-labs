@@ -14,6 +14,7 @@ const MillingModule = ({ addXP }) => {
   const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
+  const [showJobGuide, setShowJobGuide] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -309,10 +310,44 @@ const MillingModule = ({ addXP }) => {
       }
     }
 
-    const depthDiff = Math.abs(maxCutDepth - activeJobsheet.targetDepth);
+    // Target Region Depth Analysis
+    const targetRegion = activeJobsheet.targetRegion;
+    let targetVerticesCount = 0;
+    let targetCutVerticesCount = 0;
+    let targetMaxDepth = 0;
+
+    const w = workpieceSize.w;
+    const l = workpieceSize.l;
+
+    for (let iy = 0; iy <= gridY; iy++) {
+      const vy = (iy / gridY) * l - l / 2;
+      for (let ix = 0; ix <= gridX; ix++) {
+        const i = iy * (gridX + 1) + ix;
+        const vx = (ix / gridX) * w - w / 2;
+
+        let inTarget = false;
+        if (!targetRegion || targetRegion.shape === 'facing') {
+          inTarget = true;
+        } else if (targetRegion.xMin !== undefined && targetRegion.xMax !== undefined) {
+          inTarget = (vx >= targetRegion.xMin - 2 && vx <= targetRegion.xMax + 2 && vy >= targetRegion.yMin - 2 && vy <= targetRegion.yMax + 2);
+        }
+
+        if (inTarget) {
+          targetVerticesCount++;
+          const depthMm = Math.abs(heightmapRef.current[i]);
+          if (depthMm > 0.05) {
+            targetCutVerticesCount++;
+            if (depthMm > targetMaxDepth) targetMaxDepth = depthMm;
+          }
+        }
+      }
+    }
+
+    const actualDepth = targetCutVerticesCount > 0 ? targetMaxDepth : maxCutDepth;
+    const depthDiff = Math.abs(actualDepth - activeJobsheet.targetDepth);
     let calculatedScore = 0;
 
-    if (isRpmCorrect && cutVertices >= 12) {
+    if (isRpmCorrect && targetCutVerticesCount >= 6) {
       if (depthDiff <= 0.3) {
         calculatedScore = 100;
       } else if (depthDiff <= 0.6) {
@@ -332,7 +367,7 @@ const MillingModule = ({ addXP }) => {
 
     setInspectionData({
       targetDepth: activeJobsheet.targetDepth.toFixed(2),
-      actualDepth: maxCutDepth.toFixed(2),
+      actualDepth: actualDepth.toFixed(2),
       rpmUsed: rpm,
       targetRpm: `${activeJobsheet.targetRpmRange[0]} - ${activeJobsheet.targetRpmRange[1]} RPM`,
       cutAreaPercent: Math.round((cutVertices / numVertices) * 100)
@@ -459,6 +494,9 @@ const MillingModule = ({ addXP }) => {
                   viewMode={viewMode}
                   onToggleViewMode={setViewMode}
                   hideInternalToggle={true}
+                  activeJobsheet={activeJobsheet}
+                  showJobGuide={showJobGuide}
+                  onToggleJobGuide={() => setShowJobGuide(v => !v)}
                 />
 
                 {/* FLOATING TOP GLASS HUD */}
@@ -537,6 +575,22 @@ const MillingModule = ({ addXP }) => {
                       title="Beralih antara Mode 3D dan Mode 2D Presisi"
                     >
                       <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                    </button>
+
+                    {/* GARIS TARGET JOB TOGGLE (MOBILE) */}
+                    <button
+                      onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                      style={{
+                        background: showJobGuide ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.12)',
+                        border: showJobGuide ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.25)',
+                        color: showJobGuide ? '#34d399' : '#cbd5e1',
+                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '2px'
+                      }}
+                      title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
+                    >
+                      <span>🎯</span>
+                      <span>JOB</span>
                     </button>
 
                     <button
@@ -883,6 +937,30 @@ const MillingModule = ({ addXP }) => {
                     <span>{viewMode === '3d' ? '📐 MODE 2D PRESISI' : '🎮 MODE 3D STUDIO'}</span>
                   </button>
 
+                  {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE (DESKTOP) */}
+                  <button
+                    onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      background: showJobGuide ? 'rgba(16, 185, 129, 0.22)' : 'rgba(255,255,255,0.06)',
+                      color: showJobGuide ? '#34d399' : 'var(--text-main)',
+                      border: showJobGuide ? '1px solid #10b981' : '1px solid var(--border-light)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s',
+                      boxShadow: showJobGuide ? '0 0 10px rgba(16, 185, 129, 0.3)' : 'none'
+                    }}
+                    title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
+                  >
+                    <span>🎯</span>
+                    <span>GARIS JOB: {showJobGuide ? 'ON' : 'OFF'}</span>
+                  </button>
+
                   <button
                     onClick={() => { sound.playClick(); setIsMobileMode(true); }}
                     style={{
@@ -992,6 +1070,9 @@ const MillingModule = ({ addXP }) => {
           gridY={gridY}
           viewMode={viewMode}
           onToggleViewMode={setViewMode}
+          activeJobsheet={activeJobsheet}
+          showJobGuide={showJobGuide}
+          onToggleJobGuide={() => setShowJobGuide(v => !v)}
         />
       </div>
 

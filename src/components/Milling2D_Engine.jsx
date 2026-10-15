@@ -9,7 +9,9 @@ const Milling2D = ({
   toolDiameter = 10,
   rpm = 0,
   gridX = 60,
-  gridY = 30
+  gridY = 30,
+  activeJobsheet = null,
+  showJobGuide = true
 }) => {
   // SVG Canvas Settings
   const SVG_WIDTH = 800;
@@ -78,6 +80,26 @@ const Milling2D = ({
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#f8fafc' }}>
+      {/* TECHNICAL BLUEPRINT HEADER BADGE (TAMPILKAN TARGET TUGAS FRAIS) */}
+      {showJobGuide && activeJobsheet && (
+        <div style={{
+          position: 'absolute', top: '12px', left: '16px', zIndex: 10,
+          background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(8px)',
+          padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.5)',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.25)', pointerEvents: 'none'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#fbbf24', fontSize: '0.76rem', fontWeight: 800 }}>
+            <span>📐 GARIS TARGET FRAIS:</span>
+            <span style={{ color: '#ffffff' }}>{activeJobsheet.title}</span>
+          </div>
+          <div style={{ color: '#94a3b8', fontSize: '0.67rem', marginTop: '2px', display: 'flex', gap: '8px' }}>
+            <span>Bahan: <strong style={{ color: '#e2e8f0' }}>{activeJobsheet.material}</strong></span>
+            <span>•</span>
+            <span>Target: <strong style={{ color: '#facc15' }}>{activeJobsheet.desc}</strong></span>
+          </div>
+        </div>
+      )}
+
       <svg width="100%" height="100%" viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`} preserveAspectRatio="xMidYMid meet" style={{ position: 'absolute', top: 0, left: 0 }}>
         {/* LIGHT TECHNICAL GRAPH GRID */}
         <defs>
@@ -121,6 +143,93 @@ const Milling2D = ({
             stroke="rgba(15, 23, 42, 0.4)"
             strokeWidth="1.5"
           />
+
+          {/* ========================================================================= */}
+          {/* GARIS TARGET JOB FRAIS (BLUEPRINT GUIDE LINE OVERLAY)                     */}
+          {/* Siswa dapat langsung mengikuti batas garis ini untuk menyayat material   */}
+          {/* ========================================================================= */}
+          {showJobGuide && activeJobsheet?.targetRegion && (() => {
+            const region = activeJobsheet.targetRegion;
+            const regX = svgWorkpieceX + (region.x + workpieceSize.w / 2) * PIXELS_PER_MM;
+            const regY = svgWorkpieceY + (region.y + workpieceSize.l / 2) * PIXELS_PER_MM;
+            const regW = region.w * PIXELS_PER_MM;
+            const regH = region.l * PIXELS_PER_MM;
+
+            // Real-time check if target depth has been reached in this region
+            let isDone = false;
+            if (heightmap && heightmap.length > 0) {
+              let maxCut = 0;
+              for (let iy = 0; iy < gridY; iy++) {
+                for (let ix = 0; ix < gridX; ix++) {
+                  // Vertex position in workpiece coordinates (mm)
+                  const vx = -workpieceSize.w / 2 + (ix / gridX) * workpieceSize.w;
+                  const vy = -workpieceSize.l / 2 + (iy / gridY) * workpieceSize.l;
+                  if (vx >= region.x && vx <= region.x + region.w && vy >= region.y && vy <= region.y + region.l) {
+                    const vIdx = iy * (gridX + 1) + ix;
+                    const d = Math.abs(heightmap[vIdx] || 0);
+                    if (d > maxCut) maxCut = d;
+                  }
+                }
+              }
+              isDone = maxCut >= region.depth - 0.25;
+            }
+
+            const strokeColor = isDone ? '#10b981' : '#06b6d4';
+            const fillColor = isDone ? 'rgba(16, 185, 129, 0.14)' : 'rgba(6, 182, 212, 0.12)';
+            const cx = regX + regW / 2;
+            const cy = regY + regH / 2;
+
+            return (
+              <g className="milling-job-guide">
+                {/* Target Bounding Box / Area */}
+                <rect
+                  x={regX}
+                  y={regY}
+                  width={regW}
+                  height={regH}
+                  fill={fillColor}
+                  stroke={strokeColor}
+                  strokeWidth="2.5"
+                  strokeDasharray="8 4"
+                  rx={region.type === 'pocket' ? 6 : 0}
+                />
+
+                {/* Centerlines */}
+                <line x1={regX} y1={cy} x2={regX + regW} y2={cy} stroke={strokeColor} strokeWidth="1" strokeDasharray="4 4" opacity="0.6" />
+                <line x1={cx} y1={regY} x2={cx} y2={regY + regH} stroke={strokeColor} strokeWidth="1" strokeDasharray="4 4" opacity="0.6" />
+
+                {/* Dimension Extension Lines */}
+                <line x1={regX} y1={regY - 8} x2={regX + regW} y2={regY - 8} stroke={strokeColor} strokeWidth="1" strokeDasharray="2 2" />
+                <line x1={regX} y1={regY - 12} x2={regX} y2={regY - 4} stroke={strokeColor} strokeWidth="1.2" />
+                <line x1={regX + regW} y1={regY - 12} x2={regX + regW} y2={regY - 4} stroke={strokeColor} strokeWidth="1.2" />
+
+                {/* Target Dimension Pill Badge at Center */}
+                <g transform={`translate(${cx}, ${cy})`}>
+                  <rect
+                    x="-75"
+                    y="-11"
+                    width="150"
+                    height="22"
+                    rx="5"
+                    fill="rgba(15, 23, 42, 0.92)"
+                    stroke={strokeColor}
+                    strokeWidth="1.2"
+                  />
+                  <text
+                    x="0"
+                    y="4.5"
+                    fill={isDone ? '#34d399' : '#38bdf8'}
+                    fontSize="9.5"
+                    fontWeight="bold"
+                    textAnchor="middle"
+                    fontFamily="monospace"
+                  >
+                    {isDone ? '✓ ' : '🎯 '}{region.label}
+                  </text>
+                </g>
+              </g>
+            );
+          })()}
         </g>
 
         {/* ENDMILL (Spindle) - Fixed at Center (400, 200) */}

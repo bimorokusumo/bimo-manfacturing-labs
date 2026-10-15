@@ -22,7 +22,9 @@ const Lathe2D = ({
   showTailstock = false,
   gcodeText = '',
   currentLine = -1,
-  showToolpath = true
+  showToolpath = true,
+  activeJobsheet = null,
+  showJobGuide = true
 }) => {
   const SVG_WIDTH = 800;
   const SVG_HEIGHT = 400;
@@ -56,6 +58,26 @@ const Lathe2D = ({
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#f8fafc' }}>
+      {/* TECHNICAL BLUEPRINT HEADER BADGE (TAMPILKAN INFORMASI TARGET TUGAS) */}
+      {showJobGuide && activeJobsheet && (
+        <div style={{
+          position: 'absolute', top: '12px', left: '16px', zIndex: 10,
+          background: 'rgba(15, 23, 42, 0.88)', backdropFilter: 'blur(8px)',
+          padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(6, 182, 212, 0.5)',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.25)', pointerEvents: 'none'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8', fontSize: '0.76rem', fontWeight: 800 }}>
+            <span>📐 GARIS TARGET JOB:</span>
+            <span style={{ color: '#ffffff' }}>{activeJobsheet.title}</span>
+          </div>
+          <div style={{ color: '#94a3b8', fontSize: '0.67rem', marginTop: '2px', display: 'flex', gap: '8px' }}>
+            <span>Bahan: <strong style={{ color: '#e2e8f0' }}>{activeJobsheet.material}</strong></span>
+            <span>•</span>
+            <span>Target: <strong style={{ color: '#facc15' }}>{activeJobsheet.desc}</strong></span>
+          </div>
+        </div>
+      )}
+
       <svg
         width="100%"
         height="100%"
@@ -101,6 +123,146 @@ const Lathe2D = ({
             strokeWidth="2"
             style={{ transition: isRunning ? 'none' : 'all 0.05s linear' }}
           />
+        )}
+
+        {/* ========================================================================= */}
+        {/* GARIS TARGET JOB (BLUEPRINT TARGET OUTLINE & DIMENSIONS OVERLAY)          */}
+        {/* Siswa dapat langsung mengikuti garis ini untuk membentuk profil benda     */}
+        {/* ========================================================================= */}
+        {showJobGuide && activeJobsheet?.targetSteps && (
+          <g className="job-guide-layer">
+            {activeJobsheet.targetSteps.map((step, sIdx) => {
+              const x1 = 600 + (step.zStart / rawLength) * workpieceWidthPx;
+              const x2 = 600 + (step.zEnd / rawLength) * workpieceWidthPx;
+              const scaleY = 175 / 50;
+
+              const isTaper = step.isTaper;
+              const r1 = ((isTaper ? step.startDia : step.diameter) / 2) * scaleY;
+              const r2 = ((isTaper ? step.endDia : step.diameter) / 2) * scaleY;
+
+              // Check real-time progress for this step
+              let isDone = false;
+              if (profile && profile.length > 0) {
+                const i1 = Math.min(profile.length - 1, Math.max(0, Math.round((-step.zStart / rawLength) * (profile.length - 1))));
+                const i2 = Math.min(profile.length - 1, Math.max(0, Math.round((-step.zEnd / rawLength) * (profile.length - 1))));
+                const startI = Math.min(i1, i2);
+                const endI = Math.max(i1, i2);
+                const slice = profile.slice(startI, endI + 1);
+                const targetDia = isTaper ? step.endDia : step.diameter;
+                if (slice.length > 0) {
+                  const minDia = Math.min(...slice);
+                  isDone = minDia <= targetDia + 0.6;
+                }
+              }
+
+              const strokeColor = isDone ? '#10b981' : '#06b6d4';
+              const fillColor = isDone ? 'rgba(16, 185, 129, 0.08)' : 'rgba(6, 182, 212, 0.06)';
+
+              // Next step for vertical shoulder
+              const nextStep = activeJobsheet.targetSteps[sIdx + 1];
+              let nextR = r2;
+              let hasShoulder = false;
+              if (nextStep) {
+                nextR = ((nextStep.isTaper ? nextStep.startDia : nextStep.diameter) / 2) * scaleY;
+                hasShoulder = Math.abs(r2 - nextR) > 0.8;
+              }
+
+              const midX = (x1 + x2) / 2;
+              const stepLen = Math.abs(step.zEnd - step.zStart);
+
+              return (
+                <g key={`job-step-${sIdx}`}>
+                  {/* Target Region Shading */}
+                  <polygon
+                    points={`${x1},${CENTER_Y - r1} ${x2},${CENTER_Y - r2} ${x2},${CENTER_Y + r2} ${x1},${CENTER_Y + r1}`}
+                    fill={fillColor}
+                    stroke="none"
+                  />
+
+                  {/* Top Target Line (Dashed) */}
+                  <line
+                    x1={x1}
+                    y1={CENTER_Y - r1}
+                    x2={x2}
+                    y2={CENTER_Y - r2}
+                    stroke={strokeColor}
+                    strokeWidth="2.2"
+                    strokeDasharray="6 3"
+                  />
+
+                  {/* Bottom Target Line (Dashed - Sisi yang Disayat Pahat) */}
+                  <line
+                    x1={x1}
+                    y1={CENTER_Y + r1}
+                    x2={x2}
+                    y2={CENTER_Y + r2}
+                    stroke={strokeColor}
+                    strokeWidth="2.5"
+                    strokeDasharray="6 3"
+                  />
+
+                  {/* Vertical Shoulder Line between steps */}
+                  {hasShoulder && (
+                    <>
+                      <line
+                        x1={x2}
+                        y1={CENTER_Y - r2}
+                        x2={x2}
+                        y2={CENTER_Y - nextR}
+                        stroke={strokeColor}
+                        strokeWidth="2"
+                        strokeDasharray="4 2"
+                      />
+                      <line
+                        x1={x2}
+                        y1={CENTER_Y + r2}
+                        x2={x2}
+                        y2={CENTER_Y + nextR}
+                        stroke={strokeColor}
+                        strokeWidth="2"
+                        strokeDasharray="4 2"
+                      />
+                    </>
+                  )}
+
+                  {/* Dimension Extension Lines & Label */}
+                  {stepLen >= 3 && (
+                    <g>
+                      {/* Length Dimension Line (Top) */}
+                      <line x1={x1} y1={CENTER_Y - r1 - 16} x2={x2} y2={CENTER_Y - r2 - 16} stroke={strokeColor} strokeWidth="1" strokeDasharray="3 3" />
+                      <line x1={x1} y1={CENTER_Y - r1 - 20} x2={x1} y2={CENTER_Y - r1 - 12} stroke={strokeColor} strokeWidth="1.2" />
+                      <line x1={x2} y1={CENTER_Y - r2 - 20} x2={x2} y2={CENTER_Y - r2 - 12} stroke={strokeColor} strokeWidth="1.2" />
+
+                      {/* Dimension Tag Badge (Bottom, near cutting tool) */}
+                      <g transform={`translate(${midX}, ${CENTER_Y + Math.max(r1, r2) + 20})`}>
+                        <rect
+                          x="-38"
+                          y="-9"
+                          width="76"
+                          height="18"
+                          rx="4"
+                          fill="rgba(15, 23, 42, 0.92)"
+                          stroke={strokeColor}
+                          strokeWidth="1.2"
+                        />
+                        <text
+                          x="0"
+                          y="3.5"
+                          fill={isDone ? '#34d399' : '#38bdf8'}
+                          fontSize="8.5"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          fontFamily="monospace"
+                        >
+                          {isDone ? '✓ ' : ''}{step.label}
+                        </text>
+                      </g>
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+          </g>
         )}
 
         {/* ========================================================================= */}
@@ -391,7 +553,10 @@ const Lathe3D = ({
   onToggleToolpath = null,
   viewMode: controlledViewMode = null,
   onToggleViewMode = null,
-  hideInternalToggle = false
+  hideInternalToggle = false,
+  activeJobsheet = null,
+  showJobGuide: controlledShowJobGuide = null,
+  onToggleJobGuide = null
 }) => {
   const [internalViewMode, setInternalViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
   const viewMode = controlledViewMode !== null && controlledViewMode !== undefined ? controlledViewMode : internalViewMode;
@@ -399,6 +564,10 @@ const Lathe3D = ({
   const [localShowToolpath, setLocalShowToolpath] = useState(true);
   const effectiveShowToolpath = onToggleToolpath ? showToolpath : localShowToolpath;
   const toggleToolpathHandler = onToggleToolpath || (() => setLocalShowToolpath(v => !v));
+
+  const [localShowJobGuide, setLocalShowJobGuide] = useState(true);
+  const effectiveShowJobGuide = controlledShowJobGuide !== null && controlledShowJobGuide !== undefined ? controlledShowJobGuide : localShowJobGuide;
+  const toggleJobGuideHandler = onToggleJobGuide || (() => setLocalShowJobGuide(v => !v));
 
   const render2DEngine = (retryFn = null) => (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -452,6 +621,8 @@ const Lathe3D = ({
         gcodeText={gcodeText}
         currentLine={currentLine}
         showToolpath={effectiveShowToolpath}
+        activeJobsheet={activeJobsheet}
+        showJobGuide={effectiveShowJobGuide}
       />
     </div>
   );
@@ -492,7 +663,7 @@ const Lathe3D = ({
         render2DEngine()
       )}
 
-      {/* VIEW & TOOLPATH TOGGLE BUTTONS (Shown when not hidden by parent) */}
+      {/* VIEW, TOOLPATH & JOB GUIDE TOGGLE BUTTONS (Shown when not hidden by parent) */}
       {!hideInternalToggle && (
         <div style={{ position: 'absolute', top: '14px', left: '16px', display: 'flex', gap: '8px', zIndex: 10 }}>
           <button
@@ -514,6 +685,30 @@ const Lathe3D = ({
             }}
           >
             {viewMode === '3d' ? '📐 TAMPILAN 2D TEKNIK' : '🎮 TAMPILAN 3D STUDIO'}
+          </button>
+
+          {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE BUTTON */}
+          <button
+            onClick={toggleJobGuideHandler}
+            style={{
+              padding: '6px 12px',
+              background: effectiveShowJobGuide ? 'rgba(16, 185, 129, 0.22)' : 'rgba(15, 23, 42, 0.85)',
+              border: `1px solid ${effectiveShowJobGuide ? '#10b981' : 'rgba(148, 163, 184, 0.4)'}`,
+              color: effectiveShowJobGuide ? '#34d399' : '#94a3b8',
+              borderRadius: '6px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+            title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet"
+          >
+            <span>🎯</span>
+            <span>GARIS JOB: {effectiveShowJobGuide ? 'ON' : 'OFF'}</span>
           </button>
 
           {/* ALUR PAHAT (TOOLPATH) TOGGLE BUTTON */}

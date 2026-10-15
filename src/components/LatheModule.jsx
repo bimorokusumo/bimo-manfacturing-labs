@@ -15,6 +15,7 @@ const LatheModule = ({ addXP }) => {
   const [showJobsheetModal, setShowJobsheetModal] = useState(false);
   const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
   const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
+  const [showJobGuide, setShowJobGuide] = useState(true);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = latheJobsheets[activeJobsheetIndex] || latheJobsheets[0];
 
@@ -293,7 +294,7 @@ const LatheModule = ({ addXP }) => {
     // Check Mode accuracy
     const isModeCorrect = machineMode === activeJobsheet.targetMode;
 
-    // Check Material cut depth
+    // Check Material cut depth based on activeJobsheet.targetSteps
     let minDiameter = rawDiameter;
     let cutSegmentsCount = 0;
     for (let i = 0; i < profile.length; i++) {
@@ -305,16 +306,45 @@ const LatheModule = ({ addXP }) => {
       }
     }
 
-    const targetDiameter = rawDiameter - 4.0; // 2mm depth of cut = 4mm diameter reduction
-    const diameterDiff = Math.abs(minDiameter - targetDiameter);
+    // Step-by-step target accuracy check
+    let allStepsMet = true;
+    let partialStepsMet = true;
+    let targetSummary = '';
 
-    const minRequiredCutSegments = Math.max(4, Math.round(profile.length * 0.15));
+    if (activeJobsheet.targetSteps && activeJobsheet.targetSteps.length > 0) {
+      const activeSteps = activeJobsheet.targetSteps.filter(s => !s.label.includes('Cekam') && !s.label.includes('Pencekaman'));
+      targetSummary = activeSteps.map(s => s.label).join(' • ');
+
+      for (const st of activeSteps) {
+        const i1 = Math.min(profile.length - 1, Math.max(0, Math.round((-st.zStart / rawLength) * (profile.length - 1))));
+        const i2 = Math.min(profile.length - 1, Math.max(0, Math.round((-st.zEnd / rawLength) * (profile.length - 1))));
+        const sMin = Math.min(i1, i2);
+        const sMax = Math.max(i1, i2);
+        const slice = profile.slice(sMin, sMax + 1);
+        const targetD = st.isTaper ? st.endDia : st.diameter;
+        const actualMinD = slice.length > 0 ? Math.min(...slice) : rawDiameter;
+        if (Math.abs(actualMinD - targetD) > 1.2) {
+          allStepsMet = false;
+        }
+        if (Math.abs(actualMinD - targetD) > 2.8) {
+          partialStepsMet = false;
+        }
+      }
+    } else {
+      const targetDiameter = rawDiameter - 4.0;
+      allStepsMet = Math.abs(minDiameter - targetDiameter) <= 1.0;
+      partialStepsMet = Math.abs(minDiameter - targetDiameter) <= 2.5;
+    }
+
+    const minRequiredCutSegments = Math.max(4, Math.round(profile.length * 0.12));
     let calculatedScore = 0;
     if (isModeCorrect && isRpmCorrect && cutSegmentsCount >= minRequiredCutSegments) {
-      if (diameterDiff <= 1.0) {
+      if (allStepsMet) {
         calculatedScore = 100;
-      } else {
+      } else if (partialStepsMet) {
         calculatedScore = 85;
+      } else {
+        calculatedScore = 70;
       }
       sound.playSuccess();
       if (addXP) addXP(activeJobsheet.xpReward);
@@ -329,7 +359,7 @@ const LatheModule = ({ addXP }) => {
     setInspectionData({
       rawDiameter: rawDiameter.toFixed(2),
       finalDiameter: minDiameter.toFixed(2),
-      targetDiameter: targetDiameter.toFixed(2),
+      targetDiameter: targetSummary || `${(rawDiameter - 4).toFixed(2)} mm`,
       rpmUsed: rpm,
       targetRpm: `${activeJobsheet.targetRpmRange[0]} - ${activeJobsheet.targetRpmRange[1]} RPM`,
       cutSegments: cutSegmentsCount
@@ -564,6 +594,9 @@ const LatheModule = ({ addXP }) => {
                       showTailstock={true}
                       viewMode={viewMode}
                       onToggleViewMode={setViewMode}
+                      activeJobsheet={activeJobsheet}
+                      showJobGuide={showJobGuide}
+                      onToggleJobGuide={() => setShowJobGuide(v => !v)}
                       hideInternalToggle={true}
                     />
 
@@ -643,6 +676,22 @@ const LatheModule = ({ addXP }) => {
                           title="Beralih antara Mode 3D dan Mode 2D Teknik"
                         >
                           <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                        </button>
+
+                        {/* GARIS TARGET JOB TOGGLE (MOBILE) */}
+                        <button
+                          onClick={() => { sound.playClick(); setShowJobGuide(v => !v); }}
+                          style={{
+                            background: showJobGuide ? 'rgba(16, 185, 129, 0.35)' : 'rgba(255, 255, 255, 0.12)',
+                            border: showJobGuide ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.25)',
+                            color: showJobGuide ? '#34d399' : '#cbd5e1',
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '2px'
+                          }}
+                          title="Tampilkan / Sembunyikan Garis Target Job"
+                        >
+                          <span>🎯</span>
+                          <span>JOB</span>
                         </button>
 
                         <button
@@ -1054,6 +1103,9 @@ const LatheModule = ({ addXP }) => {
           showTailstock={true}
           viewMode={viewMode}
           onToggleViewMode={setViewMode}
+          activeJobsheet={activeJobsheet}
+          showJobGuide={showJobGuide}
+          onToggleJobGuide={() => setShowJobGuide(v => !v)}
         />
       </div>
 

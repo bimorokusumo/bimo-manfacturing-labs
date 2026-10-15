@@ -18,11 +18,18 @@ const Milling3D = ({
   gridY = 30,
   viewMode: controlledViewMode = null,
   onToggleViewMode = null,
-  hideInternalToggle = false
+  hideInternalToggle = false,
+  activeJobsheet = null,
+  showJobGuide: controlledShowJobGuide = null,
+  onToggleJobGuide = null
 }) => {
   const [internalViewMode, setInternalViewMode] = useState(() => (isWebGLSupported() ? '3d' : '2d'));
   const viewMode = controlledViewMode !== null && controlledViewMode !== undefined ? controlledViewMode : internalViewMode;
   const setViewMode = onToggleViewMode || setInternalViewMode;
+
+  const [localShowJobGuide, setLocalShowJobGuide] = useState(true);
+  const effectiveShowJobGuide = controlledShowJobGuide !== null && controlledShowJobGuide !== undefined ? controlledShowJobGuide : localShowJobGuide;
+  const toggleJobGuideHandler = onToggleJobGuide || (() => setLocalShowJobGuide(v => !v));
 
   const render2DEngine = (retryFn = null) => (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -71,6 +78,8 @@ const Milling3D = ({
         rpm={rpm}
         gridX={gridX}
         gridY={gridY}
+        activeJobsheet={activeJobsheet}
+        showJobGuide={effectiveShowJobGuide}
       />
     </div>
   );
@@ -107,9 +116,9 @@ const Milling3D = ({
         render2DEngine()
       )}
 
-      {/* VIEW TOGGLE BUTTON (TOP LEFT - Shown when not hidden by parent) */}
+      {/* VIEW & JOB GUIDE TOGGLE BUTTONS (TOP LEFT - Shown when not hidden by parent) */}
       {!hideInternalToggle && (
-        <div style={{ position: 'absolute', top: '14px', left: '16px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: '14px', left: '16px', display: 'flex', gap: '8px', zIndex: 10 }}>
           <button
             onClick={() => setViewMode(v => (v === '3d' ? '2d' : '3d'))}
             style={{
@@ -129,6 +138,30 @@ const Milling3D = ({
             }}
           >
             {viewMode === '3d' ? '📐 TAMPILAN 2D PRESISI (TOP-DOWN)' : '🎮 TAMPILAN 3D STUDIO'}
+          </button>
+
+          {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE BUTTON */}
+          <button
+            onClick={toggleJobGuideHandler}
+            style={{
+              padding: '6px 12px',
+              background: effectiveShowJobGuide ? 'rgba(16, 185, 129, 0.22)' : 'rgba(15, 23, 42, 0.85)',
+              border: `1px solid ${effectiveShowJobGuide ? '#10b981' : 'rgba(148, 163, 184, 0.4)'}`,
+              color: effectiveShowJobGuide ? '#34d399' : '#94a3b8',
+              borderRadius: '6px',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+            title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
+          >
+            <span>🎯</span>
+            <span>GARIS JOB: {effectiveShowJobGuide ? 'ON' : 'OFF'}</span>
           </button>
         </div>
       )}

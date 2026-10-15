@@ -560,8 +560,8 @@ html, body {
 }
 
 /* ==========================================================================
-   MOBILE LANDSCAPE (HP MODE LANDSCAPE) RESPONSIVE SYSTEM
-   Target: Smartphone in landscape orientation (Viewport height <= 550px)
+   MOBILE & TABLET RESPONSIVE SYSTEM (PORTRAIT & LANDSCAPE)
+   Target: Smartphone & Tablet (Width <= 1024px) or Small Screen Height <= 600px
    ========================================================================== */
 
 /* Drawer backdrop default (hidden on desktop) */
@@ -573,8 +573,8 @@ html, body {
   display: none;
 }
 
-@media screen and (orientation: landscape) and (max-height: 600px),
-       screen and (max-width: 1024px) and (max-height: 600px) {
+@media screen and (max-width: 1024px),
+       screen and (orientation: landscape) and (max-height: 600px) {
 
   /* 1. Global Shell & Layout */
   html, body {
@@ -599,26 +599,55 @@ html, body {
   }
 
   .app-header {
-    height: 42px !important;
+    height: 48px !important;
     padding: 0 10px !important;
     background: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .app-header-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
   }
 
   .app-header-title {
     font-size: 0.88rem !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 160px !important;
   }
 
   .app-header-subtitle {
     display: none !important;
   }
 
+  .app-header-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    flex-shrink: 0 !important;
+  }
+
   .app-header-avatar {
-    width: 26px !important;
-    height: 26px !important;
+    width: 28px !important;
+    height: 28px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .app-header-user-profile {
+    padding: 2px 4px !important;
   }
 
   .app-header-user-text {
-    font-size: 0.7rem !important;
+    font-size: 0.72rem !important;
     max-width: 90px !important;
   }
 
@@ -627,9 +656,10 @@ html, body {
   }
 
   .app-header-spreadsheet-btn {
-    padding: 5px 10px !important;
+    padding: 5px 8px !important;
     font-size: 0.72rem !important;
     display: inline-flex !important;
+    flex-shrink: 0 !important;
   }
 
   .app-header-spreadsheet-text {
@@ -637,22 +667,44 @@ html, body {
     font-size: 0.72rem !important;
   }
 
+  .app-header-sheets-link {
+    padding: 5px 8px !important;
+    font-size: 0.72rem !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+  }
+
+  .app-header-sheets-text {
+    display: inline !important;
+  }
+
   .app-header-extra-tools {
     display: none !important;
   }
 
   .app-header-fullscreen-btn {
-    padding: 4px 8px !important;
-    font-size: 0.68rem !important;
+    padding: 5px 8px !important;
+    font-size: 0.7rem !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
   }
 
   .app-header-fullscreen-text {
     display: none !important;
   }
 
+  .app-header-beranda-btn,
   .app-header-logout-btn {
-    padding: 4px 8px !important;
+    padding: 5px 8px !important;
     font-size: 0.72rem !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+  }
+
+  .app-header-login-btn {
+    padding: 6px 10px !important;
+    font-size: 0.74rem !important;
+    flex-shrink: 0 !important;
   }
 
   .app-main-body {
@@ -705,10 +757,27 @@ html, body {
     padding: 8px 12px !important;
   }
 
-  /* 3. Dashboard in Landscape */
-  .dashboard-stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 8px !important;
+  /* 3. Dashboard in Mobile / Tablet */
+  @media (orientation: landscape) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 8px !important;
+    }
+    .dashboard-labs-grid {
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 10px !important;
+    }
+  }
+
+  @media (orientation: portrait) and (max-width: 768px) {
+    .dashboard-stats-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .dashboard-labs-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
   }
 
   .dashboard-stats-grid .dashboard-card {
@@ -723,11 +792,6 @@ html, body {
 
   .dashboard-stats-grid .stat-label {
     font-size: 0.62rem !important;
-  }
-
-  .dashboard-labs-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 10px !important;
   }
 
   .dashboard-lab-card {
@@ -1134,8 +1198,66 @@ html.a11y-reduced-motion *::after {
 }
 
 .app-header-spreadsheet-text {
-  display: inline !important;
+  display: inline;
   white-space: nowrap;
+}
+
+/* Mobile Portrait Narrow Screen Fine-tuning (Width <= 680px) */
+@media screen and (max-width: 680px) {
+  .app-header {
+    height: 48px !important;
+    padding: 0 8px !important;
+  }
+
+  .app-header-left {
+    gap: 6px !important;
+  }
+
+  .app-header-title {
+    font-size: 0.84rem !important;
+    max-width: 140px !important;
+  }
+
+  .app-header-user-details {
+    display: none !important;
+  }
+
+  .app-header-spreadsheet-btn,
+  .app-header-sheets-link,
+  .app-header-fullscreen-btn,
+  .app-header-beranda-btn,
+  .app-header-logout-btn {
+    padding: 4px 6px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .app-header-spreadsheet-text,
+  .app-header-sheets-text {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .app-header {
+    padding: 0 5px !important;
+  }
+
+  .app-header-title {
+    font-size: 0.78rem !important;
+    max-width: 110px !important;
+  }
+
+  .app-header-right {
+    gap: 3px !important;
+  }
+
+  .app-header-spreadsheet-btn,
+  .app-header-sheets-link,
+  .app-header-fullscreen-btn,
+  .app-header-beranda-btn,
+  .app-header-logout-btn {
+    padding: 4px 5px !important;
+  }
 }
 
 /* ==========================================================================

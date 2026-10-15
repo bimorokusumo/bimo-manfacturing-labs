@@ -28,14 +28,23 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
       top: 0,
       zIndex: 90
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <button onClick={toggleSidebar} style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+      <div className="app-header-left" style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flexShrink: 1 }}>
+        <button
+          onClick={toggleSidebar}
+          className="app-header-hamburger-btn"
+          style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px', flexShrink: 0 }}
+          title="Buka / Tutup Menu Navigasi"
+        >
           <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
-        <div>
-          <h2 className="app-header-title" style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="app-header-title-wrapper" style={{ minWidth: 0 }}>
+          <h2
+            className="app-header-title"
+            title={isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}
+            style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
             Halo, {isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}! <span role="img" aria-label="wave">{isTeacher ? '👨‍🏫' : '👋'}</span>
           </h2>
           <p className="app-header-subtitle" style={{ color: isTeacher ? '#d97706' : 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px', fontWeight: isTeacher ? 700 : 400 }}>
@@ -44,9 +53,9 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {/* Extra tools (Inklusi & Narator) - disembunyikan di mode HP Landscape agar simpel */}
-        <div className="app-header-extra-tools" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="app-header-right" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+        {/* Extra tools (Inklusi & Narator) - disembunyikan di mode HP Landscape & Portrait sempit */}
+        <div className="app-header-extra-tools" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {/* Button Aksesibilitas & Inklusi */}
           <button
             onClick={() => setIsModalOpen(true)}
@@ -94,7 +103,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
           </button>
         </div>
 
-        {/* Fullscreen Button for Mobile Landscape */}
+        {/* Fullscreen Button for Mobile Landscape & Portrait */}
         <button
           className="app-header-fullscreen-btn"
           onClick={toggleFullscreen}
@@ -112,7 +121,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             fontWeight: 800,
             transition: 'all 0.15s'
           }}
-          title="Mode Layar Penuh (Landscape)"
+          title="Mode Layar Penuh (Fullscreen)"
         >
           <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -122,7 +131,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
 
         {/* TOMBOL REKAP SPREADSHEET DI HEADER - HANYA UNTUK GURU */}
         {isTeacher && (
-          <div style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)', flexShrink: 0 }}>
+          <div className="app-header-teacher-rekap" style={{ display: 'inline-flex', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 10px rgba(16, 185, 129, 0.4)', flexShrink: 0 }}>
             {onOpenGradebook && (
               <button
                 className="app-header-spreadsheet-btn"
@@ -148,6 +157,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
 
             {/* LINK LANGSUNG KE GOOGLE SPREADSHEET SMKN 2 DEPOK */}
             <a
+              className="app-header-sheets-link"
               href="https://docs.google.com/spreadsheets/d/1-YH8PCzHIUv1B8I1dCj_XmcQ2c-jyAavPQfWGHYCUT4/edit?hl=id&gid=1804603706#gid=1804603706"
               target="_blank"
               rel="noopener noreferrer"
@@ -166,20 +176,21 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
               title="Buka Langsung Google Spreadsheet SMKN 2 Depok di Tab Baru"
             >
               <span>↗️</span>
-              <span>Sheets</span>
+              <span className="app-header-class-text app-header-sheets-text">Sheets</span>
             </a>
           </div>
         )}
 
         {/* IDENTITAS SISWA / LOGIN & LOGOUT ACTIONS */}
         {isLoggedIn ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="app-header-user-section" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div
+              className="app-header-user-profile"
               onClick={() => openLoginModal()}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
+                gap: '8px',
                 cursor: 'pointer',
                 padding: '4px 8px',
                 borderRadius: '10px',
@@ -190,7 +201,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
               onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
               title={isTeacher ? "Akun Guru Terverifikasi (Klik untuk Ganti/Edit)" : "Klik untuk Edit Identitas / Ganti Siswa"}
             >
-              <div style={{ textAlign: 'right' }}>
+              <div className="app-header-user-details" style={{ textAlign: 'right' }}>
                 <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: isTeacher ? '#d97706' : 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {isTeacher ? `⭐ ${student.name}` : student.name}
                 </div>
@@ -198,13 +209,14 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
                   {isTeacher ? 'Pengajar' : `Absen: ${student.studentNumber}`}
                 </div>
               </div>
-              <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }}>
+              <div className="app-header-avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#334155', overflow: 'hidden', border: isTeacher ? '2.5px solid #f59e0b' : '2px solid #0284c7', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)', flexShrink: 0 }}>
                 <img src={getInitialsAvatar(student?.name, isTeacher)} alt="Avatar" style={{ width: '100%', height: '100%', display: 'block' }} />
               </div>
             </div>
 
             {/* TOMBOL BERANDA / LANDING PAGE */}
             <button
+              className="app-header-beranda-btn"
               onClick={() => {
                 if (typeof onGoToLanding === 'function') onGoToLanding();
               }}

@@ -76,10 +76,10 @@ const MobileRotatePrompt = () => {
         </div>
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.3px' }}>
-            MODE HP LANDSCAPE DISIAPKAN
+            DUKUNGAN HP PORTRAIT &amp; LANDSCAPE 📱
           </div>
           <div style={{ fontSize: '0.74rem', color: '#e2e8f0', marginTop: '2px', lineHeight: 1.3 }}>
-            Putar HP Anda ke posisi <strong>Mendatar (Landscape)</strong> untuk pengalaman simulator yang luas &amp; UI simpel!
+            Tampilan otomatis responsif: gunakan mode <strong>Tegak (Portrait)</strong> atau miringkan ke <strong>Mendatar (Landscape)</strong>!
           </div>
         </div>
       </div>

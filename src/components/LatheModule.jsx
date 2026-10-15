@@ -11,8 +11,20 @@ const LatheModule = ({ addXP }) => {
   const [activeLatheTab, setActiveLatheTab] = useState('pemotongan'); // 'rumus', 'test', 'pemotongan'
   const [cuttingSubMode, setCuttingSubMode] = useState('simulator'); // 'video', 'simulator'
   const [showCalculator, setShowCalculator] = useState(false);
+  const [showJobsheetModal, setShowJobsheetModal] = useState(false);
+  const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = latheJobsheets[activeJobsheetIndex] || latheJobsheets[0];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined' && window.innerWidth <= 850) {
+        setIsMobileMode(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const rawDiameter = activeJobsheet.diameter || 50; // mm
   const rawLength = activeJobsheet.length || 100; // mm
@@ -500,92 +512,438 @@ const LatheModule = ({ addXP }) => {
           {/* SUB-VIEW 2: SIMULATOR 3D PRAKTIK */}
           {cuttingSubMode === 'simulator' && (
             <>
-              {/* HEADER BAR & JOBSHEET SELECTOR */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          background: 'var(--bg-card)',
-          padding: '14px 20px',
-          borderRadius: '12px',
-          border: '1px solid var(--border-light)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              background: 'rgba(2, 132, 199, 0.15)',
-              border: '1px solid #0284c7',
-              borderRadius: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '1.2rem'
-            }}
-          >
-            ⚙️
-          </div>
-          <div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              SIMULATOR MESIN BUBUT KONVENSIONAL
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Tugas Aktif: <strong style={{ color: '#0284c7' }}>{activeJobsheet.title}</strong> ({activeJobsheet.material})
-            </div>
-          </div>
-        </div>
+              {isMobileMode ? (
+                /* ==============================================================
+                   MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
+                   ============================================================== */
+                <div className="mobile-game-cockpit">
+                  {/* TOP 3D VIEWPORT WITH FLOATING HUD */}
+                  <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#0b1120' }}>
+                    <Lathe3D
+                      isRunning={isSpindleRunning}
+                      toolPosition={toolPosition}
+                      profile={profile}
+                      machineMode={machineMode}
+                      rpm={rpm}
+                      isCutting={isCutting}
+                      coolant={coolant}
+                      showTailstock={true}
+                    />
 
-        {/* JOBSHEET TABS & FORMULA CALCULATOR BUTTON */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <button
-            onClick={() => { sound.playClick(); setShowCalculator(true); }}
-            style={{
-              padding: '8px 14px',
-              borderRadius: '8px',
-              fontSize: '0.8rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-              color: '#ffffff',
-              border: '1px solid #38bdf8',
-              boxShadow: '0 0 12px rgba(56, 189, 248, 0.35)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.2s'
-            }}
-            title="Buka Bank Rumus & Kalkulator Interaktif Bubut"
-          >
-            <span>🧮</span>
-            <span>RUMUS & KALKULATOR BUBUT</span>
-          </button>
+                    {/* FLOATING TOP GLASS HUD */}
+                    <div style={{
+                      position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                      padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+                    }}>
+                      {/* DRO READOUTS */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {/* DRO X */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', background: '#040914', padding: '3px 6px', borderRadius: '6px', border: '1px solid #1e293b' }}>
+                          <span style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
+                          <span style={{ fontSize: '0.82rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>Ø{droDiameter}</span>
+                          <button
+                            onClick={() => {
+                              sound.playClick();
+                              toolPosRef.current.d = rawDiameter;
+                              setToolPosition({ ...toolPosRef.current });
+                              applyInstantCut(toolPosRef.current.z, rawDiameter);
+                            }}
+                            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
+                            title="Sentuh Diameter Awal"
+                          >
+                            0
+                          </button>
+                        </div>
 
-          {latheJobsheets.map((sheet, idx) => (
-            <button
-              key={sheet.id}
-              onClick={() => setActiveJobsheetIndex(idx)}
-              style={{
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                background: activeJobsheetIndex === idx ? '#0284c7' : 'rgba(255,255,255,0.05)',
-                color: activeJobsheetIndex === idx ? '#ffffff' : 'var(--text-muted)',
-                border: activeJobsheetIndex === idx ? '1px solid #0284c7' : '1px solid var(--border-light)',
-                transition: 'all 0.2s'
-              }}
-            >
-              {idx + 1}. {sheet.title.split('(')[0]}
-            </button>
-          ))}
-        </div>
-      </div>
+                        {/* DRO Z */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', background: '#040914', padding: '3px 6px', borderRadius: '6px', border: '1px solid #1e293b' }}>
+                          <span style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
+                          <span style={{ fontSize: '0.82rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droZTravel}</span>
+                          <button
+                            onClick={() => {
+                              sound.playClick();
+                              toolPosRef.current.z = 0;
+                              setToolPosition({ ...toolPosRef.current });
+                              applyInstantCut(0, toolPosRef.current.d);
+                            }}
+                            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.55rem', padding: '1px 4px', borderRadius: '3px', cursor: 'pointer', fontWeight: 800 }}
+                            title="Zero Z"
+                          >
+                            0
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* SPINDLE STATUS & RPM */}
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: '4px',
+                        background: isSpindleRunning ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                        border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
+                        padding: '3px 8px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 800,
+                        color: isSpindleRunning ? '#10b981' : '#fca5a5'
+                      }}>
+                        <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                        <span>{rpm} RPM</span>
+                        {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
+                      </div>
+
+                      {/* QUICK MENU BUTTONS */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setShowJobsheetModal(true); }}
+                          style={{
+                            background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
+                            padding: '3px 7px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '3px'
+                          }}
+                          title="Ganti Jobsheet / Tugas"
+                        >
+                          <span>📋</span>
+                          <span>Tugas {activeJobsheetIndex + 1}</span>
+                        </button>
+
+                        <button
+                          onClick={() => { sound.playClick(); setShowCalculator(true); }}
+                          style={{
+                            background: 'rgba(16, 185, 129, 0.25)', border: '1px solid #10b981', color: '#10b981',
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer'
+                          }}
+                          title="Buka Kalkulator Rumus"
+                        >
+                          🧮
+                        </button>
+
+                        <button
+                          onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
+                            padding: '3px 6px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 700, cursor: 'pointer'
+                          }}
+                          title="Beralih ke Tampilan Desktop Penuh"
+                        >
+                          🖥️
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BOTTOM DOCKED VIRTUAL GAMEPAD (UNDER THUMBS) */}
+                  <div style={{
+                    height: '200px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                    padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 120px', gap: '6px',
+                    alignItems: 'center', boxSizing: 'border-box'
+                  }}>
+                    {/* LEFT THUMB: CROSS D-PAD */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none' }}>
+                      <div />
+                      {/* ▲ X+ (Mundur Luar) */}
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldJog('x', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldJog('x', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                        title="X+ (Mundur Luar)"
+                      >
+                        ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>X+</span>
+                      </button>
+                      <div />
+
+                      {/* ◀ Z- (Sayat Kiri ke Chuck) */}
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldJog('z', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldJog('z', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(16, 185, 129, 0.25)', border: '1px solid #10b981', color: '#10b981', fontSize: '0.68rem' }}
+                        title="Z- (Sayat Kiri)"
+                      >
+                        ◀<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z-</span>
+                      </button>
+
+                      {/* CENTER: AUTO FEED */}
+                      <button
+                        className="game-dpad-btn"
+                        onClick={() => {
+                          if (!isSpindleRunning) {
+                            sound.playError();
+                            alert('Nyalakan spindel dulu!');
+                            return;
+                          }
+                          sound.playClick();
+                          setAutoFeed(!autoFeed);
+                        }}
+                        style={{
+                          background: autoFeed ? '#10b981' : 'rgba(255,255,255,0.08)',
+                          border: autoFeed ? 'none' : '1px solid rgba(255,255,255,0.15)',
+                          color: autoFeed ? '#000' : '#94a3b8', fontSize: '0.58rem'
+                        }}
+                      >
+                        AUTO
+                      </button>
+
+                      {/* ▶ Z+ (Mundur Kanan) */}
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldJog('z', 1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldJog('z', 1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                        title="Z+ (Mundur Kanan)"
+                      >
+                        ▶<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+</span>
+                      </button>
+
+                      <div />
+                      {/* ▼ X- (Makan Masuk Diameter) */}
+                      <button
+                        className="game-dpad-btn"
+                        onMouseDown={() => startHoldJog('x', -1)}
+                        onMouseUp={stopHoldJog}
+                        onMouseLeave={stopHoldJog}
+                        onTouchStart={() => startHoldJog('x', -1)}
+                        onTouchEnd={stopHoldJog}
+                        style={{ background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem' }}
+                        title="X- (Makan Potong Ø)"
+                      >
+                        ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>X-</span>
+                      </button>
+                      <div />
+                    </div>
+
+                    {/* CENTER COLUMN: STEP & MODIFIERS */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center' }}>
+                      {/* Step Selector */}
+                      <div style={{ display: 'flex', gap: '3px' }}>
+                        {[0.02, 0.05, 0.10, 0.50].map((v) => (
+                          <button
+                            key={v}
+                            onClick={() => { sound.playClick(); setStepSize(v); }}
+                            style={{
+                              flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                              background: stepSize === v ? '#10b981' : 'rgba(255,255,255,0.06)',
+                              color: stepSize === v ? '#000' : 'var(--text-muted)',
+                              border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                            }}
+                          >
+                            {v}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Rapid & Coolant */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
+                          style={{
+                            flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                            background: rapidMode ? '#f59e0b' : 'rgba(255,255,255,0.06)',
+                            color: rapidMode ? '#000' : 'var(--text-muted)',
+                            border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                          }}
+                        >
+                          ⚡ RAPID
+                        </button>
+                        <button
+                          onClick={() => { sound.playClick(); setCoolant(!coolant); }}
+                          style={{
+                            flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                            background: coolant ? 'rgba(14, 165, 233, 0.3)' : 'rgba(255,255,255,0.06)',
+                            color: coolant ? '#38bdf8' : 'var(--text-muted)',
+                            border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.1)'
+                          }}
+                        >
+                          💦 {coolant ? 'ON' : 'OFF'}
+                        </button>
+                      </div>
+
+                      {/* Evaluate & Reset Buttons */}
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={handleEvaluate}
+                          style={{
+                            flex: 1.3, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 900, cursor: 'pointer',
+                            background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', border: 'none',
+                            boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+                          }}
+                        >
+                          🏆 CEK HASIL
+                        </button>
+                        <button
+                          onClick={handleReset}
+                          style={{
+                            flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
+                            background: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.15)'
+                          }}
+                        >
+                          🔄 RESET
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* RIGHT THUMB: POWER SPINDLE & RPM */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center' }}>
+                      {/* Big Spindle Action Button */}
+                      <button
+                        className="game-action-btn"
+                        onClick={toggleSpindle}
+                        style={{
+                          height: '62px', width: '100%',
+                          background: isSpindleRunning
+                            ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                            : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: '#ffffff', border: 'none',
+                          boxShadow: isSpindleRunning ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 0 16px rgba(16, 185, 129, 0.5)',
+                          fontSize: '0.78rem'
+                        }}
+                      >
+                        <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                        <span>{isSpindleRunning ? 'STOP' : 'START'}</span>
+                      </button>
+
+                      {/* RPM Stepper */}
+                      <div style={{ display: 'flex', alignItems: 'center', background: '#040914', borderRadius: '6px', border: '1px solid #1e293b', overflow: 'hidden' }}>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.max(150, prev - 150)); }}
+                          style={{ width: '28px', height: '28px', background: 'transparent', border: 'none', color: '#38bdf8', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                        >
+                          -
+                        </button>
+                        <div style={{ flex: 1, textAlign: 'center', fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8' }}>
+                          {rpm}
+                        </div>
+                        <button
+                          onClick={() => { sound.playClick(); setRpm(prev => Math.min(1500, prev + 150)); }}
+                          style={{ width: '28px', height: '28px', background: 'transparent', border: 'none', color: '#38bdf8', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* ==============================================================
+                   DESKTOP MULTI-PANEL VIEWPORT & PENDANT STATION
+                   ============================================================== */
+                <>
+                  {/* HEADER BAR & JOBSHEET SELECTOR */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '12px',
+                      background: 'var(--bg-card)',
+                      padding: '14px 20px',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-light)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          background: 'rgba(2, 132, 199, 0.15)',
+                          border: '1px solid #0284c7',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          fontSize: '1.2rem'
+                        }}
+                      >
+                        ⚙️
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                          SIMULATOR MESIN BUBUT KONVENSIONAL
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                          Tugas Aktif: <strong style={{ color: '#0284c7' }}>{activeJobsheet.title}</strong> ({activeJobsheet.material})
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* JOBSHEET TABS & FORMULA CALCULATOR BUTTON */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <button
+                        onClick={() => { sound.playClick(); setIsMobileMode(true); }}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          fontSize: '0.8rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: '#ffffff',
+                          border: '1px solid #34d399',
+                          boxShadow: '0 0 10px rgba(16, 185, 129, 0.35)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                        title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
+                      >
+                        <span>🎮</span>
+                        <span>MODE GAME HP</span>
+                      </button>
+
+                      <button
+                        onClick={() => { sound.playClick(); setShowCalculator(true); }}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          fontSize: '0.8rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                          color: '#ffffff',
+                          border: '1px solid #38bdf8',
+                          boxShadow: '0 0 12px rgba(56, 189, 248, 0.35)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          transition: 'all 0.2s'
+                        }}
+                        title="Buka Bank Rumus & Kalkulator Interaktif Bubut"
+                      >
+                        <span>🧮</span>
+                        <span>RUMUS & KALKULATOR BUBUT</span>
+                      </button>
+
+                      {latheJobsheets.map((sheet, idx) => (
+                        <button
+                          key={sheet.id}
+                          onClick={() => setActiveJobsheetIndex(idx)}
+                          style={{
+                            padding: '8px 14px',
+                            borderRadius: '8px',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            background: activeJobsheetIndex === idx ? '#0284c7' : 'rgba(255,255,255,0.05)',
+                            color: activeJobsheetIndex === idx ? '#ffffff' : 'var(--text-muted)',
+                            border: activeJobsheetIndex === idx ? '1px solid #0284c7' : '1px solid var(--border-light)',
+                            transition: 'all 0.2s'
+                          }}
+                        >
+                          {idx + 1}. {sheet.title.split('(')[0]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
       {/* MAIN 3D SIMULATOR VIEWPORT - FULLY UNOBSTRUCTED & RESPONSIVE */}
       <div
@@ -1218,11 +1576,143 @@ const LatheModule = ({ addXP }) => {
           </div>
         </div>
       )}
-            </>
-          )}
+    </>
+  )}
 
+  {/* MOBILE EVALUATION RESULT MODAL (IF IN MOBILE GAME MODE) */}
+  {isMobileMode && showResult && inspectionData && (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)', border: `2px solid ${score >= 80 ? '#10b981' : '#ef4444'}`,
+        borderRadius: '16px', padding: '20px', maxWidth: '420px', width: '100%',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', gap: '14px'
+      }}>
+        <div className="flex-between">
+          <span style={{
+            background: score >= 80 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+            color: score >= 80 ? '#10b981' : '#ef4444',
+            padding: '3px 10px', borderRadius: '20px', fontWeight: 800, fontSize: '0.78rem'
+          }}>
+            {score >= 80 ? '✓ TUGAS BUBUT SUKSES' : '⚠ PERLU PERBAIKAN'}
+          </span>
+          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: score >= 80 ? '#10b981' : '#ef4444' }}>
+            {score}/100
+          </div>
         </div>
-      )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Ø AWAL</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>Ø {inspectionData.rawDiameter} mm</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Ø MINIMAL TERKECIL</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#38bdf8' }}>Ø {inspectionData.finalDiameter} mm</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>RPM DIGUNAKAN</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#10b981' }}>{inspectionData.rpmUsed} RPM</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>XP DIPEROLEH</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#f59e0b' }}>
+              +{score >= 80 ? activeJobsheet.xpReward : Math.round(activeJobsheet.xpReward * 0.4)} XP
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowResult(false)}
+          style={{
+            width: '100%', padding: '10px', borderRadius: '8px',
+            background: '#0284c7', color: '#fff', border: 'none', fontWeight: 800, cursor: 'pointer'
+          }}
+        >
+          Lanjutkan Praktik
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* JOBSHEET SELECTION MODAL (MOBILE GAME MODE) */}
+  {showJobsheetModal && (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)', border: '1px solid var(--border-light)',
+        borderRadius: '16px', padding: '20px', maxWidth: '480px', width: '100%',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.6)', maxHeight: '90vh', overflowY: 'auto'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.3rem' }}>📋</span>
+            <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              PILIH TUGAS / JOBSHEET BUBUT
+            </span>
+          </div>
+          <button
+            onClick={() => setShowJobsheetModal(false)}
+            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff', fontSize: '1.1rem', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer' }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {latheJobsheets.map((sheet, idx) => (
+            <div
+              key={sheet.id}
+              onClick={() => {
+                sound.playClick();
+                setActiveJobsheetIndex(idx);
+                setShowJobsheetModal(false);
+              }}
+              style={{
+                padding: '12px 14px', borderRadius: '10px', cursor: 'pointer',
+                background: activeJobsheetIndex === idx ? 'rgba(2, 132, 199, 0.18)' : 'rgba(255,255,255,0.03)',
+                border: activeJobsheetIndex === idx ? '2px solid #0284c7' : '1px solid var(--border-light)',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              }}
+            >
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '0.88rem', color: activeJobsheetIndex === idx ? '#38bdf8' : 'var(--text-main)' }}>
+                  {idx + 1}. {sheet.title}
+                </div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Material: {sheet.material} • Ø Awal: {sheet.diameter}mm • Target: {sheet.desc}
+                </div>
+              </div>
+              {activeJobsheetIndex === idx && (
+                <span style={{ color: '#10b981', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF ✓</span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setShowJobsheetModal(false)}
+          style={{
+            width: '100%', marginTop: '16px', padding: '10px', borderRadius: '8px',
+            background: '#0284c7', color: '#fff', border: 'none', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer'
+          }}
+        >
+          Tutup & Lanjutkan Praktik
+        </button>
+      </div>
+    </div>
+  )}
+</>
+)}
+
+</div>
+)}
 
       {/* FORMULA & CALCULATOR MODAL */}
       <LatheFormulaCalculatorModal

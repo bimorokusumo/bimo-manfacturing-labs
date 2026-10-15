@@ -9,8 +9,20 @@ import { millingJobsheets } from '../data/millingJobsheets';
 const MillingModule = ({ addXP }) => {
   const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'test' | 'tools'
   const [isPrepared, setIsPrepared] = useState(true);
+  const [showJobsheetModal, setShowJobsheetModal] = useState(false);
+  const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
   const [activeJobsheetIndex, setActiveJobsheetIndex] = useState(0);
   const activeJobsheet = millingJobsheets[activeJobsheetIndex] || millingJobsheets[0];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined' && window.innerWidth <= 850) {
+        setIsMobileMode(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Workpiece & Tool Dimensions
   const [workpieceSize, setWorkpieceSize] = useState(activeJobsheet.dimensions || { w: 100, l: 50, t: 30 });
@@ -423,107 +435,486 @@ const MillingModule = ({ addXP }) => {
         <>
           {!isPrepared && <PreparationModal machineName="MESIN FRAIS" onComplete={() => setIsPrepared(true)} />}
 
-      {/* HEADER BAR & JOBSHEET SELECTOR */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          background: 'var(--bg-card)',
-          padding: '14px 20px',
-          borderRadius: '12px',
-          border: '1px solid var(--border-light)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div
-            style={{
-              width: '40px',
-              height: '40px',
-              background: 'rgba(245, 158, 11, 0.15)',
-              border: '1px solid #f59e0b',
-              borderRadius: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: '1.2rem'
-            }}
-          >
-            🔩
-          </div>
-          <div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              SIMULATOR MESIN FRAIS UNIVERSAL / VERTIKAL
-            </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Tugas Aktif: <strong style={{ color: '#f59e0b' }}>{activeJobsheet.title}</strong> ({activeJobsheet.material})
-            </div>
-          </div>
-        </div>
+          {/* SIMULATOR VIEWPORT BRANCH: MOBILE GAME COCKPIT VS DESKTOP MULTI-PANEL */}
+          {isMobileMode ? (
+            /* ==============================================================
+               MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
+               ============================================================== */
+            <div className="mobile-game-cockpit">
+              {/* TOP 3D VIEWPORT WITH FLOATING HUD */}
+              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#0b1120' }}>
+                <Milling3D
+                  isRunning={isSpindleRunning}
+                  tablePosition={tablePosition}
+                  spindlePosition={spindlePosition}
+                  heightmap={heightmap}
+                  workpieceSize={workpieceSize}
+                  toolDiameter={toolDiameter}
+                  rpm={rpm}
+                  isCutting={isCutting}
+                  coolant={coolant}
+                  gridX={gridX}
+                  gridY={gridY}
+                />
 
-        {/* JOBSHEET TABS */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {millingJobsheets.map((sheet, idx) => (
-            <button
-              key={sheet.id}
-              onClick={() => setActiveJobsheetIndex(idx)}
-              style={{
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                background: activeJobsheetIndex === idx ? '#f59e0b' : 'rgba(255,255,255,0.05)',
-                color: activeJobsheetIndex === idx ? '#000000' : 'var(--text-muted)',
-                border: activeJobsheetIndex === idx ? '1px solid #f59e0b' : '1px solid var(--border-light)',
-                transition: 'all 0.2s'
-              }}
-            >
-              {idx + 1}. {sheet.title.split('(')[0]}
-            </button>
-          ))}
-            <button
-              onClick={() => { sound.playClick(); setActiveTab('tools'); }}
-              style={{
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-                color: '#ffffff',
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
-              }}
-            >
-              <span>🔪</span> Katalog 8 Pisau Frais Real
-            </button>
-            <button
-              onClick={() => { sound.playClick(); setIsPrepared(false); }}
-              style={{
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                background: 'rgba(16, 185, 129, 0.15)',
-                color: '#10b981',
-                border: '1px solid #10b981',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Buka panduan K3 & SOP"
-            >
-              <span>🛡️</span> SOP & K3
-            </button>
-        </div>
-      </div>
+                {/* FLOATING TOP GLASS HUD */}
+                <div style={{
+                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                  padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+                }}>
+                  {/* DRO READOUTS (X, Y, Z) */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>X:</span>
+                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#10b981' }}>{droX}</span>
+                      <button
+                        onClick={() => { sound.playClick(); tablePosRef.current.x = 0; setTablePosition({ ...tablePosRef.current }); }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                        title="Zero X"
+                      >
+                        0
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Y:</span>
+                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#38bdf8' }}>{droY}</span>
+                      <button
+                        onClick={() => { sound.playClick(); tablePosRef.current.y = 0; setTablePosition({ ...tablePosRef.current }); }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#94a3b8', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer' }}
+                        title="Zero Y"
+                      >
+                        0
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#040914', padding: '2px 5px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                      <span style={{ fontSize: '0.58rem', color: '#94a3b8', fontWeight: 800 }}>Z:</span>
+                      <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: spindlePosition.z <= 0 ? '#f59e0b' : '#10b981' }}>{droZ}</span>
+                      <button
+                        onClick={() => setSpindleDepthPreset(0)}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#f59e0b', fontSize: '0.5rem', padding: '1px 3px', borderRadius: '2px', cursor: 'pointer', fontWeight: 800 }}
+                        title="Zero Z"
+                      >
+                        0
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* SPINDLE STATUS & RPM */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: '4px',
+                    background: isSpindleRunning ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                    border: `1px solid ${isSpindleRunning ? '#10b981' : '#ef4444'}`,
+                    padding: '3px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
+                    color: isSpindleRunning ? '#10b981' : '#fca5a5'
+                  }}>
+                    <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                    <span>{rpm} RPM</span>
+                    {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
+                  </div>
+
+                  {/* QUICK ACTIONS */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setShowJobsheetModal(true); }}
+                      style={{
+                        background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#fbbf24',
+                        padding: '3px 7px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '3px'
+                      }}
+                      title="Ganti Jobsheet Frais"
+                    >
+                      <span>📋</span>
+                      <span>Tugas {activeJobsheetIndex + 1}</span>
+                    </button>
+
+                    <button
+                      onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+                      style={{
+                        background: 'rgba(2, 132, 199, 0.25)', border: '1px solid #0284c7', color: '#38bdf8',
+                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer'
+                      }}
+                      title="Katalog 8 Pisau Frais Real"
+                    >
+                      🔪
+                    </button>
+
+                    <button
+                      onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#fff',
+                        padding: '3px 6px', borderRadius: '6px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer'
+                      }}
+                      title="Beralih ke Tampilan Desktop Penuh"
+                    >
+                      🖥️
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* BOTTOM DOCKED VIRTUAL GAMEPAD */}
+              <div style={{
+                height: '210px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                padding: '6px 8px', display: 'grid', gridTemplateColumns: '120px 1fr 125px', gap: '6px',
+                alignItems: 'center', boxSizing: 'border-box'
+              }}>
+                {/* LEFT THUMB: XY TABLE D-PAD */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 36px)', gridTemplateRows: 'repeat(3, 36px)', gap: '4px', justifySelf: 'center', userSelect: 'none' }}>
+                  <div />
+                  <button
+                    className="game-dpad-btn"
+                    onMouseDown={() => startHoldTableJog('y', 1)}
+                    onMouseUp={stopHoldJog}
+                    onMouseLeave={stopHoldJog}
+                    onTouchStart={() => startHoldTableJog('y', 1)}
+                    onTouchEnd={stopHoldJog}
+                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    title="Meja Mundur (Y+)"
+                  >
+                    ▲<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y+</span>
+                  </button>
+                  <div />
+
+                  <button
+                    className="game-dpad-btn"
+                    onMouseDown={() => startHoldTableJog('x', -1)}
+                    onMouseUp={stopHoldJog}
+                    onMouseLeave={stopHoldJog}
+                    onTouchStart={() => startHoldTableJog('x', -1)}
+                    onTouchEnd={stopHoldJog}
+                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    title="Meja Kiri (X-)"
+                  >
+                    ◀<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X-</span>
+                  </button>
+
+                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem', color: '#94a3b8', fontWeight: 800 }}>
+                    MEJA
+                  </div>
+
+                  <button
+                    className="game-dpad-btn"
+                    onMouseDown={() => startHoldTableJog('x', 1)}
+                    onMouseUp={stopHoldJog}
+                    onMouseLeave={stopHoldJog}
+                    onTouchStart={() => startHoldTableJog('x', 1)}
+                    onTouchEnd={stopHoldJog}
+                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    title="Meja Kanan (X+)"
+                  >
+                    ▶<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>X+</span>
+                  </button>
+
+                  <div />
+                  <button
+                    className="game-dpad-btn"
+                    onMouseDown={() => startHoldTableJog('y', -1)}
+                    onMouseUp={stopHoldJog}
+                    onMouseLeave={stopHoldJog}
+                    onTouchStart={() => startHoldTableJog('y', -1)}
+                    onTouchEnd={stopHoldJog}
+                    style={{ background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                    title="Meja Maju (Y-)"
+                  >
+                    ▼<span style={{ fontSize: '0.48rem', lineHeight: 1 }}>Y-</span>
+                  </button>
+                  <div />
+                </div>
+
+                {/* CENTER COLUMN: STEP & QUICK DEPTH PRESETS */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', padding: '0 4px', height: '100%', justifyContent: 'center' }}>
+                  {/* Step Selector */}
+                  <div style={{ display: 'flex', gap: '3px' }}>
+                    {[0.10, 0.50, 1.00, 2.00].map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => { sound.playClick(); setStepSize(v); }}
+                        style={{
+                          flex: 1, padding: '5px 0', borderRadius: '4px', fontSize: '0.62rem', fontWeight: 800, cursor: 'pointer',
+                          background: stepSize === v ? '#f59e0b' : 'rgba(255,255,255,0.06)',
+                          color: stepSize === v ? '#000' : 'var(--text-muted)',
+                          border: stepSize === v ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                        }}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Quick Depth Presets */}
+                  <div style={{ display: 'flex', gap: '3px' }}>
+                    {[
+                      { l: 'Z=0', v: 0.0, c: '#38bdf8' },
+                      { l: '-1mm', v: -1.0, c: '#f59e0b' },
+                      { l: '-2mm', v: -2.0, c: '#f59e0b' },
+                      { l: '+5mm', v: 5.0, c: '#10b981' }
+                    ].map(dp => (
+                      <button
+                        key={dp.l}
+                        onClick={() => setSpindleDepthPreset(dp.v)}
+                        style={{
+                          flex: 1, padding: '4px 0', borderRadius: '4px', fontSize: '0.6rem', fontWeight: 800, cursor: 'pointer',
+                          background: spindlePosition.z === dp.v ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255,255,255,0.05)',
+                          color: dp.c, border: `1px solid ${spindlePosition.z === dp.v ? dp.c : 'rgba(255,255,255,0.08)'}`
+                        }}
+                      >
+                        {dp.l}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Rapid & Coolant */}
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setRapidMode(!rapidMode); }}
+                      style={{
+                        flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                        background: rapidMode ? '#f59e0b' : 'rgba(255,255,255,0.06)',
+                        color: rapidMode ? '#000' : 'var(--text-muted)',
+                        border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                      }}
+                    >
+                      ⚡ RAPID 3X
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setCoolant(!coolant); }}
+                      style={{
+                        flex: 1, padding: '5px 2px', borderRadius: '5px', fontSize: '0.64rem', fontWeight: 800, cursor: 'pointer',
+                        background: coolant ? 'rgba(14, 165, 233, 0.3)' : 'rgba(255,255,255,0.06)',
+                        color: coolant ? '#38bdf8' : 'var(--text-muted)',
+                        border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.1)'
+                      }}
+                    >
+                      💦 {coolant ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+
+                  {/* Evaluate & Reset Buttons */}
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <button
+                      onClick={handleEvaluate}
+                      style={{
+                        flex: 1.3, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 900, cursor: 'pointer',
+                        background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', border: 'none',
+                        boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
+                      }}
+                    >
+                      🏆 CEK HASIL
+                    </button>
+                    <button
+                      onClick={handleReset}
+                      style={{
+                        flex: 0.8, padding: '5px 2px', borderRadius: '5px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer',
+                        background: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.15)'
+                      }}
+                    >
+                      🔄 RESET
+                    </button>
+                  </div>
+                </div>
+
+                {/* RIGHT THUMB: SPINDLE Z FEED & SPINDLE POWER */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', height: '100%', justifyContent: 'center' }}>
+                  {/* Spindle Z Jog buttons */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+                    <button
+                      className="game-dpad-btn"
+                      onMouseDown={() => startHoldSpindleJog(-1)}
+                      onMouseUp={stopHoldJog}
+                      onMouseLeave={stopHoldJog}
+                      onTouchStart={() => startHoldSpindleJog(-1)}
+                      onTouchEnd={stopHoldJog}
+                      style={{ height: '38px', background: 'rgba(56, 189, 248, 0.2)', border: '1px solid #0284c7', color: '#38bdf8', fontSize: '0.68rem' }}
+                      title="Spindel Naik (Z+)"
+                    >
+                      ▲<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z+ NAIK</span>
+                    </button>
+                    <button
+                      className="game-dpad-btn"
+                      onMouseDown={() => startHoldSpindleJog(1)}
+                      onMouseUp={stopHoldJog}
+                      onMouseLeave={stopHoldJog}
+                      onTouchStart={() => startHoldSpindleJog(1)}
+                      onTouchEnd={stopHoldJog}
+                      style={{ height: '38px', background: 'rgba(245, 158, 11, 0.25)', border: '1px solid #f59e0b', color: '#f59e0b', fontSize: '0.68rem', boxShadow: '0 0 8px rgba(245, 158, 11, 0.25)' }}
+                      title="Spindel Turun Sayat (Z-)"
+                    >
+                      ▼<span style={{ fontSize: '0.5rem', lineHeight: 1 }}>Z- SAYAT</span>
+                    </button>
+                  </div>
+
+                  {/* Big Spindle Action Button */}
+                  <button
+                    className="game-action-btn"
+                    onClick={toggleSpindle}
+                    style={{
+                      height: '48px', width: '100%',
+                      background: isSpindleRunning
+                        ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                        : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: '#ffffff', border: 'none',
+                      boxShadow: isSpindleRunning ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 0 16px rgba(16, 185, 129, 0.5)',
+                      fontSize: '0.74rem'
+                    }}
+                  >
+                    <span style={{ fontSize: '1rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                    <span>{isSpindleRunning ? 'STOP' : 'START SPINDEL'}</span>
+                  </button>
+
+                  {/* RPM Stepper */}
+                  <div style={{ display: 'flex', alignItems: 'center', background: '#040914', borderRadius: '6px', border: '1px solid #1e293b', overflow: 'hidden' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setRpm(prev => Math.max(300, prev - 150)); }}
+                      style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                    >
+                      -
+                    </button>
+                    <div style={{ flex: 1, textAlign: 'center', fontSize: '0.66rem', fontWeight: 800, color: '#f59e0b' }}>
+                      {rpm} RPM
+                    </div>
+                    <button
+                      onClick={() => { sound.playClick(); setRpm(prev => Math.min(3000, prev + 150)); }}
+                      style={{ width: '28px', height: '26px', background: 'transparent', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.9rem' }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* ==============================================================
+               DESKTOP MULTI-PANEL VIEWPORT & PENDANT STATION
+               ============================================================== */
+            <>
+              {/* HEADER BAR & JOBSHEET SELECTOR */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '12px',
+                  background: 'var(--bg-card)',
+                  padding: '14px 20px',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-light)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      background: 'rgba(245, 158, 11, 0.15)',
+                      border: '1px solid #f59e0b',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      fontSize: '1.2rem'
+                    }}
+                  >
+                    🔩
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                      SIMULATOR MESIN FRAIS UNIVERSAL / VERTIKAL
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      Tugas Aktif: <strong style={{ color: '#f59e0b' }}>{activeJobsheet.title}</strong> ({activeJobsheet.material})
+                    </div>
+                  </div>
+                </div>
+
+                {/* JOBSHEET TABS */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <button
+                    onClick={() => { sound.playClick(); setIsMobileMode(true); }}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      color: '#ffffff',
+                      border: '1px solid #34d399',
+                      boxShadow: '0 0 10px rgba(16, 185, 129, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                    title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
+                  >
+                    <span>🎮</span>
+                    <span>MODE GAME HP</span>
+                  </button>
+
+                  {millingJobsheets.map((sheet, idx) => (
+                    <button
+                      key={sheet.id}
+                      onClick={() => setActiveJobsheetIndex(idx)}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        background: activeJobsheetIndex === idx ? '#f59e0b' : 'rgba(255,255,255,0.05)',
+                        color: activeJobsheetIndex === idx ? '#000000' : 'var(--text-muted)',
+                        border: activeJobsheetIndex === idx ? '1px solid #f59e0b' : '1px solid var(--border-light)',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {idx + 1}. {sheet.title.split('(')[0]}
+                    </button>
+                  ))}
+                    <button
+                      onClick={() => { sound.playClick(); setActiveTab('tools'); }}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                        color: '#ffffff',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
+                      }}
+                    >
+                      <span>🔪</span> Katalog 8 Pisau Frais Real
+                    </button>
+                    <button
+                      onClick={() => { sound.playClick(); setIsPrepared(false); }}
+                      style={{
+                        padding: '8px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        background: 'rgba(16, 185, 129, 0.15)',
+                        color: '#10b981',
+                        border: '1px solid #10b981',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      title="Buka panduan K3 & SOP"
+                    >
+                      <span>🛡️</span> SOP & K3
+                    </button>
+                </div>
+              </div>
 
       {/* MAIN 3D SIMULATOR VIEWPORT - 100% UNOBSTRUCTED */}
       <div
@@ -1157,8 +1548,140 @@ const MillingModule = ({ addXP }) => {
           </div>
         </div>
       )}
-        </>
-      )}
+    </>
+  )}
+
+  {/* MOBILE EVALUATION RESULT MODAL (IF IN MOBILE GAME MODE) */}
+  {isMobileMode && showResult && inspectionData && (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)', border: `2px solid ${score >= 80 ? '#10b981' : '#ef4444'}`,
+        borderRadius: '16px', padding: '20px', maxWidth: '420px', width: '100%',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column', gap: '14px'
+      }}>
+        <div className="flex-between">
+          <span style={{
+            background: score >= 80 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+            color: score >= 80 ? '#10b981' : '#ef4444',
+            padding: '3px 10px', borderRadius: '20px', fontWeight: 800, fontSize: '0.78rem'
+          }}>
+            {score >= 80 ? '✓ TUGAS FRAIS SUKSES' : '⚠ PERLU PERBAIKAN'}
+          </span>
+          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: score >= 80 ? '#10b981' : '#ef4444' }}>
+            {score}/100
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>TARGET KEDALAMAN</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>{inspectionData.targetDepth} mm</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>KEDALAMAN AKTUAL</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#f59e0b' }}>{inspectionData.actualDepth} mm</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>RPM DIGUNAKAN</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#10b981' }}>{inspectionData.rpmUsed} RPM</div>
+          </div>
+          <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>XP DIPEROLEH</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#f59e0b' }}>
+              +{score >= 80 ? activeJobsheet.xpReward : Math.round(activeJobsheet.xpReward * 0.4)} XP
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowResult(false)}
+          style={{
+            width: '100%', padding: '10px', borderRadius: '8px',
+            background: '#f59e0b', color: '#000', border: 'none', fontWeight: 800, cursor: 'pointer'
+          }}
+        >
+          Lanjutkan Praktik
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* MILLING JOBSHEET SELECTION MODAL (MOBILE GAME MODE) */}
+  {showJobsheetModal && (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)', border: '1px solid var(--border-light)',
+        borderRadius: '16px', padding: '20px', maxWidth: '480px', width: '100%',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.6)', maxHeight: '90vh', overflowY: 'auto'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.3rem' }}>📋</span>
+            <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              PILIH TUGAS / JOBSHEET FRAIS
+            </span>
+          </div>
+          <button
+            onClick={() => setShowJobsheetModal(false)}
+            style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff', fontSize: '1.1rem', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer' }}
+          >
+            ✕
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {millingJobsheets.map((sheet, idx) => (
+            <div
+              key={sheet.id}
+              onClick={() => {
+                sound.playClick();
+                setActiveJobsheetIndex(idx);
+                setShowJobsheetModal(false);
+              }}
+              style={{
+                padding: '12px 14px', borderRadius: '10px', cursor: 'pointer',
+                background: activeJobsheetIndex === idx ? 'rgba(245, 158, 11, 0.18)' : 'rgba(255,255,255,0.03)',
+                border: activeJobsheetIndex === idx ? '2px solid #f59e0b' : '1px solid var(--border-light)',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+              }}
+            >
+              <div>
+                <div style={{ fontWeight: 800, fontSize: '0.88rem', color: activeJobsheetIndex === idx ? '#fbbf24' : 'var(--text-main)' }}>
+                  {idx + 1}. {sheet.title}
+                </div>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Material: {sheet.material} • Target Kedalaman: {sheet.targetDepth}mm
+                </div>
+              </div>
+              {activeJobsheetIndex === idx && (
+                <span style={{ color: '#f59e0b', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF ✓</span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setShowJobsheetModal(false)}
+          style={{
+            width: '100%', marginTop: '16px', padding: '10px', borderRadius: '8px',
+            background: '#f59e0b', color: '#000', border: 'none', fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer'
+          }}
+        >
+          Tutup & Lanjutkan Praktik
+        </button>
+      </div>
+    </div>
+  )}
+</>
+)}
     </div>
   );
 };

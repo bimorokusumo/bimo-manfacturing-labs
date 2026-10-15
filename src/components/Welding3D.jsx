@@ -820,6 +820,7 @@ const Welding3D = ({
   oxygenPressure = 2.0,
   acetylenePressure = 0.4,
   polarity = 'DCEP',
+  isMobile = false,
   onTorchUpdate, onTorchDown, onTorchUp
 }) => {
   // Determine overall rotation based on position
@@ -868,7 +869,7 @@ const Welding3D = ({
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', cursor: 'crosshair' }}>
-      <Canvas shadows camera={{ position: [0, 4, 6], fov: 45 }}>
+      <Canvas shadows camera={{ position: isMobile ? [0, 4.4, 5.2] : [0, 4, 6], fov: isMobile ? 52 : 45 }}>
         <color attach="background" args={['#e2e8f0']} />
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 10, 5]} intensity={1.5} castShadow />
@@ -876,17 +877,29 @@ const Welding3D = ({
         <pointLight position={[0, 5, 5]} intensity={0.8} />
 
         {/* WORKSHOP WELDING MACHINE APPARATUS */}
-        {weldingProcess === 'SMAW' && (
-          <SMAWMachine3D amperage={amperage} polarity={polarity} position={[-3.8, 0.35, -2.0]} />
-        )}
-        {weldingProcess === 'MIG' && (
-          <MIGMachine3D voltage={voltage} wireFeedSpeed={wireFeedSpeed} gasFlow={gasFlow} position={[-3.8, 0.35, -2.0]} />
-        )}
-        {weldingProcess === 'TIG' && (
-          <TIGMachine3D current={amperage} currentType={polarity} position={[-3.8, 0.35, -2.0]} />
-        )}
-        {weldingProcess === 'OAW' && (
-          <OAWMachine3D oawFlame={oawFlame} oxygenPressure={oxygenPressure} acetylenePressure={acetylenePressure} position={[-3.8, 0.35, -2.0]} />
+        {!isMobile ? (
+          <>
+            {weldingProcess === 'SMAW' && (
+              <SMAWMachine3D amperage={amperage} polarity={polarity} position={[-3.8, 0.35, -2.0]} />
+            )}
+            {weldingProcess === 'MIG' && (
+              <MIGMachine3D voltage={voltage} wireFeedSpeed={wireFeedSpeed} gasFlow={gasFlow} position={[-3.8, 0.35, -2.0]} />
+            )}
+            {weldingProcess === 'TIG' && (
+              <TIGMachine3D current={amperage} currentType={polarity} position={[-3.8, 0.35, -2.0]} />
+            )}
+            {weldingProcess === 'OAW' && (
+              <OAWMachine3D oawFlame={oawFlame} oxygenPressure={oxygenPressure} acetylenePressure={acetylenePressure} position={[-3.8, 0.35, -2.0]} />
+            )}
+          </>
+        ) : (
+          /* On Mobile: place the 3D machine neatly in the background corner so it never squeezes the metal plate */
+          <group position={[-5.2, 0.1, -4.5]} scale={0.45}>
+            {weldingProcess === 'SMAW' && <SMAWMachine3D amperage={amperage} polarity={polarity} position={[0, 0, 0]} />}
+            {weldingProcess === 'MIG' && <MIGMachine3D voltage={voltage} wireFeedSpeed={wireFeedSpeed} gasFlow={gasFlow} position={[0, 0, 0]} />}
+            {weldingProcess === 'TIG' && <TIGMachine3D current={amperage} currentType={polarity} position={[0, 0, 0]} />}
+            {weldingProcess === 'OAW' && <OAWMachine3D oawFlame={oawFlame} oxygenPressure={oxygenPressure} acetylenePressure={acetylenePressure} position={[0, 0, 0]} />}
+          </group>
         )}
 
         {/* WORKPIECE GROUND CLAMP (KLEM MASSA) */}

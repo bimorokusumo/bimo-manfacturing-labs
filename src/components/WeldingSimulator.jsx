@@ -616,6 +616,18 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
   const [weldingProcess, setWeldingProcess] = useState('SMAW'); // 'SMAW' | 'MIG' | 'OAW'
   const [plateThickness, setPlateThickness] = useState('6mm'); // '2mm', '4mm', '6mm', '8mm', '10mm', '12mm'
   const [showMachinePanel, setShowMachinePanel] = useState(true);
+  const [isMobileMode, setIsMobileMode] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 850);
+  const [showMobileMachineModal, setShowMobileMachineModal] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined' && window.innerWidth <= 850) {
+        setIsMobileMode(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 1. SMAW / MMA PARAMETERS
   const [amperage, setAmperage] = useState(115);
@@ -988,147 +1000,435 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
 
       {/* VIEW 3: SIMULATOR PRAKTIK 3D */}
       {labMode === 'simulasi' && (
-        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, overflowX: 'hidden' }}>
-      
-      {/* KONTROL POSISI PENGELASAN & PROSES */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--bg-card)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border-light)' }}>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <div style={{ flex: 1.5 }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>TIPE SAMBUNGAN</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button 
-                className={`btn-game ${weldType === 'groove' ? 'btn-game-primary' : 'btn-game-neutral'}`}
-                style={{ flex: 1, padding: '8px' }}
-                onClick={() => handleTypeChange('groove')}
-              >
-                GROOVE
-              </button>
-              <button 
-                className={`btn-game ${weldType === 'fillet' ? 'btn-game-primary' : 'btn-game-neutral'}`}
-                style={{ flex: 1, padding: '8px' }}
-                onClick={() => handleTypeChange('fillet')}
-              >
-                FILLET
-              </button>
-            </div>
-          </div>
-          <div style={{ flex: 3 }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>POSISI PENGELASAN</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {currentPositions.map(pos => (
-                <button 
-                  key={pos}
-                  className={`btn-game ${weldPosition === pos ? 'btn-game-success' : 'btn-game-neutral'}`}
-                  style={{ flex: 1, padding: '8px' }}
-                  onClick={() => { setWeldPosition(pos); setTorchPos(0); setWeldProgress(0); }}
-                >
-                  {pos}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div style={{ flex: 1.5, borderLeft: '1px solid var(--border-light)', paddingLeft: '16px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>MODE INTERAKSI</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button 
-                className={`btn-game ${interactionMode === 'weld' ? 'btn-game-tflm' : 'btn-game-neutral'}`}
-                style={{ flex: 1, padding: '8px' }}
-                onClick={() => setInteractionMode('weld')}
-              >
-                🔥 LAS
-              </button>
-              <button 
-                className={`btn-game ${interactionMode === 'camera' ? 'btn-game-tflm' : 'btn-game-neutral'}`}
-                style={{ flex: 1, padding: '8px' }}
-                onClick={() => setInteractionMode('camera')}
-              >
-                📷 KAMERA
-              </button>
-            </div>
-          </div>
-        </div>
+        <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '100%', minWidth: 0, overflowX: 'hidden' }}>
+          {isMobileMode ? (
+            /* ==============================================================
+               MOBILE GAME COCKPIT: 1 SINGLE SCREEN LIKE A GAME (NO SCROLL)
+               ============================================================== */
+            <div className="mobile-game-cockpit">
+              {/* TOP 3D WELDING VIEWPORT WITH FLOATING HUD */}
+              <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden', background: '#050a14' }}>
+                <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-tflm)' }}>LOADING 3D ENGINE...</div>}>
+                  <ErrorBoundary>
+                    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'auto' }}>
+                      <Welding3D 
+                        isWelding={isWelding} 
+                        torchPos={torchPos} 
+                        weldProgress={weldProgress} 
+                        weldType={weldType} 
+                        weldPosition={weldPosition} 
+                        defects={defects} 
+                        onDefectClick={handleSelectDefect} 
+                        interactionMode={interactionMode} 
+                        weldingProcess={weldingProcess} 
+                        smawElectrode={smawElectrode} 
+                        oawFlame={oawFlame} 
+                        plateThickness={plateThickness}
+                        amperage={amperage}
+                        voltage={voltage}
+                        wireFeedSpeed={wireFeedSpeed}
+                        gasFlow={gasFlow}
+                        oxygenPressure={oxygenPressure}
+                        acetylenePressure={acetylenePressure}
+                        polarity={polarity}
+                        isMobile={true}
+                        onTorchUpdate={handleTorchUpdate}
+                        onTorchDown={handleMouseDown}
+                        onTorchUp={handleMouseUp}
+                      />
+                    </div>
+                  </ErrorBoundary>
+                </Suspense>
 
-        <div style={{ height: '1px', background: 'var(--border-light)' }}></div>
+                {/* FLOATING TOP GLASS HUD */}
+                <div style={{
+                  position: 'absolute', top: '8px', left: '8px', right: '8px', zIndex: 20,
+                  display: 'flex', flexDirection: 'column', gap: '5px',
+                  background: 'rgba(15, 23, 42, 0.90)', backdropFilter: 'blur(10px)',
+                  padding: '5px 8px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.5)'
+                }}>
+                  {/* ROW 1: PROCESS SELECTION PILLS & DESKTOP SWITCH */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ display: 'flex', gap: '3px', flex: 1 }}>
+                      {['SMAW', 'MIG', 'TIG', 'OAW'].map(proc => (
+                        <button
+                          key={proc}
+                          onClick={() => handleSelectProcess(proc)}
+                          style={{
+                            flex: 1, padding: '4px 2px', borderRadius: '5px', fontSize: '0.66rem', fontWeight: 800, cursor: 'pointer',
+                            background: weldingProcess === proc ? '#ea580c' : 'rgba(255,255,255,0.06)',
+                            color: weldingProcess === proc ? '#fff' : 'var(--text-muted)',
+                            border: weldingProcess === proc ? '1px solid #ea580c' : '1px solid rgba(255,255,255,0.1)'
+                          }}
+                        >
+                          {proc}
+                        </button>
+                      ))}
+                    </div>
 
-        {/* PROSES MESIN & KETEBALAN PLAT BAR */}
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>PROSES PENGELASAN</label>
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <button 
-                  className={`btn-game ${weldingProcess === 'SMAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
-                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
-                  onClick={() => handleSelectProcess('SMAW')}
-                >
-                  ⚡ SMAW / MMA
-                </button>
-                <button 
-                  className={`btn-game ${weldingProcess === 'MIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
-                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
-                  onClick={() => handleSelectProcess('MIG')}
-                >
-                  🌀 MIG / MAG
-                </button>
-                <button 
-                  className={`btn-game ${weldingProcess === 'TIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
-                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
-                  onClick={() => handleSelectProcess('TIG')}
-                >
-                  🎯 TIG / GTAW
-                </button>
-                <button 
-                  className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
-                  style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
-                  onClick={() => handleSelectProcess('OAW')}
-                >
-                  🔥 OAW
-                </button>
-              </div>
-            </div>
+                    <button
+                      onClick={() => { sound.playClick(); setIsMobileMode(false); }}
+                      style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '4px 7px', borderRadius: '5px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer' }}
+                      title="Beralih ke Tampilan Desktop Penuh"
+                    >
+                      🖥️
+                    </button>
+                  </div>
 
-            <div style={{ borderLeft: '1px solid var(--border-light)', paddingLeft: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>TEBAL PLAT BENDA KERJA</label>
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                {['2mm', '4mm', '6mm', '8mm', '10mm', '12mm'].map(th => (
+                  {/* ROW 2: THICKNESS, POSITION, MACHINE DRAWER, MODE */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <select
+                        value={plateThickness}
+                        onChange={(e) => handleSelectThickness(e.target.value)}
+                        style={{
+                          background: '#040914', border: '1px solid #1e293b', color: '#10b981',
+                          padding: '3px 6px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, outline: 'none'
+                        }}
+                      >
+                        {['2mm', '4mm', '6mm', '8mm', '10mm', '12mm'].map(th => (
+                          <option key={th} value={th}>Plat {th}</option>
+                        ))}
+                      </select>
+
+                      <select
+                        value={weldPosition}
+                        onChange={(e) => { setWeldPosition(e.target.value); setTorchPos(0); setWeldProgress(0); }}
+                        style={{
+                          background: '#040914', border: '1px solid #1e293b', color: '#38bdf8',
+                          padding: '3px 6px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, outline: 'none'
+                        }}
+                      >
+                        {currentPositions.map(pos => (
+                          <option key={pos} value={pos}>Posisi {pos}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <button
+                        onClick={() => { sound.playClick(); setShowMobileMachineModal(true); }}
+                        style={{
+                          background: 'linear-gradient(135deg, #ea580c, #c2410c)', border: 'none', color: '#fff',
+                          padding: '4px 8px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(234,88,12,0.4)'
+                        }}
+                      >
+                        <span>🎛️ Mesin</span>
+                        <span style={{ opacity: 0.85, fontSize: '0.6rem' }}>
+                          ({weldingProcess === 'MIG' ? `${voltage}V` : weldingProcess === 'OAW' ? `${oxygenValve}%` : `${amperage}A`})
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={() => setInteractionMode(interactionMode === 'weld' ? 'camera' : 'weld')}
+                        style={{
+                          background: interactionMode === 'weld' ? 'rgba(234,88,12,0.2)' : 'rgba(56,189,248,0.2)',
+                          border: `1px solid ${interactionMode === 'weld' ? '#ea580c' : '#38bdf8'}`,
+                          color: interactionMode === 'weld' ? '#fb923c' : '#38bdf8',
+                          padding: '4px 7px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer'
+                        }}
+                      >
+                        {interactionMode === 'weld' ? '🔥 Las' : '📷 Orbit'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* EVALUATION RESULT BANNER ON 3D (STEP 7) */}
+                {step === 7 && !selectedDefect && (
+                  <div style={{
+                    position: 'absolute', top: '75px', left: '8px', right: '8px', zIndex: 15,
+                    background: 'rgba(15, 23, 42, 0.94)', backdropFilter: 'blur(10px)',
+                    padding: '8px 12px', borderRadius: '10px',
+                    border: defects.length === 0 ? '1px solid #10b981' : '1px solid #ef4444',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span>{defects.length === 0 ? '🎉' : '⚠️'}</span>
+                      <div style={{ fontSize: '0.74rem', color: '#fff', fontWeight: 800 }}>
+                        {defects.length === 0 ? 'Pengelasan Sempurna (95/100)!' : `${defects.length} Cacat Terdeteksi`}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => { setStep(6); setTorchPos(0); setWeldProgress(0); setDefects([]); }}
+                      style={{ background: '#0284c7', border: 'none', color: '#fff', padding: '4px 10px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer' }}
+                    >
+                      🔄 Ulang
+                    </button>
+                  </div>
+                )}
+
+                {/* DEFECT PILL TRIGGER */}
+                {defects.length > 0 && !selectedDefect && (
                   <button
-                    key={th}
-                    className={`btn-game ${plateThickness === th ? 'btn-game-success' : 'btn-game-neutral'}`}
-                    style={{ padding: '8px 12px', fontSize: '0.82rem', fontWeight: 800 }}
-                    onClick={() => handleSelectThickness(th)}
+                    onClick={() => setSelectedDefect(defects[0])}
+                    style={{
+                      position: 'absolute', bottom: '8px', left: '8px', zIndex: 12,
+                      background: 'rgba(239, 68, 68, 0.92)', color: '#fff', border: 'none',
+                      padding: '6px 10px', borderRadius: '8px', fontSize: '0.72rem', fontWeight: 800,
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px',
+                      boxShadow: '0 4px 14px rgba(239,68,68,0.5)'
+                    }}
                   >
-                    {th} {th === '6mm' ? '(STD)' : ''}
+                    <span>⚠️ {defects.length} Cacat Ditemukan</span>
+                    <span style={{ fontSize: '0.65rem', opacity: 0.85 }}>• Foto 📸</span>
                   </button>
-                ))}
+                )}
+              </div>
+
+              {/* BOTTOM DOCKED GAMEPAD FOR TOUCH WELDING */}
+              <div style={{
+                height: '110px', flexShrink: 0, background: '#0b1222', borderTop: '2px solid #1e293b',
+                padding: '6px 10px', display: 'flex', flexDirection: 'column', gap: '6px', boxSizing: 'border-box'
+              }}>
+                {/* ROW 1: QUICK PARAMETER ADJUSTMENT & PROGRESS */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.72rem' }}>
+                  {/* Parameter Stepper */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {weldingProcess === 'MIG' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                        <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Volt:</span>
+                        <button onClick={() => setVoltage(prev => Math.max(14, +(prev - 0.5).toFixed(1)))} style={{ background: 'none', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>-</button>
+                        <strong style={{ color: '#f59e0b', minWidth: '38px', textAlign: 'center' }}>{voltage}V</strong>
+                        <button onClick={() => setVoltage(prev => Math.min(32, +(prev + 0.5).toFixed(1)))} style={{ background: 'none', border: 'none', color: '#f59e0b', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>+</button>
+                      </div>
+                    ) : weldingProcess === 'OAW' ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                        <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Nyala Api:</span>
+                        <strong style={{ color: oawFlame === 'neutral' ? '#10b981' : '#f59e0b' }}>{oawFlame.toUpperCase()}</strong>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#040914', padding: '2px 6px', borderRadius: '5px', border: '1px solid #1e293b' }}>
+                        <span style={{ color: '#94a3b8', fontSize: '0.62rem' }}>Arus:</span>
+                        <button onClick={() => setAmperage(prev => Math.max(40, prev - 5))} style={{ background: 'none', border: 'none', color: '#ea580c', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>-</button>
+                        <strong style={{ color: '#ea580c', minWidth: '38px', textAlign: 'center' }}>{amperage}A</strong>
+                        <button onClick={() => setAmperage(prev => Math.min(220, prev + 5))} style={{ background: 'none', border: 'none', color: '#ea580c', fontWeight: 900, cursor: 'pointer', fontSize: '0.85rem' }}>+</button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Progress & Arc Status */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: isWelding ? '#ea580c' : '#94a3b8', fontWeight: 800 }}>
+                      {isWelding ? '🔥 ARC ON' : '⚡ SIAP'}
+                    </span>
+                    <div style={{ width: '60px', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${weldProgress}%`, height: '100%', background: 'linear-gradient(90deg, #ea580c, #f59e0b)', transition: 'width 0.1s' }} />
+                    </div>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#38bdf8' }}>{Math.round(weldProgress)}%</span>
+                  </div>
+                </div>
+
+                {/* ROW 2: TOUCH WELDING SLIDER & ACTION TRIGGER */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                  {/* Slider to glide torch position */}
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px', background: '#040914', padding: '0 8px', borderRadius: '8px', border: '1px solid #1e293b', height: '42px' }}>
+                    <span style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: 700 }}>POSISI:</span>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={torchPos}
+                      onChange={(e) => handleTorchUpdate(Number(e.target.value))}
+                      style={{ flex: 1, accentColor: '#ea580c', cursor: 'pointer' }}
+                    />
+                    <span style={{ fontSize: '0.68rem', fontFamily: 'monospace', color: '#ea580c', fontWeight: 800 }}>{Math.round(torchPos)}%</span>
+                  </div>
+
+                  {/* BIG TOUCH WELD TRIGGER */}
+                  <button
+                    className="game-action-btn"
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onTouchStart={handleMouseDown}
+                    onTouchEnd={handleMouseUp}
+                    style={{
+                      height: '42px', padding: '0 16px',
+                      background: isWelding
+                        ? 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                        : 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                      color: '#ffffff', border: 'none',
+                      boxShadow: isWelding ? '0 0 16px rgba(239, 68, 68, 0.6)' : '0 0 14px rgba(234, 88, 12, 0.5)',
+                      fontSize: '0.78rem', whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {isWelding ? '🔥 MENYALA (LEPAS STOP)' : '🔥 TAHAN UNTUK LAS'}
+                  </button>
+
+                  {/* Reset Button */}
+                  <button
+                    onClick={() => { setTorchPos(0); setWeldProgress(0); setDefects([]); setStep(6); }}
+                    style={{ width: '42px', height: '42px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    title="Reset Posisi Las"
+                  >
+                    🔄
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            /* ==============================================================
+               DESKTOP SPLIT VIEW: SIDE-BY-SIDE MACHINE PANEL & 3D SIMULATOR
+               ============================================================== */
+            <>
+              {/* KONTROL POSISI PENGELASAN & PROSES */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--bg-card)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border-light)' }}>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <div style={{ flex: 1.5 }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>TIPE SAMBUNGAN</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        className={`btn-game ${weldType === 'groove' ? 'btn-game-primary' : 'btn-game-neutral'}`}
+                        style={{ flex: 1, padding: '8px' }}
+                        onClick={() => handleTypeChange('groove')}
+                      >
+                        GROOVE
+                      </button>
+                      <button 
+                        className={`btn-game ${weldType === 'fillet' ? 'btn-game-primary' : 'btn-game-neutral'}`}
+                        style={{ flex: 1, padding: '8px' }}
+                        onClick={() => handleTypeChange('fillet')}
+                      >
+                        FILLET
+                      </button>
+                    </div>
+                  </div>
+                  <div style={{ flex: 3 }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>POSISI PENGELASAN</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {currentPositions.map(pos => (
+                        <button 
+                          key={pos}
+                          className={`btn-game ${weldPosition === pos ? 'btn-game-success' : 'btn-game-neutral'}`}
+                          style={{ flex: 1, padding: '8px' }}
+                          onClick={() => { setWeldPosition(pos); setTorchPos(0); setWeldProgress(0); }}
+                        >
+                          {pos}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ flex: 1.5, borderLeft: '1px solid var(--border-light)', paddingLeft: '16px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>MODE INTERAKSI</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button 
+                        className={`btn-game ${interactionMode === 'weld' ? 'btn-game-tflm' : 'btn-game-neutral'}`}
+                        style={{ flex: 1, padding: '8px' }}
+                        onClick={() => setInteractionMode('weld')}
+                      >
+                        🔥 LAS
+                      </button>
+                      <button 
+                        className={`btn-game ${interactionMode === 'camera' ? 'btn-game-tflm' : 'btn-game-neutral'}`}
+                        style={{ flex: 1, padding: '8px' }}
+                        onClick={() => setInteractionMode('camera')}
+                      >
+                        📷 KAMERA
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <button 
-              className={`btn-game ${showMachinePanel ? 'btn-game-tflm' : 'btn-game-neutral'}`}
-              style={{
-                padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800,
-                display: 'flex', alignItems: 'center', gap: '6px'
-              }}
-              onClick={() => setShowMachinePanel(!showMachinePanel)}
-            >
-              <span>🎛️</span> {showMachinePanel ? 'SEMBUNYIKAN PANEL MESIN' : 'BUKA PANEL MESIN LAS'}
-            </button>
-            <button 
-              className="btn-game"
-              style={{
-                background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: '#fca5a5', padding: '8px 14px', fontSize: '0.82rem', fontWeight: 'bold',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-              }}
-              onClick={() => setSelectedDefect(DEFECT_TYPES[0])}
-            >
-              🖼️ ENSIKLOPEDIA CACAT LAS
-            </button>
-          </div>
-        </div>
-      </div>
+                <div style={{ height: '1px', background: 'var(--border-light)' }}></div>
+
+                {/* PROSES MESIN & KETEBALAN PLAT BAR */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>PROSES PENGELASAN</label>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <button 
+                          className={`btn-game ${weldingProcess === 'SMAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                          style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                          onClick={() => handleSelectProcess('SMAW')}
+                        >
+                          ⚡ SMAW / MMA
+                        </button>
+                        <button 
+                          className={`btn-game ${weldingProcess === 'MIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                          style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                          onClick={() => handleSelectProcess('MIG')}
+                        >
+                          🌀 MIG / MAG
+                        </button>
+                        <button 
+                          className={`btn-game ${weldingProcess === 'TIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                          style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                          onClick={() => handleSelectProcess('TIG')}
+                        >
+                          🎯 TIG / GTAW
+                        </button>
+                        <button 
+                          className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
+                          style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
+                          onClick={() => handleSelectProcess('OAW')}
+                        >
+                          🔥 OAW
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ borderLeft: '1px solid var(--border-light)', paddingLeft: '16px' }}>
+                      <label style={{ display: 'block', marginBottom: '6px', fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-muted)' }}>TEBAL PLAT BENDA KERJA</label>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {['2mm', '4mm', '6mm', '8mm', '10mm', '12mm'].map(th => (
+                          <button
+                            key={th}
+                            className={`btn-game ${plateThickness === th ? 'btn-game-success' : 'btn-game-neutral'}`}
+                            style={{ padding: '8px 12px', fontSize: '0.82rem', fontWeight: 800 }}
+                            onClick={() => handleSelectThickness(th)}
+                          >
+                            {th} {th === '6mm' ? '(STD)' : ''}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button 
+                      className="btn-game"
+                      style={{
+                        padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800,
+                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        color: '#ffffff', border: '1px solid #34d399',
+                        boxShadow: '0 0 10px rgba(16, 185, 129, 0.35)',
+                        display: 'flex', alignItems: 'center', gap: '6px'
+                      }}
+                      onClick={() => setIsMobileMode(true)}
+                      title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
+                    >
+                      <span>🎮</span>
+                      <span>MODE GAME HP</span>
+                    </button>
+
+                    <button 
+                      className={`btn-game ${showMachinePanel ? 'btn-game-tflm' : 'btn-game-neutral'}`}
+                      style={{
+                        padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800,
+                        display: 'flex', alignItems: 'center', gap: '6px'
+                      }}
+                      onClick={() => setShowMachinePanel(!showMachinePanel)}
+                    >
+                      <span>🎛️</span> {showMachinePanel ? 'SEMBUNYIKAN PANEL MESIN' : 'BUKA PANEL MESIN LAS'}
+                    </button>
+
+                    <button 
+                      className="btn-game"
+                      style={{
+                        background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)',
+                        color: '#fca5a5', padding: '8px 14px', fontSize: '0.82rem', fontWeight: 'bold',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+                      }}
+                      onClick={() => setSelectedDefect(DEFECT_TYPES[0])}
+                    >
+                      🖼️ ENSIKLOPEDIA CACAT LAS
+                    </button>
+                  </div>
+                </div>
+              </div>
 
       {/* WORKSPACE: SIDE-BY-SIDE SPLIT (COMPACT MACHINE PANEL ON LEFT + 3D SIMULATOR ON RIGHT) */}
       <div style={{
@@ -1425,9 +1725,151 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
 
         </div>
       </div>
+    </>
+  )}
 
+  {/* MOBILE MACHINE SETTINGS MODAL / SLIDE-UP DRAWER */}
+  {showMobileMachineModal && (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'blur(6px)',
+      display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '0'
+    }}>
+      <div style={{
+        background: 'var(--bg-card)', borderTop: '2px solid #ea580c',
+        borderTopLeftRadius: '20px', borderTopRightRadius: '20px',
+        padding: '20px 16px', maxWidth: '520px', width: '100%',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.8)', maxHeight: '85vh', overflowY: 'auto',
+        display: 'flex', flexDirection: 'column', gap: '16px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.4rem' }}>🎛️</span>
+            <div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', margin: 0 }}>
+                PANEL PARAMETER MESIN LAS ({weldingProcess})
+              </h3>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                Plat: {plateThickness} • Mode: {weldingProcess}
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowMobileMachineModal(false)}
+            style={{
+              background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff',
+              width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer',
+              fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+          >
+            ✕
+          </button>
         </div>
-      )}
+
+        {/* MACHINE PANEL CONTENT */}
+        {weldingProcess === 'SMAW' && (
+          <SMAWMachinePanel
+            plateThickness={plateThickness}
+            onSelectThickness={handleSelectThickness}
+            amperage={amperage}
+            onChangeAmperage={setAmperage}
+            arcForce={arcForce}
+            onChangeArcForce={setArcForce}
+            hotStart={hotStart}
+            onChangeHotStart={setHotStart}
+            electrode={smawElectrode}
+            onChangeElectrode={setSmawElectrode}
+            electrodeDiameter={electrodeDiameter}
+            onChangeElectrodeDiameter={setElectrodeDiameter}
+            polarity={polarity}
+            onChangePolarity={setPolarity}
+            vrd={vrd}
+            onToggleVrd={() => setVrd(!vrd)}
+            onApplyWpsPreset={() => handleApplyWpsPreset('SMAW', plateThickness)}
+          />
+        )}
+        {weldingProcess === 'MIG' && (
+          <MIGMachinePanel
+            plateThickness={plateThickness}
+            onSelectThickness={handleSelectThickness}
+            voltage={voltage}
+            onChangeVoltage={setVoltage}
+            wireFeedSpeed={wireFeedSpeed}
+            onChangeWfs={setWireFeedSpeed}
+            wireDiameter={wireDiameter}
+            onChangeWireDiameter={setWireDiameter}
+            gasFlow={gasFlow}
+            onChangeGasFlow={setGasFlow}
+            shieldingGas={shieldingGas}
+            onChangeShieldingGas={setShieldingGas}
+            inductance={inductance}
+            onChangeInductance={setInductance}
+            triggerMode={triggerMode}
+            onChangeTriggerMode={setTriggerMode}
+            onApplyWpsPreset={() => handleApplyWpsPreset('MIG', plateThickness)}
+          />
+        )}
+        {weldingProcess === 'TIG' && (
+          <TIGMachinePanel
+            plateThickness={plateThickness}
+            onSelectThickness={handleSelectThickness}
+            current={amperage}
+            onChangeCurrent={setAmperage}
+            postFlow={tigPostFlow}
+            onChangePostFlow={setTigPostFlow}
+            pulseFreq={tigPulseFreq}
+            onChangePulseFreq={setTigPulseFreq}
+            currentType={tigCurrentType}
+            onChangeCurrentType={(t) => { setTigCurrentType(t); setPolarity(t); }}
+            tungstenType={tigTungstenType}
+            onChangeTungstenType={setTigTungstenType}
+            tungstenDiameter={tigTungstenDia}
+            onChangeTungstenDiameter={setTigTungstenDia}
+            cupSize={tigCupSize}
+            onChangeCupSize={setTigCupSize}
+            gasFlow={gasFlow}
+            onChangeGasFlow={setGasFlow}
+            hfIgnition={tigHfIgnition}
+            onToggleHf={() => setTigHfIgnition(!tigHfIgnition)}
+            onApplyWpsPreset={() => handleApplyWpsPreset('TIG', plateThickness)}
+          />
+        )}
+        {weldingProcess === 'OAW' && (
+          <OAWMachinePanel
+            plateThickness={plateThickness}
+            onSelectThickness={handleSelectThickness}
+            oxygenPressure={oxygenPressure}
+            onChangeOxygenPressure={setOxygenPressure}
+            acetylenePressure={acetylenePressure}
+            onChangeAcetylenePressure={setAcetylenePressure}
+            oxygenValve={oxygenValve}
+            onChangeOxygenValve={setOxygenValve}
+            acetyleneValve={acetyleneValve}
+            onChangeAcetyleneValve={setAcetyleneValve}
+            nozzleSize={nozzleSize}
+            onChangeNozzleSize={setNozzleSize}
+            fillerDiameter={fillerDiameter}
+            onChangeFillerDiameter={setFillerDiameter}
+            onApplyWpsPreset={() => handleApplyWpsPreset('OAW', plateThickness)}
+          />
+        )}
+
+        <button
+          onClick={() => setShowMobileMachineModal(false)}
+          style={{
+            width: '100%', padding: '12px', borderRadius: '10px',
+            background: 'linear-gradient(135deg, #ea580c, #c2410c)',
+            color: '#fff', border: 'none', fontWeight: 800, fontSize: '0.9rem',
+            cursor: 'pointer', boxShadow: '0 4px 14px rgba(234,88,12,0.4)'
+          }}
+        >
+          ✓ Simpan & Kembali ke Simulasi 3D
+        </button>
+      </div>
+    </div>
+  )}
+</div>
+)}
 
     </div>
   );

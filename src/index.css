@@ -272,41 +272,29 @@ html, body {
   transform: translateX(4px);
 }
 
-/* 3. MIDDLE ROW GRID */
+/* 3. MIDDLE ROW GRID (MONITORING SISWA & PROGRESS KOMPETENSI) */
 .dashboard-middle-grid {
   display: grid;
-  grid-template-columns: minmax(270px, 1fr) minmax(360px, 1.4fr) minmax(290px, 1.1fr);
-  gap: 20px;
+  grid-template-columns: minmax(300px, 1fr) minmax(420px, 1.8fr);
+  gap: 18px;
   width: 100%;
 }
 
 .dashboard-middle-grid.is-student {
-  grid-template-columns: minmax(340px, 1.4fr) minmax(290px, 1.1fr);
+  grid-template-columns: 1fr;
 }
 
-@media (max-width: 900px) and (min-height: 551px) {
-  .dashboard-middle-grid.is-student {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 1200px) and (min-height: 551px) {
+@media (max-width: 960px) and (min-height: 551px) {
   .dashboard-middle-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .dashboard-middle-grid > div:last-child {
-    grid-column: span 2;
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 }
 
 @media (max-width: 800px) and (min-height: 551px) {
   .dashboard-middle-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .dashboard-middle-grid > div:last-child {
-    grid-column: span 1;
+    gap: 14px;
   }
 }
 
@@ -840,12 +828,14 @@ html, body {
   }
 
   .dashboard-middle-grid {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
 
-  .dashboard-middle-grid > div:last-child {
-    grid-column: span 2 !important;
+  @media (orientation: landscape) {
+    .dashboard-middle-grid {
+      grid-template-columns: 1fr 1.6fr !important;
+    }
   }
 
   .dashboard-progress-grid {

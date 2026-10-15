@@ -186,60 +186,6 @@ const DashboardView = ({
     };
   }, [monitoredStudent]);
 
-  const leaderboardData = React.useMemo(() => {
-    let scores = [];
-    try {
-      scores = getAllStoredScores();
-    } catch {
-      scores = [];
-    }
-
-    const currentStudentName = student?.name?.trim() || 'Praktikan (Anda)';
-    const currentClassName = student?.className || 'X TPM 1';
-
-    // Map: name -> { name, xp, isCurrent, count }
-    const studentMap = {};
-
-    // Tambahkan praktikan aktif saat ini
-    studentMap[currentStudentName.toLowerCase()] = {
-      name: currentStudentName,
-      xp: globalXP,
-      isCurrent: true,
-      className: currentClassName
-    };
-
-    scores.forEach(item => {
-      if (!item || !item.namaSiswa) return;
-      const rawName = String(item.namaSiswa).trim();
-      const key = rawName.toLowerCase();
-      const earnedXP = Number(item.skorAngka || item.nilai || 0) * 10;
-      
-      if (!studentMap[key]) {
-        studentMap[key] = {
-          name: rawName,
-          xp: earnedXP,
-          isCurrent: false,
-          className: item.kelas || currentClassName
-        };
-      } else {
-        if (studentMap[key].isCurrent) {
-          studentMap[key].xp = Math.max(studentMap[key].xp, earnedXP);
-        } else {
-          studentMap[key].xp += earnedXP;
-        }
-      }
-    });
-
-    const sorted = Object.values(studentMap).sort((a, b) => b.xp - a.xp);
-
-    return sorted.map((u, i) => ({
-      rank: i + 1,
-      name: u.isCurrent ? `${u.name.replace(' (Anda)', '')} (Anda)` : u.name,
-      xp: u.xp.toLocaleString('id-ID'),
-      active: u.isCurrent,
-      badge: i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`
-    }));
-  }, [student, globalXP]);
 
   const isSpeakingAllLabs = isSpeaking && currentNarrativeTitle === 'Ringkasan Laboratorium';
 
@@ -668,204 +614,50 @@ const DashboardView = ({
           </div>
         )}
 
-        {/* CENTER COLUMN: ACTIVITIES */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
-          {/* AKTIVITAS TERAKHIR */}
-          <div className="dashboard-card" style={{ padding: '24px', flex: 1 }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '18px', margin: 0 }}>
-              AKTIVITAS TERAKHIR
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981', fontWeight: 900 }}>
-                    ✓
-                  </div>
-                  <div>
-                    <div style={{ color: 'var(--text-main)', fontSize: '0.86rem', fontWeight: 800 }}>Simulasi Pengenalan Alat Pemotong</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Kuis evaluasi 10 soal modul KD 3.4</div>
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: '#ea580c', fontWeight: 900, fontSize: '0.86rem' }}>+1.000 XP</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Baru saja</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb', fontWeight: 900 }}>
-                    📐
-                  </div>
-                  <div>
-                    <div style={{ color: 'var(--text-main)', fontSize: '0.86rem', fontWeight: 800 }}>Proyeksi Ortogonal Multi-View</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Perbandingan Kuadran I (Eropa) & III (Amerika)</div>
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: 'var(--game-primary)', fontWeight: 900, fontSize: '0.86rem' }}>+200 XP</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>1 jam lalu</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', fontWeight: 900 }}>
-                    🛡️
-                  </div>
-                  <div>
-                    <div style={{ color: 'var(--text-main)', fontSize: '0.86rem', fontWeight: 800 }}>Misi Inspeksi Keselamatan K3</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>Kelulusan pemilihan APD bengkel bubut</div>
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ color: 'var(--game-primary)', fontWeight: 900, fontSize: '0.86rem' }}>+150 XP</div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>3 jam lalu</div>
-                </div>
-              </div>
-
+        {/* PROGRESS KOMPETENSI KURIKULUM (BERDAMPINGAN DENGAN MONITORING SISWA) */}
+        <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', flexWrap: 'wrap', gap: '8px' }}>
+            <div>
+              <h3 style={{ fontSize: '0.92rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
+                PROGRESS KOMPETENSI KURIKULUM
+              </h3>
+              <p style={{ margin: '3px 0 0 0', fontSize: '0.76rem', color: '#64748b' }}>
+                Capaian Pembelajaran Elemen Gambar Teknik, Pemesinan, Fabrikasi, dan Keselamatan K3
+              </p>
             </div>
-          </div>
-
-        </div>
-
-        {/* RIGHT COLUMN: LEADERBOARD KELAS */}
-        <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
-              LEADERBOARD KELAS
-            </h3>
-            <span style={{ fontSize: '0.72rem', background: '#f1f5f9', color: '#475569', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
-              {student?.className || 'X TPM 1'}
+            <span style={{ fontSize: '0.74rem', color: '#16a34a', fontWeight: 800, background: '#f0fdf4', padding: '4px 10px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
+              Rata-rata Kelas: 57.5%
             </span>
           </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
-            {leaderboardData.slice(0, 5).map((u, i) => (
-              <div 
-                key={i} 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between', 
-                  background: u.active ? '#fff7ed' : '#ffffff', 
-                  padding: '10px 12px', 
-                  borderRadius: '10px', 
-                  border: u.active ? '1.5px solid #ea580c' : '1px solid #e2e8f0',
-                  boxShadow: u.active ? '0 2px 8px rgba(234, 88, 12, 0.12)' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ 
-                    width: '24px', 
-                    textAlign: 'center', 
-                    fontWeight: 900, 
-                    fontSize: u.rank <= 3 ? '1.1rem' : '0.85rem',
-                    color: u.rank === 1 ? '#d97706' : u.rank === 2 ? '#64748b' : u.rank === 3 ? '#b45309' : '#94a3b8'
-                  }}>
-                    {u.badge}
+          <div className="dashboard-progress-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: isTeacher ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+            gap: '14px',
+            width: '100%'
+          }}>
+            {[
+              { title: 'K3 & Budaya Kerja Industri', pct: 85, color: '#10b981', note: 'SOP & APD Bengkel' },
+              { title: 'Pemesinan Bubut & Frais', pct: 65, color: '#3b82f6', note: 'Cutting Speed & Tooling' },
+              { title: 'Fabrikasi & Alat Pemotong', pct: 60, color: '#ea580c', note: 'Shearing & Tap Drilling' },
+              { title: 'Gambar Teknik & CAD 3D', pct: 50, color: '#8b5cf6', note: 'Proyeksi & Pemodelan' }
+            ].map((item, idx) => (
+              <div key={idx} style={{ background: '#f8fafc', padding: '14px 16px', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ color: 'var(--text-main)', fontSize: '0.84rem', fontWeight: 800 }}>{item.title}</span>
+                    <span style={{ color: item.color, fontSize: '1.15rem', fontWeight: 900 }}>{item.pct}%</span>
                   </div>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#e2e8f0', overflow: 'hidden', flexShrink: 0 }}>
-                    <img 
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(u.name.replace(' (Anda)', '').split(' ')[0] || 'P')}&background=${u.active ? 'ea580c' : '64748b'}&color=fff&bold=true`} 
-                      alt={u.name} 
-                      style={{ width: '100%', height: '100%' }} 
-                    />
-                  </div>
-                  <div style={{ color: u.active ? '#ea580c' : 'var(--text-main)', fontSize: '0.86rem', fontWeight: u.active ? 800 : 700 }}>
-                    {u.name}
-                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '8px' }}>{item.note}</div>
                 </div>
-                <div style={{ color: u.active ? '#c2410c' : 'var(--text-subtle)', fontSize: '0.82rem', fontWeight: 800 }}>
-                  {u.xp} XP
+                <div style={{ height: '7px', width: '100%', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${item.pct}%`, background: item.color, borderRadius: '4px' }} />
                 </div>
               </div>
             ))}
-
-            {leaderboardData.length <= 1 && (
-              <div style={{
-                textAlign: 'center',
-                padding: '16px 12px',
-                background: '#f8fafc',
-                borderRadius: '8px',
-                border: '1px dashed #cbd5e1',
-                color: '#64748b',
-                fontSize: '0.8rem',
-                marginTop: '4px'
-              }}>
-                <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>📋</div>
-                <div style={{ fontWeight: 600 }}>Belum ada data praktikan lain</div>
-                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>
-                  Peringkat akan diperbarui otomatis saat praktikan lain menyelesaikan evaluasi/misi.
-                </div>
-              </div>
-            )}
           </div>
-
-          {isTeacher ? (
-            <button 
-              onClick={() => {
-                if (onSelectLab) {
-                  onSelectLab('gradebook');
-                }
-              }}
-              style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.25)' }}
-            >
-              📊 Buka Rekap Spreadsheet Guru
-            </button>
-          ) : (
-            <button 
-              onClick={() => {
-                if (onSelectLab) {
-                  onSelectLab('evaluasi');
-                }
-              }}
-              style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)', border: 'none', color: '#ffffff', borderRadius: '8px', fontWeight: 800, cursor: 'pointer', marginTop: '16px', fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(234, 88, 12, 0.25)' }}
-            >
-              📝 Mulai Ujian Evaluasi Siswa
-            </button>
-          )}
         </div>
 
-      </div>
-
-      {/* PROGRESS PEMBELAJARAN */}
-      <div className="dashboard-card" style={{ padding: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '8px' }}>
-          <div>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
-              PROGRESS KOMPETENSI KURIKULUM
-            </h3>
-            <p style={{ margin: '2px 0 0 0', fontSize: '0.76rem', color: '#64748b' }}>
-              Capaian Pembelajaran Elemen Gambar Teknik, Pemesinan, Fabrikasi, dan Keselamatan K3
-            </p>
-          </div>
-          <span style={{ fontSize: '0.74rem', color: '#16a34a', fontWeight: 800, background: '#f0fdf4', padding: '3px 10px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
-            Rata-rata Kelas: 57.5%
-          </span>
-        </div>
-        
-        <div className="dashboard-progress-grid">
-          {[
-            { title: 'K3 & Budaya Kerja Industri', pct: 85, color: '#10b981', note: 'SOP & APD Bengkel' },
-            { title: 'Pemesinan Bubut & Frais', pct: 65, color: '#3b82f6', note: 'Cutting Speed & Tooling' },
-            { title: 'Fabrikasi & Alat Pemotong', pct: 60, color: '#ea580c', note: 'Shearing & Tap Drilling' },
-            { title: 'Gambar Teknik & CAD 3D', pct: 50, color: '#8b5cf6', note: 'Proyeksi & Pemodelan' }
-          ].map((item, idx) => (
-            <div key={idx} style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ color: 'var(--text-main)', fontSize: '0.86rem', fontWeight: 800 }}>{item.title}</span>
-                <span style={{ color: item.color, fontSize: '1.2rem', fontWeight: 900 }}>{item.pct}%</span>
-              </div>
-              <div style={{ fontSize: '0.72rem', color: '#64748b', marginBottom: '10px' }}>{item.note}</div>
-              <div style={{ height: '8px', width: '100%', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${item.pct}%`, background: item.color, borderRadius: '4px' }} />
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
     </div>

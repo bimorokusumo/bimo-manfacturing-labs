@@ -4287,4 +4287,4 @@ No matching component was found for:
 `)}function m(e,t,r){u.subVectors(r,t),d.subVectors(e,t),u.cross(d).normalize(),f.copy(u).normalize(),n===!0?(a.setFloat32(o,f.x,!0),o+=4,a.setFloat32(o,f.y,!0),o+=4,a.setFloat32(o,f.z,!0),o+=4):(a+=`	facet normal `+f.x+` `+f.y+` `+f.z+`
 `,a+=`		outer loop
 `)}function h(e){n===!0?(a.setFloat32(o,e.x,!0),o+=4,a.setFloat32(o,e.y,!0),o+=4,a.setFloat32(o,e.z,!0),o+=4):a+=`			vertex `+e.x+` `+e.y+` `+e.z+`
-`}}};export{Kc as C,U as D,H as E,tc as S,el as T,Bc as _,hy as a,Na as b,Tv as c,ms as d,Ci as f,Ts as g,_s as h,_y as i,uv as l,Fs as m,yy as n,iy as o,J as p,vy as r,Wv as s,by as t,Yg as u,q as v,nc as w,hl as x,Wc as y};
+`}}};export{hl as C,el as D,nc as E,H as O,Na as S,Kc as T,Ts as _,hy as a,Wc as b,Tv as c,ms as d,Ci as f,_s as g,Fs as h,_y as i,U as k,uv as l,ls as m,yy as n,iy as o,J as p,vy as r,Wv as s,by as t,Yg as u,Bc as v,tc as w,A as x,q as y};

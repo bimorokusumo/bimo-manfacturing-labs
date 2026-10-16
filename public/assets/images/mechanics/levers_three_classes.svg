@@ -54,7 +54,7 @@
     <!-- Details -->
     <g transform="translate(15, 160)">
       <rect x="0" y="0" width="195" height="90" rx="6" fill="#1e293b"/>
-      <text x="10" y="18" font-size="10" font-weight="800" fill="#38bdf8">✂️ Contoh Alat Bengkel:</text>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#38bdf8">[POTONG] Contoh Alat Bengkel:</text>
       <text x="10" y="34" font-size="9" fill="#e2e8f0">• Tang kombinasi &amp; tang potong</text>
       <text x="10" y="48" font-size="9" fill="#e2e8f0">• Gunting plat seng manual</text>
       <text x="10" y="62" font-size="9" fill="#e2e8f0">• Linggis pencabut paku</text>
@@ -97,7 +97,7 @@
     <!-- Details -->
     <g transform="translate(15, 160)">
       <rect x="0" y="0" width="195" height="90" rx="6" fill="#1e293b"/>
-      <text x="10" y="18" font-size="10" font-weight="800" fill="#fbbf24">📐 Contoh Alat Bengkel:</text>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#fbbf24">[UKUR] Contoh Alat Bengkel:</text>
       <text x="10" y="34" font-size="9" fill="#e2e8f0">• Tuas pemotong plat guillotine</text>
       <text x="10" y="48" font-size="9" fill="#e2e8f0">• Gerobak dorong tatal bubut</text>
       <text x="10" y="62" font-size="9" fill="#e2e8f0">• Pemecah mur &amp; pembuka botol</text>
@@ -140,7 +140,7 @@
     <!-- Details -->
     <g transform="translate(15, 160)">
       <rect x="0" y="0" width="200" height="90" rx="6" fill="#1e293b"/>
-      <text x="10" y="18" font-size="10" font-weight="800" fill="#34d399">🔬 Contoh Alat Bengkel:</text>
+      <text x="10" y="18" font-size="10" font-weight="800" fill="#34d399">[MIKRO] Contoh Alat Bengkel:</text>
       <text x="10" y="34" font-size="9" fill="#e2e8f0">• Pinset perakit mikro-mekanik</text>
       <text x="10" y="48" font-size="9" fill="#e2e8f0">• Sekop tatal beram mesin bubut</text>
       <text x="10" y="62" font-size="9" fill="#e2e8f0">• Lengan robot hidrolik CNC</text>

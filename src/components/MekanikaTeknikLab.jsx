@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
+import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import {
   Wrench,
@@ -17,7 +18,11 @@ import {
   RotateCw,
   CheckCircle2,
   BookOpen,
-  ArrowRight
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  Info
 } from 'lucide-react';
 
 
@@ -87,6 +92,1873 @@ const MECHANICS_QUIZ = [
   }
 ];
 
+// =============================================================================
+// KOMPONEN INFOGRAFIS DIGITAL (ILUSTRASI TEKNIK VEKTOR HD)
+// =============================================================================
+function DigitalInfographicCard({
+  imageSrc,
+  title,
+  tag = 'INFOGRAFIS DIGITAL TEKNIK',
+  takeaway,
+  formula,
+  accentColor = '#0284c7'
+}) {
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      border: `2px solid ${accentColor}30`,
+      boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+      overflow: 'hidden',
+      marginBottom: '20px'
+    }}>
+      <div style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+        padding: '12px 20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '8px',
+        borderBottom: `3px solid ${accentColor}`
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={18} color="#38bdf8" />
+          <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.3px' }}>
+            {title}
+          </h3>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {formula && (
+            <span style={{
+              background: '#0f172a',
+              color: '#38bdf8',
+              padding: '3px 10px',
+              borderRadius: '6px',
+              fontFamily: "'Fira Code', 'Courier New', monospace",
+              fontWeight: 900,
+              fontSize: '0.8rem',
+              border: '1px solid #38bdf840'
+            }}>
+              {formula}
+            </span>
+          )}
+          <span style={{
+            background: `${accentColor}25`,
+            color: '#38bdf8',
+            padding: '3px 10px',
+            borderRadius: '999px',
+            fontSize: '0.68rem',
+            fontWeight: 800,
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px',
+            border: `1px solid ${accentColor}50`
+          }}>
+            {tag}
+          </span>
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0b132b',
+        padding: '14px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottom: '1px solid #1e293b'
+      }}>
+        <img
+          src={imageSrc}
+          alt={title}
+          style={{
+            width: '100%',
+            maxHeight: '360px',
+            objectFit: 'contain',
+            borderRadius: '8px'
+          }}
+          loading="lazy"
+        />
+      </div>
+
+      {takeaway && (
+        <div style={{
+          background: '#f8fafc',
+          padding: '12px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          borderTop: '1px solid #e2e8f0'
+        }}>
+          <Info size={18} color={accentColor} style={{ flexShrink: 0 }} />
+          <div style={{ fontSize: '0.84rem', color: '#1e293b', lineHeight: 1.5 }}>
+            <strong style={{ color: accentColor }}>Poin Kunci Fisika: </strong>
+            {takeaway}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// REUSABLE COLLAPSIBLE PEDAGOGICAL CALCULATION CARD
+// =============================================================================
+function PedagogicalCalculationCard({
+  title = 'Bedah Langkah Perhitungan Fisika Mekanika',
+  topicBadge = 'STANDAR MEKANIKA TEKNIK',
+  themeColor = '#0284c7',
+  lightBg = '#f0f9ff',
+  borderColor = '#bae6fd',
+  givenItems = [],
+  formulaData = { main: '', title: '', description: '', terms: [] },
+  steps = [],
+  finalResult = { value: '', unit: '', subtitle: '', badgeText: '', badgeColor: '#16a34a', badgeBg: '#dcfce7' },
+  workshopInsight = { title: '', content: '' },
+  defaultOpen = false
+}) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  return (
+    <div style={{
+      marginTop: '16px',
+      background: '#ffffff',
+      borderRadius: '14px',
+      border: `2px solid ${borderColor}`,
+      boxShadow: `0 4px 16px ${themeColor}15`,
+      overflow: 'hidden',
+      transition: 'all 0.25s ease'
+    }}>
+      <div
+        onClick={() => { sound.playClick(); setIsOpen(!isOpen); }}
+        style={{
+          background: `linear-gradient(135deg, ${themeColor} 0%, #0f172a 100%)`,
+          padding: '12px 18px',
+          color: '#ffffff',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '8px',
+          cursor: 'pointer',
+          userSelect: 'none'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Compass size={18} color="#38bdf8" />
+          <span style={{ fontWeight: 900, fontSize: '0.92rem', letterSpacing: '0.3px' }}>
+            {title}
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{
+            fontSize: '0.68rem',
+            fontWeight: 800,
+            background: 'rgba(255,255,255,0.2)',
+            padding: '3px 8px',
+            borderRadius: '999px',
+            color: '#ffffff',
+            border: '1px solid rgba(255,255,255,0.3)',
+            textTransform: 'uppercase'
+          }}>
+            {topicBadge}
+          </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              sound.playClick();
+              setIsOpen(!isOpen);
+            }}
+            style={{
+              background: isOpen ? 'rgba(255,255,255,0.25)' : '#ffffff',
+              color: isOpen ? '#ffffff' : themeColor,
+              border: 'none',
+              borderRadius: '6px',
+              padding: '4px 10px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            {isOpen ? 'Tutup Rincian' : 'Buka 5 Tahap'}
+            {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
+      </div>
+
+      {!isOpen && (
+        <div style={{
+          padding: '12px 18px',
+          background: lightBg,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            {formulaData.main && (
+              <div style={{
+                background: '#0f172a',
+                color: '#38bdf8',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontFamily: "'Fira Code', 'Courier New', monospace",
+                fontWeight: 800,
+                fontSize: '0.92rem',
+                border: '1px solid #38bdf840'
+              }}>
+                {formulaData.main}
+              </div>
+            )}
+            <div>
+              <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+                Hasil Perhitungan Rumus:
+              </div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: themeColor }}>
+                {finalResult.value} {finalResult.unit && <span style={{ fontSize: '0.82rem', color: '#475569', fontWeight: 700 }}>{finalResult.unit}</span>}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {finalResult.badgeText && (
+              <span style={{
+                background: finalResult.badgeBg || '#dcfce7',
+                color: finalResult.badgeColor || '#166534',
+                padding: '5px 12px',
+                borderRadius: '6px',
+                fontSize: '0.76rem',
+                fontWeight: 800,
+                border: `1px solid ${finalResult.badgeColor}30`
+              }}>
+                {finalResult.badgeText}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => { sound.playClick(); setIsOpen(true); }}
+              style={{
+                background: themeColor,
+                color: '#ffffff',
+                border: 'none',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+              }}
+            >
+              Lihat Bukti Matematis (5 Tahap)
+              <ChevronDown size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isOpen && (
+        <div style={{ padding: '16px 18px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.8rem',
+              fontWeight: 900,
+              color: '#1e293b',
+              marginBottom: '8px',
+              textTransform: 'uppercase'
+            }}>
+              1. Data yang Diketahui (Input Variabel):
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '8px'
+            }}>
+              {givenItems.map((item, idx) => (
+                <div key={idx} style={{
+                  background: lightBg,
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: `1px solid ${borderColor}`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, marginBottom: '2px' }}>
+                    {item.label} {item.symbol ? `(${item.symbol})` : ''}:
+                  </div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 900, color: themeColor }}>
+                    {item.value} {item.unit && <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569' }}>{item.unit}</span>}
+                  </div>
+                  {item.note && (
+                    <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '3px', fontStyle: 'italic' }}>
+                      {item.note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            marginBottom: '16px',
+            background: '#f8fafc',
+            padding: '12px 14px',
+            borderRadius: '10px',
+            border: '1px solid #e2e8f0'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '6px',
+              marginBottom: '8px'
+            }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase' }}>
+                2. Rumus Baku Fisika / Mekanika Teknik:
+              </div>
+              {formulaData.title && (
+                <span style={{ fontSize: '0.72rem', color: themeColor, fontWeight: 800, background: lightBg, padding: '2px 8px', borderRadius: '4px' }}>
+                  {formulaData.title}
+                </span>
+              )}
+            </div>
+
+            <div style={{
+              background: '#0f172a',
+              color: '#38bdf8',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              fontSize: '1.15rem',
+              fontFamily: "'Fira Code', 'Courier New', monospace",
+              fontWeight: 800,
+              letterSpacing: '0.5px',
+              overflowX: 'auto',
+              border: `1.5px solid ${themeColor}60`,
+              marginBottom: '8px'
+            }}>
+              {formulaData.main}
+            </div>
+
+            {formulaData.description && (
+              <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.5, marginBottom: '6px' }}>
+                {formulaData.description}
+              </div>
+            )}
+
+            {formulaData.terms && formulaData.terms.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '6px' }}>
+                {formulaData.terms.map((t, idx) => (
+                  <span key={idx} style={{
+                    fontSize: '0.72rem',
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    color: '#334155'
+                  }}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{
+              fontSize: '0.8rem',
+              fontWeight: 900,
+              color: '#1e293b',
+              marginBottom: '10px',
+              textTransform: 'uppercase'
+            }}>
+              3. Langkah Pembuktian &amp; Pengerjaan Matematis:
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {steps.map((st, sIdx) => (
+                <div key={sIdx} style={{
+                  background: '#ffffff',
+                  border: '1.5px solid #cbd5e1',
+                  borderRadius: '10px',
+                  padding: '12px 16px',
+                  borderLeft: `5px solid ${themeColor}`,
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <span style={{
+                      background: themeColor,
+                      color: '#ffffff',
+                      fontSize: '0.78rem',
+                      fontWeight: 900,
+                      padding: '2px 8px',
+                      borderRadius: '5px'
+                    }}>
+                      Langkah {st.stepNum || (sIdx + 1)}
+                    </span>
+                    <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#1e293b' }}>
+                      {st.title}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontFamily: "'Fira Code', 'Courier New', monospace",
+                    fontSize: '1.02rem',
+                    fontWeight: 800,
+                    color: '#0f172a',
+                    background: lightBg,
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: `1.5px solid ${borderColor}`,
+                    overflowX: 'auto',
+                    whiteSpace: 'nowrap',
+                    letterSpacing: '0.3px'
+                  }}>
+                    {st.math}
+                  </div>
+                  {st.note && (
+                    <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '6px', lineHeight: 1.5 }}>
+                      [INFO] {st.note}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{
+            background: lightBg,
+            border: `2px solid ${themeColor}`,
+            borderRadius: '10px',
+            padding: '14px 18px',
+            marginBottom: '16px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '12px'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 900, color: themeColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                4. HASIL AKHIR PERHITUNGAN:
+              </div>
+              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#0f172a', marginTop: '2px', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                <span style={{ color: themeColor }}>{finalResult.value}</span>
+                {finalResult.unit && (
+                  <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#475569' }}>
+                    {finalResult.unit}
+                  </span>
+                )}
+              </div>
+              {finalResult.subtitle && (
+                <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px', fontWeight: 600 }}>
+                  {finalResult.subtitle}
+                </div>
+              )}
+            </div>
+
+            {finalResult.badgeText && (
+              <div style={{
+                background: finalResult.badgeBg || '#dcfce7',
+                color: finalResult.badgeColor || '#166534',
+                padding: '8px 14px',
+                borderRadius: '8px',
+                fontSize: '0.82rem',
+                fontWeight: 900,
+                border: `1px solid ${finalResult.badgeColor}40`,
+                textAlign: 'center',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
+              }}>
+                {finalResult.badgeText}
+              </div>
+            )}
+          </div>
+
+          {workshopInsight && workshopInsight.content && (
+            <div style={{
+              background: '#f8fafc',
+              borderLeft: `4px solid ${themeColor}`,
+              borderRadius: '8px',
+              padding: '12px 14px',
+              border: '1px solid #e2e8f0',
+              borderLeftWidth: '4px',
+              marginBottom: '16px'
+            }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                5. Analisis Praktik &amp; Arti di Bengkel Mesin:
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.55 }}>
+                {workshopInsight.content}
+              </div>
+            </div>
+          )}
+
+          <div style={{ textAlign: 'center' }}>
+            <button
+              type="button"
+              onClick={() => { sound.playClick(); setIsOpen(false); }}
+              style={{
+                background: '#f1f5f9',
+                border: '1px solid #cbd5e1',
+                padding: '6px 18px',
+                borderRadius: '6px',
+                fontSize: '0.76rem',
+                fontWeight: 800,
+                color: '#475569',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              Tutup Rincian Langkah Matematis [▴]
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// REUSABLE COLLAPSIBLE CASE STUDY CARD
+// =============================================================================
+function CaseStudyCard({
+  badge = 'STUDI KASUS NYATA BENGKEL MESIN SMK',
+  caseNumber = '1',
+  title,
+  subtitle,
+  svgIllustration,
+  scenarioText,
+  givenData = [],
+  questions = [],
+  solutions = [],
+  workshopSafety,
+  themeColor = '#0284c7',
+  defaultOpen = false
+}) {
+  const [isSolutionsOpen, setIsSolutionsOpen] = useState(defaultOpen);
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '24px',
+      marginTop: '20px',
+      border: '1px solid #e2e8f0',
+      boxShadow: '0 6px 20px rgba(0,0,0,0.05)'
+    }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span style={{
+              background: `${themeColor}15`,
+              color: themeColor,
+              padding: '3px 10px',
+              borderRadius: '999px',
+              fontSize: '0.72rem',
+              fontWeight: 900,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase'
+            }}>
+              {badge}
+            </span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b' }}>
+              Kasus #{caseNumber}
+            </span>
+          </div>
+          <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
+            {title}
+          </h3>
+          {subtitle && (
+            <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#64748b', lineHeight: 1.4 }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {svgIllustration && (
+        <div style={{
+          background: '#0b132b',
+          borderRadius: '14px',
+          padding: '16px',
+          marginBottom: '18px',
+          border: '1px solid #1e293b',
+          boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.4)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '0 4px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Diagram Ilustrasi Teknik:
+            </span>
+            <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+              Skema Vektor Gaya, Dimensi Jarak &amp; Titik Kerja
+            </span>
+          </div>
+          {svgIllustration}
+        </div>
+      )}
+
+      {scenarioText && (
+        <div style={{
+          background: '#f8fafc',
+          borderLeft: `4px solid ${themeColor}`,
+          padding: '14px 18px',
+          borderRadius: '0 10px 10px 0',
+          marginBottom: '16px'
+        }}>
+          <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '4px' }}>
+            Skenario Masalah di Bengkel:
+          </div>
+          <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
+            {scenarioText}
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+        {givenData && givenData.length > 0 && (
+          <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0369a1', textTransform: 'uppercase', marginBottom: '8px' }}>
+              Data Masalah (Diketahui):
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {givenData.map((item, idx) => (
+                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '4px' }}>
+                  <span style={{ color: '#475569' }}>{item.label}:</span>
+                  <strong style={{ color: '#0f172a' }}>{item.val}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {questions && questions.length > 0 && (
+          <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '10px', border: '1px solid #fde68a' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#b45309', textTransform: 'uppercase', marginBottom: '8px' }}>
+              Tantangan Teknis:
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {questions.map((q, idx) => (
+                <div key={idx} style={{ fontSize: '0.76rem', color: '#78350f', lineHeight: 1.45 }}>
+                  {q}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div style={{
+        background: '#ffffff',
+        borderRadius: '12px',
+        border: `2px solid ${isSolutionsOpen ? themeColor + '60' : '#e2e8f0'}`,
+        overflow: 'hidden',
+        marginBottom: '16px'
+      }}>
+        <div
+          onClick={() => { sound.playClick(); setIsSolutionsOpen(!isSolutionsOpen); }}
+          style={{
+            background: isSolutionsOpen ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' : '#f8fafc',
+            padding: '12px 18px',
+            color: isSolutionsOpen ? '#ffffff' : '#1e293b',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: 'pointer',
+            userSelect: 'none'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Wrench size={18} color={themeColor} />
+            <span style={{ fontWeight: 900, fontSize: '0.9rem' }}>
+              Bedah Penyelesaian Lengkap Langkah demi Langkah
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              sound.playClick();
+              setIsSolutionsOpen(!isSolutionsOpen);
+            }}
+            style={{
+              background: themeColor,
+              color: '#ffffff',
+              border: 'none',
+              padding: '4px 12px',
+              borderRadius: '6px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            {isSolutionsOpen ? 'Tutup Solusi' : 'Buka Solusi Lengkap'}
+            {isSolutionsOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </button>
+        </div>
+
+        {isSolutionsOpen && (
+          <div style={{ padding: '16px 18px', background: '#ffffff' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {solutions.map((sol, idx) => (
+                <div key={idx} style={{
+                  background: '#f8fafc',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  borderLeft: `4px solid ${themeColor}`
+                }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.86rem', color: '#0f172a', marginBottom: '6px' }}>
+                    {sol.title}
+                  </div>
+                  {sol.formula && (
+                    <div style={{
+                      background: '#0f172a',
+                      color: '#38bdf8',
+                      fontFamily: "'Fira Code', monospace",
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.86rem',
+                      fontWeight: 800,
+                      marginBottom: '6px',
+                      display: 'inline-block'
+                    }}>
+                      {sol.formula}
+                    </div>
+                  )}
+                  <p style={{ margin: '0 0 6px 0', fontSize: '0.8rem', color: '#334155', lineHeight: 1.5 }}>
+                    {sol.desc}
+                  </p>
+                  {sol.result && (
+                    <div style={{ fontSize: '0.78rem', color: '#166534', fontWeight: 800, background: '#dcfce7', padding: '3px 8px', borderRadius: '4px', display: 'inline-block' }}>
+                      Hasil: {sol.result}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {workshopSafety && (
+        <div style={{
+          background: '#fef2f2',
+          borderLeft: '4px solid #ef4444',
+          padding: '12px 16px',
+          borderRadius: '0 8px 8px 0',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '10px'
+        }}>
+          <ShieldCheck size={20} color="#dc2626" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#991b1b', textTransform: 'uppercase', marginBottom: '2px' }}>
+              Keselamatan Kerja Bengkel (K3):
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#7f1d1d', lineHeight: 1.45 }}>
+              {workshopSafety}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 1: TORSI & KUNCI PAS BAUT
+// =============================================================================
+function TorqueInteractiveSimulator({
+  torque,
+  setTorque,
+  distanceCm,
+  setDistanceCm,
+  onTurnBolt,
+  rotationAngle,
+  isRotating,
+  turnResult
+}) {
+  const dMeter = Math.max(0.01, distanceCm / 100);
+  const forceN = Math.round(torque / dMeter);
+  const forceKg = (forceN / 9.8).toFixed(1);
+
+  let forceBadge = { text: '[RINGAN] Gaya Otot Sangat Enteng (Cukup 1 Tangan)', color: '#16a34a', bg: '#dcfce7' };
+  if (forceN > 400) {
+    forceBadge = { text: '[BERAT] Gaya Melebihi Kapasitas Normal (Sambung Pipa!)', color: '#dc2626', bg: '#fee2e2' };
+  } else if (forceN > 180) {
+    forceBadge = { text: '[SEDANG] Tenaga 2 Tangan Normal Bengkel', color: '#ea580c', bg: '#ffedd5' };
+  }
+
+  const armLengthPx = Math.min(460, Math.max(90, (distanceCm / 120) * 440 + 70));
+  const hasPipe = distanceCm > 40;
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: '2px solid #0284c7',
+      boxShadow: '0 4px 16px rgba(2, 132, 199, 0.08)',
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color="#0284c7" />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
+            Simulator Interaktif: Uji Torsi &amp; Putar Baut Mesin
+          </h4>
+        </div>
+        <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          Hukum Momen Gaya: τ = F × d
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          PILIH KASUS BENGKEL (Preset Cepat):
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { label: 'Baut Motor M8 (30 Nm, 15 cm)', t: 30, d: 15 },
+            { label: 'Baut Roda Mobil (100 Nm, 30 cm)', t: 100, d: 30 },
+            { label: 'Baut Truk Fuso + Pipa (360 Nm, 100 cm)', t: 360, d: 100 },
+            { label: 'Gagang Terlalu Dekat (100 Nm, 10 cm - Macet!)', t: 100, d: 10 }
+          ].map(p => (
+            <button
+              key={p.label}
+              onClick={() => { sound.playClick(); setTorque(p.t); setDistanceCm(p.d); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: (torque === p.t && distanceCm === p.d) ? '2px solid #0284c7' : '1px solid #cbd5e1',
+                background: (torque === p.t && distanceCm === p.d) ? '#e0f2fe' : '#ffffff',
+                color: '#0369a1',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+        <div style={{ background: '#f0f9ff', padding: '12px 14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0369a1' }}>
+              Jarak Pegangan Tangan (d):
+            </span>
+            <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0284c7' }}>
+              {distanceCm} cm ({(distanceCm / 100).toFixed(2)} m)
+            </span>
+          </div>
+          <input
+            type="range"
+            min="8"
+            max="120"
+            step="1"
+            value={distanceCm}
+            onChange={(e) => setDistanceCm(Number(e.target.value))}
+            style={{ width: '100%', accentColor: '#0284c7', cursor: 'pointer' }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: '#64748b', marginTop: '4px' }}>
+            <span>8 cm (Dekat Baut)</span>
+            <span>35 cm (Ujung Kunci)</span>
+            <span>120 cm (Pipa Panjang)</span>
+          </div>
+        </div>
+
+        <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>
+              Torsi Baut Yang Dibutuhkan (τ):
+            </span>
+            <span style={{ fontSize: '0.92rem', fontWeight: 900, color: '#0f172a' }}>
+              {torque} Nm
+            </span>
+          </div>
+          <input
+            type="range"
+            min="20"
+            max="360"
+            step="5"
+            value={torque}
+            onChange={(e) => setTorque(Number(e.target.value))}
+            style={{ width: '100%', accentColor: '#0f172a', cursor: 'pointer' }}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: '#64748b', marginTop: '4px' }}>
+            <span>20 Nm (Motor)</span>
+            <span>120 Nm (Mobil)</span>
+            <span>360 Nm (Truk Fuso)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '14px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>
+            Gaya Otot Tangan yang Dibutuhkan (F = τ / d):
+          </div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#38bdf8', marginTop: '2px', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+            <span>{forceN.toLocaleString()} Newton</span>
+            <span style={{ fontSize: '0.95rem', color: '#bae6fd', fontWeight: 700 }}>(≈ {forceKg} kg tarikan tangan)</span>
+          </div>
+        </div>
+        <div style={{
+          background: forceBadge.bg,
+          color: forceBadge.color,
+          padding: '6px 14px',
+          borderRadius: '8px',
+          fontSize: '0.78rem',
+          fontWeight: 900,
+          border: `1px solid ${forceBadge.color}40`
+        }}>
+          {forceBadge.text}
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0b132b',
+        borderRadius: '14px',
+        padding: '16px',
+        marginBottom: '16px',
+        border: '1px solid #1e293b',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase' }}>
+            Visual Mekanisme Nyata (Bergerak Real-Time Sesuai Slider):
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            Lengan Momen d = {distanceCm} cm | Arah Vektor F = {forceN} N
+          </span>
+        </div>
+
+        <svg viewBox="0 0 700 180" width="100%" height="auto" style={{ display: 'block' }}>
+          <line x1="20" y1="120" x2="680" y2="120" stroke="#1e293b" strokeWidth="1" strokeDasharray="3,3" />
+
+          {hasPipe && (
+            <g>
+              <rect
+                x="200"
+                y="108"
+                width={Math.max(50, armLengthPx - 180)}
+                height="24"
+                rx="4"
+                fill="#ea580c"
+                stroke="#fdba74"
+                strokeWidth="1.5"
+                strokeDasharray="4,2"
+              />
+              <text x={200 + (armLengthPx - 180) / 2} y="124" fill="#ffffff" fontSize="9" fontWeight="900" textAnchor="middle">
+                Pipa Sambungan (Cheater Pipe)
+              </text>
+            </g>
+          )}
+
+          <path
+            d={`M 90,114 L ${armLengthPx},114 L ${armLengthPx},126 L 90,126 Z`}
+            fill="#94a3b8"
+            stroke="#cbd5e1"
+            strokeWidth="1.5"
+          />
+          <circle cx={armLengthPx} cy="120" r="10" fill="#1e293b" stroke="#94a3b8" strokeWidth="2.5" />
+
+          <g transform={`translate(${armLengthPx}, 120)`}>
+            <line x1="0" y1="0" x2="0" y2="-55" stroke={forceBadge.color} strokeWidth="3" />
+            <polygon points="-5,-48 0,-58 5,-48" fill={forceBadge.color} />
+            <circle cx="0" cy="0" r="4" fill={forceBadge.color} />
+            <text x="0" y="-64" fill={forceBadge.color} fontSize="11" fontWeight="900" textAnchor="middle">
+              F = {forceN} N
+            </text>
+            <text x="0" y="-76" fill="#cbd5e1" fontSize="8" textAnchor="middle">
+              (~{forceKg} kg)
+            </text>
+          </g>
+
+          <g
+            style={{
+              transform: `translate(90px, 120px) rotate(${rotationAngle}deg)`,
+              transformOrigin: '90px 120px',
+              transition: isRotating ? 'transform 0.5s ease-out' : 'none'
+            }}
+          >
+            <polygon
+              points="90,96 111,108 111,132 90,144 69,132 69,108"
+              fill="#334155"
+              stroke="#e2e8f0"
+              strokeWidth="2.5"
+            />
+            <circle cx="90" cy="120" r="10" fill="#0f172a" stroke="#64748b" />
+            <circle cx="90" cy="120" r="2" fill="#38bdf8" />
+            <text x="90" y="123" fill="#38bdf8" fontSize="8" fontWeight="900" textAnchor="middle">
+              M20
+            </text>
+          </g>
+
+          <path d="M 90,88 A 32 32 0 0 1 122,120" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3,2" />
+          <polygon points="120,115 125,123 118,122" fill="#38bdf8" />
+
+          <line x1="90" y1="155" x2={armLengthPx} y2="155" stroke="#38bdf8" strokeWidth="1.5" />
+          <line x1="90" y1="148" x2="90" y2="162" stroke="#38bdf8" strokeWidth="1.5" />
+          <line x1={armLengthPx} y1="148" x2={armLengthPx} y2="162" stroke="#38bdf8" strokeWidth="1.5" />
+          <text x={(90 + armLengthPx) / 2} y="168" fill="#38bdf8" fontSize="9.5" fontWeight="900" textAnchor="middle">
+            Lengan Momen d = {distanceCm} cm ({(distanceCm / 100).toFixed(2)} m)
+          </text>
+        </svg>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+        <button
+          onClick={onTurnBolt}
+          disabled={isRotating}
+          style={{
+            background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+            color: '#ffffff',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '10px',
+            fontWeight: 900,
+            fontSize: '0.92rem',
+            cursor: isRotating ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
+            transition: 'all 0.15s ease'
+          }}
+        >
+          <RotateCw size={18} className={isRotating ? 'spin-anim' : ''} />
+          {isRotating ? 'Baut Sedang Berputar...' : 'PUTAR BAUT (TEST GAYA OTOT)'}
+        </button>
+
+        {turnResult === true && (
+          <div style={{
+            background: '#dcfce7',
+            color: '#166534',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            fontSize: '0.82rem',
+            fontWeight: 800,
+            border: '1px solid #86efac'
+          }}>
+            [SUKSES] Baut M20 Berhasil Berputar! Gaya otot ({forceN} N / ~{forceKg} kg) aman dalam kapasitas tangan. +100 XP!
+          </div>
+        )}
+
+        {turnResult === false && (
+          <div style={{
+            background: '#fee2e2',
+            color: '#991b1b',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            fontSize: '0.82rem',
+            fontWeight: 800,
+            border: '1px solid #fca5a5'
+          }}>
+            [OVERLOAD] Gaya otot {forceN} N (~{forceKg} kg) melebihi batas kekuatan manusia! Baut macet. Geser tangan lebih jauh atau sambung pipa!
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 2: SISTEM TUAS (PENGUNGKIT)
+// =============================================================================
+function LeverInteractiveSimulator({
+  wVal,
+  setWVal,
+  lbVal,
+  setLbVal,
+  lkVal,
+  setLkVal
+}) {
+  const km = Number((lkVal / Math.max(0.1, lbVal)).toFixed(2));
+  const fRequired = Math.round(wVal / km);
+  const fKg = (fRequired / 9.8).toFixed(1);
+  const wKg = (wVal / 9.8).toFixed(1);
+
+  const totL = Math.max(1, lbVal + lkVal);
+  const fulcrumX = 60 + (lbVal / totL) * 280;
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: '2px solid #f59e0b',
+      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.08)',
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color="#d97706" />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#b45309' }}>
+            Simulator Interaktif: Sistem Tuas &amp; Pengungkit
+          </h4>
+        </div>
+        <span style={{ background: '#fef3c7', color: '#b45309', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          W × Lb = F × Lk (KM = Lk / Lb)
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#fffbeb', padding: '10px 12px', borderRadius: '10px', border: '1px solid #fed7aa' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          PRESET ALAT BENGKEL (Klik isi otomatis):
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { label: 'Tang Potong Kawat (KM 8x)', w: 800, lb: 2, lk: 16 },
+            { label: 'Gunting Plat Seng (KM 6x)', w: 600, lb: 5, lk: 30 },
+            { label: 'Linggis Pengungkit (KM 12x)', w: 1200, lb: 10, lk: 120 },
+            { label: 'Pinset Presisi (KM 0.5x)', w: 10, lb: 8, lk: 4 }
+          ].map(p => (
+            <button
+              key={p.label}
+              onClick={() => { sound.playClick(); setWVal(p.w); setLbVal(p.lb); setLkVal(p.lk); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: (wVal === p.w && lbVal === p.lb && lkVal === p.lk) ? '2px solid #b45309' : '1px solid #fed7aa',
+                background: (wVal === p.w && lbVal === p.lb && lkVal === p.lk) ? '#fef3c7' : '#ffffff',
+                color: '#92400e',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+        <div style={{ background: '#fef2f2', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fecaca' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#991b1b', marginBottom: '4px' }}>
+            <span>Berat Beban (W):</span>
+            <span>{wVal} N (~{wKg} kg)</span>
+          </div>
+          <input type="range" min="10" max="2000" step="10" value={wVal} onChange={(e) => setWVal(Number(e.target.value))} style={{ width: '100%', accentColor: '#ef4444' }} />
+        </div>
+
+        <div style={{ background: '#fffbeb', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fde68a' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#92400e', marginBottom: '4px' }}>
+            <span>Lengan Beban (Lb):</span>
+            <span>{lbVal} cm</span>
+          </div>
+          <input type="range" min="1" max="40" step="1" value={lbVal} onChange={(e) => setLbVal(Number(e.target.value))} style={{ width: '100%', accentColor: '#f59e0b' }} />
+        </div>
+
+        <div style={{ background: '#f0fdf4', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#166534', marginBottom: '4px' }}>
+            <span>Lengan Kuasa (Lk):</span>
+            <span>{lkVal} cm</span>
+          </div>
+          <input type="range" min="4" max="150" step="2" value={lkVal} onChange={(e) => setLkVal(Number(e.target.value))} style={{ width: '100%', accentColor: '#10b981' }} />
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '12px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase' }}>Gaya Kuasa Tangan (F = W / KM):</div>
+          <div style={{ fontSize: '1.45rem', fontWeight: 900, color: '#34d399', marginTop: '2px' }}>
+            {fRequired} Newton <span style={{ fontSize: '0.85rem', color: '#a7f3d0' }}>(≈ {fKg} kg)</span>
+          </div>
+        </div>
+        <div style={{
+          background: km >= 4 ? '#dcfce7' : (km >= 1 ? '#fef3c7' : '#fee2e2'),
+          color: km >= 4 ? '#166534' : (km >= 1 ? '#92400e' : '#991b1b'),
+          padding: '6px 14px',
+          borderRadius: '8px',
+          fontSize: '0.8rem',
+          fontWeight: 900
+        }}>
+          KM = {km}× Lipat ({km >= 1 ? 'Meringankan Beban' : 'Kecepatan Gerak'})
+        </div>
+      </div>
+
+      <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
+        <svg viewBox="0 0 400 130" width="100%" height="auto" style={{ display: 'block' }}>
+          <line x1="20" y1="90" x2="380" y2="90" stroke="#334155" strokeWidth="2" strokeDasharray="4,3" />
+          <polygon points={`${fulcrumX - 14},90 ${fulcrumX + 14},90 ${fulcrumX},65`} fill="#f59e0b" stroke="#d97706" strokeWidth="2" />
+          <circle cx={fulcrumX} cy="65" r="4" fill="#0f172a" />
+          <text x={fulcrumX} y="104" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="bold">Tumpuan (Fulcrum)</text>
+
+          <line x1="45" y1="65" x2="355" y2="65" stroke="#cbd5e1" strokeWidth="6" strokeLinecap="round" />
+
+          <rect x="35" y="32" width="30" height="28" rx="4" fill="#dc2626" stroke="#f87171" strokeWidth="1.5" />
+          <text x="50" y="49" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="900">W</text>
+          <text x="50" y="24" textAnchor="middle" fill="#f87171" fontSize="8.5" fontWeight="900">{wVal} N</text>
+          <line x1="50" y1="60" x2="50" y2="78" stroke="#f87171" strokeWidth="2.5" />
+          <polygon points="46,74 50,82 54,74" fill="#f87171" />
+
+          <circle cx="350" cy="42" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+          <text x="350" y="46" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="10">F_kuasa</text>
+          <text x="350" y="20" textAnchor="middle" fill="#34d399" fontSize="8.5" fontWeight="900">{fRequired} N</text>
+          <line x1="350" y1="56" x2="350" y2="78" stroke="#10b981" strokeWidth="2.5" />
+          <polygon points="346,74 350,82 354,74" fill="#10b981" />
+
+          <line x1="50" y1="114" x2={fulcrumX} y2="114" stroke="#fca5a5" strokeWidth="1.5" />
+          <text x={(50 + fulcrumX) / 2} y="124" textAnchor="middle" fill="#fca5a5" fontSize="7.5" fontWeight="bold">Lb = {lbVal} cm</text>
+          <line x1={fulcrumX} y1="114" x2="350" y2="114" stroke="#6ee7b7" strokeWidth="1.5" />
+          <text x={(fulcrumX + 350) / 2} y="124" textAnchor="middle" fill="#6ee7b7" fontSize="7.5" fontWeight="bold">Lk = {lkVal} cm</text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 3: KESETIMBANGAN BALOK CRANE
+// =============================================================================
+function BeamInteractiveSimulator({
+  loadX,
+  setLoadX,
+  loadP,
+  setLoadP,
+  beamL = 6.0
+}) {
+  const ra = Math.round((loadP * (beamL - loadX)) / beamL);
+  const rb = Math.round(loadP - ra);
+
+  const trolleyPx = 70 + (loadX / beamL) * 380;
+  const arrowRaH = Math.min(45, Math.max(15, (ra / Math.max(1, loadP)) * 50));
+  const arrowRbH = Math.min(45, Math.max(15, (rb / Math.max(1, loadP)) * 50));
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: '2px solid #8b5cf6',
+      boxShadow: '0 4px 16px rgba(139, 92, 246, 0.08)',
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color="#7c3aed" />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#6d28d9' }}>
+            Simulator Interaktif: Kesetimbangan Balok Girder Crane
+          </h4>
+        </div>
+        <span style={{ background: '#ede9fe', color: '#6d28d9', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          ΣM = 0 &amp; ΣFy = 0
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#f5f3ff', padding: '10px 12px', borderRadius: '10px', border: '1px solid #ddd6fe' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#5b21b6', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          POSISI TROLLEY DEREK (Klik geser cepat):
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { label: 'Dekat Tumpuan A (x = 1.0 m)', x: 1.0, p: 1200 },
+            { label: 'Tepat di Tengah Balok (x = 3.0 m)', x: 3.0, p: 1200 },
+            { label: 'Dekat Tumpuan B (x = 5.0 m)', x: 5.0, p: 1200 }
+          ].map(pr => (
+            <button
+              key={pr.label}
+              onClick={() => { sound.playClick(); setLoadX(pr.x); setLoadP(pr.p); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: (loadX === pr.x && loadP === pr.p) ? '2px solid #7c3aed' : '1px solid #ddd6fe',
+                background: (loadX === pr.x && loadP === pr.p) ? '#ede9fe' : '#ffffff',
+                color: '#6d28d9',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {pr.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+        <div style={{ background: '#f5f3ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#5b21b6', marginBottom: '4px' }}>
+            <span>Posisi Derek dari A (x):</span>
+            <span>{loadX.toFixed(1)} meter</span>
+          </div>
+          <input type="range" min="0.5" max="5.5" step="0.1" value={loadX} onChange={(e) => setLoadX(Number(e.target.value))} style={{ width: '100%', accentColor: '#7c3aed' }} />
+        </div>
+
+        <div style={{ background: '#f8fafc', padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>
+            <span>Berat Beban Mesin (P):</span>
+            <span>{loadP} Newton (~{(loadP / 9.8).toFixed(1)} kg)</span>
+          </div>
+          <input type="range" min="500" max="3000" step="50" value={loadP} onChange={(e) => setLoadP(Number(e.target.value))} style={{ width: '100%', accentColor: '#0f172a' }} />
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '12px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#c4b5fd', textTransform: 'uppercase' }}>Gaya Reaksi Tumpuan Balok:</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', marginTop: '2px', display: 'flex', gap: '16px' }}>
+            <span style={{ color: '#38bdf8' }}>RA = {ra} N</span>
+            <span style={{ color: '#a78bfa' }}>RB = {rb} N</span>
+          </div>
+        </div>
+        <div style={{ background: 'rgba(255,255,255,0.1)', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', color: '#e0e7ff' }}>
+          Total RA + RB = {ra + rb} N = P ({loadP} N) [SEIMBANG]
+        </div>
+      </div>
+
+      <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
+        <svg viewBox="0 0 520 150" width="100%" height="auto" style={{ display: 'block' }}>
+          <rect x="60" y="50" width="400" height="14" rx="2" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
+          <text x="260" y="42" fill="#cbd5e1" fontSize="9" fontWeight="bold" textAnchor="middle">Bentang Balok Girder L = 6.0 Meter</text>
+
+          <polygon points="58,85 82,85 70,64" fill="#0284c7" stroke="#38bdf8" strokeWidth="1.5" />
+          <circle cx="70" cy="64" r="3" fill="#ffffff" />
+          <text x="70" y="98" fill="#38bdf8" fontSize="8.5" fontWeight="bold" textAnchor="middle">Tumpuan A</text>
+          <line x1="70" y1={85 + arrowRaH} x2="70" y2="85" stroke="#38bdf8" strokeWidth="3" />
+          <polygon points="66,88 70,80 74,88" fill="#38bdf8" />
+          <text x="70" y={102 + arrowRaH} fill="#38bdf8" fontSize="9" fontWeight="900" textAnchor="middle">RA = {ra} N</text>
+
+          <circle cx="445" cy="74" r="6" fill="#7c3aed" stroke="#a78bfa" strokeWidth="1.5" />
+          <circle cx="455" cy="74" r="6" fill="#7c3aed" stroke="#a78bfa" strokeWidth="1.5" />
+          <line x1="435" y1="82" x2="465" y2="82" stroke="#64748b" strokeWidth="2" />
+          <text x="450" y="96" fill="#a78bfa" fontSize="8.5" fontWeight="bold" textAnchor="middle">Tumpuan B (Rol)</text>
+          <line x1="450" y1={85 + arrowRbH} x2="450" y2="85" stroke="#a78bfa" strokeWidth="3" />
+          <polygon points="446,88 450,80 454,88" fill="#a78bfa" />
+          <text x="450" y={102 + arrowRbH} fill="#a78bfa" fontSize="9" fontWeight="900" textAnchor="middle">RB = {rb} N</text>
+
+          <g transform={`translate(${trolleyPx}, 50)`}>
+            <rect x="-14" y="-8" width="28" height="12" rx="3" fill="#ea580c" stroke="#fed7aa" strokeWidth="1" />
+            <line x1="0" y1="4" x2="0" y2="35" stroke="#f97316" strokeWidth="2" strokeDasharray="3,2" />
+            <rect x="-24" y="35" width="48" height="26" rx="4" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+            <text x="0" y="51" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P = {loadP} N</text>
+            <line x1="0" y1="61" x2="0" y2="78" stroke="#ef4444" strokeWidth="2.5" />
+            <polygon points="-4,74 0,82 4,74" fill="#ef4444" />
+          </g>
+
+          <line x1="70" y1="20" x2={trolleyPx} y2="20" stroke="#f59e0b" strokeWidth="1.5" />
+          <line x1="70" y1="14" x2="70" y2="26" stroke="#f59e0b" strokeWidth="1.5" />
+          <line x1={trolleyPx} y1="14" x2={trolleyPx} y2="26" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x={(70 + trolleyPx) / 2} y="16" fill="#fbbf24" fontSize="8" fontWeight="bold" textAnchor="middle">x = {loadX.toFixed(1)} m</text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 4: TEGANGAN & REGANGAN BAUT SILINDER
+// =============================================================================
+function StressInteractiveSimulator({
+  stressD,
+  setStressD,
+  stressF,
+  setStressF
+}) {
+  const area = (Math.PI * Math.pow(stressD / 2, 2)).toFixed(1);
+  const stressMPa = Math.round(stressF / Number(area));
+
+  let zone = { name: 'ZONA ELASTIS (AMAN)', color: '#10b981', bg: '#dcfce7', desc: 'Baut memanjang elastis dan akan kembali normal saat beban dilepas. Standar aman pengencangan baut bengkel.' };
+  let specimenState = 'elastic';
+
+  if (stressMPa > 480) {
+    zone = { name: '[BAHAYA] PATAH TERBELAH (UTS)', color: '#dc2626', bg: '#fee2e2', desc: 'Tegangan melewati batas kekuatan tarik maksimal (UTS = 480 MPa). Baut patah putus terbelah dua!' };
+    specimenState = 'fracture';
+  } else if (stressMPa > 380) {
+    zone = { name: '[PERINGATAN] NECKING (PENYEMPITAN EKSTREM)', color: '#ea580c', bg: '#ffedd5', desc: 'Penampang baut mengecil secara lokal (necking). Baut segera patah bila beban tidak dikurangi!' };
+    specimenState = 'necking';
+  } else if (stressMPa > 250) {
+    zone = { name: 'DEFORMASI PLASTIS (MULUR PERMANEN)', color: '#f59e0b', bg: '#fef3c7', desc: 'Baut melewati batas luluh (Yield Point = 250 MPa). Ulir baut melar permanen dan tidak bisa kencang lagi.' };
+    specimenState = 'plastic';
+  }
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: `2px solid ${zone.color}`,
+      boxShadow: `0 4px 16px ${zone.color}20`,
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color={zone.color} />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>
+            Simulator Interaktif: Uji Tarik &amp; Kekuatan Baut Silinder
+          </h4>
+        </div>
+        <span style={{ background: zone.bg, color: zone.color, padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          σ = F / A
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          PRESET PENGUJIAN TARIK (Klik uji instan):
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { label: 'Baut M10 Gaya 12 kN (Aman Elastis)', d: 10, f: 12000 },
+            { label: 'Baut M10 Gaya 25 kN (Plastis Mulur)', d: 10, f: 25000 },
+            { label: 'Baut M10 Gaya 35 kN (Necking Kritis)', d: 10, f: 35000 },
+            { label: 'Baut M8 Gaya 30 kN (Patah Putus)', d: 8, f: 30000 }
+          ].map(pr => (
+            <button
+              key={pr.label}
+              onClick={() => { sound.playClick(); setStressD(pr.d); setStressF(pr.f); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: (stressD === pr.d && stressF === pr.f) ? '2px solid #0284c7' : '1px solid #cbd5e1',
+                background: (stressD === pr.d && stressF === pr.f) ? '#e0f2fe' : '#ffffff',
+                color: '#0369a1',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {pr.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+        <div style={{ background: '#f0f9ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#0369a1', marginBottom: '4px' }}>
+            <span>Diameter Baut (d):</span>
+            <span>M{stressD} ({stressD} mm)</span>
+          </div>
+          <input type="range" min="6" max="24" step="1" value={stressD} onChange={(e) => setStressD(Number(e.target.value))} style={{ width: '100%', accentColor: '#0284c7' }} />
+          <div style={{ fontSize: '0.66rem', color: '#64748b', marginTop: '2px' }}>Luas Penampang A = {area} mm²</div>
+        </div>
+
+        <div style={{ background: '#f8fafc', padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>
+            <span>Gaya Tarik Aksial (F):</span>
+            <span>{stressF.toLocaleString()} Newton</span>
+          </div>
+          <input type="range" min="1000" max="50000" step="500" value={stressF} onChange={(e) => setStressF(Number(e.target.value))} style={{ width: '100%', accentColor: '#0f172a' }} />
+          <div style={{ fontSize: '0.66rem', color: '#64748b', marginTop: '2px' }}>Setara beban gravitasi ≈ {(stressF / 9.8).toFixed(1)} kg</div>
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '12px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase' }}>Tegangan Tarik Bahan (σ = F / A):</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: zone.color, marginTop: '2px' }}>
+            {stressMPa} MPa <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>(N/mm²)</span>
+          </div>
+        </div>
+        <div style={{ background: zone.bg, color: zone.color, padding: '6px 14px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 900 }}>
+          {zone.name}
+        </div>
+      </div>
+
+      <div style={{ background: '#0b132b', borderRadius: '12px', padding: '16px', border: '1px solid #1e293b' }}>
+        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase' }}>
+          Visual Morfologi Baut Silinder: {zone.desc}
+        </div>
+        <svg viewBox="0 0 500 100" width="100%" height="auto" style={{ display: 'block' }}>
+          <line x1="30" y1="50" x2="80" y2="50" stroke="#38bdf8" strokeWidth="3" />
+          <polygon points="35,46 25,50 35,54" fill="#38bdf8" />
+          <text x="35" y="38" fill="#38bdf8" fontSize="9" fontWeight="bold">Tarik F</text>
+
+          <line x1="470" y1="50" x2="420" y2="50" stroke="#38bdf8" strokeWidth="3" />
+          <polygon points="465,46 475,50 465,54" fill="#38bdf8" />
+          <text x="465" y="38" fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="end">Tarik F</text>
+
+          <rect x="80" y="32" width="30" height="36" rx="3" fill="#475569" stroke="#94a3b8" />
+          <rect x="390" y="32" width="30" height="36" rx="3" fill="#475569" stroke="#94a3b8" />
+
+          {specimenState === 'elastic' && (
+            <rect x="110" y="38" width="280" height="24" rx="2" fill="#10b981" stroke="#34d399" strokeWidth="1.5" />
+          )}
+
+          {specimenState === 'plastic' && (
+            <rect x="110" y="39" width="280" height="22" rx="2" fill="#f59e0b" stroke="#fbbf24" strokeWidth="1.5" />
+          )}
+
+          {specimenState === 'necking' && (
+            <path
+              d="M 110,38 L 220,38 Q 250,46 280,38 L 390,38 L 390,62 L 280,62 Q 250,54 220,62 L 110,62 Z"
+              fill="#ea580c"
+              stroke="#fdba74"
+              strokeWidth="1.5"
+            />
+          )}
+
+          {specimenState === 'fracture' && (
+            <g>
+              <path d="M 110,38 L 235,38 L 245,45 L 238,55 L 246,62 L 110,62 Z" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+              <path d="M 265,38 L 390,38 L 390,62 L 265,62 L 255,55 L 262,45 Z" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+              <text x="250" y="28" fill="#ef4444" fontSize="10" fontWeight="900" textAnchor="middle">PATAH TERBELAH!</text>
+            </g>
+          )}
+
+          <text x="250" y="86" fill="#cbd5e1" fontSize="8.5" textAnchor="middle">
+            Diameter Nominal d = {stressD} mm | Luas A = {area} mm² | σ = {stressMPa} MPa
+          </text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 5: KATROL & CHAIN BLOCK
+// =============================================================================
+function PulleyInteractiveSimulator({
+  pulleyW,
+  setPulleyW,
+  pulleyN,
+  setPulleyN
+}) {
+  const machineW_N = Math.round(pulleyW * 9.8);
+  const pullForceN = Math.round(machineW_N / pulleyN);
+  const handForceN = Math.round(pullForceN / 4);
+  const handKg = (handForceN / 9.8).toFixed(1);
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: '2px solid #059669',
+      boxShadow: '0 4px 16px rgba(5, 150, 105, 0.08)',
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color="#059669" />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#047857' }}>
+            Simulator Interaktif: Takal Chain Block &amp; Katrol Majemuk
+          </h4>
+        </div>
+        <span style={{ background: '#d1fae5', color: '#047857', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          F = W / n
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#ecfdf5', padding: '10px 12px', borderRadius: '10px', border: '1px solid #a7f3d0' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#065f46', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          PRESET ALAT ANGKAT BENGKEL:
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { label: 'Katrol Tunggal (n=1)', w: 500, n: 1 },
+            { label: 'Takal 2 Tali (n=2)', w: 800, n: 2 },
+            { label: 'Chain Block Standar (n=4)', w: 1000, n: 4 },
+            { label: 'Gantry Hoist Heavy (n=6)', w: 2000, n: 6 }
+          ].map(pr => (
+            <button
+              key={pr.label}
+              onClick={() => { sound.playClick(); setPulleyW(pr.w); setPulleyN(pr.n); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: (pulleyW === pr.w && pulleyN === pr.n) ? '2px solid #059669' : '1px solid #a7f3d0',
+                background: (pulleyW === pr.w && pulleyN === pr.n) ? '#d1fae5' : '#ffffff',
+                color: '#065f46',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {pr.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+        <div style={{ background: '#f8fafc', padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>
+            <span>Massa Mesin (m):</span>
+            <span>{pulleyW.toLocaleString()} kg ({machineW_N.toLocaleString()} N)</span>
+          </div>
+          <input type="range" min="100" max="2500" step="50" value={pulleyW} onChange={(e) => setPulleyW(Number(e.target.value))} style={{ width: '100%', accentColor: '#059669' }} />
+        </div>
+
+        <div style={{ background: '#ecfdf5', padding: '10px 12px', borderRadius: '8px', border: '1px solid #a7f3d0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#065f46', marginBottom: '4px' }}>
+            <span>Jumlah Tali Penahan Beban (n):</span>
+            <span>n = {pulleyN} utas tali (KM = {pulleyN}x)</span>
+          </div>
+          <input type="range" min="1" max="6" step="1" value={pulleyN} onChange={(e) => setPulleyN(Number(e.target.value))} style={{ width: '100%', accentColor: '#059669' }} />
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '12px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase' }}>Gaya Tarik Rantai Tangan (+ Reduksi Gigi 1:4):</div>
+          <div style={{ fontSize: '1.45rem', fontWeight: 900, color: '#34d399', marginTop: '2px' }}>
+            {handForceN.toLocaleString()} Newton <span style={{ fontSize: '0.85rem', color: '#a7f3d0' }}>(≈ {handKg} kg tarikan)</span>
+          </div>
+        </div>
+        <div style={{ background: '#d1fae5', color: '#065f46', padding: '6px 14px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 900 }}>
+          KM Total = {pulleyN * 4}x Lipat (Diringankan Drastis!)
+        </div>
+      </div>
+
+      <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
+        <svg viewBox="0 0 460 140" width="100%" height="auto" style={{ display: 'block' }}>
+          <rect x="50" y="10" width="360" height="12" rx="2" fill="#475569" stroke="#64748b" />
+          <text x="230" y="20" fill="#94a3b8" fontSize="8" textAnchor="middle">Balok Penyangga Bengkel</text>
+
+          <circle cx="160" cy="38" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+          <circle cx="160" cy="80" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+
+          <line x1="148" y1="38" x2="148" y2="80" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="3,2" />
+          <line x1="172" y1="38" x2="172" y2="80" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="3,2" />
+          <text x="160" y="62" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">n = {pulleyN} Tali</text>
+
+          <rect x="110" y="98" width="100" height="26" rx="3" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+          <text x="160" y="114" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">Mesin {pulleyW} kg</text>
+
+          <circle cx="320" cy="45" r="16" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+          <text x="320" y="48" fill="#fbbf24" fontSize="7.5" fontWeight="bold" textAnchor="middle">Gear 1:4</text>
+          <line x1="310" y1="60" x2="310" y2="105" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,2" />
+          <circle cx="310" cy="115" r="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+          <text x="310" y="118" fill="#10b981" fontSize="9" fontWeight="bold" textAnchor="middle">F</text>
+          <text x="330" y="118" fill="#86efac" fontSize="9" fontWeight="900">F = {handForceN} N (~{handKg} kg)</text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// INTERACTIVE SIMULATOR 6: GESEKAN & BIDANG MIRING
+// =============================================================================
+function FrictionInteractiveSimulator({
+  alpha,
+  setAlpha,
+  surface,
+  setSurface
+}) {
+  const wN = 2940;
+  let mu = 0.35;
+  if (surface === 'dry') mu = 0.55;
+  if (surface === 'grease') mu = 0.15;
+
+  const rad = (alpha * Math.PI) / 180;
+  const normalN = Math.round(wN * Math.cos(rad));
+  const wxN = Math.round(wN * Math.sin(rad));
+  const fsMax = Math.round(mu * normalN);
+  const isSliding = wxN > fsMax;
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      borderRadius: '16px',
+      padding: '20px',
+      border: `2px solid ${isSliding ? '#dc2626' : '#10b981'}`,
+      boxShadow: `0 4px 16px ${isSliding ? '#dc262620' : '#10b98120'}`,
+      marginBottom: '20px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sliders size={20} color={isSliding ? '#dc2626' : '#10b981'} />
+          <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>
+            Simulator Interaktif: Bidang Miring &amp; Gesekan Statis Ramp
+          </h4>
+        </div>
+        <span style={{ background: isSliding ? '#fee2e2' : '#dcfce7', color: isSliding ? '#991b1b' : '#166534', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
+          fs = μ × N | Wx = W × sin(α)
+        </span>
+      </div>
+
+      <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+        <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+          KONDISI PERMUKAAN RAMP:
+        </span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '6px' }}>
+          {[
+            { id: 'dry', label: 'Papan Kayu Kering (μ = 0,55)', mu: 0.55 },
+            { id: 'steel', label: 'Pelat Bordes Baja (μ = 0,35)', mu: 0.35 },
+            { id: 'grease', label: 'Kena Ceceran Oli Licin! (μ = 0,15)', mu: 0.15 }
+          ].map(s => (
+            <button
+              key={s.id}
+              onClick={() => { sound.playClick(); setSurface(s.id); }}
+              style={{
+                padding: '6px 8px',
+                borderRadius: '6px',
+                border: surface === s.id ? '2px solid #0284c7' : '1px solid #cbd5e1',
+                background: surface === s.id ? (s.id === 'grease' ? '#fee2e2' : '#e0f2fe') : '#ffffff',
+                color: surface === s.id ? (s.id === 'grease' ? '#991b1b' : '#0369a1') : '#475569',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ background: '#f0f9ff', padding: '10px 14px', borderRadius: '8px', border: '1px solid #bae6fd', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#0369a1', marginBottom: '4px' }}>
+          <span>Sudut Kemiringan Ramp (α):</span>
+          <span>{alpha}°</span>
+        </div>
+        <input type="range" min="5" max="45" step="1" value={alpha} onChange={(e) => setAlpha(Number(e.target.value))} style={{ width: '100%', accentColor: '#0284c7' }} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: '#64748b', marginTop: '2px' }}>
+          <span>5° (Sangat Landai)</span>
+          <span>25° (Standar Bongkar Muat)</span>
+          <span>45° (Sangat Curam)</span>
+        </div>
+      </div>
+
+      <div style={{
+        background: '#0f172a',
+        borderRadius: '12px',
+        padding: '12px 18px',
+        color: '#ffffff',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        marginBottom: '16px'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase' }}>Gaya Luncur Gravitasi vs Gesek Penahan:</div>
+          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', marginTop: '2px', display: 'flex', gap: '14px' }}>
+            <span style={{ color: '#ef4444' }}>Wx = {wxN} N</span>
+            <span style={{ color: '#10b981' }}>fs,max = {fsMax} N</span>
+          </div>
+        </div>
+        <div style={{
+          background: isSliding ? '#fee2e2' : '#dcfce7',
+          color: isSliding ? '#991b1b' : '#166534',
+          padding: '6px 14px',
+          borderRadius: '8px',
+          fontSize: '0.82rem',
+          fontWeight: 900
+        }}>
+          {isSliding ? '[BAHAYA!] MEROSOT JATUH BEBAS' : '[AMAN] DIAM TERKUNCI GESEKAN'}
+        </div>
+      </div>
+
+      <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
+        <svg viewBox="0 0 460 140" width="100%" height="auto" style={{ display: 'block' }}>
+          <line x1="20" y1="120" x2="440" y2="120" stroke="#475569" strokeWidth="2" />
+
+          <polygon
+            points={`80,${120 - Math.min(80, Math.tan(rad) * 260)} 340,120 80,120`}
+            fill="#1e293b"
+            stroke="#f59e0b"
+            strokeWidth="2"
+          />
+          <text x="280" y="114" fill="#fbbf24" fontSize="8.5" fontWeight="bold">α = {alpha}°</text>
+
+          <g transform={`translate(${180}, ${120 - Math.tan(rad) * 160}) rotate(${alpha})`}>
+            <rect x="-20" y="-28" width="40" height="28" rx="3" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+            <text x="0" y="-12" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">Genset 300kg</text>
+            <line x1="0" y1="-14" x2="30" y2="-14" stroke="#ef4444" strokeWidth="2" />
+            <polygon points="26,-17 32,-14 26,-11" fill="#ef4444" />
+            <line x1="0" y1="-14" x2="-30" y2="-14" stroke="#10b981" strokeWidth="2" />
+            <polygon points="-26,-17 -32,-14 -26,-11" fill="#10b981" />
+          </g>
+
+          {surface === 'grease' && (
+            <g transform="translate(220, 95)">
+              <circle cx="0" cy="0" r="4" fill="#0f172a" stroke="#fbbf24" strokeWidth="1.5" />
+              <text x="8" y="3" fill="#fbbf24" fontSize="7.5" fontWeight="bold">Tumpahan Oli Licin!</text>
+            </g>
+          )}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () => {}, addMissionCompleted = () => {}, onOpenDiagnostic }) {
   const { isVoiceActive } = useAccessibility();
 
@@ -108,37 +1980,18 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
   // ===========================================================================
   // STATE TAB 1: MOMEN GAYA & TORSI (KUNCI PAS BAUT)
   // ===========================================================================
-  const [handDistanceCm, setHandDistanceCm] = useState(15);
-  const [requiredTorqueNm, setRequiredTorqueNm] = useState(60);
   const [isRotatingBolt, setIsRotatingBolt] = useState(false);
   const [rotationAngle, setRotationAngle] = useState(0);
   const [boltTurnSuccess, setBoltTurnSuccess] = useState(null);
 
-  const handDistanceMeter = handDistanceCm / 100;
-  const effortForceNewton = Math.round(requiredTorqueNm / handDistanceMeter);
-  const effortKgEquivalent = (effortForceNewton / 9.8).toFixed(1);
-
-  let effortStatus = 'heavy';
-  let effortColor = '#dc2626';
-  let effortBadge = '[BERAT] SANGAT BERAT - Beban Melebihi Kapasitas Normal';
-  let effortAdvice = 'Pegangan terlalu dekat ke baut! Geser tangan lebih jauh atau sambung pipa agar enteng.';
-
-  if (effortForceNewton <= 150) {
-    effortStatus = 'light';
-    effortColor = '#16a34a';
-    effortBadge = '[RINGAN] SANGAT EFISIEN - Torsi Optimal 1 Tangan';
-    effortAdvice = 'Lengan momen sangat panjang! Torsi tercapai dengan gaya otot minimal.';
-  } else if (effortForceNewton <= 350) {
-    effortStatus = 'medium';
-    effortColor = '#ea580c';
-    effortBadge = '[SEDANG] NORMAL - Tenaga Standar';
-    effortAdvice = 'Posisi pegangan standar ujung kunci. Baut bisa diputar dengan dua tangan.';
-  }
-
   const handleTurnBolt = () => {
     sound.playClick();
-    if (effortForceNewton > 500) {
-      sound.playError ? sound.playError() : sound.playClick();
+    const dMeter = Math.max(0.01, userDistanceCm / 100);
+    const effForce = Math.round(userTorqueVal / dMeter);
+
+    if (effForce > 500) {
+      if (sound.playError) sound.playError();
+      else sound.playClick();
       setBoltTurnSuccess(false);
       return;
     }
@@ -318,306 +2171,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
   // ===========================================================================
   // REUSABLE PEDAGOGICAL CALCULATION CARD (BEDAH LANGKAH PERHITUNGAN DETAIL)
   // ===========================================================================
-  const renderPedagogicalCalculationCard = ({
-    title = 'Bedah Langkah Perhitungan Fisika Mekanika',
-    topicBadge = 'STANDAR MEKANIKA TEKNIK',
-    themeColor = '#0284c7',
-    lightBg = '#f0f9ff',
-    borderColor = '#bae6fd',
-    givenItems = [], // [{ label, symbol, value, unit, note }]
-    formulaData = { main: '', title: '', description: '', terms: [] },
-    steps = [], // [{ stepNum, title, math, note }]
-    finalResult = { value: '', unit: '', subtitle: '', badgeText: '', badgeColor: '#16a34a', badgeBg: '#dcfce7' },
-    workshopInsight = { title: '', content: '' }
-  }) => {
-    return (
-      <div style={{
-        marginTop: '16px',
-        background: '#ffffff',
-        borderRadius: '14px',
-        border: `2px solid ${borderColor}`,
-        boxShadow: `0 6px 18px ${themeColor}15`,
-        overflow: 'hidden'
-      }}>
-        {/* Card Header */}
-        <div style={{
-          background: `linear-gradient(135deg, ${themeColor} 0%, #0f172a 100%)`,
-          padding: '12px 18px',
-          color: '#ffffff',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '8px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Compass size={18} color="#0284c7" />
-            <span style={{ fontWeight: 900, fontSize: '0.92rem', letterSpacing: '0.3px' }}>
-              {title}
-            </span>
-          </div>
-          <span style={{
-            fontSize: '0.68rem',
-            fontWeight: 800,
-            background: 'rgba(255,255,255,0.2)',
-            padding: '3px 8px',
-            borderRadius: '999px',
-            color: '#ffffff',
-            border: '1px solid rgba(255,255,255,0.3)',
-            textTransform: 'uppercase'
-          }}>
-            {topicBadge}
-          </span>
-        </div>
-
-        <div style={{ padding: '16px 18px' }}>
-          {/* SECTION 1: DIKETAHUI DARI DATA INPUT / SIMULASI */}
-          <div style={{ marginBottom: '16px' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.8rem',
-              fontWeight: 900,
-              color: '#1e293b',
-              marginBottom: '8px',
-              textTransform: 'uppercase'
-            }}>
-              1. Data yang Diketahui (Input Variabel):
-            </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '8px'
-            }}>
-              {givenItems.map((item, idx) => (
-                <div key={idx} style={{
-                  background: lightBg,
-                  padding: '10px 12px',
-                  borderRadius: '8px',
-                  border: `1px solid ${borderColor}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between'
-                }}>
-                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, marginBottom: '2px' }}>
-                    {item.label} {item.symbol ? `(${item.symbol})` : ''}:
-                  </div>
-                  <div style={{ fontSize: '1.05rem', fontWeight: 900, color: themeColor }}>
-                    {item.value} {item.unit && <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569' }}>{item.unit}</span>}
-                  </div>
-                  {item.note && (
-                    <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '3px', fontStyle: 'italic' }}>
-                      {item.note}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* SECTION 2: RUMUS DASAR / BAKU FISIKA */}
-          <div style={{
-            marginBottom: '16px',
-            background: '#f8fafc',
-            padding: '12px 14px',
-            borderRadius: '10px',
-            border: '1px solid #e2e8f0'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '6px',
-              marginBottom: '8px'
-            }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase' }}>
-                2. Rumus Baku Fisika / Mekanika Teknik:
-              </div>
-              {formulaData.title && (
-                <span style={{ fontSize: '0.72rem', color: themeColor, fontWeight: 800, background: lightBg, padding: '2px 8px', borderRadius: '4px' }}>
-                  {formulaData.title}
-                </span>
-              )}
-            </div>
-
-            <div style={{
-              background: '#0f172a',
-              color: '#38bdf8',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              fontSize: '1.15rem',
-              fontWeight: 900,
-              fontFamily: "'Fira Code', monospace",
-              textAlign: 'center',
-              letterSpacing: '0.5px',
-              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)',
-              marginBottom: '8px'
-            }}>
-              {formulaData.main}
-            </div>
-
-            {formulaData.description && (
-              <div style={{ fontSize: '0.75rem', color: '#475569', lineHeight: 1.45, marginBottom: '6px' }}>
-                {formulaData.description}
-              </div>
-            )}
-
-            {formulaData.terms && formulaData.terms.length > 0 && (
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '6px 12px',
-                fontSize: '0.7rem',
-                color: '#64748b',
-                background: '#ffffff',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                border: '1px solid #e2e8f0'
-              }}>
-                {formulaData.terms.map((term, tIdx) => (
-                  <span key={tIdx}>• {term}</span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* SECTION 3: LANGKAH SUBSTITUSI & HITUNGAN DETAIL */}
-          <div style={{ marginBottom: '18px' }}>
-            <div style={{
-              fontSize: '1.05rem',
-              fontWeight: 900,
-              color: '#0f172a',
-              marginBottom: '10px',
-              textTransform: 'uppercase',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}>
-              3. Langkah Substitusi &amp; Penjabaran Perhitungan:
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {steps.map((st, sIdx) => (
-                <div key={sIdx} style={{
-                  background: '#ffffff',
-                  border: '1.5px solid #cbd5e1',
-                  borderRadius: '10px',
-                  padding: '12px 16px',
-                  borderLeft: `5px solid ${themeColor}`,
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <span style={{
-                      background: themeColor,
-                      color: '#ffffff',
-                      fontSize: '0.78rem',
-                      fontWeight: 900,
-                      padding: '2px 8px',
-                      borderRadius: '5px'
-                    }}>
-                      Langkah {st.stepNum || (sIdx + 1)}
-                    </span>
-                    <span style={{ fontSize: '0.98rem', fontWeight: 900, color: '#1e293b' }}>
-                      {st.title}
-                    </span>
-                  </div>
-                  <div style={{
-                    fontFamily: "'Fira Code', 'Courier New', monospace",
-                    fontSize: '1.02rem',
-                    fontWeight: 800,
-                    color: '#0f172a',
-                    background: lightBg,
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: `1.5px solid ${borderColor}`,
-                    overflowX: 'auto',
-                    whiteSpace: 'nowrap',
-                    letterSpacing: '0.3px'
-                  }}>
-                    {st.math}
-                  </div>
-                  {st.note && (
-                    <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '6px', lineHeight: 1.5 }}>
-                      [INFO] {st.note}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* SECTION 4: HASIL AKHIR PERHITUNGAN */}
-          <div style={{
-            background: lightBg,
-            border: `2px solid ${themeColor}`,
-            borderRadius: '10px',
-            padding: '14px 18px',
-            marginBottom: '16px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '12px'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.72rem', fontWeight: 900, color: themeColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                4. HASIL AKHIR PERHITUNGAN:
-              </div>
-              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#0f172a', marginTop: '2px', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                <span style={{ color: themeColor }}>{finalResult.value}</span>
-                {finalResult.unit && (
-                  <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#475569' }}>
-                    {finalResult.unit}
-                  </span>
-                )}
-              </div>
-              {finalResult.subtitle && (
-                <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px', fontWeight: 600 }}>
-                  {finalResult.subtitle}
-                </div>
-              )}
-            </div>
-
-            {finalResult.badgeText && (
-              <div style={{
-                background: finalResult.badgeBg || '#dcfce7',
-                color: finalResult.badgeColor || '#166534',
-                padding: '8px 14px',
-                borderRadius: '8px',
-                fontSize: '0.82rem',
-                fontWeight: 900,
-                border: `1px solid ${finalResult.badgeColor}40`,
-                textAlign: 'center',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.06)'
-              }}>
-                {finalResult.badgeText}
-              </div>
-            )}
-          </div>
-
-          {/* SECTION 5: ANALISIS PRAKTIK & ARTI DI BENGKEL MESIN */}
-          {workshopInsight && workshopInsight.content && (
-            <div style={{
-              background: '#f8fafc',
-              borderLeft: `4px solid ${themeColor}`,
-              borderRadius: '8px',
-              padding: '12px 14px',
-              border: '1px solid #e2e8f0',
-              borderLeftWidth: '4px'
-            }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                5. Analisis Praktik &amp; Arti di Bengkel Mesin:
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.55 }}>
-                {workshopInsight.content}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
+  const renderPedagogicalCalculationCard = (props) => <PedagogicalCalculationCard {...props} />;
 
   // ===========================================================================
   // HELPER COMPONENT: SMART FORMULA SOLVER FOR TORQUE
@@ -2833,282 +4387,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
   // ===========================================================================
   // REUSABLE CASE STUDY CARD RENDERER WITH TECHNICAL SVG ILLUSTRATION
   // ===========================================================================
-  const renderCaseStudyCard = ({
-    badge = 'STUDI KASUS NYATA BENGKEL MESIN SMK',
-    caseNumber = '1',
-    title,
-    subtitle,
-    svgIllustration,
-    scenarioText,
-    givenData = [],
-    questions = [],
-    solutions = [],
-    workshopSafety,
-    themeColor = '#0284c7'
-  }) => {
-    return (
-      <div style={{
-        background: '#ffffff',
-        borderRadius: '16px',
-        padding: '24px',
-        marginTop: '24px',
-        border: '1px solid #e2e8f0',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.06)'
-      }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{
-                background: `${themeColor}15`,
-                color: themeColor,
-                padding: '3px 10px',
-                borderRadius: '999px',
-                fontSize: '0.72rem',
-                fontWeight: 900,
-                letterSpacing: '0.5px',
-                textTransform: 'uppercase'
-              }}>
-                {badge}
-              </span>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b' }}>
-                Kasus #{caseNumber}
-              </span>
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              {title}
-            </h3>
-            {subtitle && (
-              <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#64748b', lineHeight: 1.4 }}>
-                {subtitle}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Gambar Ilustrasi Teknik SVG */}
-        <div style={{
-          background: '#0b132b',
-          borderRadius: '14px',
-          padding: '16px',
-          marginBottom: '20px',
-          border: '1px solid #1e293b',
-          boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.4)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '0 4px' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Diagram Ilustrasi Teknik:
-            </span>
-            <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
-              Skema Vektor Gaya, Dimensi Jarak &amp; Titik Kerja
-            </span>
-          </div>
-          {svgIllustration}
-        </div>
-
-        {/* Skenario Masalah di Bengkel */}
-        <div style={{
-          background: '#f8fafc',
-          borderLeft: `4px solid ${themeColor}`,
-          padding: '14px 18px',
-          borderRadius: '0 10px 10px 0',
-          marginBottom: '18px'
-        }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '4px' }}>
-            Skenario Masalah di Bengkel:
-          </div>
-          <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
-            {scenarioText}
-          </div>
-        </div>
-
-        {/* Grid: Data Diketahui & Pertanyaan */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '20px' }}>
-          {/* Data Diketahui */}
-          <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0369a1', textTransform: 'uppercase', marginBottom: '8px' }}>
-              Data Masalah (Diketahui):
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {givenData.map((item, idx) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '4px' }}>
-                  <span style={{ color: '#475569' }}>{item.label}:</span>
-                  <strong style={{ color: '#0f172a' }}>{item.val}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Pertanyaan Tantangan */}
-          <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '10px', border: '1px solid #fde68a' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#b45309', textTransform: 'uppercase', marginBottom: '8px' }}>
-              Tantangan Teknis:
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {questions.map((q, idx) => (
-                <div key={idx} style={{ fontSize: '0.76rem', color: '#78350f', lineHeight: 1.45 }}>
-                  {q}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Bedah Penyelesaian Lengkap Langkah demi Langkah */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '16px',
-          border: `2px solid ${themeColor}40`,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
-          overflow: 'hidden',
-          marginBottom: '22px'
-        }}>
-          {/* Header Banner - Besar & Kontras */}
-          <div style={{
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            padding: '16px 22px',
-            color: '#ffffff',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '10px',
-            borderBottom: `4px solid ${themeColor}`
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Wrench size={20} color="#0284c7" />
-              <div>
-                <div style={{ fontSize: '1.22rem', fontWeight: 900, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#ffffff' }}>
-                  Bedah Penyelesaian Lengkap Langkah demi Langkah:
-                </div>
-                <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>
-                  Penjabaran matematis terperinci, substitusi nilai, dan konversi satuan fisik
-                </div>
-              </div>
-            </div>
-            <span style={{
-              background: themeColor,
-              color: '#ffffff',
-              padding: '5px 14px',
-              borderRadius: '999px',
-              fontSize: '0.78rem',
-              fontWeight: 900,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-            }}>
-              Solusi Terbuka
-            </span>
-          </div>
-
-          <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '18px', background: '#f8fafc' }}>
-            {solutions.map((sol, idx) => (
-              <div key={idx} style={{
-                background: '#ffffff',
-                padding: '18px 20px',
-                borderRadius: '12px',
-                border: '1.5px solid #e2e8f0',
-                borderLeft: `6px solid ${themeColor}`,
-                boxShadow: '0 3px 12px rgba(0,0,0,0.04)'
-              }}>
-                {/* Step Title Header */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                  <span style={{
-                    background: `${themeColor}20`,
-                    color: themeColor,
-                    padding: '4px 12px',
-                    borderRadius: '6px',
-                    fontSize: '0.88rem',
-                    fontWeight: 900,
-                    textTransform: 'uppercase',
-                    border: `1px solid ${themeColor}40`
-                  }}>
-                    Langkah {idx + 1}
-                  </span>
-                  <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
-                    {sol.title.replace(/^Langkah \d+:\s*/, '')}
-                  </div>
-                </div>
-
-                {/* Formula Highlight Box */}
-                {sol.formula && (
-                  <div style={{
-                    fontSize: '1.05rem',
-                    fontFamily: "'Fira Code', 'Courier New', monospace",
-                    fontWeight: 800,
-                    color: '#0369a1',
-                    marginBottom: '12px',
-                    background: '#f0f9ff',
-                    padding: '10px 16px',
-                    borderRadius: '8px',
-                    border: '1.5px solid #bae6fd',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                  }}>
-                    <span style={{ color: '#0284c7', fontSize: '0.88rem', fontWeight: 900, textTransform: 'uppercase' }}>Rumus:</span>
-                    <span style={{ letterSpacing: '0.3px' }}>{sol.formula}</span>
-                  </div>
-                )}
-
-                {/* Arithmetic & Calculation Explanation */}
-                <div style={{
-                  fontSize: '1.02rem',
-                  color: '#1e293b',
-                  lineHeight: 1.75,
-                  background: '#f8fafc',
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  border: '1px solid #e2e8f0',
-                  marginBottom: sol.result ? '12px' : '0'
-                }}>
-                  {sol.desc}
-                </div>
-
-                {/* Contrast Final Result */}
-                {sol.result && (
-                  <div style={{
-                    fontSize: '1.12rem',
-                    fontWeight: 900,
-                    color: '#15803d',
-                    background: '#f0fdf4',
-                    border: '2px solid #86efac',
-                    padding: '12px 18px',
-                    borderRadius: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    boxShadow: '0 2px 6px rgba(22, 163, 74, 0.1)'
-                  }}>
-                    <Target size={20} color="#0284c7" />
-                    <span><strong>Hasil Akhir:</strong> {sol.result}</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* K3 & Workshop Safety Insight */}
-        {workshopSafety && (
-          <div style={{
-            background: '#fff1f2',
-            border: '1px solid #fecdd3',
-            borderLeft: '4px solid #e11d48',
-            borderRadius: '0 10px 10px 0',
-            padding: '12px 16px'
-          }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#be123c', marginBottom: '3px' }}>
-              ATURAN KERJA &amp; KESELAMATAN BENGKEL (K3):
-            </div>
-            <div style={{ fontSize: '0.76rem', color: '#881337', lineHeight: 1.5 }}>
-              {workshopSafety}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
+  const renderCaseStudyCard = (props) => <CaseStudyCard {...props} />;
 
   // 1. STUDI KASUS TORSI: BAUT RODA TRUK MACET
   const renderTorqueCaseStudy = () => {
@@ -3725,29 +5004,29 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       />
 
       {/* =====================================================================
-          HEADER HERO SECTION (CLEAN & COMPACT)
+          HEADER HERO SECTION (DILENGKAPI FOTO BENGKEL & BADGE FORMULA)
       ===================================================================== */}
       <div style={{
         background: 'linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0284c7 100%)',
-        borderRadius: '14px',
-        padding: '16px 22px',
+        borderRadius: '16px',
+        padding: '20px 24px',
         color: '#ffffff',
-        marginBottom: '16px',
-        boxShadow: '0 6px 20px rgba(2, 132, 199, 0.25)',
+        marginBottom: '20px',
+        boxShadow: '0 8px 24px rgba(2, 132, 199, 0.25)',
         border: '1px solid rgba(255,255,255,0.15)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: '14px'
+        gap: '20px'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+        <div style={{ flex: '1 1 500px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <span style={{
               background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
-              padding: '2px 8px',
+              padding: '3px 10px',
               borderRadius: '999px',
-              fontSize: '0.68rem',
+              fontSize: '0.7rem',
               fontWeight: 800,
               letterSpacing: '0.5px',
               textTransform: 'uppercase',
@@ -3755,37 +5034,72 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             }}>
               APPLIED MECHANICS &amp; STATICS
             </span>
-            <span style={{ fontSize: '0.74rem', color: '#e0f2fe' }}>Fisika Terapan &amp; Mekanika Teknik Mesin SMK</span>
+            <span style={{ fontSize: '0.76rem', color: '#e0f2fe' }}>Fisika Terapan &amp; Mekanika Teknik Bengkel Mesin SMK</span>
           </div>
           <h1 style={{
-            fontSize: '1.45rem',
+            fontSize: '1.65rem',
             fontWeight: 900,
-            margin: '0 0 3px 0',
+            margin: '0 0 6px 0',
             fontFamily: "'Chakra Petch', 'Segoe UI', sans-serif",
             background: 'linear-gradient(135deg, #ffffff 0%, #bae6fd 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
-            Pusat Rumus Mekanika Teknik &amp; Studi Kasus
+            Laboratorium Visual Mekanika Teknik
           </h1>
-          <p style={{ fontSize: '0.8rem', color: '#e0f2fe', margin: 0 }}>
-            Kalkulator interaktif pintar (bedah langkah 5 tahap) dan studi kasus nyata bengkel dengan ilustrasi teknik.
+          <p style={{ fontSize: '0.85rem', color: '#e0f2fe', margin: '0 0 12px 0', lineHeight: 1.5, maxWidth: '640px' }}>
+            Visualisasi konsep fisika bengkel melalui infografis digital, simulator interaktif bergerak real-time, dan studi kasus permesinan tanpa kebingungan rumus!
           </p>
+
+          {/* Formula Badges */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#facc15' }}>τ = F × d</div>
+              <div style={{ fontSize: '0.62rem', color: '#e0f2fe' }}>Momen Gaya</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#4ade80' }}>W·Lb = F·Lk</div>
+              <div style={{ fontSize: '0.62rem', color: '#e0f2fe' }}>Sistem Tuas</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#38bdf8' }}>ΣM = 0</div>
+              <div style={{ fontSize: '0.62rem', color: '#e0f2fe' }}>Kesetimbangan</div>
+            </div>
+            <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f472b6' }}>σ = F / A</div>
+              <div style={{ fontSize: '0.62rem', color: '#e0f2fe' }}>Tegangan Baut</div>
+            </div>
+          </div>
         </div>
 
-        {/* 3 Quick Badges */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#facc15' }}>τ = F × d</div>
-            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Momen Gaya</div>
-          </div>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#4ade80' }}>ΣM = 0</div>
-            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Kesetimbangan</div>
-          </div>
-          <div style={{ background: 'rgba(255,255,255,0.12)', padding: '6px 12px', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#38bdf8' }}>σ = F / A</div>
-            <div style={{ fontSize: '0.64rem', color: '#e0f2fe' }}>Tegangan Baut</div>
+        {/* Real Workshop Studio Photo Card */}
+        <div style={{
+          position: 'relative',
+          width: '240px',
+          height: '140px',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+          border: '2px solid rgba(255,255,255,0.3)',
+          flexShrink: 0
+        }}>
+          <img
+            src={getAssetUrl('assets/images/mechanics/mechanika_studio_real.jpg')}
+            alt="Mekanika Bengkel Nyata"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'linear-gradient(to top, rgba(15,23,42,0.95), transparent)',
+            padding: '6px 10px',
+            fontSize: '0.7rem',
+            fontWeight: 800,
+            color: '#ffffff'
+          }}>
+            Kunci Momen &amp; Baut Mesin Presisi
           </div>
         </div>
       </div>
@@ -3853,10 +5167,31 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'torque' && (
         <div>
-          {/* Interactive Formula Solver for Torque */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/torque_wrench_infographic.svg')}
+            title="Infografis Digital: Rahasia Hukum Momen Gaya (Torsi) Kunci Pas"
+            formula="τ = F × d"
+            accentColor="#0284c7"
+            takeaway="Semakin jauh jarak pegangan tangan ke baut (d lebih panjang), momen gaya berlipat ganda dan gaya otot yang dikerahkan terasa berlipat kali lebih ringan!"
+          />
+
+          {/* 2. Interactive Simulator (Simpel Saja Tapi Paham) */}
+          <TorqueInteractiveSimulator
+            torque={userTorqueVal}
+            setTorque={setUserTorqueVal}
+            distanceCm={userDistanceCm}
+            setDistanceCm={setUserDistanceCm}
+            onTurnBolt={handleTurnBolt}
+            rotationAngle={rotationAngle}
+            isRotating={isRotatingBolt}
+            turnResult={boltTurnSuccess}
+          />
+
+          {/* 3. Formula Solver with Collapsible 5-Step Derivation */}
           {renderTorqueFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study with Collapsible Solutions */}
           {renderTorqueCaseStudy()}
         </div>
       )}
@@ -3866,10 +5201,29 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'lever' && (
         <div>
-          {/* Embedded Formula Solver */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/levers_three_classes.svg')}
+            title="Infografis Digital: Klasifikasi 3 Kelas Tuas & Keuntungan Mekanis (KM)"
+            formula="W · Lb = F · Lk"
+            accentColor="#d97706"
+            takeaway="Tuas Kelas 1 (Tang & Linggis) menempatkan tumpuan di tengah. Semakin panjang gagang kuasa dibanding lengan beban, gaya potong dan daya angkat berlipat ganda dahsyat!"
+          />
+
+          {/* 2. Interactive Simulator */}
+          <LeverInteractiveSimulator
+            wVal={userLeverW}
+            setWVal={setUserLeverW}
+            lbVal={userLeverLb}
+            setLbVal={setUserLeverLb}
+            lkVal={userLeverLk}
+            setLkVal={setUserLeverLk}
+          />
+
+          {/* 3. Formula Solver */}
           {renderLeverFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study */}
           {renderLeverCaseStudy()}
         </div>
       )}
@@ -3879,10 +5233,28 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'equilibrium' && (
         <div>
-          {/* Embedded Formula Solver */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/equilibrium_beam.svg')}
+            title="Infografis Digital: Kesetimbangan Statis Balok Girder Overhead Crane"
+            formula="ΣM = 0  |  ΣFy = 0"
+            accentColor="#7c3aed"
+            takeaway="Beban yang digantung tidak dibagi rata bila posisinya bergeser. Tumpuan yang posisinya paling dekat dengan trolley derek akan menanggung beban reaksi (RA atau RB) yang jauh lebih berat!"
+          />
+
+          {/* 2. Interactive Simulator */}
+          <BeamInteractiveSimulator
+            loadX={userBeamX}
+            setLoadX={setUserBeamX}
+            loadP={userBeamP}
+            setLoadP={setUserBeamP}
+            beamL={userBeamL}
+          />
+
+          {/* 3. Formula Solver */}
           {renderBeamFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study */}
           {renderBeamCaseStudy()}
         </div>
       )}
@@ -3892,10 +5264,27 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'stress' && (
         <div>
-          {/* Embedded Formula Solver */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/stress_strain_curve.svg')}
+            title="Infografis Digital: Kurva Karakteristik Tegangan-Regangan Baja Mesin"
+            formula="σ = F / A"
+            accentColor="#059669"
+            takeaway="Baut pengikat wajib bekerja di Zona Elastis (Hukum Hooke). Jika ditarik melewati batas luluh (Yield Point), ulir baut akan mulur permanen, mengecil (necking), dan putus terbelah!"
+          />
+
+          {/* 2. Interactive Simulator */}
+          <StressInteractiveSimulator
+            stressD={userStressD}
+            setStressD={setUserStressD}
+            stressF={userStressF}
+            setStressF={setUserStressF}
+          />
+
+          {/* 3. Formula Solver */}
           {renderStressFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study */}
           {renderStressCaseStudy()}
         </div>
       )}
@@ -3905,10 +5294,27 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'pulley' && (
         <div>
-          {/* Embedded Formula Solver for Pulley */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/pulley_chain_block.svg')}
+            title="Infografis Digital: Takal Katrol Majemuk & Chain Block Pengangkat Mesin"
+            formula="F = W / n"
+            accentColor="#047857"
+            takeaway="Setiap utas tali penahan vertikal (n) membagi beban kerja secara merata. Dengan 4 tali dan roda gigi reduksi takal, beban 1.000 kg dapat dikerek enteng hanya dengan tarikan tangan!"
+          />
+
+          {/* 2. Interactive Simulator */}
+          <PulleyInteractiveSimulator
+            pulleyW={userPulleyW}
+            setPulleyW={setUserPulleyW}
+            pulleyN={userPulleyN}
+            setPulleyN={setUserPulleyN}
+          />
+
+          {/* 3. Formula Solver */}
           {renderPulleyFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study */}
           {renderPulleyCaseStudy()}
         </div>
       )}
@@ -3918,10 +5324,27 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ===================================================================== */}
       {activeTab === 'friction' && (
         <div>
-          {/* Embedded Formula Solver for Friction */}
+          {/* 1. Digital Infographic Card */}
+          <DigitalInfographicCard
+            imageSrc={getAssetUrl('assets/images/mechanics/friction_inclined_plane.svg')}
+            title="Infografis Digital: Gesekan Statis Bidang Miring & Bahaya Ceceran Oli"
+            formula="fs = μ × N"
+            accentColor="#b45309"
+            takeaway="Gaya gesek statis menahan benda agar tidak merosot. Ceceran oli pelumas merontokkan koefisien gesek μ drastis hingga muatan berat meluncur bebas dan memicu kecelakaan fatal!"
+          />
+
+          {/* 2. Interactive Simulator */}
+          <FrictionInteractiveSimulator
+            alpha={userFrictionAlpha}
+            setAlpha={setUserFrictionAlpha}
+            surface={surfaceType}
+            setSurface={setSurfaceType}
+          />
+
+          {/* 3. Formula Solver */}
           {renderFrictionFormulaSolver()}
 
-          {/* Studi Kasus Nyata Bengkel Mesin dengan Gambar Ilustrasi Teknik */}
+          {/* 4. Workshop Case Study */}
           {renderFrictionCaseStudy()}
         </div>
       )}

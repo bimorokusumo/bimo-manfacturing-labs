@@ -15,7 +15,7 @@
     KESETIMBANGAN STATIS &amp; REAKSI TUMPUAN BALOK (EQUILIBRIUM)
   </text>
   <text x="400" y="48" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
-    Syarat Statika Struktur: ΣFx = 0, ΣFy = 0, ΣM = 0 ➔ Menghitung Beban Pada Pondasi Crane &amp; Kolom Bengkel
+    Syarat Statika Struktur: ΣFx = 0, ΣFy = 0, ΣM = 0 -> Menghitung Beban Pada Pondasi Crane &amp; Kolom Bengkel
   </text>
 
   <!-- Beam Diagram Graphic -->
@@ -89,10 +89,10 @@
   <g transform="translate(60, 290)">
     <rect x="0" y="0" width="680" height="50" rx="8" fill="#1e293b" stroke="#334155"/>
     <text x="20" y="22" font-size="11" font-weight="900" fill="#facc15">
-      🧠 CARA HITUNG CEPAT REAKSI TUMPUAN:
+      [ANALISIS] CARA HITUNG CEPAT REAKSI TUMPUAN:
     </text>
     <text x="20" y="38" font-size="9.5" fill="#cbd5e1">
-      ΣMB = 0 ➔ RA × 6m - 1200N × (6 - 2m) = 0 ➔ <tspan font-weight="bold" fill="#34d399">RA = 800 N</tspan>. Maka <tspan font-weight="bold" fill="#34d399">RB = 1200 - 800 = 400 N</tspan>. Beban lebih dekat ke A, maka tumpuan A menahan beban 2x lebih besar!
+      ΣMB = 0 -> RA × 6m - 1200N × (6 - 2m) = 0 -> <tspan font-weight="bold" fill="#34d399">RA = 800 N</tspan>. Maka <tspan font-weight="bold" fill="#34d399">RB = 1200 - 800 = 400 N</tspan>. Beban lebih dekat ke A, maka tumpuan A menahan beban 2x lebih besar!
     </text>
   </g>
 </svg>

@@ -24,7 +24,7 @@
     HUKUM MOMEN GAYA (TORSI): MENGAPA MEMEGANG KUNCI JAUH TERASA LEBIH ENTENG?
   </text>
   <text x="400" y="52" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8" text-anchor="middle">
-    Rumus Emas: Torsi (τ) = Gaya Otot (F) × Lengan Momen (d) ➔ Semakin Jauh Pegangan Tangan, Semakin Ringan Gaya Yang Dibutuhkan!
+    Rumus Emas: Torsi (τ) = Gaya Otot (F) × Lengan Momen (d) -> Semakin Jauh Pegangan Tangan, Semakin Ringan Gaya Yang Dibutuhkan!
   </text>
 
   <!-- Central Graphic: Wrench on Hex Bolt -->
@@ -80,7 +80,7 @@
       <text x="0" y="8" font-size="9" fill="#fca5a5" text-anchor="middle">≈ 61 kg (BERAT SEKALI!)</text>
       <!-- Hand Icon -->
       <circle cx="0" cy="25" r="14" fill="#7f1d1d" stroke="#ef4444"/>
-      <text x="0" y="29" font-size="10" fill="#ffffff" text-anchor="middle">✋</text>
+      <text x="0" y="29" font-size="10" fill="#ffffff" text-anchor="middle">[TANGAN]</text>
     </g>
 
     <!-- Force 2 at 360: MEDIUM FORCE (200 N) -->
@@ -90,7 +90,7 @@
       <text x="0" y="-8" font-size="12" font-weight="900" fill="#f59e0b" text-anchor="middle">F = 200 N</text>
       <text x="0" y="6" font-size="9" fill="#fde68a" text-anchor="middle">≈ 20 kg (SEDANG)</text>
       <circle cx="0" cy="22" r="12" fill="#78350f" stroke="#f59e0b"/>
-      <text x="0" y="26" font-size="9" fill="#ffffff" text-anchor="middle">✋</text>
+      <text x="0" y="26" font-size="9" fill="#ffffff" text-anchor="middle">[TANGAN]</text>
     </g>
 
     <!-- Force 3 at 630: LIGHT FORCE (100 N) -->
@@ -100,29 +100,29 @@
       <text x="0" y="-8" font-size="12" font-weight="900" fill="#10b981" text-anchor="middle">F = 100 N</text>
       <text x="0" y="6" font-size="9" fill="#a7f3d0" text-anchor="middle">≈ 10 kg (SUPER RINGAN!)</text>
       <circle cx="0" cy="18" r="11" fill="#064e3b" stroke="#10b981"/>
-      <text x="0" y="22" font-size="8" fill="#ffffff" text-anchor="middle">👌</text>
+      <text x="0" y="22" font-size="8" fill="#ffffff" text-anchor="middle">[IDEAL]</text>
     </g>
   </g>
 
   <!-- Bottom Comparison Cards -->
   <g transform="translate(50, 310)">
     <rect x="0" y="0" width="220" height="55" rx="8" fill="#1e293b" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="15" y="20" font-size="11" font-weight="900" fill="#f87171">❌ Pegangan Dekat (10 cm):</text>
-    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan momen pendek ➔ Butuh gaya</text>
+    <text x="15" y="20" font-size="11" font-weight="900" fill="#f87171">[SALAH] Pegangan Dekat (10 cm):</text>
+    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan momen pendek -> Butuh gaya</text>
     <text x="15" y="47" font-size="9" font-weight="800" fill="#fca5a5">600 N! Baut macet &amp; tangan gemetar.</text>
   </g>
 
   <g transform="translate(290, 310)">
     <rect x="0" y="0" width="220" height="55" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
-    <text x="15" y="20" font-size="11" font-weight="900" fill="#fbbf24">🟡 Pegangan Ujung Kunci (30 cm):</text>
-    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan 3x lebih panjang ➔ Gaya turun</text>
+    <text x="15" y="20" font-size="11" font-weight="900" fill="#fbbf24">[SEDANG] Pegangan Ujung Kunci (30 cm):</text>
+    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan 3x lebih panjang -> Gaya turun</text>
     <text x="15" y="47" font-size="9" font-weight="800" fill="#fde68a">menjadi 200 N (3x lebih ringan!).</text>
   </g>
 
   <g transform="translate(530, 310)">
     <rect x="0" y="0" width="220" height="55" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
-    <text x="15" y="20" font-size="11" font-weight="900" fill="#34d399">✅ Pakai Pipa Sambung (60 cm):</text>
-    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan 6x lipat ➔ Hanya butuh</text>
+    <text x="15" y="20" font-size="11" font-weight="900" fill="#34d399">[OK] Pakai Pipa Sambung (60 cm):</text>
+    <text x="15" y="35" font-size="9" fill="#cbd5e1">Lengan 6x lipat -> Hanya butuh</text>
     <text x="15" y="47" font-size="9" font-weight="800" fill="#a7f3d0">100 N (6x lebih enteng, baut lepas!).</text>
   </g>
 </svg>

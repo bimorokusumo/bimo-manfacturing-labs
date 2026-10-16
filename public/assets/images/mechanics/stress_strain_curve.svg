@@ -53,7 +53,7 @@
 
     <!-- Point D: Fracture Point (Patah) -->
     <circle cx="365" cy="115" r="5" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
-    <text x="365" y="132" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">💥 PATAH!</text>
+    <text x="365" y="132" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">[PATAH] PATAH!</text>
   </g>
 
   <!-- Right: Explanatory Badges -->
@@ -87,7 +87,7 @@
     <!-- Warning Note -->
     <g transform="translate(15, 204)">
       <rect x="0" y="0" width="230" height="46" rx="6" fill="#1e293b"/>
-      <text x="10" y="16" font-size="9" font-weight="800" fill="#38bdf8">💡 Standar Kunci Torsi Bengkel:</text>
+      <text x="10" y="16" font-size="9" font-weight="800" fill="#38bdf8">[INFO] Standar Kunci Torsi Bengkel:</text>
       <text x="10" y="32" font-size="8" fill="#cbd5e1">Baut harus dikencangkan di ZONA ELASTIS (70-80% Yield) agar tidak kendor / patah.</text>
     </g>
   </g>

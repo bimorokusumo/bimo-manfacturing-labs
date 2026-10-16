@@ -13,7 +13,7 @@ const MACHINING_DATA = {
     id: 'lathe-chuck',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-7.16, 1.67, 1.09],
+    position: [-8.16, 1.85, 0.1],
     title: 'Chuck (Cekam 3-Rahang)',
     subtitle: '3-Jaw Self-Centering Scroll Chuck',
     spec: 'Diameter 200mm, Scroll Mandrel Presisi',
@@ -25,7 +25,7 @@ const MACHINING_DATA = {
     id: 'lathe-toolpost',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-5.8, 1.45, 1.1],
+    position: [-6.82, 1.85, 0.25],
     title: 'Tool Post & Pahat Bubut',
     subtitle: 'Quick Change 4-Way Tool Post',
     spec: 'Pahat Karbida Indexable Insert ISO Standar',
@@ -37,7 +37,7 @@ const MACHINING_DATA = {
     id: 'lathe-carriage',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-4.42, 0.99, 1.01],
+    position: [-6.82, 1.5, 0.2],
     title: 'Eretan (Carriage & Cross Slide)',
     subtitle: 'Eretan Memanjang, Melintang & Eretan Atas',
     spec: 'Resolusi Nonius 0.02 mm, Dovetail Guideway',
@@ -49,7 +49,7 @@ const MACHINING_DATA = {
     id: 'lathe-tailstock',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-2.79, 1.67, 0.63],
+    position: [-5.94, 1.85, 0.07],
     title: 'Tailstock (Kepala Lepas)',
     subtitle: 'Tailstock Assembly with Live Center',
     spec: 'Tirus Morse Taper MT3, Stroke Selongsong 100mm',
@@ -61,7 +61,7 @@ const MACHINING_DATA = {
     id: 'lathe-headstock',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-8.49, 0.72, 0.63],
+    position: [-8.8, 1.85, 0.0],
     title: 'Headstock (Kepala Tetap)',
     subtitle: 'All-Geared Headstock & Speed Selector',
     spec: 'Rentang RPM 45 - 2000 RPM, Gearbox Reduksi Oli',
@@ -73,7 +73,7 @@ const MACHINING_DATA = {
     id: 'lathe-leadscrew',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-4.5, 0.65, 1.4],
+    position: [-7.19, 1.33, 0.43],
     title: 'Poros Transportir & Pembawa',
     subtitle: 'Lead Screw & Feed Shaft Mechanism',
     spec: 'Ulir Trapesium Acme Pitch 6mm & Poros Heksagonal',
@@ -85,7 +85,7 @@ const MACHINING_DATA = {
     id: 'lathe-chippan',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-5.5, 0.35, 0.4],
+    position: [-7.5, 0.78, 0.0],
     title: 'Bak Tatal & Sistem Coolant',
     subtitle: 'Chip Collector Pan & Coolant Pump',
     spec: 'Kapasitas Pompa 40 L/menit, Emulsi Coolant 5%',
@@ -99,7 +99,7 @@ const MACHINING_DATA = {
     id: 'mill-spindle',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [5.5, 3.1, 1.3],
+    position: [7.5, 3.2, 1.2],
     title: 'Spindel & Collet Chuck Frais',
     subtitle: 'Milling Spindle Nose & Endmill Cutter',
     spec: 'Standar ISO 40 / R8, Collet ER32, Endmill 4-Flute',
@@ -111,7 +111,7 @@ const MACHINING_DATA = {
     id: 'mill-table',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [5.5, 2.5, 0.9],
+    position: [7.5, 2.45, 0.85],
     title: 'Meja Mesin Frais Alur T',
     subtitle: 'T-Slot Precision Milling Worktable',
     spec: 'Dimensi 1250 x 300 mm, 3 Alur T 18mm Presisi',
@@ -123,7 +123,7 @@ const MACHINING_DATA = {
     id: 'mill-vise',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [5.5, 2.85, 0.9],
+    position: [7.5, 2.75, 0.85],
     title: 'Ragum Mesin Frais Presisi',
     subtitle: 'Precision Milling Machine Vise',
     spec: 'Lebar Rahang 160mm, Rahang Baja Keras HRC 58-62',
@@ -135,7 +135,7 @@ const MACHINING_DATA = {
     id: 'mill-knee',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [5.5, 1.6, 0.8],
+    position: [7.5, 1.5, 0.7],
     title: 'Sadel & Lutut (Knee) Mesin',
     subtitle: 'Saddle & Knee Vertical Elevation Column',
     spec: 'Stroke Vertikal 400mm, Ulir Teleskopik Pelumas Otomatis',
@@ -147,7 +147,7 @@ const MACHINING_DATA = {
     id: 'mill-handwheels',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.8, 2.4, 0.9],
+    position: [9.8, 2.45, 0.85],
     title: 'Roda Pemutar Eretan X, Y, Z',
     subtitle: 'Graduated Micrometer Dials & Handwheels',
     spec: 'Graduasi Cincin Nonius 0.02 mm / 0.001 inch',
@@ -159,7 +159,7 @@ const MACHINING_DATA = {
     id: 'mill-motor',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [5.5, 4.6, 1.1],
+    position: [7.5, 4.3, 1.1],
     title: 'Motor & Kepala Vertikal Frais',
     subtitle: 'Milling Head Drive Motor & Step Pulley',
     spec: 'Motor 3 HP 3-Fasa, Kecepatan 80 - 4500 RPM',
@@ -171,7 +171,7 @@ const MACHINING_DATA = {
     id: 'mill-estop',
     category: 'Keselamatan K3',
     badgeColor: '#dc2626',
-    position: [4.2, 2.8, 1.4],
+    position: [6.3, 2.8, 1.4],
     title: 'Tombol Emergency Stop',
     subtitle: 'Industrial Mushroom Push-Lock Safety Button',
     spec: 'Standar IEC 60947-5-5, Kontak Pemutus Seketika',
@@ -180,12 +180,98 @@ const MACHINING_DATA = {
     k3: 'Kenali lokasi tombol E-Stop sebelum mulai mengoperasikan mesin bubut maupun mesin frais!'
   },
 
+  // --- MESIN CNC MILLING / VMC (VERTICAL MACHINING CENTER) ---
+  'cnc-enclosure': {
+    id: 'cnc-enclosure',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [0.0, 1.8, 1.0],
+    title: 'Kabin Pelindung CNC (Full Enclosure)',
+    subtitle: 'Safety Enclosure with Polycarbonate Window & Interlock',
+    spec: 'Kaca Polikarbonat Tahan Benturan 8mm, Safety Interlock Switch',
+    description: 'Kabin tertutup rapat yang mengisolasi area pemotongan berkecepatan tinggi (hingga 12.000 RPM) dan semprotan cairan pendingin bertekanan tinggi (high-pressure flood coolant). Menjaga serpihan bram panas dan cairan pendingin tidak keluar ke area operator.',
+    sop: '1. Pastikan pintu kabin tertutup rapat sebelum menekan tombol Cycle Start.\n2. Jangan membuka pintu kabin selama spindel atau sumbu mesin sedang bergerak aktif.\n3. Gunakan lampu kerja LED kabin untuk menginspeksi pemakanan melalui kaca.',
+    k3: 'Sensor interlock keselamatan otomatis mematikan spindel jika pintu dibuka saat operasi berjalan. DILARANG mem-bypass sensor pengaman pintu!'
+  },
+  'cnc-controller': {
+    id: 'cnc-controller',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [1.6, 1.9, 1.0],
+    title: 'Panel Kontrol CNC (Fanuc / Siemens)',
+    subtitle: 'Operator Control Panel & MDI Keyboard Console',
+    spec: 'Layar LCD Warna 10.4", Keyboard Alfanumerik, Rotary Mode Switch',
+    description: 'Pusat komputer kendali mesin CNC yang memproses baris instruksi program G-Code dan M-Code untuk mengontrol pergerakan motor servo sumbu X, Y, Z dan putaran spindel secara otomatis dengan presisi mikron (0.001 mm).',
+    sop: '1. Nyalakan daya listrik utama (Main Power ON) dan lakukan Homing / Zero Return pada seluruh sumbu.\n2. Muat kode program G-Code ke memori controller melalui mode EDIT atau USB/LAN.\n3. Lakukan dry run (uji jalan tanpa benda) atau single block sebelum penyayatan sesungguhnya.',
+    k3: 'Gunakan tombol Feedrate Override 25% dan aktifkan Single Block saat pertama kali menjalankan program baru untuk mencegah terjadinya tabrakan pahat (crash).'
+  },
+  'cnc-spindle': {
+    id: 'cnc-spindle',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [0.0, 2.1, 0.0],
+    title: 'Spindel CNC Presisi Tinggi & Tool Holder BT40',
+    subtitle: 'High-Speed Electro-Spindle BT40 with Pull Stud Clamping',
+    spec: 'Kecepatan 8.000 - 12.000 RPM, Tirus BT40, Run-out < 0.003 mm',
+    description: 'Poros spindel utama presisi tinggi berpenggerak motor servo AC dengan sistem pencekaman hidrolik-pneumatik pull-stud otomatis untuk arbor BT40. Memutar pisau frais endmill, face mill, atau bor dengan stabilitas getaran sangat rendah.',
+    sop: '1. Bersihkan tirus lubang spindel dari serpihan debu sebelum tool holder masuk.\n2. Pastikan tekanan angin kompresor pencekam pahat stabil di atas 6 bar.\n3. Uji putaran spindel bertahap dari RPM rendah sebelum masuk ke RPM tinggi pemotongan.',
+    k3: 'Dilarang keras menyentuh spindel atau pisau saat sedang berputar. Putaran 10.000 RPM dapat berakibat fatal seketika jika terjadi kontak fisik.'
+  },
+  'cnc-atc': {
+    id: 'cnc-atc',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [-1.25, 2.3, 0.0],
+    title: 'ATC (Automatic Tool Changer) Magasin Payung',
+    subtitle: 'Umbrella / Carousel Type Tool Magazine (16 Pockets)',
+    spec: 'Kapasitas 16 Tool Holder BT40, Waktu Ganti Pahat (T-to-T) 2.5 Detik',
+    description: 'Sistem pengubah alat potong otomatis tipe magasin piringan (umbrella/carousel). Memungkinkan penggantian berbagai jenis pahat (center drill, twist drill, tap, endmill, face mill) secara otomatis sesuai instruksi kode T dan M06 dalam program G-Code tanpa campur tangan manual.',
+    sop: '1. Pasang tool holder pada slot nomor magasin yang sesuai dengan program (T01, T02, dst).\n2. Ukur dan kalibrasi panjang offset pahat (Tool Length Offset H) menggunakan alat z-axis presetter.\n3. Masukkan data nilai offset panjang dan kompensasi radius (D) ke tabel Tool Offset di controller.',
+    k3: 'Pastikan area lintasan pergerakan magasin bebas dari halangan atau tangan saat siklus pergantian alat potong (M06) berlangsung.'
+  },
+  'cnc-table': {
+    id: 'cnc-table',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [0.0, 1.0, 0.0],
+    title: 'Meja Kerja Sumbu X-Y & Ragum Presisi CNC',
+    subtitle: 'Precision Linear Guideway Worktable & Hydraulic Vise',
+    spec: 'Stroke X: 650mm, Y: 450mm, Z: 500mm, Rapid Traverse 30 m/menit',
+    description: 'Meja kerja besi cor Meehanite dengan alur T presisi yang digerakkan oleh motor servo sumbu X dan Y melalui poros ball screw presisi dan linear motion guideway ganda tanpa celah (zero backlash). Menahan ragum hidrolik dan benda kerja yang sedang disayat.',
+    sop: '1. Bersihkan permukaan meja kerja dan pasang ragum presisi atau fixture klem secara sejajar.\n2. Lakukan setting titik nol benda kerja (Work Coordinate System G54) menggunakan edge finder atau touch probe.\n3. Simpan nilai koordinat X dan Y pada register G54 di panel controller.',
+    k3: 'Periksa jarak bebas (clearance) lintasan pahat agar tidak menabrak rahang ragum saat gerakan cepat tanpa pemakanan (G00).'
+  },
+  'cnc-mpg': {
+    id: 'cnc-mpg',
+    category: 'Mesin CNC',
+    badgeColor: '#06b6d4',
+    position: [1.8, 1.4, 0.9],
+    title: 'Handwheel MPG (Manual Pulse Generator)',
+    subtitle: 'Portable Handheld Remote Pendant Controller',
+    spec: 'Pilihan Sumbu X, Y, Z, 4th Axis; Skala Langkah x1, x10, x100 (0.001 - 0.1 mm)',
+    description: 'Pendant kontrol genggam portabel yang memungkinkan operator menggerakkan sumbu mesin secara manual dengan memutar dial pulsa beresolusi mikro (0.001 mm) saat melakukan setting nol benda kerja (touch-off) dan kalibrasi alat potong.',
+    sop: '1. Putar sakelar pemilih sumbu ke sumbu yang ingin digerakkan (X, Y, atau Z).\n2. Tentukan kelipatan skala langkah (x1 = 0.001mm, x10 = 0.01mm, x100 = 0.1mm).\n3. Putar dial pulsa perlahan sambil mengamati posisi ujung pahat terhadap benda kerja.',
+    k3: 'Selalu kembalikan sakelar pemilih sumbu ke posisi OFF setelah selesai melakukan jogging manual agar sumbu tidak bergerak tak disengaja jika roda MPG tersenggol.'
+  },
+  'cnc-estop': {
+    id: 'cnc-estop',
+    category: 'Keselamatan K3',
+    badgeColor: '#dc2626',
+    position: [1.6, 1.4, 1.15],
+    title: 'Tombol Emergency Stop Panel CNC',
+    subtitle: 'Mushroom Emergency Power Cutoff',
+    spec: 'Kategori Penghentian Stop Category 0 (EN 60204-1)',
+    description: 'Tombol darurat pemutus daya seketika pada panel kontrol CNC. Menghentikan seluruh gerakan motor servo sumbu dan motor spindel seketika dengan rem regeneratif dinamis untuk mencegah tabrakan fatal (machine crash).',
+    sop: '1. Tekan tombol jamur merah seketika jika terlihat potensi tabrakan pahat atau anomali getaran.\n2. Evaluasi dan perbaiki sumber penyebab kendala sebelum merilis tombol.\n3. Putar kepala tombol searah jarum jam untuk merilis E-Stop dan lakukan homing ulang seluruh sumbu.',
+    k3: 'Pastikan satu tangan siap siaga di dekat tombol E-Stop saat menjalankan program baru pertama kali (dry run / trial cut)!'
+  },
+
   // --- PROPS BENGKEL MESIN ---
   'shop-toolcart': {
     id: 'shop-toolcart',
     category: 'Perlengkapan Bengkel',
     badgeColor: '#059669',
-    position: [-10.5, 0.9, -2.5],
+    position: [-11.5, 0.9, -2.5],
     title: 'Lemari Perkakas Mesin',
     subtitle: 'Heavy Duty Machine Tool Cabinet & Cart',
     spec: 'Rangka Baja 1.5mm, 5 Laci Berpelor, Kunci Pengaman',
@@ -197,7 +283,7 @@ const MACHINING_DATA = {
     id: 'shop-rawstock',
     category: 'Perlengkapan Bengkel',
     badgeColor: '#059669',
-    position: [10.5, 1.2, -2.5],
+    position: [11.5, 1.2, -2.5],
     title: 'Rak Bahan Baku Logam',
     subtitle: 'Raw Stock Metal Bar & Billet Storage',
     spec: 'Baja St.37, Baja Karbon S45C, Aluminium 6061',
@@ -209,11 +295,11 @@ const MACHINING_DATA = {
     id: 'shop-scrapbin',
     category: 'Fasilitas K3',
     badgeColor: '#475569',
-    position: [0, 0.6, -4.5],
+    position: [-3.8, 0.6, -4.8],
     title: 'Bak Penampung Bram Logam',
     subtitle: 'Metal Scrap & Chip Recycling Bin',
     spec: 'Kapasitas 150 Liter, Roda Kastor, Saluran Tiris Oli',
-    description: 'Tempat pengumpulan serpihan bram/tatal sisa penyayatan mesin bubut dan frais. Dilengkapi dasar berlubang untuk meniriskan sisa cairan pendingin sebelum bram dikirim ke unit daur ulang.',
+    description: 'Tempat pengumpulan serpihan bram/tatal sisa penyayatan mesin bubut, frais, dan CNC. Dilengkapi dasar berlubang untuk meniriskan sisa cairan pendingin sebelum bram dikirim ke unit daur ulang.',
     sop: '1. Kumpulkan bram dari bak mesin menggunakan serokan tatal.\n2. Masukkan bram ke bak pembuangan.\n3. Pisahkan antara tatal baja dan tatal aluminium/kuningan.',
     k3: 'DILARANG memegang atau menekan tatal bram dengan tangan langsung karena sangat tajam dan panas.'
   },
@@ -592,300 +678,1532 @@ const InteractivePart = ({ data, onSelect, isActive, children, labelOffset = [0,
 };
 
 // ==========================================
+// 1. MESIN BUBUT INDUSTRI REALISTIS (PRECISION ENGINE LATHE)
 // ==========================================
-// 3D MESIN BUBUT REALISTIS (OBJ KNUTH V28)
-// ==========================================
-const LatheFallback = () => (
-  <group position={[0, 0, 0]}>
-    {/* Base Stand & Chip Pan */}
-    <mesh castShadow position={[0, 0.4, 0]}>
-      <boxGeometry args={[4.2, 0.8, 1.4]} />
-      <meshStandardMaterial color="#64748b" metalness={0.6} roughness={0.4} />
-    </mesh>
-    {/* Bed & Slideways */}
-    <mesh castShadow position={[0, 1.1, 0]}>
-      <boxGeometry args={[4.0, 0.5, 0.9]} />
-      <meshStandardMaterial color="#e2e8f0" metalness={0.85} roughness={0.2} />
-    </mesh>
-    {/* Headstock */}
-    <mesh castShadow position={[-1.4, 1.8, 0]}>
-      <boxGeometry args={[1.1, 0.9, 0.9]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Chuck */}
-    <mesh castShadow position={[-0.65, 1.8, 0.05]} rotation={[0, 0, Math.PI / 2]}>
-      <cylinderGeometry args={[0.35, 0.35, 0.3, 32]} />
-      <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.15} />
-    </mesh>
-    {/* Carriage & Apron */}
-    <mesh castShadow position={[0.4, 1.5, 0.2]}>
-      <boxGeometry args={[0.9, 0.8, 1.0]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Toolpost */}
-    <mesh castShadow position={[0.4, 2.05, 0.2]}>
-      <boxGeometry args={[0.35, 0.3, 0.35]} />
-      <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.25} />
-    </mesh>
-    {/* Tailstock */}
-    <mesh castShadow position={[1.5, 1.7, 0]}>
-      <boxGeometry args={[0.7, 0.7, 0.7]} />
-      <meshStandardMaterial color="#0284c7" metalness={0.5} roughness={0.35} />
-    </mesh>
-    {/* Leadscrew */}
-    <mesh castShadow position={[0.2, 1.2, 0.45]} rotation={[0, 0, Math.PI / 2]}>
-      <cylinderGeometry args={[0.035, 0.035, 3.2, 16]} />
-      <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.2} />
-    </mesh>
-  </group>
-);
-
-const RealisticLatheOBJ = LatheFallback;
-
-// ==========================================
-// 3D MESIN FRAIS INDUSTRI LENGKAP
-// ==========================================
-const IndustrialMillingMachine = ({ position = [5.0, 0, 0], onSelect, activeId }) => {
+const RealisticIndustrialLathe = ({ position = [-7.5, 0, 0], onSelect, activeId }) => {
   return (
     <group position={position}>
-      <mesh position={[0, 0.25, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2.6, 0.5, 3.2]} />
-        <meshStandardMaterial color="#64748b" roughness={0.5} metalness={0.5} />
+      {/* --- STAND / KAKI PEDESTAL BESI COR GANDA --- */}
+      {/* Pedestal Kiri (Rumah Motor & Kelistrikan) */}
+      <mesh position={[-1.25, 0.42, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.3, 0.84, 1.1]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.6} metalness={0.4} />
       </mesh>
-      <mesh position={[0, 0.45, 0.4]} receiveShadow>
-        <boxGeometry args={[2.2, 0.1, 1.8]} />
-        <meshStandardMaterial color="#475569" roughness={0.6} metalness={0.5} />
+      {/* Pintu Akses Kaki Kiri */}
+      <mesh position={[-1.25, 0.42, 0.56]}>
+        <boxGeometry args={[1.05, 0.65, 0.02]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.7} metalness={0.5} />
       </mesh>
-
-      <mesh position={[0, 2.4, -0.4]} castShadow receiveShadow>
-        <boxGeometry args={[1.6, 3.8, 2.0]} />
-        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
-      </mesh>
-      <mesh position={[0, 2.4, 0.61]} castShadow>
-        <boxGeometry args={[0.9, 3.4, 0.06]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.2} metalness={0.85} />
+      <mesh position={[-0.8, 0.42, 0.58]}>
+        <cylinderGeometry args={[0.02, 0.02, 0.1, 12]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
       </mesh>
 
-      <mesh position={[0, 4.35, 0.2]} castShadow receiveShadow>
-        <boxGeometry args={[1.3, 0.6, 2.8]} />
-        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
+      {/* Pedestal Kanan (Penyangga Ujung Alas & Sirkulasi Coolant) */}
+      <mesh position={[1.35, 0.42, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.9, 0.84, 1.1]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.6} metalness={0.4} />
+      </mesh>
+      <mesh position={[1.35, 0.42, 0.56]}>
+        <boxGeometry args={[0.7, 0.65, 0.02]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.7} metalness={0.5} />
       </mesh>
 
-      {/* MOTOR & KEPALA FRAIS */}
+      {/* Bak Penampung Tatal (Chip Pan / Sump) */}
       <InteractivePart
-        data={MACHINING_DATA['mill-motor']}
+        data={MACHINING_DATA['lathe-chippan']}
         onSelect={onSelect}
-        isActive={activeId === 'mill-motor'}
-        labelOffset={[0, 5.8, 1.2]}
-        hitArgs={[1.4, 1.8, 1.6]}
-        hitPosition={[0, 4.6, 1.2]}
+        isActive={activeId === 'lathe-chippan'}
+        labelOffset={[0, 0.6, 0.8]}
+        hitArgs={[4.2, 0.4, 1.4]}
+        hitPosition={[0, 0.78, 0]}
       >
-        <group position={[0, 4.1, 1.3]}>
-          <mesh castShadow>
-            <cylinderGeometry args={[0.55, 0.5, 0.9, 24]} />
-            <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.6} />
+        <group>
+          {/* Dasar Bak */}
+          <mesh position={[0, 0.82, 0]} receiveShadow>
+            <boxGeometry args={[3.9, 0.06, 1.3]} />
+            <meshStandardMaterial color="#334155" roughness={0.4} metalness={0.6} />
           </mesh>
-          <mesh position={[0, 0.95, -0.1]} castShadow>
-            <cylinderGeometry args={[0.4, 0.4, 0.9, 20]} />
-            <meshStandardMaterial color="#0369a1" roughness={0.4} metalness={0.5} />
+          {/* Bibir Pembatas Bak Depan & Belakang */}
+          <mesh position={[0, 0.9, 0.64]}>
+            <boxGeometry args={[3.9, 0.12, 0.03]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.5} />
           </mesh>
-          <mesh position={[0, 0.55, 0]} castShadow>
-            <boxGeometry args={[1.1, 0.3, 1.3]} />
+          <mesh position={[0, 0.9, -0.64]}>
+            <boxGeometry args={[3.9, 0.12, 0.03]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.5} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* Batang Rem Kaki Darurat (Footbrake Bar Chrome) */}
+      <mesh position={[0, 0.12, 0.62]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.025, 0.025, 3.2, 16]} />
+        <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.15} />
+      </mesh>
+      <mesh position={[-1.4, 0.12, 0.57]}>
+        <boxGeometry args={[0.06, 0.08, 0.12]} />
+        <meshStandardMaterial color="#dc2626" />
+      </mesh>
+      <mesh position={[1.4, 0.12, 0.57]}>
+        <boxGeometry args={[0.06, 0.08, 0.12]} />
+        <meshStandardMaterial color="#dc2626" />
+      </mesh>
+
+      {/* --- ALAS MESIN (BED & V-WAY PRISM GUIDEWAYS) --- */}
+      {/* Badan Bed Besi Cor */}
+      <mesh position={[0, 1.15, 0]} castShadow receiveShadow>
+        <boxGeometry args={[3.8, 0.48, 0.82]} />
+        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
+      </mesh>
+      {/* Rel Presisi V-Ways Baja Induksi Kilap */}
+      <mesh position={[0, 1.4, -0.22]}>
+        <boxGeometry args={[3.75, 0.04, 0.12]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.92} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, 1.4, 0.22]}>
+        <boxGeometry args={[3.75, 0.04, 0.12]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.92} roughness={0.15} />
+      </mesh>
+      {/* Pelat Pelindung Cipratan Belakang (Rear Splash Guard) */}
+      <mesh position={[0, 1.7, -0.58]} castShadow>
+        <boxGeometry args={[3.85, 0.95, 0.03]} />
+        <meshStandardMaterial color="#cbd5e1" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* --- KEPALA TETAP (HEADSTOCK & GEARBOX) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['lathe-headstock']}
+        onSelect={onSelect}
+        isActive={activeId === 'lathe-headstock'}
+        labelOffset={[-1.3, 2.7, 0]}
+        hitArgs={[1.4, 1.2, 1.1]}
+        hitPosition={[-1.3, 1.85, 0]}
+      >
+        <group position={[-1.3, 1.85, 0]}>
+          {/* Bodi Utama Headstock */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[1.25, 0.95, 0.92]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.35} metalness={0.55} />
+          </mesh>
+          {/* Penutup Atas Headstock */}
+          <mesh position={[0, 0.5, 0]} castShadow>
+            <boxGeometry args={[1.28, 0.08, 0.95]} />
+            <meshStandardMaterial color="#0369a1" roughness={0.4} metalness={0.6} />
+          </mesh>
+          {/* Plat Tabel RPM & Ulir Alumunium */}
+          <mesh position={[0.05, 0.12, 0.47]}>
+            <boxGeometry args={[0.9, 0.45, 0.02]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.85} roughness={0.2} />
+          </mesh>
+          <mesh position={[0.05, 0.12, 0.485]}>
+            <planeGeometry args={[0.82, 0.38]} />
+            <meshBasicMaterial color="#1e293b" />
+          </mesh>
+          {/* Kaca Intip Level Oli Spindel */}
+          <mesh position={[-0.45, 0.25, 0.47]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.03, 16]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.9} roughness={0.1} />
+          </mesh>
+
+          {/* Tuas-Tuas Pengatur Kecepatan Putar (Gear Shift Levers) */}
+          {[-0.25, 0.0, 0.25].map((x, idx) => (
+            <group key={idx} position={[x, 0.48, 0.35]} rotation={[0.4, 0, (idx - 1) * 0.3]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.25, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+              <mesh position={[0, 0.14, 0]}>
+                <sphereGeometry args={[0.045, 16, 16]} />
+                <meshStandardMaterial color={idx === 1 ? '#dc2626' : '#1e293b'} roughness={0.3} />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Kotak Transmisi Ulir (Norton Box) di Bawah Headstock */}
+          <mesh position={[0, -0.65, 0.25]} castShadow>
+            <boxGeometry args={[1.1, 0.35, 0.45]} />
+            <meshStandardMaterial color="#0369a1" roughness={0.4} />
+          </mesh>
+          <mesh position={[-0.2, -0.65, 0.49]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.05, 0.05, 0.05, 16]} />
+            <meshStandardMaterial color="#f59e0b" metalness={0.8} />
+          </mesh>
+          <mesh position={[0.2, -0.65, 0.49]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.05, 0.05, 0.05, 16]} />
+            <meshStandardMaterial color="#f59e0b" metalness={0.8} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- CEKAM RAHANG 3 (3-JAW SCROLL CHUCK) & CHUCK GUARD --- */}
+      <InteractivePart
+        data={MACHINING_DATA['lathe-chuck']}
+        onSelect={onSelect}
+        isActive={activeId === 'lathe-chuck'}
+        labelOffset={[-0.55, 2.7, 0]}
+        hitArgs={[0.9, 0.9, 0.9]}
+        hitPosition={[-0.55, 1.85, 0]}
+      >
+        <group position={[-0.55, 1.85, 0]}>
+          {/* Spindle Nose Flange (Flens Dudukan Chuck) */}
+          <mesh position={[-0.12, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.42, 0.42, 0.08, 32]} />
+            <meshStandardMaterial color="#475569" metalness={0.85} roughness={0.25} />
+          </mesh>
+
+          {/* Bodi Utama Chuck Silindris Presisi */}
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.38, 0.38, 0.26, 32]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.92} roughness={0.18} />
+          </mesh>
+
+          {/* Lubang Kunci Chuck Pinion */}
+          {[0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((ang, idx) => (
+            <mesh
+              key={idx}
+              position={[0, 0.32 * Math.cos(ang), 0.32 * Math.sin(ang)]}
+              rotation={[ang, 0, 0]}
+            >
+              <cylinderGeometry args={[0.03, 0.03, 0.27, 12]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          ))}
+
+          {/* 3 Rahang Baja Bertingkat (Hardened Stepped Jaws) */}
+          {[0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((ang, idx) => (
+            <group key={`jaw-${idx}`} rotation={[ang, 0, 0]}>
+              <mesh position={[0.13, 0.16, 0]}>
+                <boxGeometry args={[0.12, 0.14, 0.09]} />
+                <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.2} />
+              </mesh>
+              <mesh position={[0.13, 0.25, 0]}>
+                <boxGeometry args={[0.08, 0.12, 0.07]} />
+                <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.25} />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Pelindung Chuck Akrilik Engsel (Chuck Safety Guard) */}
+          <mesh position={[0, 0.45, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.46, 0.46, 0.32, 24, 1, true, 0, Math.PI]} />
+            <meshStandardMaterial color="#38bdf8" transparent opacity={0.35} roughness={0.1} />
+          </mesh>
+          <mesh position={[0, 0.45, 0.45]}>
+            <boxGeometry args={[0.34, 0.03, 0.03]} />
+            <meshStandardMaterial color="#eab308" />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- BENDA KERJA SILINDRIS (WORKPIECE) DI DALAM CHUCK --- */}
+      {/* Poros Bertingkat Baja dengan Hasil Sayatan Kilap */}
+      <group position={[0.05, 1.85, 0]}>
+        {/* Bagian Mentah (Raw Stock) */}
+        <mesh position={[-0.25, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.14, 0.14, 0.4, 24]} />
+          <meshStandardMaterial color="#475569" metalness={0.7} roughness={0.4} />
+        </mesh>
+        {/* Bagian yang Telah Dibubut Halus (Machined Finish Shiny Surface) */}
+        <mesh position={[0.3, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.11, 0.11, 0.7, 32]} />
+          <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.12} />
+        </mesh>
+        {/* Lubang Senter Kepala Lepas */}
+        <mesh position={[0.66, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <coneGeometry args={[0.04, 0.08, 16]} />
+          <meshStandardMaterial color="#0f172a" />
+        </mesh>
+      </group>
+
+      {/* --- ERETAN, APRON & TOOLPOST --- */}
+      {/* Eretan Memanjang (Saddle & Apron) */}
+      <InteractivePart
+        data={MACHINING_DATA['lathe-carriage']}
+        onSelect={onSelect}
+        isActive={activeId === 'lathe-carriage'}
+        labelOffset={[0.2, 2.3, 0.5]}
+        hitArgs={[1.1, 1.1, 1.1]}
+        hitPosition={[0.2, 1.5, 0.2]}
+      >
+        <group position={[0.2, 1.45, 0.15]}>
+          {/* Saddle H-Shape di atas V-Ways */}
+          <mesh position={[0, 0.05, -0.15]} castShadow receiveShadow>
+            <boxGeometry args={[0.85, 0.18, 0.88]} />
             <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
           </mesh>
-          <mesh position={[0.56, 0.55, 0.2]} rotation={[0, 0, Math.PI / 4]}>
-            <cylinderGeometry args={[0.03, 0.03, 0.4]} />
+          {/* Wiper Kuningan Pembersih Bram pada Saddle */}
+          <mesh position={[-0.43, 0.02, -0.15]}>
+            <boxGeometry args={[0.02, 0.08, 0.86]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.8} />
+          </mesh>
+          <mesh position={[0.43, 0.02, -0.15]}>
+            <boxGeometry args={[0.02, 0.08, 0.86]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.8} />
+          </mesh>
+
+          {/* Kotak Apron Depan */}
+          <mesh position={[0, -0.32, 0.38]} castShadow>
+            <boxGeometry args={[0.85, 0.55, 0.22]} />
+            <meshStandardMaterial color="#0369a1" roughness={0.4} metalness={0.5} />
+          </mesh>
+
+          {/* Roda Pemutar Eretan Memanjang (Longitudinal Handwheel) */}
+          <mesh position={[-0.24, -0.35, 0.53]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.16, 0.16, 0.04, 24]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.92} roughness={0.15} />
+          </mesh>
+          <mesh position={[-0.24, -0.23, 0.56]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.12, 12]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+
+          {/* Tuas Feeding Otomatis & Half-Nut Ulir */}
+          <mesh position={[0.18, -0.22, 0.52]} rotation={[0.4, 0, 0]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.18, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[0.18, -0.14, 0.57]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
             <meshStandardMaterial color="#dc2626" />
           </mesh>
-          <mesh position={[0.56, 0.55, -0.2]} rotation={[0, 0, Math.PI / 4]}>
-            <cylinderGeometry args={[0.03, 0.03, 0.4]} />
-            <meshStandardMaterial color="#10b981" />
+
+          <mesh position={[0.22, -0.42, 0.52]} rotation={[-0.4, 0, 0]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.18, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[0.22, -0.5, 0.57]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
+            <meshStandardMaterial color="#1e293b" />
+          </mesh>
+
+          {/* Jam Ulir (Thread Chasing Dial) */}
+          <mesh position={[0.38, -0.15, 0.49]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.03, 16]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.8} />
+          </mesh>
+
+          {/* Eretan Melintang (Cross-Slide Dovetail) */}
+          <mesh position={[0, 0.18, -0.05]} castShadow>
+            <boxGeometry args={[0.38, 0.1, 0.65]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.4} />
+          </mesh>
+          {/* Roda Pemutar Eretan Melintang dengan Cincin Nonius */}
+          <mesh position={[0, 0.18, 0.32]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.08, 0.08, 0.04, 20]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.92} />
+          </mesh>
+          <mesh position={[0, 0.18, 0.37]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.08, 12]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+
+          {/* Eretan Atas (Compound Rest & Swivel Degree Plate) */}
+          <mesh position={[0, 0.28, -0.1]} castShadow>
+            <cylinderGeometry args={[0.18, 0.18, 0.06, 24]} />
+            <meshStandardMaterial color="#475569" metalness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.35, -0.1]} castShadow>
+            <boxGeometry args={[0.26, 0.08, 0.35]} />
+            <meshStandardMaterial color="#0284c7" />
           </mesh>
         </group>
       </InteractivePart>
 
-      {/* SPINDEL & CUTTER */}
+      {/* Rumah Pahat (Toolpost) & Pahat Bubut Bertip Karbida */}
       <InteractivePart
-        data={MACHINING_DATA['mill-spindle']}
+        data={MACHINING_DATA['lathe-toolpost']}
         onSelect={onSelect}
-        isActive={activeId === 'mill-spindle'}
-        labelOffset={[0, 3.6, 1.4]}
-        hitArgs={[0.7, 1.1, 0.7]}
-        hitPosition={[0, 3.2, 1.3]}
+        isActive={activeId === 'lathe-toolpost'}
+        labelOffset={[0.2, 2.6, 0.05]}
+        hitArgs={[0.6, 0.6, 0.6]}
+        hitPosition={[0.2, 1.95, 0.05]}
       >
-        <group position={[0, 3.35, 1.3]}>
+        <group position={[0.2, 1.9, 0.05]}>
+          {/* Bodi 4-Way Toolpost Baja Karbon */}
           <mesh castShadow>
-            <cylinderGeometry args={[0.22, 0.22, 0.6, 24]} />
-            <meshStandardMaterial color="#94a3b8" roughness={0.25} metalness={0.8} />
+            <boxGeometry args={[0.26, 0.22, 0.26]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.85} roughness={0.3} />
           </mesh>
-          <mesh position={[0, -0.35, 0]} castShadow>
-            <cylinderGeometry args={[0.18, 0.14, 0.3, 24]} />
-            <meshStandardMaterial color="#64748b" roughness={0.2} metalness={0.9} />
+          {/* Baut-Baut Penjepit Pahat (Clamping Screws) */}
+          {[-0.08, 0.08].map((x, idx) => (
+            <mesh key={idx} position={[x, 0.13, 0.08]}>
+              <cylinderGeometry args={[0.018, 0.018, 0.06, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+          ))}
+          {/* Tuas Pengunci Tengah Toolpost */}
+          <mesh position={[0, 0.15, 0]}>
+            <cylinderGeometry args={[0.025, 0.025, 0.1, 16]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.9} />
           </mesh>
-          <mesh position={[0, -0.65, 0]} castShadow>
-            <cylinderGeometry args={[0.06, 0.06, 0.35, 16]} />
-            <meshStandardMaterial color="#ffffff" roughness={0.15} metalness={0.95} />
+          <mesh position={[0.08, 0.2, 0]} rotation={[0, 0, -Math.PI / 3]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.22, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
           </mesh>
-          <mesh position={[0.3, 0.1, 0.1]} rotation={[0, 0, -Math.PI / 3]}>
-            <cylinderGeometry args={[0.03, 0.03, 0.5, 12]} />
-            <meshStandardMaterial color="#2563eb" roughness={0.6} />
+          <mesh position={[0.18, 0.26, 0]}>
+            <sphereGeometry args={[0.028, 16, 16]} />
+            <meshStandardMaterial color="#dc2626" />
           </mesh>
-          <mesh position={[0.42, -0.2, 0.1]} rotation={[0, 0, Math.PI / 4]}>
-            <cylinderGeometry args={[0.025, 0.025, 0.3, 12]} />
-            <meshStandardMaterial color="#ea580c" roughness={0.5} />
+
+          {/* Gagang Pahat Bubut (Tool Shank) & Insert Karbida Emas */}
+          <mesh position={[-0.18, -0.02, 0]} rotation={[0, 0.15, 0]}>
+            <boxGeometry args={[0.28, 0.06, 0.06]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.8} />
+          </mesh>
+          {/* Sisipan Karbida Segitiga Emas TiN (Gold Carbide Insert) Menyentuh Poros */}
+          <mesh position={[-0.31, -0.02, 0.01]}>
+            <cylinderGeometry args={[0.025, 0.025, 0.02, 3]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.95} roughness={0.15} />
           </mesh>
         </group>
       </InteractivePart>
 
-      {/* LUTUT (KNEE) */}
+      {/* --- KEPALA LEPAS (TAILSTOCK ASSEMBLY) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['lathe-tailstock']}
+        onSelect={onSelect}
+        isActive={activeId === 'lathe-tailstock'}
+        labelOffset={[1.2, 2.5, 0]}
+        hitArgs={[0.9, 0.9, 0.9]}
+        hitPosition={[1.2, 1.85, 0]}
+      >
+        <group position={[1.2, 1.75, 0]}>
+          {/* Bodi Besi Cor Kepala Lepas */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[0.65, 0.55, 0.65]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
+          </mesh>
+          {/* Dudukan Bawah Tailstock pada V-Ways */}
+          <mesh position={[0, -0.3, 0]}>
+            <boxGeometry args={[0.7, 0.12, 0.72]} />
+            <meshStandardMaterial color="#0369a1" roughness={0.5} />
+          </mesh>
+          {/* Tuas Klem Pengunci Dasar Tailstock */}
+          <mesh position={[0.1, 0.1, 0.36]} rotation={[0.4, 0, 0]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.25, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[0.1, 0.22, 0.44]}>
+            <sphereGeometry args={[0.035, 16, 16]} />
+            <meshStandardMaterial color="#1e293b" />
+          </mesh>
+
+          {/* Selongsong Quill Presisi dengan Skala Milimeter */}
+          <mesh position={[-0.22, 0.1, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.09, 0.09, 0.45, 24]} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.12} />
+          </mesh>
+
+          {/* Center Putar (Live Center 60°) Menyokong Benda Kerja */}
+          <mesh position={[-0.45, 0.1, 0]} rotation={[0, 0, -Math.PI / 2]} castShadow>
+            <coneGeometry args={[0.08, 0.18, 24]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.98} roughness={0.1} />
+          </mesh>
+
+          {/* Roda Pemutar Tailstock di Bagian Belakang (Rear Handwheel) */}
+          <mesh position={[0.38, 0.1, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.16, 0.16, 0.04, 24]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.92} />
+          </mesh>
+          <mesh position={[0.42, 0.21, 0]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.1, 12]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- POROS TRANSPORTIR & POROS PEMBAWA (LEADSCREW & FEED SHAFT) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['lathe-leadscrew']}
+        onSelect={onSelect}
+        isActive={activeId === 'lathe-leadscrew'}
+        labelOffset={[0, 1.45, 0.5]}
+        hitArgs={[3.4, 0.35, 0.35]}
+        hitPosition={[0, 1.15, 0.44]}
+      >
+        <group position={[0, 1.15, 0.43]}>
+          {/* Poros Transportir Ulir Acme (Leadscrew) */}
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.032, 0.032, 3.5, 20]} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.15} />
+          </mesh>
+          {/* Poros Pembawa Heksagonal (Feed Shaft) di Bawahnya */}
+          <mesh position={[0, -0.09, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.024, 0.024, 3.5, 6]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} roughness={0.2} />
+          </mesh>
+          {/* Batang Sakelar Spindel ON/OFF (Control Switch Rod) */}
+          <mesh position={[0, -0.17, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.016, 0.016, 3.5, 12]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- AKSESORIS MODERN BENGKEL: DRO & SELANG COOLANT --- */}
+      {/* Layar Digital Readout (DRO 2-Axis) pada Lengan Ayun */}
+      <group position={[-0.8, 2.35, -0.45]}>
+        {/* Lengan Ayun Logam */}
+        <mesh position={[0, -0.25, 0]}>
+          <cylinderGeometry args={[0.02, 0.02, 0.5, 12]} />
+          <meshStandardMaterial color="#475569" metalness={0.8} />
+        </mesh>
+        {/* Kotak Konsol DRO */}
+        <mesh position={[0.1, 0, 0.15]} rotation={[0, -0.2, 0]} castShadow>
+          <boxGeometry args={[0.42, 0.28, 0.1]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.5} />
+        </mesh>
+        {/* Layar LED Digital Koordinat X dan Z */}
+        <mesh position={[0.1, 0.04, 0.205]} rotation={[0, -0.2, 0]}>
+          <planeGeometry args={[0.36, 0.09]} />
+          <meshBasicMaterial color="#15803d" />
+        </mesh>
+        <mesh position={[0.1, -0.06, 0.205]} rotation={[0, -0.2, 0]}>
+          <planeGeometry args={[0.36, 0.09]} />
+          <meshBasicMaterial color="#16a34a" />
+        </mesh>
+      </group>
+
+      {/* Selang Coolant Fleksibel Bersegmen (Loc-Line Blue & Orange) */}
+      <group position={[-0.15, 2.15, -0.2]}>
+        <mesh rotation={[0, 0, -0.5]}>
+          <cylinderGeometry args={[0.02, 0.02, 0.35, 12]} />
+          <meshStandardMaterial color="#2563eb" roughness={0.4} />
+        </mesh>
+        <mesh position={[0.12, -0.18, 0.12]} rotation={[0.4, 0.3, -0.8]}>
+          <coneGeometry args={[0.03, 0.08, 12]} />
+          <meshStandardMaterial color="#ea580c" roughness={0.4} />
+        </mesh>
+      </group>
+
+      {/* Marka Mat Karet Keselamatan Anti-Slip Operator di Depan Mesin */}
+      <mesh position={[0, 0.012, 1.3]} receiveShadow>
+        <boxGeometry args={[3.2, 0.02, 0.9]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+const RealisticLatheOBJ = RealisticIndustrialLathe;
+
+// ==========================================
+// 2. MESIN CNC VMC (VERTICAL MACHINING CENTER) & KONTROLER REALISTIS
+// ==========================================
+const RealisticCNCMachiningCenter = ({ position = [0, 0, 0], onSelect, activeId }) => {
+  return (
+    <group position={position}>
+      {/* --- KABIN UTAMA & RANGKA DASAR CNC (FULL ENCLOSURE & CAST BASE) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-enclosure']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-enclosure'}
+        labelOffset={[0, 2.9, 1.3]}
+        hitArgs={[3.4, 2.9, 2.7]}
+        hitPosition={[0, 1.5, 0.1]}
+      >
+        <group>
+          {/* Dasar Besi Cor Meehanite Berat (Cast Iron Machine Base) */}
+          <mesh position={[0, 0.35, 0]} castShadow receiveShadow>
+            <boxGeometry args={[3.2, 0.7, 2.6]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.6} metalness={0.5} />
+          </mesh>
+
+          {/* Kaki Leveling Pad Baja Chrome (4 Penyangga) */}
+          {[
+            [-1.4, -1.0], [1.4, -1.0],
+            [-1.4, 1.0], [1.4, 1.0]
+          ].map(([x, z], idx) => (
+            <group key={idx} position={[x, 0, z]}>
+              <mesh position={[0, 0.04, 0]}>
+                <cylinderGeometry args={[0.12, 0.14, 0.08, 16]} />
+                <meshStandardMaterial color="#334155" metalness={0.8} />
+              </mesh>
+              <mesh position={[0, 0.12, 0]}>
+                <cylinderGeometry args={[0.04, 0.04, 0.1, 12]} />
+                <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Dinding Bodi Kabin Luar Sheet Metal (Warna Putih Abu-abu Bersih Industri) */}
+          <mesh position={[0, 1.85, 0]} castShadow receiveShadow>
+            <boxGeometry args={[3.15, 2.3, 2.5]} />
+            <meshStandardMaterial color="#f1f5f9" roughness={0.3} metalness={0.4} />
+          </mesh>
+
+          {/* Garis Aksen Racing Stripe Cyan / Biru Industri Khas Mesin Modern */}
+          <mesh position={[0, 0.85, 1.26]}>
+            <boxGeometry args={[3.16, 0.12, 0.02]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.3} metalness={0.6} />
+          </mesh>
+          <mesh position={[0, 2.85, 1.26]}>
+            <boxGeometry args={[3.16, 0.08, 0.02]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.3} metalness={0.6} />
+          </mesh>
+
+          {/* Emblem Model Mesin CNC VMC-850 */}
+          <mesh position={[-0.9, 2.7, 1.265]}>
+            <planeGeometry args={[0.9, 0.18]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.4} />
+          </mesh>
+
+          {/* Bukaan Depan Area Pintu Geser Operator */}
+          <mesh position={[0, 1.75, 1.255]}>
+            <boxGeometry args={[2.0, 1.8, 0.04]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+          </mesh>
+
+          {/* Daun Pintu Geser Kiri (Sliding Door Left) dengan Jendela Transparan */}
+          <group position={[-0.48, 1.75, 1.28]}>
+            {/* Rangka Pintu */}
+            <mesh castShadow>
+              <boxGeometry args={[0.96, 1.72, 0.04]} />
+              <meshStandardMaterial color="#e2e8f0" roughness={0.3} metalness={0.5} />
+            </mesh>
+            {/* Kaca Tebal Polikarbonat Tahan Benturan (Transparan Gelap) */}
+            <mesh position={[0, 0.05, 0]}>
+              <boxGeometry args={[0.76, 1.35, 0.02]} />
+              <meshStandardMaterial
+                color="#38bdf8"
+                transparent
+                opacity={0.35}
+                roughness={0.1}
+                metalness={0.1}
+              />
+            </mesh>
+            {/* Handle Pintu Stainless Steel */}
+            <mesh position={[0.38, 0, 0.05]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.5, 12]} />
+              <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.1} />
+            </mesh>
+          </group>
+
+          {/* Daun Pintu Geser Kanan (Sliding Door Right) */}
+          <group position={[0.48, 1.75, 1.28]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.96, 1.72, 0.04]} />
+              <meshStandardMaterial color="#e2e8f0" roughness={0.3} metalness={0.5} />
+            </mesh>
+            <mesh position={[0, 0.05, 0]}>
+              <boxGeometry args={[0.76, 1.35, 0.02]} />
+              <meshStandardMaterial
+                color="#38bdf8"
+                transparent
+                opacity={0.35}
+                roughness={0.1}
+                metalness={0.1}
+              />
+            </mesh>
+            <mesh position={[-0.38, 0, 0.05]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.5, 12]} />
+              <meshStandardMaterial color="#f8fafc" metalness={0.95} roughness={0.1} />
+            </mesh>
+          </group>
+
+          {/* Rel Panduan Pintu Geser Atas (Door Guide Track) */}
+          <mesh position={[0, 2.65, 1.29]}>
+            <boxGeometry args={[2.1, 0.06, 0.06]} />
+            <meshStandardMaterial color="#64748b" metalness={0.9} />
+          </mesh>
+
+          {/* Lampu Strip LED Penerangan Ruang Potong Dalam Kabin */}
+          <mesh position={[-0.6, 2.7, 0.4]}>
+            <boxGeometry args={[0.8, 0.04, 0.1]} />
+            <meshStandardMaterial color="#ffffff" emissive="#38bdf8" emissiveIntensity={0.6} />
+          </mesh>
+          <mesh position={[0.6, 2.7, 0.4]}>
+            <boxGeometry args={[0.8, 0.04, 0.1]} />
+            <meshStandardMaterial color="#ffffff" emissive="#38bdf8" emissiveIntensity={0.6} />
+          </mesh>
+
+          {/* Menara Lampu Status 3-Warna (Andon Signal Tower Light di Atap Mesin) */}
+          <group position={[-1.2, 3.05, -0.6]}>
+            {/* Tiang Tiang Penyangga */}
+            <mesh position={[0, 0.2, 0]}>
+              <cylinderGeometry args={[0.02, 0.02, 0.4, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+            {/* Lampu Merah (Alarm / Bahaya) */}
+            <mesh position={[0, 0.58, 0]}>
+              <cylinderGeometry args={[0.045, 0.045, 0.08, 16]} />
+              <meshStandardMaterial color="#dc2626" roughness={0.2} />
+            </mesh>
+            {/* Lampu Kuning (Warning / Setup) */}
+            <mesh position={[0, 0.48, 0]}>
+              <cylinderGeometry args={[0.045, 0.045, 0.08, 16]} />
+              <meshStandardMaterial color="#eab308" roughness={0.2} />
+            </mesh>
+            {/* Lampu Hijau Menyala (Running Normal Cycle) */}
+            <mesh position={[0, 0.38, 0]}>
+              <cylinderGeometry args={[0.045, 0.045, 0.08, 16]} />
+              <meshStandardMaterial color="#22c55e" emissive="#22c55e" emissiveIntensity={0.9} roughness={0.2} />
+            </mesh>
+          </group>
+        </group>
+      </InteractivePart>
+
+      {/* --- RUANG DALAM MESIN: TIANG KOLOM Z & PELINDUNG WAY COVERS --- */}
+      <group position={[0, 0, 0]}>
+        {/* Kolom Vertikal Baja Berat Meehanite di Bagian Belakang */}
+        <mesh position={[0, 1.8, -0.75]} castShadow receiveShadow>
+          <boxGeometry args={[1.6, 2.2, 0.8]} />
+          <meshStandardMaterial color="#334155" roughness={0.5} metalness={0.6} />
+        </mesh>
+        {/* Pelindung Rel Sumbu Z Stainless Steel (Z-Axis Telescopic Way Covers) */}
+        <mesh position={[0, 1.7, -0.32]} castShadow>
+          <boxGeometry args={[0.85, 1.8, 0.06]} />
+          <meshStandardMaterial color="#cbd5e1" roughness={0.2} metalness={0.92} />
+        </mesh>
+        {[-0.6, -0.3, 0, 0.3, 0.6].map((y, idx) => (
+          <mesh key={idx} position={[0, 1.7 + y, -0.3]}>
+            <boxGeometry args={[0.88, 0.04, 0.02]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.95} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* --- SPINDEL CNC UTAMA & TOOL HOLDER BT40 (SPINDLE HEADSTOCK) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-spindle']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-spindle'}
+        labelOffset={[0, 2.65, 0.2]}
+        hitArgs={[0.9, 1.2, 0.9]}
+        hitPosition={[0, 2.05, 0.05]}
+      >
+        <group position={[0, 2.05, 0.0]}>
+          {/* Rumah Spindel Z-Carriage (Headstock Casting) */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[0.7, 0.8, 0.65]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.35} metalness={0.6} />
+          </mesh>
+
+          {/* Motor Servo Spindel AC di Atas Headstock */}
+          <mesh position={[0, 0.65, -0.05]} castShadow>
+            <cylinderGeometry args={[0.22, 0.22, 0.5, 24]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.7} />
+          </mesh>
+          {/* Sirip Pendingin Motor Spindel */}
+          <mesh position={[0, 0.65, -0.05]}>
+            <cylinderGeometry args={[0.24, 0.24, 0.35, 8]} />
+            <meshStandardMaterial color="#334155" roughness={0.5} />
+          </mesh>
+
+          {/* Hidung Spindel Presisi Tirus BT40 (Spindle Nose Cartridge) */}
+          <mesh position={[0, -0.45, 0.05]} castShadow>
+            <cylinderGeometry args={[0.18, 0.17, 0.3, 24]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.15} />
+          </mesh>
+
+          {/* Cincin Nozzle Cairan Pendingin (Multi-Nozzle Flood Coolant Ring) */}
+          <mesh position={[0, -0.58, 0.05]}>
+            <cylinderGeometry args={[0.21, 0.21, 0.06, 20]} />
+            <meshStandardMaterial color="#0284c7" roughness={0.4} />
+          </mesh>
+          {[-0.14, 0.14].map((x, idx) => (
+            <mesh key={idx} position={[x, -0.63, 0.05]} rotation={[0, 0, x > 0 ? -0.3 : 0.3]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.08, 12]} />
+              <meshStandardMaterial color="#fbbf24" metalness={0.9} />
+            </mesh>
+          ))}
+
+          {/* Tool Holder BT40 dengan Flens V-Groove Gripper ATC */}
+          <mesh position={[0, -0.66, 0.05]} castShadow>
+            <cylinderGeometry args={[0.12, 0.1, 0.14, 20]} />
+            <meshStandardMaterial color="#475569" metalness={0.9} roughness={0.2} />
+          </mesh>
+          <mesh position={[0, -0.74, 0.05]} castShadow>
+            <cylinderGeometry args={[0.09, 0.07, 0.12, 20]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.8} />
+          </mesh>
+
+          {/* Pisau Frais Solid Carbide End Mill 4-Flute TiAlN Emas-Ungu */}
+          <mesh position={[0, -0.92, 0.05]} castShadow>
+            <cylinderGeometry args={[0.04, 0.04, 0.24, 16]} />
+            <meshStandardMaterial color="#f59e0b" metalness={0.95} roughness={0.15} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- ATC (AUTOMATIC TOOL CHANGER) TIPE PAYUNG 16-TOOL --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-atc']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-atc'}
+        labelOffset={[-1.1, 2.7, 0.2]}
+        hitArgs={[0.9, 0.9, 0.9]}
+        hitPosition={[-1.1, 2.2, 0.0]}
+      >
+        <group position={[-1.1, 2.15, -0.1]}>
+          {/* Penyangga Lengan Braket ATC ke Kolom */}
+          <mesh position={[0.25, 0.25, -0.2]} castShadow>
+            <boxGeometry args={[0.45, 0.2, 0.35]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.7} />
+          </mesh>
+
+          {/* Piringan Magasin Payung ATC (Carousel Disk) */}
+          <mesh rotation={[0, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.48, 0.48, 0.06, 24]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.25} />
+          </mesh>
+          <mesh position={[0, 0.06, 0]}>
+            <cylinderGeometry args={[0.18, 0.18, 0.1, 16]} />
+            <meshStandardMaterial color="#0284c7" />
+          </mesh>
+
+          {/* Tool Pocket & Aneka Pisau BT40 Terpasang di Magasin */}
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+            const angle = (i * Math.PI * 2) / 8;
+            const px = Math.cos(angle) * 0.36;
+            const pz = Math.sin(angle) * 0.36;
+            return (
+              <group key={i} position={[px, -0.06, pz]}>
+                {/* Penjepit Cakar Pahat (Tool Gripper Finger) */}
+                <mesh>
+                  <boxGeometry args={[0.08, 0.06, 0.08]} />
+                  <meshStandardMaterial color="#1e293b" metalness={0.8} />
+                </mesh>
+                {/* BT40 Taper Holder */}
+                <mesh position={[0, -0.08, 0]}>
+                  <cylinderGeometry args={[0.045, 0.035, 0.1, 12]} />
+                  <meshStandardMaterial color="#94a3b8" metalness={0.9} />
+                </mesh>
+                {/* Variasi Pahat (Face mill, drill, endmill, tap) */}
+                <mesh position={[0, -0.16, 0]}>
+                  <cylinderGeometry args={[i % 2 === 0 ? 0.06 : 0.02, 0.02, 0.08, 12]} />
+                  <meshStandardMaterial color={i % 3 === 0 ? '#f59e0b' : '#ffffff'} metalness={0.95} />
+                </mesh>
+              </group>
+            );
+          })}
+
+          {/* Lengan Ayun Penukar Ganda (Twin-Arm Tool Changer Shifter) */}
+          <mesh position={[0.42, -0.15, 0.1]} rotation={[0, 0.4, 0]}>
+            <boxGeometry args={[0.3, 0.05, 0.1]} />
+            <meshStandardMaterial color="#475569" metalness={0.9} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- MEJA KERJA SUMBU X-Y & RAGUM PRESISI CNC (WORKTABLE) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-table']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-table'}
+        labelOffset={[0, 1.6, 0.4]}
+        hitArgs={[1.8, 0.8, 1.2]}
+        hitPosition={[0, 1.05, 0.1]}
+      >
+        <group position={[0, 0.95, 0.1]}>
+          {/* Sadel Sumbu Y & Telescopic Way Covers X */}
+          <mesh position={[0, -0.18, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.9, 0.22, 1.1]} />
+            <meshStandardMaterial color="#475569" roughness={0.5} metalness={0.6} />
+          </mesh>
+
+          {/* Meja Kerja Besi Cor Presisi dengan 3 Alur T (Meehanite T-Slotted Table) */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[1.75, 0.16, 0.82]} />
+            <meshStandardMaterial color="#cbd5e1" roughness={0.2} metalness={0.9} />
+          </mesh>
+          {[-0.24, 0, 0.24].map((z, idx) => (
+            <mesh key={idx} position={[0, 0.081, z]}>
+              <boxGeometry args={[1.72, 0.005, 0.045]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          ))}
+          {/* Saluran Pembuangan Coolant di Sekeliling Meja */}
+          <mesh position={[0, 0.075, 0.39]}>
+            <boxGeometry args={[1.74, 0.015, 0.03]} />
+            <meshStandardMaterial color="#334155" />
+          </mesh>
+
+          {/* Ragum Hidrolik Presisi CNC (High-Precision Hydraulic Vise) */}
+          <group position={[0, 0.18, 0]}>
+            {/* Dudukan Ragum dengan Baut Klem T-Slots */}
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.7, 0.14, 0.44]} />
+              <meshStandardMaterial color="#1e3a8a" roughness={0.4} metalness={0.6} />
+            </mesh>
+            {/* Rahang Diam (Fixed Jaw) */}
+            <mesh position={[0, 0.12, -0.12]} castShadow>
+              <boxGeometry args={[0.62, 0.16, 0.06]} />
+              <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.85} />
+            </mesh>
+            {/* Rahang Geser (Movable Jaw) */}
+            <mesh position={[0, 0.12, 0.06]} castShadow>
+              <boxGeometry args={[0.62, 0.16, 0.06]} />
+              <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.85} />
+            </mesh>
+
+            {/* Benda Kerja Demo CNC: Balok Aluminium 6061 Bermesin Presisi */}
+            <mesh position={[0, 0.16, -0.03]} castShadow receiveShadow>
+              <boxGeometry args={[0.44, 0.14, 0.16]} />
+              <meshStandardMaterial color="#94a3b8" roughness={0.2} metalness={0.88} />
+            </mesh>
+            {/* Kantong Melingkar & Chamfer Hasil Pemakanan Endmill (Machined Pocket) */}
+            <mesh position={[0, 0.231, -0.03]}>
+              <cylinderGeometry args={[0.07, 0.07, 0.005, 20]} />
+              <meshStandardMaterial color="#0284c7" metalness={0.9} />
+            </mesh>
+          </group>
+        </group>
+      </InteractivePart>
+
+      {/* --- PANEL KONTROL OPERATOR CNC (FANUC / SIEMENS CONTROLLER CONSOLE) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-controller']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-controller'}
+        labelOffset={[1.75, 2.5, 0.9]}
+        hitArgs={[0.85, 1.2, 0.6]}
+        hitPosition={[1.7, 1.9, 0.95]}
+      >
+        <group position={[1.65, 1.85, 0.9]}>
+          {/* Lengan Ayun Logam Penyangga Konsol (Swivel Arm Support) */}
+          <mesh position={[-0.2, 0, -0.3]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.45, 16]} />
+            <meshStandardMaterial color="#475569" metalness={0.9} />
+          </mesh>
+          <mesh position={[-0.2, -0.35, -0.3]}>
+            <cylinderGeometry args={[0.035, 0.035, 0.7, 16]} />
+            <meshStandardMaterial color="#475569" metalness={0.9} />
+          </mesh>
+
+          {/* Kotak Konsol Kontroler CNC Miring Ergonomis */}
+          <group rotation={[0, -0.35, 0]}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[0.7, 0.92, 0.22]} />
+              <meshStandardMaterial color="#1e293b" roughness={0.5} metalness={0.5} />
+            </mesh>
+            {/* Panel Depan Dua Warna Abu-abu Terang */}
+            <mesh position={[0, 0, 0.115]}>
+              <boxGeometry args={[0.66, 0.88, 0.015]} />
+              <meshStandardMaterial color="#334155" roughness={0.4} />
+            </mesh>
+
+            {/* Layar LCD Warna 10.4" Tampilan G-Code CNC */}
+            <mesh position={[0, 0.22, 0.125]}>
+              <planeGeometry args={[0.56, 0.36]} />
+              <meshBasicMaterial color="#022c22" />
+            </mesh>
+            {/* Baris Kode Program G-Code Hijau Fosfor pada Layar */}
+            <mesh position={[-0.1, 0.32, 0.128]}>
+              <planeGeometry args={[0.32, 0.025]} />
+              <meshBasicMaterial color="#22c55e" />
+            </mesh>
+            <mesh position={[-0.05, 0.26, 0.128]}>
+              <planeGeometry args={[0.42, 0.025]} />
+              <meshBasicMaterial color="#4ade80" />
+            </mesh>
+            <mesh position={[-0.08, 0.20, 0.128]}>
+              <planeGeometry args={[0.36, 0.025]} />
+              <meshBasicMaterial color="#86efac" />
+            </mesh>
+            <mesh position={[-0.12, 0.14, 0.128]}>
+              <planeGeometry args={[0.28, 0.025]} />
+              <meshBasicMaterial color="#22c55e" />
+            </mesh>
+
+            {/* Tombol Softkeys di Bawah Layar */}
+            <mesh position={[0, 0.01, 0.125]}>
+              <boxGeometry args={[0.54, 0.035, 0.01]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+
+            {/* Keyboard Alfanumerik MDI & Tombol Fungsi */}
+            <mesh position={[-0.12, -0.18, 0.125]}>
+              <boxGeometry args={[0.32, 0.28, 0.01]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+
+            {/* Tombol Cycle Start (Hijau Menyala) & Feed Hold (Merah) */}
+            <mesh position={[0.16, -0.1, 0.13]}>
+              <cylinderGeometry args={[0.028, 0.028, 0.02, 16]} />
+              <meshStandardMaterial color="#16a34a" emissive="#16a34a" emissiveIntensity={0.6} />
+            </mesh>
+            <mesh position={[0.23, -0.1, 0.13]}>
+              <cylinderGeometry args={[0.028, 0.028, 0.02, 16]} />
+              <meshStandardMaterial color="#dc2626" />
+            </mesh>
+
+            {/* Dial Putar Feedrate Override (0% - 150%) */}
+            <mesh position={[0.16, -0.22, 0.13]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.032, 0.032, 0.02, 16]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+            {/* Dial Putar Spindle Speed Override */}
+            <mesh position={[0.23, -0.22, 0.13]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.032, 0.032, 0.02, 16]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+
+            {/* Sakelar Rotary Mode Pemilihan (EDIT/MEM/MDI/HANDLE/JOG/ZERO) */}
+            <mesh position={[0.19, -0.32, 0.13]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.035, 0.035, 0.02, 16]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+        </group>
+      </InteractivePart>
+
+      {/* --- TOMBOL EMERGENCY STOP PANEL KONTROL CNC --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-estop']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-estop'}
+        labelOffset={[1.7, 1.7, 1.2]}
+        hitArgs={[0.3, 0.3, 0.3]}
+        hitPosition={[1.72, 1.45, 1.05]}
+      >
+        <group position={[1.72, 1.45, 1.05]} rotation={[0, -0.35, 0]}>
+          {/* Plat Dasar Kuning Kontras Pengaman K3 */}
+          <mesh>
+            <cylinderGeometry args={[0.065, 0.065, 0.015, 20]} />
+            <meshStandardMaterial color="#eab308" roughness={0.3} />
+          </mesh>
+          {/* Kepala Tombol Jamur Merah Besar (Mushroom E-Stop) */}
+          <mesh position={[0, 0.035, 0]}>
+            <cylinderGeometry args={[0.05, 0.04, 0.05, 20]} />
+            <meshStandardMaterial color="#ef4444" roughness={0.2} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- HANDWHEEL PENDANT MPG (MANUAL PULSE GENERATOR) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['cnc-mpg']}
+        onSelect={onSelect}
+        isActive={activeId === 'cnc-mpg'}
+        labelOffset={[1.9, 1.6, 0.8]}
+        hitArgs={[0.3, 0.4, 0.3]}
+        hitPosition={[1.92, 1.35, 0.75]}
+      >
+        <group position={[1.92, 1.35, 0.75]}>
+          {/* Dudukan Magnetik Gantung di Samping Konsol */}
+          <mesh position={[-0.03, 0, 0]}>
+            <boxGeometry args={[0.04, 0.12, 0.08]} />
+            <meshStandardMaterial color="#334155" />
+          </mesh>
+          {/* Bodi Remote Pendant MPG */}
+          <mesh position={[0.04, 0, 0]} castShadow>
+            <boxGeometry args={[0.08, 0.22, 0.12]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.6} />
+          </mesh>
+          {/* Dial Roda Pulsa Presisi MPG Chrome */}
+          <mesh position={[0.085, 0.03, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.045, 0.045, 0.015, 24]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          {/* Sakelar Pemilih Sumbu (X, Y, Z, 4) & Skala (x1, x10, x100) */}
+          <mesh position={[0.085, -0.06, -0.03]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.015, 12]} />
+            <meshStandardMaterial color="#94a3b8" />
+          </mesh>
+          <mesh position={[0.085, -0.06, 0.03]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.015, 12]} />
+            <meshStandardMaterial color="#94a3b8" />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* Mat Karet Keselamatan Anti-Slip Operator di Depan Mesin CNC */}
+      <mesh position={[0, 0.012, 1.7]} receiveShadow>
+        <boxGeometry args={[2.8, 0.02, 0.9]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+};
+
+// ==========================================
+// 3. MESIN FRAIS INDUSTRI REALISTIS (VERTICAL KNEE-TYPE MILLING MACHINE)
+// ==========================================
+const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId }) => {
+  return (
+    <group position={position}>
+      {/* --- STAND / KAKI LANDASAN BESI COR (CAST IRON BASE & SUMP) --- */}
+      <mesh position={[0, 0.22, 0.1]} castShadow receiveShadow>
+        <boxGeometry args={[2.0, 0.44, 2.4]} />
+        <meshStandardMaterial color="#1e3a5f" roughness={0.55} metalness={0.45} />
+      </mesh>
+      {/* Bibir Penampung Bak Coolant Kaki */}
+      <mesh position={[0, 0.42, 0.35]}>
+        <boxGeometry args={[1.8, 0.06, 1.6]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.7} metalness={0.4} />
+      </mesh>
+
+      {/* --- BADAN TIANG VERTIKAL BESI COR (COLUMN & WAYS) --- */}
+      {/* Kolom Piramida Utama */}
+      <mesh position={[0, 2.2, -0.35]} castShadow receiveShadow>
+        <boxGeometry args={[1.35, 3.6, 1.7]} />
+        <meshStandardMaterial color="#1e3a5f" roughness={0.45} metalness={0.5} />
+      </mesh>
+      {/* Rel Panduan Presisi Vertikal Sumbu Z (Dovetail Column Ways) */}
+      <mesh position={[0, 2.15, 0.51]} castShadow>
+        <boxGeometry args={[0.82, 3.1, 0.05]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.12} />
+      </mesh>
+
+      {/* Pintu Akses Kelistrikan Samping Kolom */}
+      <mesh position={[-0.69, 1.8, -0.35]} rotation={[0, 0, 0]}>
+        <boxGeometry args={[0.02, 1.2, 0.8]} />
+        <meshStandardMaterial color="#0f2942" roughness={0.6} />
+      </mesh>
+      {/* Sakelar Pemutus Daya Utama (Main Power Disconnect Switch) */}
+      <mesh position={[-0.71, 2.3, -0.35]}>
+        <boxGeometry args={[0.04, 0.22, 0.16]} />
+        <meshStandardMaterial color="#ca8a04" roughness={0.3} />
+      </mesh>
+      <mesh position={[-0.74, 2.3, -0.35]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.12, 12]} />
+        <meshStandardMaterial color="#dc2626" />
+      </mesh>
+
+      {/* --- LUTUT (KNEE) & POROS ELEVASI VERTIKAL --- */}
       <InteractivePart
         data={MACHINING_DATA['mill-knee']}
         onSelect={onSelect}
         isActive={activeId === 'mill-knee'}
-        labelOffset={[0, 1.8, 1.2]}
-        hitArgs={[2.2, 1.4, 2.0]}
-        hitPosition={[0, 1.5, 0.7]}
+        labelOffset={[0, 1.9, 0.8]}
+        hitArgs={[1.8, 1.2, 1.7]}
+        hitPosition={[0, 1.45, 0.65]}
       >
-        <group>
-          <mesh position={[0, 1.5, 0.7]} castShadow receiveShadow>
-            <boxGeometry args={[2.0, 1.1, 1.8]} />
-            <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
+        <group position={[0, 1.45, 0.65]}>
+          {/* Bodi Besi Cor Lutut (Knee Casting) */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[1.6, 0.95, 1.5]} />
+            <meshStandardMaterial color="#1e3a5f" roughness={0.45} metalness={0.5} />
           </mesh>
-          <mesh position={[0, 0.6, 0.9]} castShadow>
-            <cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
-            <meshStandardMaterial color="#64748b" roughness={0.3} metalness={0.7} />
+
+          {/* Poros Elevasi Ulir Teleskopik dengan Boot Karet Pelindung Accordion Bellows */}
+          <mesh position={[0, -0.75, 0.1]} castShadow>
+            <cylinderGeometry args={[0.16, 0.14, 0.65, 16]} />
+            <meshStandardMaterial color="#0f172a" roughness={0.8} />
           </mesh>
-          <mesh position={[0, 0.6, 0.9]}>
-            <cylinderGeometry args={[0.2, 0.2, 0.7, 16]} />
-            <meshStandardMaterial color="#475569" roughness={0.7} />
+          <mesh position={[0, -0.75, 0.1]}>
+            <cylinderGeometry args={[0.18, 0.18, 0.55, 8]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.9} />
+          </mesh>
+
+          {/* Tuas Klem Pengunci Lutut pada Kolom (Knee Lock Levers) */}
+          <mesh position={[-0.82, 0.15, -0.2]} rotation={[0, 0, 0.4]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.22, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[-0.87, 0.23, -0.2]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
+            <meshStandardMaterial color="#0f172a" />
           </mesh>
         </group>
       </InteractivePart>
 
-      <mesh position={[0, 2.15, 0.85]} castShadow receiveShadow>
-        <boxGeometry args={[2.2, 0.35, 1.5]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.3} metalness={0.75} />
+      {/* --- SADEL (SADDLE) SUMBU MELINTANG Y --- */}
+      <mesh position={[0, 1.95, 0.85]} castShadow receiveShadow>
+        <boxGeometry args={[1.85, 0.22, 1.25]} />
+        <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.55} />
+      </mesh>
+      {/* Rel Ekor Burung Presisi Melintang (Cross Dovetail Ways) */}
+      <mesh position={[0, 2.05, 0.85]}>
+        <boxGeometry args={[1.75, 0.04, 0.65]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.15} />
+      </mesh>
+      {/* Pompa Pelumasan Manual (Bijur One-Shot Lube Pump) pada Sisi Sadel */}
+      <mesh position={[-0.95, 1.95, 0.85]}>
+        <boxGeometry args={[0.06, 0.18, 0.14]} />
+        <meshStandardMaterial color="#334155" />
+      </mesh>
+      <mesh position={[-0.95, 2.08, 0.85]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.08, 12]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
       </mesh>
 
-      {/* MEJA FRAIS ALUR T */}
+      {/* --- MEJA KERJA PRESISI FRAIS ALUR T (T-SLOTTED TABLE) --- */}
       <InteractivePart
         data={MACHINING_DATA['mill-table']}
         onSelect={onSelect}
         isActive={activeId === 'mill-table'}
-        labelOffset={[0, 2.9, 1.5]}
-        hitArgs={[4.6, 0.4, 1.2]}
-        hitPosition={[0, 2.45, 0.85]}
+        labelOffset={[0, 2.55, 1.2]}
+        hitArgs={[4.2, 0.4, 0.9]}
+        hitPosition={[0, 2.18, 0.85]}
       >
-        <group position={[0, 2.45, 0.85]}>
+        <group position={[0, 2.18, 0.85]}>
+          {/* Bodi Meja Besi Cor Meehanite Presisi */}
           <mesh castShadow receiveShadow>
-            <boxGeometry args={[4.4, 0.25, 1.0]} />
-            <meshStandardMaterial color="#cbd5e1" roughness={0.2} metalness={0.85} />
+            <boxGeometry args={[3.8, 0.2, 0.78]} />
+            <meshStandardMaterial color="#cbd5e1" roughness={0.2} metalness={0.92} />
           </mesh>
-          <mesh position={[0, 0.126, -0.2]}>
-            <boxGeometry args={[4.3, 0.01, 0.08]} />
-            <meshStandardMaterial color="#1e293b" />
+          {/* Tiga Alur T Presisi (Precision T-Slots) */}
+          {[-0.22, 0, 0.22].map((z, idx) => (
+            <mesh key={idx} position={[0, 0.101, z]}>
+              <boxGeometry args={[3.72, 0.008, 0.045]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          ))}
+          {/* Bak Alur Pembuangan Coolant di Kedua Ujung Meja */}
+          <mesh position={[-1.82, 0.08, 0]}>
+            <boxGeometry args={[0.1, 0.04, 0.65]} />
+            <meshStandardMaterial color="#475569" />
           </mesh>
-          <mesh position={[0, 0.126, 0]}>
-            <boxGeometry args={[4.3, 0.01, 0.08]} />
-            <meshStandardMaterial color="#1e293b" />
-          </mesh>
-          <mesh position={[0, 0.126, 0.2]}>
-            <boxGeometry args={[4.3, 0.01, 0.08]} />
-            <meshStandardMaterial color="#1e293b" />
+          <mesh position={[1.82, 0.08, 0]}>
+            <boxGeometry args={[0.1, 0.04, 0.65]} />
+            <meshStandardMaterial color="#475569" />
           </mesh>
         </group>
       </InteractivePart>
 
-      {/* RAGUM MESIN FRAIS */}
-      <InteractivePart
-        data={MACHINING_DATA['mill-vise']}
-        onSelect={onSelect}
-        isActive={activeId === 'mill-vise'}
-        labelOffset={[0, 3.2, 0.9]}
-        hitArgs={[1.2, 0.6, 0.8]}
-        hitPosition={[0, 2.75, 0.85]}
-      >
-        <group position={[0, 2.67, 0.85]}>
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[0.9, 0.12, 0.6]} />
-            <meshStandardMaterial color="#1e3a8a" roughness={0.4} metalness={0.6} />
-          </mesh>
-          <mesh position={[0, 0.16, -0.15]} castShadow>
-            <boxGeometry args={[0.8, 0.2, 0.1]} />
-            <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 0.16, 0.08]} castShadow>
-            <boxGeometry args={[0.8, 0.2, 0.1]} />
-            <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 0.12, 0.25]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.04, 0.04, 0.4, 16]} />
-            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
-          </mesh>
-          <mesh position={[0, 0.22, -0.03]} castShadow receiveShadow>
-            <boxGeometry args={[0.5, 0.16, 0.14]} />
-            <meshStandardMaterial color="#94a3b8" roughness={0.2} metalness={0.85} />
-          </mesh>
-        </group>
-      </InteractivePart>
-
-      {/* HANDWHEELS */}
+      {/* --- RODA PEMUTAR ERETAN X, Y, Z & POWER FEED (HANDWHEELS) --- */}
       <InteractivePart
         data={MACHINING_DATA['mill-handwheels']}
         onSelect={onSelect}
         isActive={activeId === 'mill-handwheels'}
-        labelOffset={[2.4, 2.8, 0.85]}
-        hitArgs={[0.8, 0.8, 0.8]}
-        hitPosition={[2.4, 2.45, 0.85]}
+        labelOffset={[2.1, 2.6, 0.9]}
+        hitArgs={[4.5, 0.8, 1.4]}
+        hitPosition={[0, 1.95, 1.0]}
       >
         <group>
-          <mesh position={[-2.3, 2.45, 0.85]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.25, 0.25, 0.1, 24]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          {/* Roda Pemutar Sumbu X Kiri (Left Table Handwheel) */}
+          <group position={[-1.98, 2.18, 0.85]}>
+            <mesh rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.15, 0.15, 0.04, 24]} />
+              <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.15} />
+            </mesh>
+            {/* Cincin Skala Nonius Mikrometer Satinkrom */}
+            <mesh position={[0.03, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.07, 0.07, 0.04, 20]} />
+              <meshStandardMaterial color="#f8fafc" metalness={0.9} />
+            </mesh>
+            {/* Gagang Pegangan Berputar Chrome (Revolving Handle) */}
+            <mesh position={[-0.05, 0.1, 0]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.1, 12]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+
+          {/* Unit Penggerak Otomatis Meja Sumbu X Kanan (Table Power Feed Unit) */}
+          <group position={[2.08, 2.18, 0.85]}>
+            {/* Kotak Motor Power Feed */}
+            <mesh castShadow>
+              <boxGeometry args={[0.3, 0.32, 0.28]} />
+              <meshStandardMaterial color="#334155" roughness={0.5} metalness={0.6} />
+            </mesh>
+            {/* Tuas Arah Gerak (Direction Lever L / N / R) */}
+            <mesh position={[0, 0.18, 0.05]} rotation={[0.4, 0, 0]}>
+              <cylinderGeometry args={[0.012, 0.012, 0.12, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+            <mesh position={[0, 0.24, 0.08]}>
+              <sphereGeometry args={[0.025, 16, 16]} />
+              <meshStandardMaterial color="#dc2626" />
+            </mesh>
+            {/* Tombol Rapid Traverse & Dial Kecepatan */}
+            <mesh position={[0.16, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.03, 0.03, 0.02, 16]} />
+              <meshStandardMaterial color="#ef4444" />
+            </mesh>
+            {/* Roda Manual Sumbu X Kanan */}
+            <mesh position={[0.19, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.14, 0.14, 0.03, 24]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+            </mesh>
+          </group>
+
+          {/* Roda Pemutar Sumbu Melintang Y di Depan Sadel (Cross-Feed Handwheel) */}
+          <group position={[0, 1.85, 1.55]}>
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.16, 0.16, 0.04, 24]} />
+              <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.15} />
+            </mesh>
+            <mesh position={[0, 0, -0.03]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.075, 0.075, 0.04, 20]} />
+              <meshStandardMaterial color="#f8fafc" metalness={0.9} />
+            </mesh>
+            <mesh position={[0, 0.1, 0.06]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.1, 12]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+
+          {/* Engkol Pemutar Elevasi Lutut Sumbu Z (Knee Elevation Crank) */}
+          <group position={[0.65, 1.25, 1.45]}>
+            <mesh rotation={[0, 0, 0]}>
+              <cylinderGeometry args={[0.02, 0.02, 0.24, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+            <mesh position={[0, -0.12, 0.05]}>
+              <cylinderGeometry args={[0.018, 0.018, 0.1, 12]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+        </group>
+      </InteractivePart>
+
+      {/* --- RAGUM MESIN FRAIS PRESISI & BENDA KERJA (KURT MACHINE VISE) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['mill-vise']}
+        onSelect={onSelect}
+        isActive={activeId === 'mill-vise'}
+        labelOffset={[0, 3.0, 0.85]}
+        hitArgs={[1.1, 0.6, 0.8]}
+        hitPosition={[0, 2.55, 0.85]}
+      >
+        <group position={[0, 2.38, 0.85]}>
+          {/* Dasar Ragum Baja Keras dengan Kupingan Klem Baut T */}
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[0.9, 0.12, 0.52]} />
+            <meshStandardMaterial color="#1e3a8a" roughness={0.4} metalness={0.6} />
           </mesh>
-          <mesh position={[2.3, 2.45, 0.85]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.25, 0.25, 0.1, 24]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          {[-0.42, 0.42].map((x, idx) => (
+            <mesh key={idx} position={[x, -0.02, 0]}>
+              <boxGeometry args={[0.08, 0.06, 0.18]} />
+              <meshStandardMaterial color="#334155" metalness={0.8} />
+            </mesh>
+          ))}
+
+          {/* Rahang Tetap Belakang (Stationary Jaw) */}
+          <mesh position={[0, 0.14, -0.14]} castShadow>
+            <boxGeometry args={[0.78, 0.18, 0.08]} />
+            <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.85} />
           </mesh>
-          <mesh position={[0, 2.0, 1.65]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-            <cylinderGeometry args={[0.22, 0.22, 0.08, 24]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          {/* Rahang Geser Depan (Movable Jaw) */}
+          <mesh position={[0, 0.14, 0.08]} castShadow>
+            <boxGeometry args={[0.78, 0.18, 0.08]} />
+            <meshStandardMaterial color="#475569" roughness={0.25} metalness={0.85} />
           </mesh>
-          <mesh position={[0.7, 1.4, 1.5]} rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.22, 0.22, 0.08, 24]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.8} />
+          {/* Poros Ulir Pengencang Rahang (Vise Screw Hex Socket) */}
+          <mesh position={[0, 0.1, 0.22]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.035, 0.035, 0.35, 16]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+
+          {/* Benda Kerja Balok Logam Tersayat (Milled Workpiece with Stepped Shoulder) */}
+          <mesh position={[0, 0.19, -0.03]} castShadow receiveShadow>
+            <boxGeometry args={[0.52, 0.16, 0.14]} />
+            <meshStandardMaterial color="#94a3b8" roughness={0.2} metalness={0.85} />
+          </mesh>
+          {/* Sayatan Step Bertingkat Mengkilat pada Benda Kerja */}
+          <mesh position={[0.1, 0.23, -0.03]}>
+            <boxGeometry args={[0.28, 0.08, 0.141]} />
+            <meshStandardMaterial color="#f8fafc" roughness={0.12} metalness={0.95} />
+          </mesh>
+          {/* Serpihan Bram Logam Spiral (Curly Swarf) di Dekat Rahang */}
+          <mesh position={[-0.2, 0.1, 0.02]}>
+            <torusGeometry args={[0.025, 0.008, 8, 16]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.9} />
           </mesh>
         </group>
       </InteractivePart>
 
-      {/* E-STOP */}
+      {/* --- LENGAN RAM ATAS (OVERARM) & KEPALA VERTIKAL FRAIS --- */}
+      <mesh position={[0, 4.05, 0.2]} castShadow receiveShadow>
+        <boxGeometry args={[1.1, 0.48, 2.2]} />
+        <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.5} />
+      </mesh>
+      {/* Klem Pengunci Ram Horisontal */}
+      <mesh position={[0.56, 4.05, 0.2]}>
+        <cylinderGeometry args={[0.02, 0.02, 0.1, 12]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+      </mesh>
+
+      {/* --- MOTOR & KEPALA VERTIKAL FRAIS (MILLING HEAD & MOTOR) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['mill-motor']}
+        onSelect={onSelect}
+        isActive={activeId === 'mill-motor'}
+        labelOffset={[0, 5.7, 1.2]}
+        hitArgs={[1.4, 1.8, 1.6]}
+        hitPosition={[0, 4.65, 1.2]}
+      >
+        <group position={[0, 4.25, 1.25]}>
+          {/* Dudukan Kepala Putar Berskala Sudut (Swivel Degree Adapter ±45°) */}
+          <mesh rotation={[0, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.42, 0.42, 0.35, 24]} />
+            <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.55} />
+          </mesh>
+          <mesh position={[0, 0.05, 0.43]}>
+            <planeGeometry args={[0.3, 0.12]} />
+            <meshStandardMaterial color="#f8fafc" metalness={0.8} />
+          </mesh>
+
+          {/* Rumah Transmisi Sabuk & Variator (Variable Speed Belt Housing) */}
+          <mesh position={[0, 0.4, 0]} castShadow>
+            <boxGeometry args={[0.95, 0.36, 1.25]} />
+            <meshStandardMaterial color="#1e3a5f" roughness={0.35} metalness={0.55} />
+          </mesh>
+
+          {/* Motor Listrik 3-Phasa 3 HP dengan Sirip Pendingin (Induction Motor) */}
+          <mesh position={[0, 0.88, -0.22]} castShadow>
+            <cylinderGeometry args={[0.32, 0.32, 0.65, 24]} />
+            <meshStandardMaterial color="#0f2942" roughness={0.45} metalness={0.6} />
+          </mesh>
+          <mesh position={[0, 1.22, -0.22]}>
+            <cylinderGeometry args={[0.34, 0.34, 0.1, 24]} />
+            <meshStandardMaterial color="#334155" />
+          </mesh>
+
+          {/* Tuas Hi-Lo Back Gear Shift & Tuas Rem Spindel (Brake Lever) */}
+          <mesh position={[0.48, 0.45, 0.15]} rotation={[0, 0, Math.PI / 4]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.28, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[0.58, 0.55, 0.15]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
+            <meshStandardMaterial color="#dc2626" />
+          </mesh>
+
+          <mesh position={[0.48, 0.45, -0.2]} rotation={[0, 0, Math.PI / 4]}>
+            <cylinderGeometry args={[0.015, 0.015, 0.28, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[0.58, 0.55, -0.2]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
+            <meshStandardMaterial color="#10b981" />
+          </mesh>
+
+          {/* Roda Pemutar Kecepatan RPM (Vari-Speed Handwheel) di Bagian Depan */}
+          <mesh position={[0, 0.42, 0.64]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.04, 20]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+        </group>
+      </InteractivePart>
+
+      {/* --- SPINDEL, SELONGSONG QUILL & PISAU FRAIS (SPINDLE ASSEMBLY) --- */}
+      <InteractivePart
+        data={MACHINING_DATA['mill-spindle']}
+        onSelect={onSelect}
+        isActive={activeId === 'mill-spindle'}
+        labelOffset={[0, 3.65, 1.35]}
+        hitArgs={[0.8, 1.2, 0.8]}
+        hitPosition={[0, 3.25, 1.25]}
+      >
+        <group position={[0, 3.3, 1.25]}>
+          {/* Selongsong Quill Presisi Hardened Chrome dengan Skala Kedalaman */}
+          <mesh castShadow>
+            <cylinderGeometry args={[0.18, 0.18, 0.65, 24]} />
+            <meshStandardMaterial color="#ffffff" metalness={0.95} roughness={0.12} />
+          </mesh>
+
+          {/* Tuas Pemakanan Pengeboran Cepat (Sensitive Drill Feed Handle) di Sisi Kanan */}
+          <group position={[0.22, 0.1, 0]}>
+            <mesh rotation={[0, 0, -Math.PI / 3]}>
+              <cylinderGeometry args={[0.014, 0.014, 0.35, 12]} />
+              <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+            </mesh>
+            <mesh position={[0.15, -0.08, 0]}>
+              <sphereGeometry args={[0.032, 16, 16]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+
+          {/* Roda Pemakanan Halus Selongsong (Fine Feed Handwheel) di Depan */}
+          <mesh position={[0, 0.15, 0.22]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.08, 0.08, 0.03, 20]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.92} />
+          </mesh>
+
+          {/* Batang Pembatas Kedalaman Pemakanan (Micrometer Depth Stop Rod) */}
+          <mesh position={[-0.18, -0.05, 0.1]}>
+            <cylinderGeometry args={[0.01, 0.01, 0.45, 12]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} />
+          </mesh>
+          <mesh position={[-0.18, -0.15, 0.1]}>
+            <cylinderGeometry args={[0.024, 0.024, 0.04, 16]} />
+            <meshStandardMaterial color="#fbbf24" metalness={0.9} />
+          </mesh>
+
+          {/* Collet Chuck ER32 / Arbor Frais Baja Hitam */}
+          <mesh position={[0, -0.38, 0]} castShadow>
+            <cylinderGeometry args={[0.14, 0.11, 0.22, 24]} />
+            <meshStandardMaterial color="#1e293b" roughness={0.3} metalness={0.8} />
+          </mesh>
+
+          {/* Pisau Frais Solid Carbide End Mill 4-Flute TiN Emas (Gold Coated Cutter) */}
+          <mesh position={[0, -0.62, 0]} castShadow>
+            <cylinderGeometry args={[0.05, 0.05, 0.32, 16]} />
+            <meshStandardMaterial color="#fbbf24" roughness={0.15} metalness={0.95} />
+          </mesh>
+
+          {/* Selang Pendingin Fleksibel Dua Arah (Dual Loc-Line Coolant Hose) */}
+          <group position={[0.24, -0.1, 0.1]}>
+            <mesh rotation={[0.3, 0.2, -0.6]}>
+              <cylinderGeometry args={[0.02, 0.02, 0.38, 12]} />
+              <meshStandardMaterial color="#2563eb" roughness={0.4} />
+            </mesh>
+            <mesh position={[0.12, -0.22, 0.1]} rotation={[0.6, 0.2, -0.9]}>
+              <coneGeometry args={[0.028, 0.08, 12]} />
+              <meshStandardMaterial color="#ea580c" roughness={0.3} />
+            </mesh>
+          </group>
+        </group>
+      </InteractivePart>
+
+      {/* --- KONSOL DIGITAL READOUT (DRO 3-AXIS) PADA LENGAN AYUN --- */}
+      <group position={[1.1, 3.45, 0.6]}>
+        {/* Lengan Sambungan Besi ke Kolom */}
+        <mesh position={[-0.25, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.022, 0.022, 0.5, 12]} />
+          <meshStandardMaterial color="#475569" metalness={0.85} />
+        </mesh>
+        {/* Bodi Konsol DRO */}
+        <mesh position={[0.05, 0, 0.1]} rotation={[0, -0.25, 0]} castShadow>
+          <boxGeometry args={[0.44, 0.32, 0.1]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.5} />
+        </mesh>
+        {/* Layar Tampilan LED Hijau Sumbu X, Y, Z */}
+        <mesh position={[0.05, 0.08, 0.155]} rotation={[0, -0.25, 0]}>
+          <planeGeometry args={[0.38, 0.065]} />
+          <meshBasicMaterial color="#15803d" />
+        </mesh>
+        <mesh position={[0.05, 0, 0.155]} rotation={[0, -0.25, 0]}>
+          <planeGeometry args={[0.38, 0.065]} />
+          <meshBasicMaterial color="#16a34a" />
+        </mesh>
+        <mesh position={[0.05, -0.08, 0.155]} rotation={[0, -0.25, 0]}>
+          <planeGeometry args={[0.38, 0.065]} />
+          <meshBasicMaterial color="#22c55e" />
+        </mesh>
+      </group>
+
+      {/* --- TOMBOL EMERGENCY STOP & LAMPU KERJA (SAFETY E-STOP BOX) --- */}
       <InteractivePart
         data={MACHINING_DATA['mill-estop']}
         onSelect={onSelect}
         isActive={activeId === 'mill-estop'}
         labelOffset={[-1.2, 3.2, 1.4]}
         hitArgs={[0.5, 0.6, 0.4]}
-        hitPosition={[-1.2, 2.8, 1.4]}
+        hitPosition={[-1.15, 2.75, 1.35]}
       >
-        <group position={[-1.2, 2.8, 1.4]}>
+        <group position={[-1.15, 2.75, 1.35]}>
+          {/* Kotak Pengaman Kuning Industri Standar K3 */}
           <mesh castShadow>
-            <boxGeometry args={[0.3, 0.45, 0.18]} />
-            <meshStandardMaterial color="#ca8a04" roughness={0.4} />
+            <boxGeometry args={[0.26, 0.42, 0.18]} />
+            <meshStandardMaterial color="#eab308" roughness={0.3} />
           </mesh>
-          <mesh position={[0, 0.05, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.08, 0.06, 0.08, 16]} />
-            <meshStandardMaterial color="#ef4444" roughness={0.3} />
+          {/* Tombol Jamur Merah Penghenti Darurat (E-Stop Mushroom) */}
+          <mesh position={[0, 0.06, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.075, 0.055, 0.08, 16]} />
+            <meshStandardMaterial color="#ef4444" roughness={0.2} />
+          </mesh>
+          {/* Sakelar Start/Stop Spindel Toggle */}
+          <mesh position={[0, -0.1, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.02, 0.02, 0.04, 12]} />
+            <meshStandardMaterial color="#16a34a" />
           </mesh>
         </group>
       </InteractivePart>
 
-      <mesh position={[0, 0.015, 2.1]} receiveShadow>
-        <boxGeometry args={[2.6, 0.03, 1.2]} />
-        <meshStandardMaterial color="#334155" roughness={0.9} />
+      {/* Mat Karet Keselamatan Anti-Slip Operator di Depan Mesin Frais */}
+      <mesh position={[0, 0.012, 1.4]} receiveShadow>
+        <boxGeometry args={[2.8, 0.02, 0.9]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.9} />
       </mesh>
     </group>
   );
 };
+
+// Alias untuk kompatibilitas
+const IndustrialMillingMachine = RealisticIndustrialMilling;
 
 // ==========================================
 // PROPS PERLENGKAPAN BENGKEL MESIN
@@ -1776,34 +3094,48 @@ const WorkshopHallEnvironment = ({ viewMode }) => {
         </mesh>
       ))}
 
-      {/* 3. MARKA ZONA KERJA MESIN PADA AREA MESIN */}
+      {/* 3. MARKA ZONA KERJA MESIN PADA AREA MESIN (BUBUT, CNC, FRAIS) */}
       {viewMode === 'mesin' && (
         <group>
-          {/* Zona Mesin Bubut */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-5.5, 0.006, 0.8]}>
-            <planeGeometry args={[9.5, 5.5]} />
+          {/* Zona Mesin Bubut (x = -7.5) */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.006, 0.8]}>
+            <planeGeometry args={[6.2, 5.5]} />
             <meshStandardMaterial color="#64748b" roughness={0.6} />
           </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-5.5, 0.009, -1.95]}>
-            <planeGeometry args={[9.5, 0.14]} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.009, -1.95]}>
+            <planeGeometry args={[6.2, 0.14]} />
             <meshStandardMaterial color="#eab308" />
           </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-5.5, 0.009, 3.55]}>
-            <planeGeometry args={[9.5, 0.14]} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.009, 3.55]}>
+            <planeGeometry args={[6.2, 0.14]} />
             <meshStandardMaterial color="#eab308" />
           </mesh>
 
-          {/* Zona Mesin Frais */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[5.5, 0.006, 0.8]}>
-            <planeGeometry args={[7.5, 5.5]} />
-            <meshStandardMaterial color="#64748b" roughness={0.6} />
+          {/* Zona Mesin CNC VMC (x = 0.0) */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.006, 0.8]}>
+            <planeGeometry args={[6.0, 5.5]} />
+            <meshStandardMaterial color="#475569" roughness={0.6} />
           </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[5.5, 0.009, -1.95]}>
-            <planeGeometry args={[7.5, 0.14]} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.009, -1.95]}>
+            <planeGeometry args={[6.0, 0.14]} />
             <meshStandardMaterial color="#eab308" />
           </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[5.5, 0.009, 3.55]}>
-            <planeGeometry args={[7.5, 0.14]} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.009, 3.55]}>
+            <planeGeometry args={[6.0, 0.14]} />
+            <meshStandardMaterial color="#eab308" />
+          </mesh>
+
+          {/* Zona Mesin Frais (x = 7.5) */}
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.006, 0.8]}>
+            <planeGeometry args={[6.2, 5.5]} />
+            <meshStandardMaterial color="#64748b" roughness={0.6} />
+          </mesh>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.009, -1.95]}>
+            <planeGeometry args={[6.2, 0.14]} />
+            <meshStandardMaterial color="#eab308" />
+          </mesh>
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.009, 3.55]}>
+            <planeGeometry args={[6.2, 0.14]} />
             <meshStandardMaterial color="#eab308" />
           </mesh>
         </group>
@@ -1924,13 +3256,16 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
     if (viewMode === 'mesin') {
       switch (type) {
         case 'lathe':
-          setCameraPreset({ pos: [-5.0, 3.2, 5.5], look: [-5.0, 1.8, 0] });
+          setCameraPreset({ pos: [-7.5, 3.0, 5.0], look: [-7.5, 1.6, 0] });
+          break;
+        case 'cnc':
+          setCameraPreset({ pos: [0, 3.0, 5.2], look: [0, 1.8, 0] });
           break;
         case 'milling':
-          setCameraPreset({ pos: [5.0, 3.4, 5.5], look: [5.0, 2.2, 0] });
+          setCameraPreset({ pos: [7.5, 3.0, 5.0], look: [7.5, 1.8, 0] });
           break;
         default:
-          setCameraPreset({ pos: [0, 5.5, 12], look: [0, 1.8, 0] });
+          setCameraPreset({ pos: [0, 5.8, 13.0], look: [0, 1.8, 0] });
           break;
       }
     } else {
@@ -2018,7 +3353,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           </div>
           <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '3px 0 0 0' }}>
             {viewMode === 'mesin'
-              ? 'Area Bengkel Mesin: Mesin Bubut (Lathe) & Mesin Frais (Milling)'
+              ? 'Area Bengkel Mesin: Mesin Bubut (Lathe), Mesin CNC VMC, & Mesin Frais (Milling)'
               : 'Area Bengkel Kerja Bangku: Ragum Meja, Meja Granit, & Papan Perkakas di Tembok'}
           </p>
         </div>
@@ -2055,7 +3390,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
               boxShadow: viewMode === 'mesin' ? '0 4px 12px rgba(37, 99, 235, 0.4)' : 'none'
             }}
           >
-            <span>⚙️</span> Area Mesin (Bubut & Frais)
+            <span>⚙️</span> Area Mesin (Bubut, CNC & Frais)
           </button>
           <button
             onClick={() => setViewMode('bangku')}
@@ -2139,7 +3474,25 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 gap: '6px'
               }}
             >
-              🌀 Fokus Mesin Bubut
+              🌀 Mesin Bubut
+            </button>
+            <button
+              onClick={() => applyCameraView('cnc')}
+              style={{
+                background: 'rgba(6, 182, 212, 0.25)',
+                border: '1px solid #06b6d4',
+                color: '#67e8f9',
+                padding: '6px 10px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                cursor: 'pointer',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              🖥️ Mesin CNC VMC
             </button>
             <button
               onClick={() => applyCameraView('milling')}
@@ -2157,7 +3510,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 gap: '6px'
               }}
             >
-              ⚙️ Fokus Mesin Frais
+              ⚙️ Mesin Frais
             </button>
           </>
         ) : (
@@ -2311,77 +3664,28 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
         {/* KONTEN AREA SESUAI TAB AKTIF */}
         {viewMode === 'mesin' ? (
           <group>
-            {/* 1. MESIN BUBUT REALISTIS & KOMPONEN KLIK LANGSUNG */}
-            <group position={[-5.0, 0, 0]}>
-              <LatheFallback />
-
-              {/* Komponen-Komponen Mesin Bubut yang Langsung Bisa Diklik */}
-              <InteractivePart
-                data={MACHINING_DATA['lathe-headstock']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-headstock'}
-                labelOffset={[-1.48, 2.7, 0.1]}
-                hitArgs={[1.0, 1.1, 1.2]}
-                hitPosition={[-1.48, 1.97, 0.10]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-chuck']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-chuck'}
-                labelOffset={[-0.66, 3.0, 0.1]}
-                hitArgs={[0.9, 0.9, 0.9]}
-                hitPosition={[-0.66, 2.39, 0.04]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-toolpost']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-toolpost'}
-                labelOffset={[0.68, 2.9, 0.25]}
-                hitArgs={[0.7, 0.7, 0.7]}
-                hitPosition={[0.68, 2.30, 0.25]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-carriage']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-carriage'}
-                labelOffset={[0.68, 2.2, 0.6]}
-                hitArgs={[1.1, 1.2, 1.1]}
-                hitPosition={[0.68, 1.50, 0.2]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-tailstock']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-tailstock'}
-                labelOffset={[1.56, 2.6, 0.1]}
-                hitArgs={[0.9, 0.8, 0.8]}
-                hitPosition={[1.56, 1.98, 0.07]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-leadscrew']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-leadscrew'}
-                labelOffset={[0.31, 1.6, 0.55]}
-                hitArgs={[3.2, 0.3, 0.3]}
-                hitPosition={[0.31, 1.33, 0.43]}
-              />
-              <InteractivePart
-                data={MACHINING_DATA['lathe-chippan']}
-                onSelect={handleSelectItem}
-                isActive={activeItem?.id === 'lathe-chippan'}
-                labelOffset={[0, 0.3, 0.8]}
-                hitArgs={[4.2, 0.5, 1.5]}
-                hitPosition={[-0.08, 0.7, 0.05]}
-              />
-            </group>
-
-            {/* 2. MESIN FRAIS INDUSTRI LENGKAP */}
-            <IndustrialMillingMachine
-              position={[5.5, 0, 0]}
+            {/* 1. MESIN BUBUT INDUSTRI REALISTIS */}
+            <RealisticIndustrialLathe
+              position={[-7.5, 0, 0]}
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
 
-            {/* 3. PROPS BENGKEL MESIN */}
+            {/* 2. MESIN CNC VMC (VERTICAL MACHINING CENTER) & KONTROLER REALISTIS */}
+            <RealisticCNCMachiningCenter
+              position={[0.0, 0, 0]}
+              onSelect={handleSelectItem}
+              activeId={activeItem?.id}
+            />
+
+            {/* 3. MESIN FRAIS INDUSTRI REALISTIS */}
+            <RealisticIndustrialMilling
+              position={[7.5, 0, 0]}
+              onSelect={handleSelectItem}
+              activeId={activeItem?.id}
+            />
+
+            {/* 4. PROPS BENGKEL MESIN */}
             <MachineShopProps
               onSelect={handleSelectItem}
               activeId={activeItem?.id}

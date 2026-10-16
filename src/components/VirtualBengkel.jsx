@@ -1725,19 +1725,19 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
       {/* --- STAND / KAKI LANDASAN BESI COR (CAST IRON BASE & SUMP) --- */}
       <mesh position={[0, 0.22, 0.1]} castShadow receiveShadow>
         <boxGeometry args={[2.0, 0.44, 2.4]} />
-        <meshStandardMaterial color="#1e3a5f" roughness={0.55} metalness={0.45} />
+        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
       </mesh>
       {/* Bibir Penampung Bak Coolant Kaki */}
       <mesh position={[0, 0.42, 0.35]}>
         <boxGeometry args={[1.8, 0.06, 1.6]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.7} metalness={0.4} />
+        <meshStandardMaterial color="#0369a1" roughness={0.5} metalness={0.5} />
       </mesh>
 
       {/* --- BADAN TIANG VERTIKAL BESI COR (COLUMN & WAYS) --- */}
       {/* Kolom Piramida Utama */}
       <mesh position={[0, 2.2, -0.35]} castShadow receiveShadow>
         <boxGeometry args={[1.35, 3.6, 1.7]} />
-        <meshStandardMaterial color="#1e3a5f" roughness={0.45} metalness={0.5} />
+        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
       </mesh>
       {/* Rel Panduan Presisi Vertikal Sumbu Z (Dovetail Column Ways) */}
       <mesh position={[0, 2.15, 0.51]} castShadow>
@@ -1748,7 +1748,7 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
       {/* Pintu Akses Kelistrikan Samping Kolom */}
       <mesh position={[-0.69, 1.8, -0.35]} rotation={[0, 0, 0]}>
         <boxGeometry args={[0.02, 1.2, 0.8]} />
-        <meshStandardMaterial color="#0f2942" roughness={0.6} />
+        <meshStandardMaterial color="#0369a1" roughness={0.5} />
       </mesh>
       {/* Sakelar Pemutus Daya Utama (Main Power Disconnect Switch) */}
       <mesh position={[-0.71, 2.3, -0.35]}>
@@ -1773,17 +1773,17 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
           {/* Bodi Besi Cor Lutut (Knee Casting) */}
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1.6, 0.95, 1.5]} />
-            <meshStandardMaterial color="#1e3a5f" roughness={0.45} metalness={0.5} />
+            <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
           </mesh>
 
           {/* Poros Elevasi Ulir Teleskopik dengan Boot Karet Pelindung Accordion Bellows */}
           <mesh position={[0, -0.75, 0.1]} castShadow>
             <cylinderGeometry args={[0.16, 0.14, 0.65, 16]} />
-            <meshStandardMaterial color="#0f172a" roughness={0.8} />
+            <meshStandardMaterial color="#475569" roughness={0.6} />
           </mesh>
           <mesh position={[0, -0.75, 0.1]}>
             <cylinderGeometry args={[0.18, 0.18, 0.55, 8]} />
-            <meshStandardMaterial color="#1e293b" roughness={0.9} />
+            <meshStandardMaterial color="#64748b" roughness={0.7} />
           </mesh>
 
           {/* Tuas Klem Pengunci Lutut pada Kolom (Knee Lock Levers) */}
@@ -1793,7 +1793,7 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
           </mesh>
           <mesh position={[-0.87, 0.23, -0.2]}>
             <sphereGeometry args={[0.03, 16, 16]} />
-            <meshStandardMaterial color="#0f172a" />
+            <meshStandardMaterial color="#0369a1" />
           </mesh>
         </group>
       </InteractivePart>
@@ -1801,7 +1801,7 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
       {/* --- SADEL (SADDLE) SUMBU MELINTANG Y --- */}
       <mesh position={[0, 1.95, 0.85]} castShadow receiveShadow>
         <boxGeometry args={[1.85, 0.22, 1.25]} />
-        <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.55} />
+        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
       </mesh>
       {/* Rel Ekor Burung Presisi Melintang (Cross Dovetail Ways) */}
       <mesh position={[0, 2.05, 0.85]}>
@@ -1997,7 +1997,7 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
       {/* --- LENGAN RAM ATAS (OVERARM) & KEPALA VERTIKAL FRAIS --- */}
       <mesh position={[0, 4.05, 0.2]} castShadow receiveShadow>
         <boxGeometry args={[1.1, 0.48, 2.2]} />
-        <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.5} />
+        <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.5} />
       </mesh>
       {/* Klem Pengunci Ram Horisontal */}
       <mesh position={[0.56, 4.05, 0.2]}>
@@ -2018,7 +2018,7 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
           {/* Dudukan Kepala Putar Berskala Sudut (Swivel Degree Adapter ±45°) */}
           <mesh rotation={[0, 0, 0]} castShadow>
             <cylinderGeometry args={[0.42, 0.42, 0.35, 24]} />
-            <meshStandardMaterial color="#1e3a5f" roughness={0.4} metalness={0.55} />
+            <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.55} />
           </mesh>
           <mesh position={[0, 0.05, 0.43]}>
             <planeGeometry args={[0.3, 0.12]} />
@@ -2028,17 +2028,17 @@ const RealisticIndustrialMilling = ({ position = [7.5, 0, 0], onSelect, activeId
           {/* Rumah Transmisi Sabuk & Variator (Variable Speed Belt Housing) */}
           <mesh position={[0, 0.4, 0]} castShadow>
             <boxGeometry args={[0.95, 0.36, 1.25]} />
-            <meshStandardMaterial color="#1e3a5f" roughness={0.35} metalness={0.55} />
+            <meshStandardMaterial color="#0284c7" roughness={0.35} metalness={0.55} />
           </mesh>
 
           {/* Motor Listrik 3-Phasa 3 HP dengan Sirip Pendingin (Induction Motor) */}
           <mesh position={[0, 0.88, -0.22]} castShadow>
             <cylinderGeometry args={[0.32, 0.32, 0.65, 24]} />
-            <meshStandardMaterial color="#0f2942" roughness={0.45} metalness={0.6} />
+            <meshStandardMaterial color="#0369a1" roughness={0.4} metalness={0.6} />
           </mesh>
           <mesh position={[0, 1.22, -0.22]}>
             <cylinderGeometry args={[0.34, 0.34, 0.1, 24]} />
-            <meshStandardMaterial color="#334155" />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.8} />
           </mesh>
 
           {/* Tuas Hi-Lo Back Gear Shift & Tuas Rem Spindel (Brake Lever) */}
@@ -2308,11 +2308,95 @@ const MachineShopProps = ({ onSelect, activeId }) => {
 };
 
 // ==========================================
+// GENERATOR TEKSTUR POSTER K3 & PAPAN WORKSHOP MURNI WEBGL
+// (Tekstur 2D Canvas yang depth-tested, tidak pernah menutupi mesin/meja)
+// ==========================================
+const createPosterCanvasTexture = (title, subtitle, bullets = [], bgColor = '#059669', borderColor = '#ffffff') => {
+  if (typeof document === 'undefined') return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 340;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  // Background
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, 512, 340);
+
+  // Outer border
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 14;
+  ctx.strokeRect(7, 7, 498, 326);
+
+  // Inner border
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(20, 20, 472, 300);
+
+  // Header band
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+  ctx.fillRect(20, 20, 472, 70);
+
+  // Title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 22px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(title, 256, 52);
+
+  // Subtitle
+  if (subtitle) {
+    ctx.fillStyle = '#fef08a';
+    ctx.font = 'bold 13px system-ui, sans-serif';
+    ctx.fillText(subtitle, 256, 75);
+  }
+
+  // Bullets
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 15px system-ui, sans-serif';
+  let y = 125;
+  bullets.forEach((b) => {
+    ctx.fillText(b, 36, y);
+    y += 34;
+  });
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  return texture;
+};
+
+const createPegboardHeaderTexture = () => {
+  if (typeof document === 'undefined') return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 120;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, 1024, 120);
+
+  ctx.strokeStyle = '#eab308';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, 1016, 112);
+
+  ctx.fillStyle = '#facc15';
+  ctx.font = 'bold 36px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('PAPAN PERKAKAS KERJA BANGKU (WORKSHOP TOOL BOARD)', 512, 72);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
+};
+
+// ==========================================
 // 3D AREA KERJA BANGKU (BENCHWORK LAB)
 // Papan 5S dipasang menempel rapi di tembok belakang!
 // Meja kerja bersandar rapi di depan dinding!
 // ==========================================
 const BenchworkArea3D = ({ onSelect, activeId }) => {
+  const pegboardHeaderTex = useMemo(() => createPegboardHeaderTexture(), []);
   return (
     <group position={[0, 0, 0]}>
       {/* 1. MEJA KERJA BANGKU BERAT BERSANDAR DI DEPAN DINDING (Z = -5.4) */}
@@ -2496,27 +2580,15 @@ const BenchworkArea3D = ({ onSelect, activeId }) => {
           />
         </mesh>
 
-        {/* Header Bersih Papan Alat Bengkel */}
-        <mesh position={[0, 0.98, 0.03]}>
+        {/* Header Bersih Papan Alat Bengkel (Murni WebGL, Tanpa HTML Overlay) */}
+        <mesh position={[0, 0.98, 0.03]} receiveShadow>
           <planeGeometry args={[8.6, 0.22]} />
-          <meshStandardMaterial color="#0f172a" roughness={0.5} />
+          {pegboardHeaderTex ? (
+            <meshStandardMaterial map={pegboardHeaderTex} roughness={0.3} />
+          ) : (
+            <meshStandardMaterial color="#0f172a" roughness={0.5} />
+          )}
         </mesh>
-        <Html position={[0, 0.98, 0.04]} center transform distanceFactor={11} style={{ pointerEvents: 'none' }}>
-          <div
-            style={{
-              padding: '3px 20px',
-              color: '#facc15',
-              fontWeight: 900,
-              fontSize: '12px',
-              letterSpacing: '3px',
-              textTransform: 'uppercase',
-              fontFamily: 'system-ui, sans-serif',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            PAPAN PERKAKAS KERJA BANGKU (WORKSHOP TOOL BOARD)
-          </div>
-        </Html>
 
         {/* --- 15 PERKAKAS TERGANTUNG NEMPEL DI PAPAN TEMBOK --- */}
         {/* 1. Kikir Pipih */}
@@ -2855,207 +2927,122 @@ const BenchworkArea3D = ({ onSelect, activeId }) => {
 };
 
 // ==========================================
-// POSTER-POSTER CAMPAIGN K3 DI TEMBOK BENGKEL
 // ==========================================
-const K3WallCampaignPosters = ({ viewMode }) => {
+// RAMPING & PAPAN POSTER K3 DI TEMBOK (MURNI 3D WEBGL)
+// Depth-tested sejati: tidak akan pernah menutupi mesin atau area kerja bangku!
+// ==========================================
+const K3WallSignboard = ({ position, size = [2.8, 1.8], texture, frameColor = '#334155' }) => {
   return (
-    <group position={[0, 0, -6.88]}>
-      {/* 1. POSTER NASIONAL K3: UTAMAKAN KESELAMATAN & KESEHATAN KERJA */}
-      <group position={[-11.5, 5.0, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[2.8, 2.0]} />
+    <group position={position}>
+      {/* Rangka Bevel Frame Alumunium Tebal */}
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[size[0] + 0.1, size[1] + 0.1, 0.03]} />
+        <meshStandardMaterial color={frameColor} metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Permukaan Poster dengan Tekstur Canvas Murni (Depth-Tested, Tak Menutupi Mesin/Meja) */}
+      <mesh position={[0, 0, 0.018]} receiveShadow>
+        <planeGeometry args={size} />
+        {texture ? (
+          <meshStandardMaterial map={texture} roughness={0.3} />
+        ) : (
           <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '320px',
-              padding: '14px',
-              backgroundColor: '#059669',
-              color: '#ffffff',
-              borderRadius: '8px',
-              border: '3px solid #ffffff',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
-              fontFamily: 'system-ui, sans-serif',
-              textAlign: 'center'
-            }}
-          >
-            <div style={{ fontSize: '32px', marginBottom: '2px' }}>🛡️</div>
-            <div style={{ fontSize: '15px', fontWeight: 900, letterSpacing: '1px', textTransform: 'uppercase' }}>
-              UTAMAKAN KESELAMATAN &amp; KESEHATAN KERJA (K3)
-            </div>
-            <div style={{ fontSize: '11px', fontWeight: 700, color: '#fef08a', margin: '4px 0' }}>
-              ZERO ACCIDENT IS OUR GOAL
-            </div>
-            <div style={{ fontSize: '10px', lineHeight: '1.4', color: '#d1fae5', borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '6px' }}>
-              Bekerja dengan selamat, pulang dengan sehat kepada keluarga tercinta.
-            </div>
-          </div>
-        </Html>
-      </group>
+        )}
+      </mesh>
+    </group>
+  );
+};
 
-      {/* 2. POSTER AREA WAJIB APD STANDAR BENGKEL */}
-      <group position={[-6.0, 5.2, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[3.0, 1.9]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '340px',
-              padding: '12px 14px',
-              backgroundColor: '#1e3a8a',
-              color: '#ffffff',
-              borderRadius: '8px',
-              border: '3px solid #38bdf8',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
-              fontFamily: 'system-ui, sans-serif'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span style={{ fontSize: '24px' }}>🥽</span>
-              <div style={{ fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', color: '#38bdf8' }}>
-                AREA WAJIB ALAT PELINDUNG DIRI (APD)
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '10px', color: '#e0e7ff' }}>
-              <div>• Kacamata Safety ANSI Z87</div>
-              <div>• Sepatu Safety Sol Baja</div>
-              <div>• Baju Praktik / Wearpack</div>
-              <div>• Rambut Rapi / Ikat Aman</div>
-            </div>
-          </div>
-        </Html>
-      </group>
+const K3WallCampaignPosters = ({ viewMode }) => {
+  const texK3 = useMemo(() => createPosterCanvasTexture(
+    'UTAMAKAN KESELAMATAN (K3)',
+    'ZERO ACCIDENT IS OUR GOAL',
+    [
+      '• Bekerja selamat, pulang sehat ke keluarga',
+      '• Patuhi SOP pemesinan setiap saat',
+      '• Periksa kondisi mesin sebelum start',
+      '• Laporkan anomali pada instruktur'
+    ],
+    '#059669',
+    '#ffffff'
+  ), []);
 
-      {/* 3. POSTER BUDAYA 5R/5S MANUFAKTUR */}
-      <group position={[6.0, 5.2, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[3.2, 1.9]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '360px',
-              padding: '12px 14px',
-              backgroundColor: '#ca8a04',
-              color: '#0f172a',
-              borderRadius: '8px',
-              border: '3px solid #ffffff',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
-              fontFamily: 'system-ui, sans-serif'
-            }}
-          >
-            <div style={{ fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-              ⭐ BUDAYA 5R DI BENGKEL MANUFAKTUR
-            </div>
-            <div style={{ fontSize: '10px', lineHeight: '1.45', color: '#1e293b' }}>
-              <strong>1. Ringkas:</strong> Pisahkan alat penting &amp; tidak penting.<br />
-              <strong>2. Rapi:</strong> Kembalikan alat ke papan siluet 5S.<br />
-              <strong>3. Resik:</strong> Bersihkan bram logam sehabis bekerja.<br />
-              <strong>4. Rawat:</strong> Lumasi mesin &amp; ragum secara berkala.<br />
-              <strong>5. Rajin:</strong> Disiplin patuhi SOP setiap saat.
-            </div>
-          </div>
-        </Html>
-      </group>
+  const texAPD = useMemo(() => createPosterCanvasTexture(
+    'AREA WAJIB ALAT PELINDUNG DIRI',
+    'STANDAR K3 BENGKEL MANUFAKTUR',
+    [
+      '• Kacamata Safety Polikarbonat ANSI Z87',
+      '• Sepatu Safety Pelindung Sol Baja',
+      '• Baju Kerja Praktik / Wearpack Lengkap',
+      '• Rambut Rapi / Dilarang Pakai Cincin'
+    ],
+    '#1e3a8a',
+    '#38bdf8'
+  ), []);
 
-      {/* 4. POSTER KESELAMATAN KERJA BANGKU & ATURAN MENGIKIR */}
-      <group position={[11.5, 5.0, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[2.8, 2.0]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '320px',
-              padding: '12px 14px',
-              backgroundColor: '#dc2626',
-              color: '#ffffff',
-              borderRadius: '8px',
-              border: '3px solid #ffffff',
-              boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
-              fontFamily: 'system-ui, sans-serif'
-            }}
-          >
-            <div style={{ fontSize: '13px', fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-              ⚠️ SOP KESELAMATAN KERJA BANGKU
-            </div>
-            <div style={{ fontSize: '10px', lineHeight: '1.45', color: '#fee2e2' }}>
-              • <strong>KIKIR:</strong> WAJIB pakai gagang kayu/plastik kokoh!<br />
-              • <strong>TATAL BRAM:</strong> DILARANG meniup tatal dengan mulut.<br />
-              • <strong>MEMAHAT:</strong> Wajib pakai kacamata &amp; pelindung tangan.<br />
-              • <strong>RAGUM:</strong> Jangan memukul tuas dengan palu keras!
-            </div>
-          </div>
-        </Html>
-      </group>
+  const tex5R = useMemo(() => createPosterCanvasTexture(
+    'BUDAYA 5R MANUFAKTUR',
+    'RINGKAS - RAPI - RESIK - RAWAT - RAJIN',
+    [
+      '1. Ringkas: Singkirkan benda tak perlu',
+      '2. Rapi: Kembalikan perkakas ke papan 5S',
+      '3. Resik: Bersihkan tatal bram dari mesin',
+      '4. Rawat: Lumasi rel luncur berkala',
+      '5. Rajin: Disiplin terapkan SOP kerja'
+    ],
+    '#ca8a04',
+    '#ffffff'
+  ), []);
 
-      {/* 5. POSTER PANDUAN APAR (PASS METHOD) DI DEKAT APAR */}
-      <group position={[-11.5, 1.8, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[2.4, 1.4]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '280px',
-              padding: '10px 12px',
-              backgroundColor: '#b91c1c',
-              color: '#ffffff',
-              borderRadius: '6px',
-              border: '2px solid #ffffff',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-              fontFamily: 'system-ui, sans-serif'
-            }}
-          >
-            <div style={{ fontSize: '11px', fontWeight: 900, color: '#fef08a', textTransform: 'uppercase', marginBottom: '3px' }}>
-              🧯 CARA PENGGUNAAN APAR (P-A-S-S)
-            </div>
-            <div style={{ fontSize: '9px', lineHeight: '1.4', color: '#fee2e2' }}>
-              <strong>P - Pull:</strong> Cabut pin pengaman tabung.<br />
-              <strong>A - Aim:</strong> Arahkan corong ke dasar api.<br />
-              <strong>S - Squeeze:</strong> Tekan tuas katup.<br />
-              <strong>S - Sweep:</strong> Sapukan dari sisi ke sisi merata.
-            </div>
-          </div>
-        </Html>
-      </group>
+  const texSOP = useMemo(() => createPosterCanvasTexture(
+    'SOP KERJA BANGKU & PEMOTONGAN',
+    'STANDAR KESELAMATAN PRAKTIK',
+    [
+      '• KIKIR: Wajib pakai gagang kayu/plastik!',
+      '• BRAM: Dilarang meniup tatal dg mulut',
+      '• RAGUM: Jangan pukul tuas dengan palu',
+      '• PAHAT: Gunakan kacamata pelindung'
+    ],
+    '#dc2626',
+    '#ffffff'
+  ), []);
 
-      {/* 6. POSTER JALUR EVAKUASI & EMERGENCY EXIT */}
-      <group position={[11.5, 1.8, 0]}>
-        <mesh receiveShadow>
-          <planeGeometry args={[2.4, 1.2]} />
-          <meshStandardMaterial color="#ffffff" roughness={0.3} />
-        </mesh>
-        <Html position={[0, 0, 0.02]} center transform distanceFactor={8.5}>
-          <div
-            style={{
-              width: '280px',
-              padding: '10px 12px',
-              backgroundColor: '#047857',
-              color: '#ffffff',
-              borderRadius: '6px',
-              border: '2px solid #ffffff',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-              fontFamily: 'system-ui, sans-serif',
-              textAlign: 'center'
-            }}
-          >
-            <div style={{ fontSize: '20px' }}>🏃 ➡️ 🏁</div>
-            <div style={{ fontSize: '12px', fontWeight: 900, letterSpacing: '1px', textTransform: 'uppercase' }}>
-              JALUR EVAKUASI DARURAT
-            </div>
-            <div style={{ fontSize: '9px', color: '#d1fae5', marginTop: '2px' }}>
-              Tetap tenang • Menuju titik kumpul (Assembly Point)
-            </div>
-          </div>
-        </Html>
-      </group>
+  const texAPAR = useMemo(() => createPosterCanvasTexture(
+    'CARA PENGGUNAAN APAR (P-A-S-S)',
+    'TANGGAP DARURAT KEBAKARAN',
+    [
+      'P - Pull: Cabut pin pengaman tabung',
+      'A - Aim: Arahkan nozzle ke dasar api',
+      'S - Squeeze: Tekan tuas katup tabung',
+      'S - Sweep: Sapukan dari sisi ke sisi'
+    ],
+    '#991b1b',
+    '#fef08a'
+  ), []);
+
+  const texExit = useMemo(() => createPosterCanvasTexture(
+    'JALUR EVAKUASI DARURAT',
+    'EMERGENCY EXIT & ASSEMBLY POINT',
+    [
+      '• Tetap tenang & jangan panik',
+      '• Ikuti petunjuk arah evakuasi',
+      '• Segera menuju titik kumpul',
+      '• Dilarang kembali mengambil barang'
+    ],
+    '#047857',
+    '#ffffff'
+  ), []);
+
+  return (
+    <group position={[0, 0, -6.92]}>
+      {/* Poster-poster di dinding atas (y = 5.3) - Terpasang rapi di dinding tanpa menutupi alat */}
+      <K3WallSignboard position={[-11.5, 5.3, 0]} size={[2.8, 1.8]} texture={texK3} frameColor="#047857" />
+      <K3WallSignboard position={[-5.8, 5.3, 0]} size={[3.0, 1.8]} texture={texAPD} frameColor="#1e40af" />
+      <K3WallSignboard position={[5.8, 5.3, 0]} size={[3.0, 1.8]} texture={tex5R} frameColor="#a16207" />
+      <K3WallSignboard position={[11.5, 5.3, 0]} size={[2.8, 1.8]} texture={texSOP} frameColor="#b91c1c" />
+
+      {/* Poster di dekat APAR & Pintu Evakuasi */}
+      <K3WallSignboard position={[-11.5, 2.0, 0]} size={[2.4, 1.4]} texture={texAPAR} frameColor="#7f1d1d" />
+      <K3WallSignboard position={[11.5, 2.0, 0]} size={[2.4, 1.4]} texture={texExit} frameColor="#065f46" />
     </group>
   );
 };
@@ -3177,12 +3164,380 @@ const WorkshopHallEnvironment = ({ viewMode }) => {
 };
 
 // ==========================================
+// MODAL SOP & RAMBU K3 BENGKEL MANUFAKTUR
+// ==========================================
+const K3SopModal = ({ onClose }) => {
+  const [activeTab, setActiveTab] = useState('apd');
+
+  const tabs = [
+    { id: 'apd', label: '🦺 Standar APD Wajib', color: '#2563eb' },
+    { id: 'mesin', label: '⚙️ SOP Mesin Bubut & Frais', color: '#d97706' },
+    { id: 'cnc', label: '🖥️ SOP Mesin CNC VMC', color: '#06b6d4' },
+    { id: 'bangku', label: '🔨 SOP Kerja Bangku', color: '#10b981' },
+    { id: 'apar', label: '🧯 APAR & Evakuasi', color: '#dc2626' },
+    { id: '5r', label: '🧹 Budaya 5R (5S)', color: '#ca8a04' }
+  ];
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundColor: 'rgba(15, 23, 42, 0.85)',
+        backdropFilter: 'blur(10px)',
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '850px',
+          maxHeight: '90%',
+          backgroundColor: '#0f172a',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '16px',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.2)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          color: '#ffffff'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header Modal */}
+        <div
+          style={{
+            padding: '16px 22px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '24px' }}>🛡️</span>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#f8fafc' }}>
+                Standar Operasional Prosedur (SOP) & Rambu K3 Bengkel
+              </h3>
+              <p style={{ margin: '3px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                Pedoman Keselamatan Kerja Mesin Perkakas, CNC, Area Kerja Bangku, APAR & Jalur Evakuasi
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              color: '#94a3b8',
+              borderRadius: '8px',
+              width: '32px',
+              height: '32px',
+              fontSize: '18px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.6)';
+              e.currentTarget.style.color = '#ffffff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.color = '#94a3b8';
+            }}
+          >
+            &times;
+          </button>
+        </div>
+
+        {/* Tab Selector */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '6px',
+            padding: '10px 18px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'rgba(15, 23, 42, 0.6)',
+            overflowX: 'auto'
+          }}
+        >
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                border: 'none',
+                background: activeTab === tab.id ? tab.color : 'rgba(255, 255, 255, 0.05)',
+                color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
+                fontWeight: activeTab === tab.id ? 700 : 500,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content Body */}
+        <div style={{ padding: '22px', overflowY: 'auto', flex: 1, maxHeight: '60vh' }}>
+          {activeTab === 'apd' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>🥽 1. Kacamata Pelindung (Safety Glasses) Standar ANSI Z87.1</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Wajib dipakai sebelum memasuki batas garis kuning area permesinan. Berfungsi melindungi kornea mata dari loncatan tatal bram panas (flying chips) berkecepatan tinggi dan percikan cairan pendingin (coolant).
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>🦺 2. Baju Praktik Kerja (Wearpack Standar Industri)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Bahan katun tebal tahan api ringan dan gesekan. Lengan baju harus dikancingkan pas pada pergelangan tangan atau digulung rapi ke dalam. Dilarang mengenakan baju yang longgar, berdasi, berumbai, atau jaket bertali gantung.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>👞 3. Sepatu Keselamatan (Safety Shoes Toe Steel)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Dilengkapi pelat baja di bagian ujung jari (menahan benturan hingga 200 Joule) dan sol tahan tusukan paku/tatal bram tajam serta anti-slip pada genangan oli atau cairan pendingin.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem' }}>⛔ LARANGAN KRITIS (Bahaya Entanglement / Terlilit Spindel):</h4>
+                <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.85rem', color: '#fecaca', lineHeight: 1.6 }}>
+                  <li><strong>DILARANG KERAS MEMAKAI SARUNG TANGAN</strong> saat mengoperasikan mesin berputar (Bubut, CNC, Frais, Bor)! Kain sarung tangan dapat tersangkut putaran spindel dan menarik tangan seketika.</li>
+                  <li>Dilarang memakai cincin, jam tangan, gelang, atau kalung di area bengkel.</li>
+                  <li>Rambut panjang wajib diikat ke belakang dan dimasukkan ke dalam topi kerja.</li>
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'mesin' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🌀 1. Kunci Cekam (Chuck Key) Bubut</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  <strong>ATURAN MUTLAK:</strong> JANGAN PERNAH meninggalkan kunci cekam tertancap pada chuck bubut walau hanya satu detik! Jika motor dihidupkan, kunci cekam akan terlontar seperti proyektil mematikan. Selalu lepas kunci seketika setelah mengencangkan atau melonggarkan benda kerja.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🧹 2. Pembersihan Tatal Bram & Serpihan Logam</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Gunakan kuas atau tongkat pengait bram berpelindung saat membersihkan serpihan penyayatan. Dilarang keras membersihkan bram dengan tangan kosong atau meniupnya dengan mulut / semprotan kompresor angin sembarangan karena bram halus dapat melayang menusuk mata rekan kerja.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>⚙️ 3. Penggantian Tuas Gigi & Kecepatan Spindel</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Hanya geser tuas pemilih gigi (gear selector) atau pindahkan sabuk transmisi saat motor spindle dalam kondisi MATI TOTAL (RPM = 0). Memindahkan tuas gigi saat mesin berputar akan mematahkan gigi transmisi gearbox.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🛑 4. Penghentian Putaran & Rem Spindel</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Gunakan pedal rem kaki pada mesin bubut atau tuas rem manual pada mesin frais. DILARANG KERAS menahan atau memperlambat putaran cekam spindel dengan telapak tangan!
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'cnc' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>🚪 1. Pintu Kabin Pelindung (Enclosure Interlock)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Pintu polikarbonat kabin CNC wajib tertutup rapat selama operasi berjalan. Sensor interlock pengaman otomatis menghentikan spindel jika pintu dibuka. Dilarang keras mem-bypass atau mengakali switch interlock pengaman!
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>📏 2. Kalibrasi Offset Pahat & Titik Nol (G54)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Lakukan kalibrasi Tool Length Offset (H) dengan Z-axis presetter dan penentuan titik nol benda kerja (G54) dengan edge finder secara teliti. Kesalahan tanda minus (-) atau angka desimal dapat memicu tabrakan spindel berkekuatan puluhan kilonewton (machine crash).
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>🧪 3. Verifikasi Single Block & Dry Run Uji Coba</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Saat pertama kali mengeksekusi program baru, aktifkan tombol <strong>SINGLE BLOCK</strong> dan turunkan <strong>FEEDRATE OVERRIDE ke 25%</strong>. Uji lintasan pahat di atas benda kerja (dry run di udara) untuk memastikan tidak ada gerakan G00 yang membentur ragum.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem' }}>🚨 4. Kesiapsiagaan Tombol E-Stop</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Ibu jari operator harus selalu siaga di atas tombol Emergency Stop panel atau pendant MPG saat pertama kali menekan Cycle Start.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'bangku' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🪵 1. Gagang Kikir Kayu / Plastik Wajib Terpasang</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  DILARANG KERAS menggunakan kikir tanpa gagang pengaman! Tangkai (tang) kikir yang runcing dapat menembus telapak tangan atau pergelangan bila kikir membentur benda kerja secara tiba-tiba.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🪚 2. Pemasangan & Penggunaan Gergaji Tangan</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Pasang daun gergaji dengan ujung gigi mengarah ke depan. Berikan tegangan secukupnya menggunakan baut kupu-kupu. Mulai sayatan dengan membuat alur pemandu awal (bukan langsung digesek liar). Kurangi tekanan ayunan saat benda kerja mendekati titik putus agar ujung sisa potongan tidak jatuh menimpa kaki.
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🔩 3. Pengoperasian Ragum Meja (Bench Vise)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Cekam benda kerja sedalam mungkin di rahang ragum agar stabil dan tidak bergetar. Kencangkan tuas hanya dengan tenaga tangan biasa. Dilarang memukul tuas pemutar ragum dengan palu atau menambah pipa perpanjangan pengungkit!
+                </p>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🔨 4. Kondisi Palu, Penitik & Pahat Dingin</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Kepala penitik atau pahat yang sudah mekar/berjamur (mushroom head) wajib digerinda rapi sebelum digunakan agar pecahan baja tidak terpental mengenai mata saat dipukul palu konde.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'apar' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'rgba(220, 38, 38, 0.15)', border: '1px solid rgba(220, 38, 38, 0.4)' }}>
+                <h4 style={{ margin: '0 0 10px 0', color: '#f87171', fontSize: '1rem', fontWeight: 800 }}>
+                  🧯 Prosedur Penggunaan APAR (Metode Standar Internasional P-A-S-S):
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+                  <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
+                    <div style={{ color: '#ef4444', fontWeight: 800, fontSize: '1.1rem' }}>P - PULL</div>
+                    <div style={{ fontSize: '0.83rem', color: '#e2e8f0', marginTop: '4px' }}>Tarik pin pengaman dan putuskan segel plastik pada katup tabung.</div>
+                  </div>
+                  <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #f59e0b' }}>
+                    <div style={{ color: '#f59e0b', fontWeight: 800, fontSize: '1.1rem' }}>A - AIM</div>
+                    <div style={{ fontSize: '0.83rem', color: '#e2e8f0', marginTop: '4px' }}>Arahkan ujung selang/nozzle tepat ke titik dasar api (bukan lidah apinya).</div>
+                  </div>
+                  <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
+                    <div style={{ color: '#10b981', fontWeight: 800, fontSize: '1.1rem' }}>S - SQUEEZE</div>
+                    <div style={{ fontSize: '0.83rem', color: '#e2e8f0', marginTop: '4px' }}>Tekan tuas pegangan tabung secara mantap untuk menyemprotkan serbuk kimia/CO2.</div>
+                  </div>
+                  <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
+                    <div style={{ color: '#3b82f6', fontWeight: 800, fontSize: '1.1rem' }}>S - SWEEP</div>
+                    <div style={{ fontSize: '0.83rem', color: '#e2e8f0', marginTop: '4px' }}>Sapukan semprotan dari satu sisi ke sisi lain secara merata dari jarak 2-3 meter.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.12)', border: '1px solid rgba(5, 150, 105, 0.3)' }}>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🚪 Rute Evakuasi & Titik Kumpul (Assembly Point)</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+                  Jalur marka hijau (walkway) di tengah bengkel harus senantiasa bersih dari tumpukan benda kerja atau kabel berserakan. Saat bel alarm darurat berbunyi, matikan sakelar mesin terdekat, tinggalkan barang bawaan, dan segera berjalan cepat (tanpa panik) mengikuti tanda lampu hijau EXIT menuju titik kumpul di luar gedung bengkel.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === '5r' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
+                <div style={{ background: 'rgba(202, 138, 4, 0.12)', border: '1px solid rgba(202, 138, 4, 0.3)', padding: '12px', borderRadius: '10px' }}>
+                  <div style={{ color: '#facc15', fontWeight: 800, fontSize: '0.95rem' }}>1. RINGKAS (Seiri)</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
+                    Singkirkan benda, material afkir, atau perkakas yang tidak diperlukan dari meja kerja mesin.
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(202, 138, 4, 0.12)', border: '1px solid rgba(202, 138, 4, 0.3)', padding: '12px', borderRadius: '10px' }}>
+                  <div style={{ color: '#facc15', fontWeight: 800, fontSize: '0.95rem' }}>2. RAPI (Seiton)</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
+                    Kembalikan semua kikir, palu, penitik, jangka, dan alat ukur ke gantungan papan 5S sesuai bayangan bentuknya.
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(202, 138, 4, 0.12)', border: '1px solid rgba(202, 138, 4, 0.3)', padding: '12px', borderRadius: '10px' }}>
+                  <div style={{ color: '#facc15', fontWeight: 800, fontSize: '0.95rem' }}>3. RESIK (Seiso)</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
+                    Sapu serpihan tatal bram dan lap tumpahan oli di lantai bengkel agar tidak membahayakan orang lain.
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(202, 138, 4, 0.12)', border: '1px solid rgba(202, 138, 4, 0.3)', padding: '12px', borderRadius: '10px' }}>
+                  <div style={{ color: '#facc15', fontWeight: 800, fontSize: '0.95rem' }}>4. RAWAT (Seiketsu)</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
+                    Pertahankan standar kebersihan, berikan oli pelumas pencegah karat pada rel luncur dovetail dan meja mesin.
+                  </div>
+                </div>
+                <div style={{ background: 'rgba(202, 138, 4, 0.12)', border: '1px solid rgba(202, 138, 4, 0.3)', padding: '12px', borderRadius: '10px', gridColumn: 'span 2' }}>
+                  <div style={{ color: '#facc15', fontWeight: 800, fontSize: '0.95rem' }}>5. RAJIN (Shitsuke)</div>
+                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
+                    Jadikan disiplin penerapan K3 dan SOP operasional bengkel sebagai kebiasaan reflek dan etos kerja profesional mandiri.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer Modal */}
+        <div
+          style={{
+            padding: '12px 22px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            background: 'rgba(15, 23, 42, 0.8)'
+          }}
+        >
+          <button
+            onClick={onClose}
+            style={{
+              padding: '8px 20px',
+              borderRadius: '8px',
+              background: '#2563eb',
+              color: '#ffffff',
+              border: 'none',
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            Tutup Pedoman K3
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
 // KOMPONEN UTAMA VIRTUAL BENGKEL 3D
 // ==========================================
 const VirtualBengkel = ({ onOpenDiagnostic }) => {
   const [viewMode, setViewMode] = useState('mesin'); // 'mesin' | 'bangku'
   const [activeItem, setActiveItem] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showK3Modal, setShowK3Modal] = useState(false);
 
   // Posisi kamera & target preset
   const [cameraPreset, setCameraPreset] = useState({
@@ -3412,6 +3767,27 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           >
             <span>🔨</span> Area Kerja Bangku
           </button>
+          <button
+            onClick={() => setShowK3Modal(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: '1px solid rgba(249, 115, 22, 0.5)',
+              backgroundColor: 'rgba(234, 88, 12, 0.25)',
+              color: '#fdba74',
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 12px rgba(234, 88, 12, 0.2)'
+            }}
+            title="Buka Pedoman SOP & Rambu K3 Bengkel Lengkap"
+          >
+            <span>📋</span> SOP & Rambu K3
+          </button>
         </div>
       </div>
 
@@ -3589,6 +3965,27 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             </button>
           </>
         )}
+        <div style={{ height: '1px', background: 'rgba(255,255,255,0.15)', margin: '4px 0' }} />
+        <button
+          onClick={() => setShowK3Modal(true)}
+          style={{
+            background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(194, 65, 12, 0.45) 100%)',
+            border: '1px solid #f97316',
+            color: '#fdba74',
+            padding: '7px 10px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          📋 SOP & Rambu K3
+        </button>
       </div>
 
       {/* ==================================================== */}
@@ -3922,6 +4319,11 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           </div>
         </div>
       )}
+
+      {/* ==================================================== */}
+      {/* MODAL SOP & RAMBU K3 BENGKEL LENGKAP */}
+      {/* ==================================================== */}
+      {showK3Modal && <K3SopModal onClose={() => setShowK3Modal(false)} />}
       </div>
     </div>
   );

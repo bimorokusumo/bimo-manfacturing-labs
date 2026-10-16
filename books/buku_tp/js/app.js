@@ -35,7 +35,7 @@ class AppController {
         // Switch to Reader Mode
         this.currentMode = 'reader';
         document.body.dataset.viewMode = 'reader';
-        btnToggle.innerHTML = `<span>📖 Mode Flip Book</span>`;
+        btnToggle.innerHTML = `<span>Mode Flip Book</span>`;
         btnToggle.classList.add('active');
 
         // Scroll to corresponding page
@@ -48,7 +48,7 @@ class AppController {
         // Switch to Flipbook Mode
         this.currentMode = 'flipbook';
         document.body.dataset.viewMode = 'flipbook';
-        btnToggle.innerHTML = `<span>📜 Mode Smart Reader</span>`;
+        btnToggle.innerHTML = `<span>Mode Smart Reader</span>`;
         btnToggle.classList.remove('active');
 
         this.flipbook.renderPages();
@@ -220,11 +220,11 @@ class AppController {
 
         if (window.appAudio.isSpeaking) {
           window.appAudio.stopSpeaking();
-          btn.innerHTML = `🔊 Bacakan`;
+          btn.innerHTML = `Bacakan`;
         } else {
-          btn.innerHTML = `⏹️ Berhenti`;
+          btn.innerHTML = `Hentikan`;
           window.appAudio.speakText(section.innerText, () => {
-            btn.innerHTML = `🔊 Bacakan`;
+            btn.innerHTML = `Bacakan`;
           });
         }
       });
@@ -235,7 +235,7 @@ class AppController {
     if (btnMute) {
       btnMute.addEventListener('click', () => {
         const active = window.appAudio.toggleMute();
-        btnMute.innerHTML = active ? `<span>🔊 Suara ON</span>` : `<span>🔇 Suara OFF</span>`;
+        btnMute.innerHTML = active ? `<span>Suara ON</span>` : `<span>Suara OFF</span>`;
         if (active) window.appAudio.playClickSound();
       });
     }

@@ -13,7 +13,7 @@ const MACHINING_DATA = {
     id: 'lathe-chuck',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-8.16, 1.85, 0.1],
+    position: [-14.16, 1.85, 0.6],
     title: 'Chuck (Cekam 3-Rahang)',
     subtitle: '3-Jaw Self-Centering Scroll Chuck',
     spec: 'Diameter 200mm, Scroll Mandrel Presisi',
@@ -25,7 +25,7 @@ const MACHINING_DATA = {
     id: 'lathe-toolpost',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-6.82, 1.85, 0.25],
+    position: [-12.82, 1.85, 0.75],
     title: 'Tool Post & Pahat Bubut',
     subtitle: 'Quick Change 4-Way Tool Post',
     spec: 'Pahat Karbida Indexable Insert ISO Standar',
@@ -37,7 +37,7 @@ const MACHINING_DATA = {
     id: 'lathe-carriage',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-6.82, 1.5, 0.2],
+    position: [-12.82, 1.5, 0.7],
     title: 'Eretan (Carriage & Cross Slide)',
     subtitle: 'Eretan Memanjang, Melintang & Eretan Atas',
     spec: 'Resolusi Nonius 0.02 mm, Dovetail Guideway',
@@ -49,7 +49,7 @@ const MACHINING_DATA = {
     id: 'lathe-tailstock',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-5.94, 1.85, 0.07],
+    position: [-11.94, 1.85, 0.57],
     title: 'Tailstock (Kepala Lepas)',
     subtitle: 'Tailstock Assembly with Live Center',
     spec: 'Tirus Morse Taper MT3, Stroke Selongsong 100mm',
@@ -61,7 +61,7 @@ const MACHINING_DATA = {
     id: 'lathe-headstock',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-8.8, 1.85, 0.0],
+    position: [-14.8, 1.85, 0.5],
     title: 'Headstock (Kepala Tetap)',
     subtitle: 'All-Geared Headstock & Speed Selector',
     spec: 'Rentang RPM 45 - 2000 RPM, Gearbox Reduksi Oli',
@@ -73,7 +73,7 @@ const MACHINING_DATA = {
     id: 'lathe-leadscrew',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-7.19, 1.33, 0.43],
+    position: [-13.19, 1.33, 0.93],
     title: 'Poros Transportir & Pembawa',
     subtitle: 'Lead Screw & Feed Shaft Mechanism',
     spec: 'Ulir Trapesium Acme Pitch 6mm & Poros Heksagonal',
@@ -85,7 +85,7 @@ const MACHINING_DATA = {
     id: 'lathe-chippan',
     category: 'Mesin Bubut',
     badgeColor: '#2563eb',
-    position: [-7.5, 0.78, 0.0],
+    position: [-13.5, 0.78, 0.5],
     title: 'Bak Tatal & Sistem Coolant',
     subtitle: 'Chip Collector Pan & Coolant Pump',
     spec: 'Kapasitas Pompa 40 L/menit, Emulsi Coolant 5%',
@@ -99,7 +99,7 @@ const MACHINING_DATA = {
     id: 'mill-spindle',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.5, 3.2, 1.2],
+    position: [-0.5, 3.2, 1.7],
     title: 'Spindel & Collet Chuck Frais',
     subtitle: 'Milling Spindle Nose & Endmill Cutter',
     spec: 'Standar ISO 40 / R8, Collet ER32, Endmill 4-Flute',
@@ -111,7 +111,7 @@ const MACHINING_DATA = {
     id: 'mill-table',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.5, 2.45, 0.85],
+    position: [-0.5, 2.45, 1.35],
     title: 'Meja Mesin Frais Alur T',
     subtitle: 'T-Slot Precision Milling Worktable',
     spec: 'Dimensi 1250 x 300 mm, 3 Alur T 18mm Presisi',
@@ -123,7 +123,7 @@ const MACHINING_DATA = {
     id: 'mill-vise',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.5, 2.75, 0.85],
+    position: [-0.5, 2.75, 1.35],
     title: 'Ragum Mesin Frais Presisi',
     subtitle: 'Precision Milling Machine Vise',
     spec: 'Lebar Rahang 160mm, Rahang Baja Keras HRC 58-62',
@@ -135,7 +135,7 @@ const MACHINING_DATA = {
     id: 'mill-knee',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.5, 1.5, 0.7],
+    position: [-0.5, 1.5, 1.2],
     title: 'Sadel & Lutut (Knee) Mesin',
     subtitle: 'Saddle & Knee Vertical Elevation Column',
     spec: 'Stroke Vertikal 400mm, Ulir Teleskopik Pelumas Otomatis',
@@ -147,7 +147,7 @@ const MACHINING_DATA = {
     id: 'mill-handwheels',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [9.8, 2.45, 0.85],
+    position: [1.3, 2.45, 1.35],
     title: 'Roda Pemutar Eretan X, Y, Z',
     subtitle: 'Graduated Micrometer Dials & Handwheels',
     spec: 'Graduasi Cincin Nonius 0.02 mm / 0.001 inch',
@@ -159,7 +159,7 @@ const MACHINING_DATA = {
     id: 'mill-motor',
     category: 'Mesin Frais',
     badgeColor: '#d97706',
-    position: [7.5, 4.3, 1.1],
+    position: [-0.5, 4.3, 1.6],
     title: 'Motor & Kepala Vertikal Frais',
     subtitle: 'Milling Head Drive Motor & Step Pulley',
     spec: 'Motor 3 HP 3-Fasa, Kecepatan 80 - 4500 RPM',
@@ -171,7 +171,7 @@ const MACHINING_DATA = {
     id: 'mill-estop',
     category: 'Keselamatan K3',
     badgeColor: '#dc2626',
-    position: [6.3, 2.8, 1.4],
+    position: [-1.7, 2.8, 1.9],
     title: 'Tombol Emergency Stop',
     subtitle: 'Industrial Mushroom Push-Lock Safety Button',
     spec: 'Standar IEC 60947-5-5, Kontak Pemutus Seketika',
@@ -185,7 +185,7 @@ const MACHINING_DATA = {
     id: 'cnc-enclosure',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [0.0, 1.8, 1.0],
+    position: [-7.0, 1.8, 1.5],
     title: 'Kabin Pelindung CNC (Full Enclosure)',
     subtitle: 'Safety Enclosure with Polycarbonate Window & Interlock',
     spec: 'Kaca Polikarbonat Tahan Benturan 8mm, Safety Interlock Switch',
@@ -197,7 +197,7 @@ const MACHINING_DATA = {
     id: 'cnc-controller',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [1.6, 1.9, 1.0],
+    position: [-5.4, 1.9, 1.5],
     title: 'Panel Kontrol CNC (Fanuc / Siemens)',
     subtitle: 'Operator Control Panel & MDI Keyboard Console',
     spec: 'Layar LCD Warna 10.4", Keyboard Alfanumerik, Rotary Mode Switch',
@@ -209,7 +209,7 @@ const MACHINING_DATA = {
     id: 'cnc-spindle',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [0.0, 2.1, 0.0],
+    position: [-7.0, 2.1, 0.5],
     title: 'Spindel CNC Presisi Tinggi & Tool Holder BT40',
     subtitle: 'High-Speed Electro-Spindle BT40 with Pull Stud Clamping',
     spec: 'Kecepatan 8.000 - 12.000 RPM, Tirus BT40, Run-out < 0.003 mm',
@@ -221,7 +221,7 @@ const MACHINING_DATA = {
     id: 'cnc-atc',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [-1.25, 2.3, 0.0],
+    position: [-8.25, 2.3, 0.5],
     title: 'ATC (Automatic Tool Changer) Magasin Payung',
     subtitle: 'Umbrella / Carousel Type Tool Magazine (16 Pockets)',
     spec: 'Kapasitas 16 Tool Holder BT40, Waktu Ganti Pahat (T-to-T) 2.5 Detik',
@@ -233,7 +233,7 @@ const MACHINING_DATA = {
     id: 'cnc-table',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [0.0, 1.0, 0.0],
+    position: [-7.0, 1.0, 0.5],
     title: 'Meja Kerja Sumbu X-Y & Ragum Presisi CNC',
     subtitle: 'Precision Linear Guideway Worktable & Hydraulic Vise',
     spec: 'Stroke X: 650mm, Y: 450mm, Z: 500mm, Rapid Traverse 30 m/menit',
@@ -245,7 +245,7 @@ const MACHINING_DATA = {
     id: 'cnc-mpg',
     category: 'Mesin CNC',
     badgeColor: '#06b6d4',
-    position: [1.8, 1.4, 0.9],
+    position: [-5.2, 1.4, 1.4],
     title: 'Handwheel MPG (Manual Pulse Generator)',
     subtitle: 'Portable Handheld Remote Pendant Controller',
     spec: 'Pilihan Sumbu X, Y, Z, 4th Axis; Skala Langkah x1, x10, x100 (0.001 - 0.1 mm)',
@@ -257,7 +257,7 @@ const MACHINING_DATA = {
     id: 'cnc-estop',
     category: 'Keselamatan K3',
     badgeColor: '#dc2626',
-    position: [1.6, 1.4, 1.15],
+    position: [-5.4, 1.4, 1.65],
     title: 'Tombol Emergency Stop Panel CNC',
     subtitle: 'Mushroom Emergency Power Cutoff',
     spec: 'Kategori Penghentian Stop Category 0 (EN 60204-1)',
@@ -271,7 +271,7 @@ const MACHINING_DATA = {
     id: 'shop-toolcart',
     category: 'Perlengkapan Bengkel',
     badgeColor: '#059669',
-    position: [-11.5, 0.9, -2.5],
+    position: [-17.0, 0.9, -2.5],
     title: 'Lemari Perkakas Mesin',
     subtitle: 'Heavy Duty Machine Tool Cabinet & Cart',
     spec: 'Rangka Baja 1.5mm, 5 Laci Berpelor, Kunci Pengaman',
@@ -283,7 +283,7 @@ const MACHINING_DATA = {
     id: 'shop-rawstock',
     category: 'Perlengkapan Bengkel',
     badgeColor: '#059669',
-    position: [11.5, 1.2, -2.5],
+    position: [-17.0, 1.2, -5.2],
     title: 'Rak Bahan Baku Logam',
     subtitle: 'Raw Stock Metal Bar & Billet Storage',
     spec: 'Baja St.37, Baja Karbon S45C, Aluminium 6061',
@@ -295,7 +295,7 @@ const MACHINING_DATA = {
     id: 'shop-scrapbin',
     category: 'Fasilitas K3',
     badgeColor: '#475569',
-    position: [-3.8, 0.6, -4.8],
+    position: [-3.8, 0.5, -4.5],
     title: 'Bak Penampung Bram Logam',
     subtitle: 'Metal Scrap & Chip Recycling Bin',
     spec: 'Kapasitas 150 Liter, Roda Kastor, Saluran Tiris Oli',
@@ -307,7 +307,7 @@ const MACHINING_DATA = {
     id: 'shop-k3sign',
     category: 'Keselamatan K3',
     badgeColor: '#dc2626',
-    position: [0, 3.8, -6.9],
+    position: [-7.0, 5.3, -6.9],
     title: 'Papan SOP & Rambu K3 Bengkel',
     subtitle: 'Occupational Safety & Health Regulation Board',
     spec: 'Standar ISO 45001 & Permenaker No. 05/2018',
@@ -325,7 +325,7 @@ const BENCHWORK_DATA = {
     id: 'bench-vise-1',
     category: 'Kerja Bangku',
     badgeColor: '#059669',
-    position: [-2.8, 1.25, -4.55],
+    position: [7.7, 1.25, -4.55],
     title: 'Ragum Meja (Stasiun Kerja 1)',
     subtitle: 'Heavy Duty Bench Vise with Swivel Base',
     spec: 'Lebar Rahang 150mm, Bukaan 200mm, Besi Cor Nodular',
@@ -337,7 +337,7 @@ const BENCHWORK_DATA = {
     id: 'bench-vise-2',
     category: 'Kerja Bangku',
     badgeColor: '#059669',
-    position: [0, 1.25, -4.55],
+    position: [10.5, 1.25, -4.55],
     title: 'Ragum Meja Utama & Benda Kerja',
     subtitle: 'Bench Vise Station with Active Workpiece',
     spec: 'Benda Kerja Balok Baja St.37 dengan Garis Ukur Tata Letak',
@@ -349,7 +349,7 @@ const BENCHWORK_DATA = {
     id: 'bench-vise-3',
     category: 'Kerja Bangku',
     badgeColor: '#059669',
-    position: [2.8, 1.25, -4.55],
+    position: [13.3, 1.25, -4.55],
     title: 'Ragum Meja (Stasiun Kerja 3)',
     subtitle: 'Parallel Bench Vise with Anvil Horn',
     spec: 'Landasan Pukul Anvil Belakang, Dudukan Putar 360°',
@@ -361,7 +361,7 @@ const BENCHWORK_DATA = {
     id: 'bench-surfaceplate',
     category: 'Alat Ukur & Inspeksi',
     badgeColor: '#4f46e5',
-    position: [6.0, 1.05, -5.4],
+    position: [16.5, 1.05, -5.4],
     title: 'Meja Perata Granit Presisi',
     subtitle: 'Precision Black Granite Surface Plate',
     spec: 'Ukuran 800 x 600 x 120 mm, Standar DIN 876 Grade 0',
@@ -373,7 +373,7 @@ const BENCHWORK_DATA = {
     id: 'bench-heightgauge',
     category: 'Alat Ukur & Inspeksi',
     badgeColor: '#4f46e5',
-    position: [5.7, 1.55, -5.6],
+    position: [16.2, 1.55, -5.6],
     title: 'Jangka Sorong Ketinggian',
     subtitle: 'Vernier Height Gauge with Carbide Scriber',
     spec: 'Rentang Ukur 0 - 300 mm, Ketelitian Nonius 0.02 mm',
@@ -385,7 +385,7 @@ const BENCHWORK_DATA = {
     id: 'bench-vblock',
     category: 'Alat Ukur & Inspeksi',
     badgeColor: '#4f46e5',
-    position: [6.4, 1.25, -5.2],
+    position: [16.9, 1.25, -5.2],
     title: 'Balok V Presisi & Klem',
     subtitle: 'Precision Matched Pair V-Blocks with Clamp',
     spec: 'Sudut V 90°, Baja Perkakas Dikeraskan HRC 60',
@@ -397,7 +397,7 @@ const BENCHWORK_DATA = {
     id: 'bench-flatfile',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [-3.2, 3.7, -6.83],
+    position: [7.3, 3.7, -6.83],
     title: 'Kikir Pipih (Flat File)',
     subtitle: 'Flat Bastard & Smooth File with Wood Handle',
     spec: 'Panjang 10 - 12 Inch, Gigi Ganda (Double Cut)',
@@ -409,7 +409,7 @@ const BENCHWORK_DATA = {
     id: 'bench-halfroundfile',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [-2.2, 3.7, -6.83],
+    position: [8.3, 3.7, -6.83],
     title: 'Kikir Setengah Bulat',
     subtitle: 'Half-Round Bastard & Smooth File',
     spec: 'Sisi Rata & Sisi Radius Lengkung Konveks',
@@ -421,7 +421,7 @@ const BENCHWORK_DATA = {
     id: 'bench-roundfile',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [-1.2, 3.7, -6.83],
+    position: [9.3, 3.7, -6.83],
     title: 'Kikir Bulat (Round File)',
     subtitle: 'Round / Rat-tail File with Single Cut',
     spec: 'Penampang Silinder Tirus Berujung Runcing',
@@ -433,7 +433,7 @@ const BENCHWORK_DATA = {
     id: 'bench-trianglefile',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [-0.2, 3.7, -6.83],
+    position: [10.3, 3.7, -6.83],
     title: 'Kikir Segitiga (Triangular File)',
     subtitle: 'Three-Square / Triangular Machinist File',
     spec: 'Penampang Segitiga Sama Sisi Sudut 60°',
@@ -445,7 +445,7 @@ const BENCHWORK_DATA = {
     id: 'bench-hacksaw',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [1.2, 3.8, -6.83],
+    position: [11.7, 3.8, -6.83],
     title: 'Gergaji Besi (Hacksaw)',
     subtitle: 'Adjustable Steel Frame Hacksaw 24 TPI',
     spec: 'Rangka Pipa Baja Krom, Daun Gergaji Bi-Metal 300mm',
@@ -457,7 +457,7 @@ const BENCHWORK_DATA = {
     id: 'bench-hammer',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [2.4, 3.8, -6.83],
+    position: [12.9, 3.8, -6.83],
     title: 'Palu Konde (Ball-Peen Hammer)',
     subtitle: 'Forged Steel Ball-Peen Hammer (0.5 - 1.0 lb)',
     spec: 'Kepala Baja Tempa, Gagang Kayu Hickory / Fiber',
@@ -469,7 +469,7 @@ const BENCHWORK_DATA = {
     id: 'bench-mallet',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [3.4, 3.8, -6.83],
+    position: [13.9, 3.8, -6.83],
     title: 'Palu Lunak Karet / Plastik',
     subtitle: 'Dual-Face Soft Mallet (Rubber / Polyurethane)',
     spec: 'Diameter Kepala 40mm, Anti-Rebound Deadblow',
@@ -481,7 +481,7 @@ const BENCHWORK_DATA = {
     id: 'bench-centerpunch',
     category: 'Alat Penanda',
     badgeColor: '#db2777',
-    position: [-3.2, 2.85, -6.83],
+    position: [7.3, 2.85, -6.83],
     title: 'Penitik Pusat & Penitik Garis',
     subtitle: 'Center Punch (90°) & Prick Punch (60°)',
     spec: 'Baja Perkakas Dikeraskan HRC 55-58, Badan Knurling',
@@ -493,7 +493,7 @@ const BENCHWORK_DATA = {
     id: 'bench-scriber',
     category: 'Alat Penanda',
     badgeColor: '#db2777',
-    position: [-2.2, 2.85, -6.83],
+    position: [8.3, 2.85, -6.83],
     title: 'Penggores Baja Karbida (Scriber)',
     subtitle: 'Tungsten Carbide Tipped Engineer\'s Scriber',
     spec: 'Panjang 150mm, Jarum Karbida Tajam, Gagang Berulir',
@@ -505,7 +505,7 @@ const BENCHWORK_DATA = {
     id: 'bench-trysquare',
     category: 'Alat Ukur & Inspeksi',
     badgeColor: '#4f46e5',
-    position: [-1.2, 2.85, -6.83],
+    position: [9.3, 2.85, -6.83],
     title: 'Siku Baja Presisi 90° (Try Square)',
     subtitle: 'Engineer\'s Precision Try Square Standar 90°',
     spec: 'Bilah Baja Stainless 150mm, Toleransi Sudut Grade 1',
@@ -517,7 +517,7 @@ const BENCHWORK_DATA = {
     id: 'bench-tap',
     category: 'Perkakas Pembuat Ulir',
     badgeColor: '#7c3aed',
-    position: [0, 2.85, -6.83],
+    position: [10.5, 2.85, -6.83],
     title: 'Set Tap & Tangkai Tap (Tap Wrench)',
     subtitle: 'Hand Tap Set (M3 - M12) with Adjustable Wrench',
     spec: 'Set 3 Nomor: No.1 (Taper), No.2 (Plug), No.3 (Bottoming)',
@@ -529,7 +529,7 @@ const BENCHWORK_DATA = {
     id: 'bench-die',
     category: 'Perkakas Pembuat Ulir',
     badgeColor: '#7c3aed',
-    position: [1.2, 2.85, -6.83],
+    position: [11.7, 2.85, -6.83],
     title: 'Set Snei & Tangkai Snei (Die Stock)',
     subtitle: 'Circular Split Die & Die Stock Holder',
     spec: 'Baja Cepat HSS Metris, Dilengkapi Baut Setel Celah',
@@ -541,7 +541,7 @@ const BENCHWORK_DATA = {
     id: 'bench-filecard',
     category: 'Perawatan Perkakas',
     badgeColor: '#059669',
-    position: [2.2, 2.85, -6.83],
+    position: [12.7, 2.85, -6.83],
     title: 'Sikat Pembersih Kikir (File Card)',
     subtitle: 'Brass Wire File Card Cleaner & Scraper Pick',
     spec: 'Kawat Kuningan Halus Anti-Aus, Papan Kayu Ergonomis',
@@ -553,7 +553,7 @@ const BENCHWORK_DATA = {
     id: 'bench-chisel',
     category: 'Perkakas Tangan',
     badgeColor: '#d97706',
-    position: [3.2, 2.85, -6.83],
+    position: [13.7, 2.85, -6.83],
     title: 'Pahat Dingin / Pahat Pelat (Cold Chisel)',
     subtitle: 'Flat Cold Chisel for Metal Cutting',
     spec: 'Baja Paduan Chrome-Vanadium, Sudut Baji Potong 60°',
@@ -565,7 +565,7 @@ const BENCHWORK_DATA = {
     id: 'bench-safety',
     category: 'Fasilitas K3',
     badgeColor: '#dc2626',
-    position: [4.2, 3.4, -6.83],
+    position: [14.7, 3.4, -6.83],
     title: 'Stasiun APD Kerja Bangku',
     subtitle: 'Personal Protective Equipment (PPE) Station',
     spec: 'Kacamata Polikarbonat ANSI Z87.1, Sarung Tangan Kulit/Katun',
@@ -2215,11 +2215,11 @@ const MachineShopProps = ({ onSelect, activeId }) => {
         data={MACHINING_DATA['shop-toolcart']}
         onSelect={onSelect}
         isActive={activeId === 'shop-toolcart'}
-        labelOffset={[-10.5, 2.0, -2.5]}
+        labelOffset={[-17.0, 2.0, -2.5]}
         hitArgs={[1.6, 1.8, 1.2]}
-        hitPosition={[-10.5, 0.9, -2.5]}
+        hitPosition={[-17.0, 0.9, -2.5]}
       >
-        <group position={[-10.5, 0, -2.5]}>
+        <group position={[-17.0, 0, -2.5]}>
           <mesh position={[0, 0.9, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.4, 1.6, 1.0]} />
             <meshStandardMaterial color="#dc2626" roughness={0.35} metalness={0.5} />
@@ -2245,11 +2245,11 @@ const MachineShopProps = ({ onSelect, activeId }) => {
         data={MACHINING_DATA['shop-rawstock']}
         onSelect={onSelect}
         isActive={activeId === 'shop-rawstock'}
-        labelOffset={[10.5, 2.5, -2.5]}
+        labelOffset={[-17.0, 2.5, -5.2]}
         hitArgs={[1.8, 2.4, 1.4]}
-        hitPosition={[10.5, 1.2, -2.5]}
+        hitPosition={[-17.0, 1.2, -5.2]}
       >
-        <group position={[10.5, 0, -2.5]}>
+        <group position={[-17.0, 0, -5.2]}>
           <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.6, 2.2, 1.0]} />
             <meshStandardMaterial color="#475569" roughness={0.6} />
@@ -2277,11 +2277,11 @@ const MachineShopProps = ({ onSelect, activeId }) => {
         data={MACHINING_DATA['shop-scrapbin']}
         onSelect={onSelect}
         isActive={activeId === 'shop-scrapbin'}
-        labelOffset={[0, 1.2, -4.5]}
+        labelOffset={[-3.8, 1.2, -4.5]}
         hitArgs={[2.0, 1.1, 1.4]}
-        hitPosition={[0, 0.5, -4.5]}
+        hitPosition={[-3.8, 0.5, -4.5]}
       >
-        <group position={[0, 0, -4.5]}>
+        <group position={[-3.8, 0, -4.5]}>
           <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
             <boxGeometry args={[1.8, 0.9, 1.2]} />
             <meshStandardMaterial color="#475569" roughness={0.5} metalness={0.4} />
@@ -2293,7 +2293,7 @@ const MachineShopProps = ({ onSelect, activeId }) => {
         </group>
       </InteractivePart>
 
-      <group position={[-10.5, 0, 1.0]}>
+      <group position={[-17.0, 0, 1.5]}>
         <mesh position={[0, 0.6, 0]} castShadow>
           <cylinderGeometry args={[0.4, 0.4, 1.1, 24]} />
           <meshStandardMaterial color="#0284c7" roughness={0.4} metalness={0.4} />
@@ -2395,10 +2395,10 @@ const createPegboardHeaderTexture = () => {
 // Papan 5S dipasang menempel rapi di tembok belakang!
 // Meja kerja bersandar rapi di depan dinding!
 // ==========================================
-const BenchworkArea3D = ({ onSelect, activeId }) => {
+const BenchworkArea3D = ({ onSelect, activeId, position = [10.5, 0, 0] }) => {
   const pegboardHeaderTex = useMemo(() => createPegboardHeaderTexture(), []);
   return (
-    <group position={[0, 0, 0]}>
+    <group position={position}>
       {/* 1. MEJA KERJA BANGKU BERAT BERSANDAR DI DEPAN DINDING (Z = -5.4) */}
       <group position={[0, 0, -5.4]}>
         <mesh position={[0, 1.05, 0]} castShadow receiveShadow>
@@ -2952,7 +2952,7 @@ const K3WallSignboard = ({ position, size = [2.8, 1.8], texture, frameColor = '#
   );
 };
 
-const K3WallCampaignPosters = ({ viewMode }) => {
+const K3WallCampaignPosters = () => {
   const texK3 = useMemo(() => createPosterCanvasTexture(
     'UTAMAKAN KESELAMATAN (K3)',
     'ZERO ACCIDENT IS OUR GOAL',
@@ -3034,115 +3034,162 @@ const K3WallCampaignPosters = ({ viewMode }) => {
 
   return (
     <group position={[0, 0, -6.92]}>
-      {/* Poster-poster di dinding atas (y = 5.3) - Terpasang rapi di dinding tanpa menutupi alat */}
-      <K3WallSignboard position={[-11.5, 5.3, 0]} size={[2.8, 1.8]} texture={texK3} frameColor="#047857" />
-      <K3WallSignboard position={[-5.8, 5.3, 0]} size={[3.0, 1.8]} texture={texAPD} frameColor="#1e40af" />
-      <K3WallSignboard position={[5.8, 5.3, 0]} size={[3.0, 1.8]} texture={tex5R} frameColor="#a16207" />
-      <K3WallSignboard position={[11.5, 5.3, 0]} size={[2.8, 1.8]} texture={texSOP} frameColor="#b91c1c" />
+      {/* Poster-poster di dinding atas (y = 5.3) - Sejajar sepanjang dinding bengkel terpadu */}
+      <K3WallSignboard position={[-17.0, 5.3, 0]} size={[2.6, 1.6]} texture={texExit} frameColor="#065f46" />
+      <K3WallSignboard position={[-12.0, 5.3, 0]} size={[2.8, 1.8]} texture={texK3} frameColor="#047857" />
+      <K3WallSignboard position={[-6.5, 5.3, 0]} size={[3.0, 1.8]} texture={texAPD} frameColor="#1e40af" />
+      <K3WallSignboard position={[-0.5, 5.3, 0]} size={[2.8, 1.8]} texture={texSOP} frameColor="#b91c1c" />
+      <K3WallSignboard position={[5.8, 5.3, 0]} size={[2.8, 1.8]} texture={texSOP} frameColor="#dc2626" />
+      <K3WallSignboard position={[11.5, 5.3, 0]} size={[3.0, 1.8]} texture={tex5R} frameColor="#a16207" />
+      <K3WallSignboard position={[17.0, 5.3, 0]} size={[2.6, 1.6]} texture={texAPAR} frameColor="#7f1d1d" />
 
-      {/* Poster di dekat APAR & Pintu Evakuasi */}
-      <K3WallSignboard position={[-11.5, 2.0, 0]} size={[2.4, 1.4]} texture={texAPAR} frameColor="#7f1d1d" />
-      <K3WallSignboard position={[11.5, 2.0, 0]} size={[2.4, 1.4]} texture={texExit} frameColor="#065f46" />
+      {/* Rambu di dekat kedua APAR & Pintu Evakuasi */}
+      <K3WallSignboard position={[-19.0, 2.0, 0]} size={[2.0, 1.2]} texture={texAPAR} frameColor="#7f1d1d" />
+      <K3WallSignboard position={[19.0, 2.0, 0]} size={[2.0, 1.2]} texture={texExit} frameColor="#065f46" />
     </group>
   );
 };
 
 // ==========================================
-// LANTAI & DINDING BENGKEL DENGAN LATAR ABU-ABU TERANG
+// LANTAI & DINDING BENGKEL TERPADU DENGAN LATAR ABU-ABU TERANG
 // ==========================================
-const WorkshopHallEnvironment = ({ viewMode }) => {
+const WorkshopHallEnvironment = () => {
   return (
     <group>
-      {/* 1. LANTAI BENGKEL ABU-ABU TERANG INDUSTRIAL EPOXY */}
+      {/* 1. LANTAI BENGKEL ABU-ABU TERANG INDUSTRIAL EPOXY (44 x 26 meter) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[34, 26]} />
+        <planeGeometry args={[44, 26]} />
         <meshStandardMaterial color="#94a3b8" roughness={0.35} metalness={0.2} />
       </mesh>
 
       {/* 2. JALUR ZONA KESELAMATAN K3 WALKWAY HIJAU */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 5.5]} receiveShadow>
-        <planeGeometry args={[30, 2.0]} />
+        <planeGeometry args={[42, 2.0]} />
         <meshStandardMaterial color="#059669" roughness={0.5} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.008, 4.45]}>
-        <planeGeometry args={[30, 0.12]} />
+        <planeGeometry args={[42, 0.12]} />
         <meshStandardMaterial color="#eab308" />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.008, 6.55]}>
-        <planeGeometry args={[30, 0.12]} />
+        <planeGeometry args={[42, 0.12]} />
         <meshStandardMaterial color="#eab308" />
       </mesh>
 
       {/* Zebra Crossing Jalur K3 */}
-      {[-12, -8, -4, 0, 4, 8, 12].map((x, idx) => (
+      {[-18, -13.5, -9.0, -4.5, 0, 5.0, 10.5, 16.5].map((x, idx) => (
         <mesh key={idx} rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.009, 5.5]}>
           <planeGeometry args={[0.8, 1.8]} />
           <meshStandardMaterial color="#ffffff" />
         </mesh>
       ))}
 
-      {/* 3. MARKA ZONA KERJA MESIN PADA AREA MESIN (BUBUT, CNC, FRAIS) */}
-      {viewMode === 'mesin' && (
-        <group>
-          {/* Zona Mesin Bubut (x = -7.5) */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.006, 0.8]}>
-            <planeGeometry args={[6.2, 5.5]} />
-            <meshStandardMaterial color="#64748b" roughness={0.6} />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.009, -1.95]}>
-            <planeGeometry args={[6.2, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.5, 0.009, 3.55]}>
-            <planeGeometry args={[6.2, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
+      {/* 3. MARKA ZONA KERJA K3 PADA LANTAI BENGKEL TERPADU */}
+      <group>
+        {/* Zona Mesin Bubut (x = -13.5, z = 0.8) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-13.5, 0.006, 0.8]}>
+          <planeGeometry args={[5.8, 5.2]} />
+          <meshStandardMaterial color="#64748b" roughness={0.6} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-13.5, 0.009, -1.8]}>
+          <planeGeometry args={[5.8, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-13.5, 0.009, 3.4]}>
+          <planeGeometry args={[5.8, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
 
-          {/* Zona Mesin CNC VMC (x = 0.0) */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.006, 0.8]}>
-            <planeGeometry args={[6.0, 5.5]} />
-            <meshStandardMaterial color="#475569" roughness={0.6} />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.009, -1.95]}>
-            <planeGeometry args={[6.0, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0.0, 0.009, 3.55]}>
-            <planeGeometry args={[6.0, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
+        {/* Zona Mesin CNC VMC (x = -7.0, z = 0.8) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.0, 0.006, 0.8]}>
+          <planeGeometry args={[5.2, 5.2]} />
+          <meshStandardMaterial color="#475569" roughness={0.6} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.0, 0.009, -1.8]}>
+          <planeGeometry args={[5.2, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-7.0, 0.009, 3.4]}>
+          <planeGeometry args={[5.2, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
 
-          {/* Zona Mesin Frais (x = 7.5) */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.006, 0.8]}>
-            <planeGeometry args={[6.2, 5.5]} />
-            <meshStandardMaterial color="#64748b" roughness={0.6} />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.009, -1.95]}>
-            <planeGeometry args={[6.2, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[7.5, 0.009, 3.55]}>
-            <planeGeometry args={[6.2, 0.14]} />
-            <meshStandardMaterial color="#eab308" />
-          </mesh>
-        </group>
-      )}
+        {/* Zona Mesin Frais (x = -0.5, z = 0.8) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.5, 0.006, 0.8]}>
+          <planeGeometry args={[5.2, 5.2]} />
+          <meshStandardMaterial color="#64748b" roughness={0.6} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.5, 0.009, -1.8]}>
+          <planeGeometry args={[5.2, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-0.5, 0.009, 3.4]}>
+          <planeGeometry args={[5.2, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
 
-      {/* 4. DINDING BELAKANG BENGKEL INDUSTRI WARNA ABU-ABU BERSIH */}
+        {/* Zona Meja Kerja Bangku (x = 10.5, z = -4.6) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[10.5, 0.006, -4.6]}>
+          <planeGeometry args={[9.4, 3.8]} />
+          <meshStandardMaterial color="#475569" roughness={0.6} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[10.5, 0.009, -2.7]}>
+          <planeGeometry args={[9.4, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[5.8, 0.009, -4.6]}>
+          <planeGeometry args={[0.14, 3.8]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[15.2, 0.009, -4.6]}>
+          <planeGeometry args={[0.14, 3.8]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+
+        {/* Zona Meja Perata Granit (x = 17.0, z = -4.6) */}
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[17.0, 0.006, -4.6]}>
+          <planeGeometry args={[3.0, 3.8]} />
+          <meshStandardMaterial color="#334155" roughness={0.6} />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[17.0, 0.009, -2.7]}>
+          <planeGeometry args={[3.0, 0.14]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[18.5, 0.009, -4.6]}>
+          <planeGeometry args={[0.14, 3.8]} />
+          <meshStandardMaterial color="#eab308" />
+        </mesh>
+      </group>
+
+      {/* 4. DINDING BELAKANG BENGKEL INDUSTRI WARNA ABU-ABU BERSIH (44 x 10 meter) */}
       <mesh position={[0, 5.0, -7.0]} receiveShadow>
-        <planeGeometry args={[34, 10]} />
+        <planeGeometry args={[44, 10]} />
         <meshStandardMaterial color="#cbd5e1" roughness={0.8} />
       </mesh>
       {/* Kolom Tiang Baja Struktural H-Beam */}
-      {[-16, -11, -5.5, 0, 5.5, 11, 16].map((x, idx) => (
+      {[-20, -15, -10, -5, 0, 5, 10, 15, 20].map((x, idx) => (
         <mesh key={idx} position={[x, 5.0, -6.9]} castShadow>
           <boxGeometry args={[0.5, 10, 0.25]} />
           <meshStandardMaterial color="#475569" roughness={0.5} metalness={0.6} />
         </mesh>
       ))}
 
-      {/* 5. TABUNG PEMADAM API (APAR) */}
-      <group position={[-11, 2.0, -6.7]}>
+      {/* 5. TABUNG PEMADAM API (APAR) KIRI & KANAN */}
+      <group position={[-19, 2.0, -6.7]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.15, 0.15, 0.75, 16]} />
+          <meshStandardMaterial color="#dc2626" roughness={0.3} metalness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.45, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.15]} />
+          <meshStandardMaterial color="#1e293b" />
+        </mesh>
+        <mesh position={[0, 0.85, 0]}>
+          <planeGeometry args={[0.5, 0.5]} />
+          <meshStandardMaterial color="#ef4444" />
+        </mesh>
+      </group>
+      <group position={[19, 2.0, -6.7]}>
         <mesh castShadow>
           <cylinderGeometry args={[0.15, 0.15, 0.75, 16]} />
           <meshStandardMaterial color="#dc2626" roughness={0.3} metalness={0.4} />
@@ -3158,7 +3205,7 @@ const WorkshopHallEnvironment = ({ viewMode }) => {
       </group>
 
       {/* 6. POSTER-POSTER CAMPAIGN K3 DI TEMBOK */}
-      <K3WallCampaignPosters viewMode={viewMode} />
+      <K3WallCampaignPosters />
     </group>
   );
 };
@@ -3534,15 +3581,15 @@ const K3SopModal = ({ onClose }) => {
 // KOMPONEN UTAMA VIRTUAL BENGKEL 3D
 // ==========================================
 const VirtualBengkel = ({ onOpenDiagnostic }) => {
-  const [viewMode, setViewMode] = useState('mesin'); // 'mesin' | 'bangku'
+  const [activeZone, setActiveZone] = useState('all'); // 'all' | 'mesin' | 'bangku'
   const [activeItem, setActiveItem] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showK3Modal, setShowK3Modal] = useState(false);
 
-  // Posisi kamera & target preset
+  // Posisi kamera & target preset - Awal: Panorama Luas Seluruh Bengkel Terpadu
   const [cameraPreset, setCameraPreset] = useState({
-    pos: [0, 5.5, 12],
-    look: [0, 1.6, 0]
+    pos: [0, 8.5, 17.5],
+    look: [0, 1.8, -0.5]
   });
 
   useEffect(() => {
@@ -3550,26 +3597,6 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
       stopSpeech();
     };
   }, []);
-
-  // Update kamera default saat ganti tab area
-  useEffect(() => {
-    setActiveItem(null);
-    stopSpeech();
-    setIsSpeaking(false);
-
-    if (viewMode === 'mesin') {
-      setCameraPreset({
-        pos: [0, 5.5, 12],
-        look: [0, 1.8, 0]
-      });
-    } else {
-      // Area Kerja Bangku: pandangan menghadap meja dan tembok 5S
-      setCameraPreset({
-        pos: [0, 4.6, 1.2],
-        look: [0, 1.8, -5.2]
-      });
-    }
-  }, [viewMode]);
 
   const handleSelectItem = (item) => {
     setActiveItem(item);
@@ -3608,36 +3635,47 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
     setIsSpeaking(false);
     setActiveItem(null);
 
-    if (viewMode === 'mesin') {
-      switch (type) {
-        case 'lathe':
-          setCameraPreset({ pos: [-7.5, 3.0, 5.0], look: [-7.5, 1.6, 0] });
-          break;
-        case 'cnc':
-          setCameraPreset({ pos: [0, 3.0, 5.2], look: [0, 1.8, 0] });
-          break;
-        case 'milling':
-          setCameraPreset({ pos: [7.5, 3.0, 5.0], look: [7.5, 1.8, 0] });
-          break;
-        default:
-          setCameraPreset({ pos: [0, 5.8, 13.0], look: [0, 1.8, 0] });
-          break;
-      }
-    } else {
-      switch (type) {
-        case 'vise':
-          setCameraPreset({ pos: [0, 2.4, -2.4], look: [0, 1.3, -4.55] });
-          break;
-        case 'tools':
-          setCameraPreset({ pos: [0, 3.2, -3.2], look: [0, 3.2, -6.88] });
-          break;
-        case 'granite':
-          setCameraPreset({ pos: [6.0, 2.4, -3.2], look: [6.0, 1.2, -5.4] });
-          break;
-        default:
-          setCameraPreset({ pos: [0, 4.6, 1.2], look: [0, 1.8, -5.2] });
-          break;
-      }
+    switch (type) {
+      case 'all':
+        setActiveZone('all');
+        setCameraPreset({ pos: [0, 8.5, 17.5], look: [0, 1.8, -0.5] });
+        break;
+      case 'machine-zone':
+        setActiveZone('mesin');
+        setCameraPreset({ pos: [-7.0, 5.5, 11.0], look: [-7.0, 1.8, 0.5] });
+        break;
+      case 'lathe':
+        setActiveZone('mesin');
+        setCameraPreset({ pos: [-13.5, 3.2, 5.5], look: [-13.5, 1.6, 0.5] });
+        break;
+      case 'cnc':
+        setActiveZone('mesin');
+        setCameraPreset({ pos: [-7.0, 3.2, 5.8], look: [-7.0, 1.8, 0.5] });
+        break;
+      case 'milling':
+        setActiveZone('mesin');
+        setCameraPreset({ pos: [-0.5, 3.2, 5.5], look: [-0.5, 1.8, 0.5] });
+        break;
+      case 'bench-zone':
+        setActiveZone('bangku');
+        setCameraPreset({ pos: [11.0, 5.2, 6.0], look: [11.0, 2.0, -4.5] });
+        break;
+      case 'vise':
+        setActiveZone('bangku');
+        setCameraPreset({ pos: [10.5, 2.5, -2.0], look: [10.5, 1.35, -4.55] });
+        break;
+      case 'tools':
+        setActiveZone('bangku');
+        setCameraPreset({ pos: [10.5, 3.3, -2.8], look: [10.5, 3.2, -6.88] });
+        break;
+      case 'granite':
+        setActiveZone('bangku');
+        setCameraPreset({ pos: [16.5, 2.5, -2.8], look: [16.5, 1.2, -5.4] });
+        break;
+      default:
+        setActiveZone('all');
+        setCameraPreset({ pos: [0, 8.5, 17.5], look: [0, 1.8, -0.5] });
+        break;
     }
   };
 
@@ -3663,7 +3701,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
         }}
       >
       {/* ==================================================== */}
-      {/* HEADER ATAS: JUDUL & SWITCHER TAB AREA */}
+      {/* HEADER ATAS: JUDUL & PINTASAN NAVIGASI BENGKEL TERPADU */}
       {/* ==================================================== */}
       <div
         style={{
@@ -3707,16 +3745,15 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             </h2>
           </div>
           <p style={{ color: '#94a3b8', fontSize: '0.75rem', margin: '3px 0 0 0' }}>
-            {viewMode === 'mesin'
-              ? 'Area Bengkel Mesin: Mesin Bubut (Lathe), Mesin CNC VMC, & Mesin Frais (Milling)'
-              : 'Area Bengkel Kerja Bangku: Ragum Meja, Meja Granit, & Papan Perkakas di Tembok'}
+            Bengkel Terpadu: Mesin Bubut, CNC VMC, Mesin Frais, Meja Kerja Bangku 5S & Meja Granit QC
           </p>
         </div>
 
-        {/* Tab Tombol Pengalih Area */}
+        {/* Tab Pintasan Navigasi Cepat Antar-Zona */}
         <div
           style={{
             display: 'flex',
+            flexWrap: 'wrap',
             gap: '8px',
             background: 'rgba(15, 23, 42, 0.9)',
             padding: '6px',
@@ -3728,41 +3765,61 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           }}
         >
           <button
-            onClick={() => setViewMode('mesin')}
+            onClick={() => applyCameraView('all')}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '8px 16px',
+              padding: '8px 14px',
               borderRadius: '8px',
-              border: 'none',
-              backgroundColor: viewMode === 'mesin' ? '#2563eb' : 'transparent',
-              color: viewMode === 'mesin' ? '#ffffff' : '#94a3b8',
+              border: activeZone === 'all' ? '1px solid #38bdf8' : 'none',
+              backgroundColor: activeZone === 'all' ? 'rgba(56, 189, 248, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+              color: activeZone === 'all' ? '#ffffff' : '#cbd5e1',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: viewMode === 'mesin' ? '0 4px 12px rgba(37, 99, 235, 0.4)' : 'none'
+              boxShadow: activeZone === 'all' ? '0 4px 12px rgba(56, 189, 248, 0.3)' : 'none'
             }}
           >
-            <span>⚙️</span> Area Mesin (Bubut, CNC & Frais)
+            <span>🌐</span> Seluruh Bengkel
           </button>
           <button
-            onClick={() => setViewMode('bangku')}
+            onClick={() => applyCameraView('machine-zone')}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '8px 16px',
+              padding: '8px 14px',
               borderRadius: '8px',
-              border: 'none',
-              backgroundColor: viewMode === 'bangku' ? '#10b981' : 'transparent',
-              color: viewMode === 'bangku' ? '#ffffff' : '#94a3b8',
+              border: activeZone === 'mesin' ? '1px solid #2563eb' : 'none',
+              backgroundColor: activeZone === 'mesin' ? '#2563eb' : 'transparent',
+              color: activeZone === 'mesin' ? '#ffffff' : '#94a3b8',
               fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
-              boxShadow: viewMode === 'bangku' ? '0 4px 12px rgba(16, 185, 129, 0.4)' : 'none'
+              boxShadow: activeZone === 'mesin' ? '0 4px 12px rgba(37, 99, 235, 0.4)' : 'none'
+            }}
+          >
+            <span>⚙️</span> Area Mesin
+          </button>
+          <button
+            onClick={() => applyCameraView('bench-zone')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: activeZone === 'bangku' ? '1px solid #10b981' : 'none',
+              backgroundColor: activeZone === 'bangku' ? '#10b981' : 'transparent',
+              color: activeZone === 'bangku' ? '#ffffff' : '#94a3b8',
+              fontWeight: 700,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: activeZone === 'bangku' ? '0 4px 12px rgba(16, 185, 129, 0.4)' : 'none'
             }}
           >
             <span>🔨</span> Area Kerja Bangku
@@ -3802,7 +3859,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           zIndex: 25,
           display: 'flex',
           flexDirection: 'column',
-          gap: '6px',
+          gap: '5px',
           background: 'rgba(15, 23, 42, 0.88)',
           padding: '8px',
           borderRadius: '12px',
@@ -3812,167 +3869,149 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
         }}
       >
         <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700, padding: '2px 6px', textTransform: 'uppercase' }}>
-          Sudut Pandang Kamera
+          Navigasi Kamera
         </span>
-        {viewMode === 'mesin' ? (
-          <>
-            <button
-              onClick={() => applyCameraView('all')}
-              style={{
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: '#e2e8f0',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🌐 Luas Bengkel
-            </button>
-            <button
-              onClick={() => applyCameraView('lathe')}
-              style={{
-                background: 'rgba(37, 99, 235, 0.25)',
-                border: '1px solid #2563eb',
-                color: '#93c5fd',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🌀 Mesin Bubut
-            </button>
-            <button
-              onClick={() => applyCameraView('cnc')}
-              style={{
-                background: 'rgba(6, 182, 212, 0.25)',
-                border: '1px solid #06b6d4',
-                color: '#67e8f9',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🖥️ Mesin CNC VMC
-            </button>
-            <button
-              onClick={() => applyCameraView('milling')}
-              style={{
-                background: 'rgba(245, 158, 11, 0.25)',
-                border: '1px solid #f59e0b',
-                color: '#fcd34d',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              ⚙️ Mesin Frais
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => applyCameraView('all')}
-              style={{
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                color: '#e2e8f0',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🌐 Seluruh Meja Kerja
-            </button>
-            <button
-              onClick={() => applyCameraView('vise')}
-              style={{
-                background: 'rgba(16, 185, 129, 0.25)',
-                border: '1px solid #10b981',
-                color: '#6ee7b7',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🔩 Ragum & Benda Kerja
-            </button>
-            <button
-              onClick={() => applyCameraView('tools')}
-              style={{
-                background: 'rgba(236, 72, 153, 0.25)',
-                border: '1px solid #ec4899',
-                color: '#f472b6',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              🗄️ Papan Perkakas di Tembok
-            </button>
-            <button
-              onClick={() => applyCameraView('granite')}
-              style={{
-                background: 'rgba(99, 102, 241, 0.25)',
-                border: '1px solid #6366f1',
-                color: '#a5b4fc',
-                padding: '6px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              📐 Meja Perata Granit
-            </button>
-          </>
-        )}
-        <div style={{ height: '1px', background: 'rgba(255,255,255,0.15)', margin: '4px 0' }} />
+        <button
+          onClick={() => applyCameraView('all')}
+          style={{
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            color: '#e2e8f0',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          🌐 Seluruh Bengkel
+        </button>
+
+        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '2px 0' }} />
+        <span style={{ fontSize: '9px', color: '#60a5fa', fontWeight: 800, padding: '1px 6px' }}>ZONA MESIN</span>
+        <button
+          onClick={() => applyCameraView('lathe')}
+          style={{
+            background: 'rgba(37, 99, 235, 0.25)',
+            border: '1px solid #2563eb',
+            color: '#93c5fd',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          🌀 Mesin Bubut
+        </button>
+        <button
+          onClick={() => applyCameraView('cnc')}
+          style={{
+            background: 'rgba(6, 182, 212, 0.25)',
+            border: '1px solid #06b6d4',
+            color: '#67e8f9',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          🖥️ Mesin CNC VMC
+        </button>
+        <button
+          onClick={() => applyCameraView('milling')}
+          style={{
+            background: 'rgba(245, 158, 11, 0.25)',
+            border: '1px solid #f59e0b',
+            color: '#fcd34d',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          ⚙️ Mesin Frais
+        </button>
+
+        <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '2px 0' }} />
+        <span style={{ fontSize: '9px', color: '#34d399', fontWeight: 800, padding: '1px 6px' }}>ZONA KERJA BANGKU</span>
+        <button
+          onClick={() => applyCameraView('vise')}
+          style={{
+            background: 'rgba(16, 185, 129, 0.25)',
+            border: '1px solid #10b981',
+            color: '#6ee7b7',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          🔩 Ragum & Meja Kerja
+        </button>
+        <button
+          onClick={() => applyCameraView('tools')}
+          style={{
+            background: 'rgba(236, 72, 153, 0.25)',
+            border: '1px solid #ec4899',
+            color: '#f472b6',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          🗄️ Papan Perkakas 5S
+        </button>
+        <button
+          onClick={() => applyCameraView('granite')}
+          style={{
+            background: 'rgba(99, 102, 241, 0.25)',
+            border: '1px solid #6366f1',
+            color: '#a5b4fc',
+            padding: '5px 8px',
+            borderRadius: '6px',
+            fontSize: '11px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          📐 Meja Perata Granit
+        </button>
+
+        <div style={{ height: '1px', background: 'rgba(255,255,255,0.15)', margin: '3px 0' }} />
         <button
           onClick={() => setShowK3Modal(true)}
           style={{
             background: 'linear-gradient(135deg, rgba(234, 88, 12, 0.35) 0%, rgba(194, 65, 12, 0.45) 100%)',
             border: '1px solid #f97316',
             color: '#fdba74',
-            padding: '7px 10px',
+            padding: '6px 8px',
             borderRadius: '6px',
             fontSize: '11px',
             fontWeight: 700,
@@ -4051,66 +4090,63 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             shadow-mapSize-height={1024}
             shadow-bias={-0.0001}
           />
-        <directionalLight position={[-12, 14, -8]} intensity={0.9} />
-        <pointLight position={[0, 9, 2]} intensity={1.5} distance={30} />
-        <spotLight position={[5.5, 9, 2]} angle={0.6} penumbra={0.8} intensity={1.4} castShadow />
+          <directionalLight position={[-12, 14, -8]} intensity={0.9} />
+          <pointLight position={[0, 9, 2]} intensity={1.5} distance={30} />
+          <spotLight position={[5.5, 9, 2]} angle={0.6} penumbra={0.8} intensity={1.4} castShadow />
 
-        {/* Lingkungan Aula Bengkel Industri & Poster-Poster K3 di Dinding */}
-        <WorkshopHallEnvironment viewMode={viewMode} />
+          {/* Lingkungan Aula Bengkel Industri & Poster-Poster K3 di Dinding */}
+          <WorkshopHallEnvironment />
 
-        {/* KONTEN AREA SESUAI TAB AKTIF */}
-        {viewMode === 'mesin' ? (
+          {/* KONTEN BENGKEL TERPADU (MESIN PERKAKAS & KERJA BANGKU DALAM SATU LOKASI) */}
           <group>
-            {/* 1. MESIN BUBUT INDUSTRI REALISTIS */}
+            {/* 1. MESIN BUBUT INDUSTRI REALISTIS (X = -13.5) */}
             <RealisticIndustrialLathe
-              position={[-7.5, 0, 0]}
+              position={[-13.5, 0, 0.5]}
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
 
-            {/* 2. MESIN CNC VMC (VERTICAL MACHINING CENTER) & KONTROLER REALISTIS */}
+            {/* 2. MESIN CNC VMC (VERTICAL MACHINING CENTER) & KONTROLER REALISTIS (X = -7.0) */}
             <RealisticCNCMachiningCenter
-              position={[0.0, 0, 0]}
+              position={[-7.0, 0, 0.5]}
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
 
-            {/* 3. MESIN FRAIS INDUSTRI REALISTIS */}
+            {/* 3. MESIN FRAIS INDUSTRI REALISTIS (X = -0.5) */}
             <RealisticIndustrialMilling
-              position={[7.5, 0, 0]}
+              position={[-0.5, 0, 0.5]}
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
 
-            {/* 4. PROPS BENGKEL MESIN */}
+            {/* 4. PROPS BENGKEL MESIN (Toolcart, Material Batangan, Wadah Bram) */}
             <MachineShopProps
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
-          </group>
-        ) : (
-          <group>
-            {/* AREA KERJA BANGKU (Semua alat di meja & papan 5S di tembok klik langsung) */}
+
+            {/* 5. AREA KERJA BANGKU (Meja Kerja, 3 Ragum, Papan Perkakas 5S di Tembok, Meja Granit QC) (X = 10.5) */}
             <BenchworkArea3D
+              position={[10.5, 0, 0]}
               onSelect={handleSelectItem}
               activeId={activeItem?.id}
             />
           </group>
-        )}
 
-        {/* Bayangan Kontak pada Lantai */}
-        <ContactShadows position={[0, 0.002, 0]} opacity={0.5} scale={30} blur={2.0} far={6} />
+          {/* Bayangan Kontak pada Lantai */}
+          <ContactShadows position={[0, 0.002, 0]} opacity={0.5} scale={44} blur={2.0} far={6} />
 
-        {/* Kontrol Orbit Kamera */}
-        <OrbitControls
-          makeDefault
-          enableDamping={true}
-          dampingFactor={0.08}
-          minDistance={2}
-          maxDistance={28}
-          maxPolarAngle={Math.PI / 2 - 0.05}
-          target={cameraPreset.look}
-        />
+          {/* Kontrol Orbit Kamera */}
+          <OrbitControls
+            makeDefault
+            enableDamping={true}
+            dampingFactor={0.08}
+            minDistance={2}
+            maxDistance={35}
+            maxPolarAngle={Math.PI / 2 - 0.05}
+            target={cameraPreset.look}
+          />
 
         {/* ViewCube Sudut CAD di Kanan Bawah */}
         <GizmoHelper alignment="bottom-right" margin={[70, 70]}>

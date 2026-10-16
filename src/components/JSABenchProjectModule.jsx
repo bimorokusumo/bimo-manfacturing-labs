@@ -1,3 +1,8 @@
+import {
+  ClipboardList, ShieldAlert, FileText, Search, Settings,
+  Sparkles, CheckCircle2, RotateCcw, Compass, Target,
+  Wrench, BarChart3, Award, AlertTriangle
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -240,7 +245,7 @@ export default function JSABenchProjectModule() {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            📋
+            <ClipboardList className="w-6 h-6 text-white" />
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -284,7 +289,7 @@ export default function JSABenchProjectModule() {
               gap: '6px'
             }}
           >
-            <span>🛡️</span> Interactive JSA Builder
+            <ShieldAlert size={15} className="inline mr-1 text-emerald-400" /> Interactive JSA Builder
           </button>
           <button
             onClick={() => { sound.playClick(); setActiveTab('operation_sheet'); }}
@@ -302,7 +307,7 @@ export default function JSABenchProjectModule() {
               gap: '6px'
             }}
           >
-            <span>📜</span> Operation Sheet Benda Uji
+            <FileText size={15} className="inline mr-1 text-sky-400" /> Operation Sheet Benda Uji
           </button>
           <button
             onClick={() => { sound.playClick(); setActiveTab('qc_inspection'); }}
@@ -320,7 +325,7 @@ export default function JSABenchProjectModule() {
               gap: '6px'
             }}
           >
-            <span>🔍</span> Simulasi QC &amp; Rubrik DUDI
+            <Search size={15} className="inline mr-1 text-amber-400" /> Simulasi QC &amp; Rubrik DUDI
           </button>
         </div>
       </div>
@@ -355,7 +360,7 @@ export default function JSABenchProjectModule() {
                   cursor: 'pointer'
                 }}
               >
-                ⚙️ JSA Mesin Bor Meja
+                <Settings size={14} className="inline mr-1 text-sky-400" /> JSA Mesin Bor Meja
               </button>
               <button
                 onClick={() => { sound.playClick(); setSelectedJsaJob('gerinda_duduk'); setJsaSubmitted(false); setUserJsaSelections({}); }}
@@ -370,7 +375,7 @@ export default function JSABenchProjectModule() {
                   cursor: 'pointer'
                 }}
               >
-                ✨ JSA Mesin Gerinda Duduk
+                <Sparkles size={14} className="inline mr-1 text-amber-400" /> JSA Mesin Gerinda Duduk
               </button>
             </div>
           </div>
@@ -391,7 +396,7 @@ export default function JSABenchProjectModule() {
                   {step.hazards.map(hazard => (
                     <div key={hazard.id} style={{ background: '#fffaf5', border: '1px solid #ffedd5', borderRadius: '10px', padding: '14px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#c2410c', fontWeight: 700, fontSize: '0.88rem', marginBottom: '10px' }}>
-                        <span>⚠️</span> Potensi Bahaya: {hazard.text}
+                        <AlertTriangle size={15} className="inline mr-1 text-rose-400" /> Potensi Bahaya: {hazard.text}
                       </div>
 
                       <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
@@ -432,7 +437,7 @@ export default function JSABenchProjectModule() {
                                 gap: '8px'
                               }}
                             >
-                              <span style={{ fontSize: '1rem' }}>{isSelected ? '🔘' : '⚪'}</span>
+                              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-slate-500">{isSelected && <span className="w-2 h-2 rounded-full bg-emerald-400" />}</span>
                               <span>{ctrl.text}</span>
                             </div>
                           );
@@ -463,7 +468,7 @@ export default function JSABenchProjectModule() {
                   boxShadow: '0 4px 12px rgba(234, 88, 12, 0.3)'
                 }}
               >
-                ✅ Verifikasi &amp; Simpan Dokumen JSA ke Sistem
+                <CheckCircle2 size={16} className="inline mr-1.5" /> Verifikasi &amp; Simpan Dokumen JSA ke Sistem
               </button>
             ) : (
               <div style={{
@@ -474,7 +479,7 @@ export default function JSABenchProjectModule() {
                 textAlign: 'center'
               }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: 800, color: jsaScore >= 80 ? '#065f46' : '#991b1b', marginBottom: '6px' }}>
-                  {jsaScore >= 80 ? '🏆 JSA DISETUJUI SAFETY OFFICER (LOLOS STANDAR)' : '⚠️ JSA DITOLAK - RISIKO TINGGI BELUM TERKENDALI'}
+                  {jsaScore >= 80 ? '[DISETUJUI] JSA DISETUJUI SAFETY OFFICER (LOLOS STANDAR)' : '[DITOLAK] JSA DITOLAK - RISIKO TINGGI BELUM TERKENDALI'}
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#334155', marginBottom: '14px' }}>
                   Skor Kepatuhan Pengendalian JSA Anda: <strong>{jsaScore} / 100 XP</strong> (Tersinkron ke Spreadsheet).
@@ -492,7 +497,7 @@ export default function JSABenchProjectModule() {
                     cursor: 'pointer'
                   }}
                 >
-                  🔄 Edit Ulang JSA
+                  <RotateCcw size={14} className="inline mr-1.5" /> Edit Ulang JSA
                 </button>
               </div>
             )}
@@ -506,7 +511,7 @@ export default function JSABenchProjectModule() {
       {activeTab === 'operation_sheet' && (
         <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '1.8rem' }}>📐</span>
+            <Compass size={28} className="text-sky-400" />
             <div>
               <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
                 Operation Sheet: Proyek Balok Penitik Presisi &amp; Lubang Ulir M8
@@ -555,7 +560,7 @@ export default function JSABenchProjectModule() {
             </div>
 
             <div style={{ maxWidth: '400px', fontSize: '0.85rem', color: '#334155', lineHeight: 1.6 }}>
-              <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>🎯 Target Capaian Kompetensi DUDI:</div>
+              <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}><Target size={15} className="inline mr-1 text-sky-400" /> Target Capaian Kompetensi DUDI:</div>
               • <strong>Kerataan Bidang:</strong> Tidak ada celah cahaya saat diuji dengan bilah perata (*straight edge*).<br />
               • <strong>Kesikuan 6 Sisi:</strong> Celah penyiku presisi &lt; 0.02 mm.<br />
               • <strong>Kualitas Ulir:</strong> Ulir M8 x 1.25 tembus sempurna dan tegak lurus 90° terhadap permukaan.<br />
@@ -631,13 +636,13 @@ export default function JSABenchProjectModule() {
                   <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a' }}>{item.title}</div>
                 </div>
                 <div style={{ fontSize: '0.82rem', color: '#2563eb', fontWeight: 700, marginBottom: '6px' }}>
-                  🛠️ Alat: {item.tool}
+                  Alat: {item.tool}
                 </div>
                 <div style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.5, marginBottom: '6px' }}>
                   <strong>SOP:</strong> {item.sop}
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#b91c1c', background: '#fef2f2', padding: '6px 10px', borderRadius: '6px' }}>
-                  ⚠️ <strong>K3:</strong> {item.k3}
+                  <AlertTriangle size={13} className="inline mr-1 text-amber-400" /> <strong>K3:</strong> {item.k3}
                 </div>
               </div>
             ))}
@@ -651,7 +656,7 @@ export default function JSABenchProjectModule() {
       {activeTab === 'qc_inspection' && (
         <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <span style={{ fontSize: '1.8rem' }}>🔍</span>
+            <Search size={28} className="text-amber-400" />
             <div>
               <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
                 Simulasi Quality Control (QC Inspection) Benda Kerja Bangku
@@ -707,9 +712,9 @@ export default function JSABenchProjectModule() {
                 onChange={(e) => setQcMeasures({ ...qcMeasures, ulirThread: e.target.value })}
                 style={{ width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #94a3b8', fontWeight: 700, fontSize: '0.88rem' }}
               >
-                <option value="pass">✅ Go Masuk Halus &amp; No-Go Menahan (Standar ISO)</option>
-                <option value="tight">❌ Ulir Seret / Macet (Tap Kurang Dalam)</option>
-                <option value="loose">❌ Ulir Goyang / Oblak (Mata Bor Terlalu Besar)</option>
+                <option value="pass">[PASS] Go Masuk Halus &amp; No-Go Menahan (Standar ISO)</option>
+                <option value="tight">[FAIL] Ulir Seret / Macet (Tap Kurang Dalam)</option>
+                <option value="loose">[FAIL] Ulir Goyang / Oblak (Mata Bor Terlalu Besar)</option>
               </select>
             </div>
 
@@ -723,9 +728,9 @@ export default function JSABenchProjectModule() {
                 onChange={(e) => setQcMeasures({ ...qcMeasures, kerataan: e.target.value })}
                 style={{ width: '100%', padding: '9px', borderRadius: '8px', border: '1px solid #94a3b8', fontWeight: 700, fontSize: '0.88rem' }}
               >
-                <option value="pass">✅ Rata Tanpa Celah Cahaya &amp; Halus N7</option>
-                <option value="scratched">❌ Terdapat Bekas Goresan Dalam (Pinning Kikir)</option>
-                <option value="cembung">❌ Permukaan Cembung / Tidak Rata</option>
+                <option value="pass">[PASS] Rata Tanpa Celah Cahaya &amp; Halus N7</option>
+                <option value="scratched">[FAIL] Terdapat Bekas Goresan Dalam (Pinning Kikir)</option>
+                <option value="cembung">[FAIL] Permukaan Cembung / Tidak Rata</option>
               </select>
             </div>
           </div>
@@ -745,7 +750,7 @@ export default function JSABenchProjectModule() {
               marginBottom: '20px'
             }}
           >
-            📊 Evaluasi Hasil QC &amp; Terbitkan Sertifikat Mutu Benda Uji
+            <BarChart3 size={16} className="inline mr-1.5" /> Evaluasi Hasil QC &amp; Terbitkan Sertifikat Mutu Benda Uji
           </button>
 
           {/* QC Inspection Output */}
@@ -787,7 +792,7 @@ export default function JSABenchProjectModule() {
                 </div>
               ) : (
                 <div style={{ marginTop: '10px', color: '#065f46', fontSize: '0.88rem', fontWeight: 700 }}>
-                  🎉 Sempurna! Benda kerja uji Anda lolos seluruh kriteria presisi, kesikuan, dan kerataan berstandar Astra International / Toyota Manufacturing!
+                  [LULUS] Sempurna! Benda kerja uji Anda lolos seluruh kriteria presisi, kesikuan, dan kerataan berstandar Astra International / Toyota Manufacturing!
                 </div>
               )}
             </div>

@@ -3,6 +3,23 @@ import { sound } from '../utils/audio';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import {
+  Wrench,
+  Sliders,
+  Scale,
+  ShieldCheck,
+  Layers,
+  Disc,
+  Calculator,
+  Target,
+  Compass,
+  AlertTriangle,
+  RotateCw,
+  CheckCircle2,
+  BookOpen,
+  ArrowRight
+} from 'lucide-react';
+
 
 // =============================================================================
 // DATABASE KUIS MEKANIKA TEKNIK
@@ -66,7 +83,7 @@ const MECHANICS_QUIZ = [
       'RA = 1.200 N dan RB = 1.200 N'
     ],
     kunci: 1,
-    penjelasan: 'Menggunakan syarat kesetimbangan momen ΣMB = 0: RA × 6 - 1200 × (6 - 2) = 0 ➔ RA × 6 = 4800 ➔ RA = 800 N. Berdasarkan ΣFy = 0: RB = 1200 - 800 = 400 N. Tumpuan A yang lebih dekat menanggung beban 2x lebih besar dibanding B!'
+    penjelasan: 'Menggunakan syarat kesetimbangan momen ΣMB = 0: RA × 6 - 1200 × (6 - 2) = 0 -> RA × 6 = 4800 -> RA = 800 N. Berdasarkan ΣFy = 0: RB = 1200 - 800 = 400 N. Tumpuan A yang lebih dekat menanggung beban 2x lebih besar dibanding B!'
   }
 ];
 
@@ -103,18 +120,18 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
   let effortStatus = 'heavy';
   let effortColor = '#dc2626';
-  let effortBadge = '🥵 SANGAT BERAT! Otot Tangan Gemetar';
+  let effortBadge = '[BERAT] SANGAT BERAT - Beban Melebihi Kapasitas Normal';
   let effortAdvice = 'Pegangan terlalu dekat ke baut! Geser tangan lebih jauh atau sambung pipa agar enteng.';
 
   if (effortForceNewton <= 150) {
     effortStatus = 'light';
     effortColor = '#16a34a';
-    effortBadge = '😎 SUPER ENTENG! Diputar Lancar 1 Tangan';
+    effortBadge = '[RINGAN] SANGAT EFISIEN - Torsi Optimal 1 Tangan';
     effortAdvice = 'Lengan momen sangat panjang! Torsi tercapai dengan gaya otot minimal.';
   } else if (effortForceNewton <= 350) {
     effortStatus = 'medium';
     effortColor = '#ea580c';
-    effortBadge = '😐 SEDANG - Butuh Tenaga Sedang';
+    effortBadge = '[SEDANG] NORMAL - Tenaga Standar';
     effortAdvice = 'Posisi pegangan standar ujung kunci. Baut bisa diputar dengan dua tangan.';
   }
 
@@ -174,11 +191,11 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
   if (stressMPa > 480) {
     stressStage = 'fracture';
     stressColor = '#dc2626';
-    stressStatusText = '💥 PATAH TERBELAH! (Melewati Kekuatan Tarik Puncak UTS)';
+    stressStatusText = '[PATAH] PATAH TERBELAH (Melewati Batas Kekuatan Tarik UTS)';
   } else if (stressMPa > 380) {
     stressStage = 'necking';
     stressColor = '#ea580c';
-    stressStatusText = '⚠️ Necking (Penyempitan Penampang Ekstrem)';
+    stressStatusText = '[PERINGATAN] Necking (Penyempitan Penampang Ekstrem)';
   } else if (stressMPa > 250) {
     stressStage = 'plastic';
     stressColor = '#f59e0b';
@@ -334,7 +351,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           gap: '8px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.2rem' }}>📐</span>
+            <Compass size={18} color="#0284c7" />
             <span style={{ fontWeight: 900, fontSize: '0.92rem', letterSpacing: '0.3px' }}>
               {title}
             </span>
@@ -354,7 +371,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         </div>
 
         <div style={{ padding: '16px 18px' }}>
-          {/* SECTION 1: 📋 DIKETAHUI DARI DATA INPUT / SIMULASI */}
+          {/* SECTION 1: DIKETAHUI DARI DATA INPUT / SIMULASI */}
           <div style={{ marginBottom: '16px' }}>
             <div style={{
               display: 'flex',
@@ -366,7 +383,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               marginBottom: '8px',
               textTransform: 'uppercase'
             }}>
-              <span>📋</span> 1. Data yang Diketahui (Input Variabel):
+              1. Data yang Diketahui (Input Variabel):
             </div>
             <div style={{
               display: 'grid',
@@ -399,7 +416,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             </div>
           </div>
 
-          {/* SECTION 2: 💡 RUMUS DASAR / BAKU FISIKA */}
+          {/* SECTION 2: RUMUS DASAR / BAKU FISIKA */}
           <div style={{
             marginBottom: '16px',
             background: '#f8fafc',
@@ -416,7 +433,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               marginBottom: '8px'
             }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase' }}>
-                💡 2. Rumus Baku Fisika / Mekanika Teknik:
+                2. Rumus Baku Fisika / Mekanika Teknik:
               </div>
               {formulaData.title && (
                 <span style={{ fontSize: '0.72rem', color: themeColor, fontWeight: 800, background: lightBg, padding: '2px 8px', borderRadius: '4px' }}>
@@ -466,7 +483,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             )}
           </div>
 
-          {/* SECTION 3: ✏️ LANGKAH SUBSTITUSI & HITUNGAN DETAIL */}
+          {/* SECTION 3: LANGKAH SUBSTITUSI & HITUNGAN DETAIL */}
           <div style={{ marginBottom: '18px' }}>
             <div style={{
               fontSize: '1.05rem',
@@ -478,7 +495,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span>✏️</span> 3. Langkah Substitusi &amp; Penjabaran Perhitungan:
+              3. Langkah Substitusi &amp; Penjabaran Perhitungan:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {steps.map((st, sIdx) => (
@@ -522,7 +539,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
                   </div>
                   {st.note && (
                     <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '6px', lineHeight: 1.5 }}>
-                      💡 {st.note}
+                      [INFO] {st.note}
                     </div>
                   )}
                 </div>
@@ -530,7 +547,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             </div>
           </div>
 
-          {/* SECTION 4: 🎯 HASIL AKHIR PERHITUNGAN */}
+          {/* SECTION 4: HASIL AKHIR PERHITUNGAN */}
           <div style={{
             background: lightBg,
             border: `2px solid ${themeColor}`,
@@ -545,7 +562,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           }}>
             <div>
               <div style={{ fontSize: '0.72rem', fontWeight: 900, color: themeColor, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                🎯 4. HASIL AKHIR PERHITUNGAN:
+                4. HASIL AKHIR PERHITUNGAN:
               </div>
               <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#0f172a', marginTop: '2px', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
                 <span style={{ color: themeColor }}>{finalResult.value}</span>
@@ -579,7 +596,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             )}
           </div>
 
-          {/* SECTION 5: 🔍 ANALISIS PRAKTIK & ARTI DI BENGKEL MESIN */}
+          {/* SECTION 5: ANALISIS PRAKTIK & ARTI DI BENGKEL MESIN */}
           {workshopInsight && workshopInsight.content && (
             <div style={{
               background: '#f8fafc',
@@ -590,7 +607,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               borderLeftWidth: '4px'
             }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0f172a', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>🔍</span> 5. Analisis Praktik &amp; Arti di Bengkel Mesin:
+                5. Analisis Praktik &amp; Arti di Bengkel Mesin:
               </div>
               <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.55 }}>
                 {workshopInsight.content}
@@ -662,17 +679,17 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${fCalc} Newton`,
         unit: `(~${kgCalc} kg)`,
         subtitle: `Gaya dorong otot tangan yang dibutuhkan untuk memutar baut`,
-        badgeText: fCalc > 400 ? '🥵 SANGAT BERAT (>40 kg)' : (fCalc > 150 ? '🟡 SEDANG (15-40 kg)' : '😎 SUPER ENTENG (<15 kg)'),
+        badgeText: fCalc > 400 ? '[BERAT] SANGAT BERAT (>40 kg)' : (fCalc > 150 ? '[SEDANG] NORMAL (15-40 kg)' : '[RINGAN] SANGAT EFISIEN (<15 kg)'),
         badgeColor: fCalc > 400 ? '#dc2626' : (fCalc > 150 ? '#d97706' : '#16a34a'),
         badgeBg: fCalc > 400 ? '#fee2e2' : (fCalc > 150 ? '#fef3c7' : '#dcfce7')
       };
 
       workshopInsight = {
         content: fCalc > 400
-          ? '⚠️ BAHAYA CEDERA OTOT & BAUT SLEK: Gaya 400+ N terlalu berat untuk satu tangan! Siswa berisiko terpeleset, kunci pas terlepas, atau baut aus (selek). Solusi bengkel: Segera geser pegangan ke ujung kunci terluar atau sambungkan pipa besi (cheater pipe) agar jarak d bertambah panjang dan gaya F turun drastis!'
+          ? '[PERINGATAN] BAHAYA CEDERA OTOT & BAUT SLEK: Gaya 400+ N terlalu berat untuk satu tangan! Siswa berisiko terpeleset, kunci pas terlepas, atau baut aus (selek). Solusi bengkel: Segera geser pegangan ke ujung kunci terluar atau sambungkan pipa besi (cheater pipe) agar jarak d bertambah panjang dan gaya F turun drastis!'
           : (fCalc > 150
-            ? '🟡 KONDISI SEDANG: Dapat diputar menggunakan dorongan dua tangan dengan tumpuan kuda-kuda yang kokoh. Pastikan rahang kunci pas duduk tegak lurus sempurna pada kepala baut sebelum menekan.'
-            : '✅ KONDISI IDEAL & AMAN: Posisi pegangan sangat tepat! Lengan momen yang panjang membuat gaya yang dibutuhkan sangat kecil. Baut berputar lancar tanpa risiko kelelahan otot ataupun kerusakan ulir.')
+            ? '[SEDANG] KONDISI SEDANG: Dapat diputar menggunakan dorongan dua tangan dengan tumpuan kuda-kuda yang kokoh. Pastikan rahang kunci pas duduk tegak lurus sempurna pada kepala baut sebelum menekan.'
+            : '[AMAN] KONDISI IDEAL & AMAN: Posisi pegangan sangat tepat! Lengan momen yang panjang membuat gaya yang dibutuhkan sangat kecil. Baut berputar lancar tanpa risiko kelelahan otot ataupun kerusakan ulir.')
       };
     } else if (calcTorqueMode === 'tau') {
       const tauCalc = (userForceVal * dMeter).toFixed(1);
@@ -714,13 +731,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${tauCalc} Nm`,
         unit: 'Newton-meter',
         subtitle: `Torsi rotasi yang masuk dan mengencangkan baut`,
-        badgeText: '🔧 HASIL TORSI TERPASANG',
+        badgeText: '[TORSI] HASIL TORSI TERPASANG',
         badgeColor: '#0284c7',
         badgeBg: '#e0f2fe'
       };
 
       workshopInsight = {
-        content: `💡 KETENTUAN PENGENCANGAN MESIN: Torsi sebesar ${tauCalc} Nm ini harus dicocokkan dengan Buku Panduan Reparasi (Service Manual). Jika baut silinder head motor membutuhkan 60 Nm dan Anda hanya menghasilkan ${tauCalc} Nm, packing silinder akan bocor. Sebaliknya, bila torsi berlebih melampaui kekuatan luluh baut, batang baut akan mulur melar dan patah di dalam blok mesin!`
+        content: `[SOP] KETENTUAN PENGENCANGAN MESIN: Torsi sebesar ${tauCalc} Nm ini harus dicocokkan dengan Buku Panduan Reparasi (Service Manual). Jika baut silinder head motor membutuhkan 60 Nm dan Anda hanya menghasilkan ${tauCalc} Nm, packing silinder akan bocor. Sebaliknya, bila torsi berlebih melampaui kekuatan luluh baut, batang baut akan mulur melar dan patah di dalam blok mesin!`
       };
     } else if (calcTorqueMode === 'd') {
       const dCalcM = (userTorqueVal / Math.max(1, userForceVal)).toFixed(2);
@@ -763,13 +780,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${dCalcCm} cm`,
         unit: `(${dCalcM} meter)`,
         subtitle: `Panjang gagang kunci minimal agar tenaga siswa tidak melebihi ${userForceVal} N`,
-        badgeText: '📏 PANJANG ALAT MINIMAL',
+        badgeText: '[PANJANG] PANJANG ALAT MINIMAL',
         badgeColor: '#0284c7',
         badgeBg: '#e0f2fe'
       };
 
       workshopInsight = {
-        content: `🛠️ REKOMENDASI PERKAKAS BENGKEL: Kunci pas cincin biasa umumnya memiliki panjang 15-25 cm. Jika hasil perhitungan menuntut ${dCalcCm} cm, siswa disarankan menggunakan Gagang Kunci Shock Panjang (Breaker Bar / Sliding T-Handle) atau pipa besi penyambung agar momen gaya tercapai tanpa memaksakan otot lengan.`
+        content: `[REKOMENDASI] REKOMENDASI PERKAKAS BENGKEL: Kunci pas cincin biasa umumnya memiliki panjang 15-25 cm. Jika hasil perhitungan menuntut ${dCalcCm} cm, siswa disarankan menggunakan Gagang Kunci Shock Panjang (Breaker Bar / Sliding T-Handle) atau pipa besi penyambung agar momen gaya tercapai tanpa memaksakan otot lengan.`
       };
     }
 
@@ -784,12 +801,12 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🧮</span>
+            <Calculator size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
                 Kalkulator Rumus Momen Gaya &amp; Torsi (Isi Nilai Sendiri)
               </h4>
-              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Rumus Dasar: τ = F × d  ➔  Pilih variabel yang ingin Anda cari:</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Rumus Dasar: τ = F × d  |  Pilih variabel yang ingin Anda cari:</span>
             </div>
           </div>
           <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>
@@ -827,14 +844,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Real Presets */}
         <div style={{ marginBottom: '14px', background: '#f0f9ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0369a1', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH KASUS BENGKEL (Klik isi angka otomatis):
+            CONTOH KASUS BENGKEL (Klik isi angka otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '🛵 Baut Motor M8 (30 Nm, 15 cm)', tau: 30, d: 15 },
-              { label: '🚗 Baut Roda Mobil (100 Nm, 30 cm)', tau: 100, d: 30 },
-              { label: '🚛 Baut Truk + Pipa (300 Nm, 60 cm)', tau: 300, d: 60 },
-              { label: '🥵 Salah Dekat (60 Nm, 5 cm Macet!)', tau: 60, d: 5 }
+              { label: 'Baut Motor M8 (30 Nm, 15 cm)', tau: 30, d: 15 },
+              { label: 'Baut Roda Mobil (100 Nm, 30 cm)', tau: 100, d: 30 },
+              { label: 'Baut Truk + Pipa (300 Nm, 60 cm)', tau: 300, d: 60 },
+              { label: 'Gagang Terlalu Pendek (60 Nm, 5 cm)', tau: 60, d: 5 }
             ].map(p => (
               <button
                 key={p.label}
@@ -965,7 +982,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'W × Lb = F × Lk   ➔   F = (W × Lb) / Lk = W / KM',
+        main: 'W × Lb = F × Lk   ->   F = (W × Lb) / Lk = W / KM',
         title: 'Prinsip Kesetimbangan Tuas & Pengungkit (Hukum Archimedes)',
         description: 'Tuas bekerja dengan menyeimbangkan momen beban dan momen kuasa. Semakin panjang lengan kuasa (Lk) dibanding lengan beban (Lb), gaya otot tangan yang dibutuhkan semakin kecil.',
         terms: ['W = Gaya berat beban (N)', 'Lb = Panjang lengan beban (cm)', 'F = Gaya kuasa tangan (N)', 'Lk = Panjang lengan kuasa (cm)', 'KM = Keuntungan Mekanis = Lk / Lb']
@@ -1008,13 +1025,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${fCalc} Newton`,
         unit: `(~${kgFCalc} kg)`,
         subtitle: `Gaya kuasa yang harus dikerahkan tangan siswa (diringankan ${kmCalc}× lipat)`,
-        badgeText: kmCalc >= 4 ? '🚀 KM SANGAT TINGGI (SUPER RINGAN)' : (kmCalc >= 1 ? '✅ KM SEDANG (CUKUP RINGAN)' : '⚠️ KM RENDAH (BERAT)'),
+        badgeText: kmCalc >= 4 ? '[EFISIEN] KM SANGAT TINGGI' : (kmCalc >= 1 ? '[CUKUP] KM SEDANG' : '[BERAT] KM RENDAH'),
         badgeColor: '#b45309',
         badgeBg: '#fef3c7'
       };
 
       workshopInsight = {
-        content: `🛠️ APLIKASI BENGKEL MESIN & FABRIKASI: Prinsip ini diterapkan pada Tang Potong Kawat Baja, Gunting Plat Seng (Tin Snips), dan Linggis Pengungkit Mesin. Dengan mendesain gagang pegangan (Lk = ${userLeverLk} cm) jauh lebih panjang daripada mata potong (Lb = ${userLeverLb} cm), siswa sanggup memotong plat tebal atau mengungkit mesin seberat ${kgW} kg hanya dengan menekan pegangan sekuat ${kgFCalc} kg saja!`
+        content: `[APLIKASI] APLIKASI BENGKEL MESIN & FABRIKASI: Prinsip ini diterapkan pada Tang Potong Kawat Baja, Gunting Plat Seng (Tin Snips), dan Linggis Pengungkit Mesin. Dengan mendesain gagang pegangan (Lk = ${userLeverLk} cm) jauh lebih panjang daripada mata potong (Lb = ${userLeverLb} cm), siswa sanggup memotong plat tebal atau mengungkit mesin seberat ${kgW} kg hanya dengan menekan pegangan sekuat ${kgFCalc} kg saja!`
       };
     } else if (calcLeverMode === 'W') {
       const wCalc = Math.round(userLeverF * kmCalc);
@@ -1065,13 +1082,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${wCalc} Newton`,
         unit: `(~${kgWCalc} kg)`,
         subtitle: `Beban maksimal yang sanggup diangkat tuas pengungkit`,
-        badgeText: '🏋️ BEBAN MAKSIMAL TERANGKAT',
+        badgeText: '[BEBAN] BEBAN MAKSIMAL TERANGKAT',
         badgeColor: '#b45309',
         badgeBg: '#fef3c7'
       };
 
       workshopInsight = {
-        content: `🪵 PRAKTIK PEMINDAHAN MESIN: Dengan linggis pengungkit rasio ${kmCalc}x, seorang teknisi dapat mengangkat ujung mesin bubut/frais seberat ${kgWCalc} kg untuk menyelipkan dongkrak botol atau balok kayu penopang tanpa memerlukan alat berat derek!`
+        content: `[PRAKTIK] PRAKTIK PEMINDAHAN MESIN: Dengan linggis pengungkit rasio ${kmCalc}x, seorang teknisi dapat mengangkat ujung mesin bubut/frais seberat ${kgWCalc} kg untuk menyelipkan dongkrak botol atau balok kayu penopang tanpa memerlukan alat berat derek!`
       };
     } else if (calcLeverMode === 'Lk') {
       const lkCalc = Math.round((userLeverW * userLeverLb) / Math.max(1, userLeverF));
@@ -1114,13 +1131,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${lkCalc} cm`,
         unit: `(${(lkCalc / 100).toFixed(2)} m)`,
         subtitle: `Panjang gagang kuasa minimal agar siswa kuat mengangkat beban`,
-        badgeText: '📏 PANJANG GAGANG KUASA',
+        badgeText: '[PANJANG] PANJANG GAGANG KUASA',
         badgeColor: '#b45309',
         badgeBg: '#fef3c7'
       };
 
       workshopInsight = {
-        content: `✂️ DESAIN PERKAKAS POTONG: Pada gunting pemotong plat seng, mata pisau sengaja dibuat pendek (Lb = ${userLeverLb} cm), dan gagang didesain panjang (Lk = ${lkCalc} cm). Jika gagang terlalu pendek, tangan siswa akan kram dan plat baja tidak akan terpotong rapi.`
+        content: `[DESAIN] DESAIN PERKAKAS POTONG: Pada gunting pemotong plat seng, mata pisau sengaja dibuat pendek (Lb = ${userLeverLb} cm), dan gagang didesain panjang (Lk = ${lkCalc} cm). Jika gagang terlalu pendek, tangan siswa akan kram dan plat baja tidak akan terpotong rapi.`
       };
     } else {
       givenItems = [
@@ -1154,13 +1171,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${kmCalc}× Lipat`,
         unit: 'Rasio Pengali Gaya',
         subtitle: `Gaya kuasa diperbesar sebesar ${kmCalc} kali lipat pada sisi beban`,
-        badgeText: kmCalc >= 1 ? '✅ MENGUNTUNGKAN (GAYA BERKURANG)' : '⚠️ KM < 1 (KECEPATAN/JARAK)',
+        badgeText: kmCalc >= 1 ? '[MENGUNTUNGKAN] GAYA BERKURANG' : '[KECEPATAN] KM < 1',
         badgeColor: '#b45309',
         badgeBg: '#fef3c7'
       };
 
       workshopInsight = {
-        content: `🔍 KLASIFIKASI 3 KELAS TUAS: 
+        content: `[KLASIFIKASI] KLASIFIKASI 3 KELAS TUAS: 
 • Tuas Kelas 1 (Titik Tumpu di tengah): Tang kombinasi, linggis, gunting plat.
 • Tuas Kelas 2 (Beban di tengah): Gerobak dorong roda satu, pemotong kertas plat. Selalu memiliki KM > 1!
 • Tuas Kelas 3 (Kuasa di tengah): Pinset presisi, sumpit, sekop. KM < 1 tetapi memberikan jangkauan gerak presisi.`
@@ -1182,7 +1199,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🕹️</span>
+            <Sliders size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#b45309' }}>
                 Kalkulator Rumus &amp; Simulator Sistem Tuas (Pengungkit)
@@ -1225,14 +1242,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Presets for Levers */}
         <div style={{ marginBottom: '14px', background: '#fffbeb', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fed7aa' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#b45309', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH KASUS TUAS BENGKEL (Klik isi otomatis):
+            CONTOH KASUS TUAS BENGKEL (Klik isi otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '✂️ Tang Potong Kawat (KM 8x)', w: 800, lb: 2, lk: 16 },
-              { label: '🛠️ Gunting Plat Seng (KM 6x)', w: 600, lb: 5, lk: 30 },
-              { label: '🪵 Linggis Pengungkit (KM 12x)', w: 1200, lb: 10, lk: 120 },
-              { label: '🗜️ Pinset Presisi (KM 0.5x)', w: 10, lb: 8, lk: 4 }
+              { label: 'Tang Potong Kawat (KM 8x)', w: 800, lb: 2, lk: 16 },
+              { label: 'Gunting Plat Seng (KM 6x)', w: 600, lb: 5, lk: 30 },
+              { label: 'Linggis Pengungkit (KM 12x)', w: 1200, lb: 10, lk: 120 },
+              { label: 'Pinset Presisi (KM 0.5x)', w: 10, lb: 8, lk: 4 }
             ].map(p => (
               <button
                 key={p.label}
@@ -1334,7 +1351,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
 
             {/* Hand / Effort (Right) */}
             <circle cx="330" cy="42" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
-            <text x="330" y="46" textAnchor="middle" fontSize="12">✋</text>
+            <text x="330" y="46" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="11">F_kuasa</text>
             <text x="330" y="20" textAnchor="middle" fill="#34d399" fontSize="8.5" fontWeight="900">
               F = {calcLeverMode === 'F' ? Math.round(userLeverW / kmCalc) : userLeverF} N
             </text>
@@ -1397,7 +1414,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
     ];
 
     const formulaData = {
-      main: 'ΣMB = 0  ➔  RA = [P × (L - x)] / L   |   ΣFy = 0  ➔  RB = P - RA',
+      main: 'ΣMB = 0  ->  RA = [P × (L - x)] / L   |   ΣFy = 0  ->  RB = P - RA',
       title: 'Kesetimbangan Statika Struktur Balok Crane Sederhana',
       description: 'Struktur balok crane jembatan ditopang oleh tumpuan Sendi di A (menahan gaya vertikal & horizontal) dan tumpuan Rol di B (menahan gaya vertikal serta bebas memuai horizontal). Syarat kesetimbangan mutlak: ΣM = 0 dan ΣFy = 0.',
       terms: ['RA = Reaksi tumpuan Sendi A (N)', 'RB = Reaksi tumpuan Rol B (N)', 'P = Beban terpusat crane (N)', 'L = Bentang balok (m)', 'x = Jarak beban ke titik A (m)', 'Mmax = Momen lentur maksimum balok (Nm)']
@@ -1413,7 +1430,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       {
         stepNum: 2,
         title: 'Terapkan Syarat Kesetimbangan Momen di Titik B (ΣMB = 0)',
-        math: `+(RA × ${L} m) - [${P} N × ${(L - x).toFixed(2)} m] = 0 ➔ RA × ${L} = ${(P * (L - x)).toFixed(1)} N·m`,
+        math: `+(RA × ${L} m) - [${P} N × ${(L - x).toFixed(2)} m] = 0 -> RA × ${L} = ${(P * (L - x)).toFixed(1)} N·m`,
         note: 'Gaya RA memutar searah jarum jam (+), beban P memutar berlawanan (-)'
       },
       {
@@ -1425,13 +1442,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       {
         stepNum: 4,
         title: 'Terapkan Syarat Kesetimbangan Gaya Vertikal (ΣFy = 0)',
-        math: `RA + RB - P = 0 ➔ RB = P - RA = ${P} N - ${rA} N = ${rB} Newton (~${kgRB} kg)`,
+        math: `RA + RB - P = 0 -> RB = P - RA = ${P} N - ${rA} N = ${rB} Newton (~${kgRB} kg)`,
         note: 'Gaya vertikal ke atas yang ditahan oleh tiang fondasi B'
       },
       {
         stepNum: 5,
         title: 'Uji Kebenaran Kesetimbangan Statis (Cross-Check)',
-        math: `RA + RB = ${rA} N + ${rB} N = ${rA + rB} N (Sama persis dengan Beban P = ${P} N ➔ ✅ TERBUKTI SEIMBANG!)`,
+        math: `RA + RB = ${rA} N + ${rB} N = ${rA + rB} N (Sama persis dengan Beban P = ${P} N -> [OK] TERBUKTI SEIMBANG!)`,
         note: 'Jumlah gaya penahan ke atas tepat sama dengan gaya beban ke bawah'
       },
       {
@@ -1446,13 +1463,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       value: `RA = ${rA} N  |  RB = ${rB} N`,
       unit: `(Mmax = ${mMax} Nm)`,
       subtitle: `Tiang A memikul ~${kgRA} kg, Tiang B memikul ~${kgRB} kg`,
-      badgeText: '⚖️ KESETIMBANGAN STATIS TERBUKTI',
+      badgeText: '[SETIMBANG] KESETIMBANGAN STATIS TERBUKTI',
       badgeColor: '#166534',
       badgeBg: '#dcfce7'
     };
 
     const workshopInsight = {
-      content: `🏗️ ANALISIS REKAYASA CRANE BENGKEL: Perhatikan bahwa tumpuan ${x < L / 2 ? 'Sendi A' : (x > L / 2 ? 'Rol B' : 'Sendi A dan Rol B')} memikul porsi beban lebih besar (${Math.max(rA, rB)} N) karena posisi hoist derek lebih condong ke arahnya (${x} m dari tiang A). Nilai Momen Lentur Maksimal Mmax = ${mMax} Nm adalah angka kritis yang digunakan insinyur mesin untuk menentukan profil baja I-Beam / WF (Wide Flange) agar balok jembatan crane tidak melengkung (defleksi) ataupun patah saat mengangkat mesin berat!`
+      content: `[ANALISIS] ANALISIS REKAYASA CRANE BENGKEL: Perhatikan bahwa tumpuan ${x < L / 2 ? 'Sendi A' : (x > L / 2 ? 'Rol B' : 'Sendi A dan Rol B')} memikul porsi beban lebih besar (${Math.max(rA, rB)} N) karena posisi hoist derek lebih condong ke arahnya (${x} m dari tiang A). Nilai Momen Lentur Maksimal Mmax = ${mMax} Nm adalah angka kritis yang digunakan insinyur mesin untuk menentukan profil baja I-Beam / WF (Wide Flange) agar balok jembatan crane tidak melengkung (defleksi) ataupun patah saat mengangkat mesin berat!`
     };
 
     // Calculate load position in SVG
@@ -1469,7 +1486,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>⚖️</span>
+            <Scale size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#065f46' }}>
                 Kalkulator Reaksi Tumpuan Balok Derek (Sendi A &amp; Rol B)
@@ -1485,13 +1502,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Presets for Beam Crane */}
         <div style={{ marginBottom: '14px', background: '#f0fdf4', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#166534', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH POSISI BEBAN CRANE (Klik isi otomatis):
+            CONTOH POSISI BEBAN CRANE (Klik isi otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '🏗️ Dekat Tiang A (x = 1.5 m)', l: 6, p: 1200, x: 1.5 },
-              { label: '⚖️ Pas di Tengah (x = 3.0 m)', l: 6, p: 1200, x: 3.0 },
-              { label: '🚜 Dekat Tiang B (x = 4.5 m)', l: 6, p: 1200, x: 4.5 }
+              { label: 'Dekat Tiang A (x = 1.5 m)', l: 6, p: 1200, x: 1.5 },
+              { label: 'Pas di Tengah (x = 3.0 m)', l: 6, p: 1200, x: 3.0 },
+              { label: 'Dekat Tiang B (x = 4.5 m)', l: 6, p: 1200, x: 4.5 }
             ].map(b => (
               <button
                 key={b.label}
@@ -1638,13 +1655,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
     }
 
     let boltVisualColor = '#10b981';
-    let boltVisualLabel = '🟢 Zona Elastis (Aman)';
+    let boltVisualLabel = '[AMAN] Zona Elastis (Aman)';
     if (liveStressMPa > 450) {
       boltVisualColor = '#dc2626';
-      boltVisualLabel = '🔴 Patah Terbelah (Fracture)';
+      boltVisualLabel = '[PATAH] Patah Terbelah (Fracture)';
     } else if (liveStressMPa > 250) {
       boltVisualColor = '#f59e0b';
-      boltVisualLabel = '🟡 Zona Plastis (Mulur Permanen)';
+      boltVisualLabel = '[MULUR] Zona Plastis (Mulur Permanen)';
     }
 
     if (calcStressMode === 'sigma') {
@@ -1659,7 +1676,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'A = (π / 4) × d²   ➔   σ = F / A   ➔   SF = σ_izin / σ',
+        main: 'A = (π / 4) × d²   ->   σ = F / A   ->   SF = σ_izin / σ',
         title: 'Tegangan Tarik Aksial Baut (Tegangan Normal σ)',
         description: 'Tegangan tarik adalah intensitas gaya dalam yang timbul per satuan luas penampang material silinder baut untuk menahan tarikan: σ = F / A.',
         terms: ['F = Gaya tarik aksial (N)', 'd = Diameter baut (mm)', 'A = Luas penampang melintang (mm²)', 'σ = Tegangan tarik normal (MPa = N/mm²)', 'SF = Safety Factor (Faktor Keamanan)']
@@ -1688,7 +1705,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           stepNum: 4,
           title: 'Evaluasi Angka Keamanan (Safety Factor SF = σ_izin / σ)',
           math: `SF = ${userStressIzin} MPa ÷ ${sCalc} MPa = ${sf}`,
-          note: sf >= 1.0 ? 'SF ≥ 1.0 ➔ Baut berada di zona elastis aman!' : 'SF < 1.0 ➔ Tegangan melampaui batas aman baja!'
+          note: sf >= 1.0 ? 'SF ≥ 1.0 -> Baut berada di zona elastis aman!' : 'SF < 1.0 -> Tegangan melampaui batas aman baja!'
         }
       ];
 
@@ -1696,17 +1713,17 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${sCalc} MPa`,
         unit: '(N/mm²)',
         subtitle: `Tegangan kerja yang timbul pada penampang baut (SF = ${sf})`,
-        badgeText: sCalc <= 250 ? '🟢 ZONA ELASTIS (AMAN)' : (sCalc <= 450 ? '🟡 ZONA PLASTIS (MULUR PERMANEN)' : '🔴 BAHAYA PATAH PUTUS (FRACTURE)'),
+        badgeText: sCalc <= 250 ? '[AMAN] ZONA ELASTIS' : (sCalc <= 450 ? '[MULUR] ZONA PLASTIS' : '[PATAH] BAHAYA PUTUS'),
         badgeColor: sCalc <= 250 ? '#16a34a' : (sCalc <= 450 ? '#d97706' : '#dc2626'),
         badgeBg: sCalc <= 250 ? '#dcfce7' : (sCalc <= 450 ? '#fef3c7' : '#fee2e2')
       };
 
       workshopInsight = {
         content: sCalc <= 250
-          ? '✅ KONDISI IDEAL & AMAN BENGKEL: Baut masih bekerja di Zona Elastis (Hukum Hooke). Saat baut dikencangkan, baut meregang mikro untuk mengunci kuat, dan bila mur dilepas baut akan kembali ke panjang semula tanpa cacat permanen.'
+          ? '[AMAN] KONDISI IDEAL & AMAN BENGKEL: Baut masih bekerja di Zona Elastis (Hukum Hooke). Saat baut dikencangkan, baut meregang mikro untuk mengunci kuat, dan bila mur dilepas baut akan kembali ke panjang semula tanpa cacat permanen.'
           : (sCalc <= 450
-            ? '⚠️ PERINGATAN BENGKEL: Tegangan melewati batas luluh (Yield Strength)! Baut mengalami deformasi plastis (mulur permanen). Ulir baut akan melar, baut menjadi kendor sendiri saat mesin bergetar, dan tidak boleh digunakan kembali!'
-            : '💥 BAHAYA PATAH CRITICAL: Tegangan melampaui Ultimate Tensile Strength (UTS)! Baut mengalami penyempitan diameter ekstrem (necking) dan patah terbelah dua. Jika ini baut silinder head motor, kompresi akan meledak keluar!')
+            ? '[PERINGATAN] PERINGATAN BENGKEL: Tegangan melewati batas luluh (Yield Strength)! Baut mengalami deformasi plastis (mulur permanen). Ulir baut akan melar, baut menjadi kendor sendiri saat mesin bergetar, dan tidak boleh digunakan kembali!'
+            : '[BAHAYA] BAHAYA PATAH CRITICAL: Tegangan melampaui Ultimate Tensile Strength (UTS)! Baut mengalami penyempitan diameter ekstrem (necking) dan patah terbelah dua. Jika ini baut silinder head motor, kompresi akan meledak keluar!')
       };
     } else if (calcStressMode === 'F_max') {
       const fMax = Math.round(userStressIzin * areaMm2);
@@ -1719,7 +1736,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'A = (π / 4) × d²   ➔   F_max = σ_izin × A',
+        main: 'A = (π / 4) × d²   ->   F_max = σ_izin × A',
         title: 'Kapasitas Beban Tarik Aman Maksimal Baut',
         description: 'Gaya tarik maksimal yang diperbolehkan agar tegangan tidak melampaui tegangan izin bahan baut.',
         terms: ['A = Luas penampang (mm²)', 'σ_izin = Batas tegangan aman baja (MPa)', 'F_max = Beban tarik aman maksimal (N)']
@@ -1756,13 +1773,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${fMax} Newton`,
         unit: `(~${kgFMax} kg)`,
         subtitle: `Beban tarik aman maksimal sebelum baut mengalami kerusakan ulir`,
-        badgeText: '🛡️ BEBAN AMAN MAKSIMAL',
+        badgeText: '[AMAN] BEBAN AMAN MAKSIMAL',
         badgeColor: '#7c3aed',
         badgeBg: '#ede9fe'
       };
 
       workshopInsight = {
-        content: `🔩 APLIKASI BENGKEL: Mengetahui bahwa baut M${userStressD} berdaya tahan maksimal ${fMax} N (~${kgFMax} kg) sangat penting saat memasang Baut Pengait Mesin (Eyebolt) untuk mengangkat mesin dengan crane atau merakit sambungan flens pipa bertekanan tinggi.`
+        content: `[APLIKASI] APLIKASI BENGKEL: Mengetahui bahwa baut M${userStressD} berdaya tahan maksimal ${fMax} N (~${kgFMax} kg) sangat penting saat memasang Baut Pengait Mesin (Eyebolt) untuk mengangkat mesin dengan crane atau merakit sambungan flens pipa bertekanan tinggi.`
       };
     } else {
       const dMin = Number((Math.sqrt((4 * userStressF) / (Math.PI * userStressIzin))).toFixed(2));
@@ -1774,7 +1791,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'A_min = F / σ_izin   ➔   d_min = √[(4 × F) / (π × σ_izin)]',
+        main: 'A_min = F / σ_izin   ->   d_min = √[(4 × F) / (π × σ_izin)]',
         title: 'Diameter Baut Minimal yang Wajib Dipilih (Standard Sizing)',
         description: 'Untuk memastikan baut tidak melar permanen di bawah beban tarik F, luas penampang minimal dihitung dengan membagi gaya terhadap tegangan izin, kemudian mencari diameter minimumnya.',
         terms: ['F = Beban tarik (N)', 'σ_izin = Tegangan izin (MPa)', 'd_min = Diameter baut minimal (mm)']
@@ -1811,13 +1828,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${dMin} mm`,
         unit: `(Pilih Standar M${Math.ceil(dMin)})`,
         subtitle: `Diameter baut minimal yang wajib dipakai untuk menahan beban ${userStressF} N`,
-        badgeText: '📐 DIAMETER BAUT MINIMAL',
+        badgeText: '[STANDAR] DIAMETER BAUT MINIMAL',
         badgeColor: '#7c3aed',
         badgeBg: '#ede9fe'
       };
 
       workshopInsight = {
-        content: `📦 STANDAR TEKNIK MESIN: Di bengkel mesin, baut diproduksi mengikuti standar metrik ISO (M6, M8, M10, M12, M14, M16, dst.). Karena perhitungan menghasilkan ${dMin} mm, teknisi wajib memilih baut dengan diameter nominal sama atau lebih besar, yaitu Baut M${Math.ceil(dMin)}.`
+        content: `[STANDAR] STANDAR TEKNIK MESIN: Di bengkel mesin, baut diproduksi mengikuti standar metrik ISO (M6, M8, M10, M12, M14, M16, dst.). Karena perhitungan menghasilkan ${dMin} mm, teknisi wajib memilih baut dengan diameter nominal sama atau lebih besar, yaitu Baut M${Math.ceil(dMin)}.`
       };
     }
 
@@ -1832,7 +1849,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>📏</span>
+            <ShieldCheck size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#6d28d9' }}>
                 Kalkulator Rumus &amp; Simulator Tegangan Baut (Hukum Hooke)
@@ -1874,13 +1891,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Presets for Bolt Strength */}
         <div style={{ marginBottom: '14px', background: '#f5f3ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#6d28d9', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH KASUS KEKUATAN BAUT (Klik isi otomatis):
+            CONTOH KASUS KEKUATAN BAUT (Klik isi otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '🟢 Baut M8 Tarikan 5 kN (Aman)', f: 5000, d: 8, izin: 250 },
-              { label: '🟡 Baut M10 Tarikan 25 kN (Mulur)', f: 25000, d: 10, izin: 250 },
-              { label: '🔴 Baut M6 Tarikan 20 kN (Patah!)', f: 20000, d: 6, izin: 250 }
+              { label: 'Baut M8 Tarikan 5 kN (Aman)', f: 5000, d: 8, izin: 250 },
+              { label: 'Baut M10 Tarikan 25 kN (Mulur)', f: 25000, d: 10, izin: 250 },
+              { label: 'Baut M6 Tarikan 20 kN (Patah)', f: 20000, d: 6, izin: 250 }
             ].map(s => (
               <button
                 key={s.label}
@@ -2046,7 +2063,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'W = m × g   ➔   F = W / n = W / KM   ➔   s = n × h',
+        main: 'W = m × g   ->   F = W / n = W / KM   ->   s = n × h',
         title: 'Hukum Katrol Majemuk & Takal Rantai (Chain Block)',
         description: 'Pada takal katrol majemuk, setiap utas tali yang menopang katrol bebas berbagi beban secara merata. Gaya tarik tangan berkurang sebesar n kali lipat, namun panjang rantai yang harus ditarik bertambah n kali lipat (Hukum Kekekalan Usaha Mekanik).',
         terms: ['m = Massa beban (kg)', 'W = Gaya berat beban (N)', 'n = Jumlah tali penahan aktif', 'F = Gaya tarik kuasa tangan (N)', 's = Panjang rantai yang ditarik (m)', 'h = Ketinggian angkat beban (m)']
@@ -2089,13 +2106,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${fKg} kg (${fN} N)`,
         unit: 'Gaya Tarik Kuasa',
         subtitle: `Beban mesin ${userPulleyW} kg diringankan ${userPulleyN}× lipat menjadi hanya ${fKg} kg`,
-        badgeText: `🏗️ KEUNTUNGAN MEKANIS ${userPulleyN}×`,
+        badgeText: `[KM] KEUNTUNGAN MEKANIS ${userPulleyN}×`, 
         badgeColor: '#059669',
         badgeBg: '#dcfce7'
       };
 
       workshopInsight = {
-        content: `⚙️ PRAKTIK DI BENGKEL OTOMOTIF & ALAT BERAT: Inilah alasan teknisi bengkel sanggup mengangkat mesin mobil seberat ${userPulleyW} kg sendirian menggunakan Chain Block manual. Dengan sistem ${userPulleyN} utas tali penahan, beban 1 ton terasa setara mengangkat ${fKg} kg. Bila takal dilengkapi sistem roda gigi reduksi (geared hoist), gaya tarik berkurang lagi hingga hanya 15-20 kg saja!`
+        content: `[PRAKTIK] PRAKTIK DI BENGKEL OTOMOTIF & ALAT BERAT: Inilah alasan teknisi bengkel sanggup mengangkat mesin mobil seberat ${userPulleyW} kg sendirian menggunakan Chain Block manual. Dengan sistem ${userPulleyN} utas tali penahan, beban 1 ton terasa setara mengangkat ${fKg} kg. Bila takal dilengkapi sistem roda gigi reduksi (geared hoist), gaya tarik berkurang lagi hingga hanya 15-20 kg saja!`
       };
     } else if (calcPulleyMode === 'W') {
       const wKg = Math.round(userPulleyF * userPulleyN);
@@ -2132,13 +2149,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${wKg} kg (${wN} N)`,
         unit: 'Beban Maksimal',
         subtitle: `Kapasitas angkat maksimal sistem takal dengan tenaga tarik ${userPulleyF} kg`,
-        badgeText: '🏭 KAPASITAS ANGKAT TAKAL',
+        badgeText: '[KAPASITAS] KAPASITAS ANGKAT TAKAL',
         badgeColor: '#059669',
         badgeBg: '#dcfce7'
       };
 
       workshopInsight = {
-        content: `🏗️ RATING CHAIN BLOCK: Takal di bengkel selalu memiliki label Safety Working Load (SWL). Pastikan berat mesin tidak melampaui kapasitas angkat ${wKg} kg agar rantai baja tidak putus dan pengait tidak meregang bengkok!`
+        content: `[RATING] RATING CHAIN BLOCK: Takal di bengkel selalu memiliki label Safety Working Load (SWL). Pastikan berat mesin tidak melampaui kapasitas angkat ${wKg} kg agar rantai baja tidak putus dan pengait tidak meregang bengkok!`
       };
     } else {
       const nCalc = Math.ceil(userPulleyW / Math.max(1, userPulleyF));
@@ -2174,13 +2191,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${nCalc} Utas Tali`,
         unit: `(KM = ${nCalc}×)`,
         subtitle: `Jumlah tali penahan minimal agar tarikan tangan tidak melebihi ${userPulleyF} kg`,
-        badgeText: '📐 KONFIGURASI TALI MINIMAL',
+        badgeText: '[STANDAR] KONFIGURASI TALI MINIMAL',
         badgeColor: '#059669',
         badgeBg: '#dcfce7'
       };
 
       workshopInsight = {
-        content: `⛓️ PEMILIHAN RIGGING BENGKEL: Jika beban ${userPulleyW} kg harus diangkat dengan batas tenaga tarik ${userPulleyF} kg, rigger / teknisi wajib memilih blok katrol dengan minimal ${nCalc} utas tali atau chain block dengan rasio mekanis setara.`
+        content: `[RIGGING] PEMILIHAN RIGGING BENGKEL: Jika beban ${userPulleyW} kg harus diangkat dengan batas tenaga tarik ${userPulleyF} kg, rigger / teknisi wajib memilih blok katrol dengan minimal ${nCalc} utas tali atau chain block dengan rasio mekanis setara.`
       };
     }
 
@@ -2195,7 +2212,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🏗️</span>
+            <Layers size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#065f46' }}>
                 Kalkulator Rumus &amp; Simulator Takal Katrol (Chain Block)
@@ -2237,13 +2254,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Presets for Pulleys */}
         <div style={{ marginBottom: '14px', background: '#f0fdf4', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#065f46', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH PENGANGKATAN BEBAN TAKAL (Klik isi otomatis):
+            CONTOH PENGANGKATAN BEBAN TAKAL (Klik isi otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '⚙️ Genset Bengkel 300 kg (2 Tali ➔ 150 kg)', w: 300, n: 2 },
-              { label: '🏎️ Mesin Mobil 1.000 kg (4 Tali ➔ 250 kg)', w: 1000, n: 4 },
-              { label: '🏭 Mesin Press 2.000 kg (8 Tali ➔ 250 kg)', w: 2000, n: 8 }
+              { label: 'Genset Bengkel 300 kg (2 Tali -> 150 kg)', w: 300, n: 2 },
+              { label: 'Mesin Mobil 1.000 kg (4 Tali -> 250 kg)', w: 1000, n: 4 },
+              { label: 'Mesin Press 2.000 kg (8 Tali -> 250 kg)', w: 2000, n: 8 }
             ].map(p => (
               <button
                 key={p.label}
@@ -2375,7 +2392,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             {/* Free Pulling Rope to Hand (Right) */}
             <line x1="224" y1="28" x2="290" y2="82" stroke="#38bdf8" strokeWidth="2.5" />
             <circle cx="290" cy="82" r="12" fill="#0f172a" stroke="#38bdf8" strokeWidth="2" />
-            <text x="290" y="86" textAnchor="middle" fontSize="11">✋</text>
+            <text x="290" y="86" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="10">F_kuasa</text>
             <text x="290" y="106" textAnchor="middle" fill="#38bdf8" fontSize="8" fontWeight="bold">
               F = {calcPulleyMode === 'F' ? (userPulleyW / Math.max(1, userPulleyN)).toFixed(1) : userPulleyF} kg
             </text>
@@ -2437,7 +2454,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'N = W   ➔   Fs = μ_s × N = μ_s × W',
+        main: 'N = W   ->   Fs = μ_s × N = μ_s × W',
         title: 'Hukum Gesekan Statis Coulomb (Bidang Datar)',
         description: 'Gaya gesek statis bekerja berlawanan arah dengan kecenderungan gerak benda. Benda hanya akan bergeser bila gaya dorong eksternal melampaui gaya gesek statis maksimum (Fs).',
         terms: ['W = Gaya berat benda (N)', 'N = Gaya normal tegak lurus lantai (N)', 'μ_s = Koefisien gesek statis', 'Fs = Gaya gesek statis penahan maksimal (N)']
@@ -2465,7 +2482,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {
           stepNum: 4,
           title: 'Kriteria Status Gerak Benda di Lantai Bengkel',
-          math: `• Dorongan < ${fsCalc} N ➔ Benda DIAM (Gaya gesek mengimbangi dorongan). • Dorongan > ${fsCalc} N ➔ Benda MULAI MELUNCUR BERGERAK!`,
+          math: `• Dorongan < ${fsCalc} N -> Benda DIAM (Gaya gesek mengimbangi dorongan). • Dorongan > ${fsCalc} N -> Benda MULAI MELUNCUR BERGERAK!`,
           note: `Bila dorongan siswa kurang dari ${fsCalc} N, benda tak akan bergerak sedikit pun!`
         }
       ];
@@ -2474,13 +2491,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${fsCalc} Newton`,
         unit: `(~${kgFs} kg)`,
         subtitle: `Gaya dorong minimal yang wajib dikerahkan untuk mulai menggeser benda`,
-        badgeText: fsCalc > 300 ? '🔒 CENGKERAMAN SANGAT KUAT' : (fsCalc > 100 ? '🟡 GESEKAN SEDANG' : '⛸️ SANGAT LICIN'),
+        badgeText: fsCalc > 300 ? '[MANTAP] CENGKERAMAN SANGAT KUAT' : (fsCalc > 100 ? '[SEDANG] GESEKAN SEDANG' : '[LICIN] SANGAT LICIN'),
         badgeColor: '#0284c7',
         badgeBg: '#e0f2fe'
       };
 
       workshopInsight = {
-        content: `🗜️ APLIKASI DI BENGKEL MESIN: Gaya gesek sangat krusial dalam pencekaman ragum mesin frais/milling dan cekam (chuck) mesin bubut. Benda kerja tidak boleh bergeser saat disayat pisau frais. Karena itu, permukaan rahang ragum dibuat bergerigi baja keras untuk meningkatkan nilai koefisien gesek μ_s. Sebaliknya, tumpahan oli pelumas di lantai bengkel menurunkan μ_s ke <0.1, membuat lantai licin dan berbahaya bagi siswa!`
+        content: `[APLIKASI] APLIKASI DI BENGKEL MESIN: Gaya gesek sangat krusial dalam pencekaman ragum mesin frais/milling dan cekam (chuck) mesin bubut. Benda kerja tidak boleh bergeser saat disayat pisau frais. Karena itu, permukaan rahang ragum dibuat bergerigi baja keras untuk meningkatkan nilai koefisien gesek μ_s. Sebaliknya, tumpahan oli pelumas di lantai bengkel menurunkan μ_s ke <0.1, membuat lantai licin dan berbahaya bagi siswa!`
       };
     } else if (calcFrictionMode === 'alpha') {
       const alphaRad = Math.atan(userFrictionMu);
@@ -2491,7 +2508,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       ];
 
       formulaData = {
-        main: 'tan(α_kritis) = μ_s   ➔   α_kritis = arctan(μ_s)',
+        main: 'tan(α_kritis) = μ_s   ->   α_kritis = arctan(μ_s)',
         title: 'Sudut Kritis Kemiringan Ramp (Angle of Repose)',
         description: 'Pada bidang miring, gaya berat terurai menjadi W·sin(α) yang mendorong benda turun dan W·cos(α) yang menekan bidang. Benda mulai meluncur saat gaya pendorong tepat menyamai gaya gesek penahan: W·sin(α) = μ_s·W·cos(α) sehingga tan(α) = μ_s.',
         terms: ['α = Sudut kemiringan ramp (derajat / °)', 'μ_s = Koefisien gesek statis', 'α_kritis = Sudut batas gelincir bebas']
@@ -2501,7 +2518,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {
           stepNum: 1,
           title: 'Persamaan Kesetimbangan Bidang Miring saat Tepat Akan Meluncur',
-          math: `W × sin(α) = μ_s × W × cos(α) ➔ sin(α) / cos(α) = μ_s ➔ tan(α_kritis) = μ_s`,
+          math: `W × sin(α) = μ_s × W × cos(α) -> sin(α) / cos(α) = μ_s -> tan(α_kritis) = μ_s`,
           note: 'Massa benda saling meniadakan (sudut tidak bergantung pada berat benda!)'
         },
         {
@@ -2525,7 +2542,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {
           stepNum: 5,
           title: 'Aturan Keselamatan Penurunan Beban Mesin',
-          math: `• Kemiringan α < ${alphaDeg}° ➔ Benda AMAN DIAM (tidak meluncur). • Kemiringan α > ${alphaDeg}° ➔ Benda LANGSUNG MEROSOT TURUN BEBAS!`,
+          math: `• Kemiringan α < ${alphaDeg}° -> Benda AMAN DIAM (tidak meluncur). • Kemiringan α > ${alphaDeg}° -> Benda LANGSUNG MEROSOT TURUN BEBAS!`,
           note: `Batas kemiringan ramp maksimal sebelum meluncur adalah ${alphaDeg}°`
         }
       ];
@@ -2534,13 +2551,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `${alphaDeg}°`,
         unit: 'Sudut Kritis Kemiringan',
         subtitle: `Batas kemiringan maksimal ramp sebelum benda tergelincir turun tanpa didorong`,
-        badgeText: '📐 SUDUT GELINCIR KRITIS',
+        badgeText: '[KRITIS] SUDUT GELINCIR KRITIS',
         badgeColor: '#0284c7',
         badgeBg: '#e0f2fe'
       };
 
       workshopInsight = {
-        content: `🚚 LOADING MESIN KE BAK TRUK: Saat menurunkan mesin bubut atau genset lewat papan bidang miring (ramp) ke bak truk, pastikan sudut ramp tidak melebihi ${alphaDeg}°. Jika lebih curam dari ${alphaDeg}°, mesin akan langsung meluncur bebas tak terkendali dan membahayakan keselamatan teknisi di bawahnya!`
+        content: `[LOGISTIK] LOADING MESIN KE BAK TRUK: Saat menurunkan mesin bubut atau genset lewat papan bidang miring (ramp) ke bak truk, pastikan sudut ramp tidak melebihi ${alphaDeg}°. Jika lebih curam dari ${alphaDeg}°, mesin akan langsung meluncur bebas tak terkendali dan membahayakan keselamatan teknisi di bawahnya!`
       };
     } else {
       const muCalc = (userFrictionFs / Math.max(1, userFrictionW)).toFixed(3);
@@ -2582,13 +2599,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         value: `μ = ${muCalc}`,
         unit: 'Koefisien Gesek',
         subtitle: `Tingkat kekasaran kontak permukaan bidang kerja`,
-        badgeText: Number(muCalc) > 0.5 ? '🔒 KASAR & MANTAP' : (Number(muCalc) < 0.15 ? '🛢️ LICIN TERLUMASI OLI' : '⚙️ STANDAR KERING'),
+        badgeText: Number(muCalc) > 0.5 ? '[MANTAP] KASAR & TINGGI' : (Number(muCalc) < 0.15 ? '[LICIN] TERLUMASI OLI' : '[STANDAR] KERING'),
         badgeColor: '#0284c7',
         badgeBg: '#e0f2fe'
       };
 
       workshopInsight = {
-        content: `🔍 TRIBOLOGI & PELUMASAN: Di bengkel pemesinan, gesekan tinggi dibutuhkan pada pencekaman ragum/chuck (μ > 0.5), namun gesekan rendah sangat krusial pada eretan meja mesin bubut/milling. Dengan pemberian oli pelumas (slideway oil), nilai μ diturunkan hingga < 0.1 agar eretan meluncur mulus tanpa aus!`
+        content: `[TRIBOLOGI] TRIBOLOGI & PELUMASAN: Di bengkel pemesinan, gesekan tinggi dibutuhkan pada pencekaman ragum/chuck (μ > 0.5), namun gesekan rendah sangat krusial pada eretan meja mesin bubut/milling. Dengan pemberian oli pelumas (slideway oil), nilai μ diturunkan hingga < 0.1 agar eretan meluncur mulus tanpa aus!`
       };
     }
 
@@ -2603,7 +2620,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>📐</span>
+            <Compass size={20} color="#0284c7" />
             <div>
               <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
                 Kalkulator Rumus &amp; Simulator Gesekan (Hukum Coulomb)
@@ -2645,13 +2662,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {/* One-Click Presets for Friction */}
         <div style={{ marginBottom: '14px', background: '#f0f9ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
           <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0369a1', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-            ⚡ CONTOH KONDISI PERMUKAAN BENGKEL (Klik isi otomatis):
+            CONTOH KONDISI PERMUKAAN BENGKEL (Klik isi otomatis):
           </span>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '6px' }}>
             {[
-              { label: '🧱 Besi Karat Kasar (μ = 0.65)', w: 500, mu: 0.65 },
-              { label: '⚙️ Baja Bersih Kering (μ = 0.35)', w: 500, mu: 0.35 },
-              { label: '🛢️ Terlumasi Gemuk Oli (μ = 0.08 Licin!)', w: 500, mu: 0.08 }
+              { label: 'Besi Karat Kasar (μ = 0.65)', w: 500, mu: 0.65 },
+              { label: 'Baja Bersih Kering (μ = 0.35)', w: 500, mu: 0.35 },
+              { label: 'Terlumasi Gemuk Oli (μ = 0.08 Licin)', w: 500, mu: 0.08 }
             ].map(f => (
               <button
                 key={f.label}
@@ -2817,7 +2834,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
   // REUSABLE CASE STUDY CARD RENDERER WITH TECHNICAL SVG ILLUSTRATION
   // ===========================================================================
   const renderCaseStudyCard = ({
-    badge = '📚 STUDI KASUS NYATA BENGKEL MESIN SMK',
+    badge = 'STUDI KASUS NYATA BENGKEL MESIN SMK',
     caseNumber = '1',
     title,
     subtitle,
@@ -2880,7 +2897,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', padding: '0 4px' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              📐 Gambar Ilustrasi Diagram Teknik Kasus:
+              Diagram Ilustrasi Teknik:
             </span>
             <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
               Skema Vektor Gaya, Dimensi Jarak &amp; Titik Kerja
@@ -2898,7 +2915,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           marginBottom: '18px'
         }}>
           <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', marginBottom: '4px' }}>
-            📖 Skenario Masalah Nyata di Bengkel:
+            Skenario Masalah di Bengkel:
           </div>
           <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
             {scenarioText}
@@ -2910,7 +2927,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           {/* Data Diketahui */}
           <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0369a1', textTransform: 'uppercase', marginBottom: '8px' }}>
-              📋 Data Masalah (Diketahui):
+              Data Masalah (Diketahui):
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {givenData.map((item, idx) => (
@@ -2925,7 +2942,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           {/* Pertanyaan Tantangan */}
           <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '10px', border: '1px solid #fde68a' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#b45309', textTransform: 'uppercase', marginBottom: '8px' }}>
-              ❓ Pertanyaan / Tantangan Teknis:
+              Tantangan Teknis:
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {questions.map((q, idx) => (
@@ -2959,7 +2976,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             borderBottom: `4px solid ${themeColor}`
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '1.6rem' }}>✏️</span>
+              <Wrench size={20} color="#0284c7" />
               <div>
                 <div style={{ fontSize: '1.22rem', fontWeight: 900, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#ffffff' }}>
                   Bedah Penyelesaian Lengkap Langkah demi Langkah:
@@ -3029,7 +3046,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
                     alignItems: 'center',
                     gap: '10px'
                   }}>
-                    <span style={{ color: '#0284c7', fontSize: '0.88rem', fontWeight: 900, textTransform: 'uppercase' }}>📐 Rumus:</span>
+                    <span style={{ color: '#0284c7', fontSize: '0.88rem', fontWeight: 900, textTransform: 'uppercase' }}>Rumus:</span>
                     <span style={{ letterSpacing: '0.3px' }}>{sol.formula}</span>
                   </div>
                 )}
@@ -3063,7 +3080,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
                     gap: '10px',
                     boxShadow: '0 2px 6px rgba(22, 163, 74, 0.1)'
                   }}>
-                    <span style={{ fontSize: '1.4rem' }}>🎯</span>
+                    <Target size={20} color="#0284c7" />
                     <span><strong>Hasil Akhir:</strong> {sol.result}</span>
                   </div>
                 )}
@@ -3082,7 +3099,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             padding: '12px 16px'
           }}>
             <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#be123c', marginBottom: '3px' }}>
-              🛡️ ATURAN KERJA &amp; KESELAMATAN BENGKEL (K3):
+              ATURAN KERJA &amp; KESELAMATAN BENGKEL (K3):
             </div>
             <div style={{ fontSize: '0.76rem', color: '#881337', lineHeight: 1.5 }}>
               {workshopSafety}
@@ -3137,7 +3154,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           <line x1="130" y1="210" x2="640" y2="210" stroke="#10b981" strokeWidth="1.5" />
           <line x1="130" y1="203" x2="130" y2="217" stroke="#10b981" strokeWidth="1.5" />
           <line x1="640" y1="203" x2="640" y2="217" stroke="#10b981" strokeWidth="1.5" />
-          <text x="385" y="226" fill="#10b981" fontSize="10" fontWeight="bold" textAnchor="middle">d2 = 120 cm (1,20 meter) ➔ 4x Lebih Panjang!</text>
+          <text x="385" y="226" fill="#10b981" fontSize="10" fontWeight="bold" textAnchor="middle">d2 = 120 cm (1,20 meter) : 4x Lebih Panjang!</text>
           <line x1="640" y1="125" x2="640" y2="65" stroke="#10b981" strokeWidth="3" />
           <polygon points="635,70 640,60 645,70" fill="#10b981" />
           <text x="640" y="52" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F2 = 300 N</text>
@@ -3169,13 +3186,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           title: 'Langkah 1: Menghitung Gaya F1 pada Kunci Standar (d1 = 0,30 m)',
           formula: 'F1 = τ / d1',
           desc: 'F1 = 360 Nm ÷ 0,30 m = 1.200 Newton. Konversi ke beban gravitasi setara: 1.200 N ÷ 9,8 m/s² ≈ 122,4 kg beban otot tangan! Manusia normal tidak mampu menarik beban 122 kg dengan satu tangan.',
-          result: '1.200 Newton (~122,4 kg) ➔ Terlalu berat, baut macet total!'
+          result: '1.200 Newton (~122,4 kg) -> Terlalu berat, baut macet total!'
         },
         {
           title: 'Langkah 2: Menghitung Gaya F2 setelah Menggunakan Pipa Sambung (d2 = 1,20 m)',
           formula: 'F2 = τ / d2',
           desc: 'F2 = 360 Nm ÷ 1,20 m = 300 Newton. Konversi ke beban gravitasi setara: 300 N ÷ 9,8 m/s² ≈ 30,6 kg beban otot tangan. Beban 30 kg dapat ditarik dengan mantap oleh satu siswa dewasa berposisi kuda-kuda kokoh!',
-          result: '300 Newton (~30,6 kg) ➔ Enteng, baut langsung berputar lancar!'
+          result: '300 Newton (~30,6 kg) -> Enteng, baut langsung berputar lancar!'
         },
         {
           title: 'Langkah 3: Perbandingan Rasio Efisiensi Penggandaan Lengan',
@@ -3227,7 +3244,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           {/* Hand vector */}
           <g transform="translate(660, 90)">
             <circle cx="0" cy="-25" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
-            <text x="0" y="-21" fontSize="11" textAnchor="middle">✋</text>
+            <text x="0" y="-21" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="10">F_op</text>
             <line x1="0" y1="-5" x2="0" y2="40" stroke="#10b981" strokeWidth="3" />
             <polygon points="-5,35 0,45 5,35" fill="#10b981" />
             <text x="0" y="60" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F = 326,7 N</text>
@@ -3370,13 +3387,13 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       solutions: [
         {
           title: 'Langkah 1: Menghitung Reaksi RA menggunakan Kesetimbangan Momen di Titik B (ΣMB = 0)',
-          formula: '(RA × L) - (P × b) = 0 ➔ RA = (P × b) / L',
+          formula: '(RA × L) - (P × b) = 0 -> RA = (P × b) / L',
           desc: 'RA × 6,0 m = 12.000 N × 4,0 m = 48.000 Nm. RA = 48.000 ÷ 6,0 = 8.000 Newton (~800 kg). Tumpuan A menanggung 2/3 dari total beban karena posisi mesin lebih dekat ke tiang A.',
           result: 'RA = 8.000 Newton (~800 kg)'
         },
         {
           title: 'Langkah 2: Menghitung Reaksi RB menggunakan Kesetimbangan Gaya Vertikal (ΣFy = 0)',
-          formula: 'RA + RB - P = 0 ➔ RB = P - RA',
+          formula: 'RA + RB - P = 0 -> RB = P - RA',
           desc: 'RB = 12.000 N - 8.000 N = 4.000 Newton (~400 kg). Cek kesetimbangan: RA + RB = 8.000 + 4.000 = 12.000 N (Seimbang sempurna 100%!).',
           result: 'RB = 4.000 Newton (~400 kg)'
         },
@@ -3437,7 +3454,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             σ = F / A = 24.000 N / 113,1 mm² = 212,2 MPa
           </text>
           <text x="0" y="12" fill="#ffffff" fontSize="9" fontWeight="bold" textAnchor="middle">
-            ✅ AMAN! (σ_kerja 212,2 MPa &lt; σ_izin 300 MPa | SF = 1,41)
+            [AMAN] (σ_kerja 212,2 MPa &lt; σ_izin 300 MPa | SF = 1,41)
           </text>
         </g>
       </svg>
@@ -3534,7 +3551,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           <line x1="12" y1="-15" x2="12" y2="65" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,2" />
           <g transform="translate(-12, 50)">
             <circle cx="0" cy="-14" r="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
-            <text x="0" y="-10" fontSize="9" textAnchor="middle">✋</text>
+            <text x="0" y="-10" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="9">F_op</text>
             <line x1="0" y1="0" x2="0" y2="35" stroke="#10b981" strokeWidth="3" />
             <polygon points="-4,30 0,40 4,30" fill="#10b981" />
             <text x="0" y="55" fill="#10b981" fontSize="11" fontWeight="900" textAnchor="middle">F_tangan = 612,5 N</text>
@@ -3638,14 +3655,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           <text x="-125" y="-20" fill="#a7f3d0" fontSize="10" fontWeight="900">1. Papan Kayu Kering (μ = 0,55):</text>
           <text x="-125" y="-3" fill="#ffffff" fontSize="8.5">• Batas Gesek fs,max = 0,55 × 2.664 = 1.465 N</text>
           <text x="-125" y="13" fill="#ffffff" fontSize="8.5">• Wx (1.242 N) &lt; fs,max (1.465 N) | α_kritis = 28,8° &gt; 25°</text>
-          <text x="-125" y="27" fill="#86efac" fontSize="9" fontWeight="900">➔ HASIL: MESIN DIAM AMAN (TIDAK MEROSOT)</text>
+          <text x="-125" y="27" fill="#86efac" fontSize="9" fontWeight="900">[AMAN] HASIL: MESIN DIAM AMAN (TIDAK MEROSOT)</text>
         </g>
         <g transform="translate(560, 175)">
           <rect x="-140" y="-40" width="280" height="75" rx="8" fill="#450a0a" stroke="#dc2626" strokeWidth="1.5" />
           <text x="-125" y="-20" fill="#fca5a5" fontSize="10" fontWeight="900">2. Papan Terkena Oli (μ = 0,15):</text>
           <text x="-125" y="-3" fill="#ffffff" fontSize="8.5">• Batas Gesek fs,max = 0,15 × 2.664 = 399 N</text>
           <text x="-125" y="13" fill="#ffffff" fontSize="8.5">• Wx (1.242 N) &gt;&gt; fs,max (399 N) | α_kritis = 8,5° &lt;&lt; 25°</text>
-          <text x="-125" y="27" fill="#f87171" fontSize="9" fontWeight="900">➔ BAHAYA: MELUNCUR BEBAS (BISA MENIMPA ORANG!)</text>
+          <text x="-125" y="27" fill="#f87171" fontSize="9" fontWeight="900">[BAHAYA] BAHAYA: MELUNCUR BEBAS (BISA MENIMPA ORANG!)</text>
         </g>
       </svg>
     );
@@ -3678,7 +3695,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         {
           title: 'Langkah 2: Analisis Kondisi Papan Kayu Kering (μ = 0,55)',
           formula: 'fs,max = μ_kering × N',
-          desc: 'fs,max = 0,55 × 2.664,5 N = 1.465,5 Newton. Sudut kritis: tan(α_kritis) = 0,55 ➔ α_kritis = arctan(0,55) = 28,8°. Karena sudut kemiringan ramp (25°) masih di bawah sudut kritis (28,8°), dan daya tahan gesek fs,max (1.465,5 N) > Wx (1.242,4 N), maka genset DIAM TERKUNCI AMAN.',
+          desc: 'fs,max = 0,55 × 2.664,5 N = 1.465,5 Newton. Sudut kritis: tan(α_kritis) = 0,55 -> α_kritis = arctan(0,55) = 28,8°. Karena sudut kemiringan ramp (25°) masih di bawah sudut kritis (28,8°), dan daya tahan gesek fs,max (1.465,5 N) > Wx (1.242,4 N), maka genset DIAM TERKUNCI AMAN.',
           result: 'DIAM AMAN (fs,max 1.465,5 N > Wx 1.242,4 N)'
         },
         {
@@ -3736,7 +3753,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               textTransform: 'uppercase',
               color: '#0f172a'
             }}>
-              ⚙️ APPLIED MECHANICS &amp; STATICS
+              APPLIED MECHANICS &amp; STATICS
             </span>
             <span style={{ fontSize: '0.74rem', color: '#e0f2fe' }}>Fisika Terapan &amp; Mekanika Teknik Mesin SMK</span>
           </div>
@@ -3785,14 +3802,14 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
         paddingBottom: '4px'
       }}>
         {[
-          { id: 'torque', label: '🔧 1. Rumus Torsi (τ = F × d)', badge: 'Kunci Pas Baut' },
-          { id: 'lever', label: '🕹️ 2. Rumus Tuas (W·Lb = F·Lk)', badge: 'Pengungkit Mesin' },
-          { id: 'equilibrium', label: '⚖️ 3. Rumus Kesetimbangan (ΣM = 0)', badge: 'Balok Crane' },
-          { id: 'stress', label: '📏 4. Rumus Tegangan (σ = F/A)', badge: 'Baut Silinder' },
-          { id: 'pulley', label: '🏗️ 5. Rumus Katrol (F = W/n)', badge: 'Chain Block 1 Ton' },
-          { id: 'friction', label: '📐 6. Rumus Gesekan (fs = μ·N)', badge: 'Ramp Miring & Oli' },
-          { id: 'calculator', label: '🧮 7. Bank Semua Rumus', badge: 'All-in-One' },
-          { id: 'quiz', label: '🏆 8. Kuis Kasus Bengkel', badge: '+500 XP' }
+          { id: 'torque', label: '1. Rumus Torsi (τ = F × d)', badge: 'Kunci Pas Baut' },
+          { id: 'lever', label: '2. Rumus Tuas (W·Lb = F·Lk)', badge: 'Pengungkit Mesin' },
+          { id: 'equilibrium', label: '3. Rumus Kesetimbangan (ΣM = 0)', badge: 'Balok Crane' },
+          { id: 'stress', label: '4. Rumus Tegangan (σ = F/A)', badge: 'Baut Silinder' },
+          { id: 'pulley', label: '5. Rumus Katrol (F = W/n)', badge: 'Chain Block 1 Ton' },
+          { id: 'friction', label: '6. Rumus Gesekan (fs = μ·N)', badge: 'Ramp Miring & Oli' },
+          { id: 'calculator', label: '7. Bank Semua Rumus', badge: 'All-in-One' },
+          { id: 'quiz', label: '8. Kuis Kasus Bengkel', badge: '+500 XP' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -3922,7 +3939,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
             marginBottom: '20px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '2rem' }}>🧮</span>
+              <Calculator size={32} color="#0284c7" />
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900 }}>
                   Bank Rumus &amp; Kalkulator Pintar Mekanika Teknik
@@ -3959,7 +3976,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
             <div>
               <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-                🏆 Kuis Studi Kasus Praktis Mekanika Teknik
+                Kuis Studi Kasus Praktis Mekanika Teknik
               </h3>
               <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
                 Pecahkan 5 problem mekanika terapan bengkel dan menangkan +500 XP
@@ -3974,7 +3991,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
                 fontWeight: 900,
                 fontSize: '0.88rem'
               }}>
-                Skor: {quizScore} / 100 {quizScore >= 80 ? '🎉 LULUS (+500 XP)' : '⚠️ COBA LAGI'}
+                Skor: {quizScore} / 100 {quizScore >= 80 ? '[LULUS] (+500 XP)' : '[REMEDIAL] COBA LAGI'}
               </div>
             )}
           </div>
@@ -4037,7 +4054,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
                     fontSize: '0.75rem',
                     color: '#334155'
                   }}>
-                    <strong>💡 Pembahasan:</strong> {q.penjelasan}
+                    <strong>[PEMBAHASAN] Pembahasan:</strong> {q.penjelasan}
                   </div>
                 )}
               </div>
@@ -4057,7 +4074,7 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
               cursor: 'pointer'
             }}
           >
-            📝 SUBMIT JAWABAN KUIS &amp; KLAIM 500 XP
+            SUBMIT JAWABAN KUIS &amp; KLAIM 500 XP
           </button>
         </div>
       )}

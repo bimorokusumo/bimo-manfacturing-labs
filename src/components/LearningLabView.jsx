@@ -1,5 +1,15 @@
 import React from 'react';
 import { getAssetUrl } from '../utils/assets';
+import {
+  BookOpen,
+  Layers,
+  Flame,
+  Compass,
+  Sliders,
+  ShieldAlert,
+  Zap,
+  ShieldCheck
+} from 'lucide-react';
 
 const LearningLabView = ({ onSelectLab }) => {
   return (
@@ -12,7 +22,7 @@ const LearningLabView = ({ onSelectLab }) => {
           
           <div onClick={() => onSelectLab('dashboard')} className="game-card" style={{ cursor: 'pointer', background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
             <div style={{ height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ fontSize: '3rem' }}>📖</div>
+              <BookOpen size={44} color="#0284c7" />
             </div>
             <div style={{ padding: '16px', borderTop: '1px solid var(--border-light)', background: 'var(--bg-card)' }}>
               <h4 style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 700, marginBottom: '4px' }}>Learning<br/>Lab</h4>
@@ -77,18 +87,18 @@ const LearningLabView = ({ onSelectLab }) => {
           <div style={{ position: 'absolute', top: '40px', left: '40px', right: '40px', height: '2px', background: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
 
           {[
-            { num: 1, title: 'Pilih Material', icon: '🧊' },
-            { num: 2, title: 'Jenis Pengelasan', icon: '🔥' },
-            { num: 3, title: 'Posisi Pengelasan', icon: '📐' },
-            { num: 4, title: 'Setting Parameter', icon: '🎛️' },
-            { num: 5, title: 'Safety Check', icon: '🦺' },
-            { num: 6, title: 'Proses Pengelasan', icon: '⚡' },
-            { num: 7, title: 'Hasil & Evaluasi', icon: '🛡️' }
+            { num: 1, title: 'Pilih Material', Icon: Layers },
+            { num: 2, title: 'Jenis Pengelasan', Icon: Flame },
+            { num: 3, title: 'Posisi Pengelasan', Icon: Compass },
+            { num: 4, title: 'Setting Parameter', Icon: Sliders },
+            { num: 5, title: 'Safety Check', Icon: ShieldAlert },
+            { num: 6, title: 'Proses Pengelasan', Icon: Zap },
+            { num: 7, title: 'Hasil & Evaluasi', Icon: ShieldCheck }
           ].map((step, idx) => (
             <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', zIndex: 1 }}>
               <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 700 }}>{step.num}</div>
-              <div style={{ width: '80px', height: '80px', background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '2rem', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
-                {step.icon}
+              <div style={{ width: '80px', height: '80px', background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
+                <step.Icon size={32} color="#38bdf8" />
               </div>
               <div style={{ color: 'var(--text-subtle)', fontSize: '0.75rem', textAlign: 'center', maxWidth: '80px', lineHeight: 1.2 }}>{step.title}</div>
             </div>

@@ -89,7 +89,7 @@ const Milling2D = ({
           boxShadow: '0 4px 14px rgba(0,0,0,0.25)', pointerEvents: 'none'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#fbbf24', fontSize: '0.76rem', fontWeight: 800 }}>
-            <span>📐 GARIS TARGET FRAIS:</span>
+            <span>[TARGET] GARIS TARGET FRAIS:</span>
             <span style={{ color: '#ffffff' }}>{activeJobsheet.title}</span>
           </div>
           <div style={{ color: '#94a3b8', fontSize: '0.67rem', marginTop: '2px', display: 'flex', gap: '8px' }}>
@@ -224,7 +224,7 @@ const Milling2D = ({
                     textAnchor="middle"
                     fontFamily="monospace"
                   >
-                    {isDone ? '✓ ' : '🎯 '}{region.label}
+                    {isDone ? '[OK] ' : '[TARGET] '}{region.label}
                   </text>
                 </g>
               </g>
@@ -282,9 +282,9 @@ const Milling2D = ({
         </div>
         <div style={{ color: isPenetrating ? '#f59e0b' : isContacting ? '#10b981' : '#64748b', fontSize: '0.75rem', marginTop: '2px', fontWeight: 700 }}>
           {isPenetrating
-            ? `⚡ KONDISI: MENYAYAT MATERIAL (${Math.abs(spindlePosition.z).toFixed(2)} mm)`
+            ? `[CUT] KONDISI: MENYAYAT MATERIAL (${Math.abs(spindlePosition.z).toFixed(2)} mm)`
             : isContacting
-            ? '✓ KONDISI: MENYENTUH TITIK NOL (Z=0.00 mm)'
+            ? '[OK] KONDISI: MENYENTUH TITIK NOL (Z=0.00 mm)'
             : '▲ KONDISI: DI UDARA / AMAN'}
         </div>
       </div>

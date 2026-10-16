@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RotateCw, Smartphone } from 'lucide-react';
 
 const MobileRotatePrompt = () => {
   const [isPortraitMobile, setIsPortraitMobile] = useState(false);
@@ -61,7 +62,6 @@ const MobileRotatePrompt = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
         <div
           style={{
-            fontSize: '1.6rem',
             width: '38px',
             height: '38px',
             borderRadius: '10px',
@@ -72,11 +72,12 @@ const MobileRotatePrompt = () => {
             flexShrink: 0
           }}
         >
-          🔄
+          <RotateCw size={20} className="text-amber-400" />
         </div>
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.3px' }}>
-            DUKUNGAN HP PORTRAIT &amp; LANDSCAPE 📱
+          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.3px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Smartphone size={14} />
+            <span>DUKUNGAN HP PORTRAIT &amp; LANDSCAPE</span>
           </div>
           <div style={{ fontSize: '0.74rem', color: '#e2e8f0', marginTop: '2px', lineHeight: 1.3 }}>
             Tampilan otomatis responsif: gunakan mode <strong>Tegak (Portrait)</strong> atau miringkan ke <strong>Mendatar (Landscape)</strong>!

@@ -1,7 +1,26 @@
+import {
+  Calculator, Settings, CheckCircle2, Zap, RotateCcw, Clock,
+  Compass, Ruler, FileText, BookOpen, Lightbulb, Target,
+  BarChart3, HelpCircle, ArrowRight
+} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 
 // Database Standar Kecepatan Potong (Cutting Speed Vc / Cs) untuk Mesin Bubut SMK
+
+const getFormulaTabIcon = (id) => {
+  switch (id) {
+    case 'cutting-speed': return <Zap size={14} />;
+    case 'spindle': return <RotateCcw size={14} />;
+    case 'time': return <Clock size={14} />;
+    case 'taper': return <Compass size={14} />;
+    case 'doc-mrr': return <Ruler size={14} />;
+    case 'examples': return <FileText size={14} />;
+    case 'glossary': return <BookOpen size={14} />;
+    default: return <Calculator size={14} />;
+  }
+};
+
 export const CS_DATABASE = [
   {
     material: 'Baja Lunak / Karbon Rendah (St 37 / Mild Steel)',
@@ -231,7 +250,7 @@ const LatheFormulaView = ({
             fontSize: '2rem',
             boxShadow: '0 6px 20px rgba(56, 189, 248, 0.4)'
           }}>
-            📐
+            <Calculator className="w-5 h-5 text-white" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -267,7 +286,7 @@ const LatheFormulaView = ({
               transition: 'all 0.2s'
             }}
           >
-            <span>⚙️ Menuju Proses Pemotongan</span> →
+            <span className="flex items-center gap-1.5"><Settings size={14} className="text-sky-400" /> Menuju Proses Pemotongan <ArrowRight size={14} /></span>
           </button>
         )}
       </div>
@@ -285,7 +304,7 @@ const LatheFormulaView = ({
           alignItems: 'center',
           gap: '10px'
         }}>
-          <span>✅</span> {appliedNotice}
+          <CheckCircle2 size={16} className="text-emerald-400 inline mr-1" /> {appliedNotice}
         </div>
       )}
 
@@ -300,13 +319,13 @@ const LatheFormulaView = ({
         border: '1px solid #1e293b'
       }}>
         {[
-          { id: 'cutting-speed', label: '1. Kecepatan Potong (Cutting Speed / Vc)', icon: '⚡' },
-          { id: 'spindle', label: '2. Putaran Mesin / Spindel (n / RPM)', icon: '🔄' },
-          { id: 'time', label: '3. Gerak Makan & Waktu Sayat (F & Tc)', icon: '⏱️' },
-          { id: 'taper', label: '4. Pembubutan Tirus Sederhana', icon: '📐' },
-          { id: 'doc-mrr', label: '5. Kedalaman Potong Radial (a)', icon: '📏' },
-          { id: 'examples', label: '6. Studi Kasus Dasar (Kelas 10 SMK)', icon: '📝' },
-          { id: 'glossary', label: '7. Glosarium Simbol & Tabel Standar', icon: '📚' }
+          { id: 'cutting-speed', label: '1. Kecepatan Potong (Cutting Speed / Vc)' },
+          { id: 'spindle', label: '2. Putaran Mesin / Spindel (n / RPM)' },
+          { id: 'time', label: '3. Gerak Makan & Waktu Sayat (F & Tc)' },
+          { id: 'taper', label: '4. Pembubutan Tirus Sederhana' },
+          { id: 'doc-mrr', label: '5. Kedalaman Potong Radial (a)' },
+          { id: 'examples', label: '6. Studi Kasus Dasar (Kelas 10 SMK)' },
+          { id: 'glossary', label: '7. Glosarium Simbol & Tabel Standar' }
         ].map(tab => (
           <button
             key={tab.id}
@@ -328,7 +347,7 @@ const LatheFormulaView = ({
               transition: 'all 0.2s'
             }}
           >
-            <span>{tab.icon}</span>
+            <span>{getFormulaTabIcon(tab.id)}</span>
             <span>{tab.label}</span>
           </button>
         ))}
@@ -343,7 +362,7 @@ const LatheFormulaView = ({
           {/* DEFINISI & ASAL USUL RUMUS CUTTING SPEED */}
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-              <span style={{ fontSize: '1.6rem' }}>⚡</span>
+              <Zap size={24} className="text-amber-400" />
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#38bdf8', margin: 0 }}>
                   RUMUS KECEPATAN POTONG (CUTTING SPEED - Vc atau Cs)
@@ -414,7 +433,7 @@ const LatheFormulaView = ({
             {/* KALKULATOR INTERAKTIF Vc */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>🧮</span> Kalkulator Menghitung Cutting Speed (Vc)
+                <Calculator size={16} className="inline mr-1 text-sky-400" /> Kalkulator Menghitung Cutting Speed (Vc)
               </h4>
 
               <div style={{ marginBottom: '16px' }}>
@@ -479,7 +498,7 @@ const LatheFormulaView = ({
             {/* TABEL STANDAR Vc KELAS 10 YANG MUDAH DIINGAT */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', margin: '0 0 12px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>📚</span> Patokan Nilai Vc Sederhana untuk Kelas 10 SMK
+                <BookOpen size={16} className="inline mr-1 text-sky-400" /> Patokan Nilai Vc Sederhana untuk Kelas 10 SMK
               </h4>
               <p style={{ fontSize: '0.82rem', color: '#cbd5e1', margin: '0 0 14px 0' }}>
                 Di bengkel sekolah, siswa kelas 10 umumnya menggunakan <strong>Pahat HSS</strong>. Ingat angka-angka patokan dasar berikut saat praktik:
@@ -501,7 +520,7 @@ const LatheFormulaView = ({
                       </span>
                     </div>
                     <div style={{ fontSize: '0.78rem', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
-                      <span>💡 {row.note}</span>
+                      <span className="flex items-center gap-1"><Lightbulb size={13} className="text-amber-400 inline" /> {row.note}</span>
                       <span style={{ color: '#10b981' }}>Karbida: {row.carbide}</span>
                     </div>
                   </div>
@@ -521,7 +540,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              🔄 Rumus Kecepatan Putaran Spindel (n / RPM)
+              <RotateCcw size={16} className="inline mr-1 text-sky-400" /> Rumus Kecepatan Putaran Spindel (n / RPM)
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
               Dari rumus kecepatan potong Vc = (π × d × n) / 1000, kita balik rumusnya untuk mencari nilai <strong>n (putaran spindel per menit / RPM)</strong> yang harus disetel pada tuas mesin bubut:
@@ -536,7 +555,7 @@ const LatheFormulaView = ({
             {/* INPUT PANEL */}
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Tentukan Putaran Mesin untuk Pekerjaan Anda
+                <Settings size={16} className="inline mr-1 text-sky-400" /> Tentukan Putaran Mesin untuk Pekerjaan Anda
               </h4>
 
               <div style={{ marginBottom: '16px' }}>
@@ -630,7 +649,7 @@ const LatheFormulaView = ({
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981', margin: '0 0 16px 0' }}>
-                  🎯 Langkah Perhitungan & Penyetelan Tuas Mesin
+                  <Target size={16} className="inline mr-1 text-sky-400" /> Langkah Perhitungan & Penyetelan Tuas Mesin
                 </h4>
 
                 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
@@ -672,7 +691,7 @@ const LatheFormulaView = ({
                     transition: 'all 0.2s'
                   }}
                 >
-                  <span>⚡ Terapkan {nearestStandardRpm} RPM ke Simulator Pemotongan</span>
+                  <span className="flex items-center gap-1.5"><Zap size={14} className="text-amber-400" /> Terapkan {nearestStandardRpm} RPM ke Simulator Pemotongan</span>
                 </button>
               </div>
             </div>
@@ -689,7 +708,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              ⏱️ Kecepatan Pemakanan (F) dan Waktu Pembubutan (Tc)
+              <Clock size={16} className="inline mr-1 text-sky-400" /> Kecepatan Pemakanan (F) dan Waktu Pembubutan (Tc)
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
               • <strong>Kecepatan Pemakanan (F):</strong> Kecepatan gerak maju eretan memanjang secara otomatis dalam satuan <strong>mm/menit</strong>. Rumus: <strong>F = f × n</strong>.<br />
@@ -701,7 +720,7 @@ const LatheFormulaView = ({
             
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Parameter Pengerjaan
+                <Settings size={16} className="inline mr-1 text-sky-400" /> Parameter Pengerjaan
               </h4>
 
               <div style={{ marginBottom: '14px' }}>
@@ -759,7 +778,7 @@ const LatheFormulaView = ({
                 </div>
               ) : (
                 <div style={{ marginBottom: '14px', background: '#1e293b', padding: '10px', borderRadius: '8px', fontSize: '0.8rem', color: '#fde68a' }}>
-                  💡 Pada pembubutan muka (facing), panjang langkah adalah jari-jari: <strong>d/2 = {validD / 2} mm</strong>.
+                  <Lightbulb size={14} className="inline mr-1 text-amber-400" /> Pada pembubutan muka (facing), panjang langkah adalah jari-jari: <strong>d/2 = {validD / 2} mm</strong>.
                 </div>
               )}
 
@@ -793,7 +812,7 @@ const LatheFormulaView = ({
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', margin: '0 0 16px 0' }}>
-                  📊 Hasil Kecepatan Makan & Waktu Sayat
+                  <BarChart3 size={16} className="inline mr-1 text-sky-400" /> Hasil Kecepatan Makan & Waktu Sayat
                 </h4>
 
                 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
@@ -826,7 +845,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              📐 Rumus Pembubutan Tirus (Penggeseran Eretan Atas)
+              <Compass size={16} className="inline mr-1 text-sky-400" /> Rumus Pembubutan Tirus (Penggeseran Eretan Atas)
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
               Untuk siswa kelas 10, metode tirus yang paling dasar adalah dengan <strong>memutar eretan atas (top slide)</strong> sebesar sudut setengah tirus:
@@ -840,7 +859,7 @@ const LatheFormulaView = ({
             
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
               <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 16px 0' }}>
-                ⚙️ Ukuran Benda Tirus dari Gambar
+                <Settings size={16} className="inline mr-1 text-sky-400" /> Ukuran Benda Tirus dari Gambar
               </h4>
 
               <div style={{ marginBottom: '14px' }}>
@@ -877,7 +896,7 @@ const LatheFormulaView = ({
             <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981', margin: '0 0 16px 0' }}>
-                  🎯 Hasil Perhitungan Derajat Eretan Atas
+                  <Target size={16} className="inline mr-1 text-sky-400" /> Hasil Perhitungan Derajat Eretan Atas
                 </h4>
 
                 <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', fontFamily: 'monospace', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '16px' }}>
@@ -913,7 +932,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              📏 Tebal Sayatan / Kedalaman Potong Radial (Depth of Cut - a)
+              <Ruler size={16} className="inline mr-1 text-sky-400" /> Tebal Sayatan / Kedalaman Potong Radial (Depth of Cut - a)
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, margin: 0 }}>
               Pada mesin bubut, benda kerja berbentuk silinder. Setiap pahat masuk sejauh <strong>1 mm (secara radial)</strong>, maka diameter benda kerja akan berkurang sebesar <strong>2 mm</strong>. Rumus: <strong>a = (D0 - D1) / 2</strong>.
@@ -967,7 +986,7 @@ const LatheFormulaView = ({
               </div>
 
               <div style={{ background: '#1e293b', padding: '12px 14px', borderRadius: '10px', fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5 }}>
-                💡 <strong>Tips Aman Kelas 10:</strong> Jangan memakan terlalu dalam saat pertama kali membubut. Untuk sayatan kasar (*roughing*) cukup 1.0 mm per langkah, dan untuk sayatan halus (*finishing*) sisakan 0.2 mm agar permukaan halus dan tidak bergetar.
+                <Lightbulb size={14} className="inline mr-1 text-amber-400" /> <strong>Tips Aman Kelas 10:</strong> Jangan memakan terlalu dalam saat pertama kali membubut. Untuk sayatan kasar (*roughing*) cukup 1.0 mm per langkah, dan untuk sayatan halus (*finishing*) sisakan 0.2 mm agar permukaan halus dan tidak bergetar.
               </div>
             </div>
           </div>
@@ -982,7 +1001,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '1.6rem' }}>📝</span>
+              <FileText size={24} className="text-sky-400" />
               <h3 style={{ fontSize: '1.3rem', fontWeight: 900, color: '#38bdf8', margin: 0 }}>
                 5 STUDI KASUS DASAR BENGKEL (KHUSUS KELAS 10 SMK FASE E)
               </h3>
@@ -1076,25 +1095,25 @@ const LatheFormulaView = ({
 
               {/* CERITA KASUS */}
               <div style={{ background: '#1e293b', padding: '14px 16px', borderRadius: '10px', fontSize: '0.88rem', color: '#e2e8f0', lineHeight: 1.6, marginBottom: '14px' }}>
-                <strong>📖 Situasi Kasus di Bengkel:</strong><br />
+                <strong><BookOpen size={14} className="inline mr-1 text-sky-400" /> Situasi Kasus di Bengkel:</strong><br />
                 {item.story}
               </div>
 
               {/* GRID DIKETAHUI, DITANYA, RUMUS */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '14px' }}>
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #38bdf8' }}>
-                  <div style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800 }}>📋 DIKETAHUI:</div>
+                  <div style={{ fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800 }}>[DATA] DIKETAHUI:</div>
                   <div style={{ fontSize: '0.82rem', color: '#cbd5e1', whiteSpace: 'pre-line', marginTop: '4px', fontFamily: 'monospace' }}>
                     {item.given}
                   </div>
                 </div>
 
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', borderLeft: '3px solid #f59e0b' }}>
-                  <div style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 800 }}>❓ DITANYAKAN:</div>
+                  <div style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 800 }}>[TARGET] DITANYAKAN:</div>
                   <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '4px' }}>
                     {item.asked}
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#10b981', fontWeight: 800, marginTop: '8px' }}>💡 RUMUS DASAR:</div>
+                  <div style={{ fontSize: '0.78rem', color: '#10b981', fontWeight: 800, marginTop: '8px' }}>[FORMULA] RUMUS DASAR:</div>
                   <div style={{ fontSize: '0.88rem', color: '#6ee7b7', fontWeight: 900, fontFamily: 'monospace', marginTop: '2px' }}>
                     {item.formula}
                   </div>
@@ -1104,7 +1123,7 @@ const LatheFormulaView = ({
               {/* LANGKAH PERHITUNGAN */}
               <div style={{ background: '#020617', padding: '14px', borderRadius: '10px', border: '1px solid #1e293b', marginBottom: '14px' }}>
                 <div style={{ fontSize: '0.78rem', color: '#93c5fd', fontWeight: 800, textTransform: 'uppercase', marginBottom: '6px' }}>
-                  ✏️ Langkah Perhitungan Matematis:
+                  <FileText size={14} className="inline mr-1 text-sky-400" /> Langkah Perhitungan Matematis:
                 </div>
                 {item.steps.map((st, sIdx) => (
                   <div key={sIdx} style={{ fontSize: '0.84rem', color: '#f8fafc', fontFamily: 'monospace', padding: '3px 0' }}>
@@ -1115,7 +1134,7 @@ const LatheFormulaView = ({
 
               {/* KESIMPULAN PENYETELAN MESIN NYATA */}
               <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1.5px solid #10b981', padding: '12px 16px', borderRadius: '10px', fontSize: '0.85rem', color: '#6ee7b7', lineHeight: 1.5 }}>
-                🎯 <strong>Kesimpulan & Penyetelan Mesin Nyata:</strong> {item.conclusion}
+                <Target size={14} className="inline mr-1 text-sky-400" /> <strong>Kesimpulan & Penyetelan Mesin Nyata:</strong> {item.conclusion}
               </div>
             </div>
           ))}
@@ -1131,7 +1150,7 @@ const LatheFormulaView = ({
           
           <div style={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '16px', padding: '22px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', margin: '0 0 10px 0' }}>
-              📚 Glosarium Lambang & Satuan Standar Pemesinan Bubut
+              <BookOpen size={16} className="inline mr-1 text-sky-400" /> Glosarium Lambang & Satuan Standar Pemesinan Bubut
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: 0 }}>
               Daftar lambang besaran internasional yang harus dipahami oleh siswa SMK Teknik Pemesinan.

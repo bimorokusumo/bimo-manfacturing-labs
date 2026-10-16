@@ -1,4 +1,5 @@
 import React from 'react';
+import { Cog, RotateCw, Layers, Home } from 'lucide-react';
 
 export class CanvasErrorBoundary extends React.Component {
   constructor(props) {
@@ -40,7 +41,9 @@ export class CanvasErrorBoundary extends React.Component {
           border: '1px solid rgba(245, 158, 11, 0.35)',
           boxShadow: 'inset 0 0 30px rgba(0,0,0,0.5)'
         }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>⚙️</div>
+          <div style={{ marginBottom: '14px', color: '#f59e0b' }}>
+            <Cog size={44} className="animate-spin-slow" />
+          </div>
           <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f59e0b', marginBottom: '8px' }}>
             {this.props.title || 'Akselerasi Grafis 3D Membutuhkan Muat Ulang'}
           </div>
@@ -59,10 +62,14 @@ export class CanvasErrorBoundary extends React.Component {
                 fontWeight: 700,
                 fontSize: '0.85rem',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
+                boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              🔄 Muat Ulang Tampilan 3D
+              <RotateCw size={15} />
+              <span>Muat Ulang Tampilan 3D</span>
             </button>
             {this.props.onFallbackMode && (
               <button
@@ -75,10 +82,14 @@ export class CanvasErrorBoundary extends React.Component {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   fontWeight: 600,
                   fontSize: '0.85rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
-                📐 Beralih ke Mode 2D
+                <Layers size={15} />
+                <span>Beralih ke Mode 2D</span>
               </button>
             )}
           </div>
@@ -129,7 +140,9 @@ class ErrorBoundary extends React.Component {
             boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>⚙️</div>
+            <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+              <Cog size={48} color="#f87171" />
+            </div>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#f87171', marginBottom: '12px' }}>
               Terjadi Kendala Memuat Halaman
             </h2>
@@ -171,10 +184,14 @@ class ErrorBoundary extends React.Component {
                   borderRadius: '10px',
                   fontWeight: 700,
                   fontSize: '0.92rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px'
                 }}
               >
-                🔄 Muat Ulang Halaman
+                <RotateCw size={16} />
+                <span>Muat Ulang Halaman</span>
               </button>
               <button
                 onClick={() => {
@@ -193,10 +210,14 @@ class ErrorBoundary extends React.Component {
                   borderRadius: '10px',
                   fontWeight: 700,
                   fontSize: '0.92rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px'
                 }}
               >
-                🏠 Kembali ke Dashboard
+                <Home size={16} />
+                <span>Kembali ke Dashboard</span>
               </button>
               <button
                 onClick={() => {

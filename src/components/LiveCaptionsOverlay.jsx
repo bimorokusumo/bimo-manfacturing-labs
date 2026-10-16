@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { Volume2, Play, Pause, Square, X } from 'lucide-react';
 
 const LiveCaptionsOverlay = () => {
   const {
@@ -54,10 +55,9 @@ const LiveCaptionsOverlay = () => {
             borderRadius: '50%',
             background: 'var(--game-primary, #f59e0b)',
             color: '#000',
-            fontSize: '12px',
             fontWeight: 900
           }}>
-            🔊
+            <Volume2 size={13} />
           </span>
           <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#fcd34d', letterSpacing: '0.3px' }}>
             {currentNarrativeTitle || 'Audio Narator Inklusi'}
@@ -93,7 +93,17 @@ const LiveCaptionsOverlay = () => {
             }}
             title={isPaused ? "Lanjutkan Audio" : "Jeda Audio"}
           >
-            {isPaused ? '▶️ Lanjut' : '⏸️ Jeda'}
+            {isPaused ? (
+              <>
+                <Play size={11} fill="currentColor" />
+                <span>Lanjut</span>
+              </>
+            ) : (
+              <>
+                <Pause size={11} fill="currentColor" />
+                <span>Jeda</span>
+              </>
+            )}
           </button>
 
           {/* Stop Button */}
@@ -107,11 +117,15 @@ const LiveCaptionsOverlay = () => {
               fontWeight: 700,
               padding: '4px 10px',
               borderRadius: '6px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
             title="Hentikan Audio"
           >
-            ⏹️ Berhenti
+            <Square size={11} fill="currentColor" />
+            <span>Berhenti</span>
           </button>
 
           {/* Tutup Subtitle */}
@@ -121,14 +135,15 @@ const LiveCaptionsOverlay = () => {
               background: 'transparent',
               border: 'none',
               color: 'rgba(255,255,255,0.6)',
-              fontSize: '14px',
               padding: '2px 6px',
               cursor: 'pointer',
-              marginLeft: '4px'
+              marginLeft: '4px',
+              display: 'flex',
+              alignItems: 'center'
             }}
             title="Sembunyikan Teks Subtitle"
           >
-            ✕
+            <X size={14} />
           </button>
         </div>
       </div>

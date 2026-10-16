@@ -19,7 +19,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'machine',
     title: 'Diagnostik Machine Lab (Bubut, Frais & CNC)',
     shortTitle: 'Machine Lab',
-    icon: '⚙️',
+    icon: '[MESIN]',
     badge: 'Pemesinan',
     desc: 'Diagnosa kesiapan pengoperasian mesin bubut, penentuan RPM & pemakanan, ragum frais, geometri pahat, dan kode dasar CNC.'
   },
@@ -27,7 +27,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'cutting-tools',
     title: 'Diagnostik Alat Pemotong (Cutting Tools)',
     shortTitle: 'Alat Pemotong',
-    icon: '🔪',
+    icon: '[PAHAT]',
     badge: 'Perkakas Potong',
     desc: 'Diagnosa material pahat HSS vs Karbida, sudut bor 118°, tap & snei, reamer toleransi presisi, dan mata pisau frais.'
   },
@@ -35,7 +35,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'heat-treatment',
     title: 'Diagnostik Heat Treatment & Metalurgi',
     shortTitle: 'Heat Treatment',
-    icon: '🔥',
+    icon: '[TERMAL]',
     badge: 'Termal Logam',
     desc: 'Diagnosa proses hardening, laju quenching, tempering keuletan, annealing pelunakan, normalizing, dan 7-bak blackening.'
   },
@@ -43,7 +43,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'mechanics',
     title: 'Diagnostik Mekanika Teknik & Statika Terapan',
     shortTitle: 'Mekanika Teknik',
-    icon: '🔧',
+    icon: '[MEKANIK]',
     badge: 'Statika Mesin',
     desc: 'Diagnosa perhitungan momen gaya & torsi baut, keuntungan mekanis tuas kelas 1-3, kesetimbangan tumpuan, dan tegangan-regangan.'
   },
@@ -51,7 +51,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'welding',
     title: 'Diagnostik Welding Lab (Las Busur SMAW)',
     shortTitle: 'Welding Lab',
-    icon: '⚡',
+    icon: '[LAS]',
     badge: 'Fabrikasi Las',
     desc: 'Diagnosa prinsip las busur manual SMAW, kode elektroda AWS E6013, pengaturan ampere, sudut elektroda, dan mitigasi cacat las.'
   },
@@ -59,7 +59,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'measuring',
     title: 'Diagnostik Alat Ukur Presisi (Metrologi Industri)',
     shortTitle: 'Alat Ukur Presisi',
-    icon: '📏',
+    icon: '[UKUR]',
     badge: 'Metrologi',
     desc: 'Diagnosa pembacaan jangka sorong 0.05 & 0.02 mm, mikrometer sekrup 0.01 mm, kalibrasi nol, dial indicator, dan toleransi ISO.'
   },
@@ -67,7 +67,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'design',
     title: 'Diagnostik Design Lab & Gambar Teknik Mesin',
     shortTitle: 'Design Lab',
-    icon: '📐',
+    icon: '[CAD]',
     badge: 'CAD & Gambar Teknik',
     desc: 'Diagnosa proyeksi Amerika vs Eropa, aturan garis ISO, potongan sayatan, toleransi geometris GD&T, simbol kekasaran Ra, dan dasar CAD.'
   },
@@ -75,7 +75,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'safety',
     title: 'Diagnostik Safety Lab, K3LH & Budaya 5R',
     shortTitle: 'Safety Lab',
-    icon: '🛡️',
+    icon: '[K3]',
     badge: 'K3LH & Budaya Industri',
     desc: 'Diagnosa bahaya mekanik bengkel mesin, APD wajib, larangan sarung tangan, prosedur APAR PASS kelas kebakaran, dan 5R Seiri-Shitsuke.'
   },
@@ -83,7 +83,7 @@ export const DIAGNOSTIC_CATEGORIES = {
     id: 'virtual-bengkel',
     title: 'Diagnostik Virtual Bengkel 3D & Workshop',
     shortTitle: 'Virtual Bengkel 3D',
-    icon: '🏭',
+    icon: '[BENGKEL]',
     badge: 'Manajemen Workshop',
     desc: 'Diagnosa tata letak bengkel, safety line, penanganan tatal beram, tombol emergency stop, jalur evakuasi, dan checklist harian mesin.'
   }

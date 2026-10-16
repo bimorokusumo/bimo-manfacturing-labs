@@ -1,3 +1,8 @@
+import {
+  Wrench, Crosshair, Settings, Sparkles, FileText,
+  AlertTriangle, ShieldAlert, Key, CheckCircle, RotateCcw,
+  Award, Lightbulb, Ruler, Calculator, Shield, Zap
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -224,7 +229,7 @@ export default function BenchToolsModule() {
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            🔨
+            <Wrench className="w-8 h-8 text-white" />
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -253,12 +258,12 @@ export default function BenchToolsModule() {
         {/* Sub-kategori Navigasi */}
         <div style={{ display: 'flex', gap: '8px', marginTop: '20px', overflowX: 'auto', paddingBottom: '4px' }}>
           {[
-            { id: 'kikir_gergaji', label: '🪚 Kikir & Gergaji Besi', icon: '🪚' },
-            { id: 'pahat_penandaan', label: '📐 Pahat, Penitik & Penggores', icon: '📐' },
-            { id: 'tap_snei', label: '🔩 Tap & Snei (Ulir Presisi)', icon: '🔩' },
-            { id: 'mesin_bor', label: '⚙️ Mesin Bor Meja', icon: '⚙️' },
-            { id: 'gerinda_ragum', label: '✨ Gerinda Duduk & Ragum', icon: '✨' },
-            { id: 'evaluasi_kuis', label: '📝 Uji Kompetensi Perkakas', icon: '📝' }
+            { id: 'kikir_gergaji', label: 'Kikir & Gergaji Besi' },
+            { id: 'pahat_penandaan', label: 'Pahat, Penitik & Penggores' },
+            { id: 'tap_snei', label: 'Tap & Snei (Ulir Presisi)' },
+            { id: 'mesin_bor', label: 'Mesin Bor Meja' },
+            { id: 'gerinda_ragum', label: 'Gerinda Duduk & Ragum' },
+            { id: 'evaluasi_kuis', label: 'Uji Kompetensi Perkakas' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -293,7 +298,7 @@ export default function BenchToolsModule() {
           {/* Card Kikir */}
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '1.6rem' }}>🗜️</span>
+              <span className="font-mono text-xs px-2 py-0.5 rounded bg-orange-900/60 border border-orange-500/30 text-orange-300 font-bold">[VISE]</span>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
                   1. Kikir Presisi (Hand Files) &amp; Teknik Pengikiran
@@ -331,7 +336,7 @@ export default function BenchToolsModule() {
             {/* SOP Posisi Tubuh & K3 */}
             <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', padding: '18px', borderRadius: '12px', marginBottom: '16px' }}>
               <h4 style={{ margin: '0 0 10px 0', fontSize: '0.95rem', fontWeight: 800, color: '#92400e', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>⚠️</span> SOP Ergonomi Kuda-Kuda &amp; Distribusi Gaya Dorong
+                <AlertTriangle size={15} className="inline mr-1 text-amber-400" /> SOP Ergonomi Kuda-Kuda &amp; Distribusi Gaya Dorong
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', fontSize: '0.85rem', color: '#78350f', lineHeight: 1.6 }}>
                 <div>
@@ -350,7 +355,7 @@ export default function BenchToolsModule() {
 
             {/* File Card Tip */}
             <div style={{ background: '#f1f5f9', padding: '14px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '1.5rem' }}>🧹</span>
+              <span className="font-mono text-xs px-2 py-0.5 rounded bg-amber-900/60 border border-amber-500/30 text-amber-300 font-bold">[BRUSH]</span>
               <p style={{ margin: 0, fontSize: '0.84rem', color: '#334155', lineHeight: 1.5 }}>
                 <strong>Perawatan File Card (Sikat Kikir):</strong> Bersihkan tatal tatal yang menyangkut di sela gigi (*pinning*) searah alur guratan kikir. Jika pinning dibiarkan, tatal akan membuat goresan parah (*scratch*) pada benda kerja presisi.
               </p>
@@ -360,7 +365,7 @@ export default function BenchToolsModule() {
           {/* Card Gergaji Besi */}
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '1.6rem' }}>🪚</span>
+              <span className="font-mono text-xs px-2 py-0.5 rounded bg-orange-900/60 border border-orange-500/30 text-orange-300 font-bold">[SAW]</span>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
                   2. Gergaji Besi Manual (Hacksaw) Sesuai SOP
@@ -372,7 +377,7 @@ export default function BenchToolsModule() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
               <div style={{ border: '1px solid #e2e8f0', padding: '14px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#ea580c', marginBottom: '6px', fontSize: '0.9rem' }}>
-                  📌 Arah Gigi &amp; Langkah Dorong
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[1]</span> Arah Gigi &amp; Langkah Dorong
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
                   Mata gergaji <strong>WAJIB menghadap ke depan</strong> (menjauhi pemegang). Pemotongan hanya terjadi saat langkah <strong>MAJU</strong> (beri tekanan sedang). Pada langkah mundur, hilangkan tekanan agar gigi tidak tergerus tumpul.
@@ -381,7 +386,7 @@ export default function BenchToolsModule() {
 
               <div style={{ border: '1px solid #e2e8f0', padding: '14px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#0284c7', marginBottom: '6px', fontSize: '0.9rem' }}>
-                  ⚙️ Standar TPI (Teeth Per Inch)
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[2]</span> Standar TPI (Teeth Per Inch)
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
                   • <strong>14 - 18 TPI:</strong> Baja pejal lunak, tembaga, kuningan tebal.<br />
@@ -392,7 +397,7 @@ export default function BenchToolsModule() {
 
               <div style={{ border: '1px solid #e2e8f0', padding: '14px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#16a34a', marginBottom: '6px', fontSize: '0.9rem' }}>
-                  ⚡ Irama &amp; Kecepatan Langkah
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[3]</span> Irama &amp; Kecepatan Langkah
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: 1.5 }}>
                   Kecepatan ayunan ideal adalah <strong>40 hingga 50 langkah per menit</strong> dengan panjang langkah penuh (*full stroke*). Menggesek terlalu cepat (&gt; 60 langkah/menit) menimbulkan panas gesek tinggi yang melunakkan bilah baja gergaji.
@@ -410,14 +415,14 @@ export default function BenchToolsModule() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>📐</span> Perkakas Penandaan Presisi (Layout Tools) &amp; Pahat Dingin
+              <Crosshair size={16} className="inline mr-1.5 text-orange-400" /> Perkakas Penandaan Presisi (Layout Tools) &amp; Pahat Dingin
             </h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
               {/* Penggores */}
               <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '16px', background: '#f8fafc' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>✒️</span>
+                  <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-orange-900/60 border border-orange-500/30 text-orange-300 font-bold">[SCRIBER]</span>
                   <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#1e293b' }}>Penggores (Scriber)</h4>
                 </div>
                 <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.6, margin: '0 0 10px 0' }}>
@@ -431,7 +436,7 @@ export default function BenchToolsModule() {
               {/* Penitik Garis vs Penitik Pusat */}
               <div style={{ border: '1px solid #cbd5e1', borderRadius: '12px', padding: '16px', background: '#f8fafc' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>🎯</span>
+                  <Crosshair size={16} className="text-orange-400" />
                   <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#1e293b' }}>Penitik Rintik (30-60°) vs Penitik Pusat (90°)</h4>
                 </div>
                 <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.6, margin: '0 0 10px 0' }}>
@@ -450,7 +455,7 @@ export default function BenchToolsModule() {
               {/* Pahat Tangan & Bahaya Kepala Jamur */}
               <div style={{ gridColumn: '1 / -1', border: '1px solid #fecaca', borderRadius: '12px', padding: '18px', background: '#fef2f2' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '1.3rem' }}>🚨</span>
+                  <ShieldAlert size={18} className="text-rose-400" />
                   <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#991b1b' }}>
                     Pahat Tangan (Cold Chisel) &amp; Bahaya Maut "Mushroom Head"
                   </h4>
@@ -480,14 +485,14 @@ export default function BenchToolsModule() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🔩</span> Operasi Pengetapan (Tap) &amp; Penyneaian (Snei) Berstandar ISO
+              <Settings size={16} className="inline mr-1.5 text-orange-400" /> Operasi Pengetapan (Tap) &amp; Penyneaian (Snei) Berstandar ISO
             </h3>
 
             {/* Teori Tap 1-2-3 */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '20px' }}>
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontWeight: 800, color: '#2563eb', fontSize: '0.9rem', marginBottom: '6px' }}>
-                  1️⃣ Tap No. 1 (Taper Tap / Konis)
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[1]</span> Tap No. 1 (Taper Tap / Konis)
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#475569', lineHeight: 1.5 }}>
                   Memiliki ketirusan panjang (8 - 10 ulir tirus). Berfungsi sebagai pembuat alur awal pemandu ulir agar posisi tap tegak lurus sempurna.
@@ -496,7 +501,7 @@ export default function BenchToolsModule() {
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontWeight: 800, color: '#059669', fontSize: '0.9rem', marginBottom: '6px' }}>
-                  2️⃣ Tap No. 2 (Plug Tap / Antara)
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[2]</span> Tap No. 2 (Plug Tap / Antara)
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#475569', lineHeight: 1.5 }}>
                   Ketirusan sedang (3 - 5 ulir tirus). Berfungsi membentuk profil ulir secara lebih dalam dan presisi setelah jalur dibentuk Tap No. 1.
@@ -505,7 +510,7 @@ export default function BenchToolsModule() {
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontWeight: 800, color: '#d97706', fontSize: '0.9rem', marginBottom: '6px' }}>
-                  3️⃣ Tap No. 3 (Bottoming Tap / Rata)
+                  <span className="font-mono text-xs font-bold text-orange-400 mr-1">[3]</span> Tap No. 3 (Bottoming Tap / Rata)
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#475569', lineHeight: 1.5 }}>
                   Ketirusan sangat pendek (1 - 1.5 ulir). Digunakan untuk menyelesaikan ulir hingga mencapai dasar lubang buntu (*blind hole*).
@@ -516,7 +521,7 @@ export default function BenchToolsModule() {
             {/* Interactive Tap Calculator */}
             <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '20px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                <span style={{ fontSize: '1.4rem' }}>🧮</span>
+                <Calculator size={20} className="text-orange-400" />
                 <div>
                   <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#14532d' }}>
                     Kalkulator Diameter Mata Bor Lubang Tap (Formula: D_bor = D_nominal - Pitch)
@@ -566,7 +571,7 @@ export default function BenchToolsModule() {
               </div>
 
               <div style={{ marginTop: '12px', fontSize: '0.85rem', color: '#166534', background: '#dcfce7', padding: '10px', borderRadius: '8px' }}>
-                💡 <strong>Kaidah Putaran:</strong> Putar gagang tap 1 putaran maju searah jarum jam, lalu putar balik 1/2 putaran berlawanan jarum jam untuk <strong>memutus tatal spiral</strong>. Wajib lumasi dengan pelumas potong (*cutting oil*)!
+                <Lightbulb size={15} className="inline mr-1 text-amber-400" /> <strong>Kaidah Putaran:</strong> Putar gagang tap 1 putaran maju searah jarum jam, lalu putar balik 1/2 putaran berlawanan jarum jam untuk <strong>memutus tatal spiral</strong>. Wajib lumasi dengan pelumas potong (*cutting oil*)!
               </div>
             </div>
           </div>
@@ -580,14 +585,14 @@ export default function BenchToolsModule() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>⚙️</span> Mesin Bor Meja (Bench Drill Press) &amp; Mitigasi Bahaya Putaran
+              <Settings size={16} className="inline mr-1.5 text-orange-400" /> Mesin Bor Meja (Bench Drill Press) &amp; Mitigasi Bahaya Putaran
             </h3>
 
             {/* Aturan Emas K3 Bor Meja */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '20px' }}>
               <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#dc2626', fontSize: '0.92rem', marginBottom: '6px' }}>
-                  🚨 LARANGAN MEMEGANG DENGAN TANGAN
+                  <ShieldAlert size={14} className="inline mr-1 text-rose-400" /> LARANGAN MEMEGANG DENGAN TANGAN
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#7f1d1d', lineHeight: 1.5 }}>
                   Benda kerja <strong>WAJIB dicekam di ragum mesin (vise)</strong> dan diikat baut ke meja bor. Jika dipegang tangan kosong, saat mata bor menembus pelat, benda kerja akan tersangkut dan berputar kencang memotong jari tangan!
@@ -596,7 +601,7 @@ export default function BenchToolsModule() {
 
               <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#dc2626', fontSize: '0.92rem', marginBottom: '6px' }}>
-                  🔑 KUNCI CHUCK HARUS SEGERA DICABUT
+                  <Key size={14} className="inline mr-1 text-amber-400" /> KUNCI CHUCK HARUS SEGERA DICABUT
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#7f1d1d', lineHeight: 1.5 }}>
                   Setelah mengganti mata bor, <strong>kunci chuck WAJIB langsung dicabut</strong>. Kunci chuck yang tertinggal akan terlontar keluar seperti peluru berkecepatan tinggi saat saklar dinyalakan.
@@ -605,7 +610,7 @@ export default function BenchToolsModule() {
 
               <div style={{ background: '#fef2f2', border: '1px solid #fecaca', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#dc2626', fontSize: '0.92rem', marginBottom: '6px' }}>
-                  🧤 DILARANG MEMAKAI SARUNG TANGAN
+                  <ShieldAlert size={14} className="inline mr-1 text-rose-400" /> DILARANG MEMAKAI SARUNG TANGAN
                 </div>
                 <p style={{ margin: 0, fontSize: '0.84rem', color: '#7f1d1d', lineHeight: 1.5 }}>
                   Sarung tangan kain rajut dilarang keras! Serabut kain mudah ditarik alur heliks mata bor berputar dan langsung mematahkan tulang tangan sebelum mesin sempat dimatikan.
@@ -616,7 +621,7 @@ export default function BenchToolsModule() {
             {/* Interactive RPM Calculator */}
             <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '20px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                <span style={{ fontSize: '1.4rem' }}>⚡</span>
+                <Zap size={20} className="text-amber-400" />
                 <div>
                   <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#1e40af' }}>
                     Kalkulator Putaran Spindel Bor (Rumus: n = 1000 × Cs / (π × d))
@@ -690,13 +695,13 @@ export default function BenchToolsModule() {
           {/* Gerinda Duduk */}
           <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
             <h3 style={{ margin: '0 0 16px 0', fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>✨</span> Mesin Gerinda Duduk (Bench Grinder) &amp; Pedoman K3 Kritis
+              <Sparkles size={16} className="inline mr-1.5 text-orange-400" /> Mesin Gerinda Duduk (Bench Grinder) &amp; Pedoman K3 Kritis
             </h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
               <div style={{ border: '2px solid #fdba74', background: '#fffaf5', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#c2410c', fontSize: '0.95rem', marginBottom: '6px' }}>
-                  📏 Jarak Tool Rest Maksimal 2 - 3 mm
+                  <Ruler size={14} className="inline mr-1 text-orange-400" /> Jarak Tool Rest Maksimal 2 - 3 mm
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#431407', lineHeight: 1.6 }}>
                   Jarak antara landasan kerja (*tool rest*) dan permukaan batu gerinda <strong>TIDAK BOLEH lebih dari 2 s/d 3 mm</strong>. Jika celah longgar, benda kerja kecil dapat tertarik ke dalam celah dan memecahkan batu gerinda berkeping-keping!
@@ -705,7 +710,7 @@ export default function BenchToolsModule() {
 
               <div style={{ border: '2px solid #fdba74', background: '#fffaf5', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#c2410c', fontSize: '0.95rem', marginBottom: '6px' }}>
-                  🔔 Uji Dering (Ring Test) Sebelum Pasang
+                  <AlertTriangle size={14} className="inline mr-1 text-amber-400" /> Uji Dering (Ring Test) Sebelum Pasang
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#431407', lineHeight: 1.6 }}>
                   Ketuk ringan batu gerinda dengan gagang obeng kayu/plastik. Batu yang mulus akan menghasilkan <strong>suara denting nyaring (seperti lonceng)</strong>. Jika bersuara tumpul atau redup, batu retak internal dan DILARANG DIPASANG!
@@ -714,7 +719,7 @@ export default function BenchToolsModule() {
 
               <div style={{ border: '2px solid #fdba74', background: '#fffaf5', padding: '16px', borderRadius: '10px' }}>
                 <div style={{ fontWeight: 800, color: '#c2410c', fontSize: '0.95rem', marginBottom: '6px' }}>
-                  🚫 Larangan Mengasah Sisi Samping Batu
+                  <ShieldAlert size={14} className="inline mr-1 text-rose-400" /> Larangan Mengasah Sisi Samping Batu
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#431407', lineHeight: 1.6 }}>
                   Hanya asah pada <strong>muka lingkar luar (perimeter)</strong>. Mengasah pada bidang samping tipis batu gerinda lurus dapat menyebabkan retakan tegak lurus yang memecahkan batu saat berputar 3800 RPM.
@@ -724,7 +729,7 @@ export default function BenchToolsModule() {
 
             {/* Spark Deflector */}
             <div style={{ background: '#f8fafc', padding: '12px 16px', borderRadius: '8px', fontSize: '0.85rem', color: '#334155' }}>
-              🛡️ <strong>Spark Deflector (Pelindung Percikan Bunga Api):</strong> Jarak pelat penyerap percikan atas maksimal <strong>1.5 mm</strong> dari batu gerinda. Kaca pelindung mata (*eye shield*) transparan wajib selalu bersih.
+              <Shield size={14} className="inline mr-1 text-emerald-400" /> <strong>Spark Deflector (Pelindung Percikan Bunga Api):</strong> Jarak pelat penyerap percikan atas maksimal <strong>1.5 mm</strong> dari batu gerinda. Kaca pelindung mata (*eye shield*) transparan wajib selalu bersih.
             </div>
           </div>
 
@@ -733,7 +738,7 @@ export default function BenchToolsModule() {
             {/* Angle Grinder */}
             <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
               <h4 style={{ margin: '0 0 12px 0', fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>⚡</span> Gerinda Tangan (Angle Grinder)
+                <Zap size={16} className="inline mr-1 text-amber-400" /> Gerinda Tangan (Angle Grinder)
               </h4>
               <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.85rem', color: '#475569', lineHeight: 1.6 }}>
                 <li><strong>Wheel Guard:</strong> Pelindung penutup wajib terpasang dan menghadap ke arah tubuh operator.</li>
@@ -746,7 +751,7 @@ export default function BenchToolsModule() {
             {/* Ragum Mesin & Soft Jaws */}
             <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
               <h4 style={{ margin: '0 0 12px 0', fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>🗜️</span> Ragum Mesin &amp; Penggunaan Soft Jaws
+                <Wrench size={16} className="inline mr-1 text-orange-400" /> Ragum Mesin &amp; Penggunaan Soft Jaws
               </h4>
               <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.85rem', color: '#475569', lineHeight: 1.6 }}>
                 <li><strong>Soft Jaws (Rahang Lunak):</strong> Gunakan pelat aluminium, tembaga, atau timbal saat menjepit benda kerja yang permukaannya sudah di-finishing agar tidak berbekas guratan rahang baja keras.</li>
@@ -845,7 +850,7 @@ export default function BenchToolsModule() {
                     fontSize: '0.95rem',
                     marginBottom: '4px'
                   }}>
-                    {selectedAnswer === BENCH_QUIZ[quizIndex].correct ? '✅ JAWABAN BENAR (+10 XP)' : '❌ JAWABAN KURANG TEPAT'}
+                    {selectedAnswer === BENCH_QUIZ[quizIndex].correct ? '[BENAR] JAWABAN TEPAT (+10 XP)' : '[SALAH] JAWABAN KURANG TEPAT'}
                   </div>
                   <p style={{ margin: 0, fontSize: '0.86rem', color: '#334155', lineHeight: 1.5 }}>
                     {BENCH_QUIZ[quizIndex].expl}
@@ -868,13 +873,13 @@ export default function BenchToolsModule() {
                     cursor: 'pointer'
                   }}
                 >
-                  {quizIndex < BENCH_QUIZ.length - 1 ? 'Soal Berikutnya ➔' : 'Selesaikan & Kirim Nilai ke Spreadsheet ➔'}
+                  {quizIndex < BENCH_QUIZ.length - 1 ? 'Soal Berikutnya ->' : 'Selesaikan & Kirim Nilai ke Spreadsheet ->'}
                 </button>
               )}
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '30px 10px' }}>
-              <div style={{ fontSize: '3.5rem', marginBottom: '10px' }}>🏆</div>
+              <div className="flex justify-center" style={{ marginBottom: '10px' }}><Award size={56} className="text-amber-400" /></div>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', margin: '0 0 8px 0' }}>
                 Uji Kompetensi Perkakas Selesai!
               </h2>
@@ -906,7 +911,7 @@ export default function BenchToolsModule() {
                     cursor: 'pointer'
                   }}
                 >
-                  🔄 Ulangi Kuis Perkakas
+                  <RotateCcw size={14} className="inline mr-1.5" /> Ulangi Kuis Perkakas
                 </button>
               </div>
             </div>

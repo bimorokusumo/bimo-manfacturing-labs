@@ -1,3 +1,4 @@
+import { Award, BookOpen, RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -209,7 +210,7 @@ const CNCQuiz = ({ addXP }) => {
 
     return (
       <div className="dashboard-card" style={{ padding: '32px', textAlign: 'center', maxWidth: '700px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <div style={{ fontSize: '3.5rem' }}>{isPassed ? '🏆' : '📚'}</div>
+        <div className="flex justify-center" style={{ marginBottom: '16px' }}>{isPassed ? <Award size={56} className="text-amber-400" /> : <BookOpen size={56} className="text-sky-400" />}</div>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--text-main)', margin: 0 }}>
           {isPassed ? 'Selamat! Anda Menguasai Materi CNC!' : 'Terus Semangat Belajar CNC!'}
         </h2>
@@ -242,7 +243,7 @@ const CNCQuiz = ({ addXP }) => {
             <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f59e0b' }}>
               +1000 XP
             </div>
-            <div style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 700 }}>⭐ CNC Specialist Badge</div>
+            <div style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 700 }}>[PRESTASI] CNC Specialist Badge</div>
           </div>
         </div>
 
@@ -264,7 +265,7 @@ const CNCQuiz = ({ addXP }) => {
             gap: '8px'
           }}
         >
-          <span>🔄</span> Ulangi Kuis Asesmen
+          <RotateCcw size={14} className="inline mr-1" /> Ulangi Kuis Asesmen
         </button>
       </div>
     );
@@ -344,8 +345,8 @@ const CNCQuiz = ({ addXP }) => {
               }}
             >
               <span>{opt}</span>
-              {showExplanation && isCorrect && <span style={{ color: '#10b981', fontWeight: 900 }}>✓ Benar</span>}
-              {showExplanation && isChosen && !isCorrect && <span style={{ color: '#ef4444', fontWeight: 900 }}>✕ Salah</span>}
+              {showExplanation && isCorrect && <span style={{ color: '#10b981', fontWeight: 900 }}>[BENAR]</span>}
+              {showExplanation && isChosen && !isCorrect && <span style={{ color: '#ef4444', fontWeight: 900 }}>[SALAH]</span>}
             </button>
           );
         })}
@@ -363,7 +364,7 @@ const CNCQuiz = ({ addXP }) => {
           gap: '6px'
         }}>
           <div style={{ fontSize: '0.85rem', fontWeight: 800, color: selectedAnswer === q.answer ? '#065f46' : '#92400e' }}>
-            {selectedAnswer === q.answer ? '✅ Jawaban Anda Tepat!' : '💡 Pembahasan Konsep:'}
+            {selectedAnswer === q.answer ? '[BENAR] Jawaban Anda Tepat!' : '[PEMBAHASAN] Konsep:'}
           </div>
           <p style={{ margin: 0, fontSize: '0.85rem', color: '#334155', lineHeight: 1.6 }}>
             {q.explanation}
@@ -391,7 +392,7 @@ const CNCQuiz = ({ addXP }) => {
             boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
           }}
         >
-          <span>{currentIdx < QUESTIONS.length - 1 ? 'Soal Berikutnya ➡️' : 'Lihat Hasil Akhir 🏆'}</span>
+          <span>{currentIdx < QUESTIONS.length - 1 ? 'Soal Berikutnya ->' : 'Lihat Hasil Akhir'}</span>
         </button>
       )}
 

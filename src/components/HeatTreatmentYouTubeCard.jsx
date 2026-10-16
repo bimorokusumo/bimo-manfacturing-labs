@@ -1,3 +1,4 @@
+import { Video, Search } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 // =============================================================================
@@ -172,7 +173,7 @@ export default function HeatTreatmentYouTubeCard({ processId = 'hardening' }) {
             fontSize: '1.2rem',
             boxShadow: `0 0 12px ${item.color}60`
           }}>
-            📺
+            <Video className="w-5 h-5 text-white" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -280,7 +281,7 @@ export default function HeatTreatmentYouTubeCard({ processId = 'hardening' }) {
               marginBottom: '10px'
             }}>
               <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#0f172a' }}>
-                🔍 Poin Kunci yang Wajib Diamati Siswa:
+                <Search size={14} className="inline mr-1 text-amber-500" /> Poin Kunci yang Wajib Diamati Siswa:
               </span>
               <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700 }}>
                 Praktikum Bengkel Nyata

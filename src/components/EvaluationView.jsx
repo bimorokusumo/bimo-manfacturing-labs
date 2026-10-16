@@ -3,6 +3,24 @@ import { evaluationData } from '../data/questionBankEvaluation';
 import { sound } from '../utils/audio';
 import { useStudent } from '../context/StudentContext';
 import { recordQuizResult } from '../services/sheetService';
+import {
+  ClipboardCheck,
+  Target,
+  GraduationCap,
+  Lock,
+  Unlock,
+  ArrowRight,
+  Trophy,
+  Copy,
+  Printer,
+  RotateCw,
+  CheckCircle2,
+  XCircle,
+  Search,
+  FileText,
+  Key,
+  Check
+} from 'lucide-react';
 
 const EvaluationView = () => {
   const { student, openLoginModal, isTeacher } = useStudent();
@@ -462,7 +480,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
         boxShadow: '0 6px 18px rgba(0,0,0,0.25)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-          <span style={{ fontSize: '20px' }}>📋</span>
+          <ClipboardCheck size={20} className="text-sky-400" />
           <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Data Identitas Siswa (Wajib Diisi untuk Pendataan Nilai)
           </h3>
@@ -568,7 +586,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
         }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '18px' }}>🎯</span>
+              <Target size={18} className="text-amber-400" />
               <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', letterSpacing: '0.5px' }}>
                 ALUR PENGERJAAN BERTAHAP (SCAFFOLDING KOMPETENSI)
               </span>
@@ -591,7 +609,8 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               alignItems: 'center',
               gap: '6px'
             }}>
-              👑 Mode Guru Aktif: Akses Seluruh Level Terbuka
+              <GraduationCap size={13} />
+              <span>Mode Guru Aktif: Akses Seluruh Level Terbuka</span>
             </span>
           )}
         </div>
@@ -649,7 +668,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     fontSize: '11px',
                     fontWeight: 900
                   }}>
-                    {isCompleted ? '✓' : lvl.stepNumber}
+                    {isCompleted ? <Check size={12} strokeWidth={3} /> : lvl.stepNumber}
                   </div>
 
                   <span style={{
@@ -670,15 +689,27 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                       ? '#38bdf8'
                       : isLocked
                       ? '#fca5a5'
-                      : '#cbd5e1'
+                      : '#cbd5e1',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}>
                     {isCompleted
                       ? `Nilai: ${status.score}`
                       : isCurrent
                       ? '● Aktif'
                       : isLocked
-                      ? '🔒 Terkunci'
-                      : '🔓 Terbuka'}
+                      ? (
+                        <>
+                          <Lock size={10} />
+                          <span>Terkunci</span>
+                        </>
+                      ) : (
+                        <>
+                          <Unlock size={10} />
+                          <span>Terbuka</span>
+                        </>
+                      )}
                   </span>
                 </div>
 
@@ -771,7 +802,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     alignItems: 'center',
                     gap: '4px'
                   }}>
-                    <span>🔒</span>
+                    <Lock size={11} />
                     <span>Terkunci</span>
                   </span>
                 ) : status.isSubmitted ? (
@@ -786,7 +817,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     alignItems: 'center',
                     gap: '4px'
                   }}>
-                    <span>✓</span>
+                    <Check size={13} strokeWidth={2.5} />
                     <span>Nilai: {status.score}/100</span>
                   </span>
                 ) : (
@@ -796,9 +827,13 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     padding: '2px 8px',
                     borderRadius: '9999px',
                     backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                    color: '#38bdf8'
+                    color: '#38bdf8',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}>
-                    🔓 Terbuka
+                    <Unlock size={11} />
+                    <span>Terbuka</span>
                   </span>
                 )}
               </div>
@@ -822,7 +857,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                   alignItems: 'center',
                   gap: '5px'
                 }}>
-                  <span>🔒</span>
+                  <Lock size={11} />
                   <span>Selesaikan {lvl.prerequisiteKey?.toUpperCase()} untuk membuka</span>
                 </div>
               )}
@@ -951,8 +986,8 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                   transition: 'all 0.2s ease'
                 }}
               >
-                <span>🚀</span>
-                <span>Lanjut Kerjakan {nextLevelData.badge}: {nextLevelData.title} (Telah Terbuka 🔓) ➔</span>
+                <ArrowRight size={16} />
+                <span>Lanjut Kerjakan {nextLevelData.badge}: {nextLevelData.title} (Telah Terbuka)</span>
               </button>
             )}
 
@@ -969,7 +1004,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 alignItems: 'center',
                 gap: '8px'
               }}>
-                <span>🏆</span>
+                <Trophy size={16} className="text-pink-400" />
                 <span>Selamat! Anda Telah Menyelesaikan Seluruh Tingkat Evaluasi (C1 - HOTS)!</span>
               </div>
             )}
@@ -991,7 +1026,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 boxShadow: '0 4px 14px rgba(2,132,199,0.3)'
               }}
             >
-              <span>📋</span>
+              <Copy size={15} />
               <span>Salin Rekap Nilai Siswa (Untuk Excel Guru)</span>
             </button>
 
@@ -1011,7 +1046,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 gap: '8px'
               }}
             >
-              <span>🖨️</span>
+              <Printer size={15} />
               <span>Cetak Bukti Nilai</span>
             </button>
 
@@ -1025,10 +1060,14 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 borderRadius: '8px',
                 fontWeight: 700,
                 fontSize: '13px',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              🔄 Ulangi Ujian Level Ini
+              <RotateCw size={14} />
+              <span>Ulangi Ujian Level Ini</span>
             </button>
           </div>
 
@@ -1047,7 +1086,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span>✅</span>
+              <CheckCircle2 size={16} className="text-emerald-400" />
               <span>Rekap data nilai siswa berhasil disalin ke clipboard! Siap di-paste ke Excel, WhatsApp, atau dokumen nilai guru.</span>
             </div>
           )}
@@ -1293,9 +1332,22 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                       fontSize: '12px',
                       fontWeight: 800,
                       color: isCorrect ? '#34d399' : '#fca5a5',
-                      marginBottom: '4px'
+                      marginBottom: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
                     }}>
-                      {isCorrect ? '✅ Jawaban Anda Benar!' : `❌ Jawaban Anda Salah. Kunci: ${q.answer}`}
+                      {isCorrect ? (
+                        <>
+                          <CheckCircle2 size={14} />
+                          <span>Jawaban Anda Benar!</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle size={14} />
+                          <span>Jawaban Anda Salah. Kunci: {q.answer}</span>
+                        </>
+                      )}
                     </div>
                     <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: 1.5 }}>
                       <strong>Pembahasan:</strong> {q.explanation}
@@ -1445,7 +1497,8 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                       gap: '6px'
                     }}
                   >
-                    <span>{isRubricOpen ? 'Tutup Rubrik Penilaian' : '🔍 Lihat Kunci Jawaban & Rubrik Penilaian'}</span>
+                    {isRubricOpen ? null : <Search size={13} />}
+                    <span>{isRubricOpen ? 'Tutup Rubrik Penilaian' : 'Lihat Kunci Jawaban & Rubrik Penilaian'}</span>
                   </button>
                 </div>
 
@@ -1458,8 +1511,9 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     background: 'rgba(2, 132, 199, 0.1)',
                     border: '1px solid rgba(2, 132, 199, 0.3)'
                   }}>
-                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#38bdf8', marginBottom: '8px' }}>
-                      📋 KRITERIA POIN JAWABAN IDEAL (RUBRIK GURU &amp; EVALUASI MANDIRI):
+                    <div style={{ fontSize: '12px', fontWeight: 900, color: '#38bdf8', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <ClipboardCheck size={14} />
+                      <span>KRITERIA POIN JAWABAN IDEAL (RUBRIK GURU &amp; EVALUASI MANDIRI):</span>
                     </div>
                     <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12.5px', color: '#e2e8f0', lineHeight: 1.55 }}>
                       {essay.expectedPoints.map((pt, pIdx) => (
@@ -1518,7 +1572,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                 gap: '8px'
               }}
             >
-              <span>🚀</span>
+              <ArrowRight size={16} />
               <span>Kirim &amp; Munculkan Nilai Siswa</span>
             </button>
           ) : (
@@ -1541,8 +1595,8 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     gap: '8px'
                   }}
                 >
-                  <span>🚀</span>
-                  <span>Lanjut ke {nextLevelData.badge} ({nextLevelData.title}) ➔</span>
+                  <ArrowRight size={16} />
+                  <span>Lanjut ke {nextLevelData.badge} ({nextLevelData.title})</span>
                 </button>
               )}
 
@@ -1556,10 +1610,14 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                   border: 'none',
                   fontWeight: 800,
                   fontSize: '13px',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
-                🔄 Reset &amp; Coba Ujian Ulang
+                <RotateCw size={14} />
+                <span>Reset &amp; Coba Ujian Ulang</span>
               </button>
             </>
           )}
@@ -1610,10 +1668,9 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '30px',
               margin: '0 auto 18px auto'
             }}>
-              🔒
+              <Lock size={32} className="text-red-500" />
             </div>
 
             <span style={{
@@ -1648,7 +1705,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               alignItems: 'center',
               gap: '12px'
             }}>
-              <span style={{ fontSize: '26px' }}>🔑</span>
+              <Key size={26} className="text-sky-400 shrink-0" />
               <div>
                 <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   Prasyarat Wajib:
@@ -1683,7 +1740,8 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
                     gap: '8px'
                   }}
                 >
-                  <span>Kerjakan {lockedModalInfo.prerequisiteName?.split(':')[0] || 'Level Prasyarat'} Sekarang ➔</span>
+                  <span>Kerjakan {lockedModalInfo.prerequisiteName?.split(':')[0] || 'Level Prasyarat'} Sekarang</span>
+                  <ArrowRight size={14} />
                 </button>
               )}
 

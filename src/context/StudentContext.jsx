@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Award, FileText, X } from 'lucide-react';
 
 const StudentContext = createContext();
 
@@ -73,7 +74,7 @@ export const StudentProvider = ({ children }) => {
       const isSynced = sheetResult?.success || record.synced;
       setToastNotification({
         title: `Hasil ${record.judulKuis} Tercatat!`,
-        message: `Nilai: ${record.skor}/100 (${record.status}) • ${isSynced ? '✅ Terkirim ke Spreadsheet Guru' : '💾 Tersimpan di perangkat (Akan disinkronkan)'}`,
+        message: `Nilai: ${record.skor}/100 (${record.status}) • ${isSynced ? '[OK] Terkirim ke Spreadsheet Guru' : '● Tersimpan di perangkat (Akan disinkronkan)'}`,
         type: record.status === 'LULUS' ? 'success' : 'warning'
       });
 
@@ -180,8 +181,12 @@ export const StudentProvider = ({ children }) => {
             animation: 'slideInRight 0.3s ease-out'
           }}
         >
-          <div style={{ fontSize: '2rem' }}>
-            {toastNotification.type === 'success' ? '🏆' : '📝'}
+          <div style={{ flexShrink: 0 }}>
+            {toastNotification.type === 'success' ? (
+              <Award size={28} className="text-emerald-400" />
+            ) : (
+              <FileText size={28} className="text-amber-400" />
+            )}
           </div>
           <div>
             <div style={{ fontWeight: 800, fontSize: '0.95rem', color: toastNotification.type === 'success' ? '#34d399' : '#fbbf24' }}>
@@ -198,11 +203,13 @@ export const StudentProvider = ({ children }) => {
               border: 'none',
               color: '#94a3b8',
               cursor: 'pointer',
-              fontSize: '1.1rem',
-              marginLeft: 'auto'
+              marginLeft: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '4px'
             }}
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
       )}

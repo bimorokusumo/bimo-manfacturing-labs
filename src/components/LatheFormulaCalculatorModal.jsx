@@ -1,3 +1,4 @@
+import { Calculator, X, Zap, Clock, Compass, Ruler, BookOpen, Lightbulb, AlertTriangle, Table } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 
@@ -12,6 +13,18 @@ export const CS_DATABASE = [
 
 // Standar Kecepatan Spindel Mesin Bubut Konvensional (Gearbox Steps)
 export const STANDARD_GEAR_RPMS = [45, 70, 110, 150, 220, 300, 450, 600, 750, 900, 1200, 1500, 2000];
+
+
+const getModalTabIcon = (id) => {
+  switch (id) {
+    case 'rpm': return <Zap size={14} />;
+    case 'feed-time': return <Clock size={14} />;
+    case 'taper': return <Compass size={14} />;
+    case 'doc': return <Ruler size={14} />;
+    case 'bank': return <BookOpen size={14} />;
+    default: return <Calculator size={14} />;
+  }
+};
 
 const LatheFormulaCalculatorModal = ({
   isOpen,
@@ -186,7 +199,7 @@ const LatheFormulaCalculatorModal = ({
           borderBottom: '1px solid #1e293b'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '1.6rem' }}>🧮</span>
+            <Calculator size={24} className="text-sky-400" />
             <div>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#f8fafc', letterSpacing: '0.5px' }}>
                 RUMUS & KALKULATOR TEKNIK PEMESINAN BUBUT
@@ -213,7 +226,7 @@ const LatheFormulaCalculatorModal = ({
             onMouseOver={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.2)'}
             onMouseOut={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.08)'}
           >
-            ✕ Tutup
+            <span className="flex items-center gap-1"><X size={15} /> Tutup</span>
           </button>
         </div>
 
@@ -231,7 +244,7 @@ const LatheFormulaCalculatorModal = ({
             gap: '8px',
             boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
           }}>
-            <span>⚡</span> {appliedNotice}
+            <Zap size={14} className="inline mr-1 text-amber-400" /> {appliedNotice}
           </div>
         )}
 
@@ -245,11 +258,11 @@ const LatheFormulaCalculatorModal = ({
           overflowX: 'auto'
         }}>
           {[
-            { id: 'rpm', label: '1. RPM & Kecepatan Potong (n, Cs)', icon: '⚡' },
-            { id: 'feed-time', label: '2. Pemakanan & Waktu (F, tm)', icon: '⏱️' },
-            { id: 'taper', label: '3. Pembubutan Tirus (tan α, x)', icon: '📐' },
-            { id: 'doc', label: '4. Kedalaman Sayat (a)', icon: '📏' },
-            { id: 'bank', label: '📚 Bank Rumus Lengkap & Tabel Cs', icon: '📖' }
+            { id: 'rpm', label: '1. RPM & Kecepatan Potong (n, Cs)' },
+            { id: 'feed-time', label: '2. Pemakanan & Waktu (F, tm)' },
+            { id: 'taper', label: '3. Pembubutan Tirus (tan α, x)' },
+            { id: 'doc', label: '4. Kedalaman Sayat (a)' },
+            { id: 'bank', label: '5. Bank Rumus Lengkap & Tabel Cs' }
           ].map(tab => (
             <button
               key={tab.id}
@@ -270,7 +283,7 @@ const LatheFormulaCalculatorModal = ({
                 transition: 'all 0.2s'
               }}
             >
-              <span>{tab.icon}</span>
+              <span>{getModalTabIcon(tab.id)}</span>
               <span>{tab.label}</span>
             </button>
           ))}
@@ -560,7 +573,7 @@ const LatheFormulaCalculatorModal = ({
                     </div>
 
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '8px', lineHeight: 1.4 }}>
-                      💡 <strong>Catatan Bengkel:</strong> Karena mesin bubut konvensional menggunakan tuas transmisi bertingkat (gearbox), operator memilih putaran standar terdekat yaitu <strong>{nearestStandardRpm} RPM</strong>.
+                      <Lightbulb size={14} className="inline mr-1 text-amber-400" /> <strong>Catatan Bengkel:</strong> Karena mesin bubut konvensional menggunakan tuas transmisi bertingkat (gearbox), operator memilih putaran standar terdekat yaitu <strong>{nearestStandardRpm} RPM</strong>.
                     </div>
                   </div>
 
@@ -587,7 +600,7 @@ const LatheFormulaCalculatorModal = ({
                           gap: '8px'
                         }}
                       >
-                        <span>⚡</span>
+                        <Zap size={14} className="inline mr-1" />
                         <span>TERAPKAN GEARBOX ({nearestStandardRpm} RPM) KE MESIN</span>
                       </button>
 
@@ -940,7 +953,7 @@ const LatheFormulaCalculatorModal = ({
                     color: '#94a3b8',
                     lineHeight: 1.4
                   }}>
-                    ⏱️ <strong>Tips Efisiensi:</strong> Jika waktu pemesinan terlalu lama, tingkatkan RPM (sesuai batas Cs material) atau tingkatkan feeding (f) pada tahap pembubutan kasar (roughing).
+                    <Clock size={14} className="inline mr-1 text-sky-400" /> <strong>Tips Efisiensi:</strong> Jika waktu pemesinan terlalu lama, tingkatkan RPM (sesuai batas Cs material) atau tingkatkan feeding (f) pada tahap pembubutan kasar (roughing).
                   </div>
 
                 </div>
@@ -1111,7 +1124,7 @@ const LatheFormulaCalculatorModal = ({
                   </div>
 
                   <div style={{ fontSize: '0.72rem', color: '#64748b', lineHeight: 1.4 }}>
-                    ℹ️ <em>Selisih diameter (D - d) = {dDiff.toFixed(2)} mm. Nilai 2ℓ = {(2 * validTaperL).toFixed(2)} mm.</em>
+                    [INFO] <em>Selisih diameter (D - d) = {dDiff.toFixed(2)} mm. Nilai 2ℓ = {(2 * validTaperL).toFixed(2)} mm.</em>
                   </div>
 
                 </div>
@@ -1192,7 +1205,7 @@ const LatheFormulaCalculatorModal = ({
                     color: '#94a3b8',
                     lineHeight: 1.4
                   }}>
-                    📐 <strong>Instruksi Praktik:</strong> Kendorkan 2 baut pengikat eretan atas pada pelat skala derajat, lalu putar sejauh <strong>{alphaDegFixed}°</strong> dan kencangkan kembali secara merata sebelum menyayat secara manual.
+                    <Compass size={14} className="inline mr-1 text-sky-400" /> <strong>Instruksi Praktik:</strong> Kendorkan 2 baut pengikat eretan atas pada pelat skala derajat, lalu putar sejauh <strong>{alphaDegFixed}°</strong> dan kencangkan kembali secara merata sebelum menyayat secara manual.
                   </div>
 
                 </div>
@@ -1406,7 +1419,7 @@ const LatheFormulaCalculatorModal = ({
                     color: '#94a3b8',
                     lineHeight: 1.4
                   }}>
-                    ⚠️ <strong>Standar Keselamatan:</strong> Jangan menyayat melebihi 2.0 mm per langkah pada mesin bubut latih untuk menghindari patahnya pahat atau benda kerja terlempar dari cekam!
+                    <AlertTriangle size={14} className="inline mr-1 text-rose-400" /> <strong>Standar Keselamatan:</strong> Jangan menyayat melebihi 2.0 mm per langkah pada mesin bubut latih untuk menghindari patahnya pahat atau benda kerja terlempar dari cekam!
                   </div>
 
                 </div>
@@ -1506,7 +1519,7 @@ const LatheFormulaCalculatorModal = ({
                 padding: '16px'
               }}>
                 <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f59e0b', marginBottom: '10px' }}>
-                  📊 TABEL STANDAR KECEPATAN POTONG (CUTTING SPEED Cs) MESIN BUBUT
+                  <Table size={16} className="inline mr-1.5 text-sky-400" /> TABEL STANDAR KECEPATAN POTONG (CUTTING SPEED Cs) MESIN BUBUT
                 </div>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', color: '#cbd5e1' }}>

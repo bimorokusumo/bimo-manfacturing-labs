@@ -4,6 +4,18 @@ import { useStudent } from '../context/StudentContext';
 import { getAllStoredScores } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
 import { MASTER_STUDENTS_LIST } from '../data/studentsData';
+import {
+  Zap,
+  Award,
+  Target,
+  ClipboardCheck,
+  Volume2,
+  Square,
+  GraduationCap,
+  BarChart3,
+  CheckCircle2,
+  ArrowRight
+} from 'lucide-react';
 
 const LABS_CONFIG = [
   {
@@ -81,7 +93,7 @@ const LABS_CONFIG = [
     badgeBg: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     badgeColor: '#ffffff',
     accentColor: '#059669',
-    chips: ['Ketelitian 0.01 mm', '🔬 Anatomi & Komponen', 'Latihan Interaktif']
+    chips: ['Ketelitian 0.01 mm', 'Anatomi & Komponen', 'Latihan Interaktif']
   },
   {
     id: 'design',
@@ -261,7 +273,7 @@ const DashboardView = ({
             TOTAL PENGALAMAN (XP)
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>💰</div>
+            <Zap size={22} style={{ color: '#f59e0b', flexShrink: 0 }} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {safeXP.toLocaleString('id-ID')}
@@ -285,13 +297,13 @@ const DashboardView = ({
             LENCANA PRESTASI
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>⭐</div>
+            <Award size={22} style={{ color: '#eab308', flexShrink: 0 }} />
             <div>
               <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>
                 12 <span style={{ fontSize: '0.76rem', color: 'var(--text-subtle)', fontWeight: 700 }}>Badge</span>
               </div>
-              <div style={{ color: '#10b981', fontSize: '0.68rem', fontWeight: 700, marginTop: '1px' }}>
-                ✓ Terverifikasi
+              <div style={{ color: '#10b981', fontSize: '0.68rem', fontWeight: 700, marginTop: '1px', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                <CheckCircle2 size={11} /> Terverifikasi
               </div>
             </div>
           </div>
@@ -308,7 +320,7 @@ const DashboardView = ({
             MISI PRAKTIK SELESAI
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>🎯</div>
+            <Target size={22} style={{ color: '#10b981', flexShrink: 0 }} />
             <div>
               <div className="stat-value" style={{ color: 'var(--text-main)', fontSize: '1.2rem', fontWeight: 900, lineHeight: 1 }}>
                 {completedMissions} <span style={{ fontSize: '0.82rem', color: 'var(--text-subtle)', fontWeight: 700 }}>/ {totalMissions}</span>
@@ -348,9 +360,13 @@ const DashboardView = ({
             fontWeight: 900,
             padding: '2px 6px',
             borderRadius: '4px',
-            letterSpacing: '0.5px'
+            letterSpacing: '0.5px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
           }}>
-            📋 DIAGNOSTIK
+            <ClipboardCheck size={11} />
+            <span>DIAGNOSTIK</span>
           </span>
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f8fafc' }}>
             Asesmen Diagnostik Kognitif Awal Siswa (10 Soal K3, Gambar Teknik &amp; Pemesinan)
@@ -377,7 +393,7 @@ const DashboardView = ({
           }}
         >
           <span>Mulai Tes (10 Soal)</span>
-          <span>➔</span>
+          <ArrowRight size={14} />
         </button>
       </div>
 
@@ -412,7 +428,7 @@ const DashboardView = ({
               }}
               title="Dengarkan Pengenalan Suara Seluruh Laboratorium"
             >
-              <span>{isSpeakingAllLabs ? '⏹️' : '🔊'}</span>
+              {isSpeakingAllLabs ? <Square size={13} /> : <Volume2 size={13} />}
               <span>{isSpeakingAllLabs ? 'Hentikan' : 'Dengarkan Lab'}</span>
             </button>
 
@@ -488,7 +504,7 @@ const DashboardView = ({
                     }}
                     title={`Dengarkan penjelasan suara materi ${lab.title}`}
                   >
-                    <span style={{ fontSize: '10px' }}>{isSpeakingThisLab ? '⏹️' : '🔊'}</span>
+                    {isSpeakingThisLab ? <Square size={11} /> : <Volume2 size={11} />}
                   </button>
                 </div>
 
@@ -524,7 +540,8 @@ const DashboardView = ({
                 MONITORING SISWA
               </h3>
               <span style={{ fontSize: '0.68rem', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '3px 8px', borderRadius: '12px', fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                👨‍🏫 Khusus Pengajar
+                <GraduationCap size={13} />
+                <span>Khusus Pengajar</span>
               </span>
             </div>
 
@@ -622,7 +639,8 @@ const DashboardView = ({
                   boxShadow: '0 4px 10px rgba(15, 23, 42, 0.15)'
                 }}
               >
-                <span>📊 Buka Rapor & Gradebook Lengkap ({monitoredStudent?.name?.split(' ')[0] || 'Siswa'})</span>
+                <BarChart3 size={15} />
+                <span>Buka Rapor & Gradebook Lengkap ({monitoredStudent?.name?.split(' ')[0] || 'Siswa'})</span>
               </button>
             </div>
           </div>

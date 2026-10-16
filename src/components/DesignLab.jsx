@@ -5,6 +5,7 @@ import OrthogonalMultiViewSimulator from './OrthogonalMultiViewSimulator';
 import CADStudioSimulator from './CADStudioSimulator';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
+import { Compass, BookOpen, Boxes, Monitor, Target } from 'lucide-react';
 
 const DesignLab = ({ onOpenDiagnostic }) => {
   const [labTab, setLabTab] = useState('materi'); // Default: Modul & Standarisasi (alur belajar)
@@ -38,10 +39,10 @@ const DesignLab = ({ onOpenDiagnostic }) => {
             borderRadius: '10px',
             background: 'linear-gradient(135deg, #0284c7, #1e40af)',
             display: 'flex', justifyContent: 'center', alignItems: 'center',
-            color: '#fff', fontSize: '1.3rem',
+            color: '#fff',
             boxShadow: '0 4px 10px rgba(2, 132, 199, 0.35)'
           }}>
-            📐
+            <Compass size={22} />
           </div>
           <div>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -77,7 +78,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>📚</span> 1. Modul & Standarisasi ISO
+            <BookOpen size={14} /> 1. Modul & Standarisasi ISO
           </button>
 
           {/* STEP 2: SIMULATOR ORTOGONAL */}
@@ -99,7 +100,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>🧭</span> 2. Simulator Ortogonal
+            <Boxes size={14} /> 2. Simulator Ortogonal
           </button>
 
           {/* STEP 3: FUSION 360 CAD STUDIO */}
@@ -121,7 +122,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>🖥️</span> 3. Fusion 360 CAD (2D→3D)
+            <Monitor size={14} /> 3. Fusion 360 CAD (2D→3D)
           </button>
 
           {/* STEP 4: KUIS ASESMEN */}
@@ -143,7 +144,7 @@ const DesignLab = ({ onOpenDiagnostic }) => {
               transition: 'all 0.15s'
             }}
           >
-            <span>🎯</span> 4. Kuis Asesmen (1000 XP)
+            <Target size={14} /> 4. Kuis Asesmen (1000 XP)
           </button>
         </div>
       </div>

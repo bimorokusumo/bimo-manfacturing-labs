@@ -10,6 +10,14 @@ import CNCQuiz from './CNCQuiz';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/assets';
+import {
+  BookOpen,
+  Cog,
+  Target,
+  Disc,
+  ArrowLeft
+} from 'lucide-react';
+
 
 const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
   const [selectedMachine, setSelectedMachine] = useState(initialTab); // 'lathe', 'milling', 'cnc', 'cutting-tools'
@@ -46,7 +54,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           onClick={() => { sound.playClick(); setSelectedMachine(null); }}
           style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '20px', alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700 }}
         >
-          ← Kembali ke Garasi Mesin
+          <ArrowLeft size={15} /> <span>Kembali ke Garasi Mesin</span>
         </button>
         <div style={{ flex: 1 }}>
           <MachineCuttingToolsLab
@@ -68,7 +76,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           onClick={() => { sound.playClick(); setSelectedMachine(null); }}
           style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '20px', alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          ← Kembali ke Garasi Mesin
+          <ArrowLeft size={15} /> <span>Kembali ke Garasi Mesin</span>
         </button>
         <div style={{ flex: 1 }}>
           <LatheModule addXP={addXP} />
@@ -84,7 +92,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           onClick={() => { sound.playClick(); setSelectedMachine(null); }}
           style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', marginBottom: '20px', alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          ← Kembali ke Garasi Mesin
+          <ArrowLeft size={15} /> <span>Kembali ke Garasi Mesin</span>
         </button>
         <div style={{ flex: 1 }}>
           <MillingModule addXP={addXP} />
@@ -101,13 +109,13 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
             onClick={() => { sound.playClick(); setSelectedMachine('cnc'); }}
             style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
-            ← Kembali ke Pilihan CNC
+            <ArrowLeft size={15} /> <span>Kembali ke Pilihan CNC</span>
           </button>
           <button 
             onClick={() => { sound.playClick(); setSelectedMachine('cnc'); setCncMode('materi'); }}
             style={{ background: 'rgba(2, 132, 199, 0.1)', border: '1px solid #0284c7', color: '#0284c7', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            📖 Buka Materi & Kamus G-Code
+            <BookOpen size={15} /> <span>Buka Materi & Kamus G-Code</span>
           </button>
         </div>
         <div style={{ flex: 1 }}>
@@ -125,13 +133,13 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
             onClick={() => { sound.playClick(); setSelectedMachine('cnc'); }}
             style={{ background: 'transparent', border: '1px solid var(--border-light)', color: 'var(--text-main)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
-            ← Kembali ke Pilihan CNC
+            <ArrowLeft size={15} /> <span>Kembali ke Pilihan CNC</span>
           </button>
           <button 
             onClick={() => { sound.playClick(); setSelectedMachine('cnc'); setCncMode('materi'); }}
             style={{ background: 'rgba(2, 132, 199, 0.1)', border: '1px solid #0284c7', color: '#0284c7', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            📖 Buka Materi & Kamus G-Code
+            <BookOpen size={15} /> <span>Buka Materi & Kamus G-Code</span>
           </button>
         </div>
         <div style={{ flex: 1 }}>
@@ -173,7 +181,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
               fontSize: '0.85rem'
             }}
           >
-            ← Kembali ke Garasi Mesin
+            <ArrowLeft size={15} /> <span>Kembali ke Garasi Mesin</span>
           </button>
 
           {/* CNC Sub-Tabs: Materi, Simulasi, Kuis */}
@@ -195,7 +203,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                 transition: 'all 0.2s'
               }}
             >
-              <span>📖</span> 1. Materi & Teori CNC
+              <BookOpen size={15} /> <span>1. Materi & Teori CNC</span>
             </button>
 
             <button
@@ -215,7 +223,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                 transition: 'all 0.2s'
               }}
             >
-              <span>⚙️</span> 2. Simulator Praktik CNC
+              <Cog size={15} /> <span>2. Simulator Praktik CNC</span>
             </button>
 
             <button
@@ -235,7 +243,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                 transition: 'all 0.2s'
               }}
             >
-              <span>🎯</span> 3. Kuis Asesmen (1000 XP)
+              <Target size={15} /> <span>3. Kuis Asesmen (1000 XP)</span>
             </button>
           </div>
         </div>
@@ -350,9 +358,9 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-tp)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Bubut (Lathe)</h3>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>📐 Rumus RPM</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>📝 Test Bubut</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>[RPM] Rumus RPM</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>[TEST] Test Bubut</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>[3D] Simulator 3D</span>
             </div>
             <button className="btn-game btn-game-tp" style={{ width: '100%' }}>MASUK MESIN BUBUT</button>
           </div>
@@ -370,9 +378,9 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-tflm)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin Frais (Milling)</h3>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.15)', color: '#0284c7' }}>🔪 8 Pisau Frais Visual</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🪵 Test Frais</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.15)', color: '#0284c7' }}>[PISAU] 8 Pisau Frais Visual</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>[TEST] Test Frais</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>[3D] Simulator 3D</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <button className="btn-game btn-game-tflm" style={{ width: '100%' }}>OPERASIKAN MESIN</button>
@@ -398,7 +406,7 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
                   gap: '6px'
                 }}
               >
-                <span>🌀</span> Buka Katalog 8 Pisau Frais
+                <Disc size={14} /> <span>Buka Katalog 8 Pisau Frais</span>
               </button>
             </div>
           </div>
@@ -416,9 +424,9 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
           <div style={{ padding: '20px' }}>
             <h3 style={{ color: 'var(--game-success)', fontSize: '1.3rem', fontWeight: 800, marginBottom: '12px', textTransform: 'uppercase' }}>Mesin CNC</h3>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>📖 G-Code</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>⚙️ Simulator 3D</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>🎯 Kuis CNC</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.1)', color: '#60a5fa' }}>[CODE] G-Code</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>[3D] Simulator 3D</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>[KUIS] Kuis CNC</span>
             </div>
             <button className="btn-game btn-game-success" style={{ width: '100%' }}>PELAJARI & OPERASIKAN</button>
           </div>
@@ -446,8 +454,8 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
             overflow: 'hidden',
             position: 'relative'
           }}>
-            <div style={{ fontSize: '3.8rem', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.35))' }}>
-              🔪
+            <div style={{ display: 'flex', justifyContent: 'center', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.35))' }}>
+              <Disc size={56} color="#38bdf8" />
             </div>
             <span style={{
               position: 'absolute',
@@ -469,10 +477,10 @@ const MachineLab = ({ addXP, onOpenDiagnostic, initialTab = null }) => {
               Cutting Tools Lab
             </h3>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.1)', color: '#0284c7' }}>🪓 HSS &amp; Karbida</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(234, 88, 12, 0.1)', color: '#ea580c' }}>🌀 6+ Pisau Frais</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(22, 163, 74, 0.1)', color: '#16a34a' }}>🔩 Bor, Tap &amp; Snei</span>
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(124, 58, 237, 0.1)', color: '#7c3aed' }}>📐 Geometri &amp; Insert</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(2, 132, 199, 0.1)', color: '#0284c7' }}>[MAT] HSS &amp; Karbida</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(234, 88, 12, 0.1)', color: '#ea580c' }}>[PISAU] 6+ Pisau Frais</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(22, 163, 74, 0.1)', color: '#16a34a' }}>[ULIR] Bor, Tap &amp; Snei</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', background: 'rgba(124, 58, 237, 0.1)', color: '#7c3aed' }}>[ISO] Geometri &amp; Insert</span>
             </div>
             <button className="btn-game" style={{ width: '100%', background: '#0284c7', color: '#ffffff', border: 'none' }}>
               EKSPLORASI ALAT POTONG

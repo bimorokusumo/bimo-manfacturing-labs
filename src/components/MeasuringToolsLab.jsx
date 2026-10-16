@@ -4,6 +4,32 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import {
+  Ruler,
+  Compass,
+  Search,
+  Camera,
+  Cog,
+  Scale,
+  Target,
+  FileText,
+  Volume2,
+  Square,
+  Play,
+  RotateCw,
+  BookOpen,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  X,
+  Layers,
+  Sparkles,
+  Award,
+  ArrowRight
+} from 'lucide-react';
+
 
 // =========================================================================
 // DATA ANATOMI & KOMPONEN ALAT UKUR (STANDAR METROLOGI INDUSTRI & KURIKULUM MESIN)
@@ -396,7 +422,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', borderBottom: '1px solid var(--border-light)', paddingBottom: '16px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '1.3rem' }}>🔬</span>
+            <Ruler size={24} color="#0284c7" />
             <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: 'var(--text-main)' }}>
               Anatomi &amp; Komponen: {data.title}
             </h3>
@@ -434,7 +460,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>📐</span>
+            <Compass size={14} />
             <span>Diagram Anatomi Berlabel</span>
           </button>
 
@@ -458,7 +484,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>📸</span>
+            <Camera size={14} />
             <span>Foto Fisik Nyata (HD)</span>
           </button>
 
@@ -488,7 +514,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
             }}
             title="Perbesar gambar ke layar penuh"
           >
-            <span>🔍</span>
+            <Search size={14} />
             <span>Perbesar HD</span>
           </button>
         </div>
@@ -523,7 +549,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
         }}
       >
         <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(4px)', padding: '5px 10px', borderRadius: '6px', border: '1px solid #334155', fontSize: '0.72rem', color: '#94a3b8', pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <span>🔍</span>
+          <Search size={14} />
           <span>Klik untuk Perbesar</span>
         </div>
 
@@ -551,7 +577,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
           <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>⚙️</span>
+            <Cog size={14} />
             <span>Rincian Komponen &amp; Fungsinya (Pilih Nomor Komponen):</span>
           </h4>
           <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Nomor pada tombol sesuai dengan penomoran pada diagram di atas</span>
@@ -659,7 +685,7 @@ const ToolAnatomySection = ({ toolKey, onOpenModal }) => {
               fontSize: '0.8rem',
               color: '#334155'
             }}>
-              <strong style={{ color: '#b45309' }}>💡 Kaidah Presisi &amp; Perawatan:</strong> {activeComponent.tip}
+              <strong style={{ color: '#b45309' }}>[SOP] Kaidah Presisi &amp; Perawatan:</strong> {activeComponent.tip}
             </div>
           </div>
         )}
@@ -677,7 +703,7 @@ const METROLOGY_TOOLS = [
     id: 'vernier',
     name: 'Jangka Sorong',
     enName: 'Vernier Caliper',
-    icon: '📏',
+    
     res: '0.05 / 0.02 mm',
     category: 'direct',
     categoryLabel: 'Ukur Langsung',
@@ -690,7 +716,7 @@ const METROLOGY_TOOLS = [
     id: 'micrometer',
     name: 'Mikrometer Sekrup',
     enName: 'Outside Micrometer',
-    icon: '🔬',
+    
     res: '0.01 mm',
     category: 'direct',
     categoryLabel: 'Ukur Langsung',
@@ -703,7 +729,7 @@ const METROLOGY_TOOLS = [
     id: 'height',
     name: 'Vernier Height Gauge',
     enName: 'Height Gauge',
-    icon: '📐',
+    
     res: '0.02 mm',
     category: 'direct',
     categoryLabel: 'Ukur Langsung',
@@ -716,7 +742,7 @@ const METROLOGY_TOOLS = [
     id: 'dial',
     name: 'Dial Indikator',
     enName: 'Dial Gauge / Runout',
-    icon: '⏱️',
+    
     res: '0.01 mm / TIR',
     category: 'comparator',
     categoryLabel: 'Alat Pembanding',
@@ -729,7 +755,7 @@ const METROLOGY_TOOLS = [
     id: 'feeler',
     name: 'Feeler Gauge',
     enName: 'Thickness Clearance Gauge',
-    icon: '🪒',
+    
     res: 'Celah Presisi',
     category: 'reference',
     categoryLabel: 'Kaliber Celah',
@@ -742,7 +768,7 @@ const METROLOGY_TOOLS = [
     id: 'block',
     name: 'Gauge Block',
     enName: 'Johansson Gauge Block',
-    icon: '🧱',
+    
     res: 'Master Kalibrasi',
     category: 'reference',
     categoryLabel: 'Standar Acuan Master',
@@ -755,7 +781,7 @@ const METROLOGY_TOOLS = [
     id: 'quiz',
     name: 'Kuis Asesmen Membaca',
     enName: 'Metrology Quiz & Evaluation',
-    icon: '🏆',
+    
     res: 'XP & Evaluasi',
     category: 'evaluation',
     categoryLabel: 'Uji Kompetensi',
@@ -1130,7 +1156,7 @@ const MeasuringToolsLab = ({
             boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
             fontSize: '1.8rem'
           }}>
-            📐
+            <Ruler size={30} color="#ffffff" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
@@ -1175,13 +1201,13 @@ const MeasuringToolsLab = ({
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            🏷️ Kategori Metrologi:
+            Kategori Metrologi:
           </span>
           {[
-            { id: 'all', label: '🌐 Semua Alat (6+1)' },
-            { id: 'direct', label: '📏 Alat Ukur Langsung Presisi (3)' },
-            { id: 'comparator', label: '⏱️ Alat Ukur Pembanding & Acuan (3)' },
-            { id: 'evaluation', label: '🏆 Kuis Asesmen (1)' }
+            { id: 'all', label: 'Semua Alat (6+1)' },
+            { id: 'direct', label: 'Alat Ukur Langsung Presisi (3)' },
+            { id: 'comparator', label: 'Alat Ukur Pembanding & Acuan (3)' },
+            { id: 'evaluation', label: 'Kuis Asesmen (1)' }
           ].map(f => (
             <button
               key={f.id}
@@ -1235,7 +1261,7 @@ const MeasuringToolsLab = ({
             transition: 'all 0.2s'
           }}
         >
-          <span>⚖️</span>
+          <Scale size={14} />
           <span>{showComparisonGuide ? 'Tutup Perbandingan' : 'Pahami Perbedaan: Langsung vs Pembanding'}</span>
         </button>
       </div>
@@ -1256,7 +1282,7 @@ const MeasuringToolsLab = ({
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.4rem' }}>⚖️</span>
+                <Scale size={20} color="#0284c7" />
                 <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
                   Klasifikasi Metrologi: Alat Ukur Langsung Presisi vs. Alat Ukur Pembanding
                 </h3>
@@ -1278,7 +1304,7 @@ const MeasuringToolsLab = ({
                 cursor: 'pointer'
               }}
             >
-              ✕ Tutup
+              Tutup
             </button>
           </div>
 
@@ -1295,7 +1321,7 @@ const MeasuringToolsLab = ({
               gap: '10px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.4rem' }}>📏</span>
+                <Ruler size={20} color="#0284c7" />
                 <div>
                   <h4 style={{ margin: 0, color: '#065f46', fontSize: '1rem', fontWeight: 900 }}>1. Alat Ukur Langsung Presisi</h4>
                   <div style={{ fontSize: '0.72rem', color: '#047857', fontWeight: 700 }}>DIRECT MEASURING INSTRUMENTS</div>
@@ -1313,7 +1339,7 @@ const MeasuringToolsLab = ({
                 </ul>
               </div>
               <div style={{ fontSize: '0.76rem', color: '#047857', fontWeight: 600 }}>
-                🎯 <strong>Ciri:</strong> Jangkauan ukur panjang (0-150 mm), hasil berupa nilai nominal absolut (misal: 25.42 mm).
+                <strong>[CIRI] Ciri:</strong> Jangkauan ukur panjang (0-150 mm), hasil berupa nilai nominal absolut (misal: 25.42 mm).
               </div>
             </div>
 
@@ -1328,7 +1354,7 @@ const MeasuringToolsLab = ({
               gap: '10px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.4rem' }}>⏱️</span>
+                <Target size={20} color="#0284c7" />
                 <div>
                   <h4 style={{ margin: 0, color: '#92400e', fontSize: '1rem', fontWeight: 900 }}>2. Alat Ukur Pembanding</h4>
                   <div style={{ fontSize: '0.72rem', color: '#b45309', fontWeight: 700 }}>COMPARATIVE INSTRUMENTS (COMPARATOR)</div>
@@ -1346,7 +1372,7 @@ const MeasuringToolsLab = ({
                 </ul>
               </div>
               <div style={{ fontSize: '0.76rem', color: '#b45309', fontWeight: 600 }}>
-                🎯 <strong>Ciri:</strong> Peka terhadap mikron, jangkauan gerak pendek (0-10 mm), menguji keolengan/TIR, kerataan, dan kebulatan.
+                <strong>[CIRI] Ciri:</strong> Peka terhadap mikron, jangkauan gerak pendek (0-10 mm), menguji keolengan/TIR, kerataan, dan kebulatan.
               </div>
             </div>
 
@@ -1361,7 +1387,7 @@ const MeasuringToolsLab = ({
               gap: '10px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.4rem' }}>🧱</span>
+                <Layers size={20} color="#0284c7" />
                 <div>
                   <h4 style={{ margin: 0, color: '#075985', fontSize: '1rem', fontWeight: 900 }}>3. Standar Acuan Master &amp; Celah</h4>
                   <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700 }}>REFERENCE STANDARD &amp; CLEARANCE GAUGES</div>
@@ -1379,7 +1405,7 @@ const MeasuringToolsLab = ({
                 </ul>
               </div>
               <div style={{ fontSize: '0.76rem', color: '#0369a1', fontWeight: 600 }}>
-                🎯 <strong>Ciri:</strong> Akurasi sub-mikron, menjadi "jantung" kalibrasi seluruh instrumen di bengkel industri.
+                <strong>[CIRI] Ciri:</strong> Akurasi sub-mikron, menjadi "jantung" kalibrasi seluruh instrumen di bengkel industri.
               </div>
             </div>
           </div>
@@ -1431,7 +1457,7 @@ const MeasuringToolsLab = ({
 
           {/* TIPS PRAKTIS DI INDUSTRI */}
           <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '10px', padding: '12px 16px', fontSize: '0.8rem', color: '#78350f', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.2rem' }}>💡</span>
+            <FileText size={18} color="#0284c7" />
             <div>
               <strong>Kaidah Pemilihan di Industri:</strong> Gunakan <em>Alat Ukur Langsung</em> saat Anda membuat benda kerja dari nol untuk mengetahui dimensinya. Gunakan <em>Alat Ukur Pembanding</em> saat Anda ingin menguji kualitas kesimetrisan bentuk (kebulatan, kesejajaran, kerataan) atau saat memeriksa ribuan komponen secara cepat apakah berada dalam toleransi &plusmn;0.02 mm.
             </div>
@@ -1510,9 +1536,9 @@ const MeasuringToolsLab = ({
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
-              { id: 'simulator', label: '🧪 Simulasi Interaktif Bergerak' },
-              { id: 'theory', label: '🔬 Anatomi & Komponen (Diagram & Foto HD)' },
-              { id: 'sop', label: '📋 SOP & Cara Penggunaan Standar Industri' }
+              { id: 'simulator', label: '1. Simulasi Interaktif Bergerak' },
+              { id: 'theory', label: '2. Anatomi & Komponen (Diagram & Foto HD)' },
+              { id: 'sop', label: '3. SOP & Cara Penggunaan Standar Industri' }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -1557,7 +1583,7 @@ const MeasuringToolsLab = ({
             }}
             title="Dengarkan penjelasan suara materi dan nilai alat ukur ini (Fitur Inklusi)"
           >
-            <span style={{ fontSize: '1rem' }}>{isSpeakingThisMeasure ? '⏹️' : '🔊'}</span>
+            <span>{isSpeakingThisMeasure ? <Square size={13} fill="currentColor" /> : <Volume2 size={13} />}</span>
             <span>{isSpeakingThisMeasure ? 'Hentikan Audio' : 'Dengarkan Penjelasan Suara'}</span>
           </button>
         </div>
@@ -1603,7 +1629,7 @@ const MeasuringToolsLab = ({
                       }}
                       title="Buka diagram anatomi dan komponen jangka sorong"
                     >
-                      <span>📖</span>
+                      <BookOpen size={14} />
                       <span>Gambar Anatomi</span>
                     </button>
                     <button
@@ -1675,7 +1701,7 @@ const MeasuringToolsLab = ({
                         cursor: 'pointer'
                       }}
                     >
-                      {showCaliperReadout ? '👁️ Nilai Tampil' : '🙈 Sembunyikan (Uji Mandiri)'}
+                      {showCaliperReadout ? 'Nilai Tampil' : 'Sembunyikan (Uji Mandiri)'}
                     </button>
                   </div>
                 </div>
@@ -1686,10 +1712,10 @@ const MeasuringToolsLab = ({
                     Benda Kerja yang Diukur:
                   </span>
                   {[
-                    { id: 'outer-shaft', label: '🔘 Poros Bulat (Luar)' },
-                    { id: 'plate', label: '🔲 Plat Datar (Tebal)' },
-                    { id: 'inner-hole', label: '⭕ Busing Lubang (Dalam)' },
-                    { id: 'none', label: '🚫 Tanpa Benda' }
+                    { id: 'outer-shaft', label: 'Poros Bulat (Luar)' },
+                    { id: 'plate', label: 'Plat Datar (Tebal)' },
+                    { id: 'inner-hole', label: 'Busing Lubang (Dalam)' },
+                    { id: 'none', label: 'Tanpa Benda' }
                   ].map(wp => (
                     <button
                       key={wp.id}
@@ -2140,7 +2166,7 @@ const MeasuringToolsLab = ({
                       { label: 'Set 12.35 mm', exact: 12.35 },
                       { label: 'Set 18.45 mm', exact: 18.45 },
                       { label: 'Set 25.80 mm', exact: 25.80 },
-                      { label: 'Acak Ukuran 🎲', random: true }
+                      { label: 'Acak Ukuran', random: true }
                     ].map((btn, idx) => (
                       <button
                         key={idx}
@@ -2180,7 +2206,7 @@ const MeasuringToolsLab = ({
                 {/* CALCULATION BOX */}
                 <div className="dashboard-card" style={{ padding: '20px', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#047857', letterSpacing: '1px', marginBottom: '10px' }}>
-                    📐 BEDAH RUMUS PEMBACAAN SKALA & DIGITAL
+                    BEDAH RUMUS PEMBACAAN SKALA & DIGITAL
                   </div>
 
                   {showCaliperReadout ? (
@@ -2242,7 +2268,7 @@ const MeasuringToolsLab = ({
                       borderRadius: '8px',
                       textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🙈</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><EyeOff size={32} color="#94a3b8" /></div>
                       <div style={{ color: '#ef4444', fontWeight: 800, fontSize: '0.9rem' }}>MODE UJI BACA MANDIRI AKTIF</div>
                       <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', margin: '6px 0 14px 0' }}>
                         Tebak hasil bacaan pada ilustrasi jangka sorong, lalu klik tombol untuk mengecek ketepatan Anda.
@@ -2269,7 +2295,7 @@ const MeasuringToolsLab = ({
                 {/* 4 CARA PENGUKURAN */}
                 <div className="dashboard-card" style={{ padding: '16px' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
-                    🎯 4 Dimensi Pengukuran Caliper:
+                    4 Dimensi Pengukuran Caliper:
                   </div>
                   <ul style={{ fontSize: '0.75rem', color: '#334155', paddingLeft: '18px', margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <li><strong style={{ color: '#0f172a' }}>Rahang Luar:</strong> Mengukur diameter luar, ketebalan, atau panjang poros.</li>
@@ -2420,7 +2446,7 @@ const MeasuringToolsLab = ({
                       }}
                       title="Buka diagram anatomi dan komponen mikrometer sekrup"
                     >
-                      <span>📖</span>
+                      <BookOpen size={14} />
                       <span>Gambar Anatomi</span>
                     </button>
 
@@ -2444,7 +2470,7 @@ const MeasuringToolsLab = ({
                         gap: '6px'
                       }}
                     >
-                      <span>{microReadingMode === 'standard' ? '⚙️ Mode Standar (Ada Garis 0.5 mm)' : '⚡ Mode Sederhana (Hanya Garis 1 mm)'}</span>
+                      <span>{microReadingMode === 'standard' ? 'Mode Standar (Garis 0.5 mm)' : 'Mode Sederhana (Garis 1 mm)'}</span>
                       <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>(Klik Ganti)</span>
                     </button>
 
@@ -2461,7 +2487,7 @@ const MeasuringToolsLab = ({
                         cursor: 'pointer'
                       }}
                     >
-                      {showMicroReadout ? '👁️ Bacaan Tampil' : '🙈 Mode Uji'}
+                      {showMicroReadout ? 'Bacaan Tampil' : 'Mode Uji'}
                     </button>
                   </div>
                 </div>
@@ -2479,7 +2505,7 @@ const MeasuringToolsLab = ({
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#38bdf8' }}>
-                      🔬 SIMULATOR MIKROMETER SEKRUP PRESISI (0 - 25 mm)
+                      SIMULATOR MIKROMETER SEKRUP PRESISI (0 - 25 mm)
                     </span>
                     <span style={{ fontSize: '0.68rem', background: '#0284c7', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
                       Ketelitian 0.01 mm
@@ -2503,7 +2529,7 @@ const MeasuringToolsLab = ({
                     }}
                     title="Nyalakan/matikan garis bantu penunjuk segaris dan pembacaan"
                   >
-                    <span>{microShowGuides ? '🎯 Garis Bantu: AKTIF' : '📝 Tampilan Murni (Soal)'}</span>
+                    <span>{microShowGuides ? '[BANTU] Garis Bantu: AKTIF' : '[MURNI] Tampilan Soal'}</span>
                   </button>
                 </div>
 
@@ -2523,7 +2549,7 @@ const MeasuringToolsLab = ({
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '0 8px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ fontSize: '0.82rem', fontWeight: 900, color: '#38bdf8', letterSpacing: '0.5px' }}>
-                          🔬 TAMPILAN DETAIL SKALA (MAKRO / KACA PEMBESAR)
+                          TAMPILAN DETAIL SKALA (MAKRO / KACA PEMBESAR)
                         </span>
                         <span style={{ fontSize: '0.68rem', background: '#0284c7', color: '#fff', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
                           Ketelitian 0.01 mm
@@ -2864,7 +2890,7 @@ const MeasuringToolsLab = ({
                         boxShadow: '0 2px 8px rgba(245, 158, 11, 0.4)'
                       }}
                     >
-                      🔊 Putar Ratchet (+0.01 mm Klik!)
+                      Putar Ratchet (+0.01 mm)
                     </button>
 
                     {/* TOMBOL LANGKAH MAJU */}
@@ -2907,13 +2933,13 @@ const MeasuringToolsLab = ({
                       Contoh Soal:
                     </span>
                     {[
-                      { label: '⭐ 7.74 mm (Gambar Soal)', exact: 7.74, active: true },
+                      { label: '7.74 mm (Gambar Soal)', exact: 7.74, active: true },
                       { label: '0.00 mm (Nol)', exact: 0.00 },
                       { label: '5.50 mm (Garis 0.5 Pas)', exact: 5.50 },
                       { label: '7.48 mm (Belum 0.5 mm)', exact: 7.48 },
                       { label: '7.52 mm (Lewat 0.5 mm)', exact: 7.52 },
                       { label: '12.35 mm', exact: 12.35 },
-                      { label: 'Acak 🎲', random: true }
+                      { label: 'Acak', random: true }
                     ].map((btn, idx) => (
                       <button
                         key={idx}
@@ -2951,7 +2977,7 @@ const MeasuringToolsLab = ({
                 <div className="dashboard-card" style={{ padding: '20px', border: '1.5px solid rgba(56, 189, 248, 0.5)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '1px' }}>
-                      📖 RUMUS STANDAR UMUM
+                      RUMUS STANDAR UMUM
                     </div>
                     <span style={{ fontSize: '0.68rem', color: '#10b981', fontWeight: 700, background: 'rgba(16, 185, 129, 0.1)', padding: '2px 6px', borderRadius: '4px' }}>
                       SU + SN
@@ -3026,7 +3052,7 @@ const MeasuringToolsLab = ({
                     </div>
                   ) : (
                     <div style={{ padding: '30px 20px', background: 'rgba(239, 68, 68, 0.1)', border: '1px dashed #ef4444', borderRadius: '8px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🙈</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><EyeOff size={32} color="#94a3b8" /></div>
                       <div style={{ color: '#ef4444', fontWeight: 800, fontSize: '0.9rem' }}>MODE UJI BACA MANDIRI</div>
                       <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', margin: '6px 0 14px 0' }}>
                         Amati angka pada Skala Utama dan Skala Nonius di atas, lalu tebak hasilnya.
@@ -3044,7 +3070,7 @@ const MeasuringToolsLab = ({
                 {/* PENJELASAN PRAKTIS SKALA & TIPS MENGHILANGKAN KEBINGUNGAN SISWA */}
                 <div className="dashboard-card" style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#b45309', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>💡</span> Panduan Membaca Tanpa Bingung (Standar Gambar Soal):
+                    Panduan Membaca Tanpa Bingung (Standar Gambar Soal):
                   </div>
                   <div style={{ fontSize: '0.75rem', color: '#334155', lineHeight: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <p style={{ margin: 0 }}>
@@ -3056,11 +3082,11 @@ const MeasuringToolsLab = ({
                       {microReadingMode === 'standard' ? (
                         microHalfMm > 0 ? (
                           <span style={{ color: '#059669', fontWeight: 700 }}>
-                            ✓ Garis bawah setelah {microWholeMm} mm <u>SUDAH TERLIHAT</u> keluar dari bibir bidal &rarr; Tambahkan <strong style={{ color: '#059669' }}>+0.50 mm</strong>!
+                            [TERLIHAT] Garis bawah setelah {microWholeMm} mm <u>SUDAH TERLIHAT</u> keluar dari bibir bidal &rarr; Tambahkan <strong style={{ color: '#059669' }}>+0.50 mm</strong>!
                           </span>
                         ) : (
                           <span style={{ color: '#64748b', fontWeight: 600 }}>
-                            ✗ Garis bawah setelah {microWholeMm} mm <u>BELUM TERLIHAT</u> (masih tertutup bidal) &rarr; Bernilai <strong style={{ color: '#64748b' }}>+0.00 mm</strong>.
+                            [TERTUTUP] Garis bawah setelah {microWholeMm} mm <u>BELUM TERLIHAT</u> (masih tertutup bidal) &rarr; Bernilai <strong style={{ color: '#64748b' }}>+0.00 mm</strong>.
                           </span>
                         )
                       ) : (
@@ -3074,7 +3100,7 @@ const MeasuringToolsLab = ({
                     </p>
                     <div style={{ background: '#f8fafc', padding: '8px 10px', borderRadius: '6px', border: '1px solid #e2e8f0', marginTop: '4px' }}>
                       <strong style={{ color: '#0284c7' }}>
-                        📌 Total = Skala Atas ({microWholeMm}) + Garis Bawah ({microHalfMm.toFixed(2)}) + Bidal ({microNoniusScale.toFixed(2)}) = {microValue.toFixed(2)} mm
+                        Total = Skala Atas ({microWholeMm}) + Garis Bawah ({microHalfMm.toFixed(2)}) + Bidal ({microNoniusScale.toFixed(2)}) = {microValue.toFixed(2)} mm
                       </strong>
                     </div>
                   </div>
@@ -3185,7 +3211,7 @@ const MeasuringToolsLab = ({
                       }}
                       title="Buka diagram anatomi dan komponen vernier height gauge"
                     >
-                      <span>📖</span>
+                      <BookOpen size={14} />
                       <span>Gambar Anatomi</span>
                     </button>
                     <button
@@ -3201,7 +3227,7 @@ const MeasuringToolsLab = ({
                         cursor: 'pointer'
                       }}
                     >
-                      {showHeightReadout ? '👁️ Nilai Tampil' : '🙈 Sembunyikan (Uji Mandiri)'}
+                      {showHeightReadout ? 'Nilai Tampil' : 'Sembunyikan (Uji Mandiri)'}
                     </button>
                     <button
                       onClick={() => {
@@ -3227,7 +3253,7 @@ const MeasuringToolsLab = ({
                         gap: '6px'
                       }}
                     >
-                      ✏️ Gores Garis (Scribe Line)
+                      Gores Garis (Scribe Line)
                     </button>
                   </div>
                 </div>
@@ -3349,7 +3375,7 @@ const MeasuringToolsLab = ({
                       { label: 'Tingkat 1: 25.00 mm', exact: 25.0 },
                       { label: 'Tingkat 2: 45.50 mm', exact: 45.5 },
                       { label: 'Tingkat 3: 72.80 mm', exact: 72.8 },
-                      { label: 'Bersihkan Garis Gores 🧹', clear: true }
+                      { label: 'Bersihkan Garis Gores', clear: true }
                     ].map((btn, idx) => (
                       <button
                         key={idx}
@@ -3384,7 +3410,7 @@ const MeasuringToolsLab = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="dashboard-card" style={{ padding: '20px', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#047857', letterSpacing: '1px', marginBottom: '10px' }}>
-                    📐 PEMBACAAN TINGGI VERNIER
+                    PEMBACAAN TINGGI VERNIER
                   </div>
 
                   {showHeightReadout ? (
@@ -3418,7 +3444,7 @@ const MeasuringToolsLab = ({
                       borderRadius: '8px',
                       textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🙈</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><EyeOff size={32} color="#94a3b8" /></div>
                       <div style={{ color: '#ef4444', fontWeight: 800, fontSize: '0.9rem' }}>MODE UJI BACA MANDIRI AKTIF</div>
                       <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', margin: '6px 0 14px 0' }}>
                         Baca ketinggian langsung pada skala vernier batang tinggi penggores, lalu klik tombol untuk mengecek ketepatan Anda.
@@ -3444,7 +3470,7 @@ const MeasuringToolsLab = ({
 
                 <div className="dashboard-card" style={{ padding: '16px' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
-                    💎 Ujung Penggores Karbida (Carbide Scriber):
+                    Ujung Penggores Karbida (Carbide Scriber):
                   </div>
                   <p style={{ fontSize: '0.75rem', color: '#334155', margin: 0, lineHeight: 1.4 }}>
                     Dibuat dari paduan karbida tungsten yang sangat keras sehingga mampu menggores garis tata letak (layout line) pada baja karbon tanpa tumpul, atau dipasangi Dial Test Indicator untuk memeriksa kerataan.
@@ -3550,7 +3576,7 @@ const MeasuringToolsLab = ({
                       }}
                       title="Buka diagram anatomi dan komponen dial indicator"
                     >
-                      <span>📖</span>
+                      <BookOpen size={14} />
                       <span>Gambar Anatomi</span>
                     </button>
                     <button
@@ -3566,7 +3592,7 @@ const MeasuringToolsLab = ({
                         cursor: 'pointer'
                       }}
                     >
-                      {showDialReadout ? '👁️ Nilai Tampil' : '🙈 Sembunyikan (Uji Mandiri)'}
+                      {showDialReadout ? 'Nilai Tampil' : 'Sembunyikan (Uji Mandiri)'}
                     </button>
                     <button
                       onClick={() => {
@@ -3587,7 +3613,7 @@ const MeasuringToolsLab = ({
                         gap: '6px'
                       }}
                     >
-                      {isTestingRunout ? '⏹️ Stop Putaran Poros' : '▶️ Putar Poros (Uji Runout TIR)'}
+                      {isTestingRunout ? 'Stop Putaran Poros' : 'Putar Poros (Uji Runout TIR)'}
                     </button>
                   </div>
                 </div>
@@ -3759,7 +3785,7 @@ const MeasuringToolsLab = ({
                         cursor: 'pointer'
                       }}
                     >
-                      🔄 Putar Bezel (Zero Set Jarum)
+                      Putar Bezel (Zero Set Jarum)
                     </button>
                     <button
                       onClick={() => setShaftEccentricity(0.02)}
@@ -3800,7 +3826,7 @@ const MeasuringToolsLab = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="dashboard-card" style={{ padding: '20px', border: '1px solid rgba(245, 158, 11, 0.4)' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f59e0b', letterSpacing: '1px', marginBottom: '10px' }}>
-                    ⏱️ PEMBACAAN JARUM INDIKATOR
+                    PEMBACAAN JARUM INDIKATOR
                   </div>
 
                   {showDialReadout ? (
@@ -3832,7 +3858,7 @@ const MeasuringToolsLab = ({
                           {(shaftEccentricity * 2).toFixed(3)} mm
                         </div>
                         <div style={{ fontSize: '0.75rem', fontWeight: 800, marginTop: '4px', color: (shaftEccentricity * 2) <= 0.05 ? '#047857' : '#dc2626' }}>
-                          {(shaftEccentricity * 2) <= 0.05 ? '✅ LOLOS TOLERANSI (≤ 0.05 mm)' : '❌ MELEBIHI TOLERANSI (POROS BENGKOK)'}
+                          {(shaftEccentricity * 2) <= 0.05 ? '[OK] LOLOS TOLERANSI (≤ 0.05 mm)' : '[REVISI] MELEBIHI TOLERANSI (POROS BENGKOK)'}
                         </div>
                       </div>
                     </div>
@@ -3844,7 +3870,7 @@ const MeasuringToolsLab = ({
                       borderRadius: '8px',
                       textAlign: 'center'
                     }}>
-                      <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🙈</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><EyeOff size={32} color="#94a3b8" /></div>
                       <div style={{ color: '#ef4444', fontWeight: 800, fontSize: '0.9rem' }}>MODE UJI BACA MANDIRI AKTIF</div>
                       <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', margin: '6px 0 14px 0' }}>
                         Baca posisi jarum kecil (mm) dan jarum besar (0.01 mm) langsung pada dial face, lalu klik tombol untuk mengecek ketepatan Anda.
@@ -3870,7 +3896,7 @@ const MeasuringToolsLab = ({
 
                 <div className="dashboard-card" style={{ padding: '16px' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
-                    💡 Pre-load (Tekanan Awal):
+                    [SOP] Pre-load (Tekanan Awal):
                   </div>
                   <p style={{ fontSize: '0.75rem', color: '#334155', margin: 0, lineHeight: 1.4 }}>
                     Sebelum memulai pengukuran, plunger harus ditekan masuk sebesar <strong style={{ color: '#0f172a' }}>1 - 2 mm</strong> (pre-load) agar jarum dapat mendeteksi lembah (penyimpangan negatif) maupun puncak (penyimpangan positif).
@@ -3974,7 +4000,7 @@ const MeasuringToolsLab = ({
                       }}
                       title="Buka diagram anatomi dan komponen feeler gauge"
                     >
-                      <span>📖</span>
+                      <BookOpen size={14} />
                       <span>Gambar Anatomi</span>
                     </button>
                     {[
@@ -4139,7 +4165,7 @@ const MeasuringToolsLab = ({
                     boxShadow: '0 4px 14px rgba(2, 132, 199, 0.3)'
                   }}
                 >
-                  🔍 Masukkan Bilah ke Celah (Uji Feeling Sentuhan)
+                  Uji Celah Bilah (Feeling Sentuhan)
                 </button>
 
               </div>
@@ -4148,14 +4174,14 @@ const MeasuringToolsLab = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="dashboard-card" style={{ padding: '20px', border: '1px solid rgba(2, 132, 199, 0.4)' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0369a1', letterSpacing: '1px', marginBottom: '10px' }}>
-                    🪒 DIAGNOSTIK SENTUHAN (FEELING TACTILE)
+                    DIAGNOSTIK SENTUHAN (FEELING TACTILE)
                   </div>
 
                   {gapInspectionResult ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       {gapInspectionResult === 'tight' && (
                         <div style={{ background: '#fef2f2', border: '1px solid #ef4444', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '6px' }}>🛑</div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}><XCircle size={28} color="#ef4444" /></div>
                           <div style={{ color: '#b91c1c', fontWeight: 900, fontSize: '1rem' }}>TERLALU SEMPIT / MACET!</div>
                           <p style={{ fontSize: '0.78rem', color: '#7f1d1d', margin: '8px 0 0 0' }}>
                             Bilah tidak dapat masuk. Jangan dipaksa karena bilah baja tipis akan tertekuk permanen atau patah!
@@ -4165,7 +4191,7 @@ const MeasuringToolsLab = ({
 
                       {gapInspectionResult === 'snug' && (
                         <div style={{ background: '#f0fdf4', border: '1px solid #10b981', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '6px' }}>✨</div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}><CheckCircle2 size={28} color="#10b981" /></div>
                           <div style={{ color: '#047857', fontWeight: 900, fontSize: '1rem' }}>PAS & SNUG (SLIGHT DRAG)!</div>
                           <p style={{ fontSize: '0.78rem', color: '#14532d', margin: '8px 0 0 0' }}>
                             Tahanan geser halus dan mantap seperti menarik selembar kertas dari buku tebal. <strong>INI ADALAH UKURAN CELAH YANG TEPAT!</strong> (+15 XP)
@@ -4175,7 +4201,7 @@ const MeasuringToolsLab = ({
 
                       {gapInspectionResult === 'loose' && (
                         <div style={{ background: '#fffbeb', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', textAlign: 'center' }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '6px' }}>⚠️</div>
+                          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}><AlertTriangle size={28} color="#f59e0b" /></div>
                           <div style={{ color: '#b45309', fontWeight: 900, fontSize: '1rem' }}>TERLALU LONGGAR!</div>
                           <p style={{ fontSize: '0.78rem', color: '#78350f', margin: '8px 0 0 0' }}>
                             Bilah masuk tanpa hambatan sedikit pun dan bergoyang. Celah sesungguhnya lebih tebal dari bilah ini.
@@ -4192,7 +4218,7 @@ const MeasuringToolsLab = ({
 
                 <div className="dashboard-card" style={{ padding: '16px' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '8px' }}>
-                    📌 Golden Rule Feeler Gauge:
+                    [ATURAN] Golden Rule Feeler Gauge:
                   </div>
                   <p style={{ fontSize: '0.75rem', color: '#334155', margin: 0, lineHeight: 1.4 }}>
                     Gunakan <strong>sesedikit mungkin bilah</strong> saat mengombinasikan ketebalan (maksimal 2-3 bilah) untuk mencegah penumpukan oli dan akumulasi toleransi error.
@@ -4299,7 +4325,7 @@ const MeasuringToolsLab = ({
                         }}
                         title="Buka diagram anatomi dan komponen gauge block"
                       >
-                        <span>📖</span>
+                        <BookOpen size={14} />
                         <span>Gambar Anatomi</span>
                       </button>
                       <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>
@@ -4479,7 +4505,7 @@ const MeasuringToolsLab = ({
 
                     {currentBlockTotal === targetBlockDimension ? (
                       <span style={{ background: '#10b981', color: '#064e3b', fontWeight: 900, padding: '4px 12px', borderRadius: '6px', fontSize: '0.8rem' }}>
-                        🎉 TARGET TERCAPAI PRESISI!
+                        [OK] TARGET TERCAPAI PRESISI!
                       </span>
                     ) : (
                       <span style={{ color: '#fbbf24', fontSize: '0.8rem', fontWeight: 700 }}>
@@ -4495,7 +4521,7 @@ const MeasuringToolsLab = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="dashboard-card" style={{ padding: '20px', border: '1px solid rgba(16, 185, 129, 0.4)' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#047857', letterSpacing: '1px', marginBottom: '10px' }}>
-                    🧱 ATURAN KOMBINASI BLOK UKUR
+                    ATURAN KOMBINASI BLOK UKUR
                   </div>
 
                   <p style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.4, margin: '0 0 10px 0' }}>
@@ -4516,7 +4542,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
 
                 <div className="dashboard-card" style={{ padding: '16px' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '8px' }}>
-                    🌡️ Standar Temperatur Internasional:
+                    Standar Temperatur Internasional:
                   </div>
                   <p style={{ fontSize: '0.75rem', color: '#334155', margin: 0, lineHeight: 1.4 }}>
                     Sesuai ISO 1, semua ukuran nominal blok ukur dikalibrasi tepat pada suhu <strong>20°C (68°F)</strong>. Hindari memegang blok langsung dengan telapak tangan karena panas tubuh akan memuaikan ukuran hingga beberapa mikron.
@@ -4700,7 +4726,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
                   marginBottom: '20px'
                 }}>
                   <div style={{ fontWeight: 800, color: selectedAnswer === quizQuestions[currentQuizIndex].correct ? '#047857' : '#b91c1c', marginBottom: '4px' }}>
-                    {selectedAnswer === quizQuestions[currentQuizIndex].correct ? '🎉 JAWABAN BENAR! (+50 XP)' : '❌ JAWABAN KURANG TEPAT'}
+                    {selectedAnswer === quizQuestions[currentQuizIndex].correct ? '[BENAR] JAWABAN BENAR! (+50 XP)' : '[KURANG TEPAT] JAWABAN KURANG TEPAT'}
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
                     {quizQuestions[currentQuizIndex].explanation}
@@ -4773,7 +4799,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
                       cursor: 'pointer'
                     }}
                   >
-                    {currentQuizIndex + 1 < quizQuestions.length ? 'Soal Berikutnya ➡️' : 'Selesaikan Kuis 🏆'}
+                    {currentQuizIndex + 1 < quizQuestions.length ? 'Soal Berikutnya' : 'Selesaikan Kuis'}
                   </button>
                 )}
               </div>
@@ -4781,7 +4807,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
             </div>
           ) : (
             <div className="dashboard-card" style={{ padding: '40px', maxWidth: '600px', margin: '0 auto', textAlign: 'center', width: '100%' }}>
-              <div style={{ fontSize: '4rem', marginBottom: '14px' }}>🏆</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}><Award size={56} color="#f59e0b" /></div>
               <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '8px' }}>
                 ASESMEN METROLOGI SELESAI!
               </h2>
@@ -4825,7 +4851,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
                   cursor: 'pointer'
                 }}
               >
-                Ulangi Asesmen 🔄
+                Ulangi Asesmen
               </button>
             </div>
           )}
@@ -4884,7 +4910,7 @@ ightarrow$ pilih balok 30.0 mm.</li>
                   fontWeight: 800
                 }}
               >
-                ✕ Tutup (Esc)
+                Tutup (Esc)
               </button>
             </div>
             <div style={{ padding: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'auto', background: '#020617' }}>

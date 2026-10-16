@@ -576,7 +576,7 @@ const CompactDinseTerminal = ({ polaritySign, label, isTorch }) => (
         {label}
       </div>
       <div style={{ fontSize: '0.6rem', color: '#71717a' }}>
-        {isTorch ? '👉 Stang Las / Torch' : '⚡ Klem Massa (Ground)'}
+        {isTorch ? 'Stang Las / Torch' : 'Klem Massa (Ground)'}
       </div>
     </div>
   </div>
@@ -734,9 +734,9 @@ export const SMAWMachinePanel = ({
   const [powerOn, setPowerOn] = useState(true);
   const wps = WELDING_WPS_DATABASE.SMAW[plateThickness] || WELDING_WPS_DATABASE.SMAW['6mm'];
   
-  let statusBadge = { color: '#10b981', text: '✅ OPTIMAL' };
-  if (amperage > wps.currentRange[1]) statusBadge = { color: '#ef4444', text: '⚠️ OVERCURRENT' };
-  else if (amperage < wps.currentRange[0]) statusBadge = { color: '#f59e0b', text: '⚠️ UNDERCURRENT' };
+  let statusBadge = { color: '#10b981', text: '[OPTIMAL]' };
+  if (amperage > wps.currentRange[1]) statusBadge = { color: '#ef4444', text: '[OVERCURRENT]' };
+  else if (amperage < wps.currentRange[0]) statusBadge = { color: '#f59e0b', text: '[UNDERCURRENT]' };
 
   const estimatedVoltage = (20 + 0.04 * amperage).toFixed(1);
 
@@ -761,7 +761,7 @@ export const SMAWMachinePanel = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #ea580c', paddingBottom: '8px', marginBottom: '10px' }}>
           <div>
             <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f97316', letterSpacing: '0.5px' }}>
-              ⚡ PRO-ARC 250i (SMAW)
+              PRO-ARC 250i (SMAW)
             </div>
             <div style={{ fontSize: '0.62rem', color: '#a1a1aa' }}>DIGITAL IGBT MMA INVERTER</div>
           </div>
@@ -927,10 +927,10 @@ export const MIGMachinePanel = ({
   const diaFactor = wireDiameter === 0.8 ? 16 : wireDiameter === 1.0 ? 21 : 28;
   const estimatedAmps = Math.round(wireFeedSpeed * diaFactor);
 
-  let statusBadge = { color: '#10b981', text: '✅ OPTIMAL' };
-  if (gasFlow < 10) statusBadge = { color: '#ef4444', text: '⚠️ GAS RENDAH' };
-  else if (voltage > wps.voltageRange[1]) statusBadge = { color: '#ef4444', text: '⚠️ VOLT TINGGI' };
-  else if (voltage < wps.voltageRange[0]) statusBadge = { color: '#f59e0b', text: '⚠️ VOLT RENDAH' };
+  let statusBadge = { color: '#10b981', text: '[OPTIMAL]' };
+  if (gasFlow < 10) statusBadge = { color: '#ef4444', text: '[GAS RENDAH]' };
+  else if (voltage > wps.voltageRange[1]) statusBadge = { color: '#ef4444', text: '[VOLT TINGGI]' };
+  else if (voltage < wps.voltageRange[0]) statusBadge = { color: '#f59e0b', text: '[VOLT RENDAH]' };
 
   return (
     <div style={{ width: '100%', position: 'relative' }}>
@@ -953,7 +953,7 @@ export const MIGMachinePanel = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #0284c7', paddingBottom: '8px', marginBottom: '10px' }}>
           <div>
             <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#38bdf8', letterSpacing: '0.5px' }}>
-              🌀 SYN-MIG 350 (MIG/MAG)
+              SYN-MIG 350 (MIG/MAG)
             </div>
             <div style={{ fontSize: '0.62rem', color: '#94a3b8' }}>SYNERGIC GMAW / FCAW</div>
           </div>
@@ -1135,10 +1135,10 @@ export const TIGMachinePanel = ({
 }) => {
   const wps = WELDING_WPS_DATABASE.TIG[plateThickness] || WELDING_WPS_DATABASE.TIG['6mm'];
 
-  let statusBadge = { color: '#10b981', text: '✅ OPTIMAL' };
-  if (current > wps.currentRange[1]) statusBadge = { color: '#ef4444', text: '⚠️ OVERCURRENT' };
-  else if (current < wps.currentRange[0]) statusBadge = { color: '#f59e0b', text: '⚠️ UNDERCURRENT' };
-  else if (postFlow < 4.0) statusBadge = { color: '#ef4444', text: '⚠️ POST-FLOW RENDAH' };
+  let statusBadge = { color: '#10b981', text: '[OPTIMAL]' };
+  if (current > wps.currentRange[1]) statusBadge = { color: '#ef4444', text: '[OVERCURRENT]' };
+  else if (current < wps.currentRange[0]) statusBadge = { color: '#f59e0b', text: '[UNDERCURRENT]' };
+  else if (postFlow < 4.0) statusBadge = { color: '#ef4444', text: '[POST-FLOW RENDAH]' };
 
   return (
     <div style={{ width: '100%', position: 'relative' }}>
@@ -1161,7 +1161,7 @@ export const TIGMachinePanel = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #818cf8', paddingBottom: '8px', marginBottom: '10px' }}>
           <div>
             <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#a5b4fc', letterSpacing: '0.5px' }}>
-              🎯 PRO-TIG 250 (GTAW)
+              PRO-TIG 250 (GTAW)
             </div>
             <div style={{ fontSize: '0.62rem', color: '#c7d2fe' }}>AC/DC PULSE HF INVERTER</div>
           </div>
@@ -1402,7 +1402,7 @@ export const OAWMachinePanel = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #dc2626', paddingBottom: '8px', marginBottom: '10px' }}>
           <div>
             <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#f87171', letterSpacing: '0.5px' }}>
-              🔥 STASIUN OAW
+              STASIUN OAW
             </div>
             <div style={{ fontSize: '0.62rem', color: '#a8a29e' }}>OKSIGEN - ASETILIN</div>
           </div>
@@ -1505,7 +1505,7 @@ export const OAWMachinePanel = ({
         {/* STATUS FOOTER */}
         <div style={{ background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.66rem' }}>
           <span style={{ color: flameType === 'neutral' ? '#10b981' : '#fca5a5', fontWeight: 800 }}>
-            {flameType === 'neutral' ? '✅ NYALA NETRAL' : '⚠️ API TIDAK SEIMBANG'}
+            {flameType === 'neutral' ? '[OK] NYALA NETRAL' : '[PERINGATAN] API TIDAK SEIMBANG'}
           </span>
           <span style={{ color: '#a8a29e' }}>WPS Tip: {wps.nozzleSize}</span>
         </div>

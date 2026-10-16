@@ -1,3 +1,4 @@
+import { X, FileText, Award, AlertTriangle, Box } from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { latheQuestions } from '../data/questionBankLathe';
@@ -93,9 +94,9 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
         {/* Header */}
         <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.5rem' }}>🧠</span> {testData.title}
+            <span className="font-mono text-xs px-2 py-0.5 rounded bg-sky-900/60 border border-sky-500/30 text-sky-300 font-bold mr-1">[PRE-TEST]</span> {testData.title}
           </h2>
-          <button onClick={() => { sound.playClick(); onCancel(); }} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}>✕</button>
+          <button onClick={() => { sound.playClick(); onCancel(); }} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}><X size={18} /></button>
         </div>
 
         {/* Content Area */}
@@ -103,7 +104,7 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
           
           {stage === 'intro' && (
             <div className="animate-fade-in" style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <div style={{ fontSize: '4rem', marginBottom: '20px' }}>📝</div>
+              <div className="flex justify-center" style={{ marginBottom: '20px' }}><FileText size={56} className="text-sky-400" /></div>
               <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '16px' }}>Evaluasi Pengetahuan Dasar (Level C1)</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, maxWidth: '600px', margin: '0 auto 30px auto' }}>
                 Sebelum Anda dapat mengakses modul simulasi, Anda diwajibkan untuk menyelesaikan Pre-Test ini. Ujian terdiri dari:
@@ -270,7 +271,7 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
           {stage === 'result' && (
             <div className="animate-fade-in" style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '4rem', marginBottom: '20px' }}>
-                {isPassed ? '🎓' : '💔'}
+                {isPassed ? <Award size={56} className="text-amber-400 mx-auto" /> : <AlertTriangle size={56} className="text-rose-400 mx-auto" />}
               </div>
               <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '16px' }}>Hasil Pre-Test</h3>
               
@@ -325,13 +326,13 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
                 }}
                 title="Langsung akses simulator 3D tanpa pre-test"
               >
-                <span>🎮</span> Lewati ke Simulator 3D
+                <Box size={14} className="inline mr-1 text-sky-400" /> Lewati ke Simulator 3D
               </button>
               <button 
                 onClick={startMcq}
                 style={{ padding: '12px 32px', background: 'var(--game-primary)', border: 'none', color: '#000', borderRadius: '8px', cursor: 'pointer', fontWeight: 800 }}
               >
-                Mulai Ujian 🚀
+                Mulai Ujian
               </button>
             </div>
           )}
@@ -359,7 +360,7 @@ const MachinePreTest = ({ machineType, onPass, onCancel }) => {
                 onClick={nextEssay} 
                 style={{ padding: '10px 20px', background: '#8b5cf6', border: 'none', color: 'var(--text-main)', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
               >
-                {essayIndex === testData.essays.length - 1 ? 'Selesai & Lihat Hasil 🏁' : 'Selanjutnya →'}
+                {essayIndex === testData.essays.length - 1 ? 'Selesai & Lihat Hasil' : 'Selanjutnya ->'}
               </button>
             </>
           )}

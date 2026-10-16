@@ -2,6 +2,18 @@ import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
 import { useStudent } from '../context/StudentContext';
 import { getInitialsAvatar } from '../utils/assets';
+import {
+  Accessibility,
+  Volume2,
+  VolumeX,
+  BarChart3,
+  ExternalLink,
+  GraduationCap,
+  User,
+  Home,
+  LogOut,
+  LogIn
+} from 'lucide-react';
 
 const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => {
   const { setIsModalOpen, isSpeaking, speakText, stopSpeech } = useAccessibility();
@@ -45,7 +57,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             title={isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}
             style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}
           >
-            Halo, {isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}! <span role="img" aria-label="wave">{isTeacher ? '👨‍🏫' : '👋'}</span>
+            Halo, {isTeacher ? `Pak ${student.name}` : (isLoggedIn ? student.name : 'Siswa Praktikan')}!
           </h2>
           <p className="app-header-subtitle" style={{ color: isTeacher ? '#d97706' : 'var(--text-muted)', fontSize: '0.82rem', margin: 0, marginTop: '3px', fontWeight: isTeacher ? 700 : 400 }}>
             {isTeacher ? `Pengajar • ${student.school || 'SMKN 2 Depok'} (Panel Guru Aktif)` : (isLoggedIn ? `No. Absen: ${student.studentNumber} • ${student.className}` : 'Silakan Login untuk mencatat progres & nilai ke Spreadsheet Guru')}
@@ -75,7 +87,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             }}
             title="Pengaturan Aksesibilitas & Mode Inklusi"
           >
-            <span style={{ fontSize: '1rem' }}>♿</span>
+            <Accessibility size={15} />
             <span className="app-header-class-text">Inklusi</span>
           </button>
 
@@ -98,7 +110,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             }}
             title={isSpeaking ? "Hentikan Narator Suara" : "Dengarkan Panduan Suara"}
           >
-            <span>{isSpeaking ? '🔊' : '🔈'}</span>
+            {isSpeaking ? <VolumeX size={15} /> : <Volume2 size={15} />}
             <span className="app-header-class-text">{isSpeaking ? 'Berhenti' : 'Narator'}</span>
           </button>
         </div>
@@ -150,7 +162,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
                 }}
                 title="Buka Lembar Rekap Nilai Siswa di Aplikasi Labs"
               >
-                <span style={{ fontSize: '0.95rem' }}>📊</span>
+                <BarChart3 size={15} />
                 <span className="app-header-spreadsheet-text">Rekap Lab</span>
               </button>
             )}
@@ -175,7 +187,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
               }}
               title="Buka Langsung Google Spreadsheet SMKN 2 Depok di Tab Baru"
             >
-              <span>↗️</span>
+              <ExternalLink size={13} />
               <span className="app-header-class-text app-header-sheets-text">Sheets</span>
             </a>
           </div>
@@ -203,7 +215,8 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             >
               <div className="app-header-user-details" style={{ textAlign: 'right' }}>
                 <div className="app-header-user-text" style={{ fontWeight: 800, fontSize: '0.85rem', color: isTeacher ? '#d97706' : 'var(--text-main)', maxWidth: '140px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {isTeacher ? `⭐ ${student.name}` : student.name}
+                  {isTeacher && <GraduationCap size={14} style={{ display: 'inline', marginRight: '5px', verticalAlign: 'middle', color: '#f59e0b' }} />}
+                  {student.name}
                 </div>
                 <div className="app-header-class-text" style={{ fontSize: '0.72rem', color: isTeacher ? '#d97706' : '#0284c7', fontWeight: 700 }}>
                   {isTeacher ? 'Pengajar' : `Absen: ${student.studentNumber}`}
@@ -237,7 +250,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
               }}
               title="Ke Halaman Utama (Landing Page)"
             >
-              <span>🏠</span>
+              <Home size={14} />
               <span className="app-header-class-text">Beranda</span>
             </button>
 
@@ -270,7 +283,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
               }}
               title="Keluar / Logout dari sesi ini"
             >
-              <span>🚪</span>
+              <LogOut size={14} />
               <span className="app-header-class-text">Logout</span>
             </button>
           </div>
@@ -296,7 +309,7 @@ const Header = ({ toggleSidebar, onOpenGradebook, onLogout, onGoToLanding }) => 
             }}
             title="Masuk / Login Siswa"
           >
-            <span>🔑</span>
+            <LogIn size={15} />
             <span>Masuk / Login</span>
           </button>
         )}

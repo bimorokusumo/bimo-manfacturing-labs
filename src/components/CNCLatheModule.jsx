@@ -1,3 +1,8 @@
+import {
+  Shield, Calculator, Edit3, Eye, EyeOff, Compass,
+  Zap, Circle, Wrench, Settings, Droplets, FileText,
+  Award, Loader2, Play, Square, Lightbulb
+} from 'lucide-react';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import Lathe3D from './Lathe3D';
@@ -14,7 +19,7 @@ const TOOLS_CONFIG = {
     code: 'T0101',
     name: 'Pahat Rata Kanan',
     enName: 'Right-Hand Turning / Roughing Tool',
-    icon: '🔪',
+    icon: '[T01]',
     insert: 'WNMG 080408 / CNMG 120408 (Rhombic 80° Gold Carbide)',
     leadAngle: '95° (ISO PCLNR 2020K12)',
     orientation: 'Vertikal (CNC Turret)',
@@ -28,7 +33,7 @@ const TOOLS_CONFIG = {
     code: 'T0202',
     name: 'Pahat Alur (Grooving)',
     enName: 'Grooving / Parting Off Tool',
-    icon: '🪚',
+    icon: '[T02]',
     insert: 'CoroCut / Iscar Blade 3.0 mm (Slender Flat-Edge TiAlN)',
     leadAngle: '90° Tegak Lurus Poros (Plunging Blade)',
     orientation: 'Vertikal (CNC Turret)',
@@ -42,7 +47,7 @@ const TOOLS_CONFIG = {
     code: 'T0404',
     name: 'Pahat Ulir Luar (Threading)',
     enName: 'External Threading Tool (60° ISO Metric)',
-    icon: '🔩',
+    icon: '[T03]',
     insert: 'ISO 16ER AG60 (Equilateral 60° Laydown Carbide TiAlN)',
     leadAngle: '60° Profil Gigi Ulir Metris (ISO 16ER)',
     orientation: 'Vertikal (CNC Turret)',
@@ -56,7 +61,7 @@ const TOOLS_CONFIG = {
     code: 'T0303',
     name: 'Pahat Facing (Muka)',
     enName: 'Transversal Facing Tool',
-    icon: '🪓',
+    icon: '[T04]',
     insert: 'PCLNL 93° / TNMG 160408 (Triangular Sharp Wedge)',
     leadAngle: '93° / 75° Facing Angle',
     orientation: 'Vertikal (CNC Turret)',
@@ -463,7 +468,7 @@ const CNCLatheModule = ({ addXP }) => {
             }}
             title="Buka panduan K3 & SOP"
           >
-            <span>🛡️</span> SOP & K3
+            <Shield size={14} className="inline mr-1 text-emerald-400" /> SOP & K3
           </button>
           <button
             onClick={() => { sound.playClick(); setShowCalculator(true); }}
@@ -482,7 +487,7 @@ const CNCLatheModule = ({ addXP }) => {
               gap: '6px'
             }}
           >
-            <span>🧮</span>
+            <Calculator size={14} className="inline mr-1 text-sky-200" />
             <span>KALKULATOR SPEED (S &amp; F)</span>
           </button>
         </div>
@@ -503,7 +508,7 @@ const CNCLatheModule = ({ addXP }) => {
       }}>
         {/* PILIHAN BENDA KERJA CEPAT */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>🔘 BENDA KERJA:</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>[BENDA KERJA]:</span>
           <button
             onClick={() => { sound.playClick(); setActiveTab('1'); }}
             style={{
@@ -523,13 +528,13 @@ const CNCLatheModule = ({ addXP }) => {
           >
             <span>Ø {workpieceDiameter} mm &times; {workpieceLength} mm</span>
             <span style={{ fontSize: '0.68rem', color: '#64748b' }}>({workpieceMaterial.split(' ')[0]})</span>
-            <span style={{ fontSize: '0.75rem' }}>✎</span>
+            <Edit3 size={11} className="inline" />
           </button>
         </div>
 
         {/* PILIHAN PAHAT CEPAT */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>🔪 PAHAT CNC:</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>[PAHAT CNC]:</span>
           {Object.values(TOOLS_CONFIG).map(t => (
             <button
               key={t.id}
@@ -575,7 +580,7 @@ const CNCLatheModule = ({ addXP }) => {
           }}
           title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
         >
-          <span>{showToolpath ? '👁️' : '🙈'}</span>
+          {showToolpath ? <Eye size={13} className="inline" /> : <EyeOff size={13} className="inline" />}
           <span>JALUR PAHAT: {showToolpath ? 'AKTIF (ON)' : 'NONAKTIF'}</span>
         </button>
 
@@ -592,7 +597,7 @@ const CNCLatheModule = ({ addXP }) => {
           fontWeight: 800,
           color: '#047857'
         }}>
-          <span>📐</span>
+          <Compass size={14} className="inline mr-1 text-sky-400" />
           <span>PAHAT: VERTIKAL (CNC TURRET)</span>
         </div>
       </div>
@@ -622,7 +627,7 @@ const CNCLatheModule = ({ addXP }) => {
 
           {/* QUICK PRESET BENDA KERJA DI SIDEBAR */}
           <div style={{ marginTop: 'auto', background: 'var(--bg-card)', border: '1px solid var(--border-light)', padding: '12px', borderRadius: '10px' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '6px' }}>⚡ PRESET CEPAT:</div>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', marginBottom: '6px' }}><Zap size={12} className="inline mr-1 text-amber-400" /> PRESET CEPAT:</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {WORKPIECE_PRESETS.map(p => (
                 <button
@@ -683,7 +688,7 @@ const CNCLatheModule = ({ addXP }) => {
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>🔘</span>
+                    <Circle size={14} className="inline mr-1 text-sky-400" />
                     <span>Pengaturan Dimensi &amp; Material Benda Kerja (Workpiece)</span>
                   </h3>
                   <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>Work Offset Datum: G54 (X0 Z0 Muka)</span>
@@ -767,7 +772,7 @@ const CNCLatheModule = ({ addXP }) => {
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>🔪</span>
+                    <Wrench size={16} className="inline mr-1.5 text-sky-400" />
                     <span>Pilihan Pahat Turret CNC Bubut (Posisi Vertikal)</span>
                   </h3>
                   <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700 }}>Turret Indexing Station: 8-Tool Turret</span>
@@ -835,7 +840,7 @@ const CNCLatheModule = ({ addXP }) => {
                             cursor: 'pointer'
                           }}
                         >
-                          {isSelected ? '✓ Program G-Code Termuat (Lihat Editor)' : 'Pilih & Muat Program'}
+                          {isSelected ? '[TERMUAT] Program G-Code Termuat (Lihat Editor)' : 'Pilih & Muat Program'}
                         </button>
                       </div>
                     );
@@ -849,7 +854,7 @@ const CNCLatheModule = ({ addXP }) => {
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>⚙️</span>
+                    <Settings size={16} className="inline mr-1.5 text-sky-400" />
                     <span>Pengaturan Spindel Mesin &amp; Coolant Pendingin</span>
                   </h3>
                 </div>
@@ -914,7 +919,7 @@ const CNCLatheModule = ({ addXP }) => {
                         marginTop: '12px'
                       }}
                     >
-                      {coolant ? '💧 COOLANT AKTIF (M08)' : '⏹ COOLANT MATI (M09)'}
+                      {coolant ? 'COOLANT AKTIF (M08)' : 'COOLANT MATI (M09)'}
                     </button>
                   </div>
                 </div>
@@ -937,25 +942,25 @@ const CNCLatheModule = ({ addXP }) => {
                       onClick={() => handleSelectTool('rata')}
                       style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'rata' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.06)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      📄 Prog. Rata
+                      <FileText size={12} className="inline mr-1" /> Prog. Rata
                     </button>
                     <button
                       onClick={() => handleSelectTool('alur')}
                       style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'alur' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255,255,255,0.06)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      📄 Prog. Alur
+                      <FileText size={12} className="inline mr-1" /> Prog. Alur
                     </button>
                     <button
                       onClick={() => handleSelectTool('ulir')}
                       style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'ulir' ? 'rgba(192, 132, 252, 0.2)' : 'rgba(255,255,255,0.06)', color: '#c084fc', border: '1px solid rgba(192, 132, 252, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      📄 Prog. Ulir
+                      <FileText size={12} className="inline mr-1" /> Prog. Ulir
                     </button>
                     <button
                       onClick={() => handleSelectTool('facing')}
                       style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'facing' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255,255,255,0.06)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
                     >
-                      📄 Prog. Facing
+                      <FileText size={12} className="inline mr-1" /> Prog. Facing
                     </button>
                   </div>
                 </div>
@@ -999,7 +1004,7 @@ const CNCLatheModule = ({ addXP }) => {
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>⚡</span>
+                    <Zap size={14} className="inline mr-1 text-amber-400" />
                     <span>Monitoring DRO (Digital Read Out) &amp; Kontrol Siklus Pemotongan</span>
                   </h3>
                 </div>
@@ -1041,7 +1046,7 @@ const CNCLatheModule = ({ addXP }) => {
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '8px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>🏆</span>
+                    <Award size={14} className="inline mr-1 text-amber-400" />
                     <span>Hasil Pemotongan CNC &amp; Toleransi Geometris</span>
                   </h3>
                 </div>
@@ -1088,7 +1093,7 @@ const CNCLatheModule = ({ addXP }) => {
                 onClick={handleStart}
                 disabled={isMachining}
               >
-                <span>{isMachining ? '⏳' : '▶'}</span>
+                {isMachining ? <Loader2 size={13} className="inline animate-spin" /> : <Play size={13} className="inline" />}
                 <span>{isMachining ? 'RUNNING G-CODE EXECUTION...' : 'CYCLE START (JALANKAN SIMULASI CNC)'}</span>
               </button>
 
@@ -1137,7 +1142,7 @@ const CNCLatheModule = ({ addXP }) => {
               <img src="https://images.unsplash.com/photo-1620803454743-305f884bf60c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Benda Kerja CNC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               <div style={{ color: 'var(--text-subtle)', fontSize: '0.78rem', textAlign: 'center', padding: '10px' }}>
-                {isMachining ? '⚡ Sedang Proses Pemotongan...' : 'Menunggu Cycle Start...'}
+                {isMachining ? 'Sedang Proses Pemotongan (G01)...' : 'Menunggu Cycle Start...'}
               </div>
             )}
           </div>
@@ -1145,7 +1150,7 @@ const CNCLatheModule = ({ addXP }) => {
           {showResult ? (
             <div className="animate-fade-in">
               <div style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', padding: '8px', borderRadius: '6px', textAlign: 'center', fontWeight: 800, fontSize: '0.82rem', marginBottom: '12px', border: '1px solid #60a5fa' }}>
-                ✓ SIKLUS SELESAI
+                [OK] SIKLUS SELESAI
               </div>
 
               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
@@ -1159,7 +1164,7 @@ const CNCLatheModule = ({ addXP }) => {
             </div>
           ) : (
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              💡 <em>Tips:</em> Pilih tab <strong>1. BENDA KERJA</strong> untuk mengubah ukuran billet, atau klik tombol <strong>Pahat</strong> untuk mengganti tipe pahat ke Rata Kanan, Alur 3mm, atau Facing Muka.
+              <Lightbulb size={13} className="inline mr-1 text-amber-400" /> <em>Tips:</em> Pilih tab <strong>1. BENDA KERJA</strong> untuk mengubah ukuran billet, atau klik tombol <strong>Pahat</strong> untuk mengganti tipe pahat ke Rata Kanan, Alur 3mm, atau Facing Muka.
             </div>
           )}
         </div>

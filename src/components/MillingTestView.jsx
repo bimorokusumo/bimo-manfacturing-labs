@@ -1,3 +1,7 @@
+import {
+  FileText, Settings, ArrowRight, Search, RotateCcw,
+  ListOrdered, PenTool, Lightbulb, Send
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { millingQuestions } from '../data/questionBankMilling';
@@ -92,7 +96,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
             fontSize: '1.8rem',
             boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)'
           }}>
-            🪵
+            <FileText className="w-6 h-6 text-white" />
           </div>
           <div>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 900, margin: 0, color: '#ffffff', letterSpacing: '0.5px' }}>
@@ -122,7 +126,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
               boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
             }}
           >
-            <span>⚙️ Menuju Simulator Frais</span> →
+            <span className="flex items-center gap-1.5"><Settings size={14} className="text-amber-400" /> Menuju Simulator Frais <ArrowRight size={14} /></span>
           </button>
         )}
       </div>
@@ -155,11 +159,11 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#ffffff' }}>
-                  {finalScore >= 75 ? '🎉 Selamat! Hasil Evaluasi Teori Frais Sangat Baik' : '⚠️ Masih Perlu Latihan & Pendalaman Konsep Frais'}
+                  {finalScore >= 75 ? '[LULUS] Hasil Evaluasi Teori Frais Sangat Baik' : '[EVALUASI] Masih Perlu Latihan & Pendalaman Konsep Frais'}
                 </h3>
                 <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
                   Skor Anda: <strong>{finalScore}/100</strong> ({correctCount} dari {totalMcq} Pilihan Ganda Benar). 
-                  Nilai otomatis tercatat ke kolom <strong>🪵 Test Teori Mesin Frais</strong> di Spreadsheet!
+                  Nilai otomatis tercatat ke kolom <strong>Test Teori Mesin Frais</strong> di Spreadsheet!
                 </div>
                 <div style={{ display: 'inline-block', marginTop: '8px', padding: '4px 12px', borderRadius: '6px', background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', fontSize: '0.85rem', fontWeight: 800 }}>
                   +{Math.round(finalScore * 10)} XP Diperoleh
@@ -181,7 +185,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                {showReview ? 'Sembunyikan Kunci Pembahasan' : '🔍 Lihat Kunci Pembahasan'}
+                {showReview ? 'Sembunyikan Kunci Pembahasan' : 'Lihat Kunci Pembahasan'}
               </button>
               <button
                 onClick={handleResetTest}
@@ -196,7 +200,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                🔄 Ulangi Tes
+                <RotateCcw size={14} className="inline mr-1" /> Ulangi Tes
               </button>
             </div>
           </div>
@@ -219,7 +223,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
             fontSize: '0.88rem'
           }}
         >
-          📋 Bagian A: Pilihan Ganda ({answeredMcqCount}/{totalMcq} Terjawab)
+          <ListOrdered size={15} className="inline mr-1 text-amber-400" /> Bagian A: Pilihan Ganda ({answeredMcqCount}/{totalMcq} Terjawab)
         </button>
         <button
           onClick={() => { sound.playClick(); setActiveSubTab('essay'); }}
@@ -235,7 +239,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
             fontSize: '0.88rem'
           }}
         >
-          ✍️ Bagian B: Soal Esai Teori ({Object.keys(essayAnswers).length}/{testData.essays.length} Dijawab)
+          <PenTool size={15} className="inline mr-1 text-amber-400" /> Bagian B: Soal Esai Teori ({Object.keys(essayAnswers).length}/{testData.essays.length} Dijawab)
         </button>
       </div>
 
@@ -413,7 +417,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
                     fontSize: '0.9rem',
                     lineHeight: 1.5
                   }}>
-                    <strong style={{ color: '#38bdf8' }}>💡 Penjelasan & Kunci: </strong>
+                    <strong style={{ color: '#38bdf8' }}><Lightbulb size={14} className="inline mr-1 text-amber-400" /> Penjelasan & Kunci: </strong>
                     Jawaban yang benar adalah <strong>{currentQ.correctAnswer}</strong>. {currentQ.explanation}
                   </div>
                 )}
@@ -489,7 +493,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
             fontSize: '0.9rem',
             lineHeight: 1.5
           }}>
-            ✍️ <strong>Petunjuk Pengerjaan Esai:</strong> Jawablah pertanyaan esai teori mesin frais berikut ini dengan uraian teknis yang jelas. Jawaban Anda akan otomatis tersimpan ke catatan portofolio guru.
+            <PenTool size={14} className="inline mr-1 text-amber-400" /> <strong>Petunjuk Pengerjaan Esai:</strong> Jawablah pertanyaan esai teori mesin frais berikut ini dengan uraian teknis yang jelas. Jawaban Anda akan otomatis tersimpan ke catatan portofolio guru.
           </div>
 
           {testData.essays.map((essay, idx) => (
@@ -580,7 +584,7 @@ const MillingTestView = ({ addXP, onStartPractical }) => {
               boxShadow: '0 4px 15px rgba(16, 185, 129, 0.35)'
             }}
           >
-            <span>🚀 Selesai & Kirim Nilai ke Spreadsheet</span>
+            <span className="flex items-center gap-1.5"><Send size={14} /> Selesai & Kirim Nilai ke Spreadsheet</span>
           </button>
         </div>
       )}

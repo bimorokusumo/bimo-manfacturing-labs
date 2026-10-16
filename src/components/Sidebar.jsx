@@ -1,5 +1,39 @@
 import React from 'react';
 import { useStudent } from '../context/StudentContext';
+import {
+  Disc,
+  Layers,
+  Monitor,
+  Scissors,
+  Factory,
+  ClipboardCheck,
+  Wrench,
+  Zap,
+  Droplets,
+  Thermometer,
+  Flame,
+  Activity,
+  Shield,
+  FlaskConical,
+  Sliders,
+  Scale,
+  Ruler,
+  Boxes,
+  TrendingUp,
+  Calculator,
+  Compass,
+  Gauge,
+  Microscope,
+  DraftingCompass,
+  ShieldCheck,
+  X,
+  GraduationCap,
+  User,
+  LogOut,
+  LogIn,
+  ChevronDown,
+  ChevronRight
+} from 'lucide-react';
 
 const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, closeSidebar }) => {
   const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
@@ -30,59 +64,59 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
   // Sub-menu interaktif untuk masing-masing lab di sidebar, termasuk Tes Diagnostik (10 Soal Pilgan)
   const LAB_SUBMENUS = {
     machine: [
-      { id: 'machine-lathe', label: 'Simulator Mesin Bubut 3D', icon: '⚙️' },
-      { id: 'machine-milling', label: 'Simulator Mesin Frais 3D', icon: '🌀' },
-      { id: 'machine-cnc', label: 'Simulator Mesin CNC 3D', icon: '💻' },
-      { id: 'machine-cutting-tools', label: 'Alat Potong Mesin (Lengkap)', icon: '🔪' },
-      { id: 'machine', label: 'Garasi Semua Mesin', icon: '🏭' },
-      { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: '📋', isDiag: true }
+      { id: 'machine-lathe', label: 'Simulator Mesin Bubut 3D', icon: Disc },
+      { id: 'machine-milling', label: 'Simulator Mesin Frais 3D', icon: Layers },
+      { id: 'machine-cnc', label: 'Simulator Mesin CNC 3D', icon: Monitor },
+      { id: 'machine-cutting-tools', label: 'Alat Potong Mesin (Lengkap)', icon: Scissors },
+      { id: 'machine', label: 'Garasi Semua Mesin', icon: Factory },
+      { id: 'machine-diagnostic', label: 'Tes Diagnostik Machine Lab', icon: ClipboardCheck, isDiag: true }
     ],
     'cutting-tools': [
-      { id: 'cutting-tools', label: 'Eksplorasi Perkakas Bengkel', icon: '🛠️' },
-      { id: 'cutting-tools-diagnostic', label: 'Tes Diagnostik Perkakas', icon: '📋', isDiag: true }
+      { id: 'cutting-tools', label: 'Eksplorasi Perkakas Bengkel', icon: Wrench },
+      { id: 'cutting-tools-diagnostic', label: 'Tes Diagnostik Perkakas', icon: ClipboardCheck, isDiag: true }
     ],
     'heat-treatment': [
-      { id: 'heat-treatment-hardening', label: 'Hardening (Pengerasan)', icon: '⚡' },
-      { id: 'heat-treatment-quenching', label: 'Quenching (Media Dingin)', icon: '💧' },
-      { id: 'heat-treatment-tempering', label: 'Tempering (Penormalan)', icon: '🌡️' },
-      { id: 'heat-treatment-annealing', label: 'Annealing (Pelunakan)', icon: '🧘' },
-      { id: 'heat-treatment-normalizing', label: 'Normalizing (Penyeragaman)', icon: '🌱' },
-      { id: 'heat-treatment-case-hardening', label: 'Case Hardening (Kulit)', icon: '🛡️' },
-      { id: 'heat-treatment-blackening', label: 'Blackening (Black Oxide)', icon: '⚗️' },
-      { id: 'heat-treatment-diagnostic', label: 'Tes Diagnostik Heat Treatment', icon: '📋', isDiag: true }
+      { id: 'heat-treatment-hardening', label: 'Hardening (Pengerasan)', icon: Zap },
+      { id: 'heat-treatment-quenching', label: 'Quenching (Media Dingin)', icon: Droplets },
+      { id: 'heat-treatment-tempering', label: 'Tempering (Penormalan)', icon: Thermometer },
+      { id: 'heat-treatment-annealing', label: 'Annealing (Pelunakan)', icon: Flame },
+      { id: 'heat-treatment-normalizing', label: 'Normalizing (Penyeragaman)', icon: Activity },
+      { id: 'heat-treatment-case-hardening', label: 'Case Hardening (Kulit)', icon: Shield },
+      { id: 'heat-treatment-blackening', label: 'Blackening (Black Oxide)', icon: FlaskConical },
+      { id: 'heat-treatment-diagnostic', label: 'Tes Diagnostik Heat Treatment', icon: ClipboardCheck, isDiag: true }
     ],
     mechanics: [
-      { id: 'mechanics-torque', label: 'Momen Gaya & Torsi', icon: '🔧' },
-      { id: 'mechanics-lever', label: 'Sistem Tuas (Pengungkit)', icon: '🕹️' },
-      { id: 'mechanics-equilibrium', label: 'Kesetimbangan Tumpuan', icon: '⚖️' },
-      { id: 'mechanics-stress', label: 'Tegangan & Regangan', icon: '📏' },
-      { id: 'mechanics-pulley', label: 'Katrol & Chain Block', icon: '🏗️' },
-      { id: 'mechanics-friction', label: 'Gesekan & Bidang Miring', icon: '📐' },
-      { id: 'mechanics-calculator', label: 'Kalkulator Rumus Pintar', icon: '🧮' },
-      { id: 'mechanics-diagnostic', label: 'Tes Diagnostik Mekanika', icon: '📋', isDiag: true }
+      { id: 'mechanics-torque', label: 'Momen Gaya & Torsi', icon: Wrench },
+      { id: 'mechanics-lever', label: 'Sistem Tuas (Pengungkit)', icon: Sliders },
+      { id: 'mechanics-equilibrium', label: 'Kesetimbangan Tumpuan', icon: Scale },
+      { id: 'mechanics-stress', label: 'Tegangan & Regangan', icon: Ruler },
+      { id: 'mechanics-pulley', label: 'Katrol & Chain Block', icon: Boxes },
+      { id: 'mechanics-friction', label: 'Gesekan & Bidang Miring', icon: TrendingUp },
+      { id: 'mechanics-calculator', label: 'Kalkulator Rumus Pintar', icon: Calculator },
+      { id: 'mechanics-diagnostic', label: 'Tes Diagnostik Mekanika', icon: ClipboardCheck, isDiag: true }
     ],
     welding: [
-      { id: 'welding', label: 'Simulator Las SMAW', icon: '⚡' },
-      { id: 'welding-diagnostic', label: 'Tes Diagnostik Welding Lab', icon: '📋', isDiag: true }
+      { id: 'welding', label: 'Simulator Las SMAW', icon: Zap },
+      { id: 'welding-diagnostic', label: 'Tes Diagnostik Welding Lab', icon: ClipboardCheck, isDiag: true }
     ],
     measuring: [
-      { id: 'measuring', label: 'Semua Instrumen Metrologi', icon: '🌐' },
-      { id: 'measuring-direct', label: 'Alat Ukur Langsung Presisi', icon: '📏' },
-      { id: 'measuring-comparator', label: 'Alat Ukur Pembanding (Dial & TIR)', icon: '⏱️' },
-      { id: 'measuring-anatomy', label: 'Anatomi & Komponen Alat Ukur', icon: '🔬' },
-      { id: 'measuring-diagnostic', label: 'Tes Diagnostik Alat Ukur', icon: '📋', isDiag: true }
+      { id: 'measuring', label: 'Semua Instrumen Metrologi', icon: Compass },
+      { id: 'measuring-direct', label: 'Alat Ukur Langsung Presisi', icon: Ruler },
+      { id: 'measuring-comparator', label: 'Alat Ukur Pembanding (Dial & TIR)', icon: Gauge },
+      { id: 'measuring-anatomy', label: 'Anatomi & Komponen Alat Ukur', icon: Microscope },
+      { id: 'measuring-diagnostic', label: 'Tes Diagnostik Alat Ukur', icon: ClipboardCheck, isDiag: true }
     ],
     design: [
-      { id: 'design', label: 'Studio CAD & Gambar Teknik', icon: '📐' },
-      { id: 'design-diagnostic', label: 'Tes Diagnostik Design Lab', icon: '📋', isDiag: true }
+      { id: 'design', label: 'Studio CAD & Gambar Teknik', icon: DraftingCompass },
+      { id: 'design-diagnostic', label: 'Tes Diagnostik Design Lab', icon: ClipboardCheck, isDiag: true }
     ],
     safety: [
-      { id: 'safety', label: 'Game & Simulasi K3LH / 5R', icon: '🛡️' },
-      { id: 'safety-diagnostic', label: 'Tes Diagnostik Safety K3', icon: '📋', isDiag: true }
+      { id: 'safety', label: 'Game & Simulasi K3LH / 5R', icon: ShieldCheck },
+      { id: 'safety-diagnostic', label: 'Tes Diagnostik Safety K3', icon: ClipboardCheck, isDiag: true }
     ],
     'virtual-bengkel': [
-      { id: 'virtual-bengkel', label: 'Eksplorasi Workshop 3D', icon: '🏭' },
-      { id: 'virtual-bengkel-diagnostic', label: 'Tes Diagnostik Bengkel 3D', icon: '📋', isDiag: true }
+      { id: 'virtual-bengkel', label: 'Eksplorasi Workshop 3D', icon: Factory },
+      { id: 'virtual-bengkel-diagnostic', label: 'Tes Diagnostik Bengkel 3D', icon: ClipboardCheck, isDiag: true }
     ]
   };
 
@@ -156,13 +190,12 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1rem',
             color: '#475569',
             cursor: 'pointer'
           }}
           title="Tutup Menu"
         >
-          ✕
+          <X size={16} />
         </button>
       </div>
 
@@ -224,11 +257,11 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
                   )}
                   {hasSubmenus && (
                     <span style={{
-                      fontSize: '0.68rem',
                       color: isCurrentActive ? activeColor : '#94a3b8',
-                      fontWeight: 800
+                      display: 'flex',
+                      alignItems: 'center'
                     }}>
-                      {isCurrentActive ? '▼' : '▶'}
+                      {isCurrentActive ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                     </span>
                   )}
                 </div>
@@ -274,7 +307,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
                           title={`Asesmen Diagnostik Awal untuk ${menu.label} (10 Soal Pilgan)`}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
-                            <span style={{ fontSize: '0.85rem', flexShrink: 0 }}>{sub.icon}</span>
+                            {sub.icon && <sub.icon size={14} style={{ flexShrink: 0 }} />}
                             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub.label}</span>
                           </div>
                           <span style={{
@@ -312,7 +345,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
                           transition: 'all 0.15s'
                         }}
                       >
-                        <span style={{ fontSize: '0.85rem' }}>{sub.icon}</span>
+                        {sub.icon && <sub.icon size={14} style={{ flexShrink: 0 }} />}
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub.label}</span>
                       </button>
                     );
@@ -330,8 +363,9 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <div style={{ background: isTeacher ? '#fffbeb' : '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: isTeacher ? '1px solid #fde68a' : '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ overflow: 'hidden', flex: 1, marginRight: '6px' }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: isTeacher ? '#92400e' : '#0f172a', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                  {isTeacher ? '⭐ ' : '👤 '}{student.name}
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: isTeacher ? '#92400e' : '#0f172a', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  {isTeacher ? <GraduationCap size={14} style={{ color: '#b45309', flexShrink: 0 }} /> : <User size={14} style={{ color: '#0284c7', flexShrink: 0 }} />}
+                  <span>{student.name}</span>
                 </div>
                 <div style={{ fontSize: '0.7rem', color: isTeacher ? '#b45309' : '#64748b', fontWeight: isTeacher ? 700 : 500 }}>
                   {isTeacher ? 'Pengajar (Akses Monitoring)' : `Absen ${student.studentNumber} • ${student.className}`}
@@ -380,7 +414,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
               }}
               title="Logout dari akun ini"
             >
-              <span>🚪</span>
+              <LogOut size={14} />
               <span>Keluar (Logout)</span>
             </button>
           </div>
@@ -403,7 +437,7 @@ const Sidebar = ({ activeMenu, setActiveMenu, onLogout, onGoToLanding, isOpen, c
               boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
             }}
           >
-            <span>🔑</span>
+            <LogIn size={15} />
             <span>Masuk / Login Siswa</span>
           </button>
         )}

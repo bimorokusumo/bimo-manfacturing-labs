@@ -1,3 +1,4 @@
+import { X, Settings, Calculator, FileText, Video, Box, Crosshair, Zap, Droplets, Award, RotateCcw, Search, AlertTriangle, CheckCircle, Monitor, Smartphone, Keyboard, Play, Square } from 'lucide-react';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { sound } from '../utils/audio';
 import Lathe3D from './Lathe3D';
@@ -410,7 +411,7 @@ const LatheModule = ({ addXP }) => {
             fontSize: '1.3rem',
             color: '#ffffff'
           }}>
-            ⚙️
+            <Settings size={14} className="text-sky-400" />
           </div>
           <div>
             <div style={{ fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '0.5px' }}>
@@ -441,7 +442,7 @@ const LatheModule = ({ addXP }) => {
               boxShadow: activeLatheTab === 'rumus' ? '0 4px 15px rgba(2, 132, 199, 0.35)' : 'none'
             }}
           >
-            <span>📐</span> 1. Rumus Pemesinan
+            <Calculator size={14} className="inline mr-1.5 text-sky-400" /> 1. Rumus Pemesinan
           </button>
 
           <button
@@ -462,7 +463,7 @@ const LatheModule = ({ addXP }) => {
               boxShadow: activeLatheTab === 'test' ? '0 4px 15px rgba(245, 158, 11, 0.35)' : 'none'
             }}
           >
-            <span>📝</span> 2. Soal Test
+            <FileText size={14} className="inline mr-1.5 text-sky-400" /> 2. Soal Test
           </button>
 
           <button
@@ -483,7 +484,7 @@ const LatheModule = ({ addXP }) => {
               boxShadow: activeLatheTab === 'pemotongan' ? '0 4px 15px rgba(16, 185, 129, 0.35)' : 'none'
             }}
           >
-            <span>⚙️</span> 3. Proses Pemotongan
+            <Settings size={14} className="inline mr-1.5 text-sky-400" /> 3. Proses Pemotongan
           </button>
         </div>
       </div>
@@ -527,7 +528,7 @@ const LatheModule = ({ addXP }) => {
             border: '1px solid var(--border-light)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.1rem' }}>⚙️</span>
+              <Settings size={16} className="text-sky-400" />
               <span style={{ fontSize: '0.88rem', fontWeight: 800, color: 'var(--text-main)' }}>
                 TAMPILAN PROSES PEMOTONGAN:
               </span>
@@ -550,7 +551,7 @@ const LatheModule = ({ addXP }) => {
                   gap: '6px'
                 }}
               >
-                <span>🎬</span> Video Demonstrasi Pemotongan
+                <Video size={15} className="inline mr-1.5 text-sky-400" /> Video Demonstrasi Pemotongan
               </button>
 
               <button
@@ -569,7 +570,7 @@ const LatheModule = ({ addXP }) => {
                   gap: '6px'
                 }}
               >
-                <span>🎮</span> Simulator Praktik 3D Interaktif
+                <Box size={15} className="inline mr-1.5 text-sky-400" /> Simulator Praktik 3D Interaktif
               </button>
             </div>
           </div>
@@ -667,9 +668,9 @@ const LatheModule = ({ addXP }) => {
                               padding: '2px 6px', borderRadius: '14px', fontSize: '0.65rem', fontWeight: 800,
                               color: isSpindleRunning ? '#10b981' : '#fca5a5'
                             }}>
-                              <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                              <span className={`font-mono text-[9px] px-1 py-0.5 rounded font-bold ${isSpindleRunning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>{isSpindleRunning ? 'RUN' : 'STOP'}</span>
                               <span>{rpm} RPM</span>
-                              {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.62rem' }}>⚡</span>}
+                              {isCutting && <span className="font-mono text-[9px] font-bold text-amber-400 animate-pulse">[CUT]</span>}
                             </div>
 
                             <button
@@ -680,7 +681,7 @@ const LatheModule = ({ addXP }) => {
                               }}
                               title="Beralih ke Tampilan Desktop Penuh"
                             >
-                              🖥️
+                              <Monitor size={14} className="text-slate-400" />
                             </button>
                           </div>
                         </div>
@@ -699,7 +700,7 @@ const LatheModule = ({ addXP }) => {
                               }}
                               title="Beralih antara Mode 3D dan Mode 2D Teknik"
                             >
-                              {viewMode === '3d' ? '📐 2D' : '🎮 3D'}
+                              {viewMode === '3d' ? '2D CAD' : '3D CAM'}
                             </button>
 
                             <button
@@ -713,7 +714,7 @@ const LatheModule = ({ addXP }) => {
                               }}
                               title="Tampilkan / Sembunyikan Garis Target Job"
                             >
-                              <span>🎯</span>
+                              <Crosshair size={13} className="inline mr-1 text-sky-400" />
                               <span>JOB</span>
                             </button>
                           </div>
@@ -748,7 +749,7 @@ const LatheModule = ({ addXP }) => {
                             }}
                             title="Buka Kalkulator Rumus"
                           >
-                            🧮
+                            <Calculator size={14} className="inline text-sky-400" />
                           </button>
                         </div>
                       </div>
@@ -783,7 +784,7 @@ const LatheModule = ({ addXP }) => {
                           padding: '3px 8px', fontSize: '0.58rem', fontWeight: 700, color: '#94a3b8',
                           display: 'flex', alignItems: 'center', gap: '4px', pointerEvents: 'none'
                         }}>
-                          <span>📲</span>
+                          <Smartphone size={13} className="inline mr-1 text-sky-400" />
                           <span>Miringkan HP untuk Layar Penuh</span>
                         </div>
                       </div>
@@ -920,7 +921,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              ⚡ RAPID
+                              <Zap size={12} className="inline mr-1" /> RAPID
                             </button>
                             <button
                               onClick={() => { sound.playClick(); setCoolant(!coolant); }}
@@ -932,7 +933,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              💦 {coolant ? 'ON' : 'OFF'}
+                              <Droplets size={12} className="inline mr-1 text-cyan-400" /> {coolant ? 'ON' : 'OFF'}
                             </button>
                           </div>
 
@@ -946,7 +947,7 @@ const LatheModule = ({ addXP }) => {
                                 boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
                               }}
                             >
-                              🏆 CEK
+                              <Award size={12} className="inline mr-1 text-amber-400" /> CEK
                             </button>
                             <button
                               onClick={handleReset}
@@ -956,7 +957,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              🔄 RESET
+                              <RotateCcw size={12} className="inline mr-1" /> RESET
                             </button>
                           </div>
                         </div>
@@ -976,7 +977,7 @@ const LatheModule = ({ addXP }) => {
                               fontSize: '0.78rem'
                             }}
                           >
-                            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                            <span className="font-mono text-xs font-bold">{isSpindleRunning ? 'STOP' : 'START'}</span>
                             <span>{isSpindleRunning ? 'STOP' : 'START'}</span>
                           </button>
 
@@ -1081,9 +1082,9 @@ const LatheModule = ({ addXP }) => {
                           padding: '2px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
                           color: isSpindleRunning ? '#10b981' : '#fca5a5'
                         }}>
-                          <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                          <span className={`font-mono text-[9px] px-1 py-0.5 rounded font-bold ${isSpindleRunning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>{isSpindleRunning ? 'RUN' : 'STOP'}</span>
                           <span>{rpm} RPM</span>
-                          {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
+                          {isCutting && <span className="font-mono text-[9px] font-bold text-amber-400 animate-pulse">[CUT]</span>}
                         </div>
 
                         {/* QUICK MENU BUTTONS & 5 JOBS SELECTOR (LANDSCAPE) */}
@@ -1100,7 +1101,7 @@ const LatheModule = ({ addXP }) => {
                             }}
                             title="Beralih antara Mode 3D dan Mode 2D Teknik"
                           >
-                            <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                            <span>{viewMode === '3d' ? '2D CAD' : '3D CAM'}</span>
                           </button>
 
                           <button
@@ -1114,7 +1115,7 @@ const LatheModule = ({ addXP }) => {
                             }}
                             title="Tampilkan / Sembunyikan Garis Target Job"
                           >
-                            <span>🎯</span>
+                            <Crosshair size={13} className="inline mr-1 text-sky-400" />
                             <span>JOB</span>
                           </button>
 
@@ -1148,7 +1149,7 @@ const LatheModule = ({ addXP }) => {
                             }}
                             title="Buka Kalkulator Rumus"
                           >
-                            🧮
+                            <Calculator size={14} className="inline text-sky-400" />
                           </button>
 
                           <button
@@ -1159,7 +1160,7 @@ const LatheModule = ({ addXP }) => {
                             }}
                             title="Beralih ke Tampilan Desktop Penuh"
                           >
-                            🖥️
+                            <Monitor size={14} className="text-slate-400" />
                           </button>
                         </div>
                       </div>
@@ -1283,7 +1284,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              ⚡ RAPID
+                              <Zap size={12} className="inline mr-1" /> RAPID
                             </button>
                             <button
                               onClick={() => { sound.playClick(); setCoolant(!coolant); }}
@@ -1295,7 +1296,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              💦 {coolant ? 'ON' : 'OFF'}
+                              <Droplets size={12} className="inline mr-1 text-cyan-400" /> {coolant ? 'ON' : 'OFF'}
                             </button>
                           </div>
 
@@ -1308,7 +1309,7 @@ const LatheModule = ({ addXP }) => {
                                 boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
                               }}
                             >
-                              🏆 CEK HASIL
+                              <Award size={12} className="inline mr-1 text-amber-400" /> CEK HASIL
                             </button>
                             <button
                               onClick={handleReset}
@@ -1318,7 +1319,7 @@ const LatheModule = ({ addXP }) => {
                                 backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                               }}
                             >
-                              🔄 RESET
+                              <RotateCcw size={12} className="inline mr-1" /> RESET
                             </button>
                           </div>
                         </div>
@@ -1338,7 +1339,7 @@ const LatheModule = ({ addXP }) => {
                               fontSize: '0.78rem'
                             }}
                           >
-                            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                            <span className="font-mono text-xs font-bold">{isSpindleRunning ? 'STOP' : 'START'}</span>
                             <span>{isSpindleRunning ? 'STOP' : 'START'}</span>
                           </button>
 
@@ -1397,7 +1398,7 @@ const LatheModule = ({ addXP }) => {
                           fontSize: '1.2rem'
                         }}
                       >
-                        ⚙️
+                        <Settings size={14} className="text-sky-400" />
                       </div>
                       <div>
                         <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
@@ -1432,7 +1433,7 @@ const LatheModule = ({ addXP }) => {
                           }}
                           title="Beralih antara Mode 3D Studio dan Mode 2D Teknik"
                         >
-                          <span>{viewMode === '3d' ? '📐 MODE 2D TEKNIK' : '🎮 MODE 3D STUDIO'}</span>
+                          <span>{viewMode === '3d' ? 'MODE 2D TEKNIK' : 'MODE 3D STUDIO'}</span>
                         </button>
 
                         {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE BUTTON */}
@@ -1455,7 +1456,7 @@ const LatheModule = ({ addXP }) => {
                           }}
                           title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Bubut"
                         >
-                          <span>🎯</span>
+                          <Crosshair size={13} className="inline mr-1 text-sky-400" />
                           <span>GARIS JOB: {showJobGuide ? 'ON' : 'OFF'}</span>
                         </button>
 
@@ -1477,7 +1478,7 @@ const LatheModule = ({ addXP }) => {
                           }}
                           title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
                         >
-                          <span>🎮</span>
+                          <Box size={13} className="inline mr-1 text-sky-400" />
                           <span>MODE GAME HP</span>
                         </button>
 
@@ -1500,7 +1501,7 @@ const LatheModule = ({ addXP }) => {
                           }}
                           title="Buka Bank Rumus & Kalkulator Interaktif Bubut"
                         >
-                          <span>🧮</span>
+                          <Calculator size={13} className="inline mr-1 text-sky-400" />
                           <span>RUMUS & KALKULATOR</span>
                         </button>
                       </div>
@@ -1594,7 +1595,7 @@ const LatheModule = ({ addXP }) => {
         }}
       >
         <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ color: '#38bdf8', fontWeight: 700 }}>⌨️ KONTROL TOMBOL KEYBOARD:</span>
+          <span style={{ color: '#38bdf8', fontWeight: 700 }}><Keyboard size={14} className="inline mr-1.5" /> KONTROL TOMBOL KEYBOARD:</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>◀</kbd> Z- (Sayat Kiri)</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>▶</kbd> Z+ (Mundur Kanan)</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>▼</kbd> X- (Makan Ø)</span>
@@ -1602,7 +1603,7 @@ const LatheModule = ({ addXP }) => {
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>Spasi</kbd> Nyala/Mati Spindel</span>
         </div>
         <div style={{ color: '#10b981', fontWeight: 600 }}>
-          ⚡ Responsif Instan & Tanpa Delay
+          <Zap size={13} className="inline mr-1 text-amber-400" /> Responsif Instan & Tanpa Delay
         </div>
       </div>
 
@@ -1654,7 +1655,7 @@ const LatheModule = ({ addXP }) => {
               transition: 'all 0.2s'
             }}
           >
-            {isSpindleRunning ? '⏹ STOP SPINDEL' : '▶ START SPINDEL (M03)'}
+            {isSpindleRunning ? 'STOP SPINDEL' : 'START SPINDEL (M03)'}
           </button>
 
           {/* RPM Preset Buttons */}
@@ -1680,7 +1681,7 @@ const LatheModule = ({ addXP }) => {
                   }}
                   title="Hitung RPM Sesuai Rumus Bubut"
                 >
-                  <span>🧮</span> Rumus
+                  <Calculator size={13} className="inline mr-1 text-sky-400" /> Rumus
                 </button>
               </div>
             </div>
@@ -1724,7 +1725,7 @@ const LatheModule = ({ addXP }) => {
               gap: '6px'
             }}
           >
-            💦 PENDINGIN (COOLANT): {coolant ? 'ON' : 'OFF'}
+            <Droplets size={14} className="inline mr-1.5 text-cyan-400" /> PENDINGIN (COOLANT): {coolant ? 'ON' : 'OFF'}
           </button>
         </div>
 
@@ -1887,7 +1888,7 @@ const LatheModule = ({ addXP }) => {
                 border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
               }}
             >
-              ⚡ RAPID: {rapidMode ? 'ON' : 'OFF'}
+              <Zap size={12} className="inline mr-1" /> RAPID: {rapidMode ? 'ON' : 'OFF'}
             </button>
           </div>
 
@@ -2083,7 +2084,7 @@ const LatheModule = ({ addXP }) => {
                 boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
               }}
             >
-              🔍 UKUR & EVALUASI
+              <Search size={14} className="inline mr-1.5" /> UKUR & EVALUASI
             </button>
 
             <button
@@ -2100,7 +2101,7 @@ const LatheModule = ({ addXP }) => {
                 fontSize: '0.75rem'
               }}
             >
-              🔄 RESET BENDA KERJA
+              <RotateCcw size={14} className="inline mr-1.5" /> RESET BENDA KERJA
             </button>
           </div>
         </div>
@@ -2132,7 +2133,7 @@ const LatheModule = ({ addXP }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                {score >= 80 ? '✓ JOBSHEET SELESAI DENGAN BAIK' : '⚠ PERLU PERBAIKAN TEKNIK BUBUT'}
+                {score >= 80 ? '[LULUS] JOBSHEET SELESAI DENGAN BAIK' : '[EVALUASI] PERLU PERBAIKAN TEKNIK BUBUT'}
               </span>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '8px' }}>
                 Laporan Hasil Inspeksi Metrologi Pahat & Benda Kerja
@@ -2206,7 +2207,7 @@ const LatheModule = ({ addXP }) => {
             color: score >= 80 ? '#10b981' : '#ef4444',
             padding: '3px 10px', borderRadius: '20px', fontWeight: 800, fontSize: '0.78rem'
           }}>
-            {score >= 80 ? '✓ TUGAS BUBUT SUKSES' : '⚠ PERLU PERBAIKAN'}
+            {score >= 80 ? '[LULUS] TUGAS BUBUT SUKSES' : '[EVALUASI] PERLU PERBAIKAN'}
           </span>
           <div style={{ fontSize: '1.6rem', fontWeight: 900, color: score >= 80 ? '#10b981' : '#ef4444' }}>
             {score}/100
@@ -2261,7 +2262,7 @@ const LatheModule = ({ addXP }) => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.3rem' }}>📋</span>
+            <FileText size={20} className="text-sky-400" />
             <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)' }}>
               PILIH TUGAS / JOBSHEET BUBUT
             </span>
@@ -2270,7 +2271,7 @@ const LatheModule = ({ addXP }) => {
             onClick={() => setShowJobsheetModal(false)}
             style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff', fontSize: '1.1rem', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer' }}
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
@@ -2299,7 +2300,7 @@ const LatheModule = ({ addXP }) => {
                 </div>
               </div>
               {activeJobsheetIndex === idx && (
-                <span style={{ color: '#10b981', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF ✓</span>
+                <span style={{ color: '#10b981', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF [OK]</span>
               )}
             </div>
           ))}

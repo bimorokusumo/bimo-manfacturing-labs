@@ -50,7 +50,7 @@ const Milling3D = ({
           gap: '8px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
         }}>
-          <span>⚠️ 2D CAD Aktif (Fallback GPU)</span>
+          <span>[PERINGATAN] 2D CAD Aktif (Fallback GPU)</span>
           <button
             onClick={retryFn}
             style={{
@@ -137,7 +137,7 @@ const Milling3D = ({
               transition: 'all 0.2s'
             }}
           >
-            {viewMode === '3d' ? '📐 TAMPILAN 2D PRESISI (TOP-DOWN)' : '🎮 TAMPILAN 3D STUDIO'}
+            {viewMode === '3d' ? 'TAMPILAN 2D PRESISI (TOP-DOWN)' : 'TAMPILAN 3D STUDIO'}
           </button>
 
           {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE BUTTON */}
@@ -160,7 +160,7 @@ const Milling3D = ({
             }}
             title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
           >
-            <span>🎯</span>
+            <span>[TARGET]</span>
             <span>GARIS JOB: {effectiveShowJobGuide ? 'ON' : 'OFF'}</span>
           </button>
         </div>
@@ -211,7 +211,7 @@ const Milling3D = ({
               backdropFilter: 'blur(8px)'
             }}
           >
-            ⚡ PENYAYATAN AKTIF
+            [CUT] PENYAYATAN AKTIF
           </div>
         )}
       </div>

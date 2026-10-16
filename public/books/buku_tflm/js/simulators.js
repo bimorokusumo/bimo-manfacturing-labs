@@ -93,7 +93,7 @@ class ArcLabSimulator {
     if (this.feedbackCard) {
       this.feedbackCard.className = `lab-feedback-card ${status}`;
       this.feedbackCard.innerHTML = `
-        <div style="font-size: 1.3rem;">${status === 'ideal' ? '✅' : (status === 'danger' ? '⚠️' : 'ℹ️')}</div>
+        <div style="font-size: 1.3rem;">${status === 'ideal' ? '[OK]' : (status === 'danger' ? '[PERINGATAN]' : 'ℹ')}</div>
         <div>
           <strong>${title}</strong>
           <p style="margin: 2px 0 0 0; font-size: 0.76rem;">${message}</p>

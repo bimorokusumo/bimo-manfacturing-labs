@@ -1,3 +1,4 @@
+import { X, Settings, FileText, Wrench, Box, Crosshair, Zap, Droplets, Award, RotateCcw, Search, AlertTriangle, CheckCircle, Monitor, Smartphone, Keyboard, ShieldAlert, ArrowDown, ArrowUp } from 'lucide-react';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import Milling3D from './Milling3D';
@@ -420,7 +421,7 @@ const MillingModule = ({ addXP }) => {
             fontSize: '0.95rem'
           }}
         >
-          <span>⚙️</span> 1. Simulator Praktik Frais 3D
+          <Box size={14} className="inline mr-1.5 text-amber-400" /> 1. Simulator Praktik Frais 3D
         </button>
 
         <button
@@ -441,7 +442,7 @@ const MillingModule = ({ addXP }) => {
             fontSize: '0.95rem'
           }}
         >
-          <span>📝</span> 2. Soal Test Teori Frais (25 Soal & Esai)
+          <FileText size={14} className="inline mr-1.5 text-amber-400" /> 2. Soal Test Teori Frais (25 Soal & Esai)
         </button>
 
         <button
@@ -462,7 +463,7 @@ const MillingModule = ({ addXP }) => {
             fontSize: '0.95rem'
           }}
         >
-          <span>🔪</span> 3. Katalog Pisau Frais (8 Jenis Real)
+          <Wrench size={14} className="inline mr-1.5 text-amber-400" /> 3. Katalog Pisau Frais (8 Jenis Real)
         </button>
       </div>
 
@@ -569,9 +570,9 @@ const MillingModule = ({ addXP }) => {
                           padding: '2px 6px', borderRadius: '14px', fontSize: '0.65rem', fontWeight: 800,
                           color: isSpindleRunning ? '#10b981' : '#fca5a5'
                         }}>
-                          <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                          <span className={`font-mono text-[9px] px-1 py-0.5 rounded font-bold ${isSpindleRunning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>{isSpindleRunning ? 'RUN' : 'STOP'}</span>
                           <span>{rpm} RPM</span>
-                          {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.62rem' }}>⚡</span>}
+                          {isCutting && <span className="font-mono text-[9px] font-bold text-amber-400 animate-pulse">[CUT]</span>}
                         </div>
 
                         <button
@@ -582,7 +583,7 @@ const MillingModule = ({ addXP }) => {
                           }}
                           title="Beralih ke Tampilan Desktop Penuh"
                         >
-                          🖥️
+                          <Monitor size={14} className="text-slate-400" />
                         </button>
                       </div>
                     </div>
@@ -601,7 +602,7 @@ const MillingModule = ({ addXP }) => {
                           }}
                           title="Beralih antara Mode 3D dan Mode 2D Presisi"
                         >
-                          {viewMode === '3d' ? '📐 2D' : '🎮 3D'}
+                          {viewMode === '3d' ? '2D CAD' : '3D CAM'}
                         </button>
 
                         <button
@@ -615,7 +616,7 @@ const MillingModule = ({ addXP }) => {
                           }}
                           title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
                         >
-                          <span>🎯</span>
+                          <Crosshair size={13} className="inline mr-1 text-amber-400" />
                           <span>JOB</span>
                         </button>
                       </div>
@@ -650,7 +651,7 @@ const MillingModule = ({ addXP }) => {
                         }}
                         title="Katalog 8 Pisau Frais Real"
                       >
-                        🔪
+                        <Wrench size={13} className="inline text-amber-400" />
                       </button>
                     </div>
                   </div>
@@ -685,7 +686,7 @@ const MillingModule = ({ addXP }) => {
                       padding: '3px 8px', fontSize: '0.58rem', fontWeight: 700, color: '#94a3b8',
                       display: 'flex', alignItems: 'center', gap: '4px', pointerEvents: 'none'
                     }}>
-                      <span>📲</span>
+                      <Smartphone size={13} className="inline mr-1 text-amber-400" />
                       <span>Miringkan HP untuk Layar Penuh</span>
                     </div>
                   </div>
@@ -823,7 +824,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          ⚡ RAPID
+                          <Zap size={12} className="inline mr-1" /> RAPID
                         </button>
                         <button
                           onClick={() => { sound.playClick(); setCoolant(!coolant); }}
@@ -835,7 +836,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          💦 {coolant ? 'ON' : 'OFF'}
+                          <Droplets size={12} className="inline mr-1 text-cyan-400" /> {coolant ? 'ON' : 'OFF'}
                         </button>
                       </div>
 
@@ -849,7 +850,7 @@ const MillingModule = ({ addXP }) => {
                             boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
                           }}
                         >
-                          🏆 CEK
+                          <Award size={12} className="inline mr-1 text-amber-400" /> CEK
                         </button>
                         <button
                           onClick={handleReset}
@@ -859,7 +860,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          🔄 RESET
+                          <RotateCcw size={12} className="inline mr-1" /> RESET
                         </button>
                       </div>
                     </div>
@@ -906,7 +907,7 @@ const MillingModule = ({ addXP }) => {
                           fontSize: '0.72rem'
                         }}
                       >
-                        <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                        <span className="font-mono text-xs font-bold">{isSpindleRunning ? 'STOP' : 'START'}</span>
                         <span>{isSpindleRunning ? 'STOP' : 'START'}</span>
                       </button>
 
@@ -1013,9 +1014,9 @@ const MillingModule = ({ addXP }) => {
                       padding: '2px 7px', borderRadius: '20px', fontSize: '0.68rem', fontWeight: 800,
                       color: isSpindleRunning ? '#10b981' : '#fca5a5'
                     }}>
-                      <span>{isSpindleRunning ? '🟢' : '🔴'}</span>
+                      <span className={`font-mono text-[9px] px-1 py-0.5 rounded font-bold ${isSpindleRunning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>{isSpindleRunning ? 'RUN' : 'STOP'}</span>
                       <span>{rpm} RPM</span>
-                      {isCutting && <span style={{ color: '#f59e0b', fontSize: '0.65rem' }}>⚡</span>}
+                      {isCutting && <span className="font-mono text-[9px] font-bold text-amber-400 animate-pulse">[CUT]</span>}
                     </div>
 
                     {/* 2D/3D + GARIS JOB + QUICK 5 JOBS SELECTOR + PISAU (LANDSCAPE) */}
@@ -1032,7 +1033,7 @@ const MillingModule = ({ addXP }) => {
                         }}
                         title="Beralih antara Mode 3D dan Mode 2D Presisi"
                       >
-                        <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                        <span>{viewMode === '3d' ? '2D CAD' : '3D CAM'}</span>
                       </button>
 
                       <button
@@ -1046,7 +1047,7 @@ const MillingModule = ({ addXP }) => {
                         }}
                         title="Tampilkan / Sembunyikan Garis Target Blueprint Job"
                       >
-                        <span>🎯</span>
+                        <Crosshair size={13} className="inline mr-1 text-amber-400" />
                         <span>JOB</span>
                       </button>
 
@@ -1080,7 +1081,7 @@ const MillingModule = ({ addXP }) => {
                         }}
                         title="Katalog 8 Pisau Frais Real"
                       >
-                        🔪
+                        <Wrench size={13} className="inline text-amber-400" />
                       </button>
 
                       <button
@@ -1091,7 +1092,7 @@ const MillingModule = ({ addXP }) => {
                         }}
                         title="Beralih ke Tampilan Desktop Penuh"
                       >
-                        🖥️
+                        <Monitor size={14} className="text-slate-400" />
                       </button>
                     </div>
                   </div>
@@ -1223,7 +1224,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          ⚡ RAPID 3X
+                          <Zap size={12} className="inline mr-1" /> RAPID 3X
                         </button>
                         <button
                           onClick={() => { sound.playClick(); setCoolant(!coolant); }}
@@ -1235,7 +1236,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          💦 {coolant ? 'ON' : 'OFF'}
+                          <Droplets size={12} className="inline mr-1 text-cyan-400" /> {coolant ? 'ON' : 'OFF'}
                         </button>
                       </div>
 
@@ -1249,7 +1250,7 @@ const MillingModule = ({ addXP }) => {
                             boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)'
                           }}
                         >
-                          🏆 CEK HASIL
+                          <Award size={12} className="inline mr-1 text-amber-400" /> CEK HASIL
                         </button>
                         <button
                           onClick={handleReset}
@@ -1259,7 +1260,7 @@ const MillingModule = ({ addXP }) => {
                             backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)'
                           }}
                         >
-                          🔄 RESET
+                          <RotateCcw size={12} className="inline mr-1" /> RESET
                         </button>
                       </div>
                     </div>
@@ -1306,7 +1307,7 @@ const MillingModule = ({ addXP }) => {
                           fontSize: '0.74rem'
                         }}
                       >
-                        <span style={{ fontSize: '1rem', lineHeight: 1 }}>{isSpindleRunning ? '⏹' : '▶'}</span>
+                        <span className="font-mono text-xs font-bold">{isSpindleRunning ? 'STOP' : 'START'}</span>
                         <span>{isSpindleRunning ? 'STOP' : 'START SPINDEL'}</span>
                       </button>
 
@@ -1365,7 +1366,7 @@ const MillingModule = ({ addXP }) => {
                       fontSize: '1.2rem'
                     }}
                   >
-                    🔩
+                    <Wrench className="w-5 h-5 text-white" />
                   </div>
                   <div>
                     <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)' }}>
@@ -1400,7 +1401,7 @@ const MillingModule = ({ addXP }) => {
                       }}
                       title="Beralih antara Mode 3D Studio dan Mode 2D Presisi (Top-Down)"
                     >
-                      <span>{viewMode === '3d' ? '📐 MODE 2D PRESISI' : '🎮 MODE 3D STUDIO'}</span>
+                      <span>{viewMode === '3d' ? 'MODE 2D PRESISI' : 'MODE 3D STUDIO'}</span>
                     </button>
 
                     {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE (DESKTOP) */}
@@ -1423,7 +1424,7 @@ const MillingModule = ({ addXP }) => {
                       }}
                       title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet Frais"
                     >
-                      <span>🎯</span>
+                      <Crosshair size={13} className="inline mr-1 text-amber-400" />
                       <span>GARIS JOB: {showJobGuide ? 'ON' : 'OFF'}</span>
                     </button>
 
@@ -1445,7 +1446,7 @@ const MillingModule = ({ addXP }) => {
                       }}
                       title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
                     >
-                      <span>🎮</span>
+                      <Box size={13} className="inline mr-1 text-amber-400" />
                       <span>MODE GAME HP</span>
                     </button>
 
@@ -1466,7 +1467,7 @@ const MillingModule = ({ addXP }) => {
                         boxShadow: '0 2px 8px rgba(2, 132, 199, 0.3)'
                       }}
                     >
-                      <span>🔪</span> Pisau Frais
+                      <Wrench size={13} className="inline mr-1 text-amber-400" /> Pisau Frais
                     </button>
 
                     <button
@@ -1486,7 +1487,7 @@ const MillingModule = ({ addXP }) => {
                       }}
                       title="Buka panduan K3 & SOP"
                     >
-                      <span>🛡️</span> SOP & K3
+                      <ShieldAlert size={13} className="inline mr-1 text-emerald-400" /> SOP & K3
                     </button>
                   </div>
 
@@ -1579,7 +1580,7 @@ const MillingModule = ({ addXP }) => {
         }}
       >
         <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ color: '#f59e0b', fontWeight: 700 }}>⌨️ KONTROL TOMBOL KEYBOARD:</span>
+          <span style={{ color: '#f59e0b', fontWeight: 700 }}><Keyboard size={14} className="inline mr-1.5" /> KONTROL TOMBOL KEYBOARD:</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>◀</kbd> Meja Kiri (X-)</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>▶</kbd> Meja Kanan (X+)</span>
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>▼</kbd> Meja Maju (Y-)</span>
@@ -1589,7 +1590,7 @@ const MillingModule = ({ addXP }) => {
           <span><kbd style={{ background: '#1e293b', padding: '2px 6px', borderRadius: '4px', color: '#fff' }}>Spasi</kbd> Nyala/Mati Spindel</span>
         </div>
         <div style={{ color: '#10b981', fontWeight: 600 }}>
-          ⚡ Responsif Instan & Tanpa Delay
+          <Zap size={13} className="inline mr-1 text-amber-400" /> Responsif Instan & Tanpa Delay
         </div>
       </div>
 
@@ -1641,7 +1642,7 @@ const MillingModule = ({ addXP }) => {
               transition: 'all 0.2s'
             }}
           >
-            {isSpindleRunning ? '⏹ STOP SPINDEL' : '▶ START SPINDEL (M03)'}
+            {isSpindleRunning ? 'STOP SPINDEL' : 'START SPINDEL (M03)'}
           </button>
 
           {/* Endmill Diameter Selector */}
@@ -1714,7 +1715,7 @@ const MillingModule = ({ addXP }) => {
               border: coolant ? '1px solid #0284c7' : '1px solid rgba(255,255,255,0.06)'
             }}
           >
-            💦 PENDINGIN (COOLANT): {coolant ? 'ON' : 'OFF'}
+            <Droplets size={14} className="inline mr-1.5 text-cyan-400" /> PENDINGIN (COOLANT): {coolant ? 'ON' : 'OFF'}
           </button>
         </div>
 
@@ -1825,25 +1826,25 @@ const MillingModule = ({ addXP }) => {
                 onClick={() => setSpindleDepthPreset(0.0)}
                 style={{ padding: '4px 2px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', background: spindlePosition.z === 0 ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255,255,255,0.04)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)' }}
               >
-                ⚡ Z=0
+                <Zap size={13} className="inline mr-1 text-amber-400" /> Z=0
               </button>
               <button
                 onClick={() => setSpindleDepthPreset(-1.0)}
                 style={{ padding: '4px 2px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', background: spindlePosition.z === -1.0 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(255,255,255,0.04)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.4)' }}
               >
-                🔻 -1.0mm
+                <ArrowDown size={13} className="inline mr-1 text-rose-400" /> -1.0mm
               </button>
               <button
                 onClick={() => setSpindleDepthPreset(-2.0)}
                 style={{ padding: '4px 2px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', background: spindlePosition.z === -2.0 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(255,255,255,0.04)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.4)' }}
               >
-                🔻 -2.0mm
+                <ArrowDown size={13} className="inline mr-1 text-rose-400" /> -2.0mm
               </button>
               <button
                 onClick={() => setSpindleDepthPreset(5.0)}
                 style={{ padding: '4px 2px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, cursor: 'pointer', background: spindlePosition.z === 5.0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255,255,255,0.04)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.4)' }}
               >
-                🔺 +5.0mm
+                <ArrowUp size={13} className="inline mr-1 text-emerald-400" /> +5.0mm
               </button>
             </div>
           </div>
@@ -1910,7 +1911,7 @@ const MillingModule = ({ addXP }) => {
                 border: rapidMode ? 'none' : '1px solid rgba(255,255,255,0.1)'
               }}
             >
-              ⚡ RAPID 3X: {rapidMode ? 'ON' : 'OFF'}
+              <Zap size={12} className="inline mr-1" /> RAPID 3X: {rapidMode ? 'ON' : 'OFF'}
             </button>
           </div>
 
@@ -2066,7 +2067,7 @@ const MillingModule = ({ addXP }) => {
                 boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
               }}
             >
-              🔍 UKUR & EVALUASI
+              <Search size={14} className="inline mr-1.5" /> UKUR & EVALUASI
             </button>
 
             <button
@@ -2083,7 +2084,7 @@ const MillingModule = ({ addXP }) => {
                 fontSize: '0.75rem'
               }}
             >
-              🔄 RESET BALOK KERJA
+              <RotateCcw size={14} className="inline mr-1.5" /> RESET BALOK KERJA
             </button>
           </div>
         </div>
@@ -2115,7 +2116,7 @@ const MillingModule = ({ addXP }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                {score >= 80 ? '✓ JOBSHEET SELESAI DENGAN BAIK' : '⚠ PERLU PENYESUAIAN TEKNIK FRAIS'}
+                {score >= 80 ? '[LULUS] JOBSHEET SELESAI DENGAN BAIK' : '[EVALUASI] PERLU PENYESUAIAN TEKNIK FRAIS'}
               </span>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '8px' }}>
                 Laporan Hasil Inspeksi Metrologi Kedalaman & Kerataan Frais
@@ -2189,7 +2190,7 @@ const MillingModule = ({ addXP }) => {
             color: score >= 80 ? '#10b981' : '#ef4444',
             padding: '3px 10px', borderRadius: '20px', fontWeight: 800, fontSize: '0.78rem'
           }}>
-            {score >= 80 ? '✓ TUGAS FRAIS SUKSES' : '⚠ PERLU PERBAIKAN'}
+            {score >= 80 ? '[LULUS] TUGAS FRAIS SUKSES' : '[EVALUASI] PERLU PERBAIKAN'}
           </span>
           <div style={{ fontSize: '1.6rem', fontWeight: 900, color: score >= 80 ? '#10b981' : '#ef4444' }}>
             {score}/100
@@ -2244,7 +2245,7 @@ const MillingModule = ({ addXP }) => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.3rem' }}>📋</span>
+            <FileText size={20} className="text-amber-400" />
             <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)' }}>
               PILIH TUGAS / JOBSHEET FRAIS
             </span>
@@ -2253,7 +2254,7 @@ const MillingModule = ({ addXP }) => {
             onClick={() => setShowJobsheetModal(false)}
             style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#fff', fontSize: '1.1rem', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer' }}
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
 
@@ -2282,7 +2283,7 @@ const MillingModule = ({ addXP }) => {
                 </div>
               </div>
               {activeJobsheetIndex === idx && (
-                <span style={{ color: '#f59e0b', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF ✓</span>
+                <span style={{ color: '#f59e0b', fontWeight: 800, fontSize: '0.8rem' }}>AKTIF [OK]</span>
               )}
             </div>
           ))}

@@ -5,6 +5,10 @@ import HeatTreatmentYouTubeCard from './HeatTreatmentYouTubeCard';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { recordQuizResult } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
+import { 
+  Flame, Zap, Droplets, Thermometer, Shield, Award, Play, RotateCcw, 
+  Layers, Activity, Beaker, Check, Microscope, ArrowRight, Settings, Wrench
+} from 'lucide-react';
 
 // =============================================================================
 // DATABASE SIMULATOR BLACKENING (7-STAGE HOT BLACK OXIDE)
@@ -22,7 +26,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Melarutkan oli pemotongan dromus & gemuk agar reaksi blackening tidak belang.',
     warnaBenda: '#94a3b8',
     statusBenda: 'Baja Abu-Abu (Bebas Oli)',
-    icon: '🧼'
+    icon: '[BAK 1]'
   },
   {
     step: 2,
@@ -36,7 +40,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Membasuh sisa sabun alkali agar tidak menetralkan asam pada bak pickling.',
     warnaBenda: '#cbd5e1',
     statusBenda: 'Bersih Mengkilap (Water Break Free)',
-    icon: '💧'
+    icon: '[BILAS]'
   },
   {
     step: 3,
@@ -50,7 +54,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Mengikis karat tipis dan membuka pori-pori kristal baja (micro-etching).',
     warnaBenda: '#e2e8f0',
     statusBenda: 'Baja Ter-Etsa Bersih',
-    icon: '🧪'
+    icon: '[ASAM]'
   },
   {
     step: 4,
@@ -64,7 +68,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Membilas asam total agar tidak memicu ledakan uap saat masuk ke bak garam panas.',
     warnaBenda: '#cbd5e1',
     statusBenda: 'Baja Netral Siap Konversi',
-    icon: '💧'
+    icon: '[BILAS]'
   },
   {
     step: 5,
@@ -78,7 +82,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Inti Reaksi: Atom besi bereaksi menjadi magnetit Fe₃O₄ hitam pekat 0.000 mm!',
     warnaBenda: '#18181b',
     statusBenda: 'HITAM PEKAT DOFF (Fe₃O₄ 100%)',
-    icon: '⚗️'
+    icon: '[OKSIDA]'
   },
   {
     step: 6,
@@ -92,7 +96,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Menghilangkan residu garam dari celah ulir agar tidak timbul bercak putih karat.',
     warnaBenda: '#09090b',
     statusBenda: 'Hitam Bersih Bebas Garam',
-    icon: '💧'
+    icon: '[BILAS]'
   },
   {
     step: 7,
@@ -106,7 +110,7 @@ const BLACKENING_TANKS = [
     fungsi: 'Oli menembus pori magnetit mengusir molekul air. Tahan karat ratusan jam!',
     warnaBenda: '#020617',
     statusBenda: 'HITAM MEWAH TAHAN KARAT TOTAL',
-    icon: '🛡️'
+    icon: '[OLI]'
   }
 ];
 
@@ -622,7 +626,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               letterSpacing: '0.5px',
               textTransform: 'uppercase'
             }}>
-              🔥 METALLURGY VISUAL STUDIO
+              METALLURGY VISUAL STUDIO
             </span>
             <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>SMK Teknik Pemesinan &amp; TFLM</span>
           </div>
@@ -671,15 +675,15 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
         paddingBottom: '4px'
       }}>
         {[
-          { id: 'hardening', label: '⚡ Hardening', badge: 'Pemanasan' },
-          { id: 'quenching', label: '💧 Quenching', badge: 'Media Dingin' },
-          { id: 'tempering', label: '🌡️ Tempering', badge: 'Warna Oksida' },
-          { id: 'annealing', label: '🧘 Annealing', badge: 'Pelunakan' },
-          { id: 'normalizing', label: '🌱 Normalizing', badge: 'Butir Halus' },
-          { id: 'case-hardening', label: '🛡️ Case Hardening', badge: 'Kulit Aus' },
-          { id: 'blackening', label: '⚗️ Blackening', badge: '0.000 mm' },
-          { id: 'simulator', label: '🧪 Simulator Tungku', badge: 'Eksperimen' },
-          { id: 'quiz', label: '🏆 Kuis Visual', badge: '+500 XP' }
+          { id: 'hardening', label: 'Hardening', badge: 'Pemanasan' },
+          { id: 'quenching', label: 'Quenching', badge: 'Media Dingin' },
+          { id: 'tempering', label: 'Tempering', badge: 'Warna Oksida' },
+          { id: 'annealing', label: 'Annealing', badge: 'Pelunakan' },
+          { id: 'normalizing', label: 'Normalizing', badge: 'Butir Halus' },
+          { id: 'case-hardening', label: 'Case Hardening', badge: 'Kulit Aus' },
+          { id: 'blackening', label: 'Blackening', badge: '0.000 mm' },
+          { id: 'simulator', label: 'Simulator Tungku', badge: 'Eksperimen' },
+          { id: 'quiz', label: 'Kuis Visual', badge: '+500 XP' }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -745,19 +749,19 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           {/* 4 Concise Visual Feature Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '20px' }}>
             <div style={{ background: '#eff6ff', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #1d4ed8' }}>
-              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>📐 <strong>0.000 mm Presisi</strong></div>
+              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}><span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#1d4ed8' }}>[ISO-TOL]</span> <strong>0.000 mm Presisi</strong></div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>Hanya 1–2 mikron ke dalam logam. Ulir baut halus tidak akan macet!</div>
             </div>
             <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #15803d' }}>
-              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>🕶️ <strong>Anti-Silau (Matte)</strong></div>
+              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}><span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#15803d' }}>[FINISH]</span> <strong>Anti-Silau (Matte)</strong></div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>Warna hitam pekat menyerap cahaya, standar senjata api &amp; mikroskop.</div>
             </div>
             <div style={{ background: '#fef3c7', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #b45309' }}>
-              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>🧲 <strong>Kunci Oli Anti-Karat</strong></div>
+              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}><span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#b45309' }}>[SEAL]</span> <strong>Kunci Oli Anti-Karat</strong></div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>Pori magnetit Fe₃O₄ mengikat oli de-watering pencegah karat ratusan jam.</div>
             </div>
             <div style={{ background: '#fdf2f8', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #be185d' }}>
-              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>🛡️ <strong>Bebas Kelupas</strong></div>
+              <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}><span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#be185d' }}>[COAT]</span> <strong>Bebas Kelupas</strong></div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>Bukan lapisan cat, melainkan kristal besi teroksidasi yang menyatu.</div>
             </div>
           </div>
@@ -772,7 +776,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h4 style={{ margin: '0 0 10px 0', fontSize: '0.95rem', fontWeight: 800, color: '#334155' }}>
-              📊 Bagan Visual Alur 7 Bak Celup Pabrik:
+              Bagan Visual Alur 7 Bak Celup Pabrik:
             </h4>
             <img 
               src={getAssetUrl("/assets/images/heat_treatment/blackening_tank_diagram.svg")} 
@@ -791,7 +795,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h3 style={{ margin: '0 0 14px 0', fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
-              📋 7 Tahap Celup Blackening (Langkah Singkat &amp; Suhu Kerja):
+              7 Tahap Celup Blackening (Langkah Singkat &amp; Suhu Kerja):
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
               {BLACKENING_TANKS.map((tank) => (
@@ -806,7 +810,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                     <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0369a1' }}>BAK #{tank.step}</span>
                     <span style={{ fontSize: '0.68rem', background: '#e0f2fe', color: '#0369a1', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>{tank.temp}</span>
                   </div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>{tank.icon} {tank.sub}</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}><span style={{ fontFamily: 'monospace', fontSize: '0.75rem', fontWeight: 800, color: '#0284c7', marginRight: '6px' }}>[{tank.step}/7]</span>{tank.sub}</div>
                   <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '4px' }}>{tank.fungsi}</div>
                 </div>
               ))}
@@ -825,7 +829,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
-                  🎮 Simulator Meja Kerja Celup 7-Bak
+                  Simulator Meja Kerja Celup 7-Bak
                 </h3>
                 <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
                   Pilih benda kerja lalu klik "JALANKAN ALUR OTOMATIS" untuk melihat proses konversi warna baja
@@ -839,10 +843,10 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                   onChange={(e) => { sound.playClick(); setSelectedWorkpiece(e.target.value); }}
                   style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.82rem', fontWeight: 600, background: '#f8fafc' }}
                 >
-                  <option value="baut-hex">🔩 Baut Soket Hex Presisi</option>
-                  <option value="pisau-frais">⚙️ Pisau Frais HSS</option>
-                  <option value="roda-gigi">🏎️ Roda Gigi Mesin</option>
-                  <option value="pelat-ragum">📐 Pelat Ragum Presisi</option>
+                  <option value="baut-hex">[ISO-4762] Baut Soket Hex Presisi</option>
+                  <option value="pisau-frais">[DIN-844] Pisau Frais HSS</option>
+                  <option value="roda-gigi">[M-2.0] Roda Gigi Mesin Spur</option>
+                  <option value="pelat-ragum">[JAW] Pelat Ragum Presisi Ground</option>
                 </select>
               </div>
             </div>
@@ -863,7 +867,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                   cursor: (isDipping || autoDippingActive) ? 'not-allowed' : 'pointer'
                 }}
               >
-                {autoDippingActive ? `🔄 Memproses Bak ${currentTankIndex + 1}...` : '▶️ JALANKAN ALUR OTOMATIS (7 BAK)'}
+                {autoDippingActive ? `Memproses Bak ${currentTankIndex + 1}...` : 'JALANKAN ALUR OTOMATIS (7 BAK)'}
               </button>
 
               <button
@@ -871,7 +875,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                 disabled={isDipping || autoDippingActive}
                 style={{ background: '#f1f5f9', color: '#475569', border: '1px solid #cbd5e1', padding: '10px 14px', borderRadius: '8px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}
               >
-                🔄 Reset
+                Reset
               </button>
             </div>
 
@@ -904,7 +908,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                   justifyContent: 'center',
                   fontSize: '0.6rem'
                 }}>
-                  ⚙️
+                  <Settings size={12} color="#ffffff" />
                 </div>
               </div>
 
@@ -920,18 +924,17 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                   textAlign: 'center',
                   transition: 'background 0.8s ease'
                 }}>
-                  <div style={{ fontSize: '1.6rem' }}>
-                    {selectedWorkpiece === 'baut-hex' && '🔩'}
-                    {selectedWorkpiece === 'pisau-frais' && '⚙️'}
-                    {selectedWorkpiece === 'roda-gigi' && '🏎️'}
-                    {selectedWorkpiece === 'pelat-ragum' && '📐'}
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '0.85rem', padding: '3px 10px', borderRadius: '4px', background: 'rgba(255,255,255,0.15)', color: (finishedBlackening || currentTankIndex >= 4) ? '#f8fafc' : '#0f172a', border: '1px solid rgba(255,255,255,0.2)' }}>
+                      {selectedWorkpiece.toUpperCase()}
+                    </span>
                   </div>
                   <div style={{ fontSize: '0.8rem', fontWeight: 900, marginTop: '4px', color: (finishedBlackening || currentTankIndex >= 4) ? '#ffffff' : '#0f172a' }}>
                     {BLACKENING_TANKS[currentTankIndex].statusBenda}
                   </div>
                   {isDipping && (
                     <div style={{ fontSize: '0.7rem', color: '#f97316', fontWeight: 800, marginTop: '2px' }}>
-                      ⏳ Bereaksi di {BLACKENING_TANKS[currentTankIndex].nama} ({dipTimer}s)
+                      Bereaksi di {BLACKENING_TANKS[currentTankIndex].nama} ({dipTimer}s)
                     </div>
                   )}
                 </div>
@@ -969,23 +972,23 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             {finishedBlackening && (
               <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '10px', border: '1px solid #86efac' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '1.2rem' }}>🏆</span>
+                  <Award size={18} color="#166534" style={{ display: "inline", verticalAlign: "middle" }} />
                   <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#166534' }}>Uji Kualitas Akhir Standar Militer (MIL-DTL-13924):</div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <button onClick={() => runQualityTest('smear-pass')} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #166534', background: '#ffffff', color: '#166534', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}>
-                    🧻 Smear Test (Usap Tisu)
+                    Smear Test (Usap Tisu)
                   </button>
                   <button onClick={() => runQualityTest('water-break-pass')} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #166534', background: '#ffffff', color: '#166534', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}>
-                    💧 Water Break Free Test
+                    Water Break Free Test
                   </button>
                   <button onClick={() => runQualityTest('salt-pass')} style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid #166534', background: '#ffffff', color: '#166534', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}>
-                    🧂 Salt Spray (120 Jam)
+                    Salt Spray (120 Jam)
                   </button>
                 </div>
                 {qualityTestResult && (
                   <div style={{ marginTop: '8px', fontSize: '0.8rem', color: '#15803d', fontWeight: 700 }}>
-                    ✅ HASIL UJI LULUS TOTAL: Lapisan Fe₃O₄ kuat menempel pada logam dasar dan mengunci oli anti-karat! (+50 XP)
+                    [LULUS STANDAR] HASIL UJI: Lapisan Fe₃O₄ kuat menempel pada logam dasar dan mengunci oli anti-karat! (+50 XP)
                   </div>
                 )}
               </div>
@@ -1022,7 +1025,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '20px' }}>
             <div style={{ background: '#fef2f2', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #dc2626' }}>
               <div style={{ fontSize: '1rem', fontWeight: 900, color: '#991b1b', marginBottom: '4px' }}>
-                🔒 1. Syarat Karbon (&ge; 0.30% C)
+                [SYARAT 1] Karbon Minimum (&ge; 0.30% C)
               </div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>
                 Baja karbon rendah (AISI 1020) <strong>tidak bisa dikeraskan langsung</strong> karena karbonnya kurang untuk membentuk martensit!
@@ -1031,7 +1034,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
 
             <div style={{ background: '#fff7ed', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #ea580c' }}>
               <div style={{ fontSize: '1rem', fontWeight: 900, color: '#c2410c', marginBottom: '4px' }}>
-                ⚡ 2. Transfer Kilat (&lt; 5 Detik)
+                [SYARAT 2] Transfer Cepat (&lt; 5 Detik)
               </div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>
                 Dari tungku ke bak quench harus kurang dari 5 detik agar tidak mendingin dini menjadi perlit lunak.
@@ -1040,7 +1043,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
 
             <div style={{ background: '#eff6ff', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #1d4ed8' }}>
               <div style={{ fontSize: '1rem', fontWeight: 900, color: '#1e40af', marginBottom: '4px' }}>
-                ⚠️ 3. Wajib Segera Tempering!
+                [PERINGATAN] Wajib Segera Tempering!
               </div>
               <div style={{ fontSize: '0.78rem', color: '#334155' }}>
                 Martensit murni getas seperti kaca dan menyimpan tegangan dalam raksasa. Jangan dibiarkan &gt; 2 jam tanpa temper!
@@ -1058,7 +1061,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h3 style={{ margin: '0 0 14px 0', fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
-              📋 SOP 6 Langkah Hardening di Bengkel:
+              SOP 6 Langkah Hardening di Bengkel:
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
               {[
@@ -1091,7 +1094,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h3 style={{ margin: '0 0 6px 0', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
-              🧪 Simulator Tangki Quench Interaktif
+              Simulator Tangki Quench Interaktif
             </h3>
             <p style={{ margin: '0 0 16px 0', fontSize: '0.8rem', color: '#64748b' }}>
               Atur parameter baja dan media quench untuk melihat apakah baja berhasil keras atau justru meledak retak.
@@ -1102,14 +1105,14 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                 {/* One-Click Presets */}
                 <div style={{ marginBottom: '14px', background: '#fff1f2', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fecdd3' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#9f1239', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                    ⚡ PILIH SKENARIO NYATA BENGKEL (Klik isi otomatis):
+                    PILIH SKENARIO NYATA BENGKEL (Klik isi otomatis):
                   </span>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
                     {[
-                      { label: '🔩 Baut S45C (Quench Oli)', grade: '1045', temp: 850, media: 'oil' },
-                      { label: '🔪 Pisau SK5 (Quench Air)', grade: '1095', temp: 800, media: 'water' },
-                      { label: '🏎️ As Spindel 4140 (Oli)', grade: '4140', temp: 860, media: 'oil' },
-                      { label: '💥 Quench Garam (Retak!)', grade: '1095', temp: 880, media: 'brine' }
+                      { label: '[AISI 1045] Baut S45C (Oli)', grade: '1045', temp: 850, media: 'oil' },
+                      { label: '[JIS SK5] Pisau SK5 (Air)', grade: '1095', temp: 800, media: 'water' },
+                      { label: '[AISI 4140] As Spindel (Oli)', grade: '4140', temp: 860, media: 'oil' },
+                      { label: '[EKSTREM] Quench Air Garam', grade: '1095', temp: 880, media: 'brine' }
                     ].map(preset => (
                       <button
                         key={preset.label}
@@ -1201,7 +1204,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                     cursor: isHardeningRunning ? 'not-allowed' : 'pointer'
                   }}
                 >
-                  {isHardeningRunning ? '⏳ Sedang Dicelup ke Tangki Quench...' : '⚡ CELUPKAN SPESIMEN KE TANGKI QUENCH!'}
+                  {isHardeningRunning ? 'Sedang Dicelup ke Tangki Quench...' : 'CELUPKAN SPESIMEN KE TANGKI QUENCH'}
                 </button>
               </div>
 
@@ -1219,7 +1222,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                         background: hardeningResult.isSuccess ? '#dcfce7' : '#fee2e2',
                         color: hardeningResult.isSuccess ? '#166534' : '#991b1b'
                       }}>
-                        {hardeningResult.isSuccess ? '✅ SUKSES KERAS' : '⚠️ BAHAYA RETAK / GAGAL'}
+                        {hardeningResult.isSuccess ? '[SUKSES] STRUKTUR MARTENSIT' : '[GAGAL] DISTORSI / RETAK'}
                       </span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '10px' }}>
@@ -1236,12 +1239,12 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                       <strong>Risiko Retak Termal:</strong> {hardeningResult.crackRisk}% {hardeningResult.crackRisk > 50 && '(BAHAYA PECAH!)'}
                     </div>
                     <div style={{ background: '#eff6ff', padding: '8px 10px', borderRadius: '6px', fontSize: '0.75rem', color: '#1e40af' }}>
-                      💡 <strong>Langkah Selanjutnya:</strong> Segera lanjutkan ke tab <strong>Tempering</strong> untuk memulihkan keliatan logam!
+                      <strong>Langkah Selanjutnya:</strong> Segera lanjutkan ke tab <strong>Tempering</strong> untuk memulihkan keliatan logam!
                     </div>
                   </div>
                 ) : (
                   <div style={{ background: '#0f172a', color: '#ffffff', padding: '30px 16px', borderRadius: '10px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '6px' }}>🔥 ➔ 🧊</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", margin: "10px 0" }}><Flame size={28} color="#f97316" /><span style={{ fontFamily: "monospace", fontWeight: 900, color: "#94a3b8" }}>&rarr;</span><Droplets size={28} color="#38bdf8" /></div>
                     <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>Spesimen Membara Siap Dicelup</div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px' }}>Klik tombol merah untuk mencelupkan baja ke media quench</div>
                   </div>
@@ -1270,7 +1273,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h4 style={{ margin: '0 0 8px 0', fontSize: '1.05rem', fontWeight: 900, color: '#0369a1', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>💧</span> 3 Tahapan Fisika Perpindahan Panas Selama Quenching
+              <Droplets size={18} color="#0284c7" style={{ display: "inline", verticalAlign: "middle", marginRight: "8px" }} /> 3 Tahapan Fisika Perpindahan Panas Selama Quenching
             </h4>
             <p style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.5, margin: '0 0 16px 0' }}>
               Ketika baja membara 850°C dimasukkan ke dalam cairan pendingin, pelepasan panas terjadi melalui 3 fase termodinamika berturut-turut:
@@ -1316,29 +1319,29 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h4 style={{ margin: '0 0 12px 0', fontSize: '1rem', fontWeight: 900, color: '#1e293b' }}>
-              📊 Perbandingan 4 Media Quenching Utama di Industri Bengkel Mesin
+              Perbandingan 4 Media Quenching Utama di Industri Bengkel Mesin
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0284c7' }}>🧂 Air Garam (Brine 10%)</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0284c7' }}>[BRINE] Air Garam 10%</div>
                 <div style={{ fontSize: '0.72rem', color: '#64748b', margin: '4px 0' }}>Laju Pendinginan: <strong>Paling Cepat (~200°C/detik)</strong></div>
                 <div style={{ fontSize: '0.75rem', color: '#334155' }}>Kristal garam meledak mikro di permukaan logam, menghancurkan selimut uap seketika. Digunakan untuk baja karbon rendah/sedang. Risiko retak tinggi.</div>
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#2563eb' }}>💧 Air Biasa (Water 20°C)</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#2563eb' }}>[WATER] Air Biasa 20°C</div>
                 <div style={{ fontSize: '0.72rem', color: '#64748b', margin: '4px 0' }}>Laju Pendinginan: <strong>Sangat Cepat (~150°C/detik)</strong></div>
                 <div style={{ fontSize: '0.75rem', color: '#334155' }}>Murah dan mudah didapat. Cocok untuk baja karbon sederhana (AISI 1045). Suhu air tidak boleh di atas 30°C agar tidak terbentuk kantung uap stasioner.</div>
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706' }}>🛢️ Oli Quench Khusus (50°C - 60°C)</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#d97706' }}>[OIL] Oli Quench Khusus (50°C - 60°C)</div>
                 <div style={{ fontSize: '0.72rem', color: '#64748b', margin: '4px 0' }}>Laju Pendinginan: <strong>Sedang (~60°C - 90°C/detik)</strong></div>
                 <div style={{ fontSize: '0.75rem', color: '#334155' }}>Pilihan standar industri untuk baja perkakas dan paduan (AISI 4140). Mencegah distorsi puntir dan retak karena laju pendinginan di fasa kritis martensit lebih lembut.</div>
               </div>
 
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#059669' }}>💨 Udara Tekan / Tenang (Air)</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#059669' }}>[AIR] Udara Tekan / Tenang</div>
                 <div style={{ fontSize: '0.72rem', color: '#64748b', margin: '4px 0' }}>Laju Pendinginan: <strong>Lambat (~5°C - 15°C/detik)</strong></div>
                 <div style={{ fontSize: '0.75rem', color: '#334155' }}>Khusus untuk baja perkakas paduan tinggi (*Air Hardening Steels* seperti AISI D2, A2). Mampu mengeras cukup dengan tiupan udara tanpa risiko bengkok sama sekali.</div>
               </div>
@@ -1374,19 +1377,19 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           {/* 4 Quick Visual Color Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '20px' }}>
             <div style={{ background: '#fef9c3', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #ca8a04' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#713f12' }}>🌾 220°C: Kuning Jerami (64 HRC)</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#713f12' }}>[220°C] Kuning Jerami (64 HRC)</div>
               <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '2px' }}>Pahat Bubut, Pisau Bedah, Pisau Cukur</div>
             </div>
             <div style={{ background: '#fef08a', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #eab308' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#713f12' }}>✨ 240°C: Cokelat Emas (61 HRC)</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#713f12' }}>[240°C] Cokelat Emas (61 HRC)</div>
               <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '2px' }}>Mata Bor, Tap &amp; Snei, Pisau Frais</div>
             </div>
             <div style={{ background: '#f3e8ff', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #9333ea' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#581c87' }}>💜 280°C: Ungu (55 HRC)</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#581c87' }}>[280°C] Ungu (55 HRC)</div>
               <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '2px' }}>Pahat Dingin, Kapak Kayu, Pisau Dapur</div>
             </div>
             <div style={{ background: '#e0f2fe', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #0284c7' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0369a1' }}>🌊 300°C: Biru Terang (50 HRC)</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#0369a1' }}>[300°C] Biru Terang (50 HRC)</div>
               <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '2px' }}>Pegas, Obeng, Bilah Gergaji Besi</div>
             </div>
           </div>
@@ -1401,7 +1404,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h3 style={{ margin: '0 0 6px 0', fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
-              🎮 Simulator Bilah Logam &amp; Warna Tempering
+              Simulator Bilah Logam &amp; Warna Tempering
             </h3>
             <p style={{ margin: '0 0 16px 0', fontSize: '0.8rem', color: '#64748b' }}>
               Geser temperatur untuk melihat warna permukaan bilah logam berubah secara real-time:
@@ -1410,15 +1413,15 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             {/* Quick Tool Presets */}
             <div style={{ marginBottom: '14px', background: '#fefce8', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fef08a' }}>
               <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#854d0e', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                🎯 PILIH ALAT BENGKEL (Suhu Otomatis Menyesuaikan):
+                PILIH ALAT BENGKEL (Suhu Otomatis Menyesuaikan):
               </span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
                 {[
-                  { label: '🌾 Pahat Bubut (220°C)', temp: 220 },
-                  { label: '✨ Mata Bor & Tap (240°C)', temp: 240 },
-                  { label: '✂️ Gunting Plat (260°C)', temp: 260 },
-                  { label: '🌊 Gergaji & Obeng (300°C)', temp: 300 },
-                  { label: '🚗 Pegas Spiral (400°C)', temp: 400 }
+                  { label: '[PAHAT] Pahat Bubut (220°C)', temp: 220 },
+                  { label: '[BOR/TAP] Mata Bor & Tap (240°C)', temp: 240 },
+                  { label: '[PISAU] Gunting Plat (260°C)', temp: 260 },
+                  { label: '[GERGAJI] Gergaji & Obeng (300°C)', temp: 300 },
+                  { label: '[PEGAS] Pegas Spiral (400°C)', temp: 400 }
                 ].map(preset => (
                   <button
                     key={preset.label}
@@ -1477,7 +1480,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                 </svg>
               </div>
               <div style={{ fontSize: '1.1rem', fontWeight: 900, color: bladeInfo.hex }}>{bladeInfo.colorName}</div>
-              <div style={{ fontSize: '0.78rem', color: '#cbd5e1', marginTop: '4px' }}>🎯 <strong>Paling Cocok Untuk:</strong> {bladeInfo.tool}</div>
+              <div style={{ fontSize: '0.78rem', color: '#cbd5e1', marginTop: '4px' }}><strong>Paling Cocok Untuk:</strong> {bladeInfo.tool}</div>
             </div>
 
             {/* Readout */}
@@ -1529,7 +1532,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h4 style={{ margin: '0 0 10px 0', fontSize: '0.95rem', fontWeight: 800, color: '#334155' }}>
-              🔬 Struktur Mikro Mikroskop: Perlit Kasar Annealing vs Perlit Halus Normalizing
+              Struktur Mikro Mikroskop: Perlit Kasar Annealing vs Perlit Halus Normalizing
             </h4>
             <img 
               src={getAssetUrl("/assets/images/heat_treatment/annealing_vs_normalizing_diagram.svg")} 
@@ -1584,7 +1587,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
             <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
               <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#065f46', marginBottom: '4px' }}>
-                🌱 Normalizing (Pendinginan Udara)
+                Normalizing (Pendinginan Udara)
               </div>
               <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.75rem', color: '#334155', lineHeight: 1.5 }}>
                 <li>Didinginkan di rak udara terbuka tenang</li>
@@ -1596,7 +1599,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
 
             <div style={{ background: '#f0f9ff', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #0284c7' }}>
               <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#0369a1', marginBottom: '4px' }}>
-                🧘 Annealing (Pendinginan Tungku)
+                Annealing (Pendinginan Tungku)
               </div>
               <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.75rem', color: '#334155', lineHeight: 1.5 }}>
                 <li>Didinginkan di dalam tungku mati tertutup</li>
@@ -1610,7 +1613,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           {/* Real World Applications */}
           <div style={{ background: '#ffffff', padding: '16px', borderRadius: '10px', border: '1px solid #cbd5e1', marginBottom: '20px' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-              🚆 Aplikasi Nyata: Mengapa Rel Kereta Api &amp; Crankshaft Kapal Wajib di-Normalize?
+              Aplikasi Nyata: Mengapa Rel Kereta Api &amp; Crankshaft Kapal Wajib di-Normalize?
             </div>
             <div style={{ fontSize: '0.78rem', color: '#475569', lineHeight: 1.5 }}>
               Proses tempa panas (*hot forging*) membuat butir kristal menjadi lonjong dan membesar tidak teratur. Normalizing memecah butir kasar tersebut menjadi butir halus seragam sehingga rel kereta api tidak retak lelah saat dilintasi lokomotif berbobot ratusan ton!
@@ -1695,7 +1698,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             marginBottom: '20px'
           }}>
             <h3 style={{ margin: '0 0 4px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-              🧪 Simulator Eksperimen Termometalurgi Bebas
+              Simulator Eksperimen Termometalurgi Bebas
             </h3>
             <p style={{ margin: '0 0 16px 0', fontSize: '0.8rem', color: '#64748b' }}>
               Atur parameter jenis baja, temperatur pemanasan tungku, media quench, dan suhu tempering untuk menganalisis hasil HRC:
@@ -1707,14 +1710,14 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                 {/* One-Click Presets */}
                 <div style={{ marginBottom: '14px', background: '#fff7ed', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fed7aa' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#c2410c', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                    ⚡ PILIH SKENARIO EKSPERIMEN OTOMATIS:
+                    PILIH SKENARIO EKSPERIMEN OTOMATIS:
                   </span>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
                     {[
-                      { label: '⚙️ Poros S45C (Quench Oli + Temper 300°C)', grade: '1045', temp: 850, media: 'oil', temper: 300 },
-                      { label: '🔪 Pisau SK5 (Quench Air + Temper 200°C)', grade: '1095', temp: 800, media: 'water', temper: 200 },
-                      { label: '🧘 Full Annealing (Pelunakan di Oven)', grade: '1045', temp: 850, media: 'furnace', temper: 200 },
-                      { label: '🌱 Normalizing (Pendinginan Udara)', grade: '1045', temp: 880, media: 'air', temper: 200 }
+                      { label: '<Settings size={12} color="#ffffff" /> Poros S45C (Quench Oli + Temper 300°C)', grade: '1045', temp: 850, media: 'oil', temper: 300 },
+                      { label: '[SK5] SK5 (Air + Temper 200°C)', grade: '1095', temp: 800, media: 'water', temper: 200 },
+                      { label: '[ANNEAL] Full Annealing Tungku', grade: '1045', temp: 850, media: 'furnace', temper: 200 },
+                      { label: 'Normalizing (Pendinginan Udara)', grade: '1045', temp: 880, media: 'air', temper: 200 }
                     ].map(preset => (
                       <button
                         key={preset.label}
@@ -1816,7 +1819,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                     cursor: isHeatTreatRunning ? 'not-allowed' : 'pointer'
                   }}
                 >
-                  {isHeatTreatRunning ? '🔥 Mereaksikan Logam...' : '⚡ JALANKAN PROSES'}
+                  {isHeatTreatRunning ? 'Mereaksikan Logam...' : 'JALANKAN PROSES'}
                 </button>
               </div>
 
@@ -1824,8 +1827,8 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               <div>
                 <div style={{ background: '#0f172a', borderRadius: '10px', padding: '16px', textAlign: 'center', color: '#ffffff', marginBottom: '14px' }}>
                   <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase' }}>Pijar Visual Baja Membara</span>
-                  <div style={{ width: '80px', height: '80px', margin: '10px auto', borderRadius: '10px', background: glowInfo.bg, boxShadow: glowInfo.glow, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>
-                    🔥
+                  <div style={{ width: '80px', height: '80px', margin: '10px auto', borderRadius: '10px', background: glowInfo.bg, boxShadow: glowInfo.glow, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Flame size={36} color="#ffffff" />
                   </div>
                   <div style={{ fontSize: '0.9rem', fontWeight: 900 }}>{glowInfo.label}</div>
                   <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Fasa: {simFurnaceTemp >= 727 ? 'AUSTENIT (FCC)' : 'FERIT + PERLIT (BCC)'}</div>
@@ -1843,10 +1846,10 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                         <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#16a34a' }}>{simResult.finalHRC} HRC</div>
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#334155', marginBottom: '4px' }}>🔬 <strong>Fasa:</strong> {simResult.microPrimary}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#334155', marginBottom: '6px' }}>🛡️ <strong>Keuletan:</strong> {simResult.finalToughness} Joule</div>
+                    <div style={{ fontSize: '0.75rem', color: '#334155', marginBottom: '4px' }}><span style={{ fontFamily: "monospace", fontWeight: 800, color: "#64748b", marginRight: "4px" }}>[FASA]</span> <strong>Struktur:</strong> {simResult.microPrimary}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#334155', marginBottom: '6px' }}><span style={{ fontFamily: "monospace", fontWeight: 800, color: "#64748b", marginRight: "4px" }}>[IMPACT]</span> <strong>Keuletan:</strong> {simResult.finalToughness} Joule</div>
                     <div style={{ background: '#eff6ff', padding: '6px 8px', borderRadius: '6px', fontSize: '0.72rem', color: '#1e40af' }}>
-                      💡 {simResult.recommendation}
+                      <span style={{ fontFamily: "monospace", fontWeight: 800, color: "#1e40af", marginRight: "6px" }}>[CATATAN]</span>{simResult.recommendation}
                     </div>
                   </div>
                 )}
@@ -1863,7 +1866,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
             border: '1px solid #e2e8f0'
           }}>
             <h4 style={{ margin: '0 0 10px 0', fontSize: '0.95rem', fontWeight: 800, color: '#334155' }}>
-              🎨 Skala Visual Warna Pijar Baja &amp; Suhu (°C):
+              Skala Visual Warna Pijar Baja &amp; Suhu (°C):
             </h4>
             <img 
               src={getAssetUrl("/assets/images/heat_treatment/steel_color_temperature_chart.svg")} 
@@ -1888,7 +1891,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
             <div>
               <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-                🏆 Kuis Studi Kasus Praktis Heat Treatment
+                Kuis Studi Kasus Praktis Heat Treatment
               </h3>
               <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
                 Selesaikan 5 problem nyata bengkel mesin dan dapatkan +500 XP
@@ -1903,7 +1906,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                 fontWeight: 900,
                 fontSize: '0.88rem'
               }}>
-                Skor: {quizScore} / 100 {quizScore >= 80 ? '🎉 LULUS (+500 XP)' : '⚠️ COBA LAGI'}
+                Skor: {quizScore} / 100 {quizScore >= 80 ? '[LULUS] (+500 XP)' : '[EVALUASI] COBA LAGI'}
               </div>
             )}
           </div>
@@ -1966,7 +1969,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
                     fontSize: '0.75rem',
                     color: '#334155'
                   }}>
-                    <strong>💡 Pembahasan:</strong> {q.penjelasan}
+                    <strong>[PEMBAHASAN]:</strong> {q.penjelasan}
                   </div>
                 )}
               </div>
@@ -1986,7 +1989,7 @@ export default function HeatTreatmentLab({ initialTab = 'hardening', addXP = () 
               cursor: 'pointer'
             }}
           >
-            📝 SUBMIT JAWABAN KUIS &amp; KLAIM 500 XP
+            SUBMIT JAWABAN KUIS &amp; KLAIM 500 XP
           </button>
         </div>
       )}

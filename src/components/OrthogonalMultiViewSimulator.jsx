@@ -1,3 +1,4 @@
+import { Compass, Box, RotateCcw, Pause, Lightbulb, Map } from 'lucide-react';
 import React, { useState, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Grid, Center } from '@react-three/drei';
@@ -1316,7 +1317,7 @@ const OrthogonalMultiViewSimulator = () => {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.8rem' }}>🧭</span>
+            <Compass size={28} className="text-sky-400" />
             <div>
               <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, letterSpacing: '-0.5px', color: '#0f172a' }}>
                 Simulator 3D & 2D Tata Letak Proyeksi Ortogonal (Standar ISO SMK)
@@ -1348,7 +1349,7 @@ const OrthogonalMultiViewSimulator = () => {
               transition: 'all 0.2s'
             }}
           >
-            <span>🇺🇸</span> Proyeksi Amerika (Sudut Ketiga)
+            <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-sky-900/60 text-sky-300 font-bold mr-1">USA</span> Proyeksi Amerika (Sudut Ketiga)
           </button>
           <button
             onClick={() => { sound.playClick(); setProjectionSystem('eropa'); }}
@@ -1368,7 +1369,7 @@ const OrthogonalMultiViewSimulator = () => {
               transition: 'all 0.2s'
             }}
           >
-            <span>🇪🇺</span> Proyeksi Eropa (Sudut Pertama)
+            <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-amber-900/60 text-amber-300 font-bold mr-1">EUR</span> Proyeksi Eropa (Sudut Pertama)
           </button>
         </div>
       </div>
@@ -1383,7 +1384,7 @@ const OrthogonalMultiViewSimulator = () => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
           <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e293b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>📐</span> Pilih Benda — Klik bentuk untuk lihat proyeksi ortogonal:
+            <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-sky-900/60 text-sky-300 font-bold mr-1">ISO</span> Pilih Benda — Klik bentuk untuk lihat proyeksi ortogonal:
           </div>
           <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#0369a1', background: '#e0f2fe', padding: '3px 8px', borderRadius: '6px' }}>
             {activeObject.category} • {activeObject.dimensions}
@@ -1659,7 +1660,7 @@ const OrthogonalMultiViewSimulator = () => {
                     boxShadow: activeView === 'isometri' ? '0 2px 6px rgba(124,58,237,0.4)' : 'none'
                   }}
                 >
-                  📦 3D Iso
+                  <Box size={13} className="inline mr-1 text-sky-400" /> 3D Iso
                 </button>
               </div>
 
@@ -1678,7 +1679,7 @@ const OrthogonalMultiViewSimulator = () => {
                     boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
                   }}
                 >
-                  {autoRotate ? '⏸ Stop Putar' : '🔄 Putar Lambat'}
+                  {autoRotate ? 'Stop Putar' : 'Putar Lambat'}
                 </button>
               </div>
             </div>
@@ -1686,7 +1687,7 @@ const OrthogonalMultiViewSimulator = () => {
 
           {/* Quick Notice Banner */}
           <div style={{ padding: '10px 16px', background: '#f8fafc', borderTop: '1px solid #e2e8f0', fontSize: '0.75rem', color: '#64748b' }}>
-            💡 <em>Interaksi:</em> Klik salah satu kotak gambar 2D pada Peta Proyeksi di samping kanan untuk otomatis mengarahkan kamera 3D ke pandangan tersebut!
+            <Lightbulb size={13} className="inline mr-1 text-amber-400" /> <em>Interaksi:</em> Klik salah satu kotak gambar 2D pada Peta Proyeksi di samping kanan untuk otomatis mengarahkan kamera 3D ke pandangan tersebut!
           </div>
         </div>
 
@@ -1707,7 +1708,7 @@ const OrthogonalMultiViewSimulator = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
               <div>
                 <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 900, color: '#0f172a' }}>
-                  🗺️ Peta Tata Letak ({projectionSystem === 'amerika' ? 'Proyeksi Amerika' : 'Proyeksi Eropa'})
+                  <Map size={15} className="inline mr-1 text-sky-400" /> Peta Tata Letak ({projectionSystem === 'amerika' ? 'Proyeksi Amerika' : 'Proyeksi Eropa'})
                 </h4>
                 <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
                   Format tata letak kuadran standar ISO 5456. Setiap kotak memuat <strong>gambar 2D visual nyata</strong>:
@@ -1751,7 +1752,7 @@ const OrthogonalMultiViewSimulator = () => {
 
                     {/* Row 2, Col 2: PANDANGAN DEPAN */}
                     <div>
-                      {renderProjectionCard('depan', '★ Pandangan Utama')}
+                      {renderProjectionCard('depan', '[UTAMA] Pandangan Depan')}
                     </div>
 
                     {/* Row 2, Col 3: PANDANGAN KANAN */}
@@ -1784,7 +1785,7 @@ const OrthogonalMultiViewSimulator = () => {
 
                     {/* Row 1, Col 2: PANDANGAN DEPAN */}
                     <div>
-                      {renderProjectionCard('depan', '★ Pandangan Utama')}
+                      {renderProjectionCard('depan', '[UTAMA] Pandangan Depan')}
                     </div>
 
                     {/* Row 1, Col 3: PANDANGAN KIRI (Diletakkan di KANAN) */}

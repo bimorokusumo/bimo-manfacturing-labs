@@ -4,6 +4,10 @@ import { OrbitControls, Grid, Center } from '@react-three/drei';
 import * as THREE from 'three';
 import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
 import { sound } from '../utils/audio';
+import { 
+  FileText, Printer, Volume2, VolumeX, BookOpen, RotateCcw, 
+  HelpCircle, Download, Check, Eye, Sun, Moon, ArrowRight
+} from 'lucide-react';
 import { useAccessibility } from '../context/AccessibilityContext';
 
 // =============================================================================
@@ -14,7 +18,7 @@ export const SKETCH_PROFILES = [
     id: 'rect',
     name: 'Persegi Balok (Rectangle)',
     desc: 'Profil 2D empat persegi berukuran 40 x 40 mm. Dasar balok kotak, pelat baja, dan komponen prismatik mesin.',
-    icon: '🟦',
+    icon: '[RECT]',
     dimensions: '40 x 40 mm',
     shortcut: 'REC'
   },
@@ -22,7 +26,7 @@ export const SKETCH_PROFILES = [
     id: 'l_shape',
     name: 'Profil Bertingkat L (L-Profile)',
     desc: 'Profil penampang berundak/bertingkat dua level (40 x 40 mm dengan takik 20 mm). Dasar braket siku dan puli flensa.',
-    icon: '🪜',
+    icon: '[STEP]',
     dimensions: '40 x 40 mm (Undak 20)',
     shortcut: 'L'
   },
@@ -30,7 +34,7 @@ export const SKETCH_PROFILES = [
     id: 'circle',
     name: 'Lingkaran (Circle / Disc)',
     desc: 'Profil bundar berdiameter 40 mm. Dasar komponen silindris poros transmisi, pipa, puli, dan roda gigi.',
-    icon: '⭕',
+    icon: '[CIRCLE]',
     dimensions: 'Diameter 40 mm',
     shortcut: 'C'
   },
@@ -38,7 +42,7 @@ export const SKETCH_PROFILES = [
     id: 'hexagon',
     name: 'Heksagon / Segi Enam (Hexagon)',
     desc: 'Profil 6 sisi beraturan beradius 22 mm. Standar ISO kepala baut (hex bolt), mur penahan, dan batang heksagonal.',
-    icon: '⬡',
+    icon: '[HEX]',
     dimensions: 'Radius 22 mm (6 Sisi)',
     shortcut: 'POL'
   },
@@ -46,7 +50,7 @@ export const SKETCH_PROFILES = [
     id: 'trapezoid',
     name: 'Trapesium / Baji (Trapezoid)',
     desc: 'Profil trapesium dengan lebar dasar 44 mm dan puncak 24 mm. Dasar baji peluncur, rel ekor burung, dan alur V-belt.',
-    icon: '📐',
+    icon: '[TRAP]',
     dimensions: 'Alas 44, Puncak 24 mm',
     shortcut: 'TRAP'
   },
@@ -54,7 +58,7 @@ export const SKETCH_PROFILES = [
     id: 'star',
     name: 'Bintang / Roda Beralur (Star / Spline)',
     desc: 'Profil beralur bintang 5 lekukan beradius luar 24 mm dan dalam 14 mm. Dasar poros spline dan roda sirip pendingin.',
-    icon: '⭐',
+    icon: '[STAR]',
     dimensions: 'R_luar 24, R_dalam 14 mm',
     shortcut: 'SPL'
   }
@@ -67,7 +71,7 @@ export const CREATE_OPERATIONS = {
   extrude: {
     id: 'extrude',
     name: 'EXTRUDE (Ekstrusi Linier Z)',
-    icon: '⬆️',
+    icon: '[EXT]',
     shortcut: 'EXT',
     color: '#0284c7',
     bgActive: '#0c2340',
@@ -85,7 +89,7 @@ export const CREATE_OPERATIONS = {
   revolve: {
     id: 'revolve',
     name: 'REVOLVE (Putar Sumbu 360°)',
-    icon: '🔄',
+    icon: '[REV]',
     shortcut: 'REV',
     color: '#ea580c',
     bgActive: '#381a07',
@@ -103,7 +107,7 @@ export const CREATE_OPERATIONS = {
   sweep: {
     id: 'sweep',
     name: 'SWEEP (Sapuan Sepanjang Lintasan)',
-    icon: '〰️',
+    icon: '[SWEEP]',
     shortcut: 'SWEEP',
     color: '#a855f7',
     bgActive: '#260f38',
@@ -121,7 +125,7 @@ export const CREATE_OPERATIONS = {
   loft: {
     id: 'loft',
     name: 'LOFT (Transisi 2 Penampang)',
-    icon: '🌪️',
+    icon: '[LOFT]',
     shortcut: 'LOFT',
     color: '#06b6d4',
     bgActive: '#082530',
@@ -146,7 +150,7 @@ export const MACHINE_TEMPLATES = [
     id: 'shaft',
     name: 'Poros Bubut Bertingkat (Shaft)',
     shortName: 'Poros Bubut',
-    icon: '🪵',
+    icon: '[SHAFT]',
     category: 'Mesin Bubut',
     sketch: 'circle',
     operation: 'revolve',
@@ -165,7 +169,7 @@ export const MACHINE_TEMPLATES = [
     id: 'flange',
     name: 'Flensa Pipa 4 Lubang PCD (Pipe Flange)',
     shortName: 'Flensa Pipa',
-    icon: '🔘',
+    icon: '[FLANGE]',
     category: 'Fabrikasi Pipa',
     sketch: 'circle',
     operation: 'extrude',
@@ -184,7 +188,7 @@ export const MACHINE_TEMPLATES = [
     id: 'milling_block',
     name: 'Balok Dudukan Pasak Frais (Milling Block)',
     shortName: 'Balok Frais',
-    icon: '🧱',
+    icon: '[BLOCK]',
     category: 'Mesin Frais',
     sketch: 'rect',
     operation: 'extrude',
@@ -203,7 +207,7 @@ export const MACHINE_TEMPLATES = [
     id: 'hex_nut',
     name: 'Mur Heksagonal ISO M12 (Hex Nut)',
     shortName: 'Mur Heksagon',
-    icon: '🔩',
+    icon: '[NUT]',
     category: 'Standar ISO',
     sketch: 'hexagon',
     operation: 'extrude',
@@ -222,7 +226,7 @@ export const MACHINE_TEMPLATES = [
     id: 'bracket',
     name: 'Braket Siku Mesin L (L-Bracket)',
     shortName: 'Braket Siku',
-    icon: '🪜',
+    icon: '[STEP]',
     category: 'Konstruksi Mesin',
     sketch: 'l_shape',
     operation: 'extrude',
@@ -241,7 +245,7 @@ export const MACHINE_TEMPLATES = [
     id: 'reducer',
     name: 'Nosel Reducer Pipa Transisi (Loft Reducer)',
     shortName: 'Nosel Reducer',
-    icon: '🌪️',
+    icon: '[LOFT]',
     category: 'Sistem Fluida',
     sketch: 'circle',
     topSketch: 'rect',
@@ -503,7 +507,7 @@ const Sketch2DViewer = ({
               <text x={cx - 48} y="15" fontSize="9" fontWeight="900" textAnchor="middle" fill="#ef4444">SUMBU PUTAR (AXIS)</text>
               <path d="M 115 65 A 25 25 0 0 1 165 65" fill="none" stroke="#fb923c" strokeWidth="2.5" />
               <polygon points="165,65 159,59 159,69" fill="#fb923c" />
-              <text x="140" y="55" fontSize="10" fontWeight="900" textAnchor="middle" fill="#fb923c">⟳ Putar 360°</text>
+              <text x="140" y="55" fontSize="10" fontWeight="900" textAnchor="middle" fill="#fb923c">REV Putar 360°</text>
             </g>
           )}
 
@@ -518,7 +522,7 @@ const Sketch2DViewer = ({
           {operation === 'sweep' && (
             <g>
               <path d="M 90 140 Q 140 60 200 100 T 250 190" fill="none" stroke="#c084fc" strokeWidth="2.5" strokeDasharray="6 4" />
-              <text x="180" y="75" fontSize="10" fontWeight="900" fill="#c084fc">Lintasan Path 〰️</text>
+              <text x="180" y="75" fontSize="10" fontWeight="900" fill="#c084fc">Lintasan Path (3D)</text>
             </g>
           )}
 
@@ -974,7 +978,7 @@ const LayoutA4Paper = ({
         border: '1px solid #334155'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1.2rem' }}>📄</span>
+          <FileText size={18} color="#38bdf8" />
           <div>
             <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#f8fafc' }}>
               LAYOUT GAMBAR KERJA A4 (ISO 5456 / ISO 128)
@@ -999,7 +1003,7 @@ const LayoutA4Paper = ({
               cursor: 'pointer'
             }}
           >
-            🔙 Kembali ke Model Space (AutoCAD 3D)
+            Kembali ke Model Space (AutoCAD 3D)
           </button>
           <button
             onClick={() => { sound.playClick(); window.print(); }}
@@ -1017,7 +1021,7 @@ const LayoutA4Paper = ({
               gap: '6px'
             }}
           >
-            <span>🖨️</span> Cetak / Simpan PDF
+            Cetak / Simpan PDF
           </button>
         </div>
       </div>
@@ -1143,7 +1147,7 @@ const LayoutA4Paper = ({
               <div>DIGAMBAR: <strong>X-TP.A (SISWA)</strong></div>
               <div>DIPERIKSA: <strong>GURU PENGAMPU</strong></div>
               <div>NO. GAMBAR: <strong>CAD-TP-01</strong></div>
-              <div>STATUS: <strong style={{ color: '#16a34a' }}>DISETUJUI ✅</strong></div>
+              <div>STATUS: <strong style={{ color: '#16a34a' }}>DISETUJUI [APPROVED]</strong></div>
             </div>
           </div>
 
@@ -1478,7 +1482,7 @@ const CADStudioSimulator = () => {
               </span>
             </div>
             <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-              Pemodelan Parametrik 2D/3D • Sketsa ➡️ Padatan 3D • Cetak Etiket A4
+              Pemodelan Parametrik 2D/3D • Sketsa &rarr; Padatan 3D • Cetak Etiket A4
             </div>
           </div>
         </div>
@@ -1503,7 +1507,7 @@ const CADStudioSimulator = () => {
             }}
             title="Dengarkan penjelasan suara materi dan alat CAD ini (Inklusi)"
           >
-            <span>{isSpeakingCAD ? '⏹️' : '🔊'}</span>
+            <span>{isSpeakingCAD ? '[STOP]' : '[AUDIO]'}</span>
             <span>{isSpeakingCAD ? 'Hentikan Audio' : 'Penjelasan Suara'}</span>
           </button>
 
@@ -1521,7 +1525,7 @@ const CADStudioSimulator = () => {
               cursor: 'pointer'
             }}
           >
-            {showWorkflowGuide ? '📖 Panduan: ON' : '📖 Panduan: OFF'}
+            {showWorkflowGuide ? 'Panduan: ON' : 'Panduan: OFF'}
           </button>
 
           {/* Viewport Workspace Switcher */}
@@ -1540,7 +1544,7 @@ const CADStudioSimulator = () => {
               }}
               title="Tampilkan sketsa 2D dan model 3D berdampingan"
             >
-              🖥️ 2D & 3D
+              2D & 3D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('2d_only'); }}
@@ -1555,7 +1559,7 @@ const CADStudioSimulator = () => {
                 cursor: 'pointer'
               }}
             >
-              📐 2D
+              2D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('3d_only'); }}
@@ -1570,7 +1574,7 @@ const CADStudioSimulator = () => {
                 cursor: 'pointer'
               }}
             >
-              🧊 3D
+              3D
             </button>
             <button
               onClick={() => { sound.playClick(); setDisplayMode('layout'); }}
@@ -1586,7 +1590,7 @@ const CADStudioSimulator = () => {
               }}
               title="Lihat dalam format kertas A4 lengkap dengan Etiket Gambar Resmi SMK"
             >
-              📄 Layout A4
+              Layout A4
             </button>
           </div>
         </div>
@@ -1608,7 +1612,7 @@ const CADStudioSimulator = () => {
           gap: '10px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1rem' }}>💡</span>
+            <HelpCircle size={16} color="#1d4ed8" />
             <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1d4ed8' }}>
               ALUR KERJA CAD SISWA:
             </span>
@@ -1616,19 +1620,19 @@ const CADStudioSimulator = () => {
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', flex: 1, justifyContent: 'center' }}>
             <div style={{ background: ribbonTab === 'draw' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'draw' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>1️⃣</span> <span>Pilih Profil 2D</span>
+              <span style={{ fontWeight: 800 }}>[1]</span> <span>Pilih Profil 2D</span>
             </div>
-            <span style={{ color: '#94a3b8' }}>➔</span>
+            <span style={{ color: '#94a3b8', fontWeight: 800 }}>&rarr;</span>
             <div style={{ background: ribbonTab === 'solid' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'solid' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>2️⃣</span> <span>Bentuk Padatan 3D</span>
+              <span style={{ fontWeight: 800 }}>[2]</span> <span>Bentuk Padatan 3D</span>
             </div>
-            <span style={{ color: '#94a3b8' }}>➔</span>
+            <span style={{ color: '#94a3b8', fontWeight: 800 }}>&rarr;</span>
             <div style={{ background: ribbonTab === 'modify' ? '#0284c7' : 'rgba(37,99,235,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'modify' ? '#fff' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>3️⃣</span> <span>Beri Fillet / Lubang</span>
+              <span style={{ fontWeight: 800 }}>[3]</span> <span>Beri Fillet / Lubang</span>
             </div>
-            <span style={{ color: '#94a3b8' }}>➔</span>
+            <span style={{ color: '#94a3b8', fontWeight: 800 }}>&rarr;</span>
             <div style={{ background: ribbonTab === 'layout' ? '#10b981' : 'rgba(16,185,129,0.1)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700, color: ribbonTab === 'layout' ? '#fff' : '#059669', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>4️⃣</span> <span>Cetak Kertas Etiket A4</span>
+              <span style={{ fontWeight: 800 }}>[4]</span> <span>Cetak Kertas Etiket A4</span>
             </div>
           </div>
 
@@ -1646,12 +1650,12 @@ const CADStudioSimulator = () => {
         {/* Tab Headers */}
         <div style={{ display: 'flex', background: '#f8fafc', padding: '0 12px', borderBottom: '1px solid #e2e8f0', overflowX: 'auto' }}>
           {[
-            { id: 'draw', label: '✏️ SKETCH (Profil 2D)' },
-            { id: 'solid', label: '🧊 CREATE (Benda 3D)' },
-            { id: 'modify', label: '🛠️ MODIFY (Fillet/Lubang)' },
-            { id: 'templates', label: '📦 TEMPLATE (1-Klik)' },
-            { id: 'materials', label: '🎨 MATERIAL & FISIK' },
-            { id: 'layout', label: '📄 LAYOUT A4' }
+            { id: 'draw', label: 'SKETCH (Profil 2D)' },
+            { id: 'solid', label: 'CREATE (Benda 3D)' },
+            { id: 'modify', label: 'MODIFY (Fillet/Lubang)' },
+            { id: 'templates', label: 'TEMPLATE (1-Klik)' },
+            { id: 'materials', label: 'MATERIAL & FISIK' },
+            { id: 'layout', label: 'LAYOUT A4' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1823,7 +1827,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {isPlayingAnim ? '⏸️ Jeda' : '▶️ Animasi'}
+                  {isPlayingAnim ? 'Jeda' : 'Animasi'}
                 </button>
                 <button
                   onClick={handleReplayAnim}
@@ -1839,7 +1843,7 @@ const CADStudioSimulator = () => {
                   }}
                   title="Mulai Ulang Animasi Dari Sketsa 2D"
                 >
-                  🔄 Ulang
+                  Ulang
                 </button>
                 <input
                   type="range"
@@ -1880,7 +1884,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {hasFillet ? '✅ FILLET R' : '🔘 FILLET'}
+                  {hasFillet ? '[ON] FILLET R' : '[OFF] FILLET'}
                 </button>
                 {hasFillet && (
                   <input
@@ -1910,7 +1914,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {hasChamfer ? '✅ CHAMFER C' : '🔘 CHAMFER'}
+                  {hasChamfer ? '[ON] CHAMFER C' : '[OFF] CHAMFER'}
                 </button>
                 {hasChamfer && (
                   <input
@@ -1940,7 +1944,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {hasHole ? '✅ HOLE Ø' : '🔘 HOLE'}
+                  {hasHole ? '[ON] HOLE Ø' : '[OFF] HOLE'}
                 </button>
                 {hasHole && (
                   <input
@@ -1970,7 +1974,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {hasShell ? '✅ SHELL (RONGGA)' : '🔘 SHELL'}
+                  {hasShell ? '[ON] SHELL' : '[OFF] SHELL'}
                 </button>
                 {hasShell && (
                   <input
@@ -2000,7 +2004,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  {hasDraft ? '✅ DRAFT (TIRUS)' : '🔘 DRAFT'}
+                  {hasDraft ? '[ON] DRAFT' : '[OFF] DRAFT'}
                 </button>
                 {hasDraft && (
                   <input
@@ -2030,7 +2034,7 @@ const CADStudioSimulator = () => {
                 }}
                 title="Melihat rongga dalam dan lubang tembus"
               >
-                {isCrossSection ? '🔍 X-Ray ON' : '👁️ X-Ray (Potongan)'}
+                {isCrossSection ? '[ON] X-Ray' : '[OFF] X-Ray'}
               </button>
             </div>
           )}
@@ -2124,7 +2128,7 @@ const CADStudioSimulator = () => {
                   gap: '6px'
                 }}
               >
-                <span>📥</span> Export File STL (3D Print)
+                Export File STL (3D Print)
               </button>
             </div>
           )}
@@ -2149,7 +2153,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  📄 Tampilkan Kertas A4 Penuh
+                  Tampilkan Kertas A4 Penuh
                 </button>
                 <button
                   onClick={() => { sound.playClick(); window.print(); }}
@@ -2164,7 +2168,7 @@ const CADStudioSimulator = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  🖨️ Cetak / Unduh PDF
+                  Cetak / Unduh PDF
                 </button>
               </div>
             </div>
@@ -2242,7 +2246,7 @@ const CADStudioSimulator = () => {
                     }}
                     title="Ganti tema kanvas (Light Sheet / Dark Grid)"
                   >
-                    {cadTheme === 'dark' ? '🌙 Dark Grid' : '☀️ Light Sheet'}
+                    {cadTheme === 'dark' ? 'Dark Grid' : 'Light Sheet'}
                   </button>
                   <span style={{ color: '#64748b', fontSize: '0.68rem' }}>ISO 128 / 129</span>
                 </div>
@@ -2310,7 +2314,7 @@ const CADStudioSimulator = () => {
                       cursor: 'pointer'
                     }}
                   >
-                    {autoRotate ? '⏸ Stop Rotasi' : '🔄 Putar 360°'}
+                    {autoRotate ? 'Stop Rotasi' : 'Putar 360°'}
                   </button>
                 </div>
               </div>
@@ -2424,7 +2428,7 @@ const CADStudioSimulator = () => {
                   pointerEvents: 'none',
                   boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
                 }}>
-                  💡 Klik &amp; geser mouse untuk memutar orbit 3D • Scroll untuk zoom
+                  Klik &amp; geser mouse untuk memutar orbit 3D • Scroll untuk zoom
                 </div>
               </div>
             </div>

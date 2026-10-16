@@ -534,7 +534,7 @@ const SMAWMachine3D = ({ amperage = 115, polarity = 'DCEP', position = [-3.8, 0.
           boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
           pointerEvents: 'none'
         }}>
-          ⚡ INVERTER SMAW ({amperage}A • {polarity})
+          INVERTER SMAW ({amperage}A • {polarity})
         </div>
       </Html>
     </group>
@@ -634,7 +634,7 @@ const MIGMachine3D = ({ voltage = 22, wireFeedSpeed = 7.8, gasFlow = 15, positio
           boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
           pointerEvents: 'none'
         }}>
-          🌀 MIG/MAG ({voltage}V • {wireFeedSpeed} m/m • {gasFlow} L/m)
+          MIG/MAG ({voltage}V • {wireFeedSpeed} m/m • {gasFlow} L/m)
         </div>
       </Html>
     </group>
@@ -718,7 +718,7 @@ const OAWMachine3D = ({ oawFlame = 'neutral', oxygenPressure = 2.0, acetylenePre
           boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
           pointerEvents: 'none'
         }}>
-          🔥 STASIUN OAW (O₂: {oxygenPressure} bar • C₂H₂: {acetylenePressure} bar • {oawFlame.toUpperCase()})
+          STASIUN OAW (O₂: {oxygenPressure} bar • C₂H₂: {acetylenePressure} bar • {oawFlame.toUpperCase()})
         </div>
       </Html>
     </group>
@@ -801,7 +801,7 @@ const TIGMachine3D = ({ current = 135, currentType = 'DCEN', position = [-3.8, 0
           boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
           pointerEvents: 'none'
         }}>
-          🎯 TIG AC/DC 250 ({current} A • {currentType} • Pure Argon)
+          TIG AC/DC 250 ({current} A • {currentType} • Pure Argon)
         </div>
       </Html>
     </group>

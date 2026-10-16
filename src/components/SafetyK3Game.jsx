@@ -7,105 +7,161 @@ import Budaya5REthicsModule from './Budaya5REthicsModule';
 import BenchToolsModule from './BenchToolsModule';
 import JSABenchProjectModule from './JSABenchProjectModule';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import {
+  ShieldCheck,
+  ShieldAlert,
+  Flame,
+  Sparkles,
+  Wrench,
+  ClipboardList,
+  Search,
+  Check,
+  AlertTriangle,
+  Cog,
+  Monitor,
+  Zap,
+  Disc,
+  Glasses,
+  Shirt,
+  Footprints,
+  HardHat,
+  Hand,
+  Headphones,
+  Eye,
+  Shield,
+  UserCheck
+} from 'lucide-react';
+
 
 // =============================================================================
 // DATABASE PEKERJAAN BENGKEL MESIN & MATRIKS BAHAYA K3
 // =============================================================================
+
+const renderJobIcon = (id) => {
+  switch (id) {
+    case 'konvensional': return <Cog size={15} />;
+    case 'cnc': return <Monitor size={15} />;
+    case 'las': return <Zap size={15} />;
+    case 'heat': return <Flame size={15} />;
+    case 'gerinda': return <Disc size={15} />;
+    default: return <ShieldCheck size={15} />;
+  }
+};
+
+const renderApdIcon = (id, type) => {
+  if (type === 'wrong') return <AlertTriangle size={24} color="#ef4444" />;
+  switch (id) {
+    case 'kacamata_safety': return <Glasses size={24} color="#0284c7" />;
+    case 'wearpack': return <Shirt size={24} color="#0284c7" />;
+    case 'shoes': return <Footprints size={24} color="#0284c7" />;
+    case 'helmet': return <HardHat size={24} color="#0284c7" />;
+    case 'gloves':
+    case 'welding_gloves':
+    case 'heat_gloves': return <Hand size={24} color="#0284c7" />;
+    case 'earmuff': return <Headphones size={24} color="#0284c7" />;
+    case 'mask': return <ShieldCheck size={24} color="#0284c7" />;
+    case 'apron': return <Shield size={24} color="#0284c7" />;
+    case 'face_shield': return <Eye size={24} color="#0284c7" />;
+    case 'welding_hood': return <ShieldCheck size={24} color="#0284c7" />;
+    default: return <ShieldCheck size={24} color="#0284c7" />;
+  }
+};
+
 const JOBS = [
   {
     id: 'konvensional',
     name: 'Mesin Konvensional (Bubut & Frais)',
-    icon: '⚙️',
+    
     description: 'Pekerjaan pemesinan kontak langsung dengan benda kerja. Bahaya utama: Terbelit putaran spindel chuck (1200 RPM), serpihan tatal/gram panas 250°C, dan percikan pendingin.',
     mandatory: ['kacamata_safety', 'wearpack', 'shoes'],
     optional: ['earmuff', 'hairnet'],
     forbidden: ['gloves', 'gloves_kain', 'sandal', 'topeng_las', 'apron', 'sleeves', 'headphone', 'jam_tangan', 'cincin', 'dasi', 'topi_biasa', 'kacamata_hitam', 'kaos_longgar', 'smartphone'],
     forbiddenReasons: {
-      gloves_kain: '🚨 BAHAYA MAUT (ENTANGLEMENT)! Serat benang rajut sangat mudah tersangkut permukaan kasar benda berputar, menarik telapak tangan langsung ke dalam putaran chuck 1200 RPM hingga jari/tangan terputus!',
-      gloves: '🚨 SANGAT DILARANG! Sarung tangan kulit dapat tersangkut pada tatal spiral atau putaran spindel mesin bubut/frais dan menyeret tangan ke putaran mesin.',
-      dasi: '☠️ BAHAYA KEMATIAN SEKETIKA! Ujung dasi atau kalung yang menjuntai akan langsung tergulung lead screw atau chuck bubut, mencekik leher operator dalam hitungan 0.2 detik!',
-      kaos_longgar: '🚨 BAHAYA FATAL! Baju kedodoran atau lengan baju yang melambai sangat rentan terbelit poros mesin bubut yang sedang berputar kencang.',
-      jam_tangan: '⚠️ Perhiasan logam dan jam tangan berisiko tersangkut celah ragum, gigi pencekam chuck, atau alur tatal berputar.',
-      cincin: '⚠️ Risiko Degloving (kulit dan daging jari terkoyak lepas hingga tulang) jika cincin tersangkut pahat atau benda kerja berputar.',
-      sandal: '🚨 Kaki telanjang akan langsung melepuh tersiram tatal gram membara 250°C dan hancur tertimpa chuck/kunci bubut yang jatuh!',
-      headphone: '⚠️ Musik menutupi suara peringatan bahaya, alarm motor overload, atau bunyi derit getaran getaran obrolan (chatter) pahat.',
-      smartphone: '⚠️ Distraksi nomor 1! Menatap layar ponsel saat mesin bubut aktif berisiko kehilangan anggota tubuh dalam sepersekian detik.',
-      topeng_las: '⚠️ Kaca filter topeng las terlalu gelap untuk membaca mistar geser dan nonius mesin bubut. Gunakan Kacamata Safety bening.',
-      kacamata_hitam: '⚠️ Lensa gelap mengaburkan visibilitas ketelitian bubut; lensa non-safety mudah pecah menusuk bola mata saat tertabrak tatal.',
-      topi_biasa: '⚠️ Bahan kain poliester topi santai mudah terbakar oleh semburan gram panas dan menghalangi pandangan operator ke atas.',
-      apron: '⚠️ Tali apron kulit yang menjuntai berisiko tersangkut poros transportir mesin bubut. Gunakan Wearpack pas badan.'
+      gloves_kain: '[BAHAYA KRITIS - ENTANGLEMENT] Serat benang rajut sangat mudah tersangkut permukaan kasar benda berputar, menarik telapak tangan langsung ke dalam putaran chuck 1200 RPM hingga jari/tangan terputus!',
+      gloves: '[DILARANG KERAS] Sarung tangan kulit dapat tersangkut pada tatal spiral atau putaran spindel mesin bubut/frais dan menyeret tangan ke putaran mesin.',
+      dasi: '[BAHAYA FATAL] Ujung dasi atau kalung yang menjuntai akan langsung tergulung lead screw atau chuck bubut, mencekik leher operator dalam hitungan 0.2 detik!',
+      kaos_longgar: '[BAHAYA FATAL] Baju kedodoran atau lengan baju yang melambai sangat rentan terbelit poros mesin bubut yang sedang berputar kencang.',
+      jam_tangan: '[PERINGATAN] Perhiasan logam dan jam tangan berisiko tersangkut celah ragum, gigi pencekam chuck, atau alur tatal berputar.',
+      cincin: '[PERINGATAN] Risiko Degloving (kulit dan daging jari terkoyak lepas hingga tulang) jika cincin tersangkut pahat atau benda kerja berputar.',
+      sandal: '[BAHAYA FATAL] Kaki telanjang akan langsung melepuh tersiram tatal gram membara 250°C dan hancur tertimpa chuck/kunci bubut yang jatuh!',
+      headphone: '[PERINGATAN] Musik menutupi suara peringatan bahaya, alarm motor overload, atau bunyi derit getaran getaran obrolan (chatter) pahat.',
+      smartphone: '[PERINGATAN] Distraksi bahaya! Menatap layar ponsel saat mesin bubut aktif berisiko kehilangan anggota tubuh dalam sepersekian detik.',
+      topeng_las: '[PERINGATAN] Kaca filter topeng las terlalu gelap untuk membaca mistar geser dan nonius mesin bubut. Gunakan Kacamata Safety bening.',
+      kacamata_hitam: '[PERINGATAN] Lensa gelap mengaburkan visibilitas ketelitian bubut; lensa non-safety mudah pecah menusuk bola mata saat tertabrak tatal.',
+      topi_biasa: '[PERINGATAN] Bahan kain poliester topi santai mudah terbakar oleh semburan gram panas dan menghalangi pandangan operator ke atas.',
+      apron: '[PERINGATAN] Tali apron kulit yang menjuntai berisiko tersangkut poros transportir mesin bubut. Gunakan Wearpack pas badan.'
     }
   },
   {
     id: 'cnc',
     name: 'Mesin Non-Konvensional (CNC Turning / Milling)',
-    icon: '💻',
+    
     description: 'Pekerjaan otomatisasi pemesinan dalam kabin tertutup. Bahaya: Tabrakan pahat (crash), semprotan coolant bertekanan tinggi 20 bar, dan kejatuhan benda kerja saat setting.',
     mandatory: ['kacamata_safety', 'wearpack', 'shoes'],
     optional: ['earmuff'],
     forbidden: ['sandal', 'gloves_kain', 'topeng_las', 'headphone', 'jam_tangan', 'cincin', 'dasi', 'topi_biasa', 'kacamata_hitam', 'smartphone', 'kaos_longgar'],
     forbiddenReasons: {
-      sandal: '🚨 Chuck hidrolik atau ragum CNC berbobot puluhan kilogram bisa terjatuh saat proses pemasangan part (setup) dan meremukkan kaki.',
-      gloves_kain: '🚨 Kain rajut mudah tersangkut alat potong endmill tajam saat memasang / menyetel nol benda kerja (WCS G54).',
-      headphone: '🚨 Sangat dilarang! Kamu tidak akan mendengar alarm sirine eror atau suara tumbukan pahat di dalam kabin mesin CNC.',
-      smartphone: '🚨 Mengetik di ponsel saat tombol Cycle Start aktif dapat mengakibatkan salah input koordinat sumbu yang memicu tabrakan fatal.',
-      dasi: '🚨 Menjuntai masuk ke ruang kerja mesin saat menunduk memeriksa permukaan benda kerja.',
-      topeng_las: '⚠️ Menghalangi pandangan saat menekan layar sentuh / keypad panel kontroler CNC Fanuc/Siemens.',
-      jam_tangan: '⚠️ Menggores kaca pintu akrilik pelindung CNC dan berisiko korsleting saat mengecek panel listrik PLC.',
-      cincin: '⚠️ Berisiko tersangkut saat membersihkan bram dari celah ragum meja mesin CNC.'
+      sandal: '[BAHAYA FATAL] Chuck hidrolik atau ragum CNC berbobot puluhan kilogram bisa terjatuh saat proses pemasangan part (setup) dan meremukkan kaki.',
+      gloves_kain: '[BAHAYA FATAL] Kain rajut mudah tersangkut alat potong endmill tajam saat memasang / menyetel nol benda kerja (WCS G54).',
+      headphone: '[DILARANG KERAS] Kamu tidak akan mendengar alarm sirine eror atau suara tumbukan pahat di dalam kabin mesin CNC.',
+      smartphone: '[BAHAYA FATAL] Mengetik di ponsel saat tombol Cycle Start aktif dapat mengakibatkan salah input koordinat sumbu yang memicu tabrakan fatal.',
+      dasi: '[BAHAYA FATAL] Menjuntai masuk ke ruang kerja mesin saat menunduk memeriksa permukaan benda kerja.',
+      topeng_las: '[PERINGATAN] Menghalangi pandangan saat menekan layar sentuh / keypad panel kontroler CNC Fanuc/Siemens.',
+      jam_tangan: '[PERINGATAN] Menggores kaca pintu akrilik pelindung CNC dan berisiko korsleting saat mengecek panel listrik PLC.',
+      cincin: '[PERINGATAN] Berisiko tersangkut saat membersihkan bram dari celah ragum meja mesin CNC.'
     }
   },
   {
     id: 'fabrikasi',
     name: 'Fabrikasi Logam (Pengelasan & Pemotongan Api)',
-    icon: '⚡',
+    
     description: 'Pekerjaan menyambung dan memotong logam dengan busur listrik 3000°C. Bahaya utama: Radiasi sinar ultraviolet & inframerah, percikan bunga api 1000°C, dan uap asap beracun.',
     mandatory: ['topeng_las', 'gloves', 'shoes'],
     optional: ['respirator', 'safety_helmet'],
     forbidden: ['kacamata_safety', 'kacamata_hitam', 'gloves_kain', 'sandal', 'headphone', 'jam_tangan', 'cincin', 'dasi', 'topi_biasa', 'kaos_longgar', 'smartphone'],
     forbiddenReasons: {
-      kacamata_safety: '🚨 BAHAYA KEBUTAAN PERMANEN (FLASH BURN)! Kacamata bening TIDAK MEMILIKI filter shade ultraviolet. Kornea mata bisa terbakar radiasi las! Wajib pakai Topeng Las (Helmet).',
-      gloves_kain: '🚨 Kain katun rajut langsung terbakar dan meleleh menempel di kulit saat terkena percikan bunga api las 1000°C!',
-      sandal: '🚨 Terak las cair panas (slag) akan langsung membakar daging punggung kaki hingga melepuh!',
-      kacamata_hitam: '🚨 Kacamata fashion tidak memiliki sertifikasi filter UV shade 9-13 industri dan tidak menutupi wajah dari sengatan radiasi.',
-      jam_tangan: '🚨 Logam arloji akan menyerap radiasi panas ekstrem hingga membakar kulit pergelangan tangan, serta risiko tersengat arus las 120 Ampere.',
-      cincin: '🚨 Logam cincin menghantarkan arus listrik busur las seketika yang dapat menyebabkan luka bakar elektrik parah.',
-      dasi: '🚨 Kain dasi menjuntai langsung tersulut api elektroda las.',
-      headphone: '🚨 Plastik headphone meleleh terkena panas radiasi dan menghalangi suara ledakan tabung gas.',
-      kaos_longgar: '🚨 Percikan bunga api las masuk ke dalam rongga baju longgar dan membakar kulit dada/perut.'
+      kacamata_safety: '[BAHAYA KRITIS - FLASH BURN] Kacamata bening TIDAK MEMILIKI filter shade ultraviolet. Kornea mata bisa terbakar radiasi las! Wajib pakai Topeng Las (Helmet).',
+      gloves_kain: '[BAHAYA FATAL] Kain katun rajut langsung terbakar dan meleleh menempel di kulit saat terkena percikan bunga api las 1000°C!',
+      sandal: '[BAHAYA FATAL] Terak las cair panas (slag) akan langsung membakar daging punggung kaki hingga melepuh!',
+      kacamata_hitam: '[BAHAYA FATAL] Kacamata fashion tidak memiliki sertifikasi filter UV shade 9-13 industri dan tidak menutupi wajah dari sengatan radiasi.',
+      jam_tangan: '[BAHAYA FATAL] Logam arloji akan menyerap radiasi panas ekstrem hingga membakar kulit pergelangan tangan, serta risiko tersengat arus las 120 Ampere.',
+      cincin: '[BAHAYA FATAL] Logam cincin menghantarkan arus listrik busur las seketika yang dapat menyebabkan luka bakar elektrik parah.',
+      dasi: '[BAHAYA FATAL] Kain dasi menjuntai langsung tersulut api elektroda las.',
+      headphone: '[BAHAYA FATAL] Plastik headphone meleleh terkena panas radiasi dan menghalangi suara ledakan tabung gas.',
+      kaos_longgar: '[BAHAYA FATAL] Percikan bunga api las masuk ke dalam rongga baju longgar dan membakar kulit dada/perut.'
     }
   },
   {
     id: 'heat_treatment',
     name: 'Heat Treatment & Pengecoran Logam (Tungku 900°C)',
-    icon: '🔥',
+    
     description: 'Pekerjaan perlakuan panas pengerasan baja di dalam tungku pembakar 850°C - 950°C dan pencelupan cepat ke oli/air pendingin (quenching). Bahaya: Radiasi panas ekstrem, cipratan oli terbakar, dan ledakan uap quench.',
     mandatory: ['gloves', 'apron', 'shoes', 'kacamata_safety', 'wearpack'],
     optional: ['respirator', 'topeng_las'],
     forbidden: ['sandal', 'gloves_kain', 'headphone', 'dasi', 'cincin', 'jam_tangan', 'kaos_longgar', 'smartphone'],
     forbiddenReasons: {
-      gloves_kain: '🚨 Sarung tangan kain rajut akan langsung menyala terbakar saat menjepit tang capit logam membara 900°C!',
-      sandal: '🚨 Percikan oli quench panas atau tumpahan cairan garam nitrat langsung membakar kaki tanpa pelindung!',
-      cincin: '🚨 Radiasi tungku 900°C memanaskan cincin emas/perak hingga membakar jaringan kulit jari.',
-      dasi: '🚨 Ujung dasi menjuntai ke dalam pintu tungku atau bak quench yang bergolak mendidih.',
-      kaos_longgar: '🚨 Baju longgar menangkap radiasi panas inframerah tungku secara berlebihan.',
-      headphone: '🚨 Tidak mendengar desis ledakan uap (vapor blanket) saat quenching darurat.'
+      gloves_kain: '[BAHAYA FATAL] Sarung tangan kain rajut akan langsung menyala terbakar saat menjepit tang capit logam membara 900°C!',
+      sandal: '[BAHAYA FATAL] Percikan oli quench panas atau tumpahan cairan garam nitrat langsung membakar kaki tanpa pelindung!',
+      cincin: '[BAHAYA FATAL] Radiasi tungku 900°C memanaskan cincin emas/perak hingga membakar jaringan kulit jari.',
+      dasi: '[BAHAYA FATAL] Ujung dasi menjuntai ke dalam pintu tungku atau bak quench yang bergolak mendidih.',
+      kaos_longgar: '[BAHAYA FATAL] Baju longgar menangkap radiasi panas inframerah tungku secara berlebihan.',
+      headphone: '[BAHAYA FATAL] Tidak mendengar desis ledakan uap (vapor blanket) saat quenching darurat.'
     }
   },
   {
     id: 'gerinda',
     name: 'Mesin Gerinda Duduk & Cutting Wheel (3800 RPM)',
-    icon: '✨',
+    
     description: 'Pekerjaan mengasah pahat bubut dan memotong baja dengan batu abrasif berkecepatan tinggi 3800 RPM. Bahaya: Serpihan batu gerinda pecah (proyektil), debu abrasif korundum, percikan bunga api, dan bising > 90 dB.',
     mandatory: ['kacamata_safety', 'earmuff', 'wearpack', 'shoes'],
     optional: ['respirator'],
     forbidden: ['gloves', 'gloves_kain', 'sandal', 'dasi', 'headphone', 'jam_tangan', 'cincin', 'topi_biasa', 'smartphone'],
     forbiddenReasons: {
-      gloves: '🚨 SANGAT BERBAHAYA! Sarung tangan dilarang saat mengasah pahat di gerinda duduk karena jari bisa ditarik celah antara batu gerinda dan landasan kerja (tool rest)!',
-      gloves_kain: '🚨 Benang sarung tangan rajut sangat mudah tersangkut putaran batu gerinda 3800 RPM dan menggiling jari tangan!',
-      dasi: '🚨 Dasi terlempar ke putaran batu gerinda yang sedang berputar kencang.',
-      sandal: '🚨 Batu gerinda yang pecah meletup dapat menghujam kaki bawah dengan kecepatan ratusan km/jam!',
-      headphone: '🚨 Menghalangi pendengaran terhadap perubahan nada putaran batu gerinda yang menandakan batu retak atau terkikis miring.'
+      gloves: '[SANGAT BERBAHAYA] Sarung tangan dilarang saat mengasah pahat di gerinda duduk karena jari bisa ditarik celah antara batu gerinda dan landasan kerja (tool rest)!',
+      gloves_kain: '[BAHAYA FATAL] Benang sarung tangan rajut sangat mudah tersangkut putaran batu gerinda 3800 RPM dan menggiling jari tangan!',
+      dasi: '[BAHAYA FATAL] Dasi terlempar ke putaran batu gerinda yang sedang berputar kencang.',
+      sandal: '[BAHAYA FATAL] Batu gerinda yang pecah meletup dapat menghujam kaki bawah dengan kecepatan ratusan km/jam!',
+      headphone: '[BAHAYA FATAL] Menghalangi pendengaran terhadap perubahan nada putaran batu gerinda yang menandakan batu retak atau terkikis miring.'
     }
   }
 ];
@@ -118,7 +174,7 @@ const APD_ITEMS = [
   {
     id: 'kacamata_safety',
     name: 'Kacamata Safety Bening',
-    icon: '👓',
+    
     type: 'correct',
     bodyPart: 'eyes',
     badge: 'STANDAR K3',
@@ -129,7 +185,7 @@ const APD_ITEMS = [
   {
     id: 'wearpack',
     name: 'Wearpack Coverall Katun Drill',
-    icon: '🦺',
+    
     type: 'correct',
     bodyPart: 'body',
     badge: 'STANDAR K3',
@@ -140,7 +196,7 @@ const APD_ITEMS = [
   {
     id: 'shoes',
     name: 'Sepatu Safety Steel-Toe',
-    icon: '🥾',
+    
     type: 'correct',
     bodyPart: 'feet',
     badge: 'STANDAR K3',
@@ -151,7 +207,7 @@ const APD_ITEMS = [
   {
     id: 'topeng_las',
     name: 'Topeng Las Auto-Darkening',
-    icon: '🪖',
+    
     type: 'correct',
     bodyPart: 'head',
     badge: 'STANDAR K3',
@@ -162,7 +218,7 @@ const APD_ITEMS = [
   {
     id: 'gloves',
     name: 'Sarung Tangan Las Kulit Sapi',
-    icon: '🧤',
+    
     type: 'correct',
     bodyPart: 'hands',
     badge: 'STANDAR K3 (LAS/HEAT)',
@@ -173,7 +229,7 @@ const APD_ITEMS = [
   {
     id: 'earmuff',
     name: 'Ear Muff Peredam Bising Industri',
-    icon: '🎧',
+    
     type: 'correct',
     bodyPart: 'head',
     badge: 'STANDAR K3',
@@ -184,7 +240,7 @@ const APD_ITEMS = [
   {
     id: 'respirator',
     name: 'Respirator Kimia & Debu N95',
-    icon: '😷',
+    
     type: 'correct',
     bodyPart: 'head',
     badge: 'STANDAR K3',
@@ -195,7 +251,7 @@ const APD_ITEMS = [
   {
     id: 'apron',
     name: 'Apron Dada Kulit Sapi',
-    icon: '🎽',
+    
     type: 'correct',
     bodyPart: 'body',
     badge: 'STANDAR K3 (PENGELASAN)',
@@ -206,7 +262,7 @@ const APD_ITEMS = [
   {
     id: 'sleeves',
     name: 'Pelindung Lengan Kulit (Sleeves)',
-    icon: '💪',
+    
     type: 'correct',
     bodyPart: 'hands',
     badge: 'STANDAR K3 (PENGELASAN)',
@@ -217,7 +273,7 @@ const APD_ITEMS = [
   {
     id: 'jeans',
     name: 'Celana Jeans Denim Tebal',
-    icon: '👖',
+    
     type: 'correct',
     bodyPart: 'feet',
     badge: 'STANDAR K3 ALTERNATIF',
@@ -228,7 +284,7 @@ const APD_ITEMS = [
   {
     id: 'safety_helmet',
     name: 'Helm Safety K3 Proyek (Hard Hat)',
-    icon: '👷',
+    
     type: 'correct',
     bodyPart: 'head',
     badge: 'STANDAR K3 BENGKEL BERAT',
@@ -239,7 +295,7 @@ const APD_ITEMS = [
   {
     id: 'hairnet',
     name: 'Hairnet / Pengikat Rambut Rapi',
-    icon: '🪢',
+    
     type: 'correct',
     bodyPart: 'head',
     badge: 'STANDAR K3 OPERATOR',
@@ -252,10 +308,10 @@ const APD_ITEMS = [
   {
     id: 'gloves_kain',
     name: 'Sarung Tangan Rajut Longgar',
-    icon: '🧤',
+    
     type: 'wrong',
     bodyPart: 'hands',
-    badge: '☠️ JEBAKAN MAUT BUBUT',
+    badge: '[BAHAYA FATAL] JEBAKAN MAUT',
     spec: 'Kain Katun Rajut Longgar',
     desc: 'BAHAYA TERLILIT CHUCK BUBUT! Serat benang tersangkut benda kerja berputar dan memuntir tangan seketika!',
     image: '/assets/images/apd/gloves.jpg'
@@ -263,10 +319,10 @@ const APD_ITEMS = [
   {
     id: 'dasi',
     name: 'Dasi Panjang / Kalung Menjuntai',
-    icon: '🧣',
+    
     type: 'wrong',
     bodyPart: 'body',
-    badge: '☠️ BAHAYA KEMATIAN INSTAN',
+    badge: '[BAHAYA FATAL] KEMATIAN INSTAN',
     spec: 'Kain Menjuntai Bebas',
     desc: 'BAHAYA TERTARIK AS BUBUT! Ujung dasi ditarik putaran spindel, mencekik leher operator dalam 0.2 detik!',
     image: '/assets/images/apd/apron.jpg'
@@ -274,10 +330,10 @@ const APD_ITEMS = [
   {
     id: 'sandal',
     name: 'Sandal Jepit Karet',
-    icon: '🩴',
+    
     type: 'wrong',
     bodyPart: 'feet',
-    badge: '🚨 BAHAYA FATAL KAKI',
+    badge: '[BAHAYA FATAL] BAHAYA KAKI',
     spec: 'Karet Spons Tipis Terbuka',
     desc: 'Kaki telanjang langsung hangus tersiram tatal gram panas 250°C dan remuk tertimpa benda berat jatuh.',
     image: '/assets/images/apd/sandal.jpg'
@@ -285,10 +341,10 @@ const APD_ITEMS = [
   {
     id: 'jam_tangan',
     name: 'Jam Tangan Logam & Rantai',
-    icon: '⌚',
+    
     type: 'wrong',
     bodyPart: 'hands',
-    badge: '⚠️ ENTANGLEMENT HAZARD',
+    badge: '[PERINGATAN] ENTANGLEMENT HAZARD',
     spec: 'Logam Rantai Baja Konduktif',
     desc: 'Sangat mudah tersangkut pada celah chuck berputar 1200 RPM dan memicu korsleting listrik saat pengelasan.',
     image: '/assets/images/apd/jam_tangan.jpg'
@@ -296,10 +352,10 @@ const APD_ITEMS = [
   {
     id: 'cincin',
     name: 'Cincin Logam di Jari',
-    icon: '💍',
+    
     type: 'wrong',
     bodyPart: 'hands',
-    badge: '⚠️ BAHAYA DEGLOVING',
+    badge: '[BAHAYA FATAL] BAHAYA DEGLOVING',
     spec: 'Cincin Emas/Perak Logam',
     desc: 'Risiko kulit dan daging jari terkoyak putus jika tersangkut benda berputar, serta konduktor panas sengatan api.',
     image: '/assets/images/apd/jam_tangan.jpg'
@@ -307,10 +363,10 @@ const APD_ITEMS = [
   {
     id: 'headphone',
     name: 'Headphone Musik Nirkabel',
-    icon: '🎧',
+    
     type: 'wrong',
     bodyPart: 'head',
-    badge: '⚠️ PEKAK ALARM DARURAT',
+    badge: '[PERINGATAN] PEKAK ALARM DARURAT',
     spec: 'Headphone Musik Audio Hiburan',
     desc: 'Menutup pendengaran dari alarm darurat mesin, bunyi chatter obrolan pahat, atau teriakan bahaya rekan kerja.',
     image: '/assets/images/apd/headphone.jpg'
@@ -318,10 +374,10 @@ const APD_ITEMS = [
   {
     id: 'smartphone',
     name: 'Memegang HP Saat Bekerja',
-    icon: '📱',
+    
     type: 'wrong',
     bodyPart: 'hands',
-    badge: '🚨 DISTRAKSI FATAL',
+    badge: '[BAHAYA FATAL] DISTRAKSI FATAL',
     spec: 'Layar Sentuh Ponsel Aktif',
     desc: 'Kehilangan konsentrasi sepersekian detik saat mengoperasikan mesin berputar mengakibatkan kecelakaan fatal.',
     image: '/assets/images/apd/jam_tangan.jpg'
@@ -329,10 +385,10 @@ const APD_ITEMS = [
   {
     id: 'topi_biasa',
     name: 'Topi Santai Baseball Terbalik',
-    icon: '🧢',
+    
     type: 'wrong',
     bodyPart: 'head',
-    badge: '⚠️ TIDAK STANDAR K3',
+    badge: '[PERINGATAN] TIDAK STANDAR K3',
     spec: 'Kain Poliester Mudah Terbakar',
     desc: 'Kain tipis mudah terbakar oleh bunga api, tidak menahan benturan, dan lidah topi menghalangi pandangan ke atas.',
     image: '/assets/images/apd/topi_biasa.jpg'
@@ -340,10 +396,10 @@ const APD_ITEMS = [
   {
     id: 'kacamata_hitam',
     name: 'Kacamata Hitam Fashion',
-    icon: '🕶️',
+    
     type: 'wrong',
     bodyPart: 'eyes',
-    badge: '⚠️ GELAP & PECAH MENUSUK',
+    badge: '[PERINGATAN] GELAP & PECAH MENUSUK',
     spec: 'Lensa Kaca Fashion Biasa',
     desc: 'Pandangan gelap di bengkel; kaca non-safety mudah pecah menusuk bola mata jika tertabrak tatal gram kencang.',
     image: '/assets/images/apd/kacamata_hitam.jpg'
@@ -351,10 +407,10 @@ const APD_ITEMS = [
   {
     id: 'kaos_longgar',
     name: 'Baju Kaos Kedodoran / Gombrang',
-    icon: '👕',
+    
     type: 'wrong',
     bodyPart: 'body',
-    badge: '🚨 TERBELIT AS BUBUT',
+    badge: '[BAHAYA FATAL] TERBELIT AS BUBUT',
     spec: 'Kain Jersey Longgar Menggantung',
     desc: 'Kain yang melambai-lambai sangat mudah tergulung poros spindel atau transportir mesin bubut yang berputar.',
     image: '/assets/images/apd/wearpack.jpg'
@@ -471,7 +527,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
       setApdResult({
         status: 'danger',
         score: score,
-        title: '🚨 DITOLAK: PELANGGARAN K3 TINGKAT FATAL!',
+        title: '[DITOLAK] PELANGGARAN K3 TINGKAT FATAL!',
         message: `Operator terdeteksi menggunakan ${forbiddenList.length} item terlarang yang membahayakan nyawa!`,
         forbiddenDetails,
         missingMandatory,
@@ -487,7 +543,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
       setApdResult({
         status: 'warning',
         score: score,
-        title: '⚠️ APD BELUM LENGKAP (BELUM MEMENUHI STANDAR)',
+        title: '[BELUM LENGKAP] APD BELUM MEMENUHI STANDAR',
         message: `Peralatan wajib yang masih kurang: ${missingMandatory.join(', ')}`,
         missingMandatory,
         verdict: 'Lengkapi seluruh APD proteksi standar industri sebelum masuk ke area kerja mesin.',
@@ -500,7 +556,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
       setApdResult({
         status: 'success',
         score: 100,
-        title: '✅ APD SESUAI STANDAR INDUSTRI (100% LAYAK KERJA)',
+        title: '[LAYAK KERJA] APD SESUAI STANDAR INDUSTRI (100%)',
         message: 'Luar Biasa! Seluruh anggota tubuh operator telah terproteksi sesuai matriks bahaya bengkel.',
         verdict: `Operator telah memenuhi syarat K3 untuk mengoperasikan ${currentJobObj.name}. Tidak ada potensi bahaya terbelit atau kecelakaan mekanis.`,
         oshaCode: 'Sertifikasi K3 Mandiri: Zero Accident Ready'
@@ -573,7 +629,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.6rem' }}>🦺</span>
+            <ShieldCheck size={28} color="#0284c7" />
             <div>
               <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, fontFamily: "'Chakra Petch', sans-serif", letterSpacing: '1px' }}>
                 LABORATORIUM K3 &amp; SIMULATOR APD VIRTUAL 3D
@@ -588,11 +644,11 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
         {/* Tab Switcher */}
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', background: 'rgba(255,255,255,0.08)', padding: '6px', borderRadius: '12px' }}>
           {[
-            { id: 'apd', label: '🧍 Simulator APD 3D Orbit', desc: 'Seleksi APD' },
-            { id: 'k3lh_apar', label: '🛡️ K3LH, Bahaya & APAR', desc: 'Simulasi PASS' },
-            { id: 'budaya_5r', label: '🧹 Budaya 5R & Etika DUDI', desc: 'Audit 5S & Kuis' },
-            { id: 'perkakas', label: '🔨 Perkakas Tangan & Mesin', desc: 'Bor, Gerinda & Kikir' },
-            { id: 'jsa_dudi', label: '📋 JSA & Benda Uji DUDI', desc: 'SOP & Rubrik QC' }
+            { id: 'apd', label: 'Simulator APD 3D Orbit', desc: 'Seleksi APD', Icon: UserCheck },
+            { id: 'k3lh_apar', label: 'K3LH, Bahaya & APAR', desc: 'Simulasi PASS', Icon: Flame },
+            { id: 'budaya_5r', label: 'Budaya 5R & Etika DUDI', desc: 'Audit 5S & Kuis', Icon: Sparkles },
+            { id: 'perkakas', label: 'Perkakas Tangan & Mesin', desc: 'Bor, Gerinda & Kikir', Icon: Wrench },
+            { id: 'jsa_dudi', label: 'JSA & Benda Uji DUDI', desc: 'SOP & Rubrik QC', Icon: ClipboardList }
           ].map(tab => (
             <button
               key={tab.id}
@@ -613,7 +669,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                 whiteSpace: 'nowrap'
               }}
             >
-              <span>{tab.label}</span>
+              <span>{tab.Icon && <tab.Icon size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: '-2px' }} />}{tab.label}</span>
             </button>
           ))}
         </div>
@@ -665,7 +721,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '1.1rem' }}>{job.icon}</span>
+                      {renderJobIcon(job.id)}
                       <span>{job.name}</span>
                     </div>
                   </button>
@@ -687,7 +743,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
               alignItems: 'flex-start',
               gap: '10px'
             }}>
-              <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+              <AlertTriangle size={20} color="#f59e0b" />
               <div>
                 <strong>Identifikasi Bahaya Potensial ({currentJobObj.name}):</strong>
                 <div style={{ color: '#78350f', marginTop: '2px' }}>{currentJobObj.description}</div>
@@ -770,7 +826,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                     color: '#fff',
                     padding: '20px'
                   }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '10px' }}>📐</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}><ShieldCheck size={48} color="#0284c7" /></div>
                     <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#f8fafc' }}>
                       Bagan Skema Terpasang ({equippedItems.length} Item)
                     </div>
@@ -786,7 +842,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                             color: '#fff',
                             fontWeight: 700
                           }}>
-                            {item?.icon} {item?.name}
+                            {item?.name}
                           </span>
                         );
                       })}
@@ -810,7 +866,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                   color: '#991b1b',
                   fontWeight: 700
                 }}>
-                  <span style={{ fontSize: '1.1rem' }}>🚨</span>
+                  <AlertTriangle size={18} color="#ef4444" />
                   <div>
                     <strong>Peringatan Langsung:</strong> Terdeteksi {equippedForbiddenItems.length} item terlarang/berbahaya pada operator!
                   </div>
@@ -839,7 +895,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                     transition: 'all 0.15s'
                   }}
                 >
-                  <span>✓</span> UJI KELAYAKAN K3 OPERATOR
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Check size={14} strokeWidth={2.5} /> UJI KELAYAKAN K3 OPERATOR</span>
                 </button>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -856,7 +912,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                       cursor: 'pointer'
                     }}
                   >
-                    ✨ Pasang Standar K3
+                    Pasang Standar K3
                   </button>
 
                   <button
@@ -901,7 +957,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                 {/* Quick Search */}
                 <input
                   type="text"
-                  placeholder="🔍 Cari APD..."
+                  placeholder="Cari APD..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -918,13 +974,13 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
               <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '14px' }}>
                 {[
                   { id: 'all', label: 'Semua Item (22)' },
-                  { id: 'correct', label: '✅ Standar K3 (12)' },
-                  { id: 'wrong', label: '⚠️ Jebakan Bahaya (10)' },
-                  { id: 'head', label: '🪖 Kepala' },
-                  { id: 'eyes', label: '👓 Mata/Wajah' },
-                  { id: 'body', label: '🦺 Badan' },
-                  { id: 'hands', label: '🧤 Tangan' },
-                  { id: 'feet', label: '🥾 Kaki' }
+                  { id: 'correct', label: 'Standar K3 (12)' },
+                  { id: 'wrong', label: 'Jebakan Bahaya (10)' },
+                  { id: 'head', label: 'Kepala' },
+                  { id: 'eyes', label: 'Mata/Wajah' },
+                  { id: 'body', label: 'Badan' },
+                  { id: 'hands', label: 'Tangan' },
+                  { id: 'feet', label: 'Kaki' }
                 ].map((f) => (
                   <button
                     key={f.id}
@@ -999,7 +1055,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                         marginBottom: '8px',
                         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)'
                       }}>
-                        {item.icon}
+                        {renderApdIcon(item.id, item.type)}
                       </div>
 
                       {/* Badge Standar vs Bahaya */}
@@ -1056,7 +1112,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                           alignItems: 'center',
                           justifyContent: 'center'
                         }}>
-                          ✓
+                          <Check size={12} strokeWidth={3} />
                         </div>
                       )}
                     </div>
@@ -1112,7 +1168,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                   {apdResult.forbiddenDetails && apdResult.forbiddenDetails.length > 0 && (
                     <div style={{ background: '#ffffff', padding: '10px 14px', borderRadius: '8px', marginBottom: '10px', border: '1px solid #fecaca' }}>
                       <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#991b1b', marginBottom: '6px' }}>
-                        💥 Mekanisme Bahaya &amp; Pelanggaran Terdeteksi:
+                        Mekanisme Bahaya &amp; Pelanggaran Terdeteksi:
                       </div>
                       <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.75rem', color: '#7f1d1d', lineHeight: 1.5 }}>
                         {apdResult.forbiddenDetails.map((f, idx) => (
@@ -1128,7 +1184,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
                   {apdResult.missingMandatory && apdResult.missingMandatory.length > 0 && (
                     <div style={{ background: '#ffffff', padding: '10px 14px', borderRadius: '8px', marginBottom: '10px', border: '1px solid #fed7aa' }}>
                       <div style={{ fontSize: '0.76rem', fontWeight: 900, color: '#9a3412', marginBottom: '4px' }}>
-                        📋 Peralatan Wajib yang Belum Terpasang:
+                        Peralatan Wajib yang Belum Terpasang:
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#7c2d12' }}>
                         {apdResult.missingMandatory.join(', ')}
@@ -1138,7 +1194,7 @@ export default function SafetyK3Game({ onOpenDiagnostic } = {}) {
 
                   {/* Verdict */}
                   <div style={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.5, background: 'rgba(255,255,255,0.7)', padding: '10px 12px', borderRadius: '6px' }}>
-                    💡 <strong>Keputusan Akhir Instruktur / Safety Officer:</strong> {apdResult.verdict}
+                    <strong>[KEPUTUSAN] Keputusan Akhir Instruktur / Safety Officer:</strong> {apdResult.verdict}
                   </div>
                 </div>
               )}

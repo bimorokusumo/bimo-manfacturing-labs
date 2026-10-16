@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
+import { 
+  Wrench, Ruler, Type, Compass, Maximize2, FileText, Pencil, Target, Shield, Check, Eye, AlertTriangle, ArrowRight, Box, Search
+} from 'lucide-react';
 
 const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
   const [activeTab, setActiveTab] = useState('garis'); // Default: 2. Standarisasi Garis (ISO 128)
@@ -18,11 +21,11 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
   const [erasingStep, setErasingStep] = useState('shield'); // 'problem' | 'shield' | 'result'
 
   const tabs = [
-    { id: 'alat', label: '1. Pengenalan Alat', icon: '🧰' },
-    { id: 'garis', label: '2. Standarisasi Garis (ISO 128)', icon: '📏' },
-    { id: 'huruf', label: '3. Huruf & Angka (ISO 3098)', icon: '✍️' },
-    { id: 'proyeksi', label: '4. Jenis Proyeksi (Eropa/Amerika)', icon: '🧭' },
-    { id: 'dimensi', label: '5. Aturan Dimensi (ISO 129)', icon: '📐' }
+    { id: 'alat', label: '1. Pengenalan Alat', icon: 'ALAT' },
+    { id: 'garis', label: '2. Standarisasi Garis (ISO 128)', icon: 'GARIS' },
+    { id: 'huruf', label: '3. Huruf & Angka (ISO 3098)', icon: 'HURUF' },
+    { id: 'proyeksi', label: '4. Jenis Proyeksi (Eropa/Amerika)', icon: 'PROYEKSI' },
+    { id: 'dimensi', label: '5. Aturan Dimensi (ISO 129)', icon: 'DIMENSI' }
   ];
 
   // Pencils Database
@@ -100,7 +103,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             {/* Card 1: Kertas Gambar ISO 216 */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>📄</div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FileText size={22} color="#2563eb" /></div>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Kertas Gambar Seri A (ISO 216)</h3>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Perbandingan Rasio Panjang : Lebar = √2 : 1</p>
@@ -147,14 +150,14 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                 </table>
               </div>
               <div style={{ fontSize: '0.75rem', color: '#64748b', background: 'rgba(59, 130, 246, 0.05)', padding: '10px', borderRadius: '6px' }}>
-                💡 <strong>Aturan Tepi Kiri (20 mm):</strong> Wajib disisakan selebar 20 mm pada seluruh format kertas untuk kebutuhan penjilidan (*filing*) tanpa menutup area gambar kerja.
+                <strong>[CATATAN TEKNIS] Aturan Tepi Kiri (20 mm):</strong> Wajib disisakan selebar 20 mm pada seluruh format kertas untuk kebutuhan penjilidan (*filing*) tanpa menutup area gambar kerja.
               </div>
             </div>
 
             {/* Card 2: Pensil Gambar & Tingkat Kekerasan */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>✏️</div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pencil size={22} color="#d97706" /></div>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Derajat Kekerasan Pensil</h3>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Standar H (Hard), F (Firm), B (Black)</p>
@@ -202,7 +205,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 <div style={{ padding: '8px', background: '#ffffff', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                  🎯 <strong>Pensil Mekanik Standar:</strong> Di bengkel/studio industri lebih disukai pensil mekanik berdiameter mata <strong>0.35 mm</strong> (garis tipis) dan <strong>0.5 mm / 0.7 mm</strong> (garis tebal nyata) agar ketebalan garis selalu konstan tanpa perlu diraut.
+                  <strong>[STANDAR INDUSTRI] Pensil Mekanik:</strong> Di bengkel/studio industri lebih disukai pensil mekanik berdiameter mata <strong>0.35 mm</strong> (garis tipis) dan <strong>0.5 mm / 0.7 mm</strong> (garis tebal nyata) agar ketebalan garis selalu konstan tanpa perlu diraut.
                 </div>
               </div>
             </div>
@@ -210,7 +213,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             {/* Card 3: Penggaris T & Sepasang Segitiga */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>📐</div>
+                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Ruler size={22} color="#059669" /></div>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Penggaris T & Sepasang Segitiga</h3>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Kombinasi Sudut Istimewa 15°, 30°, 45°, 60°, 75°, 90°</p>
@@ -243,7 +246,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🧲</div>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(124, 58, 237, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Compass size={22} color="#7c3aed" /></div>
                   <div>
                     <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>Jangka, Mal, & Pelindung Penghapus</h3>
                     <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>Contoh Nyata, Diagram Anatomi & SOP Penggunaan Presisi</p>
@@ -253,9 +256,9 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                 {/* 3 Main Precision Tool Selector */}
                 <div style={{ display: 'flex', gap: '4px', background: '#f1f5f9', padding: '4px', borderRadius: '8px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
                   {[
-                    { id: 'jangka', label: '⭕ Jangka Teknik', icon: '⭕' },
-                    { id: 'mal', label: '〰️ Mal Khusus & Template', icon: '〰️' },
-                    { id: 'pelindung', label: '🛡️ Pelindung Penghapus', icon: '🛡️' }
+                    { id: 'jangka', label: '[JANGKA] Jangka Teknik', icon: 'O' },
+                    { id: 'mal', label: '[MAL] Mal Khusus & Template', icon: '~' },
+                    { id: 'pelindung', label: '[PELINDUNG] Pelindung Penghapus', icon: 'SHIELD' }
                   ].map(tool => (
                     <button
                       key={tool.id}
@@ -301,7 +304,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                     border: '1px solid #e2e8f0'
                   }}>
                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>
-                      📐 Simulasi Bukaan Jangka: <strong style={{ color: '#2563eb', fontSize: '0.9rem' }}>Radius R = {compassRadius} mm</strong> (Diameter Ø = {compassRadius * 2} mm)
+                      Simulasi Bukaan Jangka: <strong style={{ color: '#2563eb', fontSize: '0.9rem' }}>Radius R = {compassRadius} mm</strong> (Diameter Ø = {compassRadius * 2} mm)
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <input
@@ -449,7 +452,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
                     <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                       <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#2563eb', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>1️⃣</span> Jangka Pegas (Spring Bow)
+                        <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-bold">1</span> Jangka Pegas (Spring Bow)
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
                         <strong>Kapasitas:</strong> Ø5 s.d. Ø50 mm.<br />
@@ -459,7 +462,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                     <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                       <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>2️⃣</span> Jangka Besar (Giant Beam)
+                        <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-bold">2</span> Jangka Besar (Giant Beam)
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
                         <strong>Kapasitas:</strong> Ø50 s.d. Ø300 mm.<br />
@@ -469,7 +472,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                     <div style={{ padding: '10px 12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                       <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#d97706', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>3️⃣</span> Jangka Pembagi (Dividers)
+                        <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-bold">3</span> Jangka Pembagi (Dividers)
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px', lineHeight: 1.5 }}>
                         <strong>Kapasitas:</strong> Transfer skala ukuran.<br />
@@ -480,7 +483,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                   {/* SOP Industri Penggunaan Jangka */}
                   <div style={{ background: 'rgba(37, 99, 235, 0.05)', border: '1px solid rgba(37, 99, 235, 0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#1e293b', lineHeight: 1.6 }}>
-                    🎯 <strong>SOP Menggambar Lingkaran Standar ISO:</strong><br />
+                    <strong>[SOP ISO] Menggambar Lingkaran:</strong><br />
                     1. <strong>Asah Mata Pensil:</strong> Buat bentuk baji pahat (<em>chisel edge</em> sudut 75°), bukan runcing kerucut, agar garis lingkaran memiliki ketebalan konstan (0.5 / 0.7 mm).<br />
                     2. <strong>Teknik Putaran:</strong> Tancapkan jarum pada titik potong garis sumbu, pegang tangkai atas dengan ibu jari & telunjuk, condongkan jangka 10°–15° ke arah putaran, dan putar searah jarum jam dalam 1 tarikan kontinyu.
                   </div>
@@ -497,9 +500,9 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                   {/* Selector Tipe Mal */}
                   <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                     {[
-                      { id: 'kurva', label: '〰️ Mal Lengkung (French Curve)', desc: 'Kurva Nok & Impeller' },
-                      { id: 'lingkaran', label: '⭕ Mal Lingkaran (Circle Template)', desc: 'Ø1 s.d. Ø30 mm' },
-                      { id: 'baut', label: '🔩 Mal Baut, Mur & Simbol', desc: 'Kepala Baut ISO & Las' }
+                      { id: 'kurva', label: '[FRENCH CURVE] Mal Lengkung', desc: 'Kurva Nok & Impeller' },
+                      { id: 'lingkaran', label: '[TEMPLATE Ø] Mal Lingkaran', desc: 'Ø1 s.d. Ø30 mm' },
+                      { id: 'baut', label: '[FASTENER] Mal Baut, Mur & Simbol', desc: 'Kepala Baut ISO & Las' }
                     ].map(mal => (
                       <button
                         key={mal.id}
@@ -579,13 +582,13 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                           <rect x="180" y="16" width="165" height="18" rx="4" fill="#ffffff" stroke="#16a34a" strokeWidth="1" />
                           <text x="262" y="29" fontSize="9" fontWeight="800" fill="#16a34a" textAnchor="middle">
-                            ✓ Kurva Mulus Menembus P1 - P5
+                            [OK] Kurva Mulus Menembus P1 - P5
                           </text>
                         </svg>
                       </div>
 
                       <div style={{ background: '#fff7ed', border: '1px solid #ffedd5', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#9a3412', lineHeight: 1.6 }}>
-                        💡 <strong>Aturan Wajib "3 Titik Tangen Kontinyu":</strong><br />
+                        <strong>[ATURAN ISO] 3 Titik Tangen Kontinyu:</strong><br />
                         Saat menggunakan mal lengkung, jangan pernah menghubungkan hanya dua titik. Tempelkan kurva mal hingga menyinggung minimal <strong>3 titik berturutan sekaligus (P1-P2-P3)</strong>, lalu tarik garis hanya dari <strong>P1 ke P2</strong>. Setelah itu geser mal hingga menyinggung <strong>P2-P3-P4</strong> dan tarik garis <strong>P2 ke P3</strong>. Ini mencegah timbulnya patahan sudut lancip pada kurva nok/cam.
                       </div>
                     </div>
@@ -628,7 +631,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                       </div>
 
                       <div style={{ background: '#ecfdf5', border: '1px solid #d1fae5', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#065f46', lineHeight: 1.6 }}>
-                        🎯 <strong>Fungsi Krusial dalam Gambar Manufaktur:</strong><br />
+                        <strong>[APLIKASI MANUFAKTUR] Fungsi Krusial:</strong><br />
                         Jangka biasa tidak stabil dan mudah merobek kertas untuk lingkaran berdiameter <strong>&lt; 10 mm</strong>. Mal lingkaran adalah solusi standar bengkel untuk menggambar lubang baut (M3, M4, M5, M6, M8, M10), lubang pasak, radius fillet pojokan (R2, R3, R5), dan kepala paku keling dalam hitungan detik dengan konsistensi 100% presisi.
                       </div>
                     </div>
@@ -676,7 +679,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                       </div>
 
                       <div style={{ background: '#eff6ff', border: '1px solid #dbeafe', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#1e40af', lineHeight: 1.6 }}>
-                        🔩 <strong>Efisiensi Studio Gambar Teknik:</strong><br />
+                        <strong>[EFISIENSI] Studio Gambar Teknik:</strong><br />
                         Menggambar kepala baut segienam (heksagonal) secara manual memerlukan konstruksi busur derajat dan lingkaran bantu yang memakan waktu 3–5 menit per baut. Dengan mal baut ISO, operator dapat mencetak proyeksi pandangan atas baut segienam lengkap dengan lingkaran ulir hanya dalam 5 detik!
                       </div>
                     </div>
@@ -786,7 +789,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                             <line x1="60" y1="115" x2="60" y2="135" stroke="#dc2626" strokeWidth="2" />
                             
                             <rect x="75" y="55" width="90" height="35" rx="4" fill="#fee2e2" stroke="#ef4444" strokeWidth="1" />
-                            <text x="120" y="70" fontSize="8" fontWeight="900" fill="#dc2626" textAnchor="middle">❌ MASALAH:</text>
+                            <text x="120" y="70" fontSize="8" fontWeight="900" fill="#dc2626" textAnchor="middle">[ERROR] MASALAH:</text>
                             <text x="120" y="82" fontSize="7.5" fontWeight="700" fill="#991b1b" textAnchor="middle">Garis sumbu merah</text>
                             <text x="120" y="91" fontSize="7.5" fontWeight="700" fill="#991b1b" textAnchor="middle">kelebihan panjang</text>
                           </g>
@@ -811,7 +814,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                             </g>
 
                             <rect x="75" y="68" width="90" height="38" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
-                            <text x="120" y="82" fontSize="8" fontWeight="900" fill="#b45309" textAnchor="middle">🛡️ TERLINDUNGI:</text>
+                            <text x="120" y="82" fontSize="8" fontWeight="900" fill="#b45309" textAnchor="middle">[SHIELD] TERLINDUNGI:</text>
                             <text x="120" y="93" fontSize="7.5" fontWeight="700" fill="#92400e" textAnchor="middle">Hanya garis merah</text>
                             <text x="120" y="102" fontSize="7.5" fontWeight="700" fill="#92400e" textAnchor="middle">yang terbuka dicelah</text>
                           </g>
@@ -826,7 +829,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                             <circle cx="60" cy="120" r="2" fill="#16a34a" />
 
                             <rect x="75" y="55" width="90" height="42" rx="4" fill="#dcfce7" stroke="#16a34a" strokeWidth="1" />
-                            <text x="120" y="70" fontSize="8.5" fontWeight="900" fill="#15803d" textAnchor="middle">✅ HASIL BERSIH:</text>
+                            <text x="120" y="70" fontSize="8.5" fontWeight="900" fill="#15803d" textAnchor="middle">[STATUS: OK] HASIL BERSIH:</text>
                             <text x="120" y="82" fontSize="7.5" fontWeight="700" fill="#166534" textAnchor="middle">Garis benda 100% utuh</text>
                             <text x="120" y="91" fontSize="7.5" fontWeight="700" fill="#166534" textAnchor="middle">Garis lebih terhapus</text>
                             <text x="120" y="100" fontSize="7" fontWeight="800" fill="#15803d" textAnchor="middle">Kertas tidak lecet!</text>
@@ -839,7 +842,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                   {/* SOP & Keunggulan Pelindung Penghapus */}
                   <div style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#5b21b6', lineHeight: 1.6 }}>
-                    🛡️ <strong>Mengapa Pelindung Penghapus Wajib bagi Juru Gambar Mesin?</strong><br />
+                    <strong>[TEKNIK ERASING] Mengapa Pelindung Penghapus Wajib bagi Juru Gambar Mesin?</strong><br />
                     • <strong>Bahan:</strong> Pelat baja tahan karat (<em>stainless steel</em>) lentur tebal 0.1 mm yang tidak akan tergores atau sobek oleh gesekan penghapus.<br />
                     • <strong>Cara Pakai:</strong> Tekan pelindung dengan kuat memakai dua jari tangan kiri agar tidak geser. Arahkan gosokan penghapus karet <em>searah panjang celah</em>.<br />
                     • <strong>Tips Penting:</strong> Bersihkan remah/debu karet penghapus menggunakan <em>kuas pembersih gambar teknik</em> khusus. Jangan ditiup dengan mulut untuk menghindari cipratan air liur yang membuat kertas gambar lembap.
@@ -855,7 +858,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
           {/* Title Block / Etiket Standar ISO Section */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>📋</span> Standarisasi Etiket / Kepala Gambar (Title Block - ISO 7200)
+              Standarisasi Etiket / Kepala Gambar (Title Block - ISO 7200)
             </h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
               Etiket diletakkan di <strong>pojok kanan bawah</strong> kertas gambar dengan lebar standar maksimum <strong>185 mm</strong>. Etiket berisi seluruh identitas legalitas dokumen rancang bangun teknik.
@@ -947,7 +950,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                  🔍 Contoh Penerapan Nyata Jenis Garis pada Gambar Kerja Benda Mesin (ISO 128)
+                  Contoh Penerapan Nyata Jenis Garis pada Gambar Kerja Benda Mesin (ISO 128)
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
                   Klik tombol jenis garis di bawah ini atau klik langsung pada bagian gambar kerja untuk memfokuskan penerapan garis tersebut.
@@ -955,7 +958,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(16, 185, 129, 0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#065f46' }}>📐 Standar Rasio:</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#065f46' }}>Standar Rasio:</span>
                 <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#047857', background: '#d1fae5', padding: '2px 8px', borderRadius: '4px' }}>Tebal 2 : Tipis 1</span>
               </div>
             </div>
@@ -965,12 +968,12 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               {[
                 { id: 'A', label: 'Tipe A: Garis Benda (0.7 mm)', icon: '━', color: '#0f172a' },
                 { id: 'B', label: 'Tipe B: Garis Ukur & Arsir (0.35 mm)', icon: '─', color: '#0284c7' },
-                { id: 'C', label: 'Tipe C: Batas Sobekan (Bebas)', icon: '〰', color: '#10b981' },
-                { id: 'D', label: 'Tipe D: Pemendekan Poros (Zig-zag)', icon: '⚡', color: '#d97706' },
+                { id: 'C', label: 'Tipe C: Batas Sobekan (Bebas)', icon: '~', color: '#10b981' },
+                { id: 'D', label: 'Tipe D: Pemendekan Poros (Zig-zag)', icon: 'ZIGZAG', color: '#d97706' },
                 { id: 'F', label: 'Tipe E/F: Kontur Terhalang (Gores)', icon: '╌', color: '#ea580c' },
                 { id: 'G', label: 'Tipe G: Sumbu Simetri (Gores Titik)', icon: '⸺·', color: '#2563eb' },
-                { id: 'H', label: 'Tipe H: Bidang Potong A-A (Ujung Tebal)', icon: '✂️', color: '#dc2626' },
-                { id: 'all', label: 'Semua Garis Terpadu', icon: '👁️', color: '#475569' }
+                { id: 'H', label: 'Tipe H: Bidang Potong A-A (Ujung Tebal)', icon: 'A-A', color: '#dc2626' },
+                { id: 'all', label: 'Semua Garis Terpadu', icon: 'ALL', color: '#475569' }
               ].map(item => {
                 const isSelected = selectedLineType === item.id;
                 return (
@@ -1042,12 +1045,12 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                 }}>
                   {selectedLineType === 'A' ? '━ Tipe A: Garis Benda Nyata (Tebal Kontinu 0.7 mm)' :
                    selectedLineType === 'B' ? '─ Tipe B: Garis Ukur, Bantu, & Arsir Penampang 45° (Tipis Kontinu 0.35 mm)' :
-                   selectedLineType === 'C' ? '〰 Tipe C: Garis Tipis Bebas (Batas Sobekan Lokal / Broken-out Section)' :
-                   selectedLineType === 'D' ? '⚡ Tipe D: Garis Tipis Zig-zag (Batas Pemendekan Poros Panjang)' :
+                   selectedLineType === 'C' ? '~ Tipe C: Garis Tipis Bebas (Batas Sobekan Lokal / Broken-out Section)' :
+                   selectedLineType === 'D' ? '[TIPE D] Garis Tipis Zig-zag (Batas Pemendekan Poros Panjang)' :
                    selectedLineType === 'F' || selectedLineType === 'E' ? '╌ Tipe E/F: Garis Gores Putus-putus (Lubang Tersembunyi)' :
                    selectedLineType === 'G' ? '⸺· Tipe G: Garis Sumbu Simetri & Pusat Lingkaran (Gores Titik Tipis)' :
-                   selectedLineType === 'H' ? '✂️ Tipe H: Garis Bidang Pemotongan A-A (Gores Titik dengan Ujung Tebal)' :
-                   '👁️ Seluruh 8 Jenis Garis ISO 128 Terpadu pada Gambar Kerja'}
+                   selectedLineType === 'H' ? '[TIPE H] Garis Bidang Pemotongan A-A (Gores Titik dengan Ujung Tebal)' :
+                   '[SELURUH GARIS] 8 Jenis Garis ISO 128 Terpadu pada Gambar Kerja'}
                 </span>
               </div>
 
@@ -1683,7 +1686,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
 
                   {/* LINE PRECEDENCE ALERT BOX */}
                   <div style={{ padding: '12px 16px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fef3c7', color: '#92400e', fontSize: '0.8rem', lineHeight: 1.6 }}>
-                    <strong>⚠️ Urutan Prioritas Garis Berimpit (Line Precedence ISO 128):</strong><br />
+                    <strong>[PERINGATAN ISO] Urutan Prioritas Garis Berimpit (Line Precedence ISO 128):</strong><br />
                     Jika dua atau lebih garis bertumpuk pada posisi yang sama, urutan yang wajib dimenangkan adalah:<br />
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px', fontWeight: 800, fontSize: '0.75rem' }}>
                       <span style={{ background: '#0f172a', color: '#fff', padding: '2px 8px', borderRadius: '4px' }}>1. Garis Nyata (Tipe A)</span>
@@ -1938,7 +1941,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#2563eb', textTransform: 'uppercase' }}>
-                    🇺🇸 PROYEKSI AMERIKA (SUDUT KETIGA)
+                    [ANSI / ISO] PROYEKSI AMERIKA (SUDUT KETIGA)
                   </span>
                   <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#dbeafe', color: '#1e40af', padding: '3px 8px', borderRadius: '4px' }}>
                     ISO Third Angle
@@ -1995,7 +1998,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#d97706', textTransform: 'uppercase' }}>
-                    🇪🇺 PROYEKSI EROPA (SUDUT PERTAMA)
+                    [DIN / ISO] PROYEKSI EROPA (SUDUT PERTAMA)
                   </span>
                   <span style={{ fontSize: '0.7rem', fontWeight: 800, background: '#fef3c7', color: '#92400e', padding: '3px 8px', borderRadius: '4px' }}>
                     ISO First Angle
@@ -2039,11 +2042,11 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             {/* Mnemonic Guide Box */}
             <div style={{ padding: '16px 20px', background: '#f1f5f9', borderRadius: '8px', borderLeft: '5px solid #2563eb', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>
-                💡 RUMUS CEPAT MENGHAFAL SIMBOL PROYEKSI TEKNIK MESIN:
+                [MNEMONIK] RUMUS CEPAT MENGHAFAL SIMBOL PROYEKSI TEKNIK MESIN:
               </div>
               <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                • <strong>AMERIKA (Ketiga)</strong>: Huruf A diawali lingkaran bulat → <strong>LINGKARAN DI DEPAN (KIRI)</strong>, lalu Trapesium di Kanan.<br />
-                • <strong>EROPA (Pertama)</strong>: Huruf E memiliki garis balok lurus → <strong>TRAPESIUM DI DEPAN (KIRI)</strong>, lalu Lingkaran di Kanan.<br />
+                • <strong>AMERIKA (Ketiga)</strong>: Huruf A diawali lingkaran bulat &rarr; <strong>LINGKARAN DI DEPAN (KIRI)</strong>, lalu Trapesium di Kanan.<br />
+                • <strong>EROPA (Pertama)</strong>: Huruf E memiliki garis balok lurus &rarr; <strong>TRAPESIUM DI DEPAN (KIRI)</strong>, lalu Lingkaran di Kanan.<br />
                 • <em>Perhatikan Trapesium:</em> Sisi kecil selalu berada di sebelah KIRI pada kedua simbol standar ISO!
               </div>
             </div>
@@ -2064,7 +2067,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
           }}>
             <div style={{ maxWidth: '650px' }}>
               <div style={{ fontSize: '1.15rem', fontWeight: 900, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>🧭</span> Praktikkan Langsung di Step 2: Simulator Ortogonal 3D!
+                Praktikkan Langsung di Step 2: Simulator Ortogonal 3D!
               </div>
               <div style={{ fontSize: '0.85rem', opacity: 0.95, lineHeight: 1.6 }}>
                 Setelah memahami simbol proyeksi Eropa &amp; Amerika di atas, coba putar orbit 3D dan bandingkan 4 proyeksi ortogonal dari 8 model komponen standar permesinan.
@@ -2089,7 +2092,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                   transition: 'all 0.15s'
                 }}
               >
-                <span>🚀</span> Buka 2. Simulator Ortogonal ➔
+                Buka 2. Simulator Ortogonal &rarr;
               </button>
             )}
           </div>
@@ -2097,7 +2100,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
           {/* BAGIAN KETIGA: PROYEKSI PIKTORIAL (3D) */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>📦</span> Jenis-Jenis Proyeksi Piktorial (3 Dimensi)
+              Jenis-Jenis Proyeksi Piktorial (3 Dimensi)
             </h3>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '16px' }}>
@@ -2206,7 +2209,7 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                  🔍 Ilustrasi Interaktif Anatomi Dimensi Benda Kerja (ISO 129)
+                  Ilustrasi Interaktif Anatomi Dimensi Benda Kerja (ISO 129)
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
                   Klik tombol fitur di bawah ini atau klik langsung pada bagian gambar kerja untuk memfokuskan kaidah ukuran.
@@ -2256,14 +2259,14 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
             {/* FEATURE SELECTOR BUTTONS */}
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxWidth: '100%' }}>
               {[
-                { id: 'chamfer', label: 'Chamfer (C2 / 2×45°)', icon: '📐', color: '#f59e0b' },
+                { id: 'chamfer', label: 'Chamfer (C2 / 2×45°)', icon: 'C', color: '#f59e0b' },
                 { id: 'diameter', label: 'Diameter (⌀24, ⌀32, ⌀50)', icon: '⌀', color: '#2563eb' },
                 { id: 'radius', label: 'Radius Fillet (R8)', icon: 'R', color: '#059669' },
-                { id: 'sudut', label: 'Ukuran Sudut (30°)', icon: '📐', color: '#7c3aed' },
+                { id: 'sudut', label: 'Ukuran Sudut (30°)', icon: '∠', color: '#7c3aed' },
                 { id: 'lubang', label: 'Lubang & Kedalaman (↧)', icon: '↧', color: '#0891b2' },
-                { id: 'ulir', label: 'Ulir Metrik (M24)', icon: '🔩', color: '#e11d48' },
-                { id: 'linear', label: 'Linear & Jarak (≥10 & ≥7 mm)', icon: '📏', color: '#4338ca' },
-                { id: 'all', label: 'Semua Dimensi', icon: '👁️', color: '#0f172a' }
+                { id: 'ulir', label: 'Ulir Metrik (M24)', icon: 'M', color: '#e11d48' },
+                { id: 'linear', label: 'Linear & Jarak (≥10 & ≥7 mm)', icon: 'L', color: '#4338ca' },
+                { id: 'all', label: 'Semua Dimensi', icon: 'ALL', color: '#0f172a' }
               ].map(f => {
                 const isSelected = selectedDimensionFeature === f.id;
                 return (
@@ -2333,14 +2336,14 @@ const TechnicalDrawingGuide = ({ onNavigateToOrtogonal }) => {
                          selectedDimensionFeature === 'linear' ? '#4338ca' : '#0f172a',
                   fontWeight: 900
                 }}>
-                  {selectedDimensionFeature === 'chamfer' ? '📐 Chamfer (Kemiringan Tepi 2 × 45° / C2)' :
+                  {selectedDimensionFeature === 'chamfer' ? '[CHAMFER] Kemiringan Tepi 2 × 45° / C2' :
                    selectedDimensionFeature === 'diameter' ? '⌀ Diameter Poros Silinder (⌀24, ⌀32, ⌀50)' :
                    selectedDimensionFeature === 'radius' ? 'R Radius Kelengkungan Fillet (R8)' :
-                   selectedDimensionFeature === 'sudut' ? '📐 Sudut Kemiringan Konis (30°)' :
+                   selectedDimensionFeature === 'sudut' ? '[SUDUT] Sudut Kemiringan Konis (30°)' :
                    selectedDimensionFeature === 'lubang' ? '↧ Lubang Bor Buntu & Kedalaman (⌀14 ↧ 25)' :
-                   selectedDimensionFeature === 'ulir' ? '🔩 Ulir Metrik ISO (M24 × 1.5)' :
-                   selectedDimensionFeature === 'linear' ? '📏 Ukuran Panjang Linear & Aturan Jarak Standar' :
-                   '👁️ Seluruh Dimensi Terpadu Standar ISO 129'}
+                   selectedDimensionFeature === 'ulir' ? '[ULIR] Ulir Metrik ISO (M24 × 1.5)' :
+                   selectedDimensionFeature === 'linear' ? '[LINEAR] Ukuran Panjang Linear & Aturan Jarak Standar' :
+                   '[SELURUH DIMENSI] Dimensi Terpadu Standar ISO 129'}
                 </span>
               </div>
 

@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { getAssetUrl } from '../utils/assets';
+import {
+  BookOpen,
+  FileText,
+  ExternalLink,
+  Star,
+  Layers,
+  Volume2,
+  Square,
+  Play,
+  X,
+  Landmark
+} from 'lucide-react';
+
 
 const ModulesView = () => {
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'books', 'sem1', 'sem2'
@@ -7,7 +20,7 @@ const ModulesView = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeChapter, setActiveChapter] = useState(null);
 
-  // 🌟 BUKU DIGITAL INTERAKTIF 3D (50 HALAMAN LENGKAP - KURIKULUM DEEP LEARNING)
+  // BUKU DIGITAL INTERAKTIF 3D (50 HALAMAN LENGKAP - KURIKULUM DEEP LEARNING)
   const digitalBooks = [
     {
       id: 'buku-tflm',
@@ -225,10 +238,10 @@ const ModulesView = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '4px 12px', borderRadius: '20px', color: 'var(--game-primary)', fontSize: '0.8rem', fontWeight: 700, marginBottom: '8px' }}>
-            <span>🏛️ SMK NEGERI 2 DEPOK SLEMAN</span> • <span>KURIKULUM DEEP LEARNING</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Landmark size={14} /> SMK NEGERI 2 DEPOK SLEMAN</span> • <span>KURIKULUM DEEP LEARNING</span>
           </div>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: '4px 0 6px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span>📚 Perpustakaan & Modul Ajar Digital</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><BookOpen size={24} /> Perpustakaan & Modul Ajar Digital</span>
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '750px', lineHeight: 1.5 }}>
             Pusat literatur pembelajaran vokasi resmi: Buku Ajar Digital 3D Interaktif (50 Halaman Lengkap) & Modul Ajar Kurikulum Deep Learning untuk Program Keahlian Teknik Mesin & Fabrikasi Logam.
@@ -236,11 +249,11 @@ const ModulesView = () => {
         </div>
       </div>
 
-      {/* 🌟 FEATURED SECTION: BUKU DIGITAL INTERAKTIF 3D */}
+      {/* FEATURED SECTION: BUKU DIGITAL INTERAKTIF 3D */}
       {(activeTab === 'all' || activeTab === 'books') && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.3rem' }}>🌟</span>
+            <Star size={20} color="#f59e0b" fill="#f59e0b" />
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Koleksi Unggulan: Buku Digital 3D (Kurikulum Deep Learning)
             </h3>
@@ -319,7 +332,7 @@ const ModulesView = () => {
                         transition: 'all 0.2s'
                       }}
                     >
-                      <span>📖 Baca di Sini (3D)</span>
+                      <BookOpen size={16} /> <span>Baca di Sini (3D)</span>
                     </button>
 
                     <button
@@ -339,7 +352,7 @@ const ModulesView = () => {
                       }}
                       title="Buka Buku di Tab Baru / Fullscreen"
                     >
-                      <span>↗️ Layar Penuh</span>
+                      <ExternalLink size={15} /> <span>Layar Penuh</span>
                     </button>
                   </div>
                 </div>
@@ -352,8 +365,8 @@ const ModulesView = () => {
       {/* FILTER TABS */}
       <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid var(--border-light)', paddingBottom: '12px', flexWrap: 'wrap' }}>
         {[
-          { id: 'all', label: '⭐ Semua Koleksi', count: digitalBooks.length + modulesSem1.length + modulesSem2.length },
-          { id: 'books', label: '📖 Buku Digital 3D (TFLM & TP)', count: digitalBooks.length },
+          { id: 'all', label: 'Semua Koleksi', count: digitalBooks.length + modulesSem1.length + modulesSem2.length },
+          { id: 'books', label: 'Buku Digital 3D (TFLM & TP)', count: digitalBooks.length },
           { id: 'sem1', label: 'Modul Semester 1', count: modulesSem1.length + 2 },
           { id: 'sem2', label: 'Modul Semester 2', count: modulesSem2.length + 2 }
         ].map(tab => (
@@ -411,7 +424,7 @@ const ModulesView = () => {
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}
               >
-                <div style={{ fontSize: '3rem', marginBottom: '14px' }}>📖</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}><BookOpen size={48} color={book.color} /></div>
                 <h4 style={{ color: 'var(--text-main)', fontSize: '1.05rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.3 }}>{book.title}</h4>
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
                   <span style={{ background: `${book.color}18`, color: book.color, padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>
@@ -442,7 +455,7 @@ const ModulesView = () => {
                   borderRadius: '12px'
                 }}
               >
-                <div style={{ fontSize: '3rem', marginBottom: '14px' }}>📘</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}><FileText size={48} color={mod.color} /></div>
                 <h4 style={{ color: 'var(--text-main)', fontSize: '1.05rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.3 }}>{mod.title}</h4>
                 <span style={{ background: `${mod.color}15`, color: mod.color, padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>
                   {mod.category} • Semester 1
@@ -467,7 +480,7 @@ const ModulesView = () => {
                   borderRadius: '12px'
                 }}
               >
-                <div style={{ fontSize: '3rem', marginBottom: '14px' }}>📗</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}><FileText size={48} color={mod.color} /></div>
                 <h4 style={{ color: 'var(--text-main)', fontSize: '1.05rem', fontWeight: 700, marginBottom: '8px', lineHeight: 1.3 }}>{mod.title}</h4>
                 <span style={{ background: `${mod.color}15`, color: mod.color, padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase' }}>
                   {mod.category} • Semester 2
@@ -514,7 +527,7 @@ const ModulesView = () => {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '1.4rem' }}>{selectedModule.isFlipbook ? '📖' : '📘'}</span>
+                  <span>{selectedModule.isFlipbook ? <BookOpen size={22} color="#0284c7" /> : <FileText size={22} color="#3b82f6" />}</span>
                   <div>
                     <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                       {selectedModule.title}
@@ -530,7 +543,7 @@ const ModulesView = () => {
                   )}
                   {isPlaying && (
                     <span style={{ fontSize: '0.78rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '3px 8px', borderRadius: '4px', fontWeight: 700 }}>
-                      🔊 Sedang Membaca...
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Volume2 size={13} /> Sedang Membaca...</span>
                     </span>
                   )}
                 </div>
@@ -553,7 +566,7 @@ const ModulesView = () => {
                     }}
                     title="Buka di tab browser baru untuk layar penuh"
                   >
-                    <span>↗️ Buka Fullscreen</span>
+                    <ExternalLink size={14} /> <span>Buka Fullscreen</span>
                   </button>
 
                   <button 
@@ -574,7 +587,7 @@ const ModulesView = () => {
                     }}
                     title="Tutup Modal"
                   >
-                    ✖
+                    <X size={18} />
                   </button>
                 </div>
               </div>
@@ -583,7 +596,7 @@ const ModulesView = () => {
               {selectedModule.chapters && selectedModule.chapters.length > 0 && (
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginRight: '4px' }}>
-                    🔊 Audio Ringkasan Bab:
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Volume2 size={14} /> Audio Ringkasan Bab:</span>
                   </span>
                   {selectedModule.chapters.map((chapter, idx) => {
                     const isActive = isPlaying && activeChapter === idx;
@@ -606,7 +619,7 @@ const ModulesView = () => {
                           fontSize: '0.78rem'
                         }}
                       >
-                        <span>{isActive ? '⏹' : '▶️'}</span>
+                        <span>{isActive ? <Square size={12} fill="#ef4444" /> : <Play size={12} fill="currentColor" />}</span>
                         {chapter.title}
                       </button>
                     );

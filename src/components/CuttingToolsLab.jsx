@@ -4,6 +4,32 @@ import { useAccessibility } from '../context/AccessibilityContext';
 import { recordQuizResult } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
+import {
+  Wrench,
+  Layers,
+  Compass,
+  Disc,
+  Camera,
+  BookOpen,
+  ShieldCheck,
+  Target,
+  Zap,
+  Volume2,
+  Square,
+  Search,
+  ArrowRight,
+  Cog,
+  FileText,
+  AlertTriangle,
+  Calculator,
+  FileSpreadsheet,
+  Glasses,
+  ShieldAlert,
+  Sliders,
+  X,
+  CheckCircle2
+} from 'lucide-react';
+
 
 // =============================================================================
 // DATABASE 7 BENTUK PROFIL PENAMPANG KIKIR BENGKEL (HAND FILES STANDAR SMK)
@@ -15,7 +41,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Flat File / Hand File',
     penampang: 'Persegi Panjang Rata (Kedua muka sejajar, tebal sedikit menirus di ujung)',
     simbol: '▬',
-    icon: '🟦',
+    
     fotoReal: '/assets/images/perkakas/kikir_plat_real.jpg',
     fungsi: 'Meratakan dan mensejajarkan permukaan bidang datar luar, membuat sudut siku 90°, meratakan bekas potongan gergaji, dan pengerjaan pasak luar.',
     fiturKhusus: 'Memiliki "Safe Edge" (satu sisi tepi sempit polos licin tanpa gigi) untuk mengikir bidang datar yang berbatasan dengan dinding tegak 90° tanpa mengikis atau merusak dinding tersebut.',
@@ -29,7 +55,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Triangular File / Three-Square File',
     penampang: 'Segitiga Sama Sisi (Sudut baji 60° pada ketiga rusuknya)',
     simbol: '▲',
-    icon: '🔺',
+    
     fotoReal: '/assets/images/perkakas/kikir_segitiga_real.jpg',
     fungsi: 'Membersihkan alur bersudut V, meratakan sudut dalam lancip lebih dari 60°, meratakan sudut tajam 90°, dan mengasah menajamkan gigi gergaji manual.',
     fiturKhusus: 'Ketiga sisinya memiliki alur gigi pemotong presisi; rusuk sudutnya tajam untuk mencapai pojok celah sudut mati yang sempit.',
@@ -43,7 +69,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Round File / Rat-Tail File',
     penampang: 'Lingkaran Bundar Silindris (Menirus mengecil ke arah ujung bilah)',
     simbol: '●',
-    icon: '⚪',
+    
     fotoReal: '/assets/images/perkakas/kikir_bulat_real.jpg',
     fungsi: 'Memperbesar diameter lubang silindris hasil pengeboran, menghaluskan alur cekung sempit, dan membentuk fillet radius dalam.',
     fiturKhusus: 'Ujung yang melancip tirus memungkinkan kikir masuk ke lubang berdiameter kecil sebelum diperbesar bertahap ke diameter pangkalnya.',
@@ -57,7 +83,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Half-Round File',
     penampang: 'Kombinasi (Satu muka datar rata dan satu muka melengkung cembung / kubah)',
     simbol: '◗',
-    icon: '🌓',
+    
     fotoReal: '/assets/images/perkakas/kikir_setengah_bulat_real.jpg',
     fungsi: 'Perkakas paling serbaguna di bengkel kerja bangku: muka datar untuk meratakan bidang datar, muka cembung untuk bidang cekung radius dalam.',
     fiturKhusus: 'Dua fungsi dalam satu alat; muka cembung mencegah kikir terjepit saat mengikis permukaan busur radius dalam yang besar.',
@@ -85,7 +111,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Knife File',
     penampang: 'Bilah Pisau Baji Lancip (Sudut lancip sangat sempit < 30°)',
     simbol: '◣',
-    icon: '🔪',
+    
     fotoReal: '/assets/images/perkakas/kikir_pisau_real.jpg',
     fungsi: 'Mengerjakan celah alur yang sangat sempit, sudut baji lancip kurang dari 60°, dan gigi presisi roda gigi mikro.',
     fiturKhusus: 'Punggung kikir tebal untuk kekuatan struktural kaku, sedangkan tepi bawahnya sangat tipis tajam mirip bilah pisau.',
@@ -99,7 +125,7 @@ export const KIKIR_PROFILES = [
     namaEng: 'Wood & Soft Metal Rasp Cut File',
     penampang: 'Setengah Bulat / Datar dengan Gigi Prisma Menonjol Bebas',
     simbol: '▥',
-    icon: '🪵',
+    
     fotoReal: '/assets/images/perkakas/kikir_parut_real.jpg',
     fungsi: 'Pengikisan awal material lunak non-ferrous, kayu keras, dan non-logam tanpa menyebabkan gigi kikir tersumbat (anti-clogging).',
     fiturKhusus: 'Gigi pemotong bukan berupa alur garis menerus, melainkan tonjolan prisma tajam individual yang terpisah satu sama lain.',
@@ -1316,7 +1342,7 @@ const CuttingToolsLab = ({
       addMissionCompleted('mission-cutting-tools');
       sound.playSuccess?.();
       setXpClaimed(true);
-      alert('🎉 Selamat! Anda memperoleh 1000 XP atas penguasaan modul Ensiklopedia Perkakas Bengkel (Perkakas Manual & Bertenaga)!');
+      alert('Selamat! Anda memperoleh 1000 XP atas penguasaan modul Ensiklopedia Perkakas Bengkel (Perkakas Manual & Bertenaga)!');
     }
   };
 
@@ -1351,7 +1377,7 @@ const CuttingToolsLab = ({
             border: '1px solid #334155'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '1.8rem' }}>🔪</span>
+              <Wrench size={28} color="#0284c7" />
               <div>
                 <div style={{ fontWeight: 800, fontSize: '0.94rem', color: '#ffffff' }}>
                   Mencari Alat Potong Mesin (Bubut, Frais, Insert Karbida, Bor/Tap/Snei)?
@@ -1380,7 +1406,7 @@ const CuttingToolsLab = ({
                     gap: '5px'
                   }}
                 >
-                  <span>🌀</span> Pisau Frais (8 Real)
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Layers size={14} /> Pisau Frais (8 Real)</span>
                 </button>
               )}
               {onNavigateToLatheTools && (
@@ -1400,7 +1426,7 @@ const CuttingToolsLab = ({
                     gap: '5px'
                   }}
                 >
-                  <span>🪓</span> Pahat Bubut (6 Real)
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Wrench size={14} /> Pahat Bubut (6 Real)</span>
                 </button>
               )}
               {onNavigateToCarbideTools && (
@@ -1420,7 +1446,7 @@ const CuttingToolsLab = ({
                     gap: '5px'
                   }}
                 >
-                  <span>📐</span> 7 Insert Karbida
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Compass size={14} /> 7 Insert Karbida</span>
                 </button>
               )}
               {onNavigateToHoleTools && (
@@ -1440,7 +1466,7 @@ const CuttingToolsLab = ({
                     gap: '5px'
                   }}
                 >
-                  <span>🔩</span> Bor, Tap &amp; Snei
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Disc size={14} /> Bor, Tap &amp; Snei</span>
                 </button>
               )}
             </div>
@@ -1474,7 +1500,7 @@ const CuttingToolsLab = ({
             boxShadow: '0 4px 14px rgba(234, 88, 12, 0.25)',
             color: '#fff'
           }}>
-            🛠️
+            
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
@@ -1503,10 +1529,10 @@ const CuttingToolsLab = ({
         {/* Tab Navigasi Utama */}
         <div className="cutting-tools-tabs" style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '10px', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
           {[
-            { id: 'katalog', label: '📸 1. Visual & Foto Asli', icon: '🔍' },
-            { id: 'materi', label: '📖 2. Teori & SOP Perkakas', icon: '📐' },
-            { id: 'safety', label: '🛡️ 3. Standar K3', icon: '🛡️' },
-            { id: 'quiz', label: '🎯 4. Kuis Asesmen (1000 XP)', icon: '🏆' }
+            { id: 'katalog', label: '1. Visual & Foto Asli', Icon: Camera },
+            { id: 'materi', label: '2. Teori & SOP Perkakas', Icon: BookOpen },
+            { id: 'safety', label: '3. Standar K3', Icon: ShieldCheck },
+            { id: 'quiz', label: '4. Kuis Asesmen (1000 XP)', Icon: Target }
           ].map(tab => {
             const isActive = labTab === tab.id;
             return (
@@ -1557,7 +1583,7 @@ const CuttingToolsLab = ({
               }}
               title="Mulai Tes Diagnostik Perkakas Bengkel (10 Soal Pilgan)"
             >
-              <span>📋</span>
+              
               <span>Tes Diagnostik Perkakas</span>
             </button>
           )}
@@ -1604,7 +1630,7 @@ const CuttingToolsLab = ({
                     textAlign: 'center'
                   }}
                 >
-                  🌟 Semua ({CUTTING_TOOLS_DATA.length})
+                  Semua ({CUTTING_TOOLS_DATA.length})
                 </button>
 
                 <button
@@ -1625,7 +1651,7 @@ const CuttingToolsLab = ({
                     textAlign: 'center'
                   }}
                 >
-                  🔨 Manual ({manualToolsCount})
+                  Manual ({manualToolsCount})
                 </button>
 
                 <button
@@ -1646,7 +1672,7 @@ const CuttingToolsLab = ({
                     textAlign: 'center'
                   }}
                 >
-                  ⚡ Tenaga ({powerToolsCount})
+                  Tenaga ({powerToolsCount})
                 </button>
               </div>
             </div>
@@ -1710,7 +1736,7 @@ const CuttingToolsLab = ({
                           padding: '1px 5px',
                           borderRadius: '4px'
                         }}>
-                          {isManual ? '🔨 MANUAL' : '⚡ DAYA'}
+                          {isManual ? 'MANUAL' : 'DAYA'}
                         </span>
                         {t.id === 'kikir-bengkel' && (
                           <span style={{ background: '#dcfce7', color: '#15803d', fontSize: '0.6rem', fontWeight: 800, padding: '1px 4px', borderRadius: '4px' }}>
@@ -1769,7 +1795,7 @@ const CuttingToolsLab = ({
                       borderRadius: '5px',
                       textTransform: 'uppercase'
                     }}>
-                      {currentTool.kategoriType === 'manual' ? '🔨 MANUAL' : '⚡ BERTENAGA'}
+                      {currentTool.kategoriType === 'manual' ? 'MANUAL' : 'BERTENAGA'}
                     </span>
                     <span style={{
                       background: '#f1f5f9',
@@ -1813,7 +1839,7 @@ const CuttingToolsLab = ({
                     }}
                     title="Buka rincian materi teori, SOP, spesifikasi & K3 alat ini"
                   >
-                    <span>📖 Buka Teori & SOP Lengkap</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><BookOpen size={14} /> Buka Teori & SOP Lengkap</span>
                   </button>
 
                   <button
@@ -1834,7 +1860,7 @@ const CuttingToolsLab = ({
                     }}
                     title="Dengarkan penjelasan audio narator"
                   >
-                    <span style={{ fontSize: '1rem' }}>{isSpeaking ? '⏹️' : '🔊'}</span>
+                    <span>{isSpeaking ? <Square size={13} fill="currentColor" /> : <Volume2 size={13} />}</span>
                     <span>{isSpeaking ? 'Hentikan' : 'Audio SOP'}</span>
                   </button>
                 </div>
@@ -1855,7 +1881,7 @@ const CuttingToolsLab = ({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                 <div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                    📸 Foto Asli Nyata Bengkel & Anatomi Komponen
+                    Foto Asli Nyata Bengkel & Anatomi Komponen
                   </h3>
                   <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
                     {currentTool.images[selectedImageIndex]?.title || currentTool.images[0]?.title}
@@ -1876,7 +1902,7 @@ const CuttingToolsLab = ({
                       cursor: 'pointer'
                     }}
                   >
-                    {showAllPins ? '✓ Pin Tampil' : 'Sembunyikan Pin'}
+                    {showAllPins ? '[OK] Pin Tampil' : 'Sembunyikan Pin'}
                   </button>
 
                   <button
@@ -1892,7 +1918,7 @@ const CuttingToolsLab = ({
                       cursor: 'pointer'
                     }}
                   >
-                    🔍 Zoom Ukuran Penuh
+                    Zoom Ukuran Penuh
                   </button>
                 </div>
               </div>
@@ -1909,7 +1935,7 @@ const CuttingToolsLab = ({
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
                     <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0369a1', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span>🗜️</span> Pilih Bentuk Penampang Kikir (Klik untuk langsung melihat foto aslinya):
+                      Pilih Bentuk Penampang Kikir (Klik untuk langsung melihat foto aslinya):
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#0284c7', fontWeight: 700 }}>
                       Foto Aktif: <strong>{currentTool.images[selectedImageIndex]?.title || 'Kikir Plat Rata'}</strong>
@@ -1918,13 +1944,13 @@ const CuttingToolsLab = ({
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {[
-                      { id: 'plat', label: 'Flat (Plat Rata)', icon: '🔲' },
-                      { id: 'bulat', label: 'Bulat (Round / Ekor Tikus)', icon: '⭕' },
-                      { id: 'segitiga', label: 'Segitiga (Triangular)', icon: '🔺' },
-                      { id: 'setengah-bulat', label: 'Setengah Bulat (Half-Round)', icon: '🌓' },
-                      { id: 'segi-empat', label: 'Segi Empat (Square)', icon: '⬛' },
-                      { id: 'pisau', label: 'Pisau (Knife)', icon: '🔪' },
-                      { id: 'parut', label: 'Parut (Rasp)', icon: '🪵' }
+                      { id: 'plat', label: 'Flat (Plat Rata)' },
+                      { id: 'bulat', label: 'Bulat (Round / Ekor Tikus)' },
+                      { id: 'segitiga', label: 'Segitiga (Triangular)' },
+                      { id: 'setengah-bulat', label: 'Setengah Bulat (Half-Round)' },
+                      { id: 'segi-empat', label: 'Segi Empat (Square)' },
+                      { id: 'pisau', label: 'Pisau (Knife)' },
+                      { id: 'parut', label: 'Parut (Rasp)' }
                     ].map((shape) => {
                       const isSelected = activeKikirProfileId === shape.id;
                       return (
@@ -1957,7 +1983,7 @@ const CuttingToolsLab = ({
                               padding: '1px 5px',
                               borderRadius: '4px'
                             }}>
-                              ✓ AKTIF
+                              [AKTIF]
                             </span>
                           )}
                         </button>
@@ -1979,7 +2005,7 @@ const CuttingToolsLab = ({
                     gap: '8px'
                   }}>
                     <span>
-                      💡 <strong>Fungsi {activeKikirProfile.nama.split(' (')[0]}:</strong> {activeKikirProfile.fungsi}
+                      <strong>[FUNGSI] Fungsi {activeKikirProfile.nama.split(' (')[0]}:</strong> {activeKikirProfile.fungsi}
                     </span>
                     <button
                       onClick={() => handleNarrationKikirProfile(activeKikirProfile)}
@@ -1997,7 +2023,7 @@ const CuttingToolsLab = ({
                         gap: '4px'
                       }}
                     >
-                      <span>🔊</span> Narasi Profil
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Volume2 size={13} /> Narasi Profil</span>
                     </button>
                   </div>
                 </div>
@@ -2050,7 +2076,7 @@ const CuttingToolsLab = ({
                   border: '1px solid rgba(255,255,255,0.2)',
                   zIndex: 20
                 }}>
-                  <span>📸 FOTO ASLI NYATA:</span>
+                  <span>FOTO ASLI NYATA:</span>
                   <span style={{ color: '#fb923c' }}>
                     {currentTool.images[selectedImageIndex]?.title || currentTool.nama}
                   </span>
@@ -2165,7 +2191,7 @@ const CuttingToolsLab = ({
                             {komp.desc}
                           </p>
                           <div style={{ fontSize: '0.62rem', color: '#f97316', fontWeight: 700 }}>
-                            📍 {komp.lokasiFisik}
+                            {komp.lokasiFisik}
                           </div>
                         </div>
                       )}
@@ -2188,7 +2214,7 @@ const CuttingToolsLab = ({
                   alignItems: 'center'
                 }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
-                    📸 Galeri Foto & Bagan:
+                    Galeri Foto & Bagan:
                   </span>
                   {currentTool.images.map((img, imgIdx) => {
                     const isImgActive = selectedImageIndex === imgIdx;
@@ -2218,7 +2244,7 @@ const CuttingToolsLab = ({
                           transition: 'all 0.15s ease'
                         }}
                       >
-                        <span>{img.url.endsWith('.svg') ? '📐' : '📸'}</span>
+                        <span>{img.url.endsWith('.svg') ? <Compass size={13} /> : <Camera size={13} />}</span>
                         <span>{img.title.split(' (')[0]}</span>
                       </button>
                     );
@@ -2262,8 +2288,8 @@ const CuttingToolsLab = ({
                     boxShadow: '0 2px 8px rgba(2, 132, 199, 0.25)'
                   }}
                 >
-                  <span>📖 Buka Teori & SOP Lengkap</span>
-                  <span>➔</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><BookOpen size={14} /> Buka Teori & SOP Lengkap</span>
+                  <ArrowRight size={14} />
                 </button>
               </div>
 
@@ -2289,7 +2315,7 @@ const CuttingToolsLab = ({
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.6rem' }}>🛠️</span>
+                <Wrench size={24} color="#0284c7" />
                 <div>
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#c2410c', margin: 0 }}>
                     Rincian Teori & SOP: {currentTool.nama}
@@ -2319,7 +2345,7 @@ const CuttingToolsLab = ({
                   gap: '6px'
                 }}
               >
-                <span>📸</span>
+                <Camera size={14} />
                 <span>Kembali ke Visual Foto</span>
               </button>
             </div>
@@ -2327,13 +2353,13 @@ const CuttingToolsLab = ({
             {/* Deskripsi & Prinsip Mekanika */}
             <div style={{ marginBottom: '18px', padding: '14px', background: '#f8fafc', borderRadius: '8px', borderLeft: '4px solid #ea580c', fontSize: '0.82rem', color: '#334155', lineHeight: 1.6 }}>
               <p style={{ margin: '0 0 8px 0' }}>{currentTool.deskripsiLengkap || currentTool.deskripsiSingkat}</p>
-              <div><strong style={{ color: '#0f172a' }}>⚙️ Prinsip Mekanika Kerja:</strong> {currentTool.prinsipKerja}</div>
+              <div><strong style={{ color: '#0f172a' }}>Prinsip Mekanika Kerja:</strong> {currentTool.prinsipKerja}</div>
             </div>
 
             {/* Komponen & Anatomi */}
             <div style={{ marginBottom: '18px' }}>
               <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
-                📍 Anatomi Komponen Kunci ({currentTool.komponen.length} Bagian):
+                Anatomi Komponen Kunci ({currentTool.komponen.length} Bagian):
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '8px' }}>
                 {currentTool.komponen.map((k, idx) => (
@@ -2372,7 +2398,7 @@ const CuttingToolsLab = ({
             {/* Spesifikasi Parameter Teknis */}
             <div style={{ marginBottom: '18px' }}>
               <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '10px' }}>
-                📋 Spesifikasi Parameter Teknis Standar:
+                Spesifikasi Parameter Teknis Standar:
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
                 {currentTool.spesifikasi.map((spec, sIdx) => (
@@ -2394,7 +2420,7 @@ const CuttingToolsLab = ({
               {/* Box SOP */}
               <div style={{ background: '#f0f9ff', borderRadius: '10px', border: '1px solid #bae6fd', padding: '16px' }}>
                 <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#0369a1', marginBottom: '10px' }}>
-                  🔧 Standar Operasional Prosedur (SOP)
+                  Standar Operasional Prosedur (SOP)
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {currentTool.sopKerja.map((sop, sopIdx) => (
@@ -2423,12 +2449,12 @@ const CuttingToolsLab = ({
               {/* Box K3 */}
               <div style={{ background: '#fff7ed', borderRadius: '10px', border: '1px solid #fed7aa', padding: '16px' }}>
                 <div style={{ fontSize: '0.88rem', fontWeight: 900, color: '#c2410c', marginBottom: '10px' }}>
-                  🛡️ Aturan Keselamatan Kerja (K3)
+                  Aturan Keselamatan Kerja (K3)
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {currentTool.k3Penting.map((k3, k3Idx) => (
                     <div key={k3Idx} style={{ display: 'flex', gap: '8px', fontSize: '0.76rem', color: '#7c2d12', lineHeight: 1.5 }}>
-                      <span style={{ fontSize: '0.85rem', flexShrink: 0 }}>⚠️</span>
+                      <AlertTriangle size={15} color="#f59e0b" style={{ flexShrink: 0 }} />
                       <span>{k3}</span>
                     </div>
                   ))}
@@ -2460,7 +2486,7 @@ const CuttingToolsLab = ({
           {/* Header Teori */}
           <div style={{ background: '#ffffff', padding: '18px 20px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', margin: '0 0 6px 0' }}>
-              📐 Teori Standarisasi Perkakas Bengkel & Parameter Pemotongan Logam
+              Teori Standarisasi Perkakas Bengkel & Parameter Pemotongan Logam
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#64748b', margin: 0 }}>
               Kompilasi materi kompetensi kejuruan SMK Teknik Pemesinan: Klasifikasi Kikir 7 Profil, Kekasaran Bastard-Smooth, Pola Sayat Gigi, Rumus Kecepatan Potong (Cs) & RPM Bor, Tabel Tap Drill Size, dan Aturan TPI Gergaji.
@@ -2476,7 +2502,7 @@ const CuttingToolsLab = ({
             boxShadow: '0 4px 16px rgba(2, 132, 199, 0.08)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-              <span style={{ fontSize: '1.6rem' }}>📘</span>
+              <BookOpen size={24} color="#0284c7" />
               <div>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0369a1', margin: 0 }}>
                   1. Klasifikasi Standar Kikir Bengkel (7 Bentuk Penampang, Tingkat Kasar, & Pola Sayat)
@@ -2525,7 +2551,7 @@ const CuttingToolsLab = ({
               {/* Box 1: Tingkat Kekasaran Gigi */}
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  📊 4 Tingkat Kekasaran Gigi Kikir
+                  4 Tingkat Kekasaran Gigi Kikir
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.72rem' }}>
                   <div style={{ padding: '6px 8px', background: '#fff', borderRadius: '5px', borderLeft: '3px solid #ef4444' }}>
@@ -2546,7 +2572,7 @@ const CuttingToolsLab = ({
               {/* Box 2: Pola Guratan Gigi */}
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  🔪 Pola Guratan Gigi Kikir
+                  Pola Guratan Gigi Kikir
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.73rem', color: '#475569' }}>
                   <div style={{ background: '#fff', padding: '8px', borderRadius: '5px', border: '1px solid #e2e8f0' }}>
@@ -2563,7 +2589,7 @@ const CuttingToolsLab = ({
               {/* Box 3: SOP Kuda-Kuda & Perawatan */}
               <div style={{ background: '#f8fafc', padding: '14px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  🦶 Kuda-Kuda & Perawatan Kikir
+                  Kuda-Kuda & Perawatan Kikir
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.72rem', color: '#334155' }}>
                   <div>• <strong>Posisi Kaki:</strong> Kaki kiri maju 30°, kaki kanan belakang 75°, tubuh rileks condong 10° ke depan.</div>
@@ -2587,7 +2613,7 @@ const CuttingToolsLab = ({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
               <div>
                 <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: '#c2410c', margin: 0 }}>
-                  🔢 2. Kalkulator Putaran Spindel Bor (N = (1000 × Cs) / (π × d))
+                  2. Kalkulator Putaran Spindel Bor (N = (1000 × Cs) / (π × d))
                 </h3>
                 <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '2px 0 0 0' }}>
                   Hitung RPM ideal mata bor HSS pada mesin bor bangku untuk mencegah mata bor gosong atau tumpul
@@ -2665,7 +2691,7 @@ const CuttingToolsLab = ({
             {/* Tabel Ukuran Bor Tap Metrik */}
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0284c7', margin: '0 0 10px 0' }}>
-                🔩 3. Tabel Tap Drill Size (Standar ISO Metrik)
+                3. Tabel Tap Drill Size (Standar ISO Metrik)
               </h3>
               <p style={{ fontSize: '0.72rem', color: '#64748b', margin: '0 0 10px 0' }}>
                 Rumus Baku: <strong>D_bor = D_nominal - Pitch</strong>
@@ -2703,7 +2729,7 @@ const CuttingToolsLab = ({
             {/* Aturan Pemilihan TPI Gergaji Besi */}
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ea580c', margin: '0 0 10px 0' }}>
-                🪚 4. Panduan Pemilihan TPI Bilah Gergaji Besi
+                4. Panduan Pemilihan TPI Bilah Gergaji Besi
               </h3>
               <p style={{ fontSize: '0.72rem', color: '#64748b', margin: '0 0 10px 0' }}>
                 TPI = Teeth Per Inch (Aturan Emas: Minimal 3 gigi kontak simultan).
@@ -2746,7 +2772,7 @@ const CuttingToolsLab = ({
             boxShadow: '0 2px 10px rgba(239, 68, 68, 0.04)'
           }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#dc2626', margin: '0 0 6px 0' }}>
-              🛡️ Keselamatan dan Kesehatan Kerja (K3) Perkakas Bengkel & Pemotongan Logam
+              Keselamatan dan Kesehatan Kerja (K3) Perkakas Bengkel & Pemotongan Logam
             </h2>
             <p style={{ fontSize: '0.8rem', color: '#991b1b', margin: 0, lineHeight: 1.5 }}>
               Perkakas tangan manual yang salah digunakan dapat menusuk telapak tangan (ekor kikir tanpa gagang) atau mementalkan serpihan peluru (kepala jamur pahat). Sementara mesin bertenaga menyimpan putaran puluhan ribu RPM dan gaya potong puluhan ton. Kepatuhan K3 adalah harga mati bagi setiap teknisi dan siswa teknik mesin.
@@ -2756,7 +2782,7 @@ const CuttingToolsLab = ({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
             
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🥽</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><Glasses size={32} color="#0284c7" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
                 1. Pelindung Mata & Wajah (ANSI Z87.1)
               </h3>
@@ -2766,7 +2792,7 @@ const CuttingToolsLab = ({
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🚫🧤</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><ShieldAlert size={32} color="#ef4444" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#dc2626', margin: '0 0 6px 0' }}>
                 2. Larangan Sarung Tangan Kain pada Mesin Putar
               </h3>
@@ -2776,7 +2802,7 @@ const CuttingToolsLab = ({
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🗜️</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><Wrench size={32} color="#0284c7" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
                 3. Pencekaman Benda Kerja Mutlak dengan Ragum
               </h3>
@@ -2786,7 +2812,7 @@ const CuttingToolsLab = ({
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>⚠️🔪</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><AlertTriangle size={32} color="#f59e0b" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ea580c', margin: '0 0 6px 0' }}>
                 4. Kikir Wajib Bergagang (Dilarang Ekor Telanjang)
               </h3>
@@ -2796,7 +2822,7 @@ const CuttingToolsLab = ({
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🍄💥</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><ShieldAlert size={32} color="#ef4444" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#dc2626', margin: '0 0 6px 0' }}>
                 5. Bahaya Kepala Jamur Pahat (Mushroomed Head)
               </h3>
@@ -2806,7 +2832,7 @@ const CuttingToolsLab = ({
             </div>
 
             <div style={{ background: '#ffffff', padding: '18px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
-              <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>📏⚙️</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><Sliders size={32} color="#10b981" /></div>
               <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
                 6. Celah Landasan Gerinda Duduk Maksimal 2-3 mm
               </h3>
@@ -2841,7 +2867,7 @@ const CuttingToolsLab = ({
           }}>
             <div>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>
-                🎯 Kuis Evaluasi Pemahaman Perkakas Bengkel (10 Soal • 1000 XP)
+                Kuis Evaluasi Pemahaman Perkakas Bengkel (10 Soal • 1000 XP)
               </h2>
               <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>
                 Uji penguasaan Anda seputar kikir 7 profil, gergaji tangan hacksaw, pahat dingin, ragum meja, bor bangku, dan K3 bengkel mesin.
@@ -2871,7 +2897,7 @@ const CuttingToolsLab = ({
                     boxShadow: '0 4px 10px rgba(16, 185, 129, 0.3)'
                   }}
                 >
-                  {xpClaimed ? '✓ 1000 XP Telah Diklaim' : 'Klaim 1000 XP Sekarang'}
+                  {xpClaimed ? '[OK] 1000 XP Telah Diklaim' : 'Klaim 1000 XP Sekarang'}
                 </button>
               </div>
             )}
@@ -2944,7 +2970,7 @@ const CuttingToolsLab = ({
 
                 {quizSubmitted && (
                   <div style={{ marginTop: '12px', background: '#f0f9ff', padding: '10px 14px', borderRadius: '6px', fontSize: '0.74rem', color: '#334155', borderLeft: '4px solid #0284c7' }}>
-                    <strong style={{ color: '#0284c7' }}>💡 Pembahasan:</strong> {q.explanation}
+                    <strong style={{ color: '#0284c7' }}>[PEMBAHASAN] Pembahasan:</strong> {q.explanation}
                   </div>
                 )}
               </div>
@@ -3025,7 +3051,7 @@ const CuttingToolsLab = ({
                 justifyContent: 'center'
               }}
             >
-              ✕
+              <X size={20} />
             </button>
             
             <img

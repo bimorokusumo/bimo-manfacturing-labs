@@ -28,6 +28,7 @@ import { StudentProvider, useStudent } from './context/StudentContext';
 import AccessibilityModal from './components/AccessibilityModal';
 import AccessibilityFloatingWidget from './components/AccessibilityFloatingWidget';
 import LiveCaptionsOverlay from './components/LiveCaptionsOverlay';
+import { Lock, LogIn } from 'lucide-react';
 
 function AppInner() {
   const { isLoggedIn, openLoginModal, isTeacher } = useStudent();
@@ -355,7 +356,9 @@ function AppInner() {
               boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🔒</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                <Lock size={48} style={{ color: '#dc2626' }} />
+              </div>
               <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#991b1b', marginBottom: '12px' }}>
                 Akses Terbatas: Khusus Pengajar
               </h2>
@@ -388,10 +391,14 @@ function AppInner() {
                     border: 'none',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    fontSize: '0.9rem'
+                    fontSize: '0.9rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
                   }}
                 >
-                  🔑 Login Akun Guru
+                  <LogIn size={16} />
+                  <span>Login Akun Guru</span>
                 </button>
               </div>
             </div>

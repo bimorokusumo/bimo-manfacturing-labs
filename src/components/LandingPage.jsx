@@ -1,5 +1,19 @@
 import React from 'react';
 import { useStudent } from '../context/StudentContext';
+import {
+  User,
+  LogOut,
+  LogIn,
+  BarChart3,
+  ExternalLink,
+  Cpu,
+  Boxes,
+  Factory,
+  Disc,
+  Layers,
+  Monitor,
+  ShieldCheck
+} from 'lucide-react';
 
 const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => {
   const { student, isLoggedIn, openLoginModal, logout, isTeacher } = useStudent();
@@ -147,7 +161,8 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
                 }}
                 title="Klik untuk Edit Identitas / Ganti Siswa"
               >
-                <span>👤 {student.name} (Absen: {student.studentNumber})</span>
+                <User size={14} />
+                <span>{student.name} (Absen: {student.studentNumber})</span>
               </button>
               <button
                 onClick={() => {
@@ -171,7 +186,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
                 }}
                 title="Keluar / Logout Akun"
               >
-                <span>🚪</span>
+                <LogOut size={14} />
                 <span>Logout</span>
               </button>
             </div>
@@ -194,7 +209,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
                 gap: '6px'
               }}
             >
-              <span>🔑</span>
+              <LogIn size={15} />
               <span>Masuk / Login</span>
             </button>
           )}
@@ -222,7 +237,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
                 onMouseUp={(e) => e.target.style.transform = 'scale(1)'}
                 title="Buka Lembar Rekap Spreadsheet Nilai Siswa (Khusus Pengajar)"
               >
-                <span>📊</span>
+                <BarChart3 size={15} />
                 <span>Rekap Lab</span>
               </button>
 
@@ -247,7 +262,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
                 }}
                 title="Buka Langsung Google Spreadsheet Nilai Siswa di Tab Baru"
               >
-                <span>↗️</span>
+                <ExternalLink size={15} />
                 <span>Buka Google Sheets</span>
               </a>
             </>
@@ -294,7 +309,9 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
           
           {/* Badge */}
           <div style={{ 
-            display: 'inline-block', 
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
             padding: '8px 16px', 
             background: 'rgba(245, 158, 11, 0.15)', 
             border: '1px solid rgba(245, 158, 11, 0.3)', 
@@ -306,7 +323,8 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
             marginBottom: '24px',
             backdropFilter: 'blur(5px)'
           }}>
-            🌟 PLATFORM EDUKASI INDUSTRI 4.0
+            <Cpu size={15} />
+            <span>PLATFORM EDUKASI INDUSTRI 4.0</span>
           </div>
 
           <h1 style={{ 
@@ -375,7 +393,7 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
               alignItems: 'center',
               gap: '6px'
             }}>
-              <span>🎮</span>
+              <Boxes size={15} />
               <span>Akses Cepat Simulator 3D:</span>
             </div>
 
@@ -385,53 +403,56 @@ const LandingPage = ({ onStart, onSelectLab, onOpenGradebook, onOpenLogin }) => 
               gap: '10px'
             }}>
               {[
-                { id: 'virtual-bengkel', title: 'Virtual Bengkel 3D', icon: '🏭', color: '#f59e0b' },
-                { id: 'machine-lathe', title: 'Mesin Bubut 3D', icon: '⚙️', color: '#3b82f6' },
-                { id: 'machine-milling', title: 'Mesin Frais 3D', icon: '🌀', color: '#10b981' },
-                { id: 'machine-cnc', title: 'Mesin CNC 3D', icon: '💻', color: '#06b6d4' },
-                { id: 'safety', title: 'Operator Visual K3', icon: '🛡️', color: '#ea580c' },
-              ].map(card => (
-                <button
-                  key={card.id}
-                  onClick={() => {
-                    if (typeof onSelectLab === 'function') {
-                      onSelectLab(card.id);
-                    } else if (typeof onStart === 'function') {
-                      onStart(card.id);
-                    }
-                  }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '10px 14px',
-                    borderRadius: '10px',
-                    background: 'rgba(15, 23, 42, 0.85)',
-                    border: `1px solid ${card.color}55`,
-                    color: '#f8fafc',
-                    cursor: 'pointer',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    backdropFilter: 'blur(8px)',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    textAlign: 'left'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = card.color;
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.background = 'rgba(30, 41, 59, 0.95)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${card.color}55`;
-                    e.currentTarget.style.transform = 'translateY(0px)';
-                    e.currentTarget.style.background = 'rgba(15, 23, 42, 0.85)';
-                  }}
-                >
-                  <span style={{ fontSize: '1.2rem' }}>{card.icon}</span>
-                  <span style={{ lineHeight: 1.2 }}>{card.title}</span>
-                </button>
-              ))}
+                { id: 'virtual-bengkel', title: 'Virtual Bengkel 3D', icon: Factory, color: '#f59e0b' },
+                { id: 'machine-lathe', title: 'Mesin Bubut 3D', icon: Disc, color: '#3b82f6' },
+                { id: 'machine-milling', title: 'Mesin Frais 3D', icon: Layers, color: '#10b981' },
+                { id: 'machine-cnc', title: 'Mesin CNC 3D', icon: Monitor, color: '#06b6d4' },
+                { id: 'safety', title: 'Operator Visual K3', icon: ShieldCheck, color: '#ea580c' },
+              ].map(card => {
+                const CardIcon = card.icon;
+                return (
+                  <button
+                    key={card.id}
+                    onClick={() => {
+                      if (typeof onSelectLab === 'function') {
+                        onSelectLab(card.id);
+                      } else if (typeof onStart === 'function') {
+                        onStart(card.id);
+                      }
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 14px',
+                      borderRadius: '10px',
+                      background: 'rgba(15, 23, 42, 0.85)',
+                      border: `1px solid ${card.color}55`,
+                      color: '#f8fafc',
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      backdropFilter: 'blur(8px)',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                      textAlign: 'left'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = card.color;
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.background = 'rgba(30, 41, 59, 0.95)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${card.color}55`;
+                      e.currentTarget.style.transform = 'translateY(0px)';
+                      e.currentTarget.style.background = 'rgba(15, 23, 42, 0.85)';
+                    }}
+                  >
+                    <CardIcon size={18} style={{ color: card.color, flexShrink: 0 }} />
+                    <span style={{ lineHeight: 1.2 }}>{card.title}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

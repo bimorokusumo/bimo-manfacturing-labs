@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useStudent } from '../context/StudentContext';
 import { sound } from '../utils/audio';
 import { MASTER_STUDENTS_LIST } from '../data/studentsData';
+import {
+  GraduationCap,
+  AlertTriangle,
+  ClipboardList,
+  Lightbulb,
+  BarChart3,
+  ArrowRight,
+  LogOut,
+  X
+} from 'lucide-react';
 
 const CLASS_OPTIONS = [
   'X TPM 1',
@@ -197,12 +207,24 @@ const StudentLoginModal = () => {
               }}
               title="Tutup"
             >
-              ✕
+              <X size={18} />
             </button>
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '2rem' }}>🎓</span>
+            <div style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '10px',
+              background: 'rgba(245, 158, 11, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#f59e0b',
+              flexShrink: 0
+            }}>
+              <GraduationCap size={26} />
+            </div>
             <div>
               <div
                 style={{
@@ -243,7 +265,7 @@ const StudentLoginModal = () => {
                 gap: '8px'
               }}
             >
-              <span>⚠️</span>
+              <AlertTriangle size={16} style={{ flexShrink: 0 }} />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -277,14 +299,15 @@ const StudentLoginModal = () => {
               transition: 'all 0.15s'
             }}
           >
-            <span style={{ fontSize: '1.1rem' }}>👨‍🏫</span>
+            <GraduationCap size={16} />
             <span>Masuk Cepat sebagai Pengajar (Pak Bimoro Kusumo)</span>
           </button>
 
           {/* PILIH CEPAT DARI DAFTAR SISWA RESMI KELAS X-TP.A */}
           <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '12px', border: '1.5px dashed #cbd5e1' }}>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 800, color: '#334155', marginBottom: '6px' }}>
-              📋 Pilih Cepat Nama Siswa (Kelas X-TP.A SMKN 2 Depok):
+            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 800, color: '#334155', marginBottom: '6px' }}>
+              <ClipboardList size={15} className="text-slate-600" />
+              <span>Pilih Cepat Nama Siswa (Kelas X-TP.A SMKN 2 Depok):</span>
             </label>
             <select
               onChange={handleSelectFromRoster}
@@ -308,8 +331,9 @@ const StudentLoginModal = () => {
                 </option>
               ))}
             </select>
-            <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px' }}>
-              💡 Memilih nama otomatis mengisi Nomor Absen, Kelas X-TP.A, dan Sekolah SMKN 2 Depok.
+            <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Lightbulb size={14} className="text-amber-500 shrink-0" />
+              <span>Memilih nama otomatis mengisi Nomor Absen, Kelas X-TP.A, dan Sekolah SMKN 2 Depok.</span>
             </div>
           </div>
 
@@ -475,7 +499,7 @@ const StudentLoginModal = () => {
                 boxShadow: '0 2px 8px rgba(245, 158, 11, 0.15)'
               }}
             >
-              <span style={{ fontSize: '1.3rem' }}>👨‍🏫</span>
+              <GraduationCap size={22} className="text-amber-700 shrink-0" />
               <span><strong>Akun Pengajar Terdeteksi:</strong> Akses penuh Rekap Spreadsheet & Monitoring Nilai Siswa akan dibuka untuk Anda!</span>
             </div>
           ) : (
@@ -492,7 +516,7 @@ const StudentLoginModal = () => {
                 gap: '8px'
               }}
             >
-              <span>📊</span>
+              <BarChart3 size={16} className="text-emerald-600 shrink-0" />
               <span>Nilai otomatis terekam ke Spreadsheet Guru secara real-time setiap kali Anda menyelesaikan kuis &amp; simulasi.</span>
             </div>
           )}
@@ -519,7 +543,7 @@ const StudentLoginModal = () => {
             }}
           >
             <span>{isLoggedIn ? 'Simpan Identitas & Lanjut Praktik' : 'Masuk Laboratorium & Mulai Praktik'}</span>
-            <span>🚀</span>
+            <ArrowRight size={18} />
           </button>
 
           {/* TOMBOL LOGOUT JIKA SUDAH LOGIN */}
@@ -556,7 +580,7 @@ const StudentLoginModal = () => {
                 transition: 'all 0.2s'
               }}
             >
-              <span>🚪</span>
+              <LogOut size={16} />
               <span>Keluar / Logout Akun ({student.name})</span>
             </button>
           )}

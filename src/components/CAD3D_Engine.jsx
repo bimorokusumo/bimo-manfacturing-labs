@@ -1,3 +1,4 @@
+import { BarChart3, Download, Edit3, Box } from 'lucide-react';
 import React, { useMemo, useRef, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, Grid, ContactShadows } from '@react-three/drei';
@@ -659,7 +660,7 @@ const CAD3D_Engine = ({
         }}
       >
         <div style={{ color: '#38bdf8', fontWeight: 800, fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '6px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '4px' }}>
-          <span>📊</span> METROLOGI & FISIK (ISO)
+          <BarChart3 size={14} className="inline mr-1 text-sky-400" /> METROLOGI & FISIK (ISO)
         </div>
         <div>Material: <strong style={{ color: matProps.color }}>{matProps.name}</strong></div>
         <div>Volume: <strong style={{ color: '#ffffff' }}>{inspectionMetrics.volume} cm³</strong></div>
@@ -688,7 +689,7 @@ const CAD3D_Engine = ({
           onMouseOver={(e) => e.currentTarget.style.filter = 'brightness(1.15)'}
           onMouseOut={(e) => e.currentTarget.style.filter = 'none'}
         >
-          <span>📥</span> Export File STL (3D Print)
+          <Download size={14} className="inline mr-1 text-sky-400" /> Export File STL (3D Print)
         </button>
       </div>
 
@@ -714,7 +715,7 @@ const CAD3D_Engine = ({
           maxWidth: '460px',
           backdropFilter: 'blur(10px)'
         }}>
-          <div style={{ fontSize: '2.4rem' }}>📐 ➔ 🧊</div>
+          <div className="flex items-center justify-center gap-2 text-xl font-mono text-sky-400 font-bold" style={{ marginBottom: '8px' }}>[SKETCH 2D &rarr; MODEL 3D]</div>
           <div style={{ fontSize: '1.05rem', fontWeight: 900, color: '#f8fafc', letterSpacing: '0.3px' }}>
             Sketsa 2D Belum Dibuat
           </div>
@@ -726,25 +727,25 @@ const CAD3D_Engine = ({
               onClick={() => onLoadTemplate && onLoadTemplate('shaft')}
               style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #3b82f6', background: 'rgba(59, 130, 246, 0.2)', color: '#93c5fd', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}
             >
-              🪵 Poros Bubut 3D
+              [SHAFT] Poros Bubut 3D
             </button>
             <button
               onClick={() => onLoadTemplate && onLoadTemplate('flange')}
               style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #0284c7', background: 'rgba(2, 132, 199, 0.2)', color: '#7dd3fc', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}
             >
-              🔘 Flensa PCD 3D
+              [FLANGE] Flensa PCD 3D
             </button>
             <button
               onClick={() => onLoadTemplate && onLoadTemplate('milling')}
               style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #10b981', background: 'rgba(16, 185, 129, 0.2)', color: '#6ee7b7', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}
             >
-              🧱 Balok Frais 3D
+              [BLOCK] Balok Frais 3D
             </button>
             <button
               onClick={() => onLoadTemplate && onLoadTemplate('hex_nut')}
               style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #f59e0b', background: 'rgba(245, 158, 11, 0.2)', color: '#fde68a', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}
             >
-              🔩 Mur ISO 3D
+              [HEX-NUT] Mur ISO 3D
             </button>
           </div>
           <button
@@ -764,7 +765,7 @@ const CAD3D_Engine = ({
               gap: '6px'
             }}
           >
-            <span>✏️</span> Buka Editor Sketsa 2D Sekarang
+            <Edit3 size={14} className="inline mr-1" /> Buka Editor Sketsa 2D Sekarang
           </button>
         </div>
       )}

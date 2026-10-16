@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import { Accessibility, Play, Pause, Square } from 'lucide-react';
 
 const AccessibilityFloatingWidget = () => {
   const {
@@ -123,7 +124,7 @@ const AccessibilityFloatingWidget = () => {
         }}
         title="Buka Pengaturan Aksesibilitas & Inklusi"
       >
-        <span style={{ fontSize: '1.1rem' }}>♿</span>
+        <Accessibility size={16} className="text-amber-400" />
         <span className="a11y-widget-label">Aksesibilitas & Inklusi</span>
       </button>
 
@@ -176,7 +177,7 @@ const AccessibilityFloatingWidget = () => {
             }}
             title={isPaused ? 'Lanjut' : 'Jeda'}
           >
-            {isPaused ? '▶️' : '⏸️'}
+            {isPaused ? <Play size={10} fill="currentColor" /> : <Pause size={10} fill="currentColor" />}
           </button>
 
           <button
@@ -189,11 +190,15 @@ const AccessibilityFloatingWidget = () => {
               borderRadius: '20px',
               fontSize: '0.68rem',
               fontWeight: 700,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
             }}
             title="Hentikan Narasi"
           >
-            ⏹️ Stop
+            <Square size={9} fill="currentColor" />
+            <span>Stop</span>
           </button>
         </div>
       )}

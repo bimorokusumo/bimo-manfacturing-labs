@@ -1,3 +1,8 @@
+import {
+  CheckCircle2, AlertTriangle, Lightbulb, Save, Send,
+  Ruler, Wrench, Users, Clock, Award, Star, HelpCircle,
+  FileSpreadsheet, ShieldCheck
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -74,6 +79,17 @@ const AUDIT_CRITERIA = [
     maxScore: 10
   }
 ];
+
+
+const getBudayaTabIcon = (id) => {
+  switch (id) {
+    case 'prinsip_5r': return <ShieldCheck size={15} />;
+    case 'audit_5r': return <FileSpreadsheet size={15} />;
+    case 'etika_kerja': return <Users size={15} />;
+    case 'kuis_refleksi': return <HelpCircle size={15} />;
+    default: return <Award size={15} />;
+  }
+};
 
 export default function Budaya5REthicsModule() {
   const [activeTab, setActiveTab] = useState('prinsip_5r');
@@ -187,10 +203,10 @@ export default function Budaya5REthicsModule() {
       {/* SUB-NAV */}
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', background: '#f8fafc', padding: '6px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
         {[
-          { id: 'prinsip_5r', label: '📌 Prinsip Budaya Industri 5R / 5S', icon: '🧹' },
-          { id: 'audit_5r', label: '📋 Form Audit 5R Bengkel Mesin (DUDI)', icon: '📊' },
-          { id: 'etika_kerja', label: '⭐ Etika Kerja Profesional Teknisi', icon: '🤝' },
-          { id: 'kuis_refleksi', label: '❓ Kuis Refleksi 5R', icon: '❓' }
+          { id: 'prinsip_5r', label: 'Prinsip Budaya Industri 5R / 5S' },
+          { id: 'audit_5r', label: 'Form Audit 5R Bengkel Mesin (DUDI)' },
+          { id: 'etika_kerja', label: 'Etika Kerja Profesional Teknisi' },
+          { id: 'kuis_refleksi', label: 'Kuis Refleksi 5R' }
         ].map(tab => (
           <button
             key={tab.id}
@@ -210,7 +226,7 @@ export default function Budaya5REthicsModule() {
               transition: 'all 0.15s'
             }}
           >
-            <span>{tab.icon}</span>
+            <span>{getBudayaTabIcon(tab.id)}</span>
             <span>{tab.label}</span>
           </button>
         ))}
@@ -223,7 +239,7 @@ export default function Budaya5REthicsModule() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="dashboard-card" style={{ padding: '24px', background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '1.8rem', background: '#ffedd5', padding: '8px', borderRadius: '10px' }}>🇯🇵</span>
+              <span className="font-mono text-xs px-2.5 py-1.5 rounded-lg bg-orange-100 text-orange-800 font-bold tracking-wider border border-orange-200">KAIZEN / 5S</span>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
                   Penerapan Budaya Kerja Industri 5R (5S Toyota Production System)
@@ -245,7 +261,7 @@ export default function Budaya5REthicsModule() {
                   Memisahkan secara tegas antara barang yang <strong>diperlukan</strong> dan barang yang <strong>tidak diperlukan</strong>. Singkirkan benda kerja rusak, serpihan logam sisa, dan perkakas afkir dari workstation pemesinan.
                 </p>
                 <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#fff', border: '1px dashed #ef4444', fontSize: '0.75rem', color: '#7f1d1d' }}>
-                  💡 <strong>Metode Red Tag (Label Merah):</strong> Tempelkan kertas merah bertuliskan tanggal pada benda yang ragu-ragu. Jika dalam 30 hari tidak disentuh, segera pindahkan ke gudang rongsok (*scrap yard*).
+                  <Lightbulb size={14} className="inline mr-1 text-amber-500" /> <strong>Metode Red Tag (Label Merah):</strong> Tempelkan kertas merah bertuliskan tanggal pada benda yang ragu-ragu. Jika dalam 30 hari tidak disentuh, segera pindahkan ke gudang rongsok (*scrap yard*).
                 </div>
               </div>
 
@@ -259,7 +275,7 @@ export default function Budaya5REthicsModule() {
                   Menata barang-barang yang diperlukan agar mudah diambil, mudah digunakan, dan mudah dikembalikan ke tempat semula (*A place for everything and everything in its place*).
                 </p>
                 <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#fff', border: '1px dashed #f59e0b', fontSize: '0.75rem', color: '#78350f' }}>
-                  💡 <strong>Aturan 30 Detik &amp; Shadow Board:</strong> Setiap kikir, mistar baja, atau kunci pas harus dapat ditemukan dan dikembalikan dalam waktu kurang dari 30 detik berkat papan bayangan siluet alat.
+                  <Lightbulb size={14} className="inline mr-1 text-amber-500" /> <strong>Aturan 30 Detik &amp; Shadow Board:</strong> Setiap kikir, mistar baja, atau kunci pas harus dapat ditemukan dan dikembalikan dalam waktu kurang dari 30 detik berkat papan bayangan siluet alat.
                 </div>
               </div>
 
@@ -273,7 +289,7 @@ export default function Budaya5REthicsModule() {
                   Membersihkan lingkungan kerja, mesin, perkakas, dan lantai dari debu, tatal gram tajam, dan ceceran pelumas. <strong>Membersihkan adalah bentuk awal inspeksi mesin!</strong>
                 </p>
                 <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#fff', border: '1px dashed #10b981', fontSize: '0.75rem', color: '#064e3b' }}>
-                  💡 <strong>Makna Seiso:</strong> Saat menyapu eretan mesin bubut, mata teknisi mengamati apakah ada baut longgar, getaran tidak wajar, atau keausan parah pada permukaan eretan.
+                  <Lightbulb size={14} className="inline mr-1 text-amber-500" /> <strong>Makna Seiso:</strong> Saat menyapu eretan mesin bubut, mata teknisi mengamati apakah ada baut longgar, getaran tidak wajar, atau keausan parah pada permukaan eretan.
                 </div>
               </div>
 
@@ -287,7 +303,7 @@ export default function Budaya5REthicsModule() {
                   Mempertahankan dan menstandarkan kondisi Ringkas, Rapi, dan Resik yang telah dicapai melalui pembagian tugas harian, checklist kontrol visual, dan rambu warna lantai.
                 </p>
                 <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#fff', border: '1px dashed #0284c7', fontSize: '0.75rem', color: '#0c4a6e' }}>
-                  💡 <strong>Visual Management:</strong> Menggunakan garis batas demarkasi lantai (Kuning = area bahaya mesin, Hijau = jalur aman pejalan kaki, Merah = zona tabung APAR/panel).
+                  <Lightbulb size={14} className="inline mr-1 text-amber-500" /> <strong>Visual Management:</strong> Menggunakan garis batas demarkasi lantai (Kuning = area bahaya mesin, Hijau = jalur aman pejalan kaki, Merah = zona tabung APAR/panel).
                 </div>
               </div>
 
@@ -301,7 +317,7 @@ export default function Budaya5REthicsModule() {
                   Membangun kesadaran dan kebiasaan (*habit*) untuk mematuhi seluruh aturan kerja bengkel secara mandiri tanpa harus selalu disuruh atau diawasi instruktur.
                 </p>
                 <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#fff', border: '1px dashed #8b5cf6', fontSize: '0.75rem', color: '#4c1d95' }}>
-                  💡 <strong>Karakter Vokasi:</strong> Budaya memakai APD, menjaga ketertiban, hadir tepat waktu sebelum bel berbunyi, dan saling mengingatkan keselamatan kerja rekan satu tim.
+                  <Lightbulb size={14} className="inline mr-1 text-amber-500" /> <strong>Karakter Vokasi:</strong> Budaya memakai APD, menjaga ketertiban, hadir tepat waktu sebelum bel berbunyi, dan saling mengingatkan keselamatan kerja rekan satu tim.
                 </div>
               </div>
             </div>
@@ -404,8 +420,8 @@ export default function Budaya5REthicsModule() {
                 </div>
                 <div style={{ fontSize: '0.82rem', color: auditPercentage >= 90 ? '#15803d' : (auditPercentage >= 75 ? '#b45309' : '#b91c1c'), fontWeight: 700, marginTop: '2px' }}>
                   {auditPercentage >= 90
-                    ? '⭐ KELAS DUNIA (Memenuhi Standar Kerapian Astra Daihatsu & Toyota Tsusho)'
-                    : (auditPercentage >= 75 ? '✓ MEMADAI (Standar Bengkel Vokasi SMK Terakreditasi A)' : '⚠️ RAWAN (Banyak potensi kecelakaan kerja & waktu terbuang)')}
+                    ? '[STANDAR EMAS] KELAS DUNIA (Standar Industri Astra & Toyota Tsusho)'
+                    : (auditPercentage >= 75 ? '[MEMADAI] (Standar Bengkel Vokasi SMK Terakreditasi A)' : '[RAWAN] (Banyak potensi kecelakaan kerja & waktu terbuang)')}
                 </div>
               </div>
 
@@ -426,14 +442,14 @@ export default function Budaya5REthicsModule() {
                   gap: '8px'
                 }}
               >
-                <span>💾 Simpan &amp; Catat Audit ke Spreadsheet Guru</span>
-                <span>📤</span>
+                <span className="flex items-center gap-1.5"><Save size={14} /> Simpan &amp; Catat Audit ke Spreadsheet Guru</span>
+                <Send size={13} className="text-white" />
               </button>
             </div>
 
             {auditSubmitted && (
               <div style={{ marginTop: '14px', padding: '12px 16px', borderRadius: '8px', background: '#f0fdf4', border: '1px solid #86efac', color: '#166534', fontWeight: 700, fontSize: '0.85rem' }}>
-                ✅ Skor Audit 5R Bengkel ({auditPercentage}%) Berhasil Disimpan &amp; Direkam ke Rekap Nilai Guru!
+                [BERHASIL] Skor Audit 5R Bengkel ({auditPercentage}%) Berhasil Disimpan &amp; Direkam ke Rekap Nilai Guru!
               </div>
             )}
           </div>
@@ -456,7 +472,7 @@ export default function Budaya5REthicsModule() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
               <div style={{ padding: '18px', borderRadius: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
                 <h4 style={{ margin: '0 0 8px 0', fontSize: '0.92rem', fontWeight: 800, color: '#166534' }}>
-                  📏 1. Integritas Pengukuran Toleransi
+                  <Ruler size={16} className="inline mr-1.5 text-orange-600" /> 1. Integritas Pengukuran Toleransi
                 </h4>
                 <p style={{ fontSize: '0.82rem', color: '#14532d', lineHeight: 1.6, margin: 0 }}>
                   <strong>Dilarang keras memalsukan hasil ukur (*data falsification*)!</strong> Jika diameter poros hasil bubut lebih kecil dari batas bawah toleransi gambar kerja (undersize), teknisi yang beretika akan mengakuinya secara jujur kepada Quality Control (QC). Kejujuran ini mencegah perakitan part cacat yang bisa menyebabkan kegagalan mesin fatal di tangan konsumen.
@@ -465,7 +481,7 @@ export default function Budaya5REthicsModule() {
 
               <div style={{ padding: '18px', borderRadius: '12px', background: '#eff6ff', border: '1px solid #bfdbfe' }}>
                 <h4 style={{ margin: '0 0 8px 0', fontSize: '0.92rem', fontWeight: 800, color: '#1e40af' }}>
-                  🧰 2. Menghargai &amp; Menjaga Peralatan Bersama
+                  <Wrench size={16} className="inline mr-1.5 text-orange-600" /> 2. Menghargai &amp; Menjaga Peralatan Bersama
                 </h4>
                 <p style={{ fontSize: '0.82rem', color: '#1e3a8a', lineHeight: 1.6, margin: 0 }}>
                   Perkakas presisi seperti mikrometer sekrup dan jangka sorong dial tidak boleh diletakkan bertumpuk dengan palu atau kikir baja. Teknisi wajib mengelap alat ukur dari oli pendingin sebelum disimpan di kotaknya, serta menyisakan celah 0.5 mm pada rahang mikrometer agar tidak memuai.
@@ -474,7 +490,7 @@ export default function Budaya5REthicsModule() {
 
               <div style={{ padding: '18px', borderRadius: '12px', background: '#fefce8', border: '1px solid #fef08a' }}>
                 <h4 style={{ margin: '0 0 8px 0', fontSize: '0.92rem', fontWeight: 800, color: '#854d0e' }}>
-                  🤝 3. Budaya Saling Menjaga (*Brother's Keeper*)
+                  <Users size={16} className="inline mr-1.5 text-orange-600" /> 3. Budaya Saling Menjaga (*Brother's Keeper*)
                 </h4>
                 <p style={{ fontSize: '0.82rem', color: '#713f12', lineHeight: 1.6, margin: 0 }}>
                   Di bengkel industri, keselamatan Anda adalah keselamatan tim. Jika melihat rekan praktikan menyalakan mesin bubut tanpa memakai kacamata safety atau lupa mencabut kunci chuck, <strong>wajib segera ditegur dengan santun dan tegas demi menyelamatkan nyawanya</strong>.
@@ -483,7 +499,7 @@ export default function Budaya5REthicsModule() {
 
               <div style={{ padding: '18px', borderRadius: '12px', background: '#faf5ff', border: '1px solid #e9d5ff' }}>
                 <h4 style={{ margin: '0 0 8px 0', fontSize: '0.92rem', fontWeight: 800, color: '#6b21a8' }}>
-                  ⏱️ 4. Efisiensi Waktu &amp; Bebas Distraksi
+                  <Clock size={16} className="inline mr-1.5 text-orange-600" /> 4. Efisiensi Waktu &amp; Bebas Distraksi
                 </h4>
                 <p style={{ fontSize: '0.82rem', color: '#581c87', lineHeight: 1.6, margin: 0 }}>
                   Zona kerja bengkel adalah area berisiko tinggi. Penggunaan telepon genggam (smartphone) untuk urusan pribadi saat mesin berputar adalah pelanggaran etika berat. Fokus penuh pada mata pahat dan suara putaran mesin adalah ciri teknisi profesional.
@@ -546,7 +562,7 @@ export default function Budaya5REthicsModule() {
                 marginBottom: '8px',
                 color: selectedOpt === questions5R[quizIndex].answer ? '#065f46' : '#991b1b'
               }}>
-                {selectedOpt === questions5R[quizIndex].answer ? '✅ JAWABAN BENAR (+20 XP)' : '❌ REFLEKSI KESALAHAN'}
+                {selectedOpt === questions5R[quizIndex].answer ? '[BENAR] JAWABAN TEPAT (+20 XP)' : '[SALAH] REFLEKSI KESALAHAN'}
               </h4>
               <p style={{ fontSize: '0.9rem', fontWeight: 500, color: '#334155', lineHeight: 1.6, margin: 0 }}>
                 {selectedOpt === questions5R[quizIndex].answer ? questions5R[quizIndex].reflectionCorrect : questions5R[quizIndex].reflectionWrong}
@@ -575,7 +591,7 @@ export default function Budaya5REthicsModule() {
                 </button>
               ) : (
                 <div style={{ marginTop: '16px', padding: '12px', background: '#ecfdf5', borderRadius: '8px', color: '#065f46', fontWeight: 800, textAlign: 'center' }}>
-                  🎉 Selamat! Kamu telah menyelesaikan kuis Budaya Kerja 5R dengan total skor {score5R} XP! (Tersinkron ke Spreadsheet)
+                  [SELESAI] Selamat! Kamu telah menyelesaikan kuis Budaya Kerja 5R dengan total skor {score5R} XP! (Tersinkron ke Spreadsheet)
                 </div>
               )}
             </div>

@@ -1,3 +1,7 @@
+import {
+  FileText, Settings, ArrowRight, Search, RotateCcw,
+  ListOrdered, PenTool, Lightbulb, Send
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { latheQuestions } from '../data/questionBankLathe';
@@ -92,7 +96,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
             fontSize: '1.8rem',
             boxShadow: '0 4px 15px rgba(245, 158, 11, 0.35)'
           }}>
-            📝
+            <FileText className="w-6 h-6 text-white" />
           </div>
           <div>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 900, margin: 0, color: '#ffffff', letterSpacing: '0.5px' }}>
@@ -122,7 +126,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
               boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
             }}
           >
-            <span>⚙️ Menuju Proses Pemotongan</span> →
+            <span className="flex items-center gap-1.5"><Settings size={14} className="text-sky-400" /> Menuju Proses Pemotongan <ArrowRight size={14} /></span>
           </button>
         )}
       </div>
@@ -155,7 +159,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#ffffff' }}>
-                  {finalScore >= 75 ? '🎉 Selamat! Hasil Kompetensi Sangat Baik' : '⚠️ Masih Perlu Latihan & Penguatan Konsep'}
+                  {finalScore >= 75 ? '[LULUS] Hasil Kompetensi Sangat Baik' : '[EVALUASI] Masih Perlu Latihan & Penguatan Konsep'}
                 </h3>
                 <div style={{ fontSize: '0.9rem', color: '#94a3b8', marginTop: '4px' }}>
                   Skor Anda: <strong>{finalScore}/100</strong> ({correctCount} dari {totalMcq} Pilihan Ganda Benar). 
@@ -181,7 +185,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                {showReview ? 'Sembunyikan Kunci Pembahasan' : '🔍 Lihat Kunci Pembahasan'}
+                {showReview ? 'Sembunyikan Kunci Pembahasan' : 'Lihat Kunci Pembahasan'}
               </button>
               <button
                 onClick={handleResetTest}
@@ -196,7 +200,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                   fontSize: '0.85rem'
                 }}
               >
-                🔄 Ulangi Tes
+                <RotateCcw size={14} className="inline mr-1" /> Ulangi Tes
               </button>
             </div>
           </div>
@@ -219,7 +223,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
             fontSize: '0.88rem'
           }}
         >
-          📋 Bagian A: Pilihan Ganda ({answeredMcqCount}/{totalMcq} Terjawab)
+          <ListOrdered size={15} className="inline mr-1 text-sky-400" /> Bagian A: Pilihan Ganda ({answeredMcqCount}/{totalMcq} Terjawab)
         </button>
         <button
           onClick={() => { sound.playClick(); setActiveSubTab('essay'); }}
@@ -235,7 +239,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
             fontSize: '0.88rem'
           }}
         >
-          ✍️ Bagian B: Soal Esai Teori ({Object.keys(essayAnswers).length}/{testData.essays.length} Dijawab)
+          <PenTool size={15} className="inline mr-1 text-sky-400" /> Bagian B: Soal Esai Teori ({Object.keys(essayAnswers).length}/{testData.essays.length} Dijawab)
         </button>
       </div>
 
@@ -311,7 +315,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                     SOAL PILIHAN GANDA {mcqIndex + 1} DARI {totalMcq}
                   </span>
                   {currentAnswer ? (
-                    <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>✓ Sudah Dijawab</span>
+                    <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700 }}>[OK] Sudah Dijawab</span>
                   ) : (
                     <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Belum Dijawab</span>
                   )}
@@ -381,7 +385,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                           {opt.text}
                         </div>
                         {(isSubmitted || showReview) && isKeyCorrect && (
-                          <span style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 800 }}>✓ Jawaban Benar</span>
+                          <span style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 800 }}>[BENAR] Jawaban Benar</span>
                         )}
                       </div>
                     );
@@ -400,7 +404,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                     color: '#cbd5e1',
                     lineHeight: 1.5
                   }}>
-                    💡 <strong style={{ color: '#38bdf8' }}>Pembahasan:</strong> {currentQ.explanation}
+                    <Lightbulb size={14} className="inline mr-1 text-amber-400" /> <strong style={{ color: '#38bdf8' }}>Pembahasan:</strong> {currentQ.explanation}
                   </div>
                 )}
 
@@ -456,7 +460,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                             boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)'
                           }}
                         >
-                          Kirim & Selesaikan Tes 🚀
+                          Kirim & Selesaikan Tes
                         </button>
                       )
                     )}
@@ -502,7 +506,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
 
               {(showReview || isSubmitted) && essay.modelAnswer && (
                 <div style={{ marginTop: '12px', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid #d97706', padding: '12px', borderRadius: '8px', fontSize: '0.85rem', color: '#fde68a' }}>
-                  💡 <strong>Kunci Jawaban Model:</strong> {essay.modelAnswer}
+                  <Lightbulb size={14} className="inline mr-1 text-amber-400" /> <strong>Kunci Jawaban Model:</strong> {essay.modelAnswer}
                 </div>
               )}
             </div>
@@ -524,7 +528,7 @@ const LatheTestView = ({ addXP, onStartPractical }) => {
                   boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)'
                 }}
               >
-                Kirim & Selesaikan Tes 🚀
+                Kirim & Selesaikan Tes
               </button>
             </div>
           )}

@@ -3,6 +3,25 @@ import { DIAGNOSTIC_CATEGORIES, DIAGNOSTIC_QUESTIONS } from '../data/diagnosticQ
 import { sound } from '../utils/audio';
 import { useStudent } from '../context/StudentContext';
 import { recordQuizResult, getAllStoredScores, sendToGoogleSheet } from '../services/sheetService';
+import {
+  ClipboardCheck,
+  Target,
+  Cloud,
+  FlaskConical,
+  ArrowRight,
+  User,
+  LogIn,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  HardDrive,
+  Upload,
+  Lightbulb,
+  Copy,
+  Printer,
+  RotateCw,
+  Check
+} from 'lucide-react';
 
 const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = null }) => {
   const { student, isLoggedIn, openLoginModal } = useStudent();
@@ -202,14 +221,14 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
   const handleCopySummary = () => {
     if (!currentResult.isSubmitted) return;
-    const text = `📋 HASIL TES DIAGNOSTIK AWAL SISWA
+    const text = `[RAPOR] HASIL TES DIAGNOSTIK AWAL SISWA
 Kategori: ${currentCategoryData.title}
 Nama: ${studentInfo.name || '-'}
 Kelas: ${studentInfo.classRoom || '-'} | No. Absen: ${studentInfo.studentId || '-'}
 Sekolah: ${studentInfo.school || '-'}
 Waktu Ujian: ${currentResult.submitTime}
 Skor Akhir: ${currentResult.score}/100 (${currentResult.correctCount} dari ${currentQuestions.length} Soal Benar)
-Status Kesiapan: ${currentResult.score >= 80 ? '🟢 MAHIR (Siap Praktik Mandiri)' : currentResult.score >= 60 ? '🟡 CAKAP (Perlu Penguatan Konsep)' : '🔴 PERLU BIMBINGAN KHUSUS (Remedial K3 & Teori)'}
+Status Kesiapan: ${currentResult.score >= 80 ? '[MAHIR] (Siap Praktik Mandiri)' : currentResult.score >= 60 ? '[CAKAP] (Perlu Penguatan Konsep)' : '[PERLU BIMBINGAN] (Remedial K3 & Teori)'}
 Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
 
     navigator.clipboard.writeText(text);
@@ -256,9 +275,13 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
               fontSize: '0.72rem',
               padding: '3px 10px',
               borderRadius: '20px',
-              letterSpacing: '0.5px'
+              letterSpacing: '0.5px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}>
-              📋 ASESMEN DIAGNOSTIK KOGNITIF AWAL
+              <ClipboardCheck size={12} />
+              <span>ASESMEN DIAGNOSTIK KOGNITIF AWAL</span>
             </span>
             <span style={{
               background: 'rgba(255, 255, 255, 0.15)',
@@ -266,9 +289,13 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
               fontSize: '0.72rem',
               padding: '3px 10px',
               borderRadius: '20px',
-              fontWeight: 600
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}>
-              🎯 Tepat 10 Soal Pilihan Ganda
+              <Target size={12} />
+              <span>Tepat 10 Soal Pilihan Ganda</span>
             </span>
             <span style={{
               background: 'rgba(59, 130, 246, 0.25)',
@@ -276,9 +303,13 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
               fontSize: '0.72rem',
               padding: '3px 10px',
               borderRadius: '20px',
-              fontWeight: 600
+              fontWeight: 600,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
             }}>
-              ⚙️ Terkoneksi Google Spreadsheet & Gradebook
+              <Cloud size={12} />
+              <span>Terkoneksi Google Spreadsheet & Gradebook</span>
             </span>
           </div>
 
@@ -324,8 +355,9 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   whiteSpace: 'nowrap'
                 }}
               >
-                <span>🔬 Buka Simulasi {currentCategoryData?.shortTitle || 'Lab'}</span>
-                <span>➔</span>
+                <FlaskConical size={15} />
+                <span>Buka Simulasi {currentCategoryData?.shortTitle || 'Lab'}</span>
+                <ArrowRight size={14} />
               </button>
             )}
           </div>
@@ -343,7 +375,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.2rem' }}>👤</span>
+            <User size={20} className="text-slate-600" />
             <div>
               <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#0f172a' }}>Identitas Peserta Didik</div>
               <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Data ini digunakan guru untuk rekapitulasi nilai diagnostik di buku nilai & spreadsheet</div>
@@ -361,10 +393,14 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 fontSize: '0.78rem',
                 fontWeight: 700,
                 color: '#334155',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              🔑 Login Akun Siswa
+              <LogIn size={13} />
+              <span>Login Akun Siswa</span>
             </button>
           )}
         </div>
@@ -578,7 +614,24 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   fontWeight: 800,
                   color: currentResult.score >= 80 ? '#15803d' : (currentResult.score >= 60 ? '#b45309' : '#b91c1c')
                 }}>
-                  {currentResult.score >= 80 ? '🟢 KATEGORI MAHIR' : (currentResult.score >= 60 ? '🟡 KATEGORI CAKAP' : '🔴 PERLU BIMBINGAN')}
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                    {currentResult.score >= 80 ? (
+                      <>
+                        <CheckCircle2 size={14} className="text-emerald-600" />
+                        <span>KATEGORI MAHIR</span>
+                      </>
+                    ) : currentResult.score >= 60 ? (
+                      <>
+                        <AlertTriangle size={14} className="text-amber-600" />
+                        <span>KATEGORI CAKAP</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle size={14} className="text-red-600" />
+                        <span>PERLU BIMBINGAN</span>
+                      </>
+                    )}
+                  </span>
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#475569', marginTop: '2px' }}>
                   {currentResult.correctCount} dari {currentQuestions.length} Soal Benar
@@ -601,7 +654,13 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             gap: '12px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '1.3rem' }}>{syncStatus?.success ? '🟢' : '💾'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {syncStatus?.success ? (
+                  <CheckCircle2 size={24} className="text-emerald-600" />
+                ) : (
+                  <HardDrive size={24} className="text-amber-600" />
+                )}
+              </div>
               <div>
                 <div style={{ fontWeight: 800, fontSize: '0.86rem', color: syncStatus?.success ? '#166534' : '#92400e' }}>
                   {syncStatus?.success
@@ -625,9 +684,9 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   const res = await sendToGoogleSheet(target);
                   if (res.success) {
                     setSyncStatus({ success: true, record: target });
-                    alert('✅ Sukses! Nilai diagnostik berhasil dikirim ke Google Spreadsheet.');
+                    alert('Sukses! Nilai diagnostik berhasil dikirim ke Google Spreadsheet.');
                   } else {
-                    alert('⚠️ Gagal terhubung ke Google Sheets. Pastikan URL Webhook Web App sudah ditempel di menu Buku Nilai Guru.');
+                    alert('Gagal terhubung ke Google Sheets. Pastikan URL Webhook Web App sudah ditempel di menu Buku Nilai Guru.');
                   }
                 }
               }}
@@ -645,7 +704,17 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 gap: '6px'
               }}
             >
-              <span>{syncStatus?.success ? '✓ Terkirim ke Sheets' : '📤 Kirim ke Spreadsheet'}</span>
+              {syncStatus?.success ? (
+                <>
+                  <Check size={14} />
+                  <span>Terkirim ke Sheets</span>
+                </>
+              ) : (
+                <>
+                  <Upload size={14} />
+                  <span>Kirim ke Spreadsheet</span>
+                </>
+              )}
             </button>
           </div>
 
@@ -658,7 +727,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             marginBottom: '20px'
           }}>
             <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span>💡</span> Rekomendasi Guru & Rencana Diferensiasi Pembelajaran:
+              <Lightbulb size={16} className="text-amber-500" />
+              <span>Rekomendasi Guru & Rencana Diferensiasi Pembelajaran:</span>
             </div>
             <div style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.5 }}>
               {currentResult.score >= 80 ? (
@@ -701,7 +771,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 gap: '6px'
               }}
             >
-              📋 {copiedToast ? 'Tersalin ke Clipboard!' : 'Salin Ringkasan Nilai'}
+              {copiedToast ? <Check size={14} /> : <Copy size={14} />}
+              <span>{copiedToast ? 'Tersalin ke Clipboard!' : 'Salin Ringkasan Nilai'}</span>
             </button>
 
             <button
@@ -720,7 +791,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 gap: '6px'
               }}
             >
-              🖨️ Cetak / Simpan PDF
+              <Printer size={14} />
+              <span>Cetak / Simpan PDF</span>
             </button>
 
             {onNavigateToLab && (
@@ -741,7 +813,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
                 }}
               >
-                🚀 Lanjut Praktik ke {currentCategoryData?.shortTitle || 'Lab'} ➔
+                <span>Lanjut Praktik ke {currentCategoryData?.shortTitle || 'Lab'}</span>
+                <ArrowRight size={14} />
               </button>
             )}
 
@@ -762,7 +835,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 marginLeft: 'auto'
               }}
             >
-              🔄 Ulangi Tes Ini
+              <RotateCw size={14} />
+              <span>Ulangi Tes Ini</span>
             </button>
           </div>
         </div>
@@ -923,7 +997,15 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                     padding: '2px 8px',
                     borderRadius: '6px'
                   }}>
-                    {isQuestionCorrect ? '✓ Benar' : '✕ Belum Tepat'}
+                    {isQuestionCorrect ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <CheckCircle2 size={13} /> Benar
+                      </span>
+                    ) : (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <XCircle size={13} /> Belum Tepat
+                      </span>
+                    )}
                   </span>
                 )}
               </div>
@@ -990,13 +1072,13 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                     >
                       <span>{opt}</span>
                       {isSubmitted && isThisCorrectAnswer && (
-                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16a34a' }}>
-                          ✓ Kunci Jawaban
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <Check size={13} strokeWidth={2.5} /> Kunci Jawaban
                         </span>
                       )}
                       {isSubmitted && isThisWrongChoice && (
-                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#dc2626' }}>
-                          ✕ Jawaban Anda
+                        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#dc2626', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <XCircle size={13} /> Jawaban Anda
                         </span>
                       )}
                     </button>
@@ -1016,7 +1098,10 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   color: '#334155',
                   lineHeight: 1.45
                 }}>
-                  <strong style={{ color: '#1e40af' }}>💡 Konsep & Pembahasan Teknis:</strong>{' '}
+                  <strong style={{ color: '#1e40af', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                    <Lightbulb size={13} className="text-amber-500" />
+                    <span>Konsep & Pembahasan Teknis:</span>
+                  </strong>{' '}
                   {q.explanation}
                 </div>
               )}
@@ -1088,7 +1173,8 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 gap: '8px'
               }}
             >
-              {isSubmitting ? 'Menganalisis...' : 'Kumpulkan & Dapatkan Hasil Diagnostik ➔'}
+              <span>{isSubmitting ? 'Menganalisis...' : 'Kumpulkan & Dapatkan Hasil Diagnostik'}</span>
+              {!isSubmitting && <ArrowRight size={16} />}
             </button>
           </div>
         </div>

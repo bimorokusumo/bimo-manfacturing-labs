@@ -1,3 +1,4 @@
+import { AlertTriangle, ShieldAlert, RotateCcw, Play, Pause, Lightbulb, ShieldCheck } from 'lucide-react';
 import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html } from '@react-three/drei';
@@ -290,7 +291,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[0, 0.18, 0]} center>
                 <div style={{ background: '#ef4444', color: '#fff', fontSize: '10px', fontWeight: 900, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                  ⚠️ TOPI FASHION (BAHAYA API)
+                  [BAHAYA] TOPI FASHION (BAHAYA API)
                 </div>
               </Html>
             )}
@@ -357,7 +358,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[0, 0.12, 0.08]} center>
                 <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                  ⚠️ GELAP & MUDAH PECAH
+                  [BAHAYA] GELAP & MUDAH PECAH
                 </div>
               </Html>
             )}
@@ -426,7 +427,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[0, 0.22, 0]} center>
                 <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                  🚨 MUSIK = PEKAK ALARM
+                  [KRITIS] MUSIK = PEKAK ALARM
                 </div>
               </Html>
             )}
@@ -510,7 +511,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[0, -0.05, 0.16]} center>
                 <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 6px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                  🚨 KAOS KEDODORAN TERBELIT AS
+                  [KRITIS] KAOS KEDODORAN TERBELIT AS
                 </div>
               </Html>
             )}
@@ -539,7 +540,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[0, -0.22, 0.08]} center>
                 <div style={{ background: '#b91c1c', color: '#fff', fontSize: '10px', fontWeight: 900, padding: '3px 8px', borderRadius: '4px', whiteSpace: 'nowrap', border: '2px solid #fef08a', boxShadow: '0 0 10px rgba(220,38,38,0.8)' }}>
-                  ☠️ DASI FATAL: TERTARIK CHUCK BUBUT!
+                  [FATAL] DASI: TERTARIK CHUCK BUBUT!
                 </div>
               </Html>
             )}
@@ -605,7 +606,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
             {showHazardLabels && (
               <Html position={[-0.1, 0, 0]} center>
                 <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 5px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                  ⚠️ JAM LOGAM TERJEPIT
+                  [BAHAYA] JAM LOGAM TERJEPIT
                 </div>
               </Html>
             )}
@@ -627,7 +628,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
           {isWearingGlovesKain && showHazardLabels && (
             <Html position={[-0.12, 0, 0]} center>
               <div style={{ background: '#b91c1c', color: '#fff', fontSize: '10px', fontWeight: 900, padding: '3px 6px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                🚨 TERLILIT CHUCK BUBUT!
+                [KRITIS] TERLILIT CHUCK BUBUT!
               </div>
             </Html>
           )}
@@ -673,7 +674,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
               {showHazardLabels && (
                 <Html position={[0.1, 0, 0]} center>
                   <div style={{ background: '#ef4444', color: '#fff', fontSize: '8.5px', fontWeight: 900, padding: '2px 5px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                    ⚠️ CINCIN TERKULITI (DEGLOVING)
+                    [BAHAYA] CINCIN TERKULITI (DEGLOVING)
                   </div>
                 </Html>
               )}
@@ -692,7 +693,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
               {showHazardLabels && (
                 <Html position={[0.1, 0.05, 0]} center>
                   <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 5px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                    🚨 DISTRAKSI SMARTPHONE
+                    [KRITIS] DISTRAKSI SMARTPHONE
                   </div>
                 </Html>
               )}
@@ -779,7 +780,7 @@ function OperatorModel({ equippedItems, cameraPreset, showHazardLabels }) {
               {showHazardLabels && (
                 <Html position={[-0.12, 0, 0]} center>
                   <div style={{ background: '#ef4444', color: '#fff', fontSize: '9px', fontWeight: 900, padding: '2px 5px', borderRadius: '4px', whiteSpace: 'nowrap', border: '1px solid #fff' }}>
-                    🚨 SANDAL: TERTUSUK TATAL GRAM
+                    [KRITIS] SANDAL: TERTUSUK TATAL GRAM
                   </div>
                 </Html>
               )}
@@ -940,7 +941,7 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
       }}>
         {/* Title / Orbit tip */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '1rem' }}>🔄</span>
+          <RotateCcw size={14} className="text-sky-400" />
           <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '0.5px' }}>
             ORBIT 3D (KLIK & GESER PUTAR 360°)
           </span>
@@ -949,11 +950,11 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
         {/* Preset Camera Quick Jump */}
         <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
           {[
-            { id: 'full', label: '🧍 Badan Penuh' },
-            { id: 'head', label: '🪖 Kepala & Wajah' },
-            { id: 'hands', label: '🧤 Tangan & APD' },
-            { id: 'feet', label: '🥾 Sepatu & Kaki' },
-            { id: 'back', label: '🔄 Tampak Belakang' }
+            { id: 'full', label: 'Badan Penuh' },
+            { id: 'head', label: 'Kepala & Wajah' },
+            { id: 'hands', label: 'Tangan & APD' },
+            { id: 'feet', label: 'Sepatu & Kaki' },
+            { id: 'back', label: 'Tampak Belakang' }
           ].map((btn) => (
             <button
               key={btn.id}
@@ -988,7 +989,7 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
               cursor: 'pointer'
             }}
           >
-            {autoRotate ? '⏸️ Stop Putar' : '▶️ Auto Putar'}
+            {autoRotate ? 'Stop Putar' : 'Auto Putar'}
           </button>
         </div>
       </div>
@@ -1010,7 +1011,7 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
               padding: '24px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '3.5rem', marginBottom: '14px' }}>🛡️</div>
+              <div className="flex justify-center" style={{ marginBottom: '14px' }}><ShieldCheck size={56} className="text-emerald-400" /></div>
               <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f97316', marginBottom: '8px' }}>
                 Mode Skema APD Interaktif ({equippedItems.length} APD Terpasang)
               </div>
@@ -1030,7 +1031,7 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
                   cursor: 'pointer'
                 }}
               >
-                🔄 Aktifkan Visual 3D
+                <RotateCcw size={14} className="inline mr-1.5" /> Aktifkan Visual 3D
               </button>
             </div>
           )}
@@ -1100,7 +1101,7 @@ export default function Safety3DOperator({ equippedItems = [], showHazardLabels 
         justifyContent: 'space-between',
         padding: '0 4px'
       }}>
-        <span>💡 Geser kursor/layar untuk memutar sudut pandang 360°. Scroll untuk zoom in/out.</span>
+        <span className="flex items-center gap-1.5"><Lightbulb size={14} className="text-amber-400 inline" /> Geser kursor/layar untuk memutar sudut pandang 360°. Scroll untuk zoom in/out.</span>
         <span>Item terpasang: <strong>{equippedItems.length} APD</strong></span>
       </div>
     </div>

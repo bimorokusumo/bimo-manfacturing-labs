@@ -158,11 +158,11 @@ class VernierCaliperSimulator {
     }
 
     if (Math.abs(ans - target) < 0.02) {
-      this.quizFeedback.textContent = '✅ Luar biasa! Jawaban Anda sangat tepat (28,65 mm)!';
+      this.quizFeedback.textContent = '[OK] Luar biasa! Jawaban Anda sangat tepat (28,65 mm)!';
       this.quizFeedback.style.color = '#10b981';
       if (window.appAudio) window.appAudio.playSuccessSound();
     } else {
-      this.quizFeedback.textContent = `❌ Belum tepat. Target adalah ${target} mm. Terus latih kepekaan mata!`;
+      this.quizFeedback.textContent = `[FAIL] Belum tepat. Target adalah ${target} mm. Terus latih kepekaan mata!`;
       this.quizFeedback.style.color = '#ef4444';
     }
   }
@@ -448,7 +448,7 @@ const APD_TP_DATA = {
     standard: 'ISO 23125 Standard Mesin Bubut'
   },
   nogloves: {
-    title: '⚠️ ATURAN MUTLAK: LARANGAN MEMAKAI SARUNG TANGAN',
+    title: '[PERINGATAN] ATURAN MUTLAK: LARANGAN MEMAKAI SARUNG TANGAN',
     desc: 'DILARANG KERAS memakai sarung tangan rajut/kain saat mengoperasikan mesin dengan spindel berputar (Mesin Bubut, Bor Duduk, Mesin Frais). Serat kain dapat tersangkut dan menggulung tangan operator ke dalam mesin dalam hitungan milidetik!',
     hazard: 'Mencegah cedera amputasi fatal atau tangan terlilit ke spindel berputar 1000+ RPM!',
     standard: 'Standar Keselamatan Mesin Perkakas Global'

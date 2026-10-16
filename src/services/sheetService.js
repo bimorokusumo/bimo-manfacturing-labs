@@ -214,48 +214,48 @@ export const detectLabAndSubQuiz = (item) => {
   // 1. Identifikasi Lab Utama (sesuai ID Sidebar)
   let labId = 'machine';
   let labLabel = 'Machine Lab';
-  let labIcon = '⚙️';
+  let labIcon = '';
 
   if (m.includes('safety') || m.includes('k3') || m.includes('5r') || m.includes('apar') || j.includes('apd') || j.includes('k3') || j.includes('5r') || j.includes('apar') || j.includes('jsa')) {
     labId = 'safety';
     labLabel = 'Safety Lab';
-    labIcon = '🛡️';
+    labIcon = '';
   } else if (m.includes('cutting') || m.includes('potong') || m.includes('perkakas') || j.includes('potong') || j.includes('pahat') || j.includes('perkakas') || j.includes('kikir')) {
     labId = 'cutting-tools';
     labLabel = 'Perkakas Bengkel';
-    labIcon = '🛠️';
+    labIcon = '';
   } else if (m.includes('heat') || m.includes('perlakuan panas') || m.includes('metalurgi') || j.includes('hardening') || j.includes('quenching') || j.includes('annealing')) {
     labId = 'heat-treatment';
     labLabel = 'Heat Treatment';
-    labIcon = '🌡️';
+    labIcon = '';
   } else if (m.includes('mekanika') || m.includes('mechanic') || j.includes('torsi') || j.includes('tuas') || j.includes('momen gaya')) {
     labId = 'mechanics';
     labLabel = 'Mekanika Teknik';
-    labIcon = '🔧';
+    labIcon = '';
   } else if (m.includes('weld') || m.includes('las') || j.includes('smaw') || j.includes('pengelasan')) {
     labId = 'welding';
     labLabel = 'Welding Lab';
-    labIcon = '⚡';
+    labIcon = '';
   } else if (m.includes('ukur') || m.includes('measur') || m.includes('metrologi') || j.includes('jangka sorong') || j.includes('mikrometer') || j.includes('kaliper')) {
     labId = 'measuring';
     labLabel = 'Alat Ukur Presisi';
-    labIcon = '📏';
+    labIcon = '';
   } else if (m.includes('design') || m.includes('gambar') || m.includes('cad') || j.includes('proyeksi') || j.includes('cad')) {
     labId = 'design';
     labLabel = 'Design Lab';
-    labIcon = '📐';
+    labIcon = '';
   } else if (m.includes('bengkel') || m.includes('virtual') || j.includes('bengkel 3d')) {
     labId = 'virtual-bengkel';
     labLabel = 'Virtual Bengkel 3D';
-    labIcon = '🏭';
+    labIcon = '';
   } else if (m.includes('evaluasi') || j.includes('evaluasi komprehensif')) {
     labId = 'evaluasi';
     labLabel = 'Evaluasi';
-    labIcon = '📝';
+    labIcon = '';
   } else {
     labId = 'machine';
     labLabel = 'Machine Lab';
-    labIcon = '⚙️';
+    labIcon = '';
   }
 
   // 2. Identifikasi Sub-Kuis / Sub-Aktivitas Spesifik
@@ -635,7 +635,7 @@ export const exportScoresToExcelHTML = (scores = null) => {
       <!-- BANNER KLASIFIKASI KUIS -->
       <tr style="background-color: #064e3b; color: #ffffff;">
         <td colspan="11" style="padding: 10px 14px; font-size: 11pt; border: 2px solid #047857;">
-          <strong>📋 NAMA KUIS / ASESMEN:</strong> <span style="color: #6ee7b7; font-size: 11.5pt; font-weight: 800;">${quizName}</span>
+          <strong>ASESMEN:</strong> <span style="color: #6ee7b7; font-size: 11.5pt; font-weight: 800;">${quizName}</span>
           <span style="font-weight: normal; margin-left: 20px; font-size: 10pt; color: #e2e8f0;">
             | Total Siswa: <strong>${items.length}</strong> | Rata-rata Skor: <strong>${avgScore}/100</strong> | Kelulusan: <strong>${passPct}% (${passedCount}/${items.length})</strong>
           </span>

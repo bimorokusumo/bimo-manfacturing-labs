@@ -1,5 +1,20 @@
+import {
+  Lightbulb, Layers, Code, Settings, Hand, Compass,
+  BarChart3, AlertTriangle, FileText, Box, Monitor,
+  ScrollText, Play, Pause, SkipBack, SkipForward, RotateCcw, BookOpen
+} from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
+
+
+const getCncTabIcon = (id) => {
+  switch (id) {
+    case 'pengenalan': return <Lightbulb size={16} className="text-amber-400" />;
+    case 'komponen': return <Layers size={16} className="text-sky-400" />;
+    case 'gcode': return <Code size={16} className="text-indigo-400" />;
+    default: return <Settings size={16} />;
+  }
+};
 
 const CNCTheoryGuide = () => {
   const [activeTab, setActiveTab] = useState('pengenalan'); // 'pengenalan', 'komponen', 'gcode'
@@ -20,9 +35,9 @@ const CNCTheoryGuide = () => {
 
   // Tabs Definition
   const tabs = [
-    { id: 'pengenalan', label: '1. Pengenalan Dasar CNC & Sistem Sumbu', icon: '💡' },
-    { id: 'komponen', label: '2. Bagian Komponen Mesin CNC', icon: '🏗️' },
-    { id: 'gcode', label: '3. Pemrograman G-Code & M-Code', icon: '💻' }
+    { id: 'pengenalan', label: '1. Pengenalan Dasar CNC & Sistem Sumbu' },
+    { id: 'komponen', label: '2. Bagian Komponen Mesin CNC' },
+    { id: 'gcode', label: '3. Pemrograman G-Code & M-Code' }
   ];
 
   // =========================================================================
@@ -294,7 +309,7 @@ const CNCTheoryGuide = () => {
           MODUL PEMBELAJARAN MESIN CNC (COMPUTER NUMERICAL CONTROL)
         </span>
         <h2 style={{ fontSize: '1.65rem', fontWeight: 800, margin: '12px 0 8px 0', color: '#ffffff' }}>
-          ⚙️ Pengenalan Dasar, Anatomi Komponen & Pemrograman G/M Code
+          <Settings size={22} className="inline mr-2 text-sky-300" /> Pengenalan Dasar, Anatomi Komponen & Pemrograman G/M Code
         </h2>
         <p style={{ fontSize: '0.9rem', color: '#e0f2fe', lineHeight: 1.6, maxWidth: '950px', margin: 0 }}>
           Pelajari konsep dasar mesin CNC dan kaidah tangan kanan, anatomi 10 komponen utama mesin milling & bubut CNC, serta kamus lengkap dan <strong>simulator lintasan pemrograman G-Code & M-Code</strong>!
@@ -333,7 +348,7 @@ const CNCTheoryGuide = () => {
               transition: 'all 0.2s'
             }}
           >
-            <span>{t.icon}</span>
+            <span>{getCncTabIcon(t.id)}</span>
             <span>{t.label}</span>
           </button>
         ))}
@@ -352,7 +367,7 @@ const CNCTheoryGuide = () => {
                 PRINSIP KERJA OTOMASI INDUSTRI
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                💡 Apa Itu Mesin CNC? (Computer Numerical Control)
+                <Lightbulb size={18} className="inline mr-1 text-amber-400" /> Apa Itu Mesin CNC? (Computer Numerical Control)
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
                 <strong>CNC (Computer Numerical Control)</strong> adalah sistem otomasi mesin perkakas yang dioperasikan oleh perintah alfanumerik (huruf dan angka) yang telah diprogram dan disimpan di dalam komputer kontroler.
@@ -363,7 +378,7 @@ const CNCTheoryGuide = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '16px' }}>
               <div style={{ background: '#f8fafc', padding: '18px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#475569', fontWeight: 800, fontSize: '0.95rem', marginBottom: '8px' }}>
-                  <span>🕹️</span> MESIN PERKAKAS KONVENSIONAL
+                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold mr-1">[MANUAL]</span> MESIN PERKAKAS KONVENSIONAL
                 </div>
                 <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.82rem', color: '#334155', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <li><strong>Penggerak:</strong> Digerakkan secara manual oleh tangan juru mesin melalui engkol roda pemutar (handwheel).</li>
@@ -375,7 +390,7 @@ const CNCTheoryGuide = () => {
 
               <div style={{ background: '#f0fdf4', padding: '18px', borderRadius: '10px', border: '1px solid #86efac' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#166534', fontWeight: 800, fontSize: '0.95rem', marginBottom: '8px' }}>
-                  <span>⚡</span> MESIN PERKAKAS CNC MODERN
+                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-sky-900/60 text-sky-300 font-bold mr-1">[CNC]</span> MESIN PERKAKAS CNC MODERN
                 </div>
                 <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.82rem', color: '#166534', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <li><strong>Penggerak:</strong> Digerakkan motor servo AC otomatis berdasar kode angka (G-Code) dari prosesor komputer.</li>
@@ -394,7 +409,7 @@ const CNCTheoryGuide = () => {
                 STANDARISASI ISO 841
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                ✋ Kaidah Tangan Kanan & Sistem Sumbu Mesin CNC (X, Y, Z)
+                <Hand size={18} className="inline mr-1 text-amber-400" /> Kaidah Tangan Kanan & Sistem Sumbu Mesin CNC (X, Y, Z)
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                 Arah pergerakan sumbu mesin CNC ditetapkan secara internasional menggunakan <strong>Kaidah Tangan Kanan (Right Hand Rule)</strong>.
@@ -420,7 +435,7 @@ const CNCTheoryGuide = () => {
                 boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
               }}>
                 <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', marginBottom: '8px', alignSelf: 'flex-start' }}>
-                  📐 SKEMA SUMBU KARTESIUS CNC MILLING (3-AXIS)
+                  <Compass size={16} className="inline mr-1 text-sky-400" /> SKEMA SUMBU KARTESIUS CNC MILLING (3-AXIS)
                 </div>
                 <svg viewBox="0 0 380 260" style={{ width: '100%', maxWidth: '380px', height: 'auto' }}>
                   {/* Grid Lines */}
@@ -467,7 +482,7 @@ const CNCTheoryGuide = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ background: '#fef2f2', padding: '12px 16px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
                   <div style={{ fontWeight: 800, color: '#991b1b', fontSize: '0.85rem' }}>
-                    🔴 Sumbu Z = Jari Tengah (Arah Spindel Vertikal)
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold mr-1">Z</span> Sumbu Z = Jari Tengah (Arah Spindel Vertikal)
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#450a0a', marginTop: '2px', lineHeight: 1.5 }}>
                     Sumbu Z <strong>selalu sejajar dengan sumbu putar poros spindel</strong>. Arah <strong>+Z selalu bergerak menjauhi benda kerja</strong> (arah mundur aman), sedangkan <strong>-Z bergerak masuk menyayat material</strong>.
@@ -476,7 +491,7 @@ const CNCTheoryGuide = () => {
 
                 <div style={{ background: '#eff6ff', padding: '12px 16px', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
                   <div style={{ fontWeight: 800, color: '#1e40af', fontSize: '0.85rem' }}>
-                    🔵 Sumbu X = Ibu Jari (Gerakan Longitudinal Meja)
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-400 font-bold mr-1">X</span> Sumbu X = Ibu Jari (Gerakan Longitudinal Meja)
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#1e3a8a', marginTop: '2px', lineHeight: 1.5 }}>
                     Sumbu X terletak mendatar sejajar bidang meja kerja. Arah <strong>+X bergerak ke kanan</strong> juru mesin, sedangkan <strong>-X bergerak ke kiri</strong>.
@@ -485,7 +500,7 @@ const CNCTheoryGuide = () => {
 
                 <div style={{ background: '#f0fdf4', padding: '12px 16px', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
                   <div style={{ fontWeight: 800, color: '#065f46', fontSize: '0.85rem' }}>
-                    🟢 Sumbu Y = Jari Telunjuk (Gerakan Transversal Meja)
+                    <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold mr-1">Y</span> Sumbu Y = Jari Telunjuk (Gerakan Transversal Meja)
                   </div>
                   <div style={{ fontSize: '0.8rem', color: '#064e3b', marginTop: '2px', lineHeight: 1.5 }}>
                     Sumbu Y tegak lurus terhadap sumbu X dan Z. Arah <strong>+Y bergerak menjauhi operator</strong> (ke arah tiang kolom mesin), sedangkan <strong>-Y bergerak mendekati operator</strong>.
@@ -503,7 +518,7 @@ const CNCTheoryGuide = () => {
                   METODE PEMROGRAMAN LINTASAN
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                  📊 Perbandingan Koordinat Absolut (G90) vs Inkremental (G91)
+                  <BarChart3 size={18} className="inline mr-1 text-sky-400" /> Perbandingan Koordinat Absolut (G90) vs Inkremental (G91)
                 </h3>
               </div>
 
@@ -555,8 +570,8 @@ const CNCTheoryGuide = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                 <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
                   {coordMode === 'absolut' 
-                    ? '🎯 Sistem Absolut (G90): Semua titik X dan Y SELALU diukur dari satu titik acuan nol tetap (0,0) di pojok kiri bawah.'
-                    : '🔄 Sistem Inkremental (G91): Titik tujuan berikutnya dihitung dari POSISI TERAKHIR pisau berada (jarak pergeseran incremental).'
+                    ? '[G90] Sistem Absolut: Semua titik X dan Y SELALU diukur dari satu titik acuan nol tetap (0,0) di pojok kiri bawah.'
+                    : '[G91] Sistem Inkremental: Titik tujuan berikutnya dihitung dari POSISI TERAKHIR pisau berada (jarak pergeseran incremental).'
                   }
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700 }}>
@@ -692,7 +707,7 @@ const CNCTheoryGuide = () => {
                   ANATOMI MEKATRONIKA CNC
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                  🏗️ Skema Blueprint & Komponen Utama Mesin CNC
+                  <Layers size={18} className="inline mr-1 text-sky-400" /> Skema Blueprint & Komponen Utama Mesin CNC
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                   Pilih tipe mesin dan klik komponen pada diagram teknis untuk menginspeksi fungsi, spesifikasi & aturan K3.
@@ -747,10 +762,10 @@ const CNCTheoryGuide = () => {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8' }}>
-                  📐 BLUEPRINT DIAGRAM: {currentMach.title}
+                  <Compass size={16} className="inline mr-1 text-sky-400" /> BLUEPRINT DIAGRAM: {currentMach.title}
                 </span>
                 <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                  💡 Klik salah satu lingkaran pada skema mesin!
+                  <Lightbulb size={14} className="inline mr-1 text-amber-400" /> Klik salah satu lingkaran pada skema mesin!
                 </span>
               </div>
 
@@ -920,12 +935,12 @@ const CNCTheoryGuide = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px', marginTop: '4px' }}>
                   <div style={{ background: 'rgba(0,0,0,0.35)', padding: '10px 14px', borderRadius: '8px', borderLeft: `3px solid ${curComp.color}` }}>
-                    <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 800 }}>⚙️ SPESIFIKASI TEKNIS INDUSTRI:</div>
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 800 }}><Settings size={12} className="inline mr-1" /> SPESIFIKASI TEKNIS INDUSTRI:</div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>{curComp.spec}</div>
                   </div>
 
                   <div style={{ background: 'rgba(0,0,0,0.35)', padding: '10px 14px', borderRadius: '8px', borderLeft: '3px solid #ef4444' }}>
-                    <div style={{ fontSize: '0.7rem', color: '#fca5a5', fontWeight: 800 }}>⚠️ K3 & SAFETY OPERATOR:</div>
+                    <div style={{ fontSize: '0.7rem', color: '#fca5a5', fontWeight: 800 }}><AlertTriangle size={12} className="inline mr-1 text-rose-400" /> K3 & SAFETY OPERATOR:</div>
                     <div style={{ fontSize: '0.82rem', color: '#fed7aa', marginTop: '2px' }}>{curComp.k3Tip}</div>
                   </div>
                 </div>
@@ -950,7 +965,7 @@ const CNCTheoryGuide = () => {
                 STANDAR FORMAT DIN 66025 / ISO
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                📝 Anatomi Struktur Satu Baris Blok Program CNC
+                <FileText size={18} className="inline mr-1 text-sky-400" /> Anatomi Struktur Satu Baris Blok Program CNC
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                 Setiap baris kode program CNC disebut <strong>Blok (Block)</strong> yang tersusun dari kombinasi huruf (Word Address) dan angka.
@@ -1018,7 +1033,7 @@ const CNCTheoryGuide = () => {
                   INTERACTIVE G-CODE TOOLPATH SIMULATOR
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                  🎮 Simulator Eksekusi Kode G Langkah-demi-Langkah
+                  <Box size={18} className="inline mr-1 text-sky-400" /> Simulator Eksekusi Kode G Langkah-demi-Langkah
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                   Pilih skenario program di bawah, lalu jalankan animasi untuk melihat pergerakan mata pahat dan pembacaan kode real-time!
@@ -1090,7 +1105,7 @@ const CNCTheoryGuide = () => {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8' }}>
-                    🖥️ VISUALISASI LINTASAN MEJA XY
+                    <Monitor size={16} className="inline mr-1 text-sky-400" /> VISUALISASI LINTASAN MEJA XY
                   </div>
                   <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
                     Titik Saat Ini: <strong style={{ color: '#ffffff' }}>X: {activeLine.x}, Y: {activeLine.y}, Z: {activeLine.z}</strong>
@@ -1205,7 +1220,7 @@ const CNCTheoryGuide = () => {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8' }}>
-                    📜 PROGRAM BUFFER (ACTIVE G-CODE)
+                    <ScrollText size={16} className="inline mr-1 text-sky-400" /> PROGRAM BUFFER (ACTIVE G-CODE)
                   </span>
                   <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                     Baris {simStep + 1} dari {curLines.length}
@@ -1254,7 +1269,7 @@ const CNCTheoryGuide = () => {
                 {/* Explanation of current active line */}
                 <div style={{ background: 'rgba(2, 132, 199, 0.12)', border: '1px solid rgba(2, 132, 199, 0.3)', borderRadius: '8px', padding: '10px 14px' }}>
                   <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>
-                    💡 PENJELASAN BARIS BLOK AKTIF:
+                    <Lightbulb size={14} className="inline mr-1 text-amber-400" /> PENJELASAN BARIS BLOK AKTIF:
                   </div>
                   <div style={{ fontSize: '0.82rem', color: '#f8fafc', fontWeight: 700, marginTop: '2px' }}>
                     {activeLine.code}
@@ -1287,7 +1302,7 @@ const CNCTheoryGuide = () => {
                       gap: '6px'
                     }}
                   >
-                    <span>{isPlayingSim ? '⏸ Jeda' : '▶ Jalankan Siklus'}</span>
+                    {isPlayingSim ? <Pause size={13} className="inline mr-1" /> : <Play size={13} className="inline mr-1" />}<span>{isPlayingSim ? 'Jeda' : 'Jalankan Siklus'}</span>
                   </button>
 
                   <button
@@ -1309,7 +1324,7 @@ const CNCTheoryGuide = () => {
                       opacity: simStep === 0 ? 0.5 : 1
                     }}
                   >
-                    ⏮ Mundur
+                    <SkipBack size={13} className="inline mr-1" /> Mundur
                   </button>
 
                   <button
@@ -1331,7 +1346,7 @@ const CNCTheoryGuide = () => {
                       opacity: simStep === curLines.length - 1 ? 0.5 : 1
                     }}
                   >
-                    Maju ⏭
+                    Maju <SkipForward size={13} className="inline ml-1" />
                   </button>
 
                   <button
@@ -1351,7 +1366,7 @@ const CNCTheoryGuide = () => {
                       cursor: 'pointer'
                     }}
                   >
-                    🔄 Reset
+                    <RotateCcw size={13} className="inline mr-1" /> Reset
                   </button>
                 </div>
 
@@ -1368,7 +1383,7 @@ const CNCTheoryGuide = () => {
                   REFERENSI LENGKAP BENGKEL
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                  📖 Kamus Kode G & Kode M Standar Industri
+                  <BookOpen size={18} className="inline mr-1 text-sky-400" /> Kamus Kode G & Kode M Standar Industri
                 </h3>
               </div>
 

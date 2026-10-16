@@ -1,3 +1,4 @@
+import { Box, RotateCcw } from 'lucide-react';
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows } from '@react-three/drei';
@@ -195,7 +196,7 @@ const CNC3D = ({ isRunning = false, toolPosRef, heightmapRef, workpieceSize = { 
             borderRadius: '12px',
             border: '1px solid rgba(16, 185, 129, 0.4)'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>💻</div>
+            <div className="flex justify-center" style={{ marginBottom: '12px' }}><Box size={48} className="text-sky-400" /></div>
             <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', marginBottom: '8px' }}>
               Simulator 3D Mesin CNC
             </div>
@@ -215,7 +216,7 @@ const CNC3D = ({ isRunning = false, toolPosRef, heightmapRef, workpieceSize = { 
                 cursor: 'pointer'
               }}
             >
-              🔄 Aktifkan Tampilan 3D CNC
+              <RotateCcw size={14} className="inline mr-1" /> Aktifkan Tampilan 3D CNC
             </button>
           </div>
         )}

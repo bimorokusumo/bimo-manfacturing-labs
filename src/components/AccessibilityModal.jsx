@@ -1,5 +1,19 @@
 import React from 'react';
 import { useAccessibility } from '../context/AccessibilityContext';
+import {
+  Accessibility,
+  X,
+  Volume2,
+  Square,
+  Play,
+  Type,
+  Search,
+  BookOpen,
+  Eye,
+  Sparkles,
+  MessageSquare,
+  Check
+} from 'lucide-react';
 
 const AccessibilityModal = () => {
   const {
@@ -77,10 +91,9 @@ const AccessibilityModal = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.3rem',
               color: '#fff'
             }}>
-              ♿
+              <Accessibility size={22} />
             </span>
             <div>
               <h2 id="a11y-modal-title" style={{ fontSize: '1.25rem', fontWeight: 900, margin: 0, letterSpacing: '-0.01em' }}>
@@ -98,14 +111,16 @@ const AccessibilityModal = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              fontSize: '1.5rem',
               color: isHighContrast ? '#fff' : '#64748b',
               cursor: 'pointer',
               padding: '4px 8px',
-              borderRadius: '6px'
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            ✕
+            <X size={20} />
           </button>
         </div>
 
@@ -113,7 +128,8 @@ const AccessibilityModal = () => {
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
             <label style={{ fontSize: '0.9rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🔊</span> Narator Audio (Text-to-Speech)
+              <Volume2 size={16} className="text-amber-500" />
+              <span>Narator Audio (Text-to-Speech)</span>
             </label>
             <button
               onClick={isSpeaking ? stopSpeech : handleTestAudio}
@@ -121,7 +137,7 @@ const AccessibilityModal = () => {
                 background: isSpeaking ? '#ef4444' : '#f59e0b',
                 color: '#fff',
                 border: 'none',
-                padding: '5px 12px',
+                padding: '6px 14px',
                 borderRadius: '8px',
                 fontSize: '0.75rem',
                 fontWeight: 800,
@@ -131,7 +147,17 @@ const AccessibilityModal = () => {
                 gap: '6px'
               }}
             >
-              {isSpeaking ? '⏹️ Hentikan Tes' : '▶️ Uji Coba Suara'}
+              {isSpeaking ? (
+                <>
+                  <Square size={12} fill="currentColor" />
+                  <span>Hentikan Tes</span>
+                </>
+              ) : (
+                <>
+                  <Play size={12} fill="currentColor" />
+                  <span>Uji Coba Suara</span>
+                </>
+              )}
             </button>
           </div>
 
@@ -184,7 +210,8 @@ const AccessibilityModal = () => {
         {/* SECTION 2: UKURAN TEKS (FONT SIZE) */}
         <div style={{ marginBottom: '20px' }}>
           <label style={{ fontSize: '0.9rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-            <span>🔤</span> Ukuran Teks (Zoom Tipografi)
+            <Type size={16} className="text-blue-500" />
+            <span>Ukuran Teks (Zoom Tipografi)</span>
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
             {[
@@ -236,9 +263,7 @@ const AccessibilityModal = () => {
                 Teknik Pemesinan: Bubut, Frais, CNC &amp; Fabrikasi Logam
               </div>
             </div>
-            <span style={{ fontSize: '1.3rem' }}>
-              {fontSize === 'small' ? '🔍' : fontSize === 'xlarge' ? '🔎' : '👀'}
-            </span>
+            <Search size={18} className="text-blue-500" />
           </div>
         </div>
 
@@ -257,7 +282,8 @@ const AccessibilityModal = () => {
           }}>
             <div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                📖 Huruf Ramah Disleksia (Lexend)
+                <BookOpen size={16} className="text-emerald-500" />
+                <span>Huruf Ramah Disleksia (Lexend)</span>
               </div>
               <div style={{ fontSize: '0.75rem', color: isHighContrast ? '#94a3b8' : '#64748b', marginTop: '2px' }}>
                 Tipografi khusus yang mencegah huruf tertukar (b/d/p/q) & spasi kata lebih renggang.
@@ -303,7 +329,8 @@ const AccessibilityModal = () => {
           }}>
             <div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                👁️ Mode Kontras Tinggi (Low Vision)
+                <Eye size={16} className="text-sky-500" />
+                <span>Mode Kontras Tinggi (Low Vision)</span>
               </div>
               <div style={{ fontSize: '0.75rem', color: isHighContrast ? '#94a3b8' : '#64748b', marginTop: '2px' }}>
                 Meningkatkan rasio kontras warna teks dan elemen agar mudah terbaca bagi penglihatan terbatas.
@@ -349,7 +376,8 @@ const AccessibilityModal = () => {
           }}>
             <div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                🛑 Kurangi Gerakan (Reduced Motion)
+                <Sparkles size={16} className="text-amber-500" />
+                <span>Kurangi Gerakan (Reduced Motion)</span>
               </div>
               <div style={{ fontSize: '0.75rem', color: isHighContrast ? '#94a3b8' : '#64748b', marginTop: '2px' }}>
                 Mematikan rotasi otomatis objek 3D & animasi berkedip untuk siswa ADHD / sensitif vestibular.
@@ -395,7 +423,8 @@ const AccessibilityModal = () => {
           }}>
             <div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                💬 Subtitle Teks Berjalan (Tunarungu)
+                <MessageSquare size={16} className="text-indigo-500" />
+                <span>Subtitle Teks Berjalan (Tunarungu)</span>
               </div>
               <div style={{ fontSize: '0.75rem', color: isHighContrast ? '#94a3b8' : '#64748b', marginTop: '2px' }}>
                 Menampilkan kotak teks melayang saat narator berbicara untuk siswa tunarungu atau lingkungan bising.

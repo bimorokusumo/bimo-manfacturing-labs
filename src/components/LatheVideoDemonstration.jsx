@@ -1,3 +1,4 @@
+import { Video, Box, ArrowRight, Monitor, RotateCcw, Maximize2 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/assets';
@@ -117,7 +118,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
             fontSize: '1.6rem',
             boxShadow: '0 4px 14px rgba(56, 189, 248, 0.3)'
           }}>
-            🎬
+            <Video className="w-5 h-5 text-white" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -153,7 +154,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>🎮 Buka Simulator Praktik 3D</span> →
+            <span className="flex items-center gap-1.5"><Box size={14} className="text-sky-400" /> Buka Simulator Praktik 3D <ArrowRight size={14} /></span>
           </button>
         )}
       </div>
@@ -205,7 +206,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
               }}
               title="Memperbesar dan memusatkan video pemotongan bubut agar mengisi layar landscape secara penuh tanpa bilah hitam samping"
             >
-              <span>📺</span> Landscape Penuh (Widescreen)
+              <Monitor size={14} className="inline mr-1 text-sky-400" /> Landscape Penuh (Widescreen)
             </button>
 
             {/* Mode 2: Rotate 90° (Landscape Rotasi) */}
@@ -226,7 +227,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
               }}
               title="Memutar video 90° mendatar agar sejajar dengan orientasi horizontal spindel mesin bubut"
             >
-              <span>🔄</span> Rotasi Horizontal 90°
+              <RotateCcw size={14} className="inline mr-1 text-sky-400" /> Rotasi Horizontal 90°
             </button>
 
             {/* Mode 3: Fit (Rasio Asli 9:16) */}
@@ -247,7 +248,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
               }}
               title="Menampilkan bingkai asli video secara utuh"
             >
-              <span>🔍</span> Rasio Asli (Fit)
+              <Maximize2 size={14} className="inline mr-1 text-sky-400" /> Rasio Asli (Fit)
             </button>
           </div>
 
@@ -265,7 +266,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
               }}
               title="Layar Penuh (Fullscreen)"
             >
-              ⛶ Fullscreen
+              Fullscreen
             </button>
           </div>
         </div>
@@ -424,7 +425,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
                   gap: '6px'
                 }}
               >
-                {isPlaying ? '⏸ Jeda (Pause)' : '▶ Putar (Play)'}
+                {isPlaying ? 'Jeda (Pause)' : 'Putar (Play)'}
               </button>
 
               <button
@@ -439,7 +440,7 @@ const LatheVideoDemonstration = ({ onSwitchToSimulator }) => {
                   cursor: 'pointer'
                 }}
               >
-                {isMuted ? '🔇 Unmute' : '🔊 Mute'}
+                {isMuted ? 'Unmute' : 'Mute'}
               </button>
             </div>
 

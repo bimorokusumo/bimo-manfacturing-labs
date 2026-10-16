@@ -180,7 +180,7 @@ const CNCModule = ({ addXP }) => {
           }}
           title="Buka panduan K3 & SOP"
         >
-          <span>🛡️</span> SOP & K3
+          <span>[SOP]</span> SOP & K3
         </button>
       </div>
 
@@ -317,7 +317,7 @@ const CNCModule = ({ addXP }) => {
           {showResult && (
             <div className="animate-fade-in">
               <div style={{ background: 'rgba(16, 185, 129, 0.15)', color: 'var(--game-success)', padding: '8px', borderRadius: '4px', textAlign: 'center', fontWeight: 700, fontSize: '0.85rem', marginBottom: '16px', border: '1px solid var(--game-success)' }}>
-                ✓ G-CODE SUKSES
+                [OK] G-CODE SUKSES
               </div>
 
               <div style={{ fontSize: '0.85rem', color: 'var(--game-success)', fontWeight: 600, marginBottom: '4px' }}>Program Selesai!</div>

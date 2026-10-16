@@ -2,12 +2,12 @@
 // Sesuai Standar AWS (American Welding Society), ASME IX, dan ISO 14175
 
 export const FAQ_CATEGORIES = [
-  { id: 'all', label: 'Semua Tanya Jawab', count: 10, icon: '📋' },
-  { id: 'mig_mag', label: 'MIG vs MAG', count: 3, icon: '⚡' },
-  { id: 'metalurgi', label: 'Gas & Metalurgi Logam', count: 3, icon: '🧪' },
-  { id: 'pemilihan', label: 'Pemilihan Proses (SMAW / MIG / TIG)', count: 3, icon: '⚖️' },
-  { id: 'tig_acdc', label: 'TIG & Karakteristik Arus', count: 3, icon: '🎯' },
-  { id: 'k3_oven', label: 'K3, Oven & Keselamatan Gas', count: 2, icon: '🛡️' }
+  { id: 'all', label: 'Semua Tanya Jawab', count: 10, icon: '[ALL]' },
+  { id: 'mig_mag', label: 'MIG vs MAG', count: 3, icon: '[MIG/MAG]' },
+  { id: 'metalurgi', label: 'Gas & Metalurgi Logam', count: 3, icon: '[MET]' },
+  { id: 'pemilihan', label: 'Pemilihan Proses (SMAW / MIG / TIG)', count: 3, icon: '[PROC]' },
+  { id: 'tig_acdc', label: 'TIG & Karakteristik Arus', count: 3, icon: '[TIG]' },
+  { id: 'k3_oven', label: 'K3, Oven & Keselamatan Gas', count: 2, icon: '[K3]' }
 ];
 
 export const FAQ_ITEMS = [
@@ -34,7 +34,7 @@ export const FAQ_ITEMS = [
         ['Material Kerja Utama', 'Aluminium, Paduan Tembaga, Nikel, Titanium (Non-Ferro)', 'Baja Karbon Lunak (Mild Steel / MS), Baja Struktural (Ferro)'],
         ['Pola Penetrasi Las', 'Sempit menusuk di tengah (finger-like penetration)', 'Mangkuk lebar dan dalam (deep bowl-shaped penetration)'],
         ['Tegangan Permukaan Cairan', 'Sangat tinggi pada baja (cenderung menggumpal/roping)', 'Rendah (pembasahan/wetting tepi sangat licin & mulus)'],
-        ['Reaksi Kimia di Kawah', 'Nol (Hanya isolasi fisik mengusir udara luar)', 'Disosiasi CO₂ → CO + O (melepas panas rekombinasi)'],
+        ['Reaksi Kimia di Kawah', 'Nol (Hanya isolasi fisik mengusir udara luar)', 'Disosiasi CO₂ -> CO + O (melepas panas rekombinasi)'],
         ['Biaya Gas Pelindung', 'Relatif mahal (3x – 5x lebih tinggi dari CO₂)', 'Sangat ekonomis dan mudah didapatkan di pasaran'],
         ['Standar Kawat Elektroda', 'AWS A5.10 (ER4043, ER5356 untuk Aluminium)', 'AWS A5.18 (ER70S-6 dengan deoksidator Mn & Si)']
       ]
@@ -57,7 +57,7 @@ Sebaliknya, pada MAG, gas CO₂ atau penambahan oksigen sengaja dimanfaatkan sec
     question: 'Mengapa MAG (CO₂ / Ar+CO₂) digunakan khusus untuk Baja Karbon (Mild Steel)? Mengapa tidak memakai Argon murni saja?',
     subtitle: 'Disosiasi termal gas CO₂ menghasilkan penetrasi mangkuk dalam, menurunkan tegangan permukaan cairan baja (good wetting), dan deoksidasi kawat ER70S-6 menjamin hasil bebas porositas dengan biaya hemat.',
     highlights: [
-      'Penetrasi Mangkuk Dalam: Disosiasi CO₂ → CO + O melepaskan panas rekombinasi dahsyat di kawah baja, melebur dinding kampuh secara utuh.',
+      'Penetrasi Mangkuk Dalam: Disosiasi CO₂ -> CO + O melepaskan panas rekombinasi dahsyat di kawah baja, melebur dinding kampuh secara utuh.',
       'Wetting Action Sempurna: CO₂ menurunkan tegangan permukaan cairan baja sehingga rigi las mengalir rata dan tidak membentuk undercut tajam.',
       'Deoksidasi Terencana: Kawat ER70S-6 mengandung Mangan (Mn) dan Silikon (Si) tinggi yang mengikat oksigen bebas menjadi mikroslag tak berbahaya.',
       'Masalah Argon Murni pada Baja: Menghasilkan penetrasi tirus sempit (finger penetration), fusi dinding samping buruk, dan rigi menggumpal tinggi (roping).'
@@ -66,7 +66,7 @@ Sebaliknya, pada MAG, gas CO₂ atau penambahan oksigen sengaja dimanfaatkan sec
 
 1. TERMODINAMIKA & BENTUK PENETRASI BUSUR:
 Pada suhu busur las (> 3.000°C), molekul CO₂ menyerap energi busur dan mengalami disosiasi endotermik:
-CO₂ ➔ CO + O
+CO₂ -> CO + O
 Saat gas mengalir turun dan menyentuh permukaan plat baja yang suhunya lebih dingin (± 1.600°C), atom-atom tersebut mengalami rekombinasi eksotermik menjadi molekul CO₂ kembali sembari membebaskan energi panas kalor yang sangat besar langsung di dasar kawah las. Fenomena ini menciptakan penetrasi mangkuk yang lebar dan dalam (bowl-shaped penetration), menjamin fusi dinding kampuh yang sempurna.
 Sebaliknya, bila baja karbon dilas dengan Argon murni, busur membentuk kolom sempit runcing (finger-like penetration). Bagian tengah menembus dalam tapi sisi kiri-kanan tidak melebur sempurna, memicu cacat Lack of Side-Wall Fusion.
 
@@ -76,8 +76,8 @@ Gas aktif CO₂ (atau penambahan 2-5% O₂) secara drastis menurunkan tegangan p
 
 3. SISTEM DEOKSIDASI ELEKTRODA ER70S-6:
 Kawat las baja karbon ER70S-6 sengaja dirancang mengandung Mangan (Mn 1.40 - 1.85%) dan Silikon (Si 0.80 - 1.15%). Zat ini bertindak sebagai pemulung oksigen (oxygen scavenger):
-Mn + O ➔ MnO
-Si + 2O ➔ SiO₂
+Mn + O -> MnO
+Si + 2O -> SiO₂
 Oksida MnO dan SiO₂ ini memiliki berat jenis lebih ringan daripada baja cair, sehingga mengapung ke permukaan jalur lasan sebagai bercak kaca coklat mengkilap (silica islands) yang mudah dikelupas, meninggalkan logam las murni tanpa cacat porositas.`,
     proTip: 'Untuk hasil optimal pada baja tebal di industri fabrikasi, gunakan gas campuran Ar 80% + CO₂ 20% (Arcal 21 / Corgon). Campuran ini menggabungkan busur tenang minim spatter dari Argon dengan penetrasi dan fusi sempurna dari CO₂!',
     standards: 'AWS A5.18 (ER70S-6 Chemical Composition), ASME Section IX QW-404.'
@@ -102,7 +102,7 @@ Oksida MnO dan SiO₂ ini memiliki berat jenis lebih ringan daripada baja cair, 
 BENCANA METALURGI BILA TERKENA GAS MAG (CO₂ / O₂):
 1. Titik lebur logam paduan Aluminium hanyalah 660°C.
 2. Namun, saat atom Aluminium kontak dengan gas aktif CO₂ pada suhu busur las (> 3.000°C), Aluminium bereaksi secara eksplosif membentuk lapisan oksida Aluminium Oksida:
-4Al + 3CO₂ ➔ 2Al₂O₃ + 3C
+4Al + 3CO₂ -> 2Al₂O₃ + 3C
 3. Senyawa Al₂O₃ (alumina) ini adalah material keramik refraktori tahan api yang memiliki titik lebur sangat tinggi, yaitu 2.072°C!
 4. Karena panas busur pengelasan aluminium dirancang untuk suhu kerja rendah (di bawah 1.000°C), lapisan Al₂O₃ sama sekali TIDAK BISA MELELEH!
 5. Lapisan ini membentuk kulit kerak padat di atas kawah las yang mencegah cairan filler rod membasahi logam induk. Karbon bebas yang terbentuk juga mencemari sambungan.
@@ -268,7 +268,7 @@ MEKANISME RETAK HIDROGEN (HYDROGEN-INDUCED CRACKING / HIC):
 1. Fluks elektroda Low-Hydrogen mengandung mineral kalsium karbonat (CaCO₃) dan kalsium fluorida (CaF₂). Bahan ini sangat rakus menyerap uap air dari udara (higroskopis).
 2. Jika elektroda dibiarkan di udara lembab selama beberapa jam, fluks akan jenuh dengan uap air (H₂O).
 3. Saat elektroda lembab ini dibakar pada suhu busur 3.500°C, molekul air terurai seketika menjadi atom-atom Hidrogen bebas:
-H₂O ➔ 2H + O
+H₂O -> 2H + O
 4. Atom hidrogen memiliki diameter atom paling kecil di alam semesta, sehingga dengan leluasa masuk dan terlarut ke dalam kisi kristal cairan baja las.
 5. Saat sambungan las mendingin melewati suhu 200°C menuju suhu ruang, kelarutan hidrogen di dalam kisi kristal besi menurun drastis. Atom-atom hidrogen terdesak dan berdifusi mencari ruang kosong mikro (micro-cavities) di batas butir fasa martensit yang keras dan getas di daerah HAZ (Heat Affected Zone).
 6. Di dalam rongga mikro tersebut, atom hidrogen bergabung kembali menjadi molekul gas Hidrogen (H₂). Tekanan gas molekuler yang terperangkap ini dapat mencapai ribuan atmosfer!
@@ -294,7 +294,7 @@ STANDAR OPERASIONAL BAKING & HOLDING (AWS D1.1):
     subtitle: 'Di atas 15 psi (1.03 bar), gas asetilen bebas mengalami disosiasi eksotermik spontan (terurai sendiri menghasilkan panas dahsyat) bahkan tanpa oksigen, yang memicu ledakan berdaya hancur tinggi!',
     highlights: [
       'Batas Mutlak: Tekanan kerja pengatur (regulator gauge) gas Asetilen TIDAK BOLEH melebihi 15 psi (1.03 bar / 100 kPa).',
-      'Disosiasi Spontan: C₂H₂ ➔ 2C + H₂ + 227 kJ/mol Panas (meledak seketika tanpa membutuhkan oksigen).',
+      'Disosiasi Spontan: C₂H₂ -> 2C + H₂ + 227 kJ/mol Panas (meledak seketika tanpa membutuhkan oksigen).',
       'Penyimpanan Tabung Aman: Gas asetilen dilarutkan ke dalam cairan Aseton di dalam massa spons berpori kalsium silikat.',
       'SOP Tabung: Tabung asetilen wajib selalu berdiri tegak saat digunakan demi mencegah cairan aseton ikut tersedot keluar ke torch.'
     ],
@@ -306,7 +306,7 @@ Molekul asetilen memiliki ikatan rangkap tiga karbon-karbon (H-C≡C-H). Ikatan 
 2. FENOMENA DISOSIASI SPONTAN (> 15 PSI / 1.03 BAR):
 Jika gas asetilen berada dalam wujud gas bebas di dalam pipa atau selang dengan tekanan melebihi 15 psi (1.03 bar / 100 kPa), molekul tersebut menjadi tidak stabil secara ekstrem.
 Sedikit guncangan mekanik, percikan statis, atau kenaikan suhu lokal di atas 100°C akan memicu DISOSIASI EKSOTERMIK SPONTAN:
-C₂H₂ ➔ 2C (karbon padat) + H₂ (gas hidrogen) + 227 kJ/mol Energi Panas
+C₂H₂ -> 2C (karbon padat) + H₂ (gas hidrogen) + 227 kJ/mol Energi Panas
 Reaksi ini TIDAK MEMBUTUHKAN GAS OKSIGEN SAMA SEKALI! Gas asetilen akan meledak dari dalam dirinya sendiri. Kenaikan tekanan gas hidrogen panas yang mendadak melipatgandakan tekanan hingga puluhan kali lipat, merobek selang las dan menghancurkan regulator seketika.
 
 3. MENGAPA TABUNG ASETILEN BISA BERTEKANAN HINGGA 15 - 18 BAR?

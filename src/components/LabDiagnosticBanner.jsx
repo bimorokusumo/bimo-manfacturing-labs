@@ -1,5 +1,6 @@
 import React from 'react';
 import { sound } from '../utils/audio';
+import { ClipboardCheck, ArrowRight } from 'lucide-react';
 
 const LabDiagnosticBanner = ({ 
   labTitle = 'Laboratorium', 
@@ -33,9 +34,13 @@ const LabDiagnosticBanner = ({
           padding: '2px 7px',
           borderRadius: '5px',
           letterSpacing: '0.4px',
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px'
         }}>
-          📋 DIAGNOSTIK
+          <ClipboardCheck size={11} />
+          <span>DIAGNOSTIK</span>
         </span>
         <div style={{ fontWeight: 800, fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           Tes Diagnostik: {labTitle}
@@ -66,7 +71,7 @@ const LabDiagnosticBanner = ({
         }}
       >
         <span>Mulai Tes (10 Soal)</span>
-        <span>➔</span>
+        <ArrowRight size={14} />
       </button>
     </div>
   );

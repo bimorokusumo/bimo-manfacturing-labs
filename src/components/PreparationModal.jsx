@@ -1,5 +1,21 @@
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
+import {
+  ShieldCheck,
+  Ruler,
+  Glasses,
+  Footprints,
+  Shirt,
+  Calculator,
+  ClipboardList,
+  BarChart3,
+  Lightbulb,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+  Check,
+  X
+} from 'lucide-react';
 
 // Database Kecepatan Potong Standar (Cutting Speed Cs) untuk Mesin Bubut
 const CS_DATABASE = [
@@ -114,13 +130,23 @@ const PreparationModal = ({ machineName, onComplete }) => {
             }}
             title="Langsung ke simulator 3D"
           >
-            <span>✕</span> Lewati ke Simulator 3D
+            <X size={14} /> <span>Lewati ke Simulator 3D</span>
           </button>
           <div style={{ fontSize: '0.8rem', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 800, marginBottom: '6px' }}>
             TAHAP PERSIAPAN: {machineName}
           </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', margin: 0, fontFamily: "'Chakra Petch', sans-serif" }}>
-            {step === 1 ? '🛡️ Keselamatan Kerja (K3) & APD Wajib' : '📐 Standard Operating Procedure (SOP) & Rumus Pemesinan'}
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#ffffff', margin: 0, fontFamily: "'Chakra Petch', sans-serif", display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {step === 1 ? (
+              <>
+                <ShieldCheck size={28} className="text-sky-400" />
+                <span>Keselamatan Kerja (K3) & APD Wajib</span>
+              </>
+            ) : (
+              <>
+                <Ruler size={28} className="text-amber-400" />
+                <span>Standard Operating Procedure (SOP) & Rumus Pemesinan</span>
+              </>
+            )}
           </h2>
           <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
             {step === 1 
@@ -153,10 +179,13 @@ const PreparationModal = ({ machineName, onComplete }) => {
                 background: checks.glasses ? '#0284c7' : 'transparent',
                 fontWeight: 900, color: '#ffffff'
               }}>
-                {checks.glasses && '✓'}
+                {checks.glasses && <Check size={18} strokeWidth={3} />}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem' }}>👓 Kacamata Safety (Safety Glasses)</div>
+                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Glasses size={18} className="text-sky-400" />
+                  <span>Kacamata Safety (Safety Glasses)</span>
+                </div>
                 <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Melindungi kornea mata dari loncatan tatal / beram besi panas yang melayang berkecepatan tinggi.</div>
               </div>
             </div>
@@ -177,10 +206,13 @@ const PreparationModal = ({ machineName, onComplete }) => {
                 background: checks.shoes ? '#0284c7' : 'transparent',
                 fontWeight: 900, color: '#ffffff'
               }}>
-                {checks.shoes && '✓'}
+                {checks.shoes && <Check size={18} strokeWidth={3} />}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem' }}>🥾 Sepatu Safety (Safety Shoes Toecap Baja)</div>
+                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Footprints size={18} className="text-sky-400" />
+                  <span>Sepatu Safety (Safety Shoes Toecap Baja)</span>
+                </div>
                 <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Melindungi kaki dari benturan benda kerja silindris berat atau kunci chuck yang terjatuh dari meja mesin.</div>
               </div>
             </div>
@@ -201,10 +233,13 @@ const PreparationModal = ({ machineName, onComplete }) => {
                 background: checks.wearpack ? '#0284c7' : 'transparent',
                 fontWeight: 900, color: '#ffffff'
               }}>
-                {checks.wearpack && '✓'}
+                {checks.wearpack && <Check size={18} strokeWidth={3} />}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem' }}>👕 Pakaian Kerja Pas Badan (Wearpack)</div>
+                <div style={{ fontWeight: 800, color: '#ffffff', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shirt size={18} className="text-sky-400" />
+                  <span>Pakaian Kerja Pas Badan (Wearpack)</span>
+                </div>
                 <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Wajib dikancing rapat di pergelangan tangan! DILARANG memakai dasi, lengan baju longgar, jam tangan, atau sarung tangan saat memegang spindel berputar!</div>
               </div>
             </div>
@@ -223,10 +258,12 @@ const PreparationModal = ({ machineName, onComplete }) => {
                   padding: '8px 16px', borderRadius: '8px', border: 'none',
                   background: sopTab === 'formulas' ? '#0284c7' : '#1e293b',
                   color: sopTab === 'formulas' ? '#ffffff' : '#94a3b8',
-                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer'
+                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '6px'
                 }}
               >
-                📐 Bank Rumus Pemesinan Bubut
+                <Ruler size={14} />
+                <span>Bank Rumus Pemesinan Bubut</span>
               </button>
 
               <button
@@ -235,10 +272,12 @@ const PreparationModal = ({ machineName, onComplete }) => {
                   padding: '8px 16px', borderRadius: '8px', border: 'none',
                   background: sopTab === 'calculator' ? '#0284c7' : '#1e293b',
                   color: sopTab === 'calculator' ? '#ffffff' : '#94a3b8',
-                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer'
+                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '6px'
                 }}
               >
-                🧮 Kalkulator Cepat Interaktif (Isi Sendiri)
+                <Calculator size={14} />
+                <span>Kalkulator Cepat Interaktif</span>
               </button>
 
               <button
@@ -247,10 +286,12 @@ const PreparationModal = ({ machineName, onComplete }) => {
                   padding: '8px 16px', borderRadius: '8px', border: 'none',
                   background: sopTab === 'sop' ? '#0284c7' : '#1e293b',
                   color: sopTab === 'sop' ? '#ffffff' : '#94a3b8',
-                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer'
+                  fontWeight: 800, fontSize: '0.82rem', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '6px'
                 }}
               >
-                📋 SOP Operasi &amp; Menyalakan Mesin
+                <ClipboardList size={14} />
+                <span>SOP Operasi &amp; Menyalakan Mesin</span>
               </button>
             </div>
 
@@ -355,8 +396,9 @@ const PreparationModal = ({ machineName, onComplete }) => {
 
                 {/* Tabel Standar Cs */}
                 <div style={{ background: '#090d16', padding: '12px', borderRadius: '8px', border: '1px solid #1e293b' }}>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px' }}>
-                    📊 Tabel Referensi Standar Kecepatan Potong (Cs):
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <BarChart3 size={15} />
+                    <span>Tabel Referensi Standar Kecepatan Potong (Cs):</span>
                   </div>
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', fontSize: '0.72rem', borderCollapse: 'collapse', color: '#cbd5e1' }}>
@@ -467,8 +509,9 @@ const PreparationModal = ({ machineName, onComplete }) => {
                       <div style={{ fontSize: '0.78rem', fontFamily: 'monospace', color: '#cbd5e1' }}>
                         Langkah Hitung: n = (1000 × {activeCs}) / (3.1416 × {userDiameter}) = {calculatedRpm} RPM
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px' }}>
-                        💡 <strong>Saran Bengkel:</strong> Pilih kecepatan tuas transmisi mesin bubut yang paling mendekati angka <strong>{calculatedRpm} RPM</strong> (misal 600 RPM atau 750 RPM).
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Lightbulb size={13} className="text-amber-400 shrink-0" />
+                        <span><strong>Saran Bengkel:</strong> Pilih kecepatan tuas transmisi mesin bubut yang paling mendekati angka <strong>{calculatedRpm} RPM</strong> (misal 600 RPM atau 750 RPM).</span>
                       </div>
                     </div>
                   </div>
@@ -532,10 +575,11 @@ const PreparationModal = ({ machineName, onComplete }) => {
                         α = {alphaDegrees}°
                       </div>
                       <div style={{ fontSize: '0.78rem', fontFamily: 'monospace', color: '#cbd5e1' }}>
-                        tan(α) = ({userBigD} - {userSmallD}) / (2 × {userTaperL}) = {tanAlpha.toFixed(4)} ➔ α = arctan({tanAlpha.toFixed(4)}) = {alphaDegrees}°
+                        tan(α) = ({userBigD} - {userSmallD}) / (2 × {userTaperL}) = {tanAlpha.toFixed(4)} → α = arctan({tanAlpha.toFixed(4)}) = {alphaDegrees}°
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px' }}>
-                        💡 <strong>Langkah di Bengkel:</strong> Kendorkan 2 baut pengikat eretan atas (compound rest), putar skala derajat busur ke angka <strong>{alphaDegrees}°</strong>, lalu kencangkan kembali.
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <Lightbulb size={13} className="text-amber-400 shrink-0" />
+                        <span><strong>Langkah di Bengkel:</strong> Kendorkan 2 baut pengikat eretan atas (compound rest), putar skala derajat busur ke angka <strong>{alphaDegrees}°</strong>, lalu kencangkan kembali.</span>
                       </div>
                     </div>
                   </div>
@@ -547,8 +591,9 @@ const PreparationModal = ({ machineName, onComplete }) => {
             {sopTab === 'sop' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div style={{ padding: '16px', background: '#1e293b', borderRadius: '10px', borderLeft: '4px solid #f59e0b' }}>
-                  <div style={{ fontWeight: 800, color: '#fbbf24', marginBottom: '8px', fontSize: '0.95rem' }}>
-                    ⚡ 5 LANGKAH STANDAR OPERASIONAL MENYALAKAN MESIN BUBUT
+                  <div style={{ fontWeight: 800, color: '#fbbf24', marginBottom: '8px', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Zap size={16} className="text-amber-400" />
+                    <span>5 LANGKAH STANDAR OPERASIONAL MENYALAKAN MESIN BUBUT</span>
                   </div>
                   <ol style={{ color: '#cbd5e1', fontSize: '0.82rem', lineHeight: '1.6', paddingLeft: '20px', margin: 0 }}>
                     <li><strong>Lepas Kunci Cekam (Chuck Key):</strong> Pastikan kunci chuck TIDAK menancap di kepala tetap! Kunci chuck yang tertinggal bisa melesat membunuh saat spindel berputar.</li>
@@ -580,7 +625,18 @@ const PreparationModal = ({ machineName, onComplete }) => {
             onClick={handleNext}
             disabled={!allChecked && step === 1}
           >
-            {step === 1 ? 'LANJUT KE SOP & RUMUS BUBUT ▶' : '✅ SAYA SUDAH PAHAM RUMUS & SIAP MENGOPERASIKAN MESIN ▶'}
+            {step === 1 ? (
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <span>LANJUT KE SOP & RUMUS BUBUT</span>
+                <ArrowRight size={18} />
+              </span>
+            ) : (
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <CheckCircle2 size={18} />
+                <span>SAYA SUDAH PAHAM RUMUS & SIAP MENGOPERASIKAN MESIN</span>
+                <ArrowRight size={18} />
+              </span>
+            )}
           </button>
         </div>
 

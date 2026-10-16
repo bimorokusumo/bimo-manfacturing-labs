@@ -1,3 +1,4 @@
+import { Microscope } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { getAssetUrl } from '../utils/assets';
 
@@ -13,7 +14,7 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/hardening_gear_quench.jpg',
     standard: 'ASTM A255 / JIS G4051 S45C',
     equipment: 'Tungku Muffle Kanthal A1 1200°C • Bak Quench Oli ISO VG 32 Pompa Sirkulasi 1.5 m/s • Tester Rockwell C (Kerucut Intan 150 kgf)',
-    phenomenonTitle: '🔥 Fenomena Nyata di Bengkel: Semburan Api & Uap Minyak',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Semburan Api & Uap Minyak',
     phenomenonDesc: 'Saat baja membara 850°C dicelupkan ke bak oli, minyak di permukaan langsung menyala (fire flare) karena suhu baja jauh melampaui flash point oli (~210°C). Selimut uap (vapor blanket) pecah dalam 2.5 detik pertama, membekukan atom karbon di dalam kisi kristal besi membentuk Martensit 65 HRC.',
     caution: 'PERINGATAN BENGKEL: Baja baru quench tidak boleh dipukul palu atau dijatuhkan karena getas seperti kaca!',
     micrographTitle: 'Mikroskop 500x: Jarum Martensit Acicular (BCT)',
@@ -28,7 +29,7 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/tempering_colors_guide.svg',
     standard: 'DIN 17350 / ISO 4957 Tool Steels',
     equipment: 'Tungku Sirkulasi Udara Paksa (*Forced Convection Oven*) • Bak Mandi Garam Nitrat Mendidih (Salt Bath 160°C - 550°C) • Sensor Termokopel PID ±1°C',
-    phenomenonTitle: '🌈 Fenomena Nyata di Bengkel: Interferensi Warna Oksida Alami',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Interferensi Warna Oksida Alami',
     phenomenonDesc: 'Warna pelangi pada permukaan baja bukan cat kimia buatan, melainkan lapisan film tipis oksida besi yang membiaskan cahaya secara interferensi optis. Kuning Jerami (220°C, 45 nm) untuk pahat bubut presisi hingga Biru Terang (300°C, 70 nm) untuk pegas elastis.',
     caution: 'PANDUAN OPERATOR: Warna hanya akurat jika permukaan baja dipoles bersih mengkilap sebelum dipanaskan!',
     micrographTitle: 'Mikroskop 500x: Martensit Temper (Sementit Submikroskopis)',
@@ -43,7 +44,7 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/annealing_cooling_infographic.svg',
     standard: 'ASTM A384 / JIS G0551 Full Anneal',
     equipment: 'Tungku Car-Bottom Gas Alam 20 Ton • Isolasi Keramik Fiber Refraktori Tebal 300 mm • Programmer PLC Penurunan Suhu 15°C/Jam',
-    phenomenonTitle: '🧘 Fenomena Nyata di Bengkel: Pendinginan Super Lambat 24 Jam',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Pendinginan Super Lambat 24 Jam',
     phenomenonDesc: 'Blok baja tempa dan cor berbobot ratusan kilogram dimasukkan ke dalam tungku car-bottom. Setelah mencapai 850°C dan ditahan (soaking), burner dimatikan dan pintu diisolasi rapat. Penurunan suhu dikontrol sangat lambat (10-20°C per jam) selama 12 hingga 24 jam untuk menghasilkan Perlit Kasar yang sangat lunak (12 HRC / 160 HB) agar pisau frais dan pahat bubut CNC awet berhari-hari.',
     caution: 'FAKTA BIAYA: Biaya energi tungku anneal 24 jam sangat tinggi, namun menghemat puluhan juta rupiah dari keawetan mata pahat bubut karbida!',
     micrographTitle: 'Mikroskop 500x: Perlit Kasar Lamela Tebal + Ferit Bebas',
@@ -58,7 +59,7 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/hot_metal_forging_quench.jpg',
     standard: 'AREMA Chapter 4 (Rel KA) / ASTM A36',
     equipment: 'Tungku Pemanas 920°C Kamar Austenit • Rak Pendingin Kisi Baja Terbuka Sirkulasi Bebas • Pyrometer Inframerah Non-Kontak',
-    phenomenonTitle: '💨 Fenomena Nyata di Bengkel: Rekristalisasi Butir di Udara Bebas',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Rekristalisasi Butir di Udara Bebas',
     phenomenonDesc: 'Komponen tempa panas diangkat pada suhu 900°C dan dijajarkan pada rak baja terbuka. Aliran konveksi udara alami kamar mendinginkan baja lebih cepat dibanding annealing tungku tertutup, memicu nukleasi kristal yang rapat dan halus (ASTM grain size 7-8). Menghasilkan ketangguhan impak tinggi tanpa adanya getas ataupun tegangan sisa tempa.',
     caution: 'APLIKASI NYATA: Rel kereta api wajib di-normalize agar tidak patah retak lelah (fatigue failure) saat dilindas lokomotif ratusan ton.',
     micrographTitle: 'Mikroskop 500x: Butir Kristal Halus Seragam Rapat (ASTM 8)',
@@ -73,13 +74,13 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/pack_carburizing_box.svg',
     standard: 'SAE J423 / ISO 2639 Case Depth Standard',
     equipment: 'Kotak Retort Baja Paduan Tahan Panas Inconel 600 • Serbuk Arang Kayu Keras + 10% Barium Karbonat BaCO₃ • Bak Quench Air Bertekanan',
-    phenomenonTitle: '🛡️ Fenomena Nyata di Bengkel: Difusi Karbon & Belahan Penampang',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Difusi Karbon & Belahan Penampang',
     phenomenonDesc: 'Roda gigi baja karbon rendah (AISI 1020 / St 37) dimasukkan ke kotak baja tahan panas berisi arang kayu keras dan aktivator Barium Karbonat (BaCO₃), lalu disegel lempung tanah api (fireclay). Dipanaskan pada 920°C selama 6 jam. Karbon berdifusi masuk sedalam 1.0 mm ke permukaan. Setelah di-quench air, kulit menjadi Martensit 62 HRC anti-aus sedangkan inti tetap Ferit-Perlit 22 HRC ulet menyerap kejutan torsi mesin.',
     caution: 'UJI PENAMPANG: Benda uji dipotong dan dietsa asam nital 2% untuk memverifikasi kedalaman kulit keras (effective case depth = 1.0 mm).',
     micrographTitle: 'Mikroskop 500x: Gradasi Fasa Kulit Luar (62 HRC) ke Inti (22 HRC)',
     micrographDesc: 'Penampang melintang menunjukkan transisi konsentrasi karbon dari 0.9% C di permukaan luar (Martensit jarum padat) melandai ke 0.2% C di inti dalam (Ferit poligonal + Perlit lunak).',
     micrographColor: '#a855f7',
-    grainType: 'Gradien Karburasi (Case Martensite ➔ Core Ferrite)'
+    grainType: 'Gradien Karburasi (Case Martensite -> Core Ferrite)'
   },
   blackening: {
     title: 'Dokumentasi Riil Industri: Jalur 7 Tangki Kimia Hot Black Oxide Baut Presisi',
@@ -88,7 +89,7 @@ const DOCUMENTARY_DATA = {
     subImage: '/assets/images/heat_treatment/blackening_tank_diagram.svg',
     standard: 'MIL-DTL-13924 Class 1 / DIN 50938',
     equipment: 'Jalur 7 Tangki Stainless Steel SUS-316L • Pemanas Celup Titanium Digital 15 kW • Bak Garam Kaustik Mendidih 142°C • Bak Minyak Pelindung ASTM D-1748',
-    phenomenonTitle: '⚫ Fenomena Nyata di Bengkel: Konversi Kimia Hitam Pekat Tanpa Ubah Ukuran',
+    phenomenonTitle: 'Fenomena Nyata di Bengkel: Konversi Kimia Hitam Pekat Tanpa Ubah Ukuran',
     phenomenonDesc: 'Proses kimia konversi panas pada suhu mendidih 140°C - 145°C menggunakan larutan garam kaustik nitrit/nitrat. Besi permukaan (Fe) bereaksi membentuk Magnetit (Fe₃O₄) setebal 1 - 2 mikron berwarna hitam pekat mengkilap. Tidak mengubah dimensi sedikitpun (toleransi 0.000 mm), lalu disegel cairan oli anti-karat pelindung (water displacing oil).',
     caution: 'KEUNGGULAN PRESISI: Baut dan mur presisi tidak akan seret atau macet karena ketebalan lapisan tidak menambah toleransi ulir!',
     micrographTitle: 'Mikroskop 500x: Lapisan Film Konversi Magnetit Fe₃O₄ (1.5 µm)',
@@ -198,7 +199,7 @@ export default function HeatTreatmentRealDocumentary({
                 fontWeight: 800,
                 border: '1px solid #ca8a04'
               }}>
-                📸 FOTO INDUSTRI RIIL
+                [DOKUMENTASI] FOTO INDUSTRI RIIL
               </div>
             </div>
             <div style={{ padding: '10px 12px', background: '#0b1120' }}>
@@ -234,7 +235,7 @@ export default function HeatTreatmentRealDocumentary({
             {/* Industrial Observation Checklist */}
             <div style={{ background: 'rgba(2, 6, 23, 0.6)', padding: '10px', borderRadius: '8px', border: '1px solid #1e293b' }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', marginBottom: '4px' }}>
-                🔍 CATATAN PARAMETER BENGKEL TEKNIK:
+                CATATAN PARAMETER BENGKEL TEKNIK:
               </div>
               <div style={{ fontSize: '0.72rem', color: '#94a3b8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <div>• Suhu Operasi Aktual: <strong style={{ color: '#facc15' }}>{temp}°C</strong></div>
@@ -287,7 +288,7 @@ export default function HeatTreatmentRealDocumentary({
         border: '1px solid #334155'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1rem' }}>🔬</span>
+          <Microscope size={16} className="text-sky-400" />
           <span style={{ fontSize: '0.78rem', fontFamily: 'monospace', fontWeight: 900, color: '#f8fafc' }}>
             OPTICAL MICROSCOPE PERBESARAN 500x &bull; ETCH: NITAL 2% (HNO₃ + ALKOHOL)
           </span>

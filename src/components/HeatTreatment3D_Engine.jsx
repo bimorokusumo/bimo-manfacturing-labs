@@ -287,7 +287,7 @@ const QuenchTank3D = ({ position = [1.8, 0.5, 0.4], media = 'oil', isBubbling = 
           textTransform: 'uppercase',
           letterSpacing: '1px'
         }}>
-          {media === 'oil' ? '⚠️ BAK OLI QUENCH 60°C' : '⚠️ BAK AIR QUENCH'}
+          {media === 'oil' ? '[QUENCH] BAK OLI QUENCH 60°C' : '[QUENCH] BAK AIR QUENCH'}
         </div>
       </Html>
 
@@ -506,7 +506,7 @@ const AirCoolingRack3D = ({ position = [0.8, 0.45, 0.2] }) => {
           border: '1px solid #10b981',
           textTransform: 'uppercase'
         }}>
-          💨 RAK PENDINGINAN UDARA BEBAS (KAMAR)
+          RAK PENDINGINAN UDARA BEBAS (KAMAR)
         </div>
       </Html>
     </group>
@@ -545,7 +545,7 @@ const CarburizingBox3D = ({ position = [0, 0.6, 0], temp = 920 }) => {
           border: '1px solid #ea580c',
           borderRadius: '3px'
         }}>
-          📦 KOTAK ARANG AKTIF (920°C)
+          KOTAK ARANG AKTIF (920°C)
         </div>
       </Html>
     </group>
@@ -902,7 +902,7 @@ export default function HeatTreatment3D_Engine({
         gap: '6px',
         pointerEvents: 'none'
       }}>
-        <span>🖱️ Putar 360° dengan Drag Mouse &bull; Scroll untuk Zoom Benda Kerja</span>
+        <span>Putar 360° dengan Drag Mouse &bull; Scroll untuk Zoom Benda Kerja</span>
       </div>
     </div>
   );

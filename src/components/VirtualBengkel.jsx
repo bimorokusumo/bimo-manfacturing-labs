@@ -2,6 +2,42 @@ import React, { Suspense, useState, useEffect, useMemo, Component } from 'react'
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Html, GizmoHelper, GizmoViewcube } from '@react-three/drei';
 import * as THREE from 'three';
+import {
+  Factory,
+  Globe,
+  Cog,
+  Hammer,
+  ClipboardCheck,
+  ShieldCheck,
+  Disc,
+  Cpu,
+  Monitor,
+  Wrench,
+  Boxes,
+  Sliders,
+  RotateCw,
+  Info,
+  Ruler,
+  FileText,
+  ShieldAlert,
+  Volume2,
+  Square,
+  HardHat,
+  Flame,
+  Sparkles,
+  Eye,
+  Shirt,
+  Ban,
+  Key,
+  Trash2,
+  Octagon,
+  DoorClosed,
+  CheckCircle2,
+  AlertTriangle,
+  LogOut,
+  Layers,
+  Shield
+} from 'lucide-react';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import { CanvasErrorBoundary } from './ErrorBoundary';
 
@@ -3217,12 +3253,12 @@ const K3SopModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('apd');
 
   const tabs = [
-    { id: 'apd', label: '🦺 Standar APD Wajib', color: '#2563eb' },
-    { id: 'mesin', label: '⚙️ SOP Mesin Bubut & Frais', color: '#d97706' },
-    { id: 'cnc', label: '🖥️ SOP Mesin CNC VMC', color: '#06b6d4' },
-    { id: 'bangku', label: '🔨 SOP Kerja Bangku', color: '#10b981' },
-    { id: 'apar', label: '🧯 APAR & Evakuasi', color: '#dc2626' },
-    { id: '5r', label: '🧹 Budaya 5R (5S)', color: '#ca8a04' }
+    { id: 'apd', label: 'Standar APD Wajib', icon: HardHat, color: '#2563eb' },
+    { id: 'mesin', label: 'SOP Mesin Bubut & Frais', icon: Cog, color: '#d97706' },
+    { id: 'cnc', label: 'SOP Mesin CNC VMC', icon: Monitor, color: '#06b6d4' },
+    { id: 'bangku', label: 'SOP Kerja Bangku', icon: Hammer, color: '#10b981' },
+    { id: 'apar', label: 'APAR & Evakuasi', icon: Flame, color: '#dc2626' },
+    { id: '5r', label: 'Budaya 5R (5S)', icon: Sparkles, color: '#ca8a04' }
   ];
 
   return (
@@ -3268,7 +3304,7 @@ const K3SopModal = ({ onClose }) => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '24px' }}>🛡️</span>
+            <ShieldCheck size={26} color="#38bdf8" />
             <div>
               <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#f8fafc' }}>
                 Standar Operasional Prosedur (SOP) & Rambu K3 Bengkel
@@ -3318,26 +3354,33 @@ const K3SopModal = ({ onClose }) => {
             overflowX: 'auto'
           }}
         >
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                padding: '8px 14px',
-                borderRadius: '8px',
-                border: 'none',
-                background: activeTab === tab.id ? tab.color : 'rgba(255, 255, 255, 0.05)',
-                color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
-                fontWeight: activeTab === tab.id ? 700 : 500,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const TabIcon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: activeTab === tab.id ? tab.color : 'rgba(255, 255, 255, 0.05)',
+                  color: activeTab === tab.id ? '#ffffff' : '#94a3b8',
+                  fontWeight: activeTab === tab.id ? 700 : 500,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <TabIcon size={14} />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab Content Body */}
@@ -3345,28 +3388,36 @@ const K3SopModal = ({ onClose }) => {
           {activeTab === 'apd' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>🥽 1. Kacamata Pelindung (Safety Glasses) Standar ANSI Z87.1</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Eye size={16} /> 1. Kacamata Pelindung (Safety Glasses) Standar ANSI Z87.1
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Wajib dipakai sebelum memasuki batas garis kuning area permesinan. Berfungsi melindungi kornea mata dari loncatan tatal bram panas (flying chips) berkecepatan tinggi dan percikan cairan pendingin (coolant).
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>🦺 2. Baju Praktik Kerja (Wearpack Standar Industri)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shirt size={16} /> 2. Baju Praktik Kerja (Wearpack Standar Industri)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Bahan katun tebal tahan api ringan dan gesekan. Lengan baju harus dikancingkan pas pada pergelangan tangan atau digulung rapi ke dalam. Dilarang mengenakan baju yang longgar, berdasi, berumbai, atau jaket bertali gantung.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem' }}>👞 3. Sepatu Keselamatan (Safety Shoes Toe Steel)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#60a5fa', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shield size={16} /> 3. Sepatu Keselamatan (Safety Shoes Toe Steel)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Dilengkapi pelat baja di bagian ujung jari (menahan benturan hingga 200 Joule) dan sol tahan tusukan paku/tatal bram tajam serta anti-slip pada genangan oli atau cairan pendingin.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem' }}>⛔ LARANGAN KRITIS (Bahaya Entanglement / Terlilit Spindel):</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Ban size={16} /> LARANGAN KRITIS (Bahaya Entanglement / Terlilit Spindel):
+                </h4>
                 <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.85rem', color: '#fecaca', lineHeight: 1.6 }}>
                   <li><strong>DILARANG KERAS MEMAKAI SARUNG TANGAN</strong> saat mengoperasikan mesin berputar (Bubut, CNC, Frais, Bor)! Kain sarung tangan dapat tersangkut putaran spindel dan menarik tangan seketika.</li>
                   <li>Dilarang memakai cincin, jam tangan, gelang, atau kalung di area bengkel.</li>
@@ -3379,28 +3430,36 @@ const K3SopModal = ({ onClose }) => {
           {activeTab === 'mesin' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🌀 1. Kunci Cekam (Chuck Key) Bubut</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Key size={16} /> 1. Kunci Cekam (Chuck Key) Bubut
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   <strong>ATURAN MUTLAK:</strong> JANGAN PERNAH meninggalkan kunci cekam tertancap pada chuck bubut walau hanya satu detik! Jika motor dihidupkan, kunci cekam akan terlontar seperti proyektil mematikan. Selalu lepas kunci seketika setelah mengencangkan atau melonggarkan benda kerja.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🧹 2. Pembersihan Tatal Bram & Serpihan Logam</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Trash2 size={16} /> 2. Pembersihan Tatal Bram & Serpihan Logam
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Gunakan kuas atau tongkat pengait bram berpelindung saat membersihkan serpihan penyayatan. Dilarang keras membersihkan bram dengan tangan kosong atau meniupnya dengan mulut / semprotan kompresor angin sembarangan karena bram halus dapat melayang menusuk mata rekan kerja.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>⚙️ 3. Penggantian Tuas Gigi & Kecepatan Spindel</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Cog size={16} /> 3. Penggantian Tuas Gigi & Kecepatan Spindel
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Hanya geser tuas pemilih gigi (gear selector) atau pindahkan sabuk transmisi saat motor spindle dalam kondisi MATI TOTAL (RPM = 0). Memindahkan tuas gigi saat mesin berputar akan mematahkan gigi transmisi gearbox.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', border: '1px solid rgba(217, 119, 6, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem' }}>🛑 4. Penghentian Putaran & Rem Spindel</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#fbbf24', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Octagon size={16} /> 4. Penghentian Putaran & Rem Spindel
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Gunakan pedal rem kaki pada mesin bubut atau tuas rem manual pada mesin frais. DILARANG KERAS menahan atau memperlambat putaran cekam spindel dengan telapak tangan!
                 </p>
@@ -3411,28 +3470,36 @@ const K3SopModal = ({ onClose }) => {
           {activeTab === 'cnc' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>🚪 1. Pintu Kabin Pelindung (Enclosure Interlock)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <DoorClosed size={16} /> 1. Pintu Kabin Pelindung (Enclosure Interlock)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Pintu polikarbonat kabin CNC wajib tertutup rapat selama operasi berjalan. Sensor interlock pengaman otomatis menghentikan spindel jika pintu dibuka. Dilarang keras mem-bypass atau mengakali switch interlock pengaman!
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>📏 2. Kalibrasi Offset Pahat & Titik Nol (G54)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Ruler size={16} /> 2. Kalibrasi Offset Pahat & Titik Nol (G54)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Lakukan kalibrasi Tool Length Offset (H) dengan Z-axis presetter dan penentuan titik nol benda kerja (G54) dengan edge finder secara teliti. Kesalahan tanda minus (-) atau angka desimal dapat memicu tabrakan spindel berkekuatan puluhan kilonewton (machine crash).
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(6, 182, 212, 0.12)', border: '1px solid rgba(6, 182, 212, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem' }}>🧪 3. Verifikasi Single Block & Dry Run Uji Coba</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#67e8f9', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 size={16} /> 3. Verifikasi Single Block & Dry Run Uji Coba
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Saat pertama kali mengeksekusi program baru, aktifkan tombol <strong>SINGLE BLOCK</strong> dan turunkan <strong>FEEDRATE OVERRIDE ke 25%</strong>. Uji lintasan pahat di atas benda kerja (dry run di udara) untuk memastikan tidak ada gerakan G00 yang membentur ragum.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.4)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem' }}>🚨 4. Kesiapsiagaan Tombol E-Stop</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#f87171', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AlertTriangle size={16} /> 4. Kesiapsiagaan Tombol E-Stop
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Ibu jari operator harus selalu siaga di atas tombol Emergency Stop panel atau pendant MPG saat pertama kali menekan Cycle Start.
                 </p>
@@ -3443,28 +3510,36 @@ const K3SopModal = ({ onClose }) => {
           {activeTab === 'bangku' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🪵 1. Gagang Kikir Kayu / Plastik Wajib Terpasang</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldAlert size={16} /> 1. Gagang Kikir Kayu / Plastik Wajib Terpasang
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   DILARANG KERAS menggunakan kikir tanpa gagang pengaman! Tangkai (tang) kikir yang runcing dapat menembus telapak tangan atau pergelangan bila kikir membentur benda kerja secara tiba-tiba.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🪚 2. Pemasangan & Penggunaan Gergaji Tangan</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Layers size={16} /> 2. Pemasangan & Penggunaan Gergaji Tangan
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Pasang daun gergaji dengan ujung gigi mengarah ke depan. Berikan tegangan secukupnya menggunakan baut kupu-kupu. Mulai sayatan dengan membuat alur pemandu awal (bukan langsung digesek liar). Kurangi tekanan ayunan saat benda kerja mendekati titik putus agar ujung sisa potongan tidak jatuh menimpa kaki.
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🔩 3. Pengoperasian Ragum Meja (Bench Vise)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Wrench size={16} /> 3. Pengoperasian Ragum Meja (Bench Vise)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Cekam benda kerja sedalam mungkin di rahang ragum agar stabil dan tidak bergetar. Kencangkan tuas hanya dengan tenaga tangan biasa. Dilarang memukul tuas pemutar ragum dengan palu atau menambah pipa perpanjangan pengungkit!
                 </p>
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🔨 4. Kondisi Palu, Penitik & Pahat Dingin</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Hammer size={16} /> 4. Kondisi Palu, Penitik & Pahat Dingin
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Kepala penitik atau pahat yang sudah mekar/berjamur (mushroom head) wajib digerinda rapi sebelum digunakan agar pecahan baja tidak terpental mengenai mata saat dipukul palu konde.
                 </p>
@@ -3475,8 +3550,8 @@ const K3SopModal = ({ onClose }) => {
           {activeTab === 'apar' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ padding: '14px 18px', borderRadius: '10px', background: 'rgba(220, 38, 38, 0.15)', border: '1px solid rgba(220, 38, 38, 0.4)' }}>
-                <h4 style={{ margin: '0 0 10px 0', color: '#f87171', fontSize: '1rem', fontWeight: 800 }}>
-                  🧯 Prosedur Penggunaan APAR (Metode Standar Internasional P-A-S-S):
+                <h4 style={{ margin: '0 0 10px 0', color: '#f87171', fontSize: '1rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Flame size={18} /> Prosedur Penggunaan APAR (Metode Standar Internasional P-A-S-S):
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                   <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
@@ -3499,7 +3574,9 @@ const K3SopModal = ({ onClose }) => {
               </div>
 
               <div style={{ padding: '12px 16px', borderRadius: '10px', background: 'rgba(5, 150, 105, 0.12)', border: '1px solid rgba(5, 150, 105, 0.3)' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem' }}>🚪 Rute Evakuasi & Titik Kumpul (Assembly Point)</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: '#34d399', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <LogOut size={16} /> Rute Evakuasi & Titik Kumpul (Assembly Point)
+                </h4>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: '#cbd5e1', lineHeight: 1.6 }}>
                   Jalur marka hijau (walkway) di tengah bengkel harus senantiasa bersih dari tumpukan benda kerja atau kabel berserakan. Saat bel alarm darurat berbunyi, matikan sakelar mesin terdekat, tinggalkan barang bawaan, dan segera berjalan cepat (tanpa panik) mengikuti tanda lampu hijau EXIT menuju titik kumpul di luar gedung bengkel.
                 </p>
@@ -3731,7 +3808,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '18px' }}>🏭</span>
+            <Factory size={20} color="#f59e0b" />
             <h2
               style={{
                 color: '#ffffff',
@@ -3782,7 +3859,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
               boxShadow: activeZone === 'all' ? '0 4px 12px rgba(56, 189, 248, 0.3)' : 'none'
             }}
           >
-            <span>🌐</span> Seluruh Bengkel
+            <Globe size={15} /> Seluruh Bengkel
           </button>
           <button
             onClick={() => applyCameraView('machine-zone')}
@@ -3802,7 +3879,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
               boxShadow: activeZone === 'mesin' ? '0 4px 12px rgba(37, 99, 235, 0.4)' : 'none'
             }}
           >
-            <span>⚙️</span> Area Mesin
+            <Cog size={15} /> Area Mesin
           </button>
           <button
             onClick={() => applyCameraView('bench-zone')}
@@ -3822,7 +3899,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
               boxShadow: activeZone === 'bangku' ? '0 4px 12px rgba(16, 185, 129, 0.4)' : 'none'
             }}
           >
-            <span>🔨</span> Area Kerja Bangku
+            <Hammer size={15} /> Area Kerja Bangku
           </button>
           <button
             onClick={() => setShowK3Modal(true)}
@@ -3843,7 +3920,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             }}
             title="Buka Pedoman SOP & Rambu K3 Bengkel Lengkap"
           >
-            <span>📋</span> SOP & Rambu K3
+            <ClipboardCheck size={15} /> SOP & Rambu K3
           </button>
         </div>
       </div>
@@ -3887,7 +3964,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          🌐 Seluruh Bengkel
+          <Globe size={13} /> Seluruh Bengkel
         </button>
 
         <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '2px 0' }} />
@@ -3908,7 +3985,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          🌀 Mesin Bubut
+          <Disc size={13} /> Mesin Bubut
         </button>
         <button
           onClick={() => applyCameraView('cnc')}
@@ -3926,7 +4003,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          🖥️ Mesin CNC VMC
+          <Monitor size={13} /> Mesin CNC VMC
         </button>
         <button
           onClick={() => applyCameraView('milling')}
@@ -3944,7 +4021,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          ⚙️ Mesin Frais
+          <Cog size={13} /> Mesin Frais
         </button>
 
         <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '2px 0' }} />
@@ -3965,7 +4042,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          🔩 Ragum & Meja Kerja
+          <Wrench size={13} /> Ragum & Meja Kerja
         </button>
         <button
           onClick={() => applyCameraView('tools')}
@@ -3983,7 +4060,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          🗄️ Papan Perkakas 5S
+          <Boxes size={13} /> Papan Perkakas 5S
         </button>
         <button
           onClick={() => applyCameraView('granite')}
@@ -4001,7 +4078,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             gap: '6px'
           }}
         >
-          📐 Meja Perata Granit
+          <Sliders size={13} /> Meja Perata Granit
         </button>
 
         <div style={{ height: '1px', background: 'rgba(255,255,255,0.15)', margin: '3px 0' }} />
@@ -4023,7 +4100,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             transition: 'all 0.2s ease'
           }}
         >
-          📋 SOP & Rambu K3
+          <ClipboardCheck size={13} /> SOP & Rambu K3
         </button>
       </div>
 
@@ -4046,7 +4123,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
             padding: '28px',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '3.5rem', marginBottom: '14px' }}>🏭</div>
+            <Factory size={56} style={{ color: '#38bdf8', marginBottom: '14px' }} />
             <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8', marginBottom: '10px' }}>
               Virtual Bengkel Mesin & Kerja Bangku
             </div>
@@ -4064,10 +4141,13 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 fontWeight: 800,
                 fontSize: '0.88rem',
                 cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
                 boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
               }}
             >
-              🔄 Aktifkan Visual 3D Bengkel
+              <RotateCw size={15} /> Aktifkan Visual 3D Bengkel
             </button>
           </div>
         )}
@@ -4181,7 +4261,9 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
           boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
         }}
       >
-        <span style={{ color: '#38bdf8', fontWeight: 700 }}>💡 Interaksi:</span> Klik langsung pada perkakas di papan dinding atau meja untuk membuka materi • Tahan klik kiri untuk memutar • Scroll untuk zoom
+        <span style={{ color: '#38bdf8', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <Info size={14} /> Panduan Interaksi:
+        </span> Klik langsung pada perkakas di papan dinding atau meja untuk membuka materi • Tahan klik kiri untuk memutar • Scroll untuk zoom
       </div>
 
       {/* ==================================================== */}
@@ -4269,10 +4351,14 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 padding: '8px 12px',
                 borderRadius: '8px',
                 fontSize: '11px',
-                color: '#38bdf8'
+                color: '#38bdf8',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              <strong>📐 Standar/Spesifikasi:</strong> {activeItem.spec}
+              <Ruler size={13} />
+              <span><strong>Standar/Spesifikasi:</strong> {activeItem.spec}</span>
             </div>
           )}
 
@@ -4296,8 +4382,8 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 borderRadius: '10px'
               }}
             >
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '4px' }}>
-                📋 SOP Prosedur Penggunaan Industri:
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FileText size={13} /> SOP Prosedur Penggunaan Industri:
               </div>
               <div style={{ fontSize: '12px', lineHeight: '1.55', color: '#d1fae5', whiteSpace: 'pre-line' }}>
                 {activeItem.sop}
@@ -4315,8 +4401,8 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 borderRadius: '10px'
               }}
             >
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#f87171', textTransform: 'uppercase', marginBottom: '4px' }}>
-                🛡️ Keselamatan Kerja (K3):
+              <div style={{ fontSize: '11px', fontWeight: 800, color: '#f87171', textTransform: 'uppercase', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <ShieldAlert size={13} /> Keselamatan Kerja (K3):
               </div>
               <div style={{ fontSize: '12px', lineHeight: '1.55', color: '#fee2e2' }}>
                 {activeItem.k3}
@@ -4343,7 +4429,7 @@ const VirtualBengkel = ({ onOpenDiagnostic }) => {
                 transition: 'all 0.2s'
               }}
             >
-              <span>{isSpeaking ? '⏹️' : '🔊'}</span>
+              {isSpeaking ? <Square size={14} /> : <Volume2 size={14} />}
               {isSpeaking ? 'Hentikan Suara' : 'Dengarkan Penjelasan'}
             </button>
 

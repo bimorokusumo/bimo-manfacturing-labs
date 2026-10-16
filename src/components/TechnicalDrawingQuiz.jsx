@@ -1,3 +1,4 @@
+import { Award, BookOpen, RotateCcw, Lightbulb } from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -193,7 +194,7 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
     const isPass = score >= 700;
     return (
       <div className="dashboard-card" style={{ padding: '40px', textAlign: 'center', maxWidth: '650px', margin: '0 auto' }}>
-        <div style={{ fontSize: '4rem', marginBottom: '16px' }}>{isPass ? '🏆' : '📚'}</div>
+        <div className="flex justify-center" style={{ marginBottom: '16px' }}>{isPass ? <Award size={56} className="text-amber-400" /> : <BookOpen size={56} className="text-sky-400" />}</div>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: isPass ? '#10b981' : '#f59e0b', marginBottom: '8px' }}>
           {isPass ? 'LUAR BIASA! ASESMEN LULUS' : 'EVALUASI PERLU DITINGKATKAN'}
         </h2>
@@ -218,7 +219,7 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
           className="btn-game btn-game-primary"
           style={{ padding: '12px 32px', fontSize: '1rem' }}
         >
-          🔄 Ulangi Kuis Asesmen
+          <RotateCcw size={14} className="inline mr-1" /> Ulangi Kuis Asesmen
         </button>
       </div>
     );
@@ -297,10 +298,10 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
               </span>
               <span style={{ flex: 1 }}>{opt}</span>
               {isAnswered && opt === currentQ.answer && (
-                <span style={{ color: '#10b981', fontWeight: 900 }}>✓ Benar</span>
+                <span style={{ color: '#10b981', fontWeight: 900 }}>[BENAR]</span>
               )}
               {isAnswered && opt === selectedOption && opt !== currentQ.answer && (
-                <span style={{ color: '#ef4444', fontWeight: 900 }}>✕ Salah</span>
+                <span style={{ color: '#ef4444', fontWeight: 900 }}>[SALAH]</span>
               )}
             </button>
           );
@@ -317,7 +318,7 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
           marginBottom: '24px'
         }}>
           <div style={{ fontWeight: 800, fontSize: '0.9rem', color: selectedOption === currentQ.answer ? '#065f46' : '#92400e', marginBottom: '4px' }}>
-            💡 Pembahasan Ilmiah:
+            <Lightbulb size={14} className="inline mr-1 text-amber-400" /> Pembahasan Ilmiah:
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
             {currentQ.explanation}
@@ -332,7 +333,7 @@ const TechnicalDrawingQuiz = ({ onComplete }) => {
           className="btn-game btn-game-tp"
           style={{ width: '100%', padding: '14px', fontSize: '1rem' }}
         >
-          {currentIndex < QUESTIONS.length - 1 ? 'Soal Berikutnya →' : 'Lihat Hasil Akhir Asesmen 🏆'}
+          {currentIndex < QUESTIONS.length - 1 ? 'Soal Berikutnya →' : 'Lihat Hasil Akhir Asesmen'}
         </button>
       )}
 

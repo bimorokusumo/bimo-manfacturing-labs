@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/assets';
+import { 
+  Flame, Zap, Wrench, Shield, Check, AlertTriangle, ArrowRight, BookOpen, Layers, Compass, HelpCircle, Activity, Search, Folder, Award
+} from 'lucide-react';
 import { FAQ_CATEGORIES, FAQ_ITEMS } from '../data/weldingFaqData';
 
 
@@ -42,10 +45,10 @@ const WeldingTheoryGuide = () => {
   }, [isAnimatingWeave, activeTab, simMode]);
 
   const tabs = [
-    { id: 'jenis', label: '1. Jenis-Jenis Pengelasan', icon: '⚡' },
-    { id: 'alat', label: '2. Kode Elektroda & Peralatan Bengkel Las', icon: '🧰' },
-    { id: 'teknik', label: '3. Simulasi Praktik & Teknik Dasar', icon: '🔥' },
-    { id: 'faq', label: '4. Tanya Jawab & Komparasi Metalurgi (FAQ)', icon: '❓' }
+    { id: 'jenis', label: '1. Jenis-Jenis Pengelasan', icon: 'PROSES' },
+    { id: 'alat', label: '2. Kode Elektroda & Peralatan Bengkel Las', icon: 'ELEKTRODA' },
+    { id: 'teknik', label: '3. Simulasi Praktik & Teknik Dasar', icon: 'TEKNIK' },
+    { id: 'faq', label: '4. Tanya Jawab & Komparasi Metalurgi (FAQ)', icon: 'FAQ' }
   ];
 
   // PROCESS DATA
@@ -281,7 +284,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kawat baja pejal di tengah elektroda yang menyalurkan arus listrik pengelasan. Ujungnya meleleh membentuk tetesan cairan logam yang mengisi kampuh las.',
           temp: 'Titik lebur baja: ± 1.530°C',
           tip: 'Pastikan ukuran diameter kawat sesuai dengan ketebalan plat kerja dan kapasitas ampere mesin las.',
-          badge: '⚡ Logam Pengisi',
+          badge: '[FILLER] Logam Pengisi',
           color: '#94a3b8'
         },
         flux_coating: {
@@ -290,7 +293,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Campuran mineral padat (titania, selulosa, serbuk besi, kalsium karbonat). Panas busur menguapkan fluks menjadi selubung gas dan terak cair yang mengikat kotoran oksida.',
           temp: 'Menguap pada suhu > 1.200°C',
           tip: 'Jaga elektroda tetap kering; fluks lembab akan menghasilkan gas hidrogen penyebab retak dingin.',
-          badge: '🛡️ Salutan Fluks',
+          badge: '[FLUX] Salutan Fluks',
           color: '#d97706'
         },
         arc_plasma: {
@@ -299,7 +302,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Loncatan arus listrik berenergi tinggi yang mengionisasi udara menjadi plasma bertekanan tinggi untuk melebur kawat elektroda dan logam induk seketika.',
           temp: 'Suhu busur: 3.000°C – 3.500°C',
           tip: 'Jaga panjang busur stabil (setara diameter kawat inti, ± 2-3 mm) agar cairan las tidak meletup-letup (spatter).',
-          badge: '🔥 Plasma Busur',
+          badge: '[PLASMA] Plasma Busur',
           color: '#f59e0b'
         },
         gas_shield: {
@@ -308,7 +311,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Uap gas CO, CO2, dan H2O hasil penguraian zat kimia fluks yang menyelimuti busur plasma sehingga cairan logam tidak teroksidasi oleh udara sekitar.',
           temp: 'Suhu gas selubung: ± 1.800°C - 2.200°C',
           tip: 'Keunggulan utama SMAW: gas pelindung diproduksi langsung dari kawat sehingga tahan terpaan angin luar ruangan.',
-          badge: '💨 Gas Pelindung',
+          badge: '[GAS] Gas Pelindung',
           color: '#38bdf8'
         },
         weld_pool: {
@@ -317,7 +320,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kolam cairan logam induk dan logam kawat las yang mencair sempurna pada suhu ± 1.600°C sebelum membeku menjadi sambungan permanen.',
           temp: 'Suhu cairan: 1.550°C – 1.700°C',
           tip: 'Perhatikan tepi kawah las (puddle toes); isi kampuh dengan tenang tanpa meninggalkan cacat undercut.',
-          badge: '🌊 Kawah Cair',
+          badge: '[POOL] Kawah Cair',
           color: '#ef4444'
         },
         slag: {
@@ -326,7 +329,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Cairan terak yang memiliki massa jenis lebih ringan mengapung ke atas kawah cair dan mengeras membentuk lapisan pelindung oksidasi serta memperlambat laju pendinginan.',
           temp: 'Membeku pada suhu ± 1.100°C',
           tip: 'Wajib dibersihkan tuntas menggunakan palu terak (chipping hammer) sebelum melanjutkan lintasan las berikutnya!',
-          badge: '🧱 Kerak Terak',
+          badge: '[SLAG] Kerak Terak',
           color: '#b45309'
         },
         weld_bead: {
@@ -335,7 +338,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Logam las yang telah mengkristal sempurna dengan struktur mikro ferit-perlit berkekuatan tarik tinggi melampaui logam induk aslinya.',
           temp: 'Membeku di bawah 1.400°C',
           tip: 'Rigi-rigi las yang seragam dan simetris menandakan kecepatan tarik (travel speed) yang konsisten.',
-          badge: '✅ Rigi Las Beku',
+          badge: '[BEAD] Rigi Las Beku',
           color: '#64748b'
         },
         base_metal: {
@@ -344,7 +347,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Plat baja karbon atau baja struktural yang diberi kampuh (groove) dan terhubung dengan kabel masa (ground clamp) mesin las.',
           temp: 'Menerima rambatan panas (HAZ: 800°C - 1.100°C)',
           tip: 'Bersihkan permukaan plat dari karat, cat, dan minyak sebelum mengelas demi mencegah cacat porositas.',
-          badge: '⚙️ Logam Induk',
+          badge: '[BASE] Logam Induk',
           color: '#475569'
         }
       }
@@ -359,7 +362,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Corong tembaga presisi di ujung stang las yang mengarahkan aliran gas pelindung secara seragam menyelimuti busur listrik.',
           temp: 'Didinginkan oleh gas atau sirkulasi air',
           tip: 'Bersihkan cipratan las (spatter) di dalam nozel secara berkala menggunakan anti-spatter spray.',
-          badge: '🛡️ Corong Nozel',
+          badge: '[NOZZLE] Corong Nozel',
           color: '#f97316'
         },
         contact_tip: {
@@ -368,7 +371,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Komponen tembaga berlubang mikro tempat meluncurnya kawat las sambil mentransfer arus listrik tegangan searah DC(+).',
           temp: 'Titik kontak arus tinggi: ± 300°C - 500°C',
           tip: 'Ganti contact tip jika lubangnya telah membesar/oval agar busur tidak goyang dan tidak terjadi burn-back.',
-          badge: '⚡ Contact Tip',
+          badge: '[CONTACT] Contact Tip',
           color: '#eab308'
         },
         solid_wire: {
@@ -377,7 +380,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kawat baja berlapis tembaga tipis yang diumpankan terus-menerus oleh motor feeder, menghilangkan kebutuhan mengganti kawat batangan.',
           temp: 'Diameter umum: 0.8 mm, 1.0 mm, 1.2 mm',
           tip: 'Sesuaikan tekanan roller penarik wire feeder agar kawat tidak selip ataupun tertekuk.',
-          badge: '🔄 Kawat Gulung',
+          badge: '[SPOOL] Kawat Gulung',
           color: '#3b82f6'
         },
         gas_shield: {
@@ -386,7 +389,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Gas pelindung bertekanan dari tabung silinder (Argon murni untuk MIG atau CO2 / campuran Ar+CO2 untuk MAG) yang memblokir udara luar.',
           temp: 'Laju aliran standar: 12 – 18 Liter/menit',
           tip: 'Hindari hembusan angin langsung di area kerja karena dapat menerbangkan selubung gas dan memicu porositas.',
-          badge: '💨 Gas Pelindung',
+          badge: '[GAS] Gas Pelindung',
           color: '#06b6d4'
         },
         arc_plasma: {
@@ -395,7 +398,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Busur listrik bertekanan plasma yang mentransfer tetesan logam cair secara halus dan cepat ke kawah las.',
           temp: 'Suhu busur: 3.200°C – 4.000°C',
           tip: 'Pahami mode transfer logam: Short-Circuiting untuk plat tipis, Spray Transfer untuk plat tebal.',
-          badge: '🔥 Busur Cepat',
+          badge: '[ARC] Busur Cepat',
           color: '#2563eb'
         },
         weld_pool: {
@@ -404,7 +407,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Cairan logam sangat bersih tanpa lapisan terak padat tebal, hanya menyisakan pulau silikon mikroskopis tipis di tepinya.',
           temp: 'Suhu kawah: ± 1.650°C',
           tip: 'Pertahankan panjang penonjolan kawat (stick-out) sekitar 10 - 15 mm untuk menjaga stabilitas kawah.',
-          badge: '🌊 Kawah Bersih',
+          badge: '[POOL] Kawah Bersih',
           color: '#ef4444'
         },
         weld_bead: {
@@ -413,7 +416,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Jalur lasan dengan rigi-rigi halus mengkilap, menghemat waktu fabrikasi hingga 50% karena tidak perlu proses pembersihan terak.',
           temp: 'Efisiensi deposisi: 95% - 98%',
           tip: 'Sangat cocok untuk perakitan bodi otomotif, tangki fabrikasi, dan produksi massal pabrik.',
-          badge: '✅ Rigi Rapi',
+          badge: '[BEAD] Rigi Rapi',
           color: '#1d4ed8'
         },
         base_metal: {
@@ -422,7 +425,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Plat baja struktural atau lembaran bodi kendaraan yang menerima penetrasi panas konstan dari busur semi-otomatis.',
           temp: 'Area HAZ terlokalisasi sempit',
           tip: 'Pemasangan klem ground yang kencang sangat krusial untuk kestabilan sirkuit tegangan konstan GMAW.',
-          badge: '⚙️ Logam Induk',
+          badge: '[BASE] Logam Induk',
           color: '#475569'
         }
       }
@@ -437,7 +440,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Corong keramik berbahan alumina merah muda yang tahan temperatur sangat tinggi, bertugas mengarahkan aliran gas Argon laminer.',
           temp: 'Tahan panas hingga > 1.800°C',
           tip: 'Gunakan gas lens di dalam keramik untuk menghasilkan aliran gas Argon yang benar-benar laminer dan bebas turbulensi.',
-          badge: '🌸 Keramik Alumina',
+          badge: '[CUP] Keramik Alumina',
           color: '#ec4899'
         },
         tungsten: {
@@ -446,7 +449,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Batang wolfram murni atau paduan thorium/ceria berujung runcing tajam yang sama sekali tidak ikut meleleh selama pengelasan berlangsung.',
           temp: 'Titik lebur: 3.422°C (Logam titik lebur tertinggi)',
           tip: 'Asah ujung tungsten secara memanjang (bukan melingkar) dengan sudut 30° - 60° agar busur terfokus lurus.',
-          badge: '💎 Wolfram Non-Melt',
+          badge: '[TUNGSTEN] Wolfram Non-Melt',
           color: '#6366f1'
         },
         filler_rod: {
@@ -455,7 +458,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kawat batangan polos tanpa fluks yang dicelupkan secara berirama oleh juru las ke bagian depan kawah las yang mencair.',
           temp: 'Dilelehkan oleh panas kolam cair (bukan oleh busur langsung)',
           tip: 'Selalu jaga ujung kawat filler tetap berada di dalam selubung gas Argon agar tidak teroksidasi saat ditarik keluar.',
-          badge: '🥢 Kawat Pakan',
+          badge: '[ROD] Kawat Pakan',
           color: '#10b981'
         },
         gas_shield: {
@@ -464,7 +467,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Gas mulia murni yang sama sekali tidak bereaksi secara kimia, melindungi elektroda wolfram panas dan kolam cairan logam dari oksigen.',
           temp: 'Kemurnian gas: 99.99% Argon Murni',
           tip: 'Atur waktu post-flow gas 5-10 detik setelah busur mati agar tungsten dan kawah dingin tanpa teroksidasi.',
-          badge: '💨 Argon 99.99%',
+          badge: '[ARGON] Argon 99.99%',
           color: '#14b8a6'
         },
         arc_plasma: {
@@ -473,7 +476,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Busur listrik berdaya fokus jarum yang sangat tenang, stabil, dan bebas percikan (zero spatter), memungkinkan pengelasan plat super tipis.',
           temp: 'Suhu busur: 3.500°C – 4.500°C',
           tip: 'Hindari menyentuhkan ujung tungsten ke kawah cair agar tidak terjadi kontaminasi wolfram (tungsten inclusion).',
-          badge: '🔥 Busur Jarum',
+          badge: '[NEEDLE] Busur Jarum',
           color: '#059669'
         },
         weld_pool: {
@@ -482,7 +485,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Cairan logam bening mengkilap seperti cermin tanpa sedikitpun asap, kotoran, atau terak.',
           temp: 'Suhu kawah: ± 1.600°C',
           tip: 'Gunakan pedal kontrol kaki (foot pedal) untuk mengatur besar kecilnya ampere secara real-time saat mengelas.',
-          badge: '🌊 Kawah Cermin',
+          badge: '[MIRROR] Kawah Cermin',
           color: '#10b981'
         },
         stack_dimes: {
@@ -491,7 +494,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Rigi-rigi berjarak presisi menyerupai tumpukan koin atau sisik ikan yang seragam sempurna, standar tertinggi pipa PLTU dan pesawat terbang.',
           temp: 'Bebas terak & tanpa spatter',
           tip: 'Irama celupan filler rod dan kecepatan maju stang las harus benar-benar selaras untuk mendapatkan rigi sisik ikan.',
-          badge: '✨ Stack of Dimes',
+          badge: '[STACK] Stack of Dimes',
           color: '#047857'
         },
         base_metal: {
@@ -500,7 +503,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Pipa uap tekanan tinggi, plat stainless steel food grade, aluminium kapal cepat, atau paduan nikel industri kedirgantaraan.',
           temp: 'Penetrasi akar las (root pass) sangat sempurna',
           tip: 'Bersihkan permukaan sambungan dengan sikat stainless steel khusus (jangan pakai sikat bekas baja karbon).',
-          badge: '⚙️ Logam Khusus',
+          badge: '[ALLOY] Logam Khusus',
           color: '#475569'
         }
       }
@@ -515,7 +518,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Moncong kuningan berlubang kalibrasi tempat bertemunya gas O2 dan C2H2 dalam rasio 1:1 untuk menciptakan nyala api netral.',
           temp: 'Dibuat dari kuningan padat penghantar panas',
           tip: 'Pilih ukuran mata blender (nozzle size) yang sesuai dengan ketebalan plat agar api tidak meletup (backfire).',
-          badge: '🔥 Blender Las',
+          badge: '[TORCH] Blender Las',
           color: '#ea580c'
         },
         gas_hoses: {
@@ -524,7 +527,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Selang merah membawa gas bahan bakar asetilen (tekanan kerja 0.3-0.5 bar) dan selang biru membawa gas pengoksidasi (1.5-2.5 bar).',
           temp: 'Dilengkapi katup pengaman arus balik (flashback arrestor)',
           tip: 'Wajib pasang Flashback Arrestor pada regulator dan blender untuk mencegah api menjalar balik ke dalam tabung gas!',
-          badge: '🔴🔵 Selang Kembar',
+          badge: '[HOSES] Selang Kembar',
           color: '#dc2626'
         },
         inner_cone: {
@@ -533,7 +536,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kerucut api pendek berwarna putih terang berkilau tempat terjadinya reaksi pembakaran primer C2H2 + O2 -> 2CO + H2.',
           temp: 'Suhu tertinggi: 3.100°C – 3.300°C',
           tip: 'Posisikan ujung kerucut putih 2 - 3 mm di atas permukaan plat kerja (jangan sampai menyentuh cairan las).',
-          badge: '⚪ Kerucut Inti',
+          badge: '[CONE] Kerucut Inti',
           color: '#ffffff'
         },
         outer_envelope: {
@@ -542,7 +545,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Nyala api luar berwarna biru lembayung yang mereaksikan gas CO dan H2 dengan oksigen udara bebas menjadi CO2 dan uap air pelindung.',
           temp: 'Suhu zona luar: 1.200°C – 2.000°C',
           tip: 'Nyala api netral (perbandingan O2 dan C2H2 seimbang) adalah jenis nyala standar untuk mengelas baja lunak.',
-          badge: '🔵 Selubung Luar',
+          badge: '[ENVELOPE] Selubung Luar',
           color: '#38bdf8'
         },
         filler_rod: {
@@ -551,7 +554,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Batang kawat baja lunak berlapis tembaga tipis yang diselipkan perlahan ke dalam kawah cair setelah plat kerja meleleh.',
           temp: 'Dilelehkan oleh panas konduksi kawah cair',
           tip: 'Bisa digunakan tanpa kawat pakan sama sekali (teknik autogenous) untuk sambungan lipat plat tipis.',
-          badge: '🥢 Kawat Pakan',
+          badge: '[ROD] Kawat Pakan',
           color: '#f87171'
         },
         weld_pool: {
@@ -560,7 +563,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kolam cairan logam yang terbentuk murni akibat rambatan panas api gas (tanpa loncatan arus listrik).',
           temp: 'Suhu kawah: ± 1.500°C',
           tip: 'Pendinginan berlangsung lambat sehingga sambungan memiliki keuletan tinggi dan tidak mudah getas.',
-          badge: '🌊 Kawah Termal',
+          badge: '[POOL] Kawah Termal',
           color: '#ef4444'
         },
         weld_bead: {
@@ -569,7 +572,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Jalur las yang mulus dan rata dengan zona pengaruh panas (HAZ) yang relatif lebih lebar dibanding las busur listrik.',
           temp: 'Laju pendinginan bertahap',
           tip: 'Sangat handal untuk reparasi tangki motor, pipa refrigerasi AC (brazing), dan perbaikan bodi mobil.',
-          badge: '✅ Jalur Halus',
+          badge: '[BEAD] Jalur Halus',
           color: '#b91c1c'
         },
         base_metal: {
@@ -578,7 +581,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Plat tipis ketebalan 0.5 - 3.0 mm atau pipa tembaga pendingin yang memerlukan panas merata terkontrol.',
           temp: 'Zona HAZ lebar (perlu antisipasi distorsi panas)',
           tip: 'Lakukan pemanasan awal (preheating) perlahan untuk mengurangi resiko perubahan bentuk plat tipis.',
-          badge: '⚙️ Plat Tipis',
+          badge: '[BASE] Plat Tipis',
           color: '#475569'
         }
       }
@@ -593,7 +596,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kawat las berbentuk pipa silinder baja tipis yang digulung mengelilingi serbuk fluks, diumpankan kontinu dari mesin feeder.',
           temp: 'Kepadatan arus sangat tinggi',
           tip: 'Gunakan roller bergerigi khusus (knurled drive roll) pada wire feeder agar kawat pipa berongga tidak penyet.',
-          badge: '🔘 Selubung Pipa',
+          badge: '[SHEATH] Selubung Pipa',
           color: '#8b5cf6'
         },
         flux_core: {
@@ -602,7 +605,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Serbuk mineral kimia padat di dalam rongga kawat yang meledak seketika saat busur menyala, membentuk selimut terak dan gas pelindung.',
           temp: 'Bereaksi kimia di dalam busur',
           tip: 'Tipe FCAW Self-Shielded (FCAW-S) tidak memerlukan tabung gas sama sekali, sangat perkasa di lapangan berangin kencang.',
-          badge: '🧪 Inti Fluks',
+          badge: '[CORE] Inti Fluks',
           color: '#c084fc'
         },
         gas_shield: {
@@ -611,7 +614,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kombinasi perlindungan uap gas hasil dekomposisi fluks di dalam kawat dengan semburan gas CO2 eksternal (tipe FCAW-G).',
           temp: 'Laju semprot gas: 15 – 25 Liter/menit',
           tip: 'FCAW tipe gas-shielded menghasilkan penetrasi terkuat dan nilai uji ketangguhan impak tertinggi.',
-          badge: '💨 Gas Ganda',
+          badge: '[DUAL GAS] Gas Ganda',
           color: '#60a5fa'
         },
         arc_plasma: {
@@ -620,7 +623,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Busur plasma berenergi sangat tinggi yang mentransfer logam kawat secara semprotan halus (spray) dengan laju lebur tercepat di industri.',
           temp: 'Suhu busur: 3.500°C – 4.200°C',
           tip: 'Perhatikan ventilasi bengkel! Asap las (fume) FCAW lebih pekat dibanding SMAW atau MIG biasa.',
-          badge: '🔥 Busur Masif',
+          badge: '[ARC] Busur Masif',
           color: '#7c3aed'
         },
         weld_pool: {
@@ -629,7 +632,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Kawah las cair bertekanan besar yang mampu menembus akar kampuh baja tebal tanpa resiko cacat lack of penetration.',
           temp: 'Suhu kawah: 1.650°C – 1.800°C',
           tip: 'Mampu menyambung plat baja tebal dalam jumlah pass (lintasan) yang jauh lebih sedikit dibanding metode lain.',
-          badge: '🌊 Penetrasi Dalam',
+          badge: '[POOL] Penetrasi Dalam',
           color: '#ef4444'
         },
         slag_blanket: {
@@ -638,7 +641,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Lapisan kerak terak yang mengeras sepersekian detik lebih cepat untuk menopang kolam cairan logam berat pada posisi vertikal atau overhead.',
           temp: 'Membeku seketika di atas cairan logam',
           tip: 'Kerak terak FCAW mudah terkelupas lepas (self-peeling) setelah sambungan lasan mendingin.',
-          badge: '🧱 Terak Cepat Beku',
+          badge: '[SLAG] Terak Cepat Beku',
           color: '#6d28d9'
         },
         weld_bead: {
@@ -647,7 +650,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Jalur las berkekuatan mekanis luar biasa yang lulus uji radiografi (X-Ray) dan uji ultrasonik pada struktur konstruksi kritis.',
           temp: 'Laju deposisi mencapai 8 - 12 kg logam/jam',
           tip: 'Pilihan utama konstruksi kilang minyak lepas pantai (offshore), jembatan baja gantung, dan alat berat tambang.',
-          badge: '✅ Las Struktural',
+          badge: '[BEAD] Las Struktural',
           color: '#5b21b6'
         },
         base_metal: {
@@ -656,7 +659,7 @@ const WeldingTheoryGuide = () => {
           desc: 'Plat baja tebal 12 mm hingga lebih dari 50 mm yang membutuhkan sambungan kokoh berkekuatan luluh tinggi.',
           temp: 'Menerima masukan panas tinggi (High Heat Input)',
           tip: 'Perhitungkan suhu interpass (maksimal 250°C) agar ketangguhan struktur mikro logam tidak menurun.',
-          badge: '⚙️ Plat Baja Tebal',
+          badge: '[BASE] Plat Baja Tebal',
           color: '#475569'
         }
       }
@@ -772,7 +775,7 @@ const WeldingTheoryGuide = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-                  ⚡ Klasifikasi 5 Proses Pengelasan Utama (Welding Processes)
+                  Klasifikasi 5 Proses Pengelasan Utama (Welding Processes)
                 </h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
                   Pilih salah satu teknologi pengelasan di bawah untuk melihat prinsip kerja, kelebihan, dan aplikasi industrinya.
@@ -824,7 +827,7 @@ const WeldingTheoryGuide = () => {
                       SKEMA TEKNIS
                     </span>
                     <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc' }}>
-                      🔬 {curDiagram.title}
+                      {curDiagram.title}
                     </h4>
                   </div>
                   <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
@@ -841,7 +844,7 @@ const WeldingTheoryGuide = () => {
                   borderRadius: '20px', 
                   fontWeight: 700 
                 }}>
-                  💡 Klik salah satu komponen pada gambar atau daftar di bawah!
+                  Klik salah satu komponen pada gambar atau daftar di bawah!
                 </div>
               </div>
 
@@ -920,7 +923,7 @@ const WeldingTheoryGuide = () => {
                     <line x1="100" y1="28" x2="380" y2="28" stroke="#38bdf8" strokeWidth="2.5" strokeDasharray="6 4" />
                     <polygon points="390,28 375,22 375,34" fill="#38bdf8" />
                     <text x="240" y="20" fill="#38bdf8" fontSize="11" fontWeight="700" textAnchor="middle">
-                      ➡️ Arah Pengelasan (Direction of Travel)
+                      Arah Pengelasan (Direction of Travel)
                     </text>
                   </g>
 
@@ -1596,7 +1599,7 @@ const WeldingTheoryGuide = () => {
               {/* Component Selector Buttons (Interactive Hotspots Legenda) */}
               <div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  🏷️ Pilih Komponen untuk Inspeksi Metalurgi & Fungsi:
+                  Pilih Komponen untuk Inspeksi Metalurgi & Fungsi:
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {Object.entries(curDiagram.components).map(([key, comp]) => {
@@ -1672,7 +1675,7 @@ const WeldingTheoryGuide = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      ✕ Tutup Detail
+                      Tutup Detail
                     </button>
                   </div>
 
@@ -1682,12 +1685,12 @@ const WeldingTheoryGuide = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px', marginTop: '4px' }}>
                     <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 14px', borderRadius: '8px', borderLeft: `3px solid ${activeComp.color}` }}>
-                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 800 }}>🌡️ SUHU / PARAMETER KERJA:</div>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 800 }}>[PARAMETER] SUHU / PARAMETER KERJA:</div>
                       <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f8fafc', marginTop: '2px' }}>{activeComp.temp}</div>
                     </div>
 
                     <div style={{ background: 'rgba(0,0,0,0.3)', padding: '10px 14px', borderRadius: '8px', borderLeft: '3px solid #10b981' }}>
-                      <div style={{ fontSize: '0.7rem', color: '#6ee7b7', fontWeight: 800 }}>🛠️ TIPS PRAKTIK BENGKEL:</div>
+                      <div style={{ fontSize: '0.7rem', color: '#6ee7b7', fontWeight: 800 }}>[TIPS] REKOMENDASI BENGKEL:</div>
                       <div style={{ fontSize: '0.82rem', color: '#e2e8f0', marginTop: '2px' }}>{activeComp.tip}</div>
                     </div>
                   </div>
@@ -1704,7 +1707,7 @@ const WeldingTheoryGuide = () => {
                   color: '#94a3b8',
                   fontSize: '0.8rem'
                 }}>
-                  <span style={{ fontSize: '1.2rem' }}>ℹ️</span>
+                  <HelpCircle size={18} color="#38bdf8" />
                   <span>
                     <strong>Tips Interaktif:</strong> Klik pada komponen di dalam ilustrasi (misal: busur, kawah las, kawat inti, fluks/gas) atau tombol di atas untuk melihat detail mekanisme kimia & metalurginya.
                   </span>
@@ -1755,17 +1758,17 @@ const WeldingTheoryGuide = () => {
               {/* SPECIFICATION PILLS */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '12px' }}>
                 <div style={{ background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>🛡️ METODE PELINDUNG (SHIELDING):</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>METODE PELINDUNG (SHIELDING):</div>
                   <div style={{ fontSize: '0.8rem', color: '#334155' }}>{curProc.shielding}</div>
                 </div>
 
                 <div style={{ background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>🔩 LOGAM PENGISI (FILLER METAL):</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>LOGAM PENGISI (FILLER METAL):</div>
                   <div style={{ fontSize: '0.8rem', color: '#334155' }}>{curProc.filler}</div>
                 </div>
 
                 <div style={{ background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>🏭 APLIKASI UTAMA INDUSTRI:</div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 800, color: curProc.borderColor, marginBottom: '4px' }}>APLIKASI UTAMA INDUSTRI:</div>
                   <div style={{ fontSize: '0.8rem', color: '#334155' }}>{curProc.applications}</div>
                 </div>
               </div>
@@ -1774,7 +1777,7 @@ const WeldingTheoryGuide = () => {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '16px' }}>
                 <div style={{ background: '#ffffff', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
                   <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#065f46', marginBottom: '8px' }}>
-                    ✅ KEUNGGULAN UTAMA:
+                    [KEUNGGULAN] KELEBIHAN UTAMA:
                   </div>
                   <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.8rem', color: '#334155', lineHeight: 1.6 }}>
                     {curProc.advantages.map((adv, idx) => (
@@ -1785,7 +1788,7 @@ const WeldingTheoryGuide = () => {
 
                 <div style={{ background: '#ffffff', padding: '16px', borderRadius: '8px', borderLeft: '4px solid #ef4444' }}>
                   <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#991b1b', marginBottom: '8px' }}>
-                    ⚠️ KETERBATASAN / KEKURANGAN:
+                    [LIMITASI] KEKURANGAN / BATASAN:
                   </div>
                   <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.8rem', color: '#334155', lineHeight: 1.6 }}>
                     {curProc.limitations.map((lim, idx) => (
@@ -1816,7 +1819,7 @@ const WeldingTheoryGuide = () => {
                 STANDAR AMERICAN WELDING SOCIETY (AWS A5.1 / A5.5)
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                🏷️ Anatomi & Cara Membaca Kode Elektroda Las (Contoh: E6013, E7018, E7016, E6010)
+                Anatomi & Cara Membaca Kode Elektroda Las (Contoh: E6013, E7018, E7016, E6010)
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                 Pilih jenis kawat las AWS di bawah, lalu <strong>klik pada setiap kotak kode (E, 60/70, 1, 3/8)</strong> untuk melihat arti spesifikasi teknisnya.
@@ -1980,7 +1983,7 @@ const WeldingTheoryGuide = () => {
               {/* General Summary Card for Selected AWS Code */}
               <div style={{ width: '100%', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '12px 16px' }}>
                 <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#92400e', marginBottom: '4px' }}>
-                  📌 Rangkuman Karakteristik Kawat Las {curAws.code}:
+                  Rangkuman Karakteristik Kawat Las {curAws.code}:
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
                   {curAws.fullExplanation} <em>{curAws.popularEquiv}</em>
@@ -1998,7 +2001,7 @@ const WeldingTheoryGuide = () => {
                 MEREK DAGANG BENGKEL & INDUSTRI (KOBELCO & NIKKO STEEL)
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                🏭 Kawat Las Paling Banyak Dipakai di Indonesia: RD-260, LB-52, & RB-26
+                Kawat Las Paling Banyak Dipakai di Indonesia: RD-260, LB-52, & RB-26
               </h3>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                 Di bengkel kerja nyata, welder sering menyebut kawat las dengan nama merk dagangnya. Berikut korelasi dan spesifikasi detailnya:
@@ -2083,7 +2086,7 @@ const WeldingTheoryGuide = () => {
 
               <div style={{ background: '#fffbeb', border: '1px solid #fde68a', padding: '12px', borderRadius: '8px' }}>
                 <div style={{ fontWeight: 800, fontSize: '0.8rem', color: '#92400e', marginBottom: '2px' }}>
-                  🌡️ Aturan Oven / Pemanasan:
+                  Aturan Oven / Pemanasan:
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
                   {curTrade.ovenRule}
@@ -2092,7 +2095,7 @@ const WeldingTheoryGuide = () => {
 
               <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px', borderRadius: '8px' }}>
                 <div style={{ fontWeight: 800, fontSize: '0.8rem', color: '#166534', marginBottom: '2px' }}>
-                  🏭 Rekomendasi Aplikasi Bengkel & Proyek:
+                  Rekomendasi Aplikasi Bengkel & Proyek:
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
                   {curTrade.usage}
@@ -2103,7 +2106,7 @@ const WeldingTheoryGuide = () => {
             {/* Tabel Komparasi Praktis */}
             <div>
               <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '10px' }}>
-                📊 TABEL PERBANDINGAN PRAKTIS RD-260, LB-52, & RB-26 DI LAPANGAN:
+                TABEL PERBANDINGAN PRAKTIS RD-260, LB-52, & RB-26 DI LAPANGAN:
               </div>
               <div style={{ overflowX: 'auto', border: '1px solid #cbd5e1', borderRadius: '8px' }}>
                 <table style={{ width: '100%', fontSize: '0.8rem', borderCollapse: 'collapse', textAlign: 'left' }}>
@@ -2159,7 +2162,7 @@ const WeldingTheoryGuide = () => {
                   FOTO FISIK ALAT
                 </span>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: '6px 0 0 0' }}>
-                  🛠️ Peralatan Utama Bengkel Las Mesin
+                  Peralatan Utama Bengkel Las Mesin
                 </h3>
               </div>
               <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
@@ -2285,7 +2288,7 @@ const WeldingTheoryGuide = () => {
                   SIMULATOR PRAKTIK INTERAKTIF
                 </span>
                 <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--text-main)', margin: '8px 0 4px 0' }}>
-                  🎮 Simulasi Teknik Dasar: Sudut, Jarak Busur, & Gerakan Ayunan
+                  Simulasi Teknik Dasar: Sudut, Jarak Busur, & Gerakan Ayunan
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                   Uji coba parameter sudut kemiringan, jarak panjang busur, dan lihat animasi pola ayunan elektroda.
@@ -2308,7 +2311,7 @@ const WeldingTheoryGuide = () => {
                     transition: 'all 0.2s'
                   }}
                 >
-                  📐 1. Sudut Elektroda
+                  1. Sudut Elektroda
                 </button>
                 <button
                   onClick={() => { sound.playClick(); setSimMode('jarak'); }}
@@ -2324,7 +2327,7 @@ const WeldingTheoryGuide = () => {
                     transition: 'all 0.2s'
                   }}
                 >
-                  📏 2. Jarak Busur (Arc Length)
+                  2. Jarak Busur (Arc Length)
                 </button>
                 <button
                   onClick={() => { sound.playClick(); setSimMode('ayunan'); }}
@@ -2340,7 +2343,7 @@ const WeldingTheoryGuide = () => {
                     transition: 'all 0.2s'
                   }}
                 >
-                  〰️ 3. Pola Ayunan (Weaving)
+                  3. Pola Ayunan (Weaving)
                 </button>
               </div>
             </div>
@@ -2364,7 +2367,7 @@ const WeldingTheoryGuide = () => {
                         </div>
                       </div>
                       <span style={{ fontSize: '1.05rem', fontWeight: 900, color: (travelAngle >= 70 && travelAngle <= 80) ? '#16a34a' : '#dc2626' }}>
-                        {travelAngle}° {(travelAngle >= 70 && travelAngle <= 80) ? '✅ (IDEAL 70°-80°)' : travelAngle > 80 ? '⚠️ (TERLALU TEGAK)' : '⚠️ (TERLALU REBAH)'}
+                        {travelAngle}° {(travelAngle >= 70 && travelAngle <= 80) ? '[IDEAL 70°-80°]' : travelAngle > 80 ? '[TERLALU TEGAK]' : '[TERLALU REBAH]'}
                       </span>
                     </div>
                     <input
@@ -2440,12 +2443,12 @@ const WeldingTheoryGuide = () => {
                     {travelAngle > 80 ? (
                       <g>
                         <path d="M 250 208 Q 280 206 310 210" fill="none" stroke="#ef4444" strokeWidth="4" strokeDasharray="4 2" />
-                        <text x="320" y="205" fill="#ef4444" fontSize="11" fontWeight="bold">⚠️ Terak Mendahului Busur!</text>
+                        <text x="320" y="205" fill="#ef4444" fontSize="11" fontWeight="bold">[BAHAYA] Terak Mendahului Busur!</text>
                       </g>
                     ) : (
                       <g>
                         <path d="M 230 208 Q 180 206 140 208" fill="none" stroke="#10b981" strokeWidth="3" />
-                        <text x="110" y="185" fill="#10b981" fontSize="11" fontWeight="bold">✓ Terak Tertolak ke Belakang</text>
+                        <text x="110" y="185" fill="#10b981" fontSize="11" fontWeight="bold">[OK] Terak Tertolak ke Belakang</text>
                       </g>
                     )}
 
@@ -2492,7 +2495,7 @@ const WeldingTheoryGuide = () => {
                                 fontWeight="bold"
                                 textAnchor="end"
                               >
-                                Miring {dragAngle}° {(dragAngle >= 10 && dragAngle <= 15) ? '✨ (10°-15°)' : ''}
+                                Miring {dragAngle}° {(dragAngle >= 10 && dragAngle <= 15) ? '[IDEAL 10°-15°]' : ''}
                               </text>
                             </g>
                           )}
@@ -2519,7 +2522,7 @@ const WeldingTheoryGuide = () => {
                           <line x1="230" y1="270" x2="360" y2="270" stroke="#38bdf8" strokeWidth="3" />
                           <polygon points="360,270 350,265 350,275" fill="#38bdf8" />
                           <text x="295" y="288" fill="#38bdf8" fontSize="11" fontWeight="bold" textAnchor="middle">
-                            ARAH TARIKAN LAS (TRAVEL DIRECTION) ➔
+                            ARAH TARIKAN LAS (TRAVEL DIRECTION) &rarr;
                           </text>
                         </g>
                       );
@@ -2539,10 +2542,10 @@ const WeldingTheoryGuide = () => {
                 }}>
                   <div style={{ fontWeight: 900, fontSize: '0.98rem', color: (travelAngle >= 70 && travelAngle <= 80) ? '#166534' : '#991b1b' }}>
                     {(travelAngle >= 70 && travelAngle <= 80)
-                      ? `✅ KONDISI SUDUT OPTIMAL: ${travelAngle}° terhadap benda kerja (Miring ${90 - travelAngle}° menarik dari tegak lurus)`
+                      ? `[KONDISI OPTIMAL] SUDUT KERJA: ${travelAngle}° terhadap benda kerja (Miring ${90 - travelAngle}° menarik dari tegak lurus)`
                       : travelAngle > 80
-                      ? `⚠️ PERINGATAN: ELEKTRODA TERLALU TEGAK (${travelAngle}° > 80° / Hanya Miring ${90 - travelAngle}° dari Posisi Tegak Lurus)`
-                      : `⚠️ PERINGATAN: ELEKTRODA TERLALU REBAH (${travelAngle}° < 70° / Miring ${90 - travelAngle}° > 20° dari Posisi Tegak Lurus)`}
+                      ? `[PERINGATAN] ELEKTRODA TERLALU TEGAK (${travelAngle}° > 80° / Hanya Miring ${90 - travelAngle}° dari Posisi Tegak Lurus)`
+                      : `[PERINGATAN] ELEKTRODA TERLALU REBAH (${travelAngle}° < 70° / Miring ${90 - travelAngle}° > 20° dari Posisi Tegak Lurus)`}
                   </div>
                   <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: 1.55 }}>
                     {(travelAngle >= 70 && travelAngle <= 80)
@@ -2564,7 +2567,7 @@ const WeldingTheoryGuide = () => {
                   gap: '12px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '1.5rem' }}>📐</span>
+                    <Compass size={24} color="#b45309" />
                     <div>
                       <div style={{ fontWeight: 900, fontSize: '0.95rem', color: '#92400e' }}>
                         PEDOMAN STANDAR SUDUT KEMIRINGAN ELEKTRODA (SMAW)
@@ -2584,7 +2587,7 @@ const WeldingTheoryGuide = () => {
                     color: '#78350f',
                     lineHeight: 1.6
                   }}>
-                    💡 <strong>Kaidah Utama:</strong> Sudut kemiringan elektroda yang benar umumnya adalah <strong>70 hingga 80 derajat terhadap garis lurus benda kerja</strong> atau sedikit miring (menarik) sekitar <strong>10 hingga 15 derajat dari posisi tegak lurus</strong>.
+                    <strong>[KAIDAH UTAMA] Sudut Kemiringan:</strong> Sudut kemiringan elektroda yang benar umumnya adalah <strong>70 hingga 80 derajat terhadap garis lurus benda kerja</strong> atau sedikit miring (menarik) sekitar <strong>10 hingga 15 derajat dari posisi tegak lurus</strong>.
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
@@ -2643,7 +2646,7 @@ const WeldingTheoryGuide = () => {
                         Panjang Busur Nyala (Arc Length):
                       </span>
                       <span style={{ fontSize: '1.2rem', fontWeight: 900, color: (arcLength >= 1.8 && arcLength <= 3.2) ? '#16a34a' : '#dc2626' }}>
-                        {arcLength.toFixed(1)} mm {(arcLength >= 1.8 && arcLength <= 3.2) ? '✅ (IDEAL)' : arcLength < 1.8 ? '❌ (NEMPEL/PADAM)' : '⚠️ (TERLALU JAUH)'}
+                        {arcLength.toFixed(1)} mm {(arcLength >= 1.8 && arcLength <= 3.2) ? '[IDEAL]' : arcLength < 1.8 ? '[HUBUNG SINGKAT]' : '[TERLALU PANJANG]'}
                       </span>
                     </div>
                     <input
@@ -2673,7 +2676,7 @@ const WeldingTheoryGuide = () => {
                     className="btn-game btn-game-primary"
                     style={{ padding: '10px 18px', fontSize: '0.8rem' }}
                   >
-                    🔊 Cek Karakter Suara Busur
+                    Cek Karakter Suara Busur
                   </button>
                 </div>
 
@@ -2761,10 +2764,10 @@ const WeldingTheoryGuide = () => {
                 }}>
                   <div style={{ fontWeight: 900, fontSize: '0.95rem', color: (arcLength >= 1.8 && arcLength <= 3.2) ? '#166534' : '#991b1b' }}>
                     {(arcLength >= 1.8 && arcLength <= 3.2)
-                      ? '✅ JARAK BUSUR IDEAL: STABIL & SUARA MENDELEBUR SEMPURNA'
+                      ? '[JARAK IDEAL] BUSUR STABIL & PENGELASAN OPTIMAL'
                       : arcLength < 1.8
-                      ? '❌ JARAK TERLALU PENDEK: ELEKTRODA MENEMPEL / SHORT CIRCUIT'
-                      : '⚠️ JARAK TERLALU PANJANG: BAHAYA CACAT POROSITAS & TEGANGAN MELONJAK'}
+                      ? '[JARAK TERLALU PENDEK] ELEKTRODA MENEMPEL / SHORT CIRCUIT'
+                      : '[JARAK TERLALU PANJANG] BAHAYA CACAT POROSITAS & TEGANGAN MELONJAK'}
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
                     {(arcLength >= 1.8 && arcLength <= 3.2)
@@ -2788,10 +2791,10 @@ const WeldingTheoryGuide = () => {
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', background: '#f8fafc', padding: '12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                   {[
                     { id: 'stringer', label: '1. Stringer Bead (Lurus)', icon: '━', desc: 'Tanpa ayunan, untuk akar pipa (root pass)' },
-                    { id: 'zigzag', label: '2. Pola Zig-Zag', icon: '⚡', desc: 'Gerakan bolak-balik dengan jeda di sisi kampuh' },
+                    { id: 'zigzag', label: '2. Pola Zig-Zag', icon: 'Z', desc: 'Gerakan bolak-balik dengan jeda di sisi kampuh' },
                     { id: 'triangle', label: '3. Pola Segitiga (Triangle)', icon: '▲', desc: 'Khusus posisi vertikal naik (3G Upward)' },
-                    { id: 'crescent', label: '4. Pola Bulan Sabit (Crescent)', icon: '🌙', desc: 'Ayunan melengkung untuk capping permukaan' },
-                    { id: 'circular', label: '5. Pola Melingkar (Circular)', icon: '🔄', desc: 'Untuk mengisi celah kampuh yang lebar' }
+                    { id: 'crescent', label: '4. Pola Bulan Sabit (Crescent)', icon: 'C', desc: 'Ayunan melengkung untuk capping permukaan' },
+                    { id: 'circular', label: '5. Pola Melingkar (Circular)', icon: 'O', desc: 'Untuk mengisi celah kampuh yang lebar' }
                   ].map(w => (
                     <button
                       key={w.id}
@@ -2938,7 +2941,7 @@ const WeldingTheoryGuide = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      {isAnimatingWeave ? '⏸️ Jeda Animasi' : '▶️ Jalankan Animasi'}
+                      {isAnimatingWeave ? 'Jeda Animasi' : 'Jalankan Animasi'}
                     </button>
                     <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
                       Kecepatan Gerak: Konsisten dengan jeda 0.5 detik di kedua tepi kampuh.
@@ -2949,7 +2952,7 @@ const WeldingTheoryGuide = () => {
                 {/* Weaving Motion Educational Principle */}
                 <div style={{ padding: '16px', background: '#f8fafc', borderLeft: '4px solid #ea580c', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div style={{ fontWeight: 900, fontSize: '0.9rem', color: '#0f172a' }}>
-                    💡 HUKUM EMAS TEKNIK AYUNAN ELEKTRODA (WEAVING RULE):
+                    [HUKUM EMAS] TEKNIK AYUNAN ELEKTRODA (WEAVING RULE):
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#334155', lineHeight: 1.6 }}>
                     • <strong>JEDA SEJENAK DI TEPI (PAUSE AT TOES):</strong> Juru las wajib berhenti sejenak (0.5 – 1 detik) di setiap dinding sisi kiri dan kanan kampuh agar cairan logam las mengisi penuh cerukan dan <strong>mencegah timbulnya cacat Undercut</strong>!<br />
@@ -2965,7 +2968,7 @@ const WeldingTheoryGuide = () => {
           {/* STANDAR POSISI PENGELASAN 1G - 6G */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-              🧭 Standarisasi Posisi Pengelasan Plat & Pipa (AWS D1.1 & ISO 6947)
+              Standarisasi Posisi Pengelasan Plat & Pipa (AWS D1.1 & ISO 6947)
             </h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '14px' }}>
@@ -2992,7 +2995,7 @@ const WeldingTheoryGuide = () => {
           {/* OAW FLAME TYPES GUIDE */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-              🔥 3 Jenis Nyala Api Las Karbit / OAW (Oxy-Acetylene Flame)
+              3 Jenis Nyala Api Las Karbit / OAW (Oxy-Acetylene Flame)
             </h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '14px' }}>
@@ -3033,7 +3036,7 @@ const WeldingTheoryGuide = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
               <div style={{ flex: 1, minWidth: '280px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '1.4rem' }}>❓</span>
+                  <HelpCircle size={22} color="#ea580c" />
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                     Tanya Jawab (FAQ) & Komparasi Metalurgi Pengelasan Industri
                   </h3>
@@ -3061,7 +3064,7 @@ const WeldingTheoryGuide = () => {
                     gap: '6px'
                   }}
                 >
-                  <span>📂</span>
+                  <Folder size={14} style={{ display: 'inline', marginRight: '4px' }} />
                   <span>Buka Semua ({FAQ_ITEMS.length})</span>
                 </button>
                 <button
@@ -3080,7 +3083,7 @@ const WeldingTheoryGuide = () => {
                     gap: '6px'
                   }}
                 >
-                  <span>📁</span>
+                  <Folder size={14} style={{ display: 'inline', marginRight: '4px' }} />
                   <span>Tutup Semua</span>
                 </button>
               </div>
@@ -3092,7 +3095,7 @@ const WeldingTheoryGuide = () => {
                 type="text"
                 value={faqSearchQuery}
                 onChange={(e) => setFaqSearchQuery(e.target.value)}
-                placeholder="🔍 Cari topik / kata kunci (misal: Mild Steel, Aluminium, Porositas, AC Balance, Oven, Asetilen, Argon, Deoksidator, Root Pass)..."
+                placeholder="Cari topik / kata kunci (misal: Mild Steel, Aluminium, Porositas, AC Balance, Oven, Asetilen, Argon, Deoksidator, Root Pass)..."
                 style={{
                   width: '100%',
                   padding: '12px 16px',
@@ -3124,7 +3127,7 @@ const WeldingTheoryGuide = () => {
                     fontWeight: 800
                   }}
                 >
-                  ✕
+                  X
                 </button>
               )}
             </div>
@@ -3185,7 +3188,7 @@ const WeldingTheoryGuide = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {filteredFaqItems.length === 0 ? (
               <div className="dashboard-card" style={{ padding: '36px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🔎</div>
+                <Search size={36} color="#64748b" style={{ margin: '0 auto 8px auto' }} />
                 <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-main)' }}>Tidak Ditemukan Pertanyaan yang Sesuai</div>
                 <div style={{ fontSize: '0.85rem', marginTop: '4px' }}>
                   Coba kata kunci lain atau pilih filter kategori "Semua Tanya Jawab".
@@ -3342,7 +3345,7 @@ const WeldingTheoryGuide = () => {
                           color: '#0f172a',
                           lineHeight: 1.5
                         }}>
-                          💡 Ringkasan Inti: {item.subtitle}
+                          [RINGKASAN INTI] {item.subtitle}
                         </div>
 
                         {/* HIGHLIGHT BULLETS */}
@@ -3455,7 +3458,7 @@ const WeldingTheoryGuide = () => {
                             gap: '10px',
                             alignItems: 'flex-start'
                           }}>
-                            <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>⭐</span>
+                            <Award size={18} color="#d97706" style={{ display: 'inline', verticalAlign: 'middle' }} />
                             <div>
                               <strong>TIPS PRAKTISI WELDER:</strong> {item.proTip}
                             </div>
@@ -3473,7 +3476,7 @@ const WeldingTheoryGuide = () => {
                             borderTop: '1px solid #f1f5f9',
                             paddingTop: '10px'
                           }}>
-                            <span>📜 <strong>Standar Rujukan Industri:</strong> {item.standards}</span>
+                            <span><strong>Standar Rujukan Industri:</strong> {item.standards}</span>
                             <span style={{ fontWeight: 700, color: item.badgeColor }}>Topik #{item.id}</span>
                           </div>
                         )}
@@ -3488,7 +3491,7 @@ const WeldingTheoryGuide = () => {
           {/* INDUSTRIAL MATRIX QUICK REFERENCE SUMMARY */}
           <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.3rem' }}>📊</span>
+              <Layers size={22} color="#0f172a" />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                 Matriks Komparasi Ringkas 5 Proses Pengelasan (SMAW • MIG • MAG • TIG • OAW)
               </h3>

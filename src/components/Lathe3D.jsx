@@ -67,7 +67,7 @@ const Lathe2D = ({
           boxShadow: '0 4px 14px rgba(0,0,0,0.25)', pointerEvents: 'none'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8', fontSize: '0.76rem', fontWeight: 800 }}>
-            <span>📐 GARIS TARGET JOB:</span>
+            <span>[TARGET] GARIS TARGET JOB:</span>
             <span style={{ color: '#ffffff' }}>{activeJobsheet.title}</span>
           </div>
           <div style={{ color: '#94a3b8', fontSize: '0.67rem', marginTop: '2px', display: 'flex', gap: '8px' }}>
@@ -254,7 +254,7 @@ const Lathe2D = ({
                           textAnchor="middle"
                           fontFamily="monospace"
                         >
-                          {isDone ? '✓ ' : ''}{step.label}
+                          {isDone ? '[OK] ' : ''}{step.label}
                         </text>
                       </g>
                     </g>
@@ -508,7 +508,7 @@ const Lathe2D = ({
           <g transform="translate(16, 20)">
             <rect x="0" y="0" width="224" height="74" rx="8" fill="rgba(15, 23, 42, 0.90)" stroke="#38bdf8" strokeWidth="1" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
             <text x="12" y="18" fill="#f8fafc" fontSize="10" fontWeight="900" letterSpacing="0.5">
-              📐 ALUR GERAKAN PAHAT (TOOLPATH)
+              ALUR GERAKAN PAHAT (TOOLPATH)
             </text>
             {/* Rapid line G00 */}
             <line x1="14" y1="34" x2="42" y2="34" stroke="#eab308" strokeWidth="2" strokeDasharray="5 3" />
@@ -588,7 +588,7 @@ const Lathe3D = ({
           gap: '8px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
         }}>
-          <span>⚠️ 2D CAD Aktif (Fallback GPU)</span>
+          <span>[PERINGATAN] 2D CAD Aktif (Fallback GPU)</span>
           <button
             onClick={retryFn}
             style={{
@@ -684,7 +684,7 @@ const Lathe3D = ({
               transition: 'all 0.2s'
             }}
           >
-            {viewMode === '3d' ? '📐 TAMPILAN 2D TEKNIK' : '🎮 TAMPILAN 3D STUDIO'}
+            {viewMode === '3d' ? 'TAMPILAN 2D TEKNIK' : 'TAMPILAN 3D STUDIO'}
           </button>
 
           {/* GARIS TARGET JOB (BLUEPRINT) TOGGLE BUTTON */}
@@ -707,7 +707,7 @@ const Lathe3D = ({
             }}
             title="Tampilkan / Sembunyikan Garis Target Blueprint Jobsheet"
           >
-            <span>🎯</span>
+            <span>[TARGET]</span>
             <span>GARIS JOB: {effectiveShowJobGuide ? 'ON' : 'OFF'}</span>
           </button>
 
@@ -731,7 +731,7 @@ const Lathe3D = ({
             }}
             title="Tampilkan / Sembunyikan Garis Alur Gerakan Pahat (G00 Rapid & G01 Sayat)"
           >
-            <span>{effectiveShowToolpath ? '👁️' : '🙈'}</span>
+            <span>{effectiveShowToolpath ? 'TOOLPATH ON' : 'TOOLPATH OFF'}</span>
             <span>ALUR PAHAT: {effectiveShowToolpath ? 'ON' : 'OFF'}</span>
           </button>
         </div>
@@ -782,7 +782,7 @@ const Lathe3D = ({
               backdropFilter: 'blur(8px)'
             }}
           >
-            ⚡ PENYAYATAN AKTIF
+            [CUT] PENYAYATAN AKTIF
           </div>
         )}
       </div>

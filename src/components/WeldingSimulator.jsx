@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/assets';
+import { 
+  Flame, Zap, BookOpen, Target, Settings, Sliders, RotateCcw, 
+  AlertTriangle, Check, Camera, Image, Layers, ExternalLink, X, HelpCircle
+} from 'lucide-react';
 
 import Welding3D from './Welding3D';
 import Welding2D_Engine from './Welding2D_Engine';
@@ -326,7 +330,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
             onMouseEnter={(e) => { e.currentTarget.style.background = '#ef4444'; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'; }}
           >
-            ✕
+            X
           </button>
         </div>
 
@@ -337,7 +341,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
           {allDefects.length > 0 && (
             <div style={{ marginBottom: '14px', background: 'rgba(239, 68, 68, 0.12)', padding: '10px 14px', borderRadius: '12px', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
               <div style={{ fontSize: '0.78rem', color: '#fca5a5', fontWeight: 800, marginBottom: '6px' }}>
-                📍 TITIK CACAT PADA JALUR LAS 3D INI ({allDefects.length}):
+                TITIK CACAT PADA JALUR LAS 3D INI ({allDefects.length}):
               </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {allDefects.map((d, i) => {
@@ -355,7 +359,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                         display: 'flex', alignItems: 'center', gap: '6px'
                       }}
                     >
-                      <span>🔴 Titik #{i + 1}:</span>
+                      <span style={{ fontWeight: 800, color: '#fca5a5' }}>[PT-#{i + 1}]</span>
                       <span>{typeName.split(' ')[0]} ({Math.round(d.pos)}%)</span>
                     </button>
                   );
@@ -367,7 +371,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
           {/* All Defect Types Selector (Ensiklopedia / Quick Switch) */}
           <div style={{ marginBottom: '14px', background: 'rgba(255,255,255,0.03)', padding: '8px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, marginBottom: '6px' }}>
-              📚 ENSIKLOPEDIA 7 JENIS CACAT LAS LENGKAP:
+              ENSIKLOPEDIA 7 JENIS CACAT LAS LENGKAP:
             </div>
             <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
               {DEFECT_TYPES.map(dt => {
@@ -402,7 +406,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                 fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s'
               }}
             >
-              📸 Foto Makro Nyata (Real Workshop)
+              Foto Makro Nyata (Real Workshop)
             </button>
             <button
               onClick={() => setActiveTab('diagram')}
@@ -413,7 +417,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                 fontWeight: 800, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s'
               }}
             >
-              📐 Diagram Skematik NDT (Irisan)
+              Diagram Skematik NDT (Irisan)
             </button>
           </div>
 
@@ -430,7 +434,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                   fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
                 }}
               >
-                🔎 Foto 1: Tampilan Permukaan (Visual)
+                Foto 1: Tampilan Permukaan (Visual)
               </button>
               <button
                 onClick={() => setPhotoSubIndex(1)}
@@ -442,7 +446,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                   fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer'
                 }}
               >
-                🔬 Foto 2: Detail Makro / Irisan Penampang
+                Foto 2: Detail Makro / Irisan Penampang
               </button>
             </div>
           )}
@@ -493,7 +497,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                     padding: '4px 8px', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer'
                   }}
                 >
-                  {isZoomed ? '🔍 Perkecil' : '🔍 Perbesar Foto'}
+                  {isZoomed ? 'Perkecil' : 'Perbesar Foto'}
                 </button>
 
                 {/* Google Search Link Badge */}
@@ -510,7 +514,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                     boxShadow: '0 4px 12px rgba(0,0,0,0.6)', transition: 'transform 0.2s'
                   }}
                 >
-                  🌐 Cari Foto Real Lain di Google Images ↗
+                  Cari Foto Real Lain di Google Images &rarr;
                 </a>
               </div>
             ) : (
@@ -524,7 +528,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px', marginBottom: '16px' }}>
             <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
               <span style={{ fontSize: '0.72rem', color: '#fca5a5', fontWeight: 800, textTransform: 'uppercase', display: 'block' }}>
-                ⚠️ TINGKAT KEPARAHAN:
+                [SEVERITY] TINGKAT KEPARAHAN:
               </span>
               <span style={{ fontSize: '0.86rem', color: '#ffffff', fontWeight: 700 }}>
                 {currentDefect.severity || 'Sedang / Perlu Perbaikan'}
@@ -533,7 +537,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
 
             <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
               <span style={{ fontSize: '0.72rem', color: '#93c5fd', fontWeight: 800, textTransform: 'uppercase', display: 'block' }}>
-                📋 STANDAR KEBERTERIMAAN (AWS / ISO):
+                [STANDAR] KEBERTERIMAAN (AWS / ISO):
               </span>
               <span style={{ fontSize: '0.86rem', color: '#ffffff', fontWeight: 700 }}>
                 {currentDefect.standardBadge || 'AWS D1.1 Structural Welding Code'}
@@ -546,7 +550,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
             {currentDefect.fieldInspection && (
               <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '12px 14px', borderRadius: '10px', borderLeft: '4px solid #ef4444' }}>
                 <strong style={{ color: '#fca5a5', fontSize: '0.85rem', display: 'block', marginBottom: '3px' }}>
-                  🔍 CIRI-CIRI INSPEKSI VISUAL & NDT:
+                  [INSPEKSI] CIRI-CIRI INSPEKSI VISUAL & NDT:
                 </strong>
                 <p style={{ color: 'var(--text-main)', fontSize: '0.88rem', margin: 0, lineHeight: '1.45' }}>
                   {currentDefect.fieldInspection}
@@ -556,7 +560,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
 
             <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
               <strong style={{ color: '#f59e0b', fontSize: '0.85rem', display: 'block', marginBottom: '3px' }}>
-                ⚡ ALASAN TERJADI (PENYEBAB UTAMA):
+                [PENYEBAB] ALASAN TERJADI (PENYEBAB UTAMA):
               </strong>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', margin: 0, lineHeight: '1.45' }}>
                 {currentDefect.cause}
@@ -565,7 +569,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
 
             <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '12px 14px', borderRadius: '10px', borderLeft: '4px solid var(--game-success)' }}>
               <strong style={{ color: 'var(--game-success)', fontSize: '0.85rem', display: 'block', marginBottom: '3px' }}>
-                ✅ CARA PENCEGAHAN & SOLUSI BENGKEL:
+                [SOLUSI] CARA PENCEGAHAN & SOLUSI BENGKEL:
               </strong>
               <p style={{ color: 'var(--text-main)', fontSize: '0.88rem', margin: 0, lineHeight: '1.45' }}>
                 {currentDefect.solution}
@@ -580,7 +584,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
               style={{ width: '100%', padding: '12px', fontSize: '0.9rem', fontWeight: 800 }}
               onClick={onClose}
             >
-              ◀️ KEMBALI KE SIMULATOR 3D (EVALUASI LAS)
+              KEMBALI KE SIMULATOR 3D (EVALUASI LAS)
             </button>
             <a
               href={googleImagesUrl}
@@ -594,7 +598,7 @@ const DefectModal = ({ defect: initialDefect, allDefects = [], onClose, onSelect
                 alignItems: 'center', justifyContent: 'center', gap: '6px'
               }}
             >
-              🌐 BUKA HASIL CARI GOOGLE IMAGES (FOTO NYATA LAINNYA) ↗
+              BUKA HASIL CARI GOOGLE IMAGES (FOTO NYATA LAINNYA) &rarr;
             </a>
           </div>
         </div>
@@ -909,7 +913,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             color: '#fff', fontSize: '1.4rem',
             boxShadow: '0 4px 10px rgba(234, 88, 12, 0.3)'
           }}>
-            🔥
+            <Flame size={22} color="#ffffff" />
           </div>
           <div>
             <h2 style={{ fontSize: '1.15rem', fontWeight: 900, color: 'var(--text-main)', margin: 0, letterSpacing: '0.5px' }}>
@@ -941,7 +945,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>📚</span> Teori & Materi
+            Teori & Materi
           </button>
 
           <button
@@ -962,7 +966,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>🔥</span> Simulator Praktik 3D
+            Simulator Praktik 3D
           </button>
 
           <button
@@ -983,7 +987,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               transition: 'all 0.2s'
             }}
           >
-            <span>🎯</span> Kuis Asesmen (1000 XP)
+            Kuis Asesmen (1000 XP)
           </button>
         </div>
       </div>
@@ -1105,7 +1109,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                         }}
                         title="Beralih antara Mode 3D Studio dan Mode 2D Makro"
                       >
-                        <span>{viewMode === '3d' ? '📐 2D' : '🎮 3D'}</span>
+                        <span>{viewMode === '3d' ? '2D' : '3D'}</span>
                       </button>
 
                       <button
@@ -1113,7 +1117,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                         style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '3px 6px', borderRadius: '5px', fontSize: '0.66rem', fontWeight: 700, cursor: 'pointer' }}
                         title="Beralih ke Tampilan Desktop Penuh"
                       >
-                        🖥️
+                        [DESKTOP]
                       </button>
                     </div>
                   </div>
@@ -1157,7 +1161,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                           display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(234,88,12,0.4)'
                         }}
                       >
-                        <span>🎛️ Mesin</span>
+                        <span>Mesin</span>
                         <span style={{ opacity: 0.85, fontSize: '0.6rem' }}>
                           ({weldingProcess === 'MIG' ? `${voltage}V` : weldingProcess === 'OAW' ? `${oxygenValve}%` : `${amperage}A`})
                         </span>
@@ -1172,7 +1176,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                           padding: '4px 7px', borderRadius: '5px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer'
                         }}
                       >
-                        {interactionMode === 'weld' ? '🔥 Las' : '📷 Orbit'}
+                        {interactionMode === 'weld' ? 'Las' : 'Orbit'}
                       </button>
                     </div>
                   </div>
@@ -1188,7 +1192,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span>{defects.length === 0 ? '🎉' : '⚠️'}</span>
+                      <span>{defects.length === 0 ? '[OK]' : '[WARN]'}</span>
                       <div style={{ fontSize: '0.74rem', color: '#fff', fontWeight: 800 }}>
                         {defects.length === 0 ? 'Pengelasan Sempurna (95/100)!' : `${defects.length} Cacat Terdeteksi`}
                       </div>
@@ -1197,7 +1201,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       onClick={() => { setStep(6); setTorchPos(0); setWeldProgress(0); setDefects([]); }}
                       style={{ background: '#0284c7', border: 'none', color: '#fff', padding: '4px 10px', borderRadius: '6px', fontSize: '0.68rem', fontWeight: 800, cursor: 'pointer' }}
                     >
-                      🔄 Ulang
+                      Ulang
                     </button>
                   </div>
                 )}
@@ -1214,8 +1218,8 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       boxShadow: '0 4px 14px rgba(239,68,68,0.5)'
                     }}
                   >
-                    <span>⚠️ {defects.length} Cacat Ditemukan</span>
-                    <span style={{ fontSize: '0.65rem', opacity: 0.85 }}>• Foto 📸</span>
+                    <span>[WARN] {defects.length} Cacat Ditemukan</span>
+                    <span style={{ fontSize: '0.65rem', opacity: 0.85 }}>• Foto</span>
                   </button>
                 )}
               </div>
@@ -1256,7 +1260,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                   {/* Progress & Arc Status */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span style={{ color: isWelding ? '#ea580c' : '#94a3b8', fontWeight: 800 }}>
-                      {isWelding ? '🔥 ARC ON' : '⚡ SIAP'}
+                      {isWelding ? 'ARC ON' : 'SIAP'}
                     </span>
                     <div style={{ width: '60px', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{ width: `${weldProgress}%`, height: '100%', background: 'linear-gradient(90deg, #ea580c, #f59e0b)', transition: 'width 0.1s' }} />
@@ -1298,7 +1302,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       fontSize: '0.78rem', whiteSpace: 'nowrap'
                     }}
                   >
-                    {isWelding ? '🔥 MENYALA (LEPAS STOP)' : '🔥 TAHAN UNTUK LAS'}
+                    {isWelding ? 'MENYALA (LEPAS STOP)' : 'TAHAN UNTUK LAS'}
                   </button>
 
                   {/* Reset Button */}
@@ -1307,7 +1311,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                     style={{ width: '42px', height: '42px', background: 'rgba(15, 23, 42, 0.85)', border: '1px solid rgba(255,255,255,0.15)', color: '#94a3b8', borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
                     title="Reset Posisi Las"
                   >
-                    🔄
+                    RESET
                   </button>
                 </div>
               </div>
@@ -1362,14 +1366,14 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                         style={{ flex: 1, padding: '8px' }}
                         onClick={() => setInteractionMode('weld')}
                       >
-                        🔥 LAS
+                        LAS
                       </button>
                       <button 
                         className={`btn-game ${interactionMode === 'camera' ? 'btn-game-tflm' : 'btn-game-neutral'}`}
                         style={{ flex: 1, padding: '8px' }}
                         onClick={() => setInteractionMode('camera')}
                       >
-                        📷 KAMERA
+                        KAMERA
                       </button>
                     </div>
                   </div>
@@ -1388,28 +1392,28 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                           style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                           onClick={() => handleSelectProcess('SMAW')}
                         >
-                          ⚡ SMAW / MMA
+                          SMAW / MMA
                         </button>
                         <button 
                           className={`btn-game ${weldingProcess === 'MIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
                           style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                           onClick={() => handleSelectProcess('MIG')}
                         >
-                          🌀 MIG / MAG
+                          MIG / MAG
                         </button>
                         <button 
                           className={`btn-game ${weldingProcess === 'TIG' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
                           style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                           onClick={() => handleSelectProcess('TIG')}
                         >
-                          🎯 TIG / GTAW
+                          TIG / GTAW
                         </button>
                         <button 
                           className={`btn-game ${weldingProcess === 'OAW' ? 'btn-game-primary' : 'btn-game-neutral'}`} 
                           style={{ padding: '8px 14px', fontSize: '0.82rem', fontWeight: 800 }} 
                           onClick={() => handleSelectProcess('OAW')}
                         >
-                          🔥 OAW
+                          OAW
                         </button>
                       </div>
                     </div>
@@ -1446,7 +1450,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       onClick={() => { sound.playClick(); setViewMode(v => v === '3d' ? '2d' : '3d'); }}
                       title="Beralih antara Mode 3D Studio dan Mode 2D Makro Penampang"
                     >
-                      <span>{viewMode === '3d' ? '📐 MODE 2D MAKRO' : '🎮 MODE 3D STUDIO'}</span>
+                      <span>{viewMode === '3d' ? 'MODE 2D MAKRO' : 'MODE 3D STUDIO'}</span>
                     </button>
 
                     <button 
@@ -1461,7 +1465,6 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       onClick={() => setIsMobileMode(true)}
                       title="Beralih ke Mode Game 1 Layar Penuh (Cocok untuk Layar HP)"
                     >
-                      <span>🎮</span>
                       <span>MODE GAME HP</span>
                     </button>
 
@@ -1473,7 +1476,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       }}
                       onClick={() => setShowMachinePanel(!showMachinePanel)}
                     >
-                      <span>🎛️</span> {showMachinePanel ? 'SEMBUNYIKAN PANEL MESIN' : 'BUKA PANEL MESIN LAS'}
+                      {showMachinePanel ? 'SEMBUNYIKAN PANEL MESIN' : 'BUKA PANEL MESIN LAS'}
                     </button>
 
                     <button 
@@ -1485,7 +1488,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                       }}
                       onClick={() => setSelectedDefect(DEFECT_TYPES[0])}
                     >
-                      🖼️ ENSIKLOPEDIA CACAT LAS
+                      ENSIKLOPEDIA CACAT LAS
                     </button>
                   </div>
                 </div>
@@ -1657,12 +1660,12 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 800, fontSize: '0.82rem', color: '#fca5a5', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        ⚠️ {d.name}
+                        [CACAT] {d.name}
                       </div>
                       <div style={{ fontSize: '0.72rem', color: '#60a5fa', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
                         <span>Titik {Math.round(d.pos)}%</span>
                         <span>•</span>
-                        <span>Lihat Foto 📸</span>
+                        <span>Lihat Foto</span>
                       </div>
                     </div>
                   </button>
@@ -1741,12 +1744,12 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               }} className="animate-pulse" />
               <div>
                 <div style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.95rem' }}>
-                  {defects.length === 0 ? '🎉 PENGELASAN PERFECT! (Skor 95/100)' : `⚠️ TERDETEKSI ${defects.length} CACAT PADA ALUR LAS 3D`}
+                  {defects.length === 0 ? '[SEMPURNA] PENGELASAN PERFECT! (Skor 95/100)' : `[EVALUASI] TERDETEKSI ${defects.length} CACAT PADA ALUR LAS 3D`}
                 </div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                   {defects.length === 0
                     ? 'Tidak ditemukan cacat las visual. Penetrasi dan manik las optimal.'
-                    : 'Klik titik merah berkedip 🔴 di sepanjang hasil lasan 3D untuk melihat gambar & jenis cacatnya!'}
+                    : 'Klik titik merah di sepanjang hasil lasan 3D untuk melihat gambar & jenis cacatnya!'}
                 </div>
               </div>
             </div>
@@ -1756,7 +1759,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               style={{ padding: '8px 16px', fontSize: '0.82rem', fontWeight: 800 }}
               onClick={() => { setStep(6); setTorchPos(0); setWeldProgress(0); setDefects([]); }}
             >
-              🔄 SIMULASI ULANG
+              SIMULASI ULANG
             </button>
           </div>
         )}
@@ -1825,7 +1828,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🎛️</span>
+            <Sliders size={20} color="#ea580c" />
             <div>
               <h3 style={{ fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', margin: 0 }}>
                 PANEL PARAMETER MESIN LAS ({weldingProcess})
@@ -1843,7 +1846,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
               fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}
           >
-            ✕
+            X
           </button>
         </div>
 
@@ -1944,7 +1947,7 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
             cursor: 'pointer', boxShadow: '0 4px 14px rgba(234,88,12,0.4)'
           }}
         >
-          ✓ Simpan & Kembali ke Simulasi 3D
+          Simpan & Kembali ke Simulasi 3D
         </button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { Award, BookOpen, RotateCcw } from 'lucide-react';
 import React, { useState } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
@@ -263,7 +264,7 @@ const WeldingQuiz = ({ onComplete }) => {
 
     return (
       <div className="dashboard-card" style={{ padding: '40px', textAlign: 'center', maxWidth: '650px', margin: '0 auto' }}>
-        <div style={{ fontSize: '4rem', marginBottom: '16px' }}>{isPass ? '🏆' : '📚'}</div>
+        <div className="flex justify-center" style={{ marginBottom: '16px' }}>{isPass ? <Award size={56} className="text-amber-400" /> : <BookOpen size={56} className="text-sky-400" />}</div>
         <h2 style={{ fontSize: '1.8rem', fontWeight: 900, color: isPass ? '#10b981' : '#f59e0b', marginBottom: '8px' }}>
           {isPass ? 'LUAR BIASA! ASESMEN PENGELASAN LULUS' : 'EVALUASI PERLU DITINGKATKAN'}
         </h2>
@@ -288,7 +289,7 @@ const WeldingQuiz = ({ onComplete }) => {
           className="btn-game btn-game-primary"
           style={{ padding: '12px 32px', fontSize: '1rem' }}
         >
-          🔄 Ulangi Asesmen Kuis
+          <RotateCcw size={14} className="inline mr-1" /> Ulangi Asesmen Kuis
         </button>
       </div>
     );
@@ -385,8 +386,8 @@ const WeldingQuiz = ({ onComplete }) => {
                 {String.fromCharCode(65 + idx)}
               </span>
               <span style={{ flex: 1 }}>{opt}</span>
-              {isAnswered && opt === currentQ.answer && <span>✅</span>}
-              {isAnswered && opt === selectedOption && opt !== currentQ.answer && <span>❌</span>}
+              {isAnswered && opt === currentQ.answer && <span className="font-mono text-xs text-emerald-400 font-bold">[BENAR]</span>}
+              {isAnswered && opt === selectedOption && opt !== currentQ.answer && <span className="font-mono text-xs text-rose-400 font-bold">[SALAH]</span>}
             </button>
           );
         })}
@@ -402,7 +403,7 @@ const WeldingQuiz = ({ onComplete }) => {
           marginBottom: '24px'
         }}>
           <div style={{ fontWeight: 800, fontSize: '0.9rem', color: selectedOption === currentQ.answer ? '#065f46' : '#991b1b', marginBottom: '4px' }}>
-            {selectedOption === currentQ.answer ? '🎉 JAWABAN TEPAT!' : '⚠️ JAWABAN KURANG TEPAT'}
+            {selectedOption === currentQ.answer ? '[BENAR] JAWABAN TEPAT!' : '[EVALUASI] JAWABAN KURANG TEPAT'}
           </div>
           <p style={{ fontSize: '0.85rem', color: '#334155', margin: 0, lineHeight: 1.5 }}>
             {currentQ.explanation}
@@ -418,7 +419,7 @@ const WeldingQuiz = ({ onComplete }) => {
             className="btn-game btn-game-primary"
             style={{ padding: '12px 28px', fontSize: '0.95rem' }}
           >
-            {currentIndex < QUESTIONS.length - 1 ? 'Soal Berikutnya ➔' : 'Lihat Hasil Akhir 🏆'}
+            {currentIndex < QUESTIONS.length - 1 ? 'Soal Berikutnya ->' : 'Lihat Hasil Akhir'}
           </button>
         </div>
       )}

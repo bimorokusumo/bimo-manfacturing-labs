@@ -1,7 +1,25 @@
+import {
+  Zap, Flame, Wind, Sparkles, Shield, FlaskConical,
+  Play, Pause, RotateCcw, Volume2, Square, Mic,
+  Box, Video, Microscope, BarChart3, Clock, Thermometer
+} from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import HeatTreatment3D_Engine from './HeatTreatment3D_Engine';
 import HeatTreatmentRealDocumentary from './HeatTreatmentRealDocumentary';
+
+
+const renderHtIcon = (id, size = 18) => {
+  switch (id) {
+    case 'hardening': return <Zap size={size} className="text-amber-400" />;
+    case 'tempering': return <Flame size={size} className="text-orange-400" />;
+    case 'normalizing': return <Wind size={size} className="text-sky-400" />;
+    case 'annealing': return <Sparkles size={size} className="text-emerald-400" />;
+    case 'carburizing': return <Shield size={size} className="text-indigo-400" />;
+    case 'blackoxide': return <FlaskConical size={size} className="text-purple-400" />;
+    default: return <Flame size={size} />;
+  }
+};
 
 // =============================================================================
 // DATABASE 6 MODUL VIDEO SIMULASI ANIMASI HEAT TREATMENT (MASING-MASING SENDIRI)
@@ -11,13 +29,13 @@ const VIDEO_MODULES = [
     id: 'hardening',
     title: '1. Hardening (Pengerasan Quench)',
     subtitle: 'Pemanasan 850°C & Pendinginan Kilat Membentuk Martensit Keras 65 HRC',
-    icon: '⚡',
+    icon: 'hardening',
     duration: 44,
     color: '#dc2626',
     chapters: [
       { start: 0, end: 10, title: '1. Baja Mentah S45C (25°C, 20 HRC)', stage: 'raw' },
       { start: 10, end: 22, title: '2. Pemanasan Tungku 850°C (Austenit)', stage: 'heat' },
-      { start: 22, end: 34, title: '3. Quenching Kejut Oli (850°C ➔ 50°C)', stage: 'quench' },
+      { start: 22, end: 34, title: '3. Quenching Kejut Oli (850°C -> 50°C)', stage: 'quench' },
       { start: 34, end: 44, title: '4. Martensit Jarum (Keras 65 HRC, Getas!)', stage: 'martensite' }
     ]
   },
@@ -25,7 +43,7 @@ const VIDEO_MODULES = [
     id: 'tempering',
     title: '2. Tempering (Penormalan & Pelepasan Getas)',
     subtitle: 'Pemanasan Ulang 150°C - 450°C Menghilangkan Kerapuhan & Spektrum Warna Oksida',
-    icon: '🌡️',
+    icon: 'tempering',
     duration: 46,
     color: '#f59e0b',
     chapters: [
@@ -39,7 +57,7 @@ const VIDEO_MODULES = [
     id: 'annealing',
     title: '3. Full Annealing (Pelunakan Total)',
     subtitle: 'Pendinginan Super Lambat 24 Jam di Tungku Tertutup untuk Kemudahan Mesin Bubut',
-    icon: '🧘',
+    icon: 'normalizing',
     duration: 42,
     color: '#0284c7',
     chapters: [
@@ -53,7 +71,7 @@ const VIDEO_MODULES = [
     id: 'normalizing',
     title: '4. Normalizing (Penyeragaman Butir Kristal)',
     subtitle: 'Pemanasan 900°C & Pendinginan Udara Terbuka Menghasilkan Butir Halus & Bebas Tegangan',
-    icon: '🌱',
+    icon: 'annealing',
     duration: 40,
     color: '#16a34a',
     chapters: [
@@ -67,7 +85,7 @@ const VIDEO_MODULES = [
     id: 'case-hardening',
     title: '5. Case Hardening (Karburisasi Kulit Luar)',
     subtitle: 'Difusi Karbon 1 mm: Kulit Keras 62 HRC, Inti Tetap Ulet 22 HRC Menahan Torsi',
-    icon: '🛡️',
+    icon: 'carburizing',
     duration: 42,
     color: '#ea580c',
     chapters: [
@@ -81,7 +99,7 @@ const VIDEO_MODULES = [
     id: 'blackening',
     title: '6. Blackening (Hot Black Oxide 7 Bak)',
     subtitle: 'Lapisan Magnetit Fe₃O₄ Anti-Karat Presisi 0.000 mm Tanpa Mengubah Ukuran',
-    icon: '⚗️',
+    icon: 'blackoxide',
     duration: 56,
     color: '#475569',
     chapters: [
@@ -451,7 +469,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
           bubbles: qProg < 0.7,
           inFurnace: false,
           inQuench: true,
-          badge: `Quench Cepat Oli: ${temp}°C ➔ 65 HRC!`,
+          badge: `Quench Cepat Oli: ${temp}°C -> 65 HRC!`,
           subtitles: '3. Quenching Kejut: Baja membara dicemplungkan ke bak oli dalam 3 detik! Atom karbon terkunci paksa membentuk Martensit Jarum (65 HRC). PERINGATAN: Baja sangat getas seperti kaca!',
           tips: 'Peringatan keras: Jangan memukul baja setelah quench karena bisa langsung pecah berkeping-keping!'
         };
@@ -500,7 +518,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
       } else if (t <= 34) {
         const p = (t - 22) / 12;
         const temp = Math.round(260 + p * 140);
-        const col = p < 0.5 ? '#d97706' : '#2563eb'; // Cokelat emas ➔ Biru
+        const col = p < 0.5 ? '#d97706' : '#2563eb'; // Cokelat emas -> Biru
         return {
           temp,
           phase: p < 0.5 ? 'Martensit Temper (Cokelat Emas)' : 'Troostite / Bainit (Biru)',
@@ -731,7 +749,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               fontSize: '1.4rem',
               boxShadow: `0 0 15px ${activeVideo.color}40`
             }}>
-              {activeVideo.icon}
+              {renderHtIcon(activeVideo.id, 24)}
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -785,7 +803,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                   transition: 'all 0.2s'
                 }}
               >
-                <span style={{ fontSize: '1.2rem' }}>{v.icon}</span>
+                <span className="flex items-center justify-center">{renderHtIcon(v.id, 16)}</span>
                 <div>
                   <div style={{ color: isSel ? v.color : '#cbd5e1', fontSize: '0.82rem', fontWeight: 900 }}>
                     {v.title.split('(')[0].replace(/^\d+\.\s*/, '')}
@@ -840,7 +858,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: viewMode === '3d' ? '0 0 12px rgba(56, 189, 248, 0.4)' : 'none'
             }}
           >
-            <span>🎮</span> 3D Bengkel Sinematik (WebGL)
+            <Box size={14} className="inline mr-1 text-sky-400" /> 3D Bengkel Sinematik (WebGL)
           </button>
 
           <button
@@ -860,7 +878,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: viewMode === 'real-video' ? '0 0 12px rgba(239, 68, 68, 0.4)' : 'none'
             }}
           >
-            <span>📹</span> Video Nyata Industri
+            <Video size={14} className="inline mr-1 text-sky-400" /> Video Nyata Industri
           </button>
 
           <button
@@ -880,7 +898,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: viewMode === 'micrograph' ? '0 0 12px rgba(16, 185, 129, 0.4)' : 'none'
             }}
           >
-            <span>🔬</span> Mikroskop Riil (500x)
+            <Microscope size={14} className="inline mr-1 text-sky-400" /> Mikroskop Riil (500x)
           </button>
 
           <button
@@ -900,7 +918,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: viewMode === '2d-diagram' ? '0 0 12px rgba(168, 85, 247, 0.4)' : 'none'
             }}
           >
-            <span>📊</span> Diagram Alir
+            <BarChart3 size={14} className="inline mr-1 text-sky-400" /> Diagram Alir
           </button>
         </div>
       </div>
@@ -980,7 +998,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 gap: '6px',
                 boxShadow: '0 0 14px rgba(56, 189, 248, 0.5)'
               }}>
-                <span style={{ fontSize: '0.9rem' }}>🎙️</span>
+                <Mic size={14} className="text-sky-400" />
                 <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff' }}>
                   Suara Pria Sedang Berbicara...
                 </span>
@@ -1004,7 +1022,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
           }}>
             <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>STATUS PARAMETER</div>
             <div style={{ fontSize: '1.15rem', fontFamily: 'monospace', fontWeight: 900, color: activeVideo.color }}>
-              {currentProps.temp ? `🌡️ ${currentProps.temp}°C` : '⚗️ REAKSI KIMIA'} &bull; <span style={{ color: '#38bdf8' }}>{currentProps.hrc ? `${currentProps.hrc} HRC` : '0.000 mm'}</span>
+              {currentProps.temp ? `${currentProps.temp}°C` : 'REAKSI KIMIA'} &bull; <span style={{ color: '#38bdf8' }}>{currentProps.hrc ? `${currentProps.hrc} HRC` : '0.000 mm'}</span>
             </div>
             <div style={{ fontSize: '0.7rem', color: '#cbd5e1', fontWeight: 600 }}>
               {currentProps.phase || currentProps.badge}
@@ -1066,7 +1084,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 background: currentProps.inFurnace ? 'radial-gradient(circle, #fef08a 0%, #ea580c 60%, #7c2d12 100%)' : '#0f172a',
                 borderRadius: '8px', border: '2px solid #334155', display: 'flex', justifyContent: 'center', alignItems: 'center'
               }}>
-                {currentProps.inFurnace && <span style={{ fontSize: '2.4rem' }}>🔥</span>}
+                {currentProps.inFurnace && <Flame size={36} className="text-amber-500 animate-pulse" />}
               </div>
             </div>
 
@@ -1081,7 +1099,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               <div style={{ width: '100%', height: '100%', background: 'linear-gradient(180deg, rgba(14, 165, 233, 0.3) 0%, rgba(3, 105, 161, 0.8) 100%)', position: 'relative' }}>
                 {currentProps.bubbles && (
                   <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', fontSize: '1.4rem', animation: 'bounce 0.4s infinite' }}>
-                    🫧🫧🫧
+                    <span className="font-mono text-xs font-bold text-sky-300 tracking-wider">[BOILING]</span>
                   </div>
                 )}
               </div>
@@ -1103,7 +1121,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative'
               }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#ffffff' }}>{currentProps.hrc}HRC</span>
-                {currentProps.steam && <span style={{ position: 'absolute', top: '-30px', fontSize: '1.5rem' }}>💨</span>}
+                {currentProps.steam && <span className="font-mono text-[10px] text-sky-300 font-bold" style={{ position: 'absolute', top: '-24px' }}>[VAPOR]</span>}
               </div>
               <div style={{ background: '#000', padding: '4px 8px', borderRadius: '4px', fontSize: '0.68rem', fontWeight: 800, marginTop: '6px', whiteSpace: 'nowrap' }}>
                 {currentProps.badge}
@@ -1125,7 +1143,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: currentProps.glow, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '0 24px', transition: 'all 0.6s', position: 'relative'
             }}>
-              <span style={{ fontSize: '1.4rem' }}>🔪</span>
+              <span className="font-mono text-xs font-bold text-amber-300">[M-STEEL]</span>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#0f172a' }}>{currentProps.hrc} HRC</div>
                 <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#1e293b' }}>{currentProps.phase}</div>
@@ -1165,9 +1183,9 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 width: '180px', height: '120px', background: currentProps.temp > 500 ? 'radial-gradient(circle, #f97316 0%, #7c2d12 100%)' : '#0f172a',
                 borderRadius: '8px', border: '2px solid #334155', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '6px'
               }}>
-                <span style={{ fontSize: '2rem' }}>🔒</span>
+                <Shield size={28} className="text-sky-400" />
                 <span style={{ fontSize: '0.72rem', color: '#cbd5e1', fontWeight: 700 }}>
-                  {currentTime > 20 ? '⏱️ Dingin Lambat 24 Jam...' : 'Pemanasan 850°C'}
+                  {currentTime > 20 ? 'Dingin Lambat 24 Jam (Furnace Cooling)...' : 'Pemanasan 850°C'}
                 </span>
               </div>
               <div style={{ fontSize: '0.75rem', fontWeight: 900, color: '#4ade80', marginTop: '10px' }}>
@@ -1184,13 +1202,13 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
             <div style={{ width: '170px', height: '200px', background: '#1e293b', border: '4px solid #475569', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8' }}>TUNGKU 900°C</div>
               <div style={{ width: '120px', height: '120px', background: currentTime <= 20 ? 'radial-gradient(circle, #fb923c 0%, #9a3412 100%)' : '#0f172a', borderRadius: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {currentTime <= 20 && <span style={{ fontSize: '2rem' }}>🔥</span>}
+                {currentTime <= 20 && <Flame size={28} className="text-amber-500 animate-pulse" />}
               </div>
             </div>
 
             {/* Open Air Cooling Rack */}
             <div style={{ width: '220px', height: '200px', background: 'rgba(15, 23, 42, 0.7)', border: '2px dashed #16a34a', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.5rem' }}>💨</span>
+              <Wind size={24} className="text-sky-300" />
               <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4ade80' }}>RAK UDARA TERBUKA KAMAR</div>
               <div style={{ width: '80px', height: '40px', background: currentProps.color, borderRadius: '6px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 900, fontSize: '0.75rem', color: '#fff' }}>
                 {currentProps.hrc} HRC
@@ -1214,7 +1232,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 width: '120px', height: '120px', borderRadius: '50%', background: '#334155',
                 display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#cbd5e1'
               }}>
-                <span style={{ fontSize: '1.8rem' }}>⚙️</span>
+                <span className="font-mono text-xs font-bold text-sky-400">[GEAR S45C]</span>
                 <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8' }}>INTI POROS</span>
                 <span style={{ fontSize: '0.8rem', fontWeight: 900, color: '#4ade80' }}>22 HRC (ULET)</span>
               </div>
@@ -1251,20 +1269,20 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 width: '46px', height: '42px', background: currentProps.tankData.color, border: '2px solid rgba(255,255,255,0.3)',
                 borderRadius: '6px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.2rem', boxShadow: '0 4px 12px rgba(0,0,0,0.5)', transition: 'background 0.5s'
               }}>
-                🔩
+                <span className="font-mono text-[10px] font-bold text-white tracking-wider">[WORK]</span>
               </div>
             </div>
 
             {/* 7 Tanks */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', width: '100%', height: '140px', zIndex: 10 }}>
               {[
-                { label: 'Bak 1: Degrease', liquid: '#0284c7', icon: '🧼' },
-                { label: 'Bak 2: Rinse 1', liquid: '#38bdf8', icon: '💧' },
-                { label: 'Bak 3: Acid Pickling', liquid: '#10b981', icon: '🧪' },
-                { label: 'Bak 4: Rinse 2', liquid: '#38bdf8', icon: '💧' },
-                { label: 'Bak 5: Hot Salt 142°C', liquid: '#0f172a', icon: '⚗️', special: true },
-                { label: 'Bak 6: Rinse 3', liquid: '#38bdf8', icon: '💧' },
-                { label: 'Bak 7: Oil Seal', liquid: '#d97706', icon: '🛡️' }
+                { label: 'Bak 1: Degrease', liquid: '#0284c7', icon: 'T-1' },
+                { label: 'Bak 2: Rinse 1', liquid: '#38bdf8', icon: 'T-2' },
+                { label: 'Bak 3: Acid Pickling', liquid: '#10b981', icon: 'T-3' },
+                { label: 'Bak 4: Rinse 2', liquid: '#38bdf8', icon: 'T-4' },
+                { label: 'Bak 5: Hot Salt 142°C', liquid: '#0f172a', icon: 'blackoxide', special: true },
+                { label: 'Bak 6: Rinse 3', liquid: '#38bdf8', icon: 'T-6' },
+                { label: 'Bak 7: Oil Seal', liquid: '#d97706', icon: 'T-7' }
               ].map((tank, idx) => {
                 const isActive = currentProps.tankIdx === idx;
                 return (
@@ -1273,10 +1291,10 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                     display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: isActive ? '0 0 15px rgba(56, 189, 248, 0.4)' : 'none'
                   }}>
                     <div style={{ padding: '4px', fontSize: '0.62rem', fontWeight: 800, textAlign: 'center', background: isActive ? '#0284c7' : '#0f172a', color: '#fff', whiteSpace: 'nowrap' }}>
-                      {tank.icon} {idx + 1}
+                      {tank.icon}
                     </div>
                     <div style={{ flex: 1, background: tank.liquid, opacity: 0.8, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      {tank.special && isActive && <span style={{ fontSize: '1rem', animation: 'bounce 0.6s infinite' }}>🫧</span>}
+                      {tank.special && isActive && <span className="font-mono text-[9px] font-bold text-sky-200 animate-pulse">BOIL</span>}
                     </div>
                   </div>
                 );
@@ -1361,7 +1379,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               boxShadow: isPlaying ? '0 0 12px rgba(239, 68, 68, 0.4)' : '0 0 12px rgba(16, 185, 129, 0.4)'
             }}
           >
-            <span>{isPlaying ? '⏸ JEDA VIDEO' : '▶ PUTAR VIDEO'}</span>
+            {isPlaying ? <Pause size={14} className="inline mr-1" /> : <Play size={14} className="inline mr-1" />}<span>{isPlaying ? 'JEDA VIDEO' : 'PUTAR VIDEO'}</span>
           </button>
 
           <button
@@ -1377,7 +1395,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               cursor: 'pointer'
             }}
           >
-            ⏮ Ulang
+            <RotateCcw size={13} className="inline mr-1" /> Ulang
           </button>
 
           <div style={{ fontSize: '0.8rem', fontFamily: 'monospace', color: '#94a3b8' }}>
@@ -1436,7 +1454,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
             }}
             title="Aktifkan atau Matikan Narasi Suara Laki-Laki Otomatis"
           >
-            <span>🎙️</span>
+            <Mic size={14} className="inline mr-1 text-sky-400" />
             <span>{narrationEnabled ? 'Suara Pria: AKTIF' : 'Suara Pria: MATI'}</span>
           </button>
         </div>
@@ -1455,7 +1473,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '1.3rem' }}>👨‍🏫</span>
+            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-sky-900/60 border border-sky-500/30 text-sky-300 font-bold uppercase tracking-wider">AUDIO NARRATOR</span>
             <div>
               <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 PENJELASAN INSTRUKTUR BENGKEL ({activeVideo.title.toUpperCase()}):
@@ -1493,7 +1511,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
               transition: 'all 0.2s'
             }}
           >
-            <span>{isSpeaking ? '⏹ HENTIKAN SUARA PRIA' : '🔊 DENGARKAN SUARA PRIA (LAKI-LAKI)'}</span>
+            {isSpeaking ? <Square size={13} className="inline mr-1 text-rose-400" /> : <Volume2 size={13} className="inline mr-1 text-sky-400" />}<span>{isSpeaking ? 'HENTIKAN SUARA NARATOR' : 'DENGARKAN SUARA NARATOR'}</span>
           </button>
         </div>
 
@@ -1511,7 +1529,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
             color: '#38bdf8'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🎙️</span>
+              <Mic size={14} className="inline mr-1 text-sky-400" />
               <strong>Instruktur Pria Sedang Berbicara (Nada Bariton Mantap)...</strong>
             </div>
             <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
@@ -1553,7 +1571,7 @@ const HeatTreatmentVideoSim = ({ initialVideoId = 'hardening', onSelectQuiz, onC
                 gap: '4px'
               }}
             >
-              <span>Sudah paham? Uji kemampuan lewat Kuis Visual ➔</span>
+              <span>Sudah paham? Uji kemampuan lewat Kuis Visual &rarr;</span>
             </button>
           </div>
         )}

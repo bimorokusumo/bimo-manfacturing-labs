@@ -2,6 +2,27 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { sound } from '../utils/audio';
 import { recordQuizResult } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
+import {
+  Layers,
+  Wrench,
+  Compass,
+  Disc,
+  Calculator,
+  Target,
+  Sliders,
+  Camera,
+  Search,
+  Cog,
+  AlertTriangle,
+  Award,
+  CheckCircle2,
+  RotateCw,
+  BookOpen,
+  X,
+  FileSpreadsheet,
+  ArrowRight
+} from 'lucide-react';
+
 
 // =============================================================================
 // DATABASE 1: KATEGORI MATERIAL ISO STANDAR UNTUK INSERT & ALAT POTONG
@@ -78,7 +99,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Face Mill (Pisau Frais Muka / Shell Mill)',
     englishName: 'Face Milling Cutter / Indexable Shell Mill',
     category: 'Milling Permukaan Datar',
-    icon: '🥞',
+    
     fotoReal: '/assets/images/machine_cutting_tools/face_mill.jpg',
     isoStandard: 'DIN 8030 / ISO 6462 (Lead Angle 45° & 90°)',
     materialBadan: 'Baja Paduan Perkakas 42CrMo4 Sepuh + Sisipan Karbida Sintered',
@@ -117,7 +138,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Square End Mill (Pisau Frais Jari Ujung Datar)',
     englishName: 'Square End Mill (Flat Bottom / 90° Shoulder)',
     category: 'Milling Kontur, Alur & Dinding Siku',
-    icon: '📏',
+    
     fotoReal: '/assets/images/machine_cutting_tools/end_mill.jpg',
     isoStandard: 'DIN 844 / DIN 6527 (Solid Carbide / HSS-Co8)',
     materialBadan: 'Solid Tungsten Carbide (Mikrograin WC 10% Co) / HSS-Co8',
@@ -156,7 +177,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Ball Nose End Mill (Pisau Frais Ujung Bulat / Ball Mill)',
     englishName: 'Ball Nose End Mill (3D Contouring / Mold & Die)',
     category: 'Milling Permukaan 3D & Cetakan',
-    icon: '🔮',
+    
     fotoReal: '/assets/images/machine_cutting_tools/ball_nose_mill.jpg',
     isoStandard: 'DIN 6527 L / ISO Ball Nose Standard',
     materialBadan: 'Solid Micrograin Tungsten Carbide',
@@ -194,7 +215,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Roughing End Mill (Pisau Frais Kasar / Ripper)',
     englishName: 'Roughing End Mill / Corn Cob Ripper (DIN 844 NR/HR)',
     category: 'Milling Pengasaran Berat & Pembuangan Bram',
-    icon: '⚡',
+    
     fotoReal: '/assets/images/machine_cutting_tools/roughing_mill.jpg',
     isoStandard: 'DIN 844 NR (Profil Knuckle Kasar) & HR (Profil Halus)',
     materialBadan: 'Baja Paduan HSS-Co8 / Solid Sub-Micrograin Tungsten Carbide',
@@ -231,7 +252,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'T-Slot Milling Cutter (Pisau Frais Alur T)',
     englishName: 'T-Slot Milling Cutter (Woodruff & ISO T-Nut Slotter)',
     category: 'Milling Alur Khusus Mesin',
-    icon: '⚓',
+    
     fotoReal: '/assets/images/machine_cutting_tools/t_slot_cutter.jpg',
     isoStandard: 'DIN 851 / ISO 299 (Standar Meja Mesin Perkakas)',
     materialBadan: 'Baja Paduan HSS-E (Cobalt 8%) / Sisipan Karbida Brazed',
@@ -269,7 +290,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Dovetail Milling Cutter (Pisau Frais Ekor Burung)',
     englishName: 'Dovetail Milling Cutter (Machine Slideway & Gib Slot)',
     category: 'Milling Pemandu Luncur Mesin',
-    icon: '🕊️',
+    
     fotoReal: '/assets/images/machine_cutting_tools/dovetail_cutter.jpg',
     isoStandard: 'DIN 1833 Standard Dovetail Cutters',
     materialBadan: 'Baja HSS-Co8 / Solid Tungsten Carbide',
@@ -307,7 +328,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Chamfer Mill (Pisau Frais Kemiringan Tepi & Deburring)',
     englishName: 'Chamfering End Mill (Edge Beveling & Deburring 45°/90°)',
     category: 'Finishing & Deburring Tepi',
-    icon: '📐',
+    
     fotoReal: '/assets/images/machine_cutting_tools/chamfer_mill.jpg',
     isoStandard: 'DIN 6527 Chamfer Standard (Sudut Konis 45° / 60°)',
     materialBadan: 'Solid Tungsten Carbide / Sisipan Indexable Insert',
@@ -344,7 +365,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Slitting Saw (Piringan Frais Pemotong Celah & Belah)',
     englishName: 'Metal Slitting Saw / Circular Slotting Saw (Thin Disc Cutter)',
     category: 'Pemotongan Celah Tipis & Pembelahan',
-    icon: '💿',
+    
     fotoReal: '/assets/images/machine_cutting_tools/slitting_saw.jpg',
     isoStandard: 'DIN 1837 A (Gigi Halus) / DIN 1838 B (Gigi Kasar)',
     materialBadan: 'Baja Perkakas HSS-DMo5 / HSS-Co5 Tempa Presisi',
@@ -382,7 +403,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Thread Mill (Pisau Frais Pembuat Ulir)',
     englishName: 'Thread Milling Cutter / Helical Thread Mill',
     category: 'Pembuatan Ulir Presisi CNC',
-    icon: '🔩',
+    
     fotoReal: '/assets/images/machine_cutting_tools/thread_mill.jpg',
     isoStandard: 'ISO 68-1 / DIN 13 (Profil Ulir Metrik 60°)',
     materialBadan: 'Solid Sub-Micrograin Tungsten Carbide',
@@ -419,7 +440,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Concave Milling Cutter (Pisau Frais Cembung-Cekung)',
     englishName: 'Concave Form Relieved Milling Cutter (Convex Radius Cutter)',
     category: 'Pemesinan Bentuk Khusus (Form Milling)',
-    icon: '⭕',
+    
     fotoReal: '/assets/images/machine_cutting_tools/concave_mill.jpg',
     isoStandard: 'DIN 856 Concave Milling Cutters',
     materialBadan: 'Baja Paduan Perkakas HSS-Co5 / HSS-Co8 Tempa',
@@ -456,7 +477,7 @@ const MILLING_CUTTERS_CATALOG = [
     name: 'Fly Cutter (Pemotong Muka Spindel Tunggal)',
     englishName: 'Fly Cutter (Single-Point Sweep Facing Tool)',
     category: 'Finishing Permukaan Cermin Super Rata',
-    icon: '🪶',
+    
     fotoReal: '/assets/images/machine_cutting_tools/fly_cutter.jpg',
     isoStandard: 'Toolroom Machinist Facing Standard',
     materialBadan: 'Baja Paduan Karbon 40Cr Sepuh + Tool Bit Karbida',
@@ -627,8 +648,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk C: Rhombic 80° (CNMG / CCMT)',
     sudutHidung: '80° (Belah Ketupat 80°)',
     sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
-    kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
-    fleksibilitas: '⭐⭐⭐ (Sedang)',
+    kekuatanTepi: 'Level 5/5 (Sangat Kuat)',
+    fleksibilitas: 'Level 3/5 (Sedang)',
     color: '#2563eb',
     fotoReal: '/assets/images/machine_cutting_tools/insert_c_cnmg.jpg',
     deskripsi: 'Bentuk paling populer dan standar utama di bengkel mesin bubut seluruh dunia. Sudut hidung 80° memberikan ketahanan luar biasa terhadap beban pemakanan berat tanpa mudah gompal.',
@@ -640,8 +661,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk D: Rhombic 55° (DNMG / DCMT)',
     sudutHidung: '55° (Belah Ketupat 55°)',
     sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
-    kekuatanTepi: '⭐⭐⭐⭐ (Kuat)',
-    fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
+    kekuatanTepi: 'Level 4/5 (Kuat)',
+    fleksibilitas: 'Level 4/5 (Tinggi)',
     color: '#ea580c',
     fotoReal: '/assets/images/machine_cutting_tools/insert_d_dnmg.jpg',
     deskripsi: 'Bentuk belah ketupat sudut 55° yang memungkinkan pahat masuk ke sudut bahu 90° dan membubut profil kontur tirus tanpa mengalami interferensi dinding.',
@@ -653,8 +674,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk S: Square 90° (SNMG / SCMT)',
     sudutHidung: '90° (Bujur Sangkar)',
     sisiPotong: '4 Sisi (Positif) / 8 Sisi (Negatif)',
-    kekuatanTepi: '⭐⭐⭐⭐⭐ (Kekuatan Maksimum)',
-    fleksibilitas: '⭐⭐ (Terbatas)',
+    kekuatanTepi: 'Level 5/5 (Kekuatan Maksimum)',
+    fleksibilitas: 'Level 2/5 (Terbatas)',
     color: '#16a34a',
     fotoReal: '/assets/images/machine_cutting_tools/insert_s_square.svg',
     deskripsi: 'Bentuk bujur sangkar dengan sudut hidung 90° terkuat. Sangat hemat karena memiliki total 8 sisi potong aktif (pada tipe negatif SNMG bolak-balik).',
@@ -666,8 +687,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk T: Triangular 60° (TNMG / TCMT)',
     sudutHidung: '60° (Segitiga Sama Sisi)',
     sisiPotong: '3 Sisi (Positif) / 6 Sisi (Negatif)',
-    kekuatanTepi: '⭐⭐⭐ (Sedang)',
-    fleksibilitas: '⭐⭐⭐⭐ (Tinggi)',
+    kekuatanTepi: 'Level 3/5 (Sedang)',
+    fleksibilitas: 'Level 4/5 (Tinggi)',
     color: '#d97706',
     fotoReal: '/assets/images/machine_cutting_tools/insert_t_tnmg.jpg',
     deskripsi: 'Bentuk segitiga sama sisi yang sangat ekonomis dengan harga per sisi potong termurah. Sudut baji 60° tajam dan gaya potong relatif ringan.',
@@ -679,8 +700,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk W: Trigon 80° (WNMG / WCMT)',
     sudutHidung: '80° (Trigon 3 Sudut)',
     sisiPotong: '6 Sisi Potong Aktif Bolak-Balik',
-    kekuatanTepi: '⭐⭐⭐⭐⭐ (Sangat Kuat)',
-    fleksibilitas: '⭐⭐⭐ (Sedang)',
+    kekuatanTepi: 'Level 5/5 (Sangat Kuat)',
+    fleksibilitas: 'Level 3/5 (Sedang)',
     color: '#7c3aed',
     fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts.jpg',
     deskripsi: 'Pengembangan modern dari perpaduan bentuk C dan T. Memiliki sudut hidung 80° sekokoh bentuk C, tetapi memiliki 6 sisi potong aktif bolak-balik seperti bentuk segitiga!',
@@ -692,8 +713,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk V: Rhombic 35° (VNMG / VCMT)',
     sudutHidung: '35° (Sangat Lancip)',
     sisiPotong: '4 Sisi (Positif) / 4 Sisi (Negatif)',
-    kekuatanTepi: '⭐⭐ (Rentan Beban Berat)',
-    fleksibilitas: '⭐⭐⭐⭐⭐ (Aksesibilitas Maksimum)',
+    kekuatanTepi: 'Level 2/5 (Rentan Beban Berat)',
+    fleksibilitas: 'Level 5/5 (Aksesibilitas Maksimum)',
     color: '#db2777',
     fotoReal: '/assets/images/machine_cutting_tools/carbide_inserts_vhm.jpg',
     deskripsi: 'Bentuk belah ketupat sangat lancip 35° yang dapat menjangkau ceruk sempit, alur kontur kurva tajam, dan pembubutan undercut.',
@@ -705,8 +726,8 @@ const CARBIDE_INSERTS_CATALOG = [
     name: 'Bentuk R: Round / Bulat (RNMG / RCMT)',
     sudutHidung: 'Bulat Melingkar (Lingkaran Penuh)',
     sisiPotong: 'Dapat Diputar Berkeliling (Tak Terhingga)',
-    kekuatanTepi: '⭐⭐⭐⭐⭐ (Paling Tahan Benturan)',
-    fleksibilitas: '⭐⭐⭐ (Khusus Kontur Radius)',
+    kekuatanTepi: 'Level 5/5 (Paling Tahan Benturan)',
+    fleksibilitas: 'Level 3/5 (Khusus Kontur Radius)',
     color: '#0284c7',
     fotoReal: '/assets/images/machine_cutting_tools/insert_r_round.svg',
     deskripsi: 'Sisipan berbentuk piringan lingkaran penuh tanpa sudut tajam. Menghilangkan titik konsentrasi tegangan sehingga tahan terhadap beban kejut pemotongan terputus.',
@@ -1776,7 +1797,7 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
             {/* Kotak Info Simulasi */}
             <rect x="80" y="20" width="640" height="48" rx="8" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" />
             <text x="100" y="42" fill="#0f172a" fontSize="12" fontWeight="900">
-              ⚡ {tool.simulasi.judul}
+              {tool.simulasi.judul}
             </text>
             <text x="100" y="58" fill="#475569" fontSize="10.5" fontWeight="700">
               {tool.simulasi.aksi}
@@ -1796,7 +1817,7 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
             {/* Header Blueprint */}
             <rect x="40" y="20" width="720" height="42" fill="#1e293b" stroke="#38bdf8" strokeWidth="1.5" rx="6" />
             <text x="60" y="46" fill="#38bdf8" fontSize="13" fontWeight="900" letterSpacing="1">
-              📐 BLUEPRINT TEKNIK: {tool.blueprint.judul.toUpperCase()}
+              BLUEPRINT TEKNIK: {tool.blueprint.judul.toUpperCase()}
             </text>
             <text x="740" y="46" fill="#94a3b8" fontSize="11" fontWeight="800" textAnchor="end">
               STANDAR ISO 1101 / DIN 7168
@@ -1816,7 +1837,7 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                     BIDANG ATAS FRAIS RATA (SURFACE FINISH Ra = 0.8 µm)
                   </text>
                   <text x="340" y="110" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
-                    Simbol Kerataan: ⏥ 0.01 mm • Simbol Kekasaran: ▽▽▽ N6
+                    Toleransi Kerataan: 0.01 mm • Kekasaran: N6 (Ra 0.8 µm)
                   </text>
                 </g>
               )}
@@ -1842,7 +1863,7 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                     RONGGA CETAKAN KURVA BOLA R8.0 mm
                   </text>
                   <text x="340" y="175" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
-                    Toleransi Profil Permukaan Bebas: ⌒ 0.01 mm
+                    Toleransi Profil Permukaan: 0.01 mm
                   </text>
                 </g>
               )}
@@ -1960,7 +1981,7 @@ const MillingCutterVisual = ({ tool, mode = 'anatomy', activePinId = 1, onPinCli
                     BIDANG ATAS SAPUAN CERMIN (MIRROR FACING FINISH)
                   </text>
                   <text x="340" y="110" fill="#fef08a" fontSize="12" fontWeight="800" textAnchor="middle">
-                    Kekasaran Permukaan: Ra 0.2 µm • Kerataan Total: ⏥ 0.005 mm
+                    Kekasaran Permukaan: Ra 0.2 µm • Kerataan Total: 0.005 mm
                   </text>
                 </g>
               )}
@@ -2780,7 +2801,7 @@ const INSERT_ISO_SYSTEM = {
   {
     id: 'twist-drill',
     name: 'Mata Bor Spiral (Twist Drill)',
-    icon: '🔩',
+    
     fotoReal: '/assets/images/machine_cutting_tools/mata_bor.jpg',
     standar: 'DIN 338 / DIN 345 (Morse Taper)',
     sudutPuncak: '118° (Baja Lunak & Umum) vs 135° Split-Point (Baja Keras & Stainless)',
@@ -2796,7 +2817,7 @@ const INSERT_ISO_SYSTEM = {
   {
     id: 'center-drill',
     name: 'Mata Bor Senter (Center Drill DIN 333 Tipe A 60°)',
-    icon: '📍',
+    
     fotoReal: '/assets/images/machine_cutting_tools/bor_senter.jpg',
     standar: 'DIN 333 Tipe A (Sudut 60°)',
     sudutPuncak: 'Sudut Kerucut 60° dengan Bor Perintis Kecil',
@@ -2811,7 +2832,7 @@ const INSERT_ISO_SYSTEM = {
   {
     id: 'hand-tap-set',
     name: 'Set Hand Tap Manual (3 Buah Pembuat Ulir Dalam ISO)',
-    icon: '🧵',
+    
     fotoReal: '/assets/images/machine_cutting_tools/tap_t_wrench.jpg',
     standar: 'ISO 529 / DIN 352 (Metrik 60°)',
     sudutPuncak: 'Sudut Profil Gigi 60° Standar Metrik ISO',
@@ -2826,7 +2847,7 @@ const INSERT_ISO_SYSTEM = {
   {
     id: 'snei-dies',
     name: 'Snei Bulat Terbelah (Split Round Threading Die)',
-    icon: '⭕',
+    
     fotoReal: '/assets/images/machine_cutting_tools/snei_die.jpg',
     standar: 'DIN EN 22568 / ISO Metrik 60°',
     sudutPuncak: 'Sudut Ulir 60° Luar untuk Baut & Poros',
@@ -3024,7 +3045,7 @@ const UniversalToolCardVisual = React.memo(({
               background: 'rgba(2, 132, 199, 0.25)', padding: '1px 5px',
               borderRadius: '3px', letterSpacing: '0.5px', zIndex: 2
             }}>
-              📐 CAD
+              CAD
             </span>
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {type === 'milling' && <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />}
@@ -3051,7 +3072,7 @@ const UniversalToolCardVisual = React.memo(({
               background: type === 'milling' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.25)', padding: '1px 5px',
               borderRadius: '3px', letterSpacing: '0.5px', zIndex: 2
             }}>
-              📷 FOTO ASLI
+              FOTO ASLI
             </span>
             <img
               src={getAssetUrl(tool.fotoReal)}
@@ -3080,7 +3101,7 @@ const UniversalToolCardVisual = React.memo(({
             background: 'rgba(2, 132, 199, 0.25)', padding: '2px 6px',
             borderRadius: '4px', zIndex: 2
           }}>
-            📐 BENTUK GEOMETRI CAD
+            BENTUK GEOMETRI CAD
           </span>
           {type === 'milling' && <MillingCutterCardVisual toolId={tool.id} isSelected={isSelected} />}
           {type === 'lathe' && <LatheToolCardVisual toolId={tool.id} isSelected={isSelected} />}
@@ -3105,7 +3126,7 @@ const UniversalToolCardVisual = React.memo(({
             background: type === 'milling' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.25)', padding: '2px 6px',
             borderRadius: '4px', zIndex: 2
           }}>
-            📷 FOTO ASLI BENGKEL
+            FOTO ASLI BENGKEL
           </span>
           <img
             src={getAssetUrl(tool.fotoReal)}
@@ -3131,7 +3152,7 @@ const UniversalToolCardVisual = React.memo(({
           e.stopPropagation();
           onToggle();
         }}
-        title="Klik untuk ganti mode visual kartu ini (Split 🔀 -> CAD 📐 -> Foto 📷)"
+        title="Ganti mode visual (Split / CAD / Foto)"
         style={{
           position: 'absolute',
           bottom: '5px',
@@ -3149,7 +3170,7 @@ const UniversalToolCardVisual = React.memo(({
           transition: 'all 0.15s'
         }}
       >
-        {isSplit ? '🔀 Split' : isCad ? '📐 CAD' : '📷 Foto'}
+        {isSplit ? 'Split' : isCad ? 'CAD' : 'Foto'}
       </button>
     </div>
   );
@@ -3205,7 +3226,7 @@ const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
           fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8',
           border: '1px solid rgba(56, 189, 248, 0.3)'
         }}>
-          📷 Foto Dokumentasi Asli Mesin Perkakas
+          Foto Dokumentasi Asli Mesin Perkakas
         </div>
       </div>
 
@@ -3261,7 +3282,7 @@ const RealPhotoShowcase = React.memo(({ tool, category = 'milling' }) => {
 
         <div style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.25)', borderRadius: '10px', padding: '12px 14px' }}>
           <div style={{ fontSize: '0.74rem', fontWeight: 900, color: '#4ade80', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span>💡</span> Panduan Identifikasi Visual di Bengkel Mesin:
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Search size={14} /> Panduan Identifikasi Visual di Bengkel Mesin:</span>
           </div>
           <p style={{ margin: 0, fontSize: '0.8rem', color: '#e2e8f0', lineHeight: 1.5 }}>
             {tool.tipsTeknis || tool.keunggulan || tool.tipsPraktik || tool.deskripsi}
@@ -3412,7 +3433,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             </span>
           </div>
           <h1 style={{ margin: '0 0 6px 0', fontSize: '1.65rem', fontWeight: 900, letterSpacing: '0.5px', color: '#ffffff' }}>
-            🔪 Cutting Tools Lab: Katalog Visual Alat Potong Mesin
+            Cutting Tools Lab: Katalog Visual Alat Potong Mesin
           </h1>
           <p style={{ margin: 0, fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.5 }}>
             Eksplorasi mendalam anatomi pahat bubut HSS &amp; karbida, 6+ jenis pisau frais (Face Mill, End Mill, Ball Mill, dll.), dekoder kode insert ISO, geometri sudut potong, serta kalkulator parameter pemesinan presisi.
@@ -3439,7 +3460,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 transition: 'all 0.15s'
               }}
             >
-              <span>⚙️</span> Praktik Bubut
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Cog size={13} /> Praktik Bubut</span>
             </button>
           )}
           {onNavigateToMilling && (
@@ -3460,7 +3481,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 transition: 'all 0.15s'
               }}
             >
-              <span>🪵</span> Praktik Frais
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Layers size={13} /> Praktik Frais</span>
             </button>
           )}
         </div>
@@ -3478,12 +3499,12 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
         boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
       }}>
         {[
-          { id: 'milling', label: '1. Pisau Frais / Milling (8 Jenis Real)', icon: '🌀', color: '#0284c7' },
-          { id: 'pahat', label: '2. Pahat Bubut (HSS & Karbida)', icon: '🪓', color: '#2563eb' },
-          { id: 'insert', label: '3. Insert Karbida & Sudut Geometri', icon: '📐', color: '#ea580c' },
-          { id: 'hole-thread', label: '4. Mata Bor, Tap & Snei', icon: '🔩', color: '#16a34a' },
-          { id: 'kalkulator', label: '5. Kalkulator Kecepatan Potong', icon: '🧮', color: '#7c3aed' },
-          { id: 'quiz', label: '6. Kuis Asesmen (1000 XP)', icon: '🎯', color: '#dc2626' }
+          { id: 'milling', label: '1. Pisau Frais / Milling (8 Jenis Real)',  color: '#0284c7' },
+          { id: 'pahat', label: '2. Pahat Bubut (HSS & Karbida)',  color: '#2563eb' },
+          { id: 'insert', label: '3. Insert Karbida & Sudut Geometri',  color: '#ea580c' },
+          { id: 'hole-thread', label: '4. Mata Bor, Tap & Snei',  color: '#16a34a' },
+          { id: 'kalkulator', label: '5. Kalkulator Kecepatan Potong',  color: '#7c3aed' },
+          { id: 'quiz', label: '6. Kuis Asesmen (1000 XP)',  color: '#dc2626' }
         ].map(t => {
           const isSelected = activeTab === t.id;
           return (
@@ -3506,7 +3527,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 transition: 'all 0.15s'
               }}
             >
-              <span>{t.icon}</span>
+              {renderTabIcon(t.id)}
               <span>{t.label}</span>
             </button>
           );
@@ -3530,7 +3551,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               </span>
             </div>
             <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
-              🪓 Jenis-Jenis Pahat Bubut (Lathe Tools) Standar ISO &amp; DIN
+              Jenis-Jenis Pahat Bubut (Lathe Tools) Standar ISO &amp; DIN
             </h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#e0f2fe', lineHeight: 1.5, maxWidth: '850px' }}>
               Pekerjaan membubut menggunakan alat potong bermata tunggal (single-point tool) untuk membentuk silinder luar, bidang muka, alur, ulir baut, hingga lubang tembus dalam. Pilih jenis pahat di bawah ini untuk melihat ilustrasi CAD nyata, arah sayat, dan simulasi pemesinannya.
@@ -3552,7 +3573,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
-                👁️ Mode Tampilan Kartu Pahat Bubut:
+                Mode Tampilan Kartu Pahat Bubut:
               </span>
               <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
                 (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
@@ -3569,7 +3590,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                🔀 Split (CAD + Foto)
+                Split (CAD + Foto)
               </button>
               <button
                 onClick={() => { sound.playClick(); setLatheCardView('cad'); }}
@@ -3581,7 +3602,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📐 Bentuk CAD / Profil
+                Bentuk CAD / Profil
               </button>
               <button
                 onClick={() => { sound.playClick(); setLatheCardView('photo'); }}
@@ -3593,7 +3614,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📷 Foto Asli Bengkel
+                Foto Asli Bengkel
               </button>
             </div>
           </div>
@@ -3661,10 +3682,10 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
                     <div style={{ paddingTop: '6px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#64748b' }}>
-                        📍 {tool.arahSayat.split('(')[0]}
+                        {tool.arahSayat.split('(')[0]}
                       </span>
                       <span style={{ fontSize: '0.75rem', fontWeight: 900, color: tool.color }}>
-                        {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
+                        {isSelected ? '[OK] Sedang Dipilih' : 'Lihat Detail →'}
                       </span>
                     </div>
                   </div>
@@ -3732,7 +3753,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>🔍</span> Anatomi Detail
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Search size={13} /> Anatomi Detail</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setLatheMode('realPhoto'); }}
@@ -3751,7 +3772,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>📷</span> Foto Asli Bengkel
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Camera size={13} /> Foto Asli Bengkel</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setLatheMode('simulation'); }}
@@ -3770,7 +3791,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>⚙️</span> Simulasi Pembubutan
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Cog size={13} /> Simulasi Pembubutan</span>
                     </button>
                   </div>
                 </div>
@@ -3859,7 +3880,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                           {activePin.desc}
                         </div>
                         <div style={{ fontSize: '0.78rem', color: current.color, background: `${current.color}10`, padding: '6px 10px', borderRadius: '6px', borderLeft: `3px solid ${current.color}` }}>
-                          <strong>💡 Tips Praktik Bengkel:</strong> {activePin.tip}
+                          <strong>[TIPS] Tips Praktik Bengkel:</strong> {activePin.tip}
                         </div>
                       </div>
                     </div>
@@ -3875,7 +3896,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
                   <div style={{ background: '#eff6ff', padding: '14px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#1e40af', marginBottom: '6px' }}>
-                      🎯 Aplikasi Pekerjaan Utama
+                      Aplikasi Pekerjaan Utama
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#1e3a8a', lineHeight: 1.5 }}>
                       {current.aplikasi}
@@ -3884,7 +3905,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
                   <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#166534', marginBottom: '6px' }}>
-                      ⚡ Keunggulan Geometri &amp; Mekanik
+                      Keunggulan Geometri &amp; Mekanik
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
                       {current.keunggulan}
@@ -3893,7 +3914,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
                   <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '8px', border: '1px solid #fde68a' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#92400e', marginBottom: '6px' }}>
-                      💡 Pedoman Penyetelan &amp; Operasi
+                      Pedoman Penyetelan &amp; Operasi
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
                       {current.tipsTeknis}
@@ -3913,7 +3934,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   ANATOMI ALAT POTONG TUNGGAL (SINGLE POINT TOOL)
                 </span>
                 <h3 style={{ margin: '6px 0 0 0', fontSize: '1.3rem', fontWeight: 900, color: '#0f172a' }}>
-                  🔍 Anatomi Geometri Pahat Bubut Standar ISO
+                  Anatomi Geometri Pahat Bubut Standar ISO
                 </h3>
               </div>
               <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
@@ -4054,7 +4075,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 STANDAR INTERNASIONAL ISO 513
               </span>
               <h3 style={{ margin: '6px 0 2px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-                🎨 Kode Warna ISO Material Benda Kerja pada Insert Karbida
+                Kode Warna ISO Material Benda Kerja pada Insert Karbida
               </h3>
               <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
                 Pilihlah huruf kategori di bawah untuk melihat spesifikasi tatal, rekomendasi pelapis, dan penanganan mesin:
@@ -4163,7 +4184,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               </span>
             </div>
             <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
-              🌀 Jenis-Jenis Alat Potong Pekerjaan Frais (Milling)
+              Jenis-Jenis Alat Potong Pekerjaan Frais (Milling)
             </h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#e0f2fe', lineHeight: 1.5, maxWidth: '850px' }}>
               Mesin frais menggunakan alat potong multi-gigi yang berputar menyayat benda kerja yang bergerak translasi. Di bawah ini ditampilkan visual fisik nyata, geometri heliks, sudut potong, simulasi sayatan ke logam, dan blueprint penampang hasil pemesinannya sesuai standar bengkel presisi.
@@ -4244,7 +4265,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 transition: 'all 0.15s'
               }}
             >
-              🔍 Buka Poster Bagan Referensi Lengkap
+              Buka Poster Bagan Referensi Lengkap
             </button>
           </div>
 
@@ -4263,7 +4284,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
-                👁️ Mode Tampilan Kartu Pisau Frais:
+                Mode Tampilan Kartu Pisau Frais:
               </span>
               <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
                 (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
@@ -4280,7 +4301,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                🔀 Split (CAD + Foto)
+                Split (CAD + Foto)
               </button>
               <button
                 onClick={() => { sound.playClick(); setMillingCardView('cad'); }}
@@ -4292,7 +4313,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📐 Bentuk CAD / Profil
+                Bentuk CAD / Profil
               </button>
               <button
                 onClick={() => { sound.playClick(); setMillingCardView('photo'); }}
@@ -4304,7 +4325,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📷 Foto Asli Bengkel
+                Foto Asli Bengkel
               </button>
             </div>
           </div>
@@ -4358,10 +4379,10 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
                         <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0369a1', background: '#e0f2fe', padding: '2px 6px', borderRadius: '4px' }}>
-                          📐 {tool.diaRange}
+                          {tool.diaRange}
                         </span>
                         <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#475569', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
-                          ⚙️ {tool.fluteOrInserts}
+                          {tool.fluteOrInserts}
                         </span>
                       </div>
                     </div>
@@ -4380,7 +4401,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       gap: '6px',
                       transition: 'all 0.15s'
                     }}>
-                      {isSelected ? '✓ Sedang Diinspeksi di Bawah' : 'Buka Anatomi & Simulasi →'}
+                      {isSelected ? '[OK] Sedang Diinspeksi di Bawah' : 'Buka Anatomi & Simulasi →'}
                     </div>
                   </div>
                 </div>
@@ -4450,7 +4471,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>🔍</span> Anatomi Fisik
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Search size={13} /> Anatomi Fisik</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setMillingMode('realPhoto'); }}
@@ -4469,7 +4490,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>📷</span> Foto Asli Bengkel
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Camera size={13} /> Foto Asli Bengkel</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setMillingMode('simulation'); }}
@@ -4488,7 +4509,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>⚙️</span> Simulasi Sayatan
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Cog size={13} /> Simulasi Sayatan</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setMillingMode('profile'); }}
@@ -4507,7 +4528,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>📐</span> Blueprint CAD
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Compass size={13} /> Blueprint CAD</span>
                     </button>
                   </div>
                 </div>
@@ -4598,7 +4619,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                           {activePin.desc}
                         </div>
                         <div style={{ fontSize: '0.78rem', color: '#0284c7', background: '#f0f9ff', padding: '6px 10px', borderRadius: '6px', borderLeft: '3px solid #0284c7' }}>
-                          <strong>💡 Tips Perawatan Bengkel:</strong> {activePin.tip}
+                          <strong>[TIPS] Tips Perawatan Bengkel:</strong> {activePin.tip}
                         </div>
                       </div>
                     </div>
@@ -4622,7 +4643,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#0f172a', textTransform: 'uppercase' }}>
-                      📊 Parameter Pemesinan Rekomendasi (Standar Workshop)
+                      Parameter Pemesinan Rekomendasi (Standar Workshop)
                     </span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>Kompatibilitas ISO:</span>
@@ -4665,7 +4686,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
                   <div style={{ background: '#eff6ff', padding: '14px', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#1e40af', marginBottom: '6px' }}>
-                      🎯 Fungsi Utama Pengerjaan
+                      Fungsi Utama Pengerjaan
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#1e3a8a', lineHeight: 1.5 }}>
                       {current.fungsiUtama}
@@ -4674,7 +4695,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
                   <div style={{ background: '#f0fdf4', padding: '14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#166534', marginBottom: '6px' }}>
-                      ⚡ Keunggulan Mekanik
+                      Keunggulan Mekanik
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
                       {current.keunggulan}
@@ -4683,7 +4704,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
                   <div style={{ background: '#fffbeb', padding: '14px', borderRadius: '8px', border: '1px solid #fde68a' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.85rem', color: '#92400e', marginBottom: '6px' }}>
-                      💡 Tips &amp; Trik Bengkel
+                      Tips &amp; Trik Bengkel
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
                       {current.tipsTeknis}
@@ -4701,7 +4722,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   alignItems: 'flex-start',
                   gap: '12px'
                 }}>
-                  <span style={{ fontSize: '1.4rem' }}>⚠️</span>
+                  <AlertTriangle size={22} color="#f59e0b" />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 900, fontSize: '0.88rem', color: '#991b1b', marginBottom: '3px' }}>
                       Kesalahan Fatal yang Sering Dilakukan Siswa di Bengkel:
@@ -4736,7 +4757,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               </span>
             </div>
             <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
-              📐 Visualisasi 7 Bentuk Geometri Insert Karbida (C, D, S, T, W, V, R)
+              Visualisasi 7 Bentuk Geometri Insert Karbida (C, D, S, T, W, V, R)
             </h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#ffedd5', lineHeight: 1.5, maxWidth: '850px' }}>
               Setiap bentuk insert karbida dirancang dengan kompromi antara <strong>Kekuatan Sisi Potong (Edge Strength)</strong> dan <strong>Fleksibilitas Menjangkau Kontur (Accessibility)</strong>. Klik bentuk insert di bawah untuk melihat geometri CAD nyata dan karakteristik teknisnya.
@@ -4758,7 +4779,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
-                👁️ Mode Tampilan Kartu Insert Karbida:
+                Mode Tampilan Kartu Insert Karbida:
               </span>
               <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
                 (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
@@ -4775,7 +4796,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                🔀 Split (CAD + Foto)
+                Split (CAD + Foto)
               </button>
               <button
                 onClick={() => { sound.playClick(); setInsertCardView('cad'); }}
@@ -4787,7 +4808,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📐 Bentuk CAD / Profil
+                Bentuk CAD / Profil
               </button>
               <button
                 onClick={() => { sound.playClick(); setInsertCardView('photo'); }}
@@ -4799,7 +4820,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📷 Foto Asli Bengkel
+                Foto Asli Bengkel
               </button>
             </div>
           </div>
@@ -4872,7 +4893,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         Kekuatan: {ins.kekuatanTepi.split(' ')[0]}
                       </span>
                       <span style={{ fontSize: '0.7rem', fontWeight: 900, color: ins.color }}>
-                        {isSelected ? '✓ Terpilih' : 'Pilih'}
+                        {isSelected ? '[OK] Terpilih' : 'Pilih'}
                       </span>
                     </div>
                   </div>
@@ -4953,13 +4974,13 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   overflow: 'hidden'
                 }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#020617', borderRadius: '8px', padding: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px' }}>📐 BENTUK GEOMETRI CAD & SUDUT HIDUNG</div>
+                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#38bdf8', marginBottom: '6px' }}>BENTUK GEOMETRI CAD & SUDUT HIDUNG</div>
                     <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <CarbideInsertCardVisual shape={currentIns.shape} isSelected={true} />
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#020617', borderRadius: '8px', padding: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#4ade80', marginBottom: '6px' }}>📷 FOTO ASLI BENGKEL DOKUMENTASI</div>
+                    <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#4ade80', marginBottom: '6px' }}>FOTO ASLI BENGKEL DOKUMENTASI</div>
                     <div style={{ width: '100%', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <img
                         src={getAssetUrl(currentIns.fotoReal)}
@@ -4980,7 +5001,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
                   <div style={{ background: '#f0fdf4', padding: '12px 14px', borderRadius: '8px', border: '1px solid #bbf7d0' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.83rem', color: '#166534', marginBottom: '4px' }}>
-                      🎯 Fungsi Utama Pengerjaan
+                      Fungsi Utama Pengerjaan
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#14532d', lineHeight: 1.5 }}>
                       {currentIns.fungsi}
@@ -4988,7 +5009,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   </div>
                   <div style={{ background: '#fffbeb', padding: '12px 14px', borderRadius: '8px', border: '1px solid #fde68a' }}>
                     <div style={{ fontWeight: 800, fontSize: '0.83rem', color: '#92400e', marginBottom: '4px' }}>
-                      ⚡ Keunggulan Mekanik &amp; Efisiensi
+                      Keunggulan Mekanik &amp; Efisiensi
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#78350f', lineHeight: 1.5 }}>
                       {currentIns.keunggulan}
@@ -5006,7 +5027,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 STANDARISASI SISTEM KODE ISO 1832
               </span>
               <h3 style={{ margin: '6px 0 2px 0', fontSize: '1.35rem', fontWeight: 900, color: '#0f172a' }}>
-                🏷️ Dekoder Interaktif Kode ISO Insert Karbida: CNMG 120408
+                Dekoder Interaktif Kode ISO Insert Karbida: CNMG 120408
               </h3>
               <p style={{ margin: 0, fontSize: '0.83rem', color: '#64748b' }}>
                 Klik salah satu huruf/angka pada blok kode di bawah ini untuk mempelajari makna teknis, sudut geometri, dan fungsi pemotongannya:
@@ -5125,7 +5146,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 DIAGRAM TEKNIK REAL-TIME
               </span>
               <h3 style={{ margin: '6px 0 2px 0', fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
-                📐 4 Sudut Geometri Kritis &amp; Fungsinya pada Pembentukan Tatal
+                4 Sudut Geometri Kritis &amp; Fungsinya pada Pembentukan Tatal
               </h3>
               <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
                 Klik tombol tab sudut di bawah untuk melihat simulasi visual efek sudut baji terhadap arah aliran geram dan gaya pemotongan:
@@ -5228,7 +5249,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.84rem', fontWeight: 900, color: '#0f172a' }}>
-                👁️ Mode Tampilan Kartu Bor & Ulir:
+                Mode Tampilan Kartu Bor & Ulir:
               </span>
               <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
                 (Pilih tampilan bentuk profil CAD, foto workshop asli, atau keduanya)
@@ -5245,7 +5266,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                🔀 Split (CAD + Foto)
+                Split (CAD + Foto)
               </button>
               <button
                 onClick={() => { sound.playClick(); setHoleCardView('cad'); }}
@@ -5257,7 +5278,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📐 Bentuk CAD / Profil
+                Bentuk CAD / Profil
               </button>
               <button
                 onClick={() => { sound.playClick(); setHoleCardView('photo'); }}
@@ -5269,7 +5290,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   transition: 'all 0.15s'
                 }}
               >
-                📷 Foto Asli Bengkel
+                Foto Asli Bengkel
               </button>
             </div>
           </div>
@@ -5332,7 +5353,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         Standar DIN / ISO
                       </span>
                       <span style={{ fontSize: '0.75rem', fontWeight: 900, color: '#16a34a' }}>
-                        {isSelected ? '✓ Sedang Dipilih' : 'Lihat Detail →'}
+                        {isSelected ? '[OK] Sedang Dipilih' : 'Lihat Detail →'}
                       </span>
                     </div>
                   </div>
@@ -5374,7 +5395,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         </span>
                       </div>
                       <h3 style={{ margin: '6px 0 0 0', fontSize: '1.4rem', fontWeight: 900, color: '#0f172a' }}>
-                        {current.icon} {current.name}
+                        {current.name}
                       </h3>
                     </div>
                   </div>
@@ -5398,7 +5419,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>🔍</span> Anatomi &amp; Dimensi Standar
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Search size={13} /> Anatomi &amp; Dimensi Standar</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setHoleViewMode('realPhoto'); }}
@@ -5417,7 +5438,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>📷</span> Foto Asli Bengkel
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Camera size={13} /> Foto Asli Bengkel</span>
                     </button>
                     <button
                       onClick={() => { sound.playClick(); setHoleViewMode('simulation'); }}
@@ -5436,7 +5457,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                         transition: 'all 0.15s'
                       }}
                     >
-                      <span>⚙️</span> Simulasi Proses Kerja
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Cog size={13} /> Simulasi Proses Kerja</span>
                     </button>
                   </div>
                 </div>
@@ -5466,7 +5487,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 </div>
 
                 <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '14px 18px', borderRadius: '8px', fontSize: '0.84rem', color: '#14532d', lineHeight: 1.5 }}>
-                  💡 <strong>Kaidah Praktik Kerja Bangku &amp; Mesin:</strong> {current.tipsPraktik}
+                  <strong>[SOP] Kaidah Praktik Kerja Bangku &amp; Mesin:</strong> {current.tipsPraktik}
                 </div>
               </div>
             );
@@ -5477,7 +5498,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
               <div>
                 <h4 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
-                  📊 Tabel Standar Diameter Lubang Bor Pra-Tap &amp; Poros Snei ISO
+                  Tabel Standar Diameter Lubang Bor Pra-Tap &amp; Poros Snei ISO
                 </h4>
                 <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: '#64748b' }}>
                   Rumus Lubang Tap: <code>Dbor = D - P</code> • Rumus Poros Snei: <code>Dporos = D - (0.1 × P)</code>
@@ -5535,7 +5556,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             {/* INPUT CONTROLS */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 900, color: '#0f172a' }}>
-                ⚙️ Parameter Input Pemesinan
+                Parameter Input Pemesinan
               </h3>
 
               {/* Material Preset Buttons */}
@@ -5629,7 +5650,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             {/* HASIL KALKULASI DISPLAY */}
             <div className="dashboard-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', background: '#faf5ff', border: '2px solid #c4b5fd' }}>
               <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#581c87' }}>
-                📊 Output Parameter Putaran Mesin
+                Output Parameter Putaran Mesin
               </h3>
 
               {/* Display RPM */}
@@ -5660,7 +5681,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
 
               {/* Tips Keselamatan Permesinan */}
               <div style={{ background: '#fdf4ff', padding: '12px 14px', borderRadius: '8px', border: '1px solid #f0abfc', fontSize: '0.78rem', color: '#86198f', lineHeight: 1.5 }}>
-                ⚠️ <strong>Perhatian Teknisi Mesin:</strong> Pada mesin bubut manual, pilih tuas transmisi gearbox RPM yang paling mendekati nilai perhitungan di atas tanpa melebihi batas getaran aman benda kerja.
+                <strong>[PERHATIAN] Perhatian Teknisi Mesin:</strong> Pada mesin bubut manual, pilih tuas transmisi gearbox RPM yang paling mendekati nilai perhitungan di atas tanpa melebihi batas getaran aman benda kerja.
               </div>
             </div>
 
@@ -5680,7 +5701,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               EVALUASI KOMPETENSI TEKNIK PEMESINAN
             </span>
             <h2 style={{ margin: '8px 0 6px 0', fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
-              🎯 Kuis Asesmen Teori Alat Potong Mesin (10 Soal)
+              Kuis Asesmen Teori Alat Potong Mesin (10 Soal)
             </h2>
             <p style={{ margin: 0, fontSize: '0.88rem', color: '#fee2e2', lineHeight: 1.5 }}>
               Uji pemahamanmu tentang kode insert ISO, jenis pisau frais, tap &amp; snei, serta sudut geometri potong. Capai nilai ≥ 70 untuk mengklaim <strong>1000 XP</strong> ke profil belajarmu!
@@ -5773,7 +5794,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       color: isCorrect ? '#14532d' : '#991b1b',
                       lineHeight: 1.45
                     }}>
-                      <strong>{isCorrect ? '✅ Benar!' : '❌ Salah.'}</strong> {q.exp}
+                      <strong>{isCorrect ? '[BENAR]' : '[SALAH]'}</strong> {q.exp}
                     </div>
                   )}
                 </div>
@@ -5804,7 +5825,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
                 <div style={{ fontSize: '1.25rem', fontWeight: 900, color: quizScore >= 70 ? '#16a34a' : '#dc2626' }}>
-                  Skor Anda: {quizScore} / 100 {quizScore >= 70 ? '🎉 LULUS' : '⚠️ REMEDIAL'}
+                  Skor Anda: {quizScore} / 100 {quizScore >= 70 ? '[LULUS]' : '[REMEDIAL]'}
                 </div>
                 {quizScore >= 70 && !xpClaimed && (
                   <button
@@ -5821,12 +5842,12 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                       boxShadow: '0 4px 12px rgba(245, 158, 11, 0.35)'
                     }}
                   >
-                    ⭐ Klaim 1000 XP
+                    Klaim 1000 XP
                   </button>
                 )}
                 {xpClaimed && (
                   <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#16a34a', background: '#dcfce7', padding: '6px 12px', borderRadius: '6px' }}>
-                    ✅ 1000 XP Berhasil Diklaim!
+                    [OK] 1000 XP Berhasil Diklaim!
                   </span>
                 )}
                 <button
@@ -5842,7 +5863,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                     cursor: 'pointer'
                   }}
                 >
-                  🔄 Ulangi Kuis
+                  Ulangi Kuis
                 </button>
               </div>
             )}
@@ -5895,7 +5916,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
               zIndex: 10
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.4rem' }}>📖</span>
+                <BookOpen size={20} color="#0284c7" />
                 <div>
                   <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>
                     Bagan Standar Industri: Types of Milling Cutters
@@ -5922,7 +5943,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                   justifyContent: 'center'
                 }}
               >
-                ✕
+                <X size={20} />
               </button>
             </div>
 
@@ -5952,7 +5973,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
             {/* Footer Penjelasan & Quick Guide */}
             <div style={{ padding: '16px 20px', background: '#0f172a', borderTop: '1px solid #334155' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', marginBottom: '8px' }}>
-                ⚡ 9 Jenis Pisau Frais Standar pada Bagan Referensi:
+                9 Jenis Pisau Frais Standar pada Bagan Referensi:
               </div>
               <div style={{
                 display: 'grid',

@@ -480,7 +480,7 @@ const Welding2D_Engine = ({
             <line x1="0" y1="-4" x2="-25" y2="-20" stroke="#ef4444" strokeWidth="1.5" />
             <rect x="-95" y="-34" width="70" height="18" fill="rgba(239, 68, 68, 0.85)" rx="4" />
             <text x="-60" y="-22" fill="#fff" fontSize="8" fontWeight="900" textAnchor="middle">
-              ⚠️ Undercut
+              [CACAT] Undercut
             </text>
           </g>
         )}
@@ -491,7 +491,7 @@ const Welding2D_Engine = ({
             <line x1="0" y1="4" x2="25" y2="24" stroke="#ef4444" strokeWidth="1.5" />
             <rect x="25" y="16" width="120" height="18" fill="rgba(239, 68, 68, 0.85)" rx="4" />
             <text x="85" y="28" fill="#fff" fontSize="8" fontWeight="900" textAnchor="middle">
-              ⚠️ Kurang Penetrasi Akar
+              [CACAT] Kurang Penetrasi Akar
             </text>
           </g>
         )}
@@ -504,7 +504,7 @@ const Welding2D_Engine = ({
             <line x1="10" y1="-5" x2="35" y2="-22" stroke="#ef4444" strokeWidth="1.5" />
             <rect x="35" y="-34" width="85" height="18" fill="rgba(239, 68, 68, 0.85)" rx="4" />
             <text x="77" y="-22" fill="#fff" fontSize="8" fontWeight="900" textAnchor="middle">
-              ⚠️ Cacat Porosity
+              [CACAT] Cacat Porosity
             </text>
           </g>
         )}

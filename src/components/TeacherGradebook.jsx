@@ -16,6 +16,51 @@ import {
 } from '../services/sheetService';
 import { sound } from '../utils/audio';
 import { MASTER_STUDENTS_LIST as ROSTER_STUDENTS } from '../data/studentsData';
+import {
+  FileSpreadsheet,
+  ExternalLink,
+  RotateCw,
+  Settings,
+  Download,
+  FileText,
+  ClipboardCopy,
+  Printer,
+  Clock,
+  Archive,
+  Trash2,
+  Search,
+  Users,
+  Star,
+  Target,
+  Trophy,
+  CheckCircle2,
+  XCircle,
+  Check,
+  X,
+  AlertTriangle,
+  Folder,
+  Plus,
+  Link,
+  Lightbulb,
+  FlaskConical,
+  BarChart3,
+  ShieldCheck,
+  Cog,
+  Flame,
+  Wrench,
+  Zap,
+  Ruler,
+  Compass,
+  Layers,
+  GraduationCap,
+  Sparkles,
+  Monitor,
+  Disc,
+  ArrowRight,
+  ClipboardCheck,
+  Factory
+} from 'lucide-react';
+
 
 const GOOGLE_APPS_SCRIPT_CODE = `/**
  * =============================================================================
@@ -25,18 +70,18 @@ const GOOGLE_APPS_SCRIPT_CODE = `/**
  * Sesuai dengan Struktur Sidebar Website BIMO Manufacturing Labs:
  * 
  * 1. Tab Baris Bawah Spreadsheet (Sheet Tabs) diklasifikasikan per Modul Lab:
- *    - 🛡️ 1. Safety Lab
- *    - ⚙️ 2. Machine Lab
- *    - 🔪 3. Alat Pemotong
- *    - 🌡️ 4. Heat Treatment
- *    - 🔧 5. Mekanika Teknik
- *    - ⚡ 6. Welding Lab
- *    - 📏 7. Alat Ukur Presisi
- *    - 📐 8. Design Lab
- *    - 🏭 9. Virtual Bengkel
- *    - 🎓 10. Evaluasi Akhir
- *    - 📊 Rekap Seluruh Lab (Master Summary)
- *    - 📥 Data Masuk (Raw Data)
+ *    - 1. Safety Lab
+ *    - 2. Machine Lab
+ *    - 3. Alat Pemotong
+ *    - 4. Heat Treatment
+ *    - 5. Mekanika Teknik
+ *    - 6. Welding Lab
+ *    - 7. Alat Ukur Presisi
+ *    - 8. Design Lab
+ *    - 9. Virtual Bengkel
+ *    - 10. Evaluasi Akhir
+ *    - Rekap Seluruh Lab (Master Summary)
+ *    - Data Masuk (Raw Data)
  * 
  * 2. Seluruh nilai yang ditampilkan 100% adalah NILAI ASLI SISWA (Skala 0 - 100,
  *    misal: 75, 80, 85, 90, 100). Tidak ada lagi pecahan/rasio (1/2/3/4/5/6/7/8/9)
@@ -92,99 +137,99 @@ var MASTER_STUDENTS_LIST = [
 var LAB_CONFIGS = [
   {
     id: "safety",
-    tabName: "🛡️ 1. Safety Lab",
+    tabName: "1. Safety Lab",
     shortTitle: "Safety Lab (K3LH)",
     tasks: [
-      { key: "apd", name: "🛡️ Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
-      { key: "jsa_bor", name: "📋 JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
-      { key: "jsa_pahat", name: "📋 JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
-      { key: "apar", name: "🧯 Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
-      { key: "5r", name: "✨ Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
-      { key: "perkakas", name: "🔧 SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
-      { key: "qc", name: "🔍 Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
-      { key: "diag_safety", name: "📝 Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
+      { key: "apd", name: "Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
+      { key: "jsa_bor", name: "JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
+      { key: "jsa_pahat", name: "JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
+      { key: "apar", name: "Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
+      { key: "5r", name: "Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
+      { key: "perkakas", name: "SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
+      { key: "qc", name: "Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
+      { key: "diag_safety", name: "Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
     ]
   },
   {
     id: "machine",
-    tabName: "⚙️ 2. Machine Lab",
+    tabName: "2. Machine Lab",
     shortTitle: "Machine Lab (Permesinan)",
     tasks: [
-      { key: "lathe", name: "🔩 Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
-      { key: "milling", name: "🪵 Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
-      { key: "cnc", name: "💻 Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
-      { key: "diag_machine", name: "📝 Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
+      { key: "lathe", name: "Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
+      { key: "milling", name: "Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
+      { key: "cnc", name: "Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
+      { key: "diag_machine", name: "Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
     ]
   },
   {
     id: "cutting-tools",
-    tabName: "🛠️ 3. Perkakas Bengkel",
+    tabName: "3. Perkakas Bengkel",
     shortTitle: "Perkakas Bengkel & RPM",
     tasks: [
-      { key: "cutting_quiz", name: "🛠️ Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
-      { key: "diag_cutting", name: "📝 Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
+      { key: "cutting_quiz", name: "Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
+      { key: "diag_cutting", name: "Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
     ]
   },
   {
     id: "heat-treatment",
-    tabName: "🌡️ 4. Heat Treatment",
+    tabName: "4. Heat Treatment",
     shortTitle: "Heat Treatment & Metalurgi",
     tasks: [
-      { key: "metallurgy", name: "🌡️ Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
-      { key: "diag_heat", name: "📝 Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
+      { key: "metallurgy", name: "Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
+      { key: "diag_heat", name: "Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
     ]
   },
   {
     id: "mechanics",
-    tabName: "🔧 5. Mekanika Teknik",
+    tabName: "5. Mekanika Teknik",
     shortTitle: "Mekanika Teknik Terapan",
     tasks: [
-      { key: "torque", name: "⚖️ Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
-      { key: "diag_mechanics", name: "📝 Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
+      { key: "torque", name: "Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
+      { key: "diag_mechanics", name: "Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
     ]
   },
   {
     id: "welding",
-    tabName: "⚡ 6. Welding Lab",
+    tabName: "6. Welding Lab",
     shortTitle: "Welding Lab (Pengelasan)",
     tasks: [
-      { key: "smaw", name: "⚡ Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
-      { key: "diag_welding", name: "📝 Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
+      { key: "smaw", name: "Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
+      { key: "diag_welding", name: "Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
     ]
   },
   {
     id: "measuring",
-    tabName: "📏 7. Alat Ukur Presisi",
+    tabName: "7. Alat Ukur Presisi",
     shortTitle: "Alat Ukur Presisi & Metrologi",
     tasks: [
-      { key: "caliper_micrometer", name: "📏 Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
-      { key: "diag_measuring", name: "📝 Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
+      { key: "caliper_micrometer", name: "Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
+      { key: "diag_measuring", name: "Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
     ]
   },
   {
     id: "design",
-    tabName: "📐 8. Design Lab",
+    tabName: "8. Design Lab",
     shortTitle: "Design Lab & Studio CAD",
     tasks: [
-      { key: "cad_drawing", name: "📐 Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
-      { key: "diag_design", name: "📝 Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
+      { key: "cad_drawing", name: "Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
+      { key: "diag_design", name: "Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
     ]
   },
   {
     id: "virtual-bengkel",
-    tabName: "🏭 9. Virtual Bengkel",
+    tabName: "9. Virtual Bengkel",
     shortTitle: "Virtual Bengkel 3D",
     tasks: [
-      { key: "virtual_bengkel", name: "🏭 Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
-      { key: "diag_virtual", name: "📝 Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
+      { key: "virtual_bengkel", name: "Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
+      { key: "diag_virtual", name: "Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
     ]
   },
   {
     id: "evaluasi",
-    tabName: "🎓 10. Evaluasi Akhir",
+    tabName: "10. Evaluasi Akhir",
     shortTitle: "Evaluasi Akhir Komprehensif",
     tasks: [
-      { key: "evaluasi_final", name: "🎓 Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+      { key: "evaluasi_final", name: "Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
     ]
   }
 ];
@@ -472,25 +517,25 @@ function doGet(e) {
 function onOpen() {
   try {
     var ui = SpreadsheetApp.getUi();
-    ui.createMenu("⚡ Menu BIMO Labs")
-      .addItem("📊 1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)", "buatSemuaTabModulLab")
-      .addItem("📋 2. Buat Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
-      .addItem("🔄 3. Sinkronkan & Rapikan Ulang Semua Data", "buatSemuaTabModulLab")
+    ui.createMenu("Menu BIMO Labs")
+      .addItem("1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)", "buatSemuaTabModulLab")
+      .addItem("2. Buat Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
+      .addItem("3. Sinkronkan & Rapikan Ulang Semua Data", "buatSemuaTabModulLab")
       .addSeparator()
-      .addItem("ℹ️ Panduan Pemakaian", "tampilkanPanduan")
+      .addItem("Panduan Pemakaian", "tampilkanPanduan")
       .addToUi();
   } catch (e) {}
 }
 
 function tampilkanPanduan() {
   var pesan = "CARA MENGGUNAKAN MENU BIMO LABS:\n\n" +
-    "1. Klik '📊 1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)':\n" +
+    "1. Klik '1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)':\n" +
     "   Sistem otomatis membuat tab di bar bawah sesuai sidebar website:\n" +
-    "   🛡️ Safety Lab, ⚙️ Machine Lab, 🔪 Alat Pemotong, 🌡️ Heat Treatment, dll.\n\n" +
+    "   Safety Lab, Machine Lab, Perkakas Bengkel, Heat Treatment, dll.\n\n" +
     "2. Nilai yang ditampilkan adalah NILAI ASLI SISWA (Skala 0 - 100, misal: 80, 85, 90, 100).\n" +
     "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama & nilai asli).\n" +
     "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Merah = REMEDIAL, Abu-abu = Belum).\n\n" +
-    "3. Tab '📊 Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.\n\n" +
+    "3. Tab 'Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.\n\n" +
     "Seluruh data nilai dijamin 100% aman dan tidak akan terhapus.";
   SpreadsheetApp.getUi().alert("Panduan Rekap Nilai BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
 }
@@ -526,7 +571,7 @@ function buatSemuaTabModulLab() {
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 
   try {
-    SpreadsheetApp.getUi().alert("✅ Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
+    SpreadsheetApp.getUi().alert("[OK] Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
   } catch (e) {}
 }
 
@@ -578,7 +623,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // ---------------------------------------------------------------------------
   // BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR PER ROW / BARIS)
   // ---------------------------------------------------------------------------
-  sheet.appendRow(["📌 BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
+  sheet.appendRow(["BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
   var sec1Title = sheet.getRange(4, 1, 1, 11);
   sec1Title.merge();
   sec1Title.setBackground("#1e293b");
@@ -690,7 +735,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (STATUS PENGUMPULAN PER SISWA)
   // ---------------------------------------------------------------------------
   var sec2StartRow = curRow + 1;
-  sheet.appendRow(["📋 BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
+  sheet.appendRow(["BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
   var sec2Title = sheet.getRange(sec2StartRow, 1, 1, 4 + tasks.length + 3);
   sec2Title.merge();
   sec2Title.setBackground("#1e293b");
@@ -749,7 +794,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
           row.push(rec.skor + " (REMEDIAL)");
         }
       } else {
-        row.push("⏳ Belum");
+        row.push("[BELUM]");
       }
     });
 
@@ -845,7 +890,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
  * =============================================================================
  */
 function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
-  var masterName = "📊 Rekap Seluruh Lab";
+  var masterName = "Rekap Seluruh Lab";
   var sheet = ss.getSheetByName(masterName);
   if (!sheet) {
     sheet = ss.insertSheet(masterName, 0);
@@ -854,7 +899,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   }
 
   // BANNER MASTER
-  sheet.appendRow(["📊 REKAPITULASI KELENGKAPAN TUGAS SELURUH LABORATORIUM (BIMO MANUFACTURING LABS)"]);
+  sheet.appendRow(["REKAPITULASI KELENGKAPAN TUGAS SELURUH LABORATORIUM (BIMO MANUFACTURING LABS)"]);
   var b1 = sheet.getRange(1, 1, 1, 4 + labs.length + 3);
   b1.merge();
   b1.setBackground("#0f172a");
@@ -916,7 +961,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
         }
       });
 
-      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau ⏳ Belum)
+      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau [BELUM])
       if (labFinished > 0) {
         var labAvg = Math.round(labScoreSum / labFinished);
         if (labAvg >= 75) {
@@ -925,7 +970,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
           row.push(labAvg + " (REMEDIAL)");
         }
       } else {
-        row.push("⏳ Belum");
+        row.push("[BELUM]");
       }
     });
 
@@ -1015,7 +1060,7 @@ function identifyLabAndTask(modulStr, quizStr) {
       }
     }
     if (text.indexOf("machine") !== -1 || text.indexOf("mesin") !== -1) {
-      return { labId: "machine", taskKey: "diag_machine", taskName: "📝 Tes Diagnostik Machine Lab" };
+      return { labId: "machine", taskKey: "diag_machine", taskName: "Tes Diagnostik Machine Lab" };
     }
   }
 
@@ -1049,7 +1094,7 @@ function identifyLabAndTask(modulStr, quizStr) {
   if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
   if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
   if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
-  if (text.indexOf("evaluasi") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "🎓 Evaluasi Akhir Komprehensif" };
+  if (text.indexOf("evaluasi") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "Evaluasi Akhir Komprehensif" };
 
   return { labId: "machine", taskKey: "machine_gen", taskName: q || "Praktik Machine Lab" };
 }
@@ -1160,7 +1205,7 @@ function getAllDataRows(ss) {
 
   sheets.forEach(function(sheet) {
     var name = sheet.getName();
-    if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("⚙️") !== -1 || name.indexOf("🔪") !== -1 || name.indexOf("🌡️") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("⚡") !== -1 || name.indexOf("📏") !== -1 || name.indexOf("📐") !== -1 || name.indexOf("🏭") !== -1 || name.indexOf("🎓") !== -1 || name.indexOf("📋") !== -1) {
+    if (name.indexOf("Rekap") !== -1 || name.indexOf("Safety") !== -1 || name.indexOf("Machine") !== -1 || name.indexOf("Perkakas") !== -1 || name.indexOf("Heat") !== -1 || name.indexOf("Mekanika") !== -1 || name.indexOf("Welding") !== -1 || name.indexOf("Ukur") !== -1 || name.indexOf("Design") !== -1 || name.indexOf("Bengkel") !== -1 || name.indexOf("Evaluasi") !== -1) {
       return;
     }
 
@@ -1227,7 +1272,7 @@ function getAllDataRows(ss) {
  * =============================================================================
  */
 function getOrCreateRawSheet(ss) {
-  var rawName = "📥 Data Masuk (Raw Data)";
+  var rawName = "Data Masuk (Raw Data)";
   var sheet = ss.getSheetByName(rawName);
   if (!sheet) {
     var firstSheet = ss.getSheets()[0];
@@ -1285,174 +1330,215 @@ function getOrCreateRawSheet(ss) {
 const LAB_CONFIGS = [
   {
     id: "safety",
-    tabName: "🛡️ 1. Safety Lab",
+    tabName: "1. Safety Lab",
     shortTitle: "Safety Lab (K3LH)",
     tasks: [
-      { key: "apd", name: "🛡️ Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
-      { key: "jsa_bor", name: "📋 JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
-      { key: "jsa_pahat", name: "📋 JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
-      { key: "apar", name: "🧯 Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
-      { key: "5r", name: "✨ Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
-      { key: "perkakas", name: "🔧 SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
-      { key: "qc", name: "🔍 Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
-      { key: "diag_safety", name: "📝 Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
+      { key: "apd", name: "Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
+      { key: "jsa_bor", name: "JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
+      { key: "jsa_pahat", name: "JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
+      { key: "apar", name: "Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
+      { key: "5r", name: "Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
+      { key: "perkakas", name: "SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
+      { key: "qc", name: "Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
+      { key: "diag_safety", name: "Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
     ]
   },
   {
     id: "machine",
-    tabName: "⚙️ 2. Machine Lab",
+    tabName: "2. Machine Lab",
     shortTitle: "Machine Lab (Permesinan)",
     tasks: [
-      { key: "lathe", name: "🔩 Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
-      { key: "milling", name: "🪵 Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
-      { key: "cnc", name: "💻 Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
-      { key: "diag_machine", name: "📝 Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
+      { key: "lathe", name: "Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
+      { key: "milling", name: "Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
+      { key: "cnc", name: "Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
+      { key: "diag_machine", name: "Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
     ]
   },
   {
     id: "cutting-tools",
-    tabName: "🛠️ 3. Perkakas Bengkel",
+    tabName: "3. Perkakas Bengkel",
     shortTitle: "Perkakas Bengkel & RPM",
     tasks: [
-      { key: "cutting_quiz", name: "🛠️ Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
-      { key: "diag_cutting", name: "📝 Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
+      { key: "cutting_quiz", name: "Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
+      { key: "diag_cutting", name: "Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
     ]
   },
   {
     id: "heat-treatment",
-    tabName: "🌡️ 4. Heat Treatment",
+    tabName: "4. Heat Treatment",
     shortTitle: "Heat Treatment & Metalurgi",
     tasks: [
-      { key: "metallurgy", name: "🌡️ Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
-      { key: "diag_heat", name: "📝 Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
+      { key: "metallurgy", name: "Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
+      { key: "diag_heat", name: "Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
     ]
   },
   {
     id: "mechanics",
-    tabName: "🔧 5. Mekanika Teknik",
+    tabName: "5. Mekanika Teknik",
     shortTitle: "Mekanika Teknik Terapan",
     tasks: [
-      { key: "torque", name: "⚖️ Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
-      { key: "diag_mechanics", name: "📝 Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
+      { key: "torque", name: "Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
+      { key: "diag_mechanics", name: "Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
     ]
   },
   {
     id: "welding",
-    tabName: "⚡ 6. Welding Lab",
+    tabName: "6. Welding Lab",
     shortTitle: "Welding Lab (Pengelasan)",
     tasks: [
-      { key: "smaw", name: "⚡ Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
-      { key: "diag_welding", name: "📝 Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
+      { key: "smaw", name: "Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
+      { key: "diag_welding", name: "Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
     ]
   },
   {
     id: "measuring",
-    tabName: "📏 7. Alat Ukur Presisi",
+    tabName: "7. Alat Ukur Presisi",
     shortTitle: "Alat Ukur Presisi & Metrologi",
     tasks: [
-      { key: "caliper_micrometer", name: "📏 Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
-      { key: "diag_measuring", name: "📝 Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
+      { key: "caliper_micrometer", name: "Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
+      { key: "diag_measuring", name: "Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
     ]
   },
   {
     id: "design",
-    tabName: "📐 8. Design Lab",
+    tabName: "8. Design Lab",
     shortTitle: "Design Lab & Studio CAD",
     tasks: [
-      { key: "cad_drawing", name: "📐 Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
-      { key: "diag_design", name: "📝 Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
+      { key: "cad_drawing", name: "Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
+      { key: "diag_design", name: "Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
     ]
   },
   {
     id: "virtual-bengkel",
-    tabName: "🏭 9. Virtual Bengkel",
+    tabName: "9. Virtual Bengkel",
     shortTitle: "Virtual Bengkel 3D",
     tasks: [
-      { key: "virtual_bengkel", name: "🏭 Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
-      { key: "diag_virtual", name: "📝 Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
+      { key: "virtual_bengkel", name: "Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
+      { key: "diag_virtual", name: "Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
     ]
   },
   {
     id: "evaluasi",
-    tabName: "🎓 10. Evaluasi Akhir",
+    tabName: "10. Evaluasi Akhir",
     shortTitle: "Evaluasi Akhir Komprehensif",
     tasks: [
-      { key: "evaluasi_final", name: "🎓 Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+      { key: "evaluasi_final", name: "Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
     ]
   }
 ];
 
 // DEFINISI MODUL LAB SESUAI SIDEBAR
+
+const renderLabIcon = (id) => {
+  switch (id) {
+    case 'safety': return <ShieldCheck size={15} />;
+    case 'machine': return <Cog size={15} />;
+    case 'cutting-tools': return <Disc size={15} />;
+    case 'heat-treatment': return <Flame size={15} />;
+    case 'mechanics': return <Wrench size={15} />;
+    case 'welding': return <Zap size={15} />;
+    case 'measuring': return <Ruler size={15} />;
+    case 'design': return <Compass size={15} />;
+    case 'virtual-bengkel': return <Factory size={15} />;
+    case 'evaluasi': return <GraduationCap size={15} />;
+    default: return <Layers size={15} />;
+  }
+};
+
+const renderSubQuizIcon = (id) => {
+  switch (id) {
+    case 'diagnostic': return <ClipboardCheck size={14} />;
+    case 'apd': return <ShieldCheck size={14} />;
+    case 'apar': return <AlertTriangle size={14} />;
+    case '5r': return <Sparkles size={14} />;
+    case 'perkakas': return <Wrench size={14} />;
+    case 'jsa': return <FileText size={14} />;
+    case 'qc': return <Search size={14} />;
+    case 'lathe': return <RotateCw size={14} />;
+    case 'milling': return <Layers size={14} />;
+    case 'cnc': return <Monitor size={14} />;
+    case 'cutting_quiz': return <Disc size={14} />;
+    case 'metallurgy': return <Flame size={14} />;
+    case 'torque': return <Wrench size={14} />;
+    case 'smaw': return <Zap size={14} />;
+    case 'caliper_micrometer': return <Ruler size={14} />;
+    case 'cad_drawing': return <Compass size={14} />;
+    case 'virtual_bengkel': return <Factory size={14} />;
+    case 'evaluasi_final': return <GraduationCap size={14} />;
+    default: return <FileSpreadsheet size={14} />;
+  }
+};
+
 const ALL_LAB_TABS = [
-  { id: 'all', label: 'Semua Modul', icon: '📋' },
-  { id: 'safety', label: 'Safety Lab (K3)', icon: '🛡️' },
-  { id: 'machine', label: 'Machine Lab', icon: '⚙️' },
-  { id: 'cutting-tools', label: 'Perkakas Bengkel', icon: '🛠️' },
-  { id: 'heat-treatment', label: 'Heat Treatment', icon: '🌡️' },
-  { id: 'mechanics', label: 'Mekanika Teknik', icon: '🔧' },
-  { id: 'welding', label: 'Welding Lab', icon: '⚡' },
-  { id: 'measuring', label: 'Alat Ukur Presisi', icon: '📏' },
-  { id: 'design', label: 'Design Lab', icon: '📐' },
-  { id: 'virtual-bengkel', label: 'Virtual Bengkel 3D', icon: '🏭' },
-  { id: 'evaluasi', label: 'Evaluasi', icon: '📝' }
+  { id: 'all', label: 'Semua Modul', icon: '' },
+  { id: 'safety', label: 'Safety Lab (K3)', icon: '' },
+  { id: 'machine', label: 'Machine Lab', icon: '' },
+  { id: 'cutting-tools', label: 'Perkakas Bengkel', icon: '' },
+  { id: 'heat-treatment', label: 'Heat Treatment', icon: '' },
+  { id: 'mechanics', label: 'Mekanika Teknik', icon: '' },
+  { id: 'welding', label: 'Welding Lab', icon: '' },
+  { id: 'measuring', label: 'Alat Ukur Presisi', icon: '' },
+  { id: 'design', label: 'Design Lab', icon: '' },
+  { id: 'virtual-bengkel', label: 'Virtual Bengkel 3D', icon: '' },
+  { id: 'evaluasi', label: 'Evaluasi', icon: '' }
 ];
 
 // DEFINISI SUB-KUIS SPESIFIK UNTUK TIAP MODUL SIDEBAR
 const SUB_QUIZ_CONFIG = {
   safety: [
-    { id: 'all', label: 'Semua Kuis Safety Lab', icon: '📑' },
-    { id: 'apd', label: 'Kuis Inspeksi APD Operator', icon: '🛡️' },
-    { id: 'diagnostic', label: 'Tes Diagnostik K3 (10 Soal)', icon: '📋' },
-    { id: 'apar', label: 'Simulasi APAR P-A-S-S', icon: '🧯' },
-    { id: '5r', label: 'Budaya Kerja 5R & Etika DUDI', icon: '🧹' },
-    { id: 'perkakas', label: 'SOP Perkakas Tangan', icon: '🛠️' },
-    { id: 'jsa', label: 'Penyusunan JSA DUDI', icon: '📋' },
-    { id: 'qc', label: 'Audit QC Benda Uji DUDI', icon: '🔍' }
+    { id: 'all', label: 'Semua Kuis Safety Lab', icon: '' },
+    { id: 'apd', label: 'Kuis Inspeksi APD Operator', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik K3 (10 Soal)', icon: '' },
+    { id: 'apar', label: 'Simulasi APAR P-A-S-S', icon: '' },
+    { id: '5r', label: 'Budaya Kerja 5R & Etika DUDI', icon: '' },
+    { id: 'perkakas', label: 'SOP Perkakas Tangan', icon: '' },
+    { id: 'jsa', label: 'Penyusunan JSA DUDI', icon: '' },
+    { id: 'qc', label: 'Audit QC Benda Uji DUDI', icon: '' }
   ],
   machine: [
-    { id: 'all', label: 'Semua Machine Lab', icon: '📑' },
-    { id: 'lathe', label: 'Test Teori Mesin Bubut', icon: '🔩' },
-    { id: 'milling', label: 'Test Teori Mesin Frais', icon: '🪵' },
-    { id: 'cnc', label: 'Test Teori & Kode CNC', icon: '💻' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Machine Lab (10 Soal)', icon: '📋' }
+    { id: 'all', label: 'Semua Machine Lab', icon: '' },
+    { id: 'lathe', label: 'Test Teori Mesin Bubut', icon: '' },
+    { id: 'milling', label: 'Test Teori Mesin Frais', icon: '' },
+    { id: 'cnc', label: 'Test Teori & Kode CNC', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Machine Lab (10 Soal)', icon: '' }
   ],
   'cutting-tools': [
-    { id: 'all', label: 'Semua Perkakas Bengkel', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Perkakas (10 Soal)', icon: '📋' },
-    { id: 'cutting_quiz', label: 'Kuis Perkakas & Kalkulasi RPM', icon: '🛠️' }
+    { id: 'all', label: 'Semua Perkakas Bengkel', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Perkakas (10 Soal)', icon: '' },
+    { id: 'cutting_quiz', label: 'Kuis Perkakas & Kalkulasi RPM', icon: '' }
   ],
   'heat-treatment': [
-    { id: 'all', label: 'Semua Heat Treatment', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Heat Treatment (10 Soal)', icon: '📋' },
-    { id: 'metallurgy', label: 'Kuis Evaluasi Metalurgi', icon: '🌡️' }
+    { id: 'all', label: 'Semua Heat Treatment', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Heat Treatment (10 Soal)', icon: '' },
+    { id: 'metallurgy', label: 'Kuis Evaluasi Metalurgi', icon: '' }
   ],
   mechanics: [
-    { id: 'all', label: 'Semua Mekanika Teknik', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Mekanika (10 Soal)', icon: '📋' },
-    { id: 'torque', label: 'Kuis Momen Gaya & Torsi', icon: '🔧' }
+    { id: 'all', label: 'Semua Mekanika Teknik', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Mekanika (10 Soal)', icon: '' },
+    { id: 'torque', label: 'Kuis Momen Gaya & Torsi', icon: '' }
   ],
   welding: [
-    { id: 'all', label: 'Semua Welding Lab', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Welding Lab (10 Soal)', icon: '📋' },
-    { id: 'smaw', label: 'Kuis Asesmen Las SMAW', icon: '⚡' }
+    { id: 'all', label: 'Semua Welding Lab', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Welding Lab (10 Soal)', icon: '' },
+    { id: 'smaw', label: 'Kuis Asesmen Las SMAW', icon: '' }
   ],
   measuring: [
-    { id: 'all', label: 'Semua Alat Ukur', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Alat Ukur (10 Soal)', icon: '📋' },
-    { id: 'caliper_micrometer', label: 'Uji Pembacaan Kaliper & Mikrometer', icon: '📏' }
+    { id: 'all', label: 'Semua Alat Ukur', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Alat Ukur (10 Soal)', icon: '' },
+    { id: 'caliper_micrometer', label: 'Uji Pembacaan Kaliper & Mikrometer', icon: '' }
   ],
   design: [
-    { id: 'all', label: 'Semua Design Lab', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Design Lab (10 Soal)', icon: '📋' },
-    { id: 'cad_drawing', label: 'Kuis Gambar Teknik & CAD', icon: '📐' }
+    { id: 'all', label: 'Semua Design Lab', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Design Lab (10 Soal)', icon: '' },
+    { id: 'cad_drawing', label: 'Kuis Gambar Teknik & CAD', icon: '' }
   ],
   'virtual-bengkel': [
-    { id: 'all', label: 'Semua Bengkel 3D', icon: '📑' },
-    { id: 'diagnostic', label: 'Tes Diagnostik Bengkel 3D (10 Soal)', icon: '📋' }
+    { id: 'all', label: 'Semua Bengkel 3D', icon: '' },
+    { id: 'diagnostic', label: 'Tes Diagnostik Bengkel 3D (10 Soal)', icon: '' }
   ],
   evaluasi: [
-    { id: 'all', label: 'Semua Evaluasi', icon: '📑' },
-    { id: 'evaluasi_final', label: 'Evaluasi Akhir Komprehensif', icon: '📝' }
+    { id: 'all', label: 'Semua Evaluasi', icon: '' },
+    { id: 'evaluasi_final', label: 'Evaluasi Akhir Komprehensif', icon: '' }
   ]
 };
 
@@ -1500,7 +1586,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
     sound.playClick();
     const target = getSpreadsheetDocUrl();
     window.open(target, '_blank', 'noopener,noreferrer');
-    showToast('🌐 Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok)...');
+    showToast('[SINKRON] Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok)...');
   };
 
   const handleOpenAndPasteGoogleSheets = async () => {
@@ -1820,7 +1906,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
     const labName = foundLab ? foundLab.label : 'Semua Modul';
     if (activeSubTab !== 'all') {
       const foundSub = currentSubQuizList.find(s => s.id === activeSubTab);
-      return `${labName} ➔ ${foundSub ? foundSub.label : ''}`;
+      return `${labName} > ${foundSub ? foundSub.label : ''}`;
     }
     return labName;
   }, [activeTab, activeSubTab, currentSubQuizList]);
@@ -1844,7 +1930,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
       saveSheetDocUrl(tempSheetUrl);
     }
     sound.playSuccess();
-    setTestStatus('✅ Pengaturan berhasil disimpan!');
+    setTestStatus('[OK] Pengaturan berhasil disimpan!');
     setTimeout(() => {
       setTestStatus('');
       setIsConfigModalOpen(false);
@@ -1880,10 +1966,10 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
     const res = await sendToGoogleSheet(testRecord);
     if (res.success) {
       sound.playSuccess();
-      setTestStatus('✅ Berhasil terkirim! Silakan periksa Google Spreadsheet Anda.');
+      setTestStatus('[OK] Berhasil terkirim! Silakan periksa Google Spreadsheet Anda.');
     } else {
       sound.playError();
-      setTestStatus(`⚠️ Gagal mengirim: ${res.error || res.reason || 'Periksa kembali URL Webhook Anda'}`);
+      setTestStatus(`[GAGAL] Gagal mengirim: ${res.error || res.reason || 'Periksa kembali URL Webhook Anda'}`);
     }
   };
 
@@ -1905,7 +1991,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
       clearAllStoredScores();
       setScores([]);
       sound.playSuccess();
-      showToast('🗑️ Data lokal berhasil dibersihkan.');
+      showToast('[OK] Data lokal berhasil dibersihkan.');
     }
   };
 
@@ -1939,7 +2025,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           gap: '10px',
           animation: 'fadeIn 0.2s ease-out'
         }}>
-          <span>📗</span>
+          <FileSpreadsheet size={16} />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -1980,7 +2066,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               onClick={() => {
                 sound.playClick();
                 loadData();
-                showToast('✅ Data nilai siswa berhasil diperbarui!');
+                showToast('[OK] Data nilai siswa berhasil diperbarui!');
               }}
               style={{
                 background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
@@ -1998,7 +2084,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Segarkan data nilai terbaru sekarang"
             >
-              <span>🔄</span>
+              <RotateCw size={14} />
               <span>Segarkan Data</span>
             </button>
 
@@ -2010,7 +2096,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 rel="noopener noreferrer"
                 onClick={() => {
                   sound.playClick();
-                  showToast('🌐 Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok) di tab baru...');
+                  showToast('Membuka Google Spreadsheet Nilai Siswa (SMKN 2 Depok) di tab baru...');
                 }}
                 style={{
                   background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -2025,7 +2111,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 }}
                 title={`Buka langsung Google Spreadsheet: ${sheetDocUrl || DEFAULT_SPREADSHEET_DOC_URL}`}
               >
-                <span style={{ fontSize: '1rem' }}>↗️</span>
+                <ExternalLink size={15} />
                 <span>Buka Google Sheets</span>
               </a>
               <button
@@ -2048,7 +2134,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 }}
                 title="Pilihan & Pengaturan Tautan Google Spreadsheet"
               >
-                ⚙️
+                <Settings size={15} />
               </button>
             </div>
 
@@ -2070,7 +2156,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Unduh tabel yang sedang aktif ke format Excel (.xls)"
             >
-              <span>📥</span>
+              <Download size={15} />
               <span>Unduh Excel (.xls)</span>
             </button>
 
@@ -2092,7 +2178,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Unduh format standar CSV"
             >
-              <span>📄</span>
+              <FileText size={15} />
               <span>Unduh CSV</span>
             </button>
 
@@ -2114,7 +2200,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Salin data lembar ini ke clipboard"
             >
-              <span>📋</span>
+              <ClipboardCopy size={15} />
               <span>Salin Lembar Ini</span>
             </button>
 
@@ -2136,7 +2222,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Cetak atau simpan sebagai dokumen PDF resmi"
             >
-              <span>🖨️</span>
+              <Printer size={15} />
               <span>Cetak / PDF</span>
             </button>
           </div>
@@ -2146,7 +2232,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.12)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', fontSize: '0.82rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#6ee7b7', fontWeight: 800 }}>
-              <span>📍</span>
+              <Target size={14} />
               <span>Lembar Aktif: <strong>{currentLabTitle}</strong></span>
             </span>
             <span style={{ color: '#94a3b8' }}>|</span>
@@ -2155,7 +2241,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             <span style={{ color: '#cbd5e1' }}>Kelas: <strong>X TPM 1 (Teknik Permesinan)</strong></span>
             <span style={{ color: '#94a3b8' }}>|</span>
             <span style={{ color: '#6ee7b7', fontSize: '0.78rem' }}>
-              🕒 Pembaruan Terakhir: <strong>{lastSyncTime} WIB</strong>
+              <Clock size={13} style={{ display: 'inline', marginRight: '4px', verticalAlign: '-2px' }} /> Pembaruan Terakhir: <strong>{lastSyncTime} WIB</strong>
             </span>
           </div>
 
@@ -2174,7 +2260,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Unduh seluruh rekap semua modul lab sekaligus"
             >
-              📦 Unduh Seluruh Lab (.xls)
+              <Download size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: '-2px' }} /> Unduh Seluruh Lab (.xls)
             </button>
 
             <button
@@ -2191,7 +2277,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Bersihkan riwayat data nilai lokal di perangkat ini"
             >
-              🗑️ Reset Data
+              <Trash2 size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: '-2px' }} /> Reset Data
             </button>
           </div>
         </div>
@@ -2236,7 +2322,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   transition: 'all 0.15s'
                 }}
               >
-                <span>{tab.icon}</span>
+                {renderLabIcon(tab.id)}
                 <span>{tab.label}</span>
                 <span style={{
                   background: isActive ? '#10b981' : '#e2e8f0',
@@ -2267,8 +2353,8 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
-              <span>📑</span>
-              <span>2. Pilih Lembar Sub-Kuis Spesifik di <strong>{currentLabTitle.split(' ➔ ')[0]}</strong>:</span>
+              <FileSpreadsheet size={15} />
+              <span>2. Pilih Lembar Sub-Kuis Spesifik di <strong>{currentLabTitle.split(' > ')[0]}</strong>:</span>
             </div>
             <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
               <em>Klik sub-kuis untuk mengisolasi nilainya tanpa tercampur dengan kuis lain</em>
@@ -2302,7 +2388,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     boxShadow: isSubActive ? '0 2px 6px rgba(5, 150, 105, 0.3)' : 'none'
                   }}
                 >
-                  <span>{sub.icon}</span>
+                  {renderSubQuizIcon(sub.id)}
                   <span>{sub.label}</span>
                   <span style={{
                     background: isSubActive ? '#ffffff' : '#f1f5f9',
@@ -2376,7 +2462,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <span>
             <strong style={{ color: '#059669' }}>=AVERAGE(I2:I{filteredScores.length + 1})</strong>
             <span style={{ color: '#64748b', marginLeft: '10px' }}>
-              ➔ Lembar: <strong>{currentLabTitle}</strong> | Rata-rata Skor: <strong>{averageScore} / 100</strong>
+              Lembar: <strong>{currentLabTitle}</strong> | Rata-rata Skor: <strong>{averageScore} / 100</strong>
             </span>
           </span>
           <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
@@ -2392,7 +2478,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #2563eb' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =COUNTA(B2:B)</span>
-            <span style={{ fontSize: '1.2rem' }}>📝</span>
+            <FileSpreadsheet size={20} color="#0284c7" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginTop: '4px' }}>
             {totalSubmissions} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Siswa Mengerjakan</span>
@@ -2404,7 +2490,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #10b981' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =COUNTUNIQUE(B2:B)</span>
-            <span style={{ fontSize: '1.2rem' }}>👥</span>
+            <Users size={20} color="#10b981" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#10b981', marginTop: '4px' }}>
             {uniqueStudents} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>Siswa Unik</span>
@@ -2416,7 +2502,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #f59e0b' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =AVERAGE(I2:I)</span>
-            <span style={{ fontSize: '1.2rem' }}>⭐</span>
+            <Star size={20} color="#f59e0b" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: averageScore >= 75 ? '#10b981' : '#f59e0b', marginTop: '4px' }}>
             {averageScore} <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>/ 100</span>
@@ -2428,7 +2514,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         <div className="dashboard-card" style={{ padding: '16px 20px', borderLeft: '4px solid #8b5cf6' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Formula: =COUNTIF(K:K, "LULUS")</span>
-            <span style={{ fontSize: '1.2rem' }}>🎯</span>
+            <Target size={20} color="#8b5cf6" />
           </div>
           <div style={{ fontSize: '1.5rem', fontWeight: 900, color: passingRate >= 75 ? '#10b981' : '#ef4444', marginTop: '4px' }}>
             {passingRate}% <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b' }}>({passedCount}/{totalSubmissions})</span>
@@ -2443,7 +2529,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: 1, minWidth: '280px' }}>
             {/* SEARCH INPUT */}
             <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}>🔍</span>
+              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }}></span>
               <input
                 type="text"
                 placeholder="Cari nama siswa, nomor absen, kuis..."
@@ -2465,7 +2551,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             {/* DROPDOWN KLASIFIKASI NAMA KUIS / ASESMEN */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#065f46', whiteSpace: 'nowrap' }}>
-                📋 Nama Kuis:
+                Nama Kuis:
               </span>
               <select
                 value={selectedQuizName}
@@ -2510,8 +2596,8 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
             >
               <option value="all">Semua Status</option>
-              <option value="LULUS">✓ LULUS (≥ 75)</option>
-              <option value="REMEDIAL">✗ REMEDIAL (&lt; 75)</option>
+              <option value="LULUS">[OK] LULUS (≥ 75)</option>
+              <option value="REMEDIAL">[REM] REMEDIAL (&lt; 75)</option>
             </select>
 
             {/* SORT BY */}
@@ -2530,7 +2616,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             >
               <option value="quiz_name">Urutkan: Nama Kuis (A-Z)</option>
               <option value="student_name">Urutkan: Nama Siswa (A-Z)</option>
-              <option value="highest_score">Urutkan: Skor Tertinggi (100 ➔ 0)</option>
+              <option value="highest_score">Urutkan: Skor Tertinggi (100 ke 0)</option>
               <option value="newest_time">Urutkan: Waktu Terbaru</option>
             </select>
           </div>
@@ -2554,7 +2640,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Kelompokkan tabel rapi per Nama Kuis / Asesmen"
             >
-              <span>📑</span>
+              <FileSpreadsheet size={15} />
               <span>Dikelompokkan per Kuis</span>
             </button>
             <button
@@ -2574,7 +2660,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Tampilkan matriks ceklis pengumpulan siswa per kuis"
             >
-              <span>📊</span>
+              <BarChart3 size={15} />
               <span>Matriks Pengumpulan Siswa</span>
             </button>
             <button
@@ -2594,7 +2680,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               }}
               title="Tampilkan tabel baris datar"
             >
-              <span>📋</span>
+              <ClipboardCopy size={15} />
               <span>Tabel Datar</span>
             </button>
           </div>
@@ -2613,7 +2699,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               onClick={() => setSelectedQuizName('all')}
               style={{ background: 'transparent', border: 'none', color: '#dc2626', fontWeight: 800, cursor: 'pointer', fontSize: '0.78rem' }}
             >
-              ✕ Hapus Filter Kuis (Tampilkan Semua)
+              Hapus Filter Kuis (Tampilkan Semua)
             </button>
           )}
         </div>
@@ -2708,7 +2794,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 {studentSubmissionMatrix.studentList.length === 0 ? (
                   <tr>
                     <td colSpan={7 + studentSubmissionMatrix.quizList.length} style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
-                      <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
+                      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><Folder size={40} color="#94a3b8" /></div>
                       <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
                         Belum Ada Siswa yang Mengumpulkan Tugas
                       </div>
@@ -2769,7 +2855,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                             return (
                               <td key={quiz} style={{ padding: '8px 10px', textAlign: 'center', borderRight: '1px solid #e2e8f0', background: '#f8fafc' }}>
                                 <span style={{ color: '#94a3b8', fontSize: '0.75rem', fontWeight: 600 }}>
-                                  ⏳ Belum
+                                  [BELUM]
                                 </span>
                               </td>
                             );
@@ -2802,7 +2888,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                                   fontWeight: 900,
                                   fontSize: '0.78rem'
                                 }}>
-                                  {isPassed ? '✓' : '✗'} {sub.skor}
+                                  {isPassed ? '[OK]' : '[REM]'} {sub.skor}
                                 </span>
                                 {sub.jawabanBenar !== undefined && (
                                   <span style={{ fontSize: '0.68rem', color: '#64748b' }}>
@@ -2849,7 +2935,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                             border: `1px solid ${isComplete ? '#bbf7d0' : (finishedCount > 0 ? '#fde68a' : '#fecaca')}`,
                             display: 'inline-block'
                           }}>
-                            {isComplete ? '✓ LENGKAP' : (finishedCount > 0 ? 'SEBAGIAN' : 'BELUM ADA')}
+                            {isComplete ? '[OK] LENGKAP' : (finishedCount > 0 ? 'SEBAGIAN' : 'BELUM ADA')}
                           </span>
                         </td>
                       </tr>
@@ -2958,7 +3044,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               {filteredScores.length === 0 ? (
                 <tr>
                   <td colSpan="13" style={{ padding: '50px 20px', textAlign: 'center', color: '#64748b', background: '#ffffff' }}>
-                    <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>📂</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}><Folder size={40} color="#94a3b8" /></div>
                     <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
                       Belum Ada Hasil Pengerjaan untuk Kategori Ini
                     </div>
@@ -2998,18 +3084,18 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                                 KLASIFIKASI KUIS
                               </span>
                               <strong style={{ fontSize: '0.98rem', letterSpacing: '0.3px', color: '#ffffff' }}>
-                                📋 {group.quizName}
+                                {group.quizName}
                               </strong>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '0.78rem' }}>
-                              <span>👥 <strong>{group.totalCount}</strong> Siswa</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Users size={14} /> <strong>{group.totalCount}</strong> Siswa</span>
                               <span style={{ color: '#94a3b8' }}>|</span>
-                              <span>⭐ Rata-rata: <strong>{group.avgScore}</strong>/100</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Star size={14} /> Rata-rata: <strong>{group.avgScore}</strong>/100</span>
                               <span style={{ color: '#94a3b8' }}>|</span>
-                              <span>🏆 Tertinggi: <strong>{group.maxScore}</strong></span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Trophy size={14} /> Tertinggi: <strong>{group.maxScore}</strong></span>
                               <span style={{ color: '#94a3b8' }}>|</span>
                               <span style={{ color: group.passPct >= 75 ? '#6ee7b7' : '#fca5a5' }}>
-                                ✅ Kelulusan KKM: <strong>{group.passedCount}/{group.totalCount} ({group.passPct}%)</strong>
+                                Kelulusan KKM: <strong>{group.passedCount}/{group.totalCount} ({group.passPct}%)</strong>
                               </span>
                             </div>
                           </div>
@@ -3017,7 +3103,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                           {/* DAFTAR NAMA SISWA YANG MENGUMPULKAN KUIS INI */}
                           <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.15)', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                             <span style={{ fontSize: '0.72rem', color: '#a7f3d0', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.4px' }}>
-                              👤 Siswa yang Sudah Mengumpulkan ({group.totalCount} Siswa):
+                              Siswa yang Sudah Mengumpulkan ({group.totalCount} Siswa):
                             </span>
                             {group.items.map((it, i) => {
                               const passed = it.status === 'LULUS' || Number(it.skor) >= 75;
@@ -3184,7 +3270,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                                   display: 'inline-block'
                                 }}
                               >
-                                {isPassed ? '✓ LULUS' : '✗ REMEDIAL'}
+                                {isPassed ? '[OK] LULUS' : '[REM] REMEDIAL'}
                               </span>
                             </td>
 
@@ -3203,7 +3289,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                                   fontWeight: 800
                                 }}
                               >
-                                🔍 Rincian
+                                Rincian
                               </button>
                             </td>
                           </tr>
@@ -3353,7 +3439,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                             display: 'inline-block'
                           }}
                         >
-                          {isPassed ? '✓ LULUS' : '✗ REMEDIAL'}
+                          {isPassed ? '[OK] LULUS' : '[REM] REMEDIAL'}
                         </span>
                       </td>
 
@@ -3372,7 +3458,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                             fontWeight: 800
                           }}
                         >
-                          🔍 Rincian
+                          Rincian
                         </button>
                       </td>
                     </tr>
@@ -3399,7 +3485,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1' }}>SMKN 2 Depok</td>
                   <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1' }}>-</td>
                   <td style={{ padding: '12px 14px', borderRight: '1px solid #cbd5e1', color: '#065f46' }}>
-                    {activeSubTab !== 'all' ? currentLabTitle.split(' ➔ ')[1] : 'Semua Sub-Kuis'}
+                    {activeSubTab !== 'all' ? currentLabTitle.split(' > ')[1] : 'Semua Sub-Kuis'}
                   </td>
                   <td style={{ padding: '12px 16px', borderRight: '1px solid #cbd5e1', color: '#64748b' }}>
                     =AVERAGE(I:I)
@@ -3475,7 +3561,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', color: '#64748b' }}>
-          <span>💡 <em>Klik tombol <strong>"Unduh Excel Lembar Ini (.xls)"</strong> untuk langsung mencetak atau mengolah nilai sub-kuis ini.</em></span>
+          <span><em>Klik tombol <strong>"Unduh Excel Lembar Ini (.xls)"</strong> untuk langsung mencetak atau mengolah nilai sub-kuis ini.</em></span>
         </div>
       </div>
 
@@ -3500,7 +3586,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.2rem' }}>⚙️</span>
+            <Settings size={18} />
             <div>
               <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--text-main, #0f172a)' }}>
                 Integrasi Cloud Otomatis ke Google Drive (Opsional)
@@ -3531,7 +3617,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   cursor: 'pointer'
                 }}
               >
-                📋 Panduan & Salin Kode Apps Script
+                Panduan & Salin Kode Apps Script
               </button>
 
               <button
@@ -3547,7 +3633,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   cursor: 'pointer'
                 }}
               >
-                {webhookUrl ? '🟢 Ganti URL Webhook' : '⚙️ Tempel URL Webhook'}
+                {webhookUrl ? 'Ganti URL Webhook' : 'Tempel URL Webhook'}
               </button>
 
               {pendingSyncCount > 0 && (
@@ -3564,7 +3650,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  🔄 Sinkronkan {pendingSyncCount} Nilai Tertunda
+                  Sinkronkan {pendingSyncCount} Nilai Tertunda
                 </button>
               )}
             </div>
@@ -3584,12 +3670,12 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <div className="dashboard-card" style={{ width: '100%', maxWidth: '640px', background: '#fff', borderRadius: '16px', padding: '26px', maxHeight: '88vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.3rem' }}>🔍</span>
+                <Search size={18} />
                 <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
                   Rincian Hasil Asesmen Siswa
                 </h3>
               </div>
-              <button onClick={() => setSelectedDetailRecord(null)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+              <button onClick={() => setSelectedDetailRecord(null)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}></button>
             </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '0.85rem', marginBottom: '16px', background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
@@ -3644,9 +3730,9 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <div className="dashboard-card" style={{ width: '100%', maxWidth: '640px', background: '#fff', borderRadius: '16px', padding: '28px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
               <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', color: '#0f172a' }}>
-                <span>⚙️</span> Konfigurasi Webhook Google Spreadsheet
+                <Settings size={18} style={{ display: 'inline', marginRight: '6px', verticalAlign: '-2px' }} /> Konfigurasi Webhook Google Spreadsheet
               </h3>
-              <button onClick={() => setIsConfigModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+              <button onClick={() => setIsConfigModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}></button>
             </div>
 
             <p style={{ fontSize: '0.86rem', color: '#475569', lineHeight: 1.5, margin: '0 0 14px 0' }}>
@@ -3656,7 +3742,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             {/* QUICK LINK BUTTONS */}
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px 14px', marginBottom: '14px' }}>
               <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>📌</span>
+                <Target size={14} />
                 <span>Tautan Cepat Membuka Google Sheets:</span>
               </div>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -3677,7 +3763,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     gap: '6px'
                   }}
                 >
-                  <span>📂 Buka Daftar Sheets Anda (sheets.google.com) ↗</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Folder size={14} /> Buka Daftar Sheets Anda (sheets.google.com) <ExternalLink size={13} /></span>
                 </a>
                 <a
                   href="https://sheets.new"
@@ -3696,7 +3782,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     gap: '6px'
                   }}
                 >
-                  <span>➕ Buat File Baru (sheets.new) ↗</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Plus size={14} /> Buat File Baru (sheets.new) <ExternalLink size={13} /></span>
                 </a>
               </div>
             </div>
@@ -3704,7 +3790,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             <form onSubmit={handleSaveWebhook} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px', color: '#0f172a' }}>
-                  🔗 Tautan Langsung Dokumen Spreadsheet Anda (Opsional):
+                  Tautan Langsung Dokumen Spreadsheet Anda (Opsional):
                 </label>
                 <input
                   type="url"
@@ -3720,13 +3806,13 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   }}
                 />
                 <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
-                  Saat diisi, tombol <strong>↗️ Buka Google Sheets</strong> di toolbar akan langsung membuka file ini.
+                  Saat diisi, tombol <strong>Buka Google Sheets</strong> di toolbar akan langsung membuka file ini.
                 </div>
               </div>
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px', color: '#0f172a' }}>
-                  ⚡ URL Web App Google Apps Script (Webhook Pengirim Nilai):
+                  URL Web App Google Apps Script (Webhook Pengirim Nilai):
                 </label>
                 <input
                   type="url"
@@ -3765,7 +3851,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  🧪 Uji Kirim Baris Tes
+                  Uji Kirim Baris Tes
                 </button>
 
                 <button
@@ -3796,18 +3882,18 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <div className="dashboard-card" style={{ width: '100%', maxWidth: '820px', background: '#fff', borderRadius: '18px', padding: '28px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
               <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '8px', color: '#0f172a' }}>
-                <span>📋</span> Kode Google Apps Script & Cara Pasang (Opsional)
+                <ClipboardCopy size={15} /> Kode Google Apps Script & Cara Pasang (Opsional)
               </h3>
-              <button onClick={() => setIsGuideModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+              <button onClick={() => setIsGuideModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}></button>
             </div>
 
             <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.86rem', lineHeight: 1.6 }}>
               <div style={{ fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>Langkah Pemasangan di Google Spreadsheet Pribadi:</div>
               <ol style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <li>Buka <strong>https://sheets.new</strong> di tab baru untuk membuat spreadsheet kosong.</li>
-                <li>Klik menu <strong>Ekstensi (Extensions)</strong> ➔ pilih <strong>Apps Script</strong>.</li>
+                <li>Klik menu <strong>Ekstensi (Extensions)</strong> &gt; pilih <strong>Apps Script</strong>.</li>
                 <li>Hapus kode lama, lalu klik tombol <strong>"Salin Kode Apps Script"</strong> di bawah dan tempelkan.</li>
-                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> ➔ <strong>Penerapan baru</strong>.</li>
+                <li>Klik <strong>Simpan</strong> (ikon disket), lalu klik tombol biru <strong>Terapkan (Deploy)</strong> &gt; <strong>Penerapan baru</strong>.</li>
                 <li>Pilih jenis <strong>Aplikasi web</strong>, ubah <em>Yang memiliki akses</em> menjadi: <strong>Siapa saja (Anyone)</strong>.</li>
                 <li>Salin URL Web App yang berakhiran <code>/exec</code> lalu tempelkan di menu pengaturan webhook.</li>
               </ol>
@@ -3832,7 +3918,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     gap: '6px'
                   }}
                 >
-                  {copyCodeSuccess ? '✓ Kode Berhasil Disalin!' : '📋 Salin Kode Apps Script'}
+                  {copyCodeSuccess ? '[OK] Kode Berhasil Disalin!' : 'Salin Kode Apps Script'}
                 </button>
               </div>
               <pre
@@ -3870,7 +3956,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                   cursor: 'pointer'
                 }}
               >
-                Lanjut Masukkan URL Webhook ➔
+                Lanjut Masukkan URL Webhook &gt;
               </button>
             </div>
           </div>
@@ -3883,17 +3969,17 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           <div className="dashboard-card" style={{ width: '100%', maxWidth: '620px', background: '#fff', borderRadius: '18px', padding: '28px', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.4rem' }}>📋</span>
+                <ClipboardCopy size={20} color="#0284c7" />
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
                   Data Nilai Berhasil Disalin! Buka Google Sheets & Paste
                 </h3>
               </div>
-              <button onClick={() => setIsPasteGuideModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+              <button onClick={() => setIsPasteGuideModalOpen(false)} style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}></button>
             </div>
 
             <div style={{ background: '#ecfdf5', border: '1.5px solid #10b981', borderRadius: '12px', padding: '16px', marginBottom: '18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#065f46', fontWeight: 800, fontSize: '0.95rem', marginBottom: '6px' }}>
-                <span>✅</span>
+                <CheckCircle2 size={18} color="#10b981" />
                 <span>Data Siswa Bapak Tetap Aman & Tidak Hilang!</span>
               </div>
               <p style={{ margin: 0, fontSize: '0.86rem', color: '#047857', lineHeight: 1.5 }}>
@@ -3965,7 +4051,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #e2e8f0', paddingBottom: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.5rem' }}>📊</span>
+                <BarChart3 size={24} color="#0284c7" />
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#0f172a' }}>
                   Akses Google Sheets (SMKN 2 Depok)
                 </h3>
@@ -3974,7 +4060,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 onClick={() => setIsOpenSheetModal(false)}
                 style={{ background: 'transparent', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#64748b' }}
               >
-                ✕
+                
               </button>
             </div>
 
@@ -3985,7 +4071,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
             {/* OPSI 1: TAUTKAN URL SPREADSHEET PRIBADI */}
             <div style={{ background: '#f8fafc', border: '1.5px solid #cbd5e1', borderRadius: '12px', padding: '16px', marginBottom: '16px' }}>
               <label style={{ display: 'block', fontWeight: 800, fontSize: '0.86rem', color: '#0f172a', marginBottom: '6px' }}>
-                🔗 Tautan Langsung Google Spreadsheet Anda:
+                Tautan Langsung Google Spreadsheet Anda:
               </label>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input
@@ -4009,9 +4095,9 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     if (urlToSave && urlToSave.trim().startsWith('http')) {
                       window.open(urlToSave.trim(), '_blank');
                       setIsOpenSheetModal(false);
-                      showToast('✅ Tautan disimpan & Spreadsheet dibuka!');
+                      showToast('[OK] Tautan disimpan & Spreadsheet dibuka!');
                     } else {
-                      showToast('✅ Pengaturan tautan diperbarui!');
+                      showToast('[OK] Pengaturan tautan diperbarui!');
                     }
                   }}
                   style={{
@@ -4026,11 +4112,13 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  Simpan & Buka ↗
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    Simpan & Buka <ExternalLink size={13} />
+                  </span>
                 </button>
               </div>
               <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '6px' }}>
-                💡 Tempelkan link file Spreadsheet Anda di sini. Tombol di toolbar akan langsung membuka file ini setiap kali diklik.
+                Tempelkan link file Spreadsheet Anda di sini. Tombol di toolbar akan langsung membuka file ini setiap kali diklik.
               </div>
             </div>
 
@@ -4063,10 +4151,10 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>📂</span>
+                  <Folder size={14} />
                   <span>Buka Beranda Google Sheets (docs.google.com)</span>
                 </div>
-                <span>↗</span>
+                <ExternalLink size={13} />
               </button>
 
               {/* BUAT DOKUMEN BARU & SALIN DATA */}
@@ -4091,10 +4179,10 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span>➕</span>
+                  <Plus size={14} />
                   <span>Buat File Baru (sheets.new) & Salin Otomatis Tabel Ini</span>
                 </div>
-                <span>↗</span>
+                <ExternalLink size={13} />
               </button>
             </div>
 

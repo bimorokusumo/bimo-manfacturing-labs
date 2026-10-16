@@ -5,6 +5,13 @@ import { recordQuizResult } from '../services/sheetService';
 import { getAssetUrl } from '../utils/assets';
 import LabDiagnosticBanner from './LabDiagnosticBanner';
 import {
+  Play,
+  Pause,
+  RotateCcw,
+  Activity,
+  ArrowUp,
+  ArrowDown,
+  Zap,
   Wrench,
   Sliders,
   Scale,
@@ -881,7 +888,7 @@ function CaseStudyCard({
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 1: TORSI & KUNCI PAS BAUT
+// INTERACTIVE SIMULATOR 1: TORSI & KUNCI PAS BAUT (ANIMASI GERAK RATCHET SWING)
 // =============================================================================
 function TorqueInteractiveSimulator({
   torque,
@@ -893,12 +900,17 @@ function TorqueInteractiveSimulator({
   isRotating,
   turnResult
 }) {
+  const [isAutoTurning, setIsAutoTurning] = useState(false);
+  const [boltAngle, setBoltAngle] = useState(0);
+  const [clickCount, setClickCount] = useState(0);
+
   const dMeter = Math.max(0.01, distanceCm / 100);
   const forceN = Math.round(torque / dMeter);
   const forceKg = (forceN / 9.8).toFixed(1);
+  const isStrained = forceN > 400;
 
   let forceBadge = { text: '[RINGAN] Gaya Otot Sangat Enteng (Cukup 1 Tangan)', color: '#16a34a', bg: '#dcfce7' };
-  if (forceN > 400) {
+  if (isStrained) {
     forceBadge = { text: '[BERAT] Gaya Melebihi Kapasitas Normal (Sambung Pipa!)', color: '#dc2626', bg: '#fee2e2' };
   } else if (forceN > 180) {
     forceBadge = { text: '[SEDANG] Tenaga 2 Tangan Normal Bengkel', color: '#ea580c', bg: '#ffedd5' };
@@ -907,20 +919,47 @@ function TorqueInteractiveSimulator({
   const armLengthPx = Math.min(460, Math.max(90, (distanceCm / 120) * 440 + 70));
   const hasPipe = distanceCm > 40;
 
+  // Auto-tightening ratchet cycle
+  useEffect(() => {
+    let interval = null;
+    if (isAutoTurning) {
+      interval = setInterval(() => {
+        setBoltAngle((prev) => (prev + (isStrained ? 5 : 20)) % 360);
+        setClickCount((c) => c + 1);
+        sound.playClick();
+      }, 350);
+    }
+    return () => clearInterval(interval);
+  }, [isAutoTurning, isStrained]);
+
+  const handleManualTurn = () => {
+    sound.playClick();
+    setBoltAngle((prev) => (prev + (isStrained ? 8 : 25)) % 360);
+    setClickCount((c) => c + 1);
+    if (onTurnBolt) onTurnBolt();
+  };
+
+  const handleResetBolt = () => {
+    sound.playClick();
+    setIsAutoTurning(false);
+    setBoltAngle(0);
+    setClickCount(0);
+  };
+
   return (
     <div style={{
       background: '#ffffff',
       borderRadius: '16px',
       padding: '20px',
-      border: '2px solid #0284c7',
-      boxShadow: '0 4px 16px rgba(2, 132, 199, 0.08)',
+      border: isStrained ? '2px solid #ef4444' : '2px solid #0284c7',
+      boxShadow: isStrained ? '0 4px 16px rgba(239, 68, 68, 0.15)' : '0 4px 16px rgba(2, 132, 199, 0.08)',
       marginBottom: '20px'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color="#0284c7" />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0369a1' }}>
-            Simulator Interaktif: Uji Torsi &amp; Putar Baut Mesin
+            Simulator Interaktif: Animasi Kunci Momen &amp; Putaran Baut Mesin
           </h4>
         </div>
         <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -928,6 +967,7 @@ function TorqueInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Buttons */}
       <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           PILIH KASUS BENGKEL (Preset Cepat):
@@ -960,6 +1000,7 @@ function TorqueInteractiveSimulator({
         </div>
       </div>
 
+      {/* Sliders Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
         <div style={{ background: '#f0f9ff', padding: '12px 14px', borderRadius: '10px', border: '1px solid #bae6fd' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
@@ -1012,6 +1053,7 @@ function TorqueInteractiveSimulator({
         </div>
       </div>
 
+      {/* Result Force Badge */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1046,6 +1088,7 @@ function TorqueInteractiveSimulator({
         </div>
       </div>
 
+      {/* Animated Blueprint Canvas */}
       <div style={{
         background: '#0b132b',
         borderRadius: '14px',
@@ -1056,17 +1099,19 @@ function TorqueInteractiveSimulator({
         overflow: 'hidden'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase' }}>
-            Visual Mekanisme Nyata (Bergerak Real-Time Sesuai Slider):
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color="#38bdf8" />
+            Visual Bergerak: Mekanisme Ratchet &amp; Putaran Baut Nyata
           </span>
           <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
-            Lengan Momen d = {distanceCm} cm | Arah Vektor F = {forceN} N
+            Rotasi: {boltAngle}° | Klik Ratchet: {clickCount}x | d = {distanceCm} cm
           </span>
         </div>
 
         <svg viewBox="0 0 700 180" width="100%" height="auto" style={{ display: 'block' }}>
           <line x1="20" y1="120" x2="680" y2="120" stroke="#1e293b" strokeWidth="1" strokeDasharray="3,3" />
 
+          {/* Cheater Pipe Extension */}
           {hasPipe && (
             <g>
               <rect
@@ -1086,32 +1131,41 @@ function TorqueInteractiveSimulator({
             </g>
           )}
 
-          <path
-            d={`M 90,114 L ${armLengthPx},114 L ${armLengthPx},126 L 90,126 Z`}
-            fill="#94a3b8"
-            stroke="#cbd5e1"
-            strokeWidth="1.5"
-          />
-          <circle cx={armLengthPx} cy="120" r="10" fill="#1e293b" stroke="#94a3b8" strokeWidth="2.5" />
-
-          <g transform={`translate(${armLengthPx}, 120)`}>
-            <line x1="0" y1="0" x2="0" y2="-55" stroke={forceBadge.color} strokeWidth="3" />
-            <polygon points="-5,-48 0,-58 5,-48" fill={forceBadge.color} />
-            <circle cx="0" cy="0" r="4" fill={forceBadge.color} />
-            <text x="0" y="-64" fill={forceBadge.color} fontSize="11" fontWeight="900" textAnchor="middle">
-              F = {forceN} N
-            </text>
-            <text x="0" y="-76" fill="#cbd5e1" fontSize="8" textAnchor="middle">
-              (~{forceKg} kg)
-            </text>
-          </g>
-
+          {/* Wrench Arm with Ratchet Swing Animation */}
           <g
             style={{
-              transform: `translate(90px, 120px) rotate(${rotationAngle}deg)`,
               transformOrigin: '90px 120px',
-              transition: isRotating ? 'transform 0.5s ease-out' : 'none'
+              animation: isAutoTurning
+                ? (isStrained ? 'strainVibrate 0.15s infinite' : 'ratchetSwing 0.7s infinite ease-in-out')
+                : (isStrained ? 'strainVibrate 0.2s infinite' : 'none')
             }}
+          >
+            <path
+              d={`M 90,114 L ${armLengthPx},114 L ${armLengthPx},126 L 90,126 Z`}
+              fill="#94a3b8"
+              stroke="#cbd5e1"
+              strokeWidth="1.5"
+            />
+            <circle cx={armLengthPx} cy="120" r="10" fill="#1e293b" stroke="#94a3b8" strokeWidth="2.5" />
+
+            {/* Hand Force Arrow */}
+            <g transform={`translate(${armLengthPx}, 120)`}>
+              <line x1="0" y1="0" x2="0" y2="-55" stroke={forceBadge.color} strokeWidth="3" />
+              <polygon points="-5,-48 0,-58 5,-48" fill={forceBadge.color} />
+              <circle cx="0" cy="0" r="4" fill={forceBadge.color} />
+              <text x="0" y="-64" fill={forceBadge.color} fontSize="11" fontWeight="900" textAnchor="middle">
+                F = {forceN} N
+              </text>
+              <text x="0" y="-76" fill="#cbd5e1" fontSize="8" textAnchor="middle">
+                (~{forceKg} kg)
+              </text>
+            </g>
+          </g>
+
+          {/* Rotating Hex Bolt M20 */}
+          <g
+            transform={`rotate(${boltAngle}, 90, 120)`}
+            style={{ transition: isAutoTurning ? 'none' : 'transform 0.25s ease-out' }}
           >
             <polygon
               points="90,96 111,108 111,132 90,144 69,132 69,108"
@@ -1121,14 +1175,17 @@ function TorqueInteractiveSimulator({
             />
             <circle cx="90" cy="120" r="10" fill="#0f172a" stroke="#64748b" />
             <circle cx="90" cy="120" r="2" fill="#38bdf8" />
-            <text x="90" y="123" fill="#38bdf8" fontSize="8" fontWeight="900" textAnchor="middle">
+            <line x1="82" y1="120" x2="98" y2="120" stroke="#38bdf8" strokeWidth="1.5" />
+            <text x="90" y="115" fill="#38bdf8" fontSize="6.5" fontWeight="900" textAnchor="middle">
               M20
             </text>
           </g>
 
+          {/* Rotation arc indicator */}
           <path d="M 90,88 A 32 32 0 0 1 122,120" fill="none" stroke="#38bdf8" strokeWidth="2" strokeDasharray="3,2" />
           <polygon points="120,115 125,123 118,122" fill="#38bdf8" />
 
+          {/* Dimension Line d */}
           <line x1="90" y1="155" x2={armLengthPx} y2="155" stroke="#38bdf8" strokeWidth="1.5" />
           <line x1="90" y1="148" x2="90" y2="162" stroke="#38bdf8" strokeWidth="1.5" />
           <line x1={armLengthPx} y1="148" x2={armLengthPx} y2="162" stroke="#38bdf8" strokeWidth="1.5" />
@@ -1138,64 +1195,82 @@ function TorqueInteractiveSimulator({
         </svg>
       </div>
 
+      {/* Animation Controls Bar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-        <button
-          onClick={onTurnBolt}
-          disabled={isRotating}
-          style={{
-            background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-            color: '#ffffff',
-            border: 'none',
-            padding: '12px 24px',
-            borderRadius: '10px',
-            fontWeight: 900,
-            fontSize: '0.92rem',
-            cursor: isRotating ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)',
-            transition: 'all 0.15s ease'
-          }}
-        >
-          <RotateCw size={18} className={isRotating ? 'spin-anim' : ''} />
-          {isRotating ? 'Baut Sedang Berputar...' : 'PUTAR BAUT (TEST GAYA OTOT)'}
-        </button>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => { sound.playClick(); setIsAutoTurning(!isAutoTurning); }}
+            style={{
+              background: isAutoTurning ? '#ea580c' : '#0284c7',
+              color: '#ffffff',
+              border: 'none',
+              padding: '10px 18px',
+              borderRadius: '8px',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {isAutoTurning ? <Pause size={16} /> : <Play size={16} />}
+            {isAutoTurning ? 'Jeda Animasi Putar' : 'Mulai Animasi Putar Baut (Auto-Drive)'}
+          </button>
 
-        {turnResult === true && (
-          <div style={{
-            background: '#dcfce7',
-            color: '#166534',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontSize: '0.82rem',
-            fontWeight: 800,
-            border: '1px solid #86efac'
-          }}>
-            [SUKSES] Baut M20 Berhasil Berputar! Gaya otot ({forceN} N / ~{forceKg} kg) aman dalam kapasitas tangan. +100 XP!
-          </div>
-        )}
+          <button
+            onClick={handleManualTurn}
+            style={{
+              background: '#0f172a',
+              color: '#ffffff',
+              border: 'none',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <RotateCw size={16} />
+            Putar Ratchet 1 Klik
+          </button>
 
-        {turnResult === false && (
-          <div style={{
-            background: '#fee2e2',
-            color: '#991b1b',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontSize: '0.82rem',
-            fontWeight: 800,
-            border: '1px solid #fca5a5'
-          }}>
-            [OVERLOAD] Gaya otot {forceN} N (~{forceKg} kg) melebihi batas kekuatan manusia! Baut macet. Geser tangan lebih jauh atau sambung pipa!
-          </div>
-        )}
+          <button
+            onClick={handleResetBolt}
+            style={{
+              background: '#f1f5f9',
+              border: '1px solid #cbd5e1',
+              padding: '10px 14px',
+              borderRadius: '8px',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              color: '#475569',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            <RotateCcw size={16} />
+            Reset Posisi Baut
+          </button>
+        </div>
+
+        <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
+          {isStrained
+            ? '[PERINGATAN] Gaya sangat berat! Baut berputar lambat & bergetar keras.'
+            : '[SUKSES] Lengan momen cukup! Baut berputar lancar tanpa hambatan.'}
+        </span>
       </div>
     </div>
   );
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 2: SISTEM TUAS (PENGUNGKIT)
+// INTERACTIVE SIMULATOR 2: SISTEM TUAS (ANIMASI AYUNAN DINAMIS & TERANGKAT)
 // =============================================================================
 function LeverInteractiveSimulator({
   wVal,
@@ -1205,6 +1280,10 @@ function LeverInteractiveSimulator({
   lkVal,
   setLkVal
 }) {
+  const [isOscillating, setIsOscillating] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const [oscPhase, setOscPhase] = useState(0);
+
   const km = Number((lkVal / Math.max(0.1, lbVal)).toFixed(2));
   const fRequired = Math.round(wVal / km);
   const fKg = (fRequired / 9.8).toFixed(1);
@@ -1212,6 +1291,28 @@ function LeverInteractiveSimulator({
 
   const totL = Math.max(1, lbVal + lkVal);
   const fulcrumX = 60 + (lbVal / totL) * 280;
+
+  // Oscillating animation loop
+  useEffect(() => {
+    let interval = null;
+    if (isOscillating) {
+      interval = setInterval(() => {
+        setOscPhase((p) => p + 0.14);
+      }, 35);
+    }
+    return () => clearInterval(interval);
+  }, [isOscillating]);
+
+  // Compute live tilt angle
+  let tiltAngle = 0;
+  if (isOscillating) {
+    tiltAngle = Math.sin(oscPhase) * 9;
+  } else if (isPressed) {
+    tiltAngle = km >= 1.0 ? 11 : 2;
+  }
+
+  // Load box lift clearance
+  const isLifted = tiltAngle > 2;
 
   return (
     <div style={{
@@ -1226,7 +1327,7 @@ function LeverInteractiveSimulator({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color="#d97706" />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#b45309' }}>
-            Simulator Interaktif: Sistem Tuas &amp; Pengungkit
+            Simulator Interaktif: Animasi Ayunan Tuas &amp; Angkat Beban
           </h4>
         </div>
         <span style={{ background: '#fef3c7', color: '#b45309', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -1234,6 +1335,7 @@ function LeverInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Buttons */}
       <div style={{ marginBottom: '14px', background: '#fffbeb', padding: '10px 12px', borderRadius: '10px', border: '1px solid #fed7aa' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#92400e', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           PRESET ALAT BENGKEL (Klik isi otomatis):
@@ -1266,6 +1368,7 @@ function LeverInteractiveSimulator({
         </div>
       </div>
 
+      {/* Sliders Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '16px' }}>
         <div style={{ background: '#fef2f2', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fecaca' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#991b1b', marginBottom: '4px' }}>
@@ -1292,6 +1395,7 @@ function LeverInteractiveSimulator({
         </div>
       </div>
 
+      {/* Force Output Banner */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1322,39 +1426,113 @@ function LeverInteractiveSimulator({
         </div>
       </div>
 
+      {/* Live Animated Seesaw SVG */}
       <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
-        <svg viewBox="0 0 400 130" width="100%" height="auto" style={{ display: 'block' }}>
-          <line x1="20" y1="90" x2="380" y2="90" stroke="#334155" strokeWidth="2" strokeDasharray="4,3" />
-          <polygon points={`${fulcrumX - 14},90 ${fulcrumX + 14},90 ${fulcrumX},65`} fill="#f59e0b" stroke="#d97706" strokeWidth="2" />
-          <circle cx={fulcrumX} cy="65" r="4" fill="#0f172a" />
-          <text x={fulcrumX} y="104" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="bold">Tumpuan (Fulcrum)</text>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color="#fbbf24" />
+            Visual Bergerak: Jungkat-Jungkit Mekanis &amp; Pengangkatan Beban
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            Kemiringan: {tiltAngle.toFixed(1)}° | Status: {isLifted ? '[TERANGKAT DI UDARA]' : '[DIATAS LANDASAN]'}
+          </span>
+        </div>
 
-          <line x1="45" y1="65" x2="355" y2="65" stroke="#cbd5e1" strokeWidth="6" strokeLinecap="round" />
+        <svg viewBox="0 0 400 135" width="100%" height="auto" style={{ display: 'block' }}>
+          <line x1="20" y1="92" x2="380" y2="92" stroke="#334155" strokeWidth="2" strokeDasharray="4,3" />
 
-          <rect x="35" y="32" width="30" height="28" rx="4" fill="#dc2626" stroke="#f87171" strokeWidth="1.5" />
-          <text x="50" y="49" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="900">W</text>
-          <text x="50" y="24" textAnchor="middle" fill="#f87171" fontSize="8.5" fontWeight="900">{wVal} N</text>
-          <line x1="50" y1="60" x2="50" y2="78" stroke="#f87171" strokeWidth="2.5" />
-          <polygon points="46,74 50,82 54,74" fill="#f87171" />
+          {/* Fulcrum Pivot Base */}
+          <polygon points={`${fulcrumX - 14},92 ${fulcrumX + 14},92 ${fulcrumX},67`} fill="#f59e0b" stroke="#d97706" strokeWidth="2" />
+          <circle cx={fulcrumX} cy="67" r="4" fill="#0f172a" />
+          <text x={fulcrumX} y="106" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="bold">Tumpuan</text>
 
-          <circle cx="350" cy="42" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
-          <text x="350" y="46" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="10">F_kuasa</text>
-          <text x="350" y="20" textAnchor="middle" fill="#34d399" fontSize="8.5" fontWeight="900">{fRequired} N</text>
-          <line x1="350" y1="56" x2="350" y2="78" stroke="#10b981" strokeWidth="2.5" />
-          <polygon points="346,74 350,82 354,74" fill="#10b981" />
+          {/* Tilting Beam Assembly */}
+          <g
+            transform={`rotate(${tiltAngle}, ${fulcrumX}, 67)`}
+            style={{ transition: isOscillating ? 'none' : 'transform 0.35s ease-out' }}
+          >
+            {/* Lever Bar */}
+            <line x1="45" y1="67" x2="355" y2="67" stroke="#cbd5e1" strokeWidth="6" strokeLinecap="round" />
 
-          <line x1="50" y1="114" x2={fulcrumX} y2="114" stroke="#fca5a5" strokeWidth="1.5" />
-          <text x={(50 + fulcrumX) / 2} y="124" textAnchor="middle" fill="#fca5a5" fontSize="7.5" fontWeight="bold">Lb = {lbVal} cm</text>
-          <line x1={fulcrumX} y1="114" x2="350" y2="114" stroke="#6ee7b7" strokeWidth="1.5" />
-          <text x={(fulcrumX + 350) / 2} y="124" textAnchor="middle" fill="#6ee7b7" fontSize="7.5" fontWeight="bold">Lk = {lkVal} cm</text>
+            {/* Load Crate W */}
+            <rect x="35" y="34" width="30" height="28" rx="4" fill="#dc2626" stroke="#f87171" strokeWidth="1.5" />
+            <text x="50" y="51" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="900">W</text>
+            <text x="50" y="26" textAnchor="middle" fill="#f87171" fontSize="8.5" fontWeight="900">{wVal} N</text>
+            <line x1="50" y1="62" x2="50" y2="80" stroke="#f87171" strokeWidth="2.5" />
+            <polygon points="46,76 50,84 54,76" fill="#f87171" />
+
+            {/* Effort Hand F */}
+            <circle cx="350" cy="44" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+            <text x="350" y="48" fill="#10b981" fontWeight="bold" textAnchor="middle" fontSize="10">F_kuasa</text>
+            <text x="350" y="22" textAnchor="middle" fill="#34d399" fontSize="8.5" fontWeight="900">{fRequired} N</text>
+            <line x1="350" y1="58" x2="350" y2="80" stroke="#10b981" strokeWidth="2.5" />
+            <polygon points="346,76 350,84 354,76" fill="#10b981" />
+          </g>
+
+          {/* Ground Clearance Lift Indicator */}
+          {isLifted && (
+            <g>
+              <line x1="50" y1="92" x2="50" y2={92 - (tiltAngle * 1.5)} stroke="#34d399" strokeWidth="1.5" strokeDasharray="2,2" />
+              <text x="70" y="86" fill="#34d399" fontSize="7.5" fontWeight="bold">Terangkat!</text>
+            </g>
+          )}
+
+          {/* Dimension Lines */}
+          <line x1="50" y1="116" x2={fulcrumX} y2="116" stroke="#fca5a5" strokeWidth="1.5" />
+          <text x={(50 + fulcrumX) / 2} y="126" textAnchor="middle" fill="#fca5a5" fontSize="7.5" fontWeight="bold">Lb = {lbVal} cm</text>
+          <line x1={fulcrumX} y1="116" x2="350" y2="116" stroke="#6ee7b7" strokeWidth="1.5" />
+          <text x={(fulcrumX + 350) / 2} y="126" textAnchor="middle" fill="#6ee7b7" fontSize="7.5" fontWeight="bold">Lk = {lkVal} cm</text>
         </svg>
+      </div>
+
+      {/* Control Buttons */}
+      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => { sound.playClick(); setIsPressed(!isPressed); }}
+          style={{
+            background: isPressed ? '#15803d' : '#16a34a',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isPressed ? <RotateCcw size={14} /> : <Zap size={14} />}
+          {isPressed ? 'Lepaskan Tekanan Tuas' : 'Tekan Tuas (Angkat Beban)'}
+        </button>
+
+        <button
+          onClick={() => { sound.playClick(); setIsOscillating(!isOscillating); }}
+          style={{
+            background: isOscillating ? '#d97706' : '#f59e0b',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isOscillating ? <Pause size={14} /> : <Play size={14} />}
+          {isOscillating ? 'Hentikan Ayunan' : 'Mulai Ayunan Otomatis (Harmonic Seesaw)'}
+        </button>
       </div>
     </div>
   );
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 3: KESETIMBANGAN BALOK CRANE
+// INTERACTIVE SIMULATOR 3: KESETIMBANGAN BALOK CRANE (ANIMASI DEREK MELUNCUR)
 // =============================================================================
 function BeamInteractiveSimulator({
   loadX,
@@ -1363,12 +1541,37 @@ function BeamInteractiveSimulator({
   setLoadP,
   beamL = 6.0
 }) {
+  const [isPatrolling, setIsPatrolling] = useState(false);
+  const [patrolDir, setPatrolDir] = useState(1);
+
   const ra = Math.round((loadP * (beamL - loadX)) / beamL);
   const rb = Math.round(loadP - ra);
 
   const trolleyPx = 70 + (loadX / beamL) * 380;
-  const arrowRaH = Math.min(45, Math.max(15, (ra / Math.max(1, loadP)) * 50));
-  const arrowRbH = Math.min(45, Math.max(15, (rb / Math.max(1, loadP)) * 50));
+  const arrowRaH = Math.min(50, Math.max(14, (ra / Math.max(1, loadP)) * 56));
+  const arrowRbH = Math.min(50, Math.max(14, (rb / Math.max(1, loadP)) * 56));
+
+  // Dynamic Auto-Patrolling Trolley
+  useEffect(() => {
+    let interval = null;
+    if (isPatrolling) {
+      interval = setInterval(() => {
+        setLoadX((prevX) => {
+          let next = prevX + 0.05 * patrolDir;
+          if (next >= 5.2) {
+            setPatrolDir(-1);
+            return 5.2;
+          }
+          if (next <= 0.8) {
+            setPatrolDir(1);
+            return 0.8;
+          }
+          return Number(next.toFixed(2));
+        });
+      }, 50);
+    }
+    return () => clearInterval(interval);
+  }, [isPatrolling, patrolDir, setLoadX]);
 
   return (
     <div style={{
@@ -1383,7 +1586,7 @@ function BeamInteractiveSimulator({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color="#7c3aed" />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#6d28d9' }}>
-            Simulator Interaktif: Kesetimbangan Balok Girder Crane
+            Simulator Interaktif: Animasi Derek Meluncur &amp; Reaksi Tumpuan Balok
           </h4>
         </div>
         <span style={{ background: '#ede9fe', color: '#6d28d9', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -1391,6 +1594,7 @@ function BeamInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Positions */}
       <div style={{ marginBottom: '14px', background: '#f5f3ff', padding: '10px 12px', borderRadius: '10px', border: '1px solid #ddd6fe' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#5b21b6', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           POSISI TROLLEY DEREK (Klik geser cepat):
@@ -1422,6 +1626,7 @@ function BeamInteractiveSimulator({
         </div>
       </div>
 
+      {/* Sliders Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
         <div style={{ background: '#f5f3ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#5b21b6', marginBottom: '4px' }}>
@@ -1440,6 +1645,7 @@ function BeamInteractiveSimulator({
         </div>
       </div>
 
+      {/* Reaction Force Outputs */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1464,47 +1670,102 @@ function BeamInteractiveSimulator({
         </div>
       </div>
 
+      {/* Live Animated Crane SVG */}
       <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
-        <svg viewBox="0 0 520 150" width="100%" height="auto" style={{ display: 'block' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color="#c084fc" />
+            Visual Bergerak: Posisi Trolley Derek &amp; Pertumbuhan Vektor RA/RB
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            Derek: {loadX.toFixed(2)}m | RA: {ra}N | RB: {rb}N
+          </span>
+        </div>
+
+        <svg viewBox="0 0 520 155" width="100%" height="auto" style={{ display: 'block' }}>
+          {/* I-Beam Girder */}
           <rect x="60" y="50" width="400" height="14" rx="2" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
           <text x="260" y="42" fill="#cbd5e1" fontSize="9" fontWeight="bold" textAnchor="middle">Bentang Balok Girder L = 6.0 Meter</text>
 
+          {/* Support A (Pinned) */}
           <polygon points="58,85 82,85 70,64" fill="#0284c7" stroke="#38bdf8" strokeWidth="1.5" />
           <circle cx="70" cy="64" r="3" fill="#ffffff" />
           <text x="70" y="98" fill="#38bdf8" fontSize="8.5" fontWeight="bold" textAnchor="middle">Tumpuan A</text>
+          {/* Dynamic Reaction RA Arrow */}
           <line x1="70" y1={85 + arrowRaH} x2="70" y2="85" stroke="#38bdf8" strokeWidth="3" />
           <polygon points="66,88 70,80 74,88" fill="#38bdf8" />
           <text x="70" y={102 + arrowRaH} fill="#38bdf8" fontSize="9" fontWeight="900" textAnchor="middle">RA = {ra} N</text>
 
+          {/* Support B (Roller) */}
           <circle cx="445" cy="74" r="6" fill="#7c3aed" stroke="#a78bfa" strokeWidth="1.5" />
           <circle cx="455" cy="74" r="6" fill="#7c3aed" stroke="#a78bfa" strokeWidth="1.5" />
           <line x1="435" y1="82" x2="465" y2="82" stroke="#64748b" strokeWidth="2" />
           <text x="450" y="96" fill="#a78bfa" fontSize="8.5" fontWeight="bold" textAnchor="middle">Tumpuan B (Rol)</text>
+          {/* Dynamic Reaction RB Arrow */}
           <line x1="450" y1={85 + arrowRbH} x2="450" y2="85" stroke="#a78bfa" strokeWidth="3" />
           <polygon points="446,88 450,80 454,88" fill="#a78bfa" />
           <text x="450" y={102 + arrowRbH} fill="#a78bfa" fontSize="9" fontWeight="900" textAnchor="middle">RB = {rb} N</text>
 
-          <g transform={`translate(${trolleyPx}, 50)`}>
+          {/* Gliding Trolley Assembly */}
+          <g
+            transform={`translate(${trolleyPx}, 50)`}
+            style={{ transition: isPatrolling ? 'none' : 'transform 0.25s ease-out' }}
+          >
+            {/* Wheels */}
+            <circle cx="-8" cy="-8" r="4" fill="#0f172a" stroke="#f97316" strokeWidth="1.5" />
+            <circle cx="8" cy="-8" r="4" fill="#0f172a" stroke="#f97316" strokeWidth="1.5" />
             <rect x="-14" y="-8" width="28" height="12" rx="3" fill="#ea580c" stroke="#fed7aa" strokeWidth="1" />
-            <line x1="0" y1="4" x2="0" y2="35" stroke="#f97316" strokeWidth="2" strokeDasharray="3,2" />
-            <rect x="-24" y="35" width="48" height="26" rx="4" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
-            <text x="0" y="51" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P = {loadP} N</text>
-            <line x1="0" y1="61" x2="0" y2="78" stroke="#ef4444" strokeWidth="2.5" />
-            <polygon points="-4,74 0,82 4,74" fill="#ef4444" />
+
+            {/* Pendulum Cable & Load */}
+            <g style={{ transformOrigin: '0 4px', animation: isPatrolling ? 'cablePendulum 1.4s infinite ease-in-out' : 'none' }}>
+              <line x1="0" y1="4" x2="0" y2="35" stroke="#f97316" strokeWidth="2" strokeDasharray="3,2" />
+              <rect x="-24" y="35" width="48" height="26" rx="4" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+              <text x="0" y="51" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P = {loadP} N</text>
+              <line x1="0" y1="61" x2="0" y2="78" stroke="#ef4444" strokeWidth="2.5" />
+              <polygon points="-4,74 0,82 4,74" fill="#ef4444" />
+            </g>
           </g>
 
+          {/* Dimension Line x */}
           <line x1="70" y1="20" x2={trolleyPx} y2="20" stroke="#f59e0b" strokeWidth="1.5" />
           <line x1="70" y1="14" x2="70" y2="26" stroke="#f59e0b" strokeWidth="1.5" />
           <line x1={trolleyPx} y1="14" x2={trolleyPx} y2="26" stroke="#f59e0b" strokeWidth="1.5" />
           <text x={(70 + trolleyPx) / 2} y="16" fill="#fbbf24" fontSize="8" fontWeight="bold" textAnchor="middle">x = {loadX.toFixed(1)} m</text>
         </svg>
       </div>
+
+      {/* Control Buttons */}
+      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => { sound.playClick(); setIsPatrolling(!isPatrolling); }}
+          style={{
+            background: isPatrolling ? '#ea580c' : '#7c3aed',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isPatrolling ? <Pause size={14} /> : <Play size={14} />}
+          {isPatrolling ? 'Jeda Derek' : 'Jalankan Derek Otomatis (Auto-Patrol)'}
+        </button>
+
+        <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
+          Perhatikan: Semakin dekat derek ke tumpuan A, panah biru RA makin tinggi membesar!
+        </span>
+      </div>
     </div>
   );
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 4: TEGANGAN & REGANGAN BAUT SILINDER
+// INTERACTIVE SIMULATOR 4: TEGANGAN & REGANGAN BAUT (ANIMASI UJI TARIK HIDROLIK)
 // =============================================================================
 function StressInteractiveSimulator({
   stressD,
@@ -1512,6 +1773,8 @@ function StressInteractiveSimulator({
   stressF,
   setStressF
 }) {
+  const [isAutoRamping, setIsAutoRamping] = useState(false);
+
   const area = (Math.PI * Math.pow(stressD / 2, 2)).toFixed(1);
   const stressMPa = Math.round(stressF / Number(area));
 
@@ -1529,6 +1792,31 @@ function StressInteractiveSimulator({
     specimenState = 'plastic';
   }
 
+  // Auto hydraulic tensile test ramp
+  useEffect(() => {
+    let interval = null;
+    if (isAutoRamping) {
+      interval = setInterval(() => {
+        setStressF((prevF) => {
+          const currentStress = prevF / Number(area);
+          if (currentStress >= 510) {
+            setIsAutoRamping(false);
+            if (sound.playError) sound.playError();
+            return prevF;
+          }
+          return Math.min(50000, prevF + 800);
+        });
+      }, 70);
+    }
+    return () => clearInterval(interval);
+  }, [isAutoRamping, area, setStressF]);
+
+  const handleResetSpecimen = () => {
+    sound.playClick();
+    setIsAutoRamping(false);
+    setStressF(12000);
+  };
+
   return (
     <div style={{
       background: '#ffffff',
@@ -1542,7 +1830,7 @@ function StressInteractiveSimulator({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color={zone.color} />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>
-            Simulator Interaktif: Uji Tarik &amp; Kekuatan Baut Silinder
+            Simulator Interaktif: Animasi Uji Tarik Hidrolik &amp; Kekuatan Baut
           </h4>
         </div>
         <span style={{ background: zone.bg, color: zone.color, padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -1550,6 +1838,7 @@ function StressInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Buttons */}
       <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           PRESET PENGUJIAN TARIK (Klik uji instan):
@@ -1582,6 +1871,7 @@ function StressInteractiveSimulator({
         </div>
       </div>
 
+      {/* Sliders Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
         <div style={{ background: '#f0f9ff', padding: '10px 12px', borderRadius: '8px', border: '1px solid #bae6fd' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#0369a1', marginBottom: '4px' }}>
@@ -1602,6 +1892,7 @@ function StressInteractiveSimulator({
         </div>
       </div>
 
+      {/* Stress Output Badge */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1625,11 +1916,20 @@ function StressInteractiveSimulator({
         </div>
       </div>
 
+      {/* Live Animated Tensile Specimen SVG */}
       <div style={{ background: '#0b132b', borderRadius: '12px', padding: '16px', border: '1px solid #1e293b' }}>
-        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase' }}>
-          Visual Morfologi Baut Silinder: {zone.desc}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', color: zone.color, fontWeight: 800, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color={zone.color} />
+            Visual Morfologi Baut Silinder: {zone.desc}
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            σ = {stressMPa} MPa | Status: {specimenState.toUpperCase()}
+          </span>
         </div>
+
         <svg viewBox="0 0 500 100" width="100%" height="auto" style={{ display: 'block' }}>
+          {/* Tension Force Arrows */}
           <line x1="30" y1="50" x2="80" y2="50" stroke="#38bdf8" strokeWidth="3" />
           <polygon points="35,46 25,50 35,54" fill="#38bdf8" />
           <text x="35" y="38" fill="#38bdf8" fontSize="9" fontWeight="bold">Tarik F</text>
@@ -1638,9 +1938,11 @@ function StressInteractiveSimulator({
           <polygon points="465,46 475,50 465,54" fill="#38bdf8" />
           <text x="465" y="38" fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="end">Tarik F</text>
 
-          <rect x="80" y="32" width="30" height="36" rx="3" fill="#475569" stroke="#94a3b8" />
-          <rect x="390" y="32" width="30" height="36" rx="3" fill="#475569" stroke="#94a3b8" />
+          {/* Gripping Chucks */}
+          <rect x="80" y="30" width="30" height="40" rx="3" fill="#334155" stroke="#94a3b8" />
+          <rect x="390" y="30" width="30" height="40" rx="3" fill="#334155" stroke="#94a3b8" />
 
+          {/* Specimen States */}
           {specimenState === 'elastic' && (
             <rect x="110" y="38" width="280" height="24" rx="2" fill="#10b981" stroke="#34d399" strokeWidth="1.5" />
           )}
@@ -1663,6 +1965,7 @@ function StressInteractiveSimulator({
               <path d="M 110,38 L 235,38 L 245,45 L 238,55 L 246,62 L 110,62 Z" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
               <path d="M 265,38 L 390,38 L 390,62 L 265,62 L 255,55 L 262,45 Z" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
               <text x="250" y="28" fill="#ef4444" fontSize="10" fontWeight="900" textAnchor="middle">PATAH TERBELAH!</text>
+              <line x1="248" y1="36" x2="252" y2="64" stroke="#fef08a" strokeWidth="2" strokeDasharray="3,2" />
             </g>
           )}
 
@@ -1671,12 +1974,55 @@ function StressInteractiveSimulator({
           </text>
         </svg>
       </div>
+
+      {/* Control Buttons */}
+      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => { sound.playClick(); setIsAutoRamping(!isAutoRamping); }}
+          style={{
+            background: isAutoRamping ? '#ea580c' : '#059669',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isAutoRamping ? <Pause size={14} /> : <Play size={14} />}
+          {isAutoRamping ? 'Jeda Penarikan' : 'Mulai Uji Tarik Hidrolik Otomatis'}
+        </button>
+
+        <button
+          onClick={handleResetSpecimen}
+          style={{
+            background: '#f1f5f9',
+            border: '1px solid #cbd5e1',
+            padding: '8px 14px',
+            borderRadius: '6px',
+            fontSize: '0.82rem',
+            fontWeight: 800,
+            color: '#475569',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <RotateCcw size={14} />
+          Pasang Baut Baru (Reset)
+        </button>
+      </div>
     </div>
   );
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 5: KATROL & CHAIN BLOCK
+// INTERACTIVE SIMULATOR 5: KATROL & CHAIN BLOCK (ANIMASI KEREK MESIN BERPUTAR)
 // =============================================================================
 function PulleyInteractiveSimulator({
   pulleyW,
@@ -1684,10 +2030,38 @@ function PulleyInteractiveSimulator({
   pulleyN,
   setPulleyN
 }) {
+  const [isHoisting, setIsHoisting] = useState(false);
+  const [hoistY, setHoistY] = useState(0);
+  const [gearAngle, setGearAngle] = useState(0);
+
   const machineW_N = Math.round(pulleyW * 9.8);
   const pullForceN = Math.round(machineW_N / pulleyN);
   const handForceN = Math.round(pullForceN / 4);
   const handKg = (handForceN / 9.8).toFixed(1);
+
+  // Dynamic continuous hoist loop
+  useEffect(() => {
+    let interval = null;
+    if (isHoisting) {
+      interval = setInterval(() => {
+        setGearAngle((a) => (a + 18) % 360);
+        setHoistY((y) => (y >= 28 ? 0 : y + 0.9));
+      }, 40);
+    }
+    return () => clearInterval(interval);
+  }, [isHoisting]);
+
+  const handleStepUp = () => {
+    sound.playClick();
+    setGearAngle((a) => (a + 25) % 360);
+    setHoistY((y) => Math.min(28, y + 5));
+  };
+
+  const handleResetFloor = () => {
+    sound.playClick();
+    setIsHoisting(false);
+    setHoistY(0);
+  };
 
   return (
     <div style={{
@@ -1702,7 +2076,7 @@ function PulleyInteractiveSimulator({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color="#059669" />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#047857' }}>
-            Simulator Interaktif: Takal Chain Block &amp; Katrol Majemuk
+            Simulator Interaktif: Animasi Kerek Mesin &amp; Rantai Chain Block
           </h4>
         </div>
         <span style={{ background: '#d1fae5', color: '#047857', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -1710,6 +2084,7 @@ function PulleyInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Buttons */}
       <div style={{ marginBottom: '14px', background: '#ecfdf5', padding: '10px 12px', borderRadius: '10px', border: '1px solid #a7f3d0' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#065f46', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           PRESET ALAT ANGKAT BENGKEL:
@@ -1742,6 +2117,7 @@ function PulleyInteractiveSimulator({
         </div>
       </div>
 
+      {/* Sliders Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '16px' }}>
         <div style={{ background: '#f8fafc', padding: '10px 12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#1e293b', marginBottom: '4px' }}>
@@ -1760,6 +2136,7 @@ function PulleyInteractiveSimulator({
         </div>
       </div>
 
+      {/* Force Output Banner */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1783,35 +2160,157 @@ function PulleyInteractiveSimulator({
         </div>
       </div>
 
+      {/* Live Animated Hoist SVG */}
       <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
-        <svg viewBox="0 0 460 140" width="100%" height="auto" style={{ display: 'block' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color="#34d399" />
+            Visual Bergerak: Rantai Mengalir &amp; Mesin Terangkat ke Atas
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            Tinggi Angkat: {(hoistY * 2).toFixed(0)} cm | Putaran Roda Gigi: {gearAngle}°
+          </span>
+        </div>
+
+        <svg viewBox="0 0 460 145" width="100%" height="auto" style={{ display: 'block' }}>
+          {/* Support Beam */}
           <rect x="50" y="10" width="360" height="12" rx="2" fill="#475569" stroke="#64748b" />
           <text x="230" y="20" fill="#94a3b8" fontSize="8" textAnchor="middle">Balok Penyangga Bengkel</text>
 
-          <circle cx="160" cy="38" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
-          <circle cx="160" cy="80" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+          {/* Top Fixed Sheaves */}
+          <g transform={`rotate(${gearAngle}, 160, 38)`}>
+            <circle cx="160" cy="38" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+            <line x1="160" y1="26" x2="160" y2="50" stroke="#10b981" strokeWidth="1.5" />
+            <line x1="148" y1="38" x2="172" y2="38" stroke="#10b981" strokeWidth="1.5" />
+          </g>
 
-          <line x1="148" y1="38" x2="148" y2="80" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="3,2" />
-          <line x1="172" y1="38" x2="172" y2="80" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="3,2" />
-          <text x="160" y="62" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">n = {pulleyN} Tali</text>
+          {/* Bottom Traveling Sheaves (Ascends with hoistY) */}
+          <g transform={`translate(0, ${-hoistY})`}>
+            <circle cx="160" cy="80" r="14" fill="#1e293b" stroke="#10b981" strokeWidth="2" />
+            <circle cx="160" cy="80" r="3" fill="#ffffff" />
 
-          <rect x="110" y="98" width="100" height="26" rx="3" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
-          <text x="160" y="114" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">Mesin {pulleyW} kg</text>
+            {/* Suspended Machine Workpiece */}
+            <line x1="160" y1="94" x2="160" y2="102" stroke="#cbd5e1" strokeWidth="2" />
+            <rect x="110" y="102" width="100" height="26" rx="3" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
+            <text x="160" y="118" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">Mesin Bubut {pulleyW} kg</text>
+          </g>
 
-          <circle cx="320" cy="45" r="16" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+          {/* Moving Chain Strands */}
+          <line
+            x1="148"
+            y1="38"
+            x2="148"
+            y2={80 - hoistY}
+            stroke="#cbd5e1"
+            strokeWidth="2"
+            strokeDasharray="4,2"
+            style={{ animation: isHoisting ? 'flowHoistChain 0.4s linear infinite' : 'none' }}
+          />
+          <line
+            x1="172"
+            y1="38"
+            x2="172"
+            y2={80 - hoistY}
+            stroke="#cbd5e1"
+            strokeWidth="2"
+            strokeDasharray="4,2"
+            style={{ animation: isHoisting ? 'flowHoistChain 0.4s linear infinite' : 'none' }}
+          />
+          <text x="160" y={62 - hoistY / 2} fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">n = {pulleyN} Tali</text>
+
+          {/* Reduction Gearbox Sprocket */}
+          <g transform={`rotate(${-gearAngle}, 320, 45)`}>
+            <circle cx="320" cy="45" r="16" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+            <line x1="320" y1="31" x2="320" y2="59" stroke="#f59e0b" strokeWidth="1.5" />
+            <line x1="306" y1="45" x2="334" y2="45" stroke="#f59e0b" strokeWidth="1.5" />
+          </g>
           <text x="320" y="48" fill="#fbbf24" fontSize="7.5" fontWeight="bold" textAnchor="middle">Gear 1:4</text>
-          <line x1="310" y1="60" x2="310" y2="105" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3,2" />
+
+          {/* Hand Chain with Flow Animation */}
+          <line
+            x1="310"
+            y1="60"
+            x2="310"
+            y2="105"
+            stroke="#f59e0b"
+            strokeWidth="1.5"
+            strokeDasharray="4,2"
+            style={{ animation: isHoisting ? 'flowHoistChain 0.3s linear infinite' : 'none' }}
+          />
           <circle cx="310" cy="115" r="10" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
           <text x="310" y="118" fill="#10b981" fontSize="9" fontWeight="bold" textAnchor="middle">F</text>
           <text x="330" y="118" fill="#86efac" fontSize="9" fontWeight="900">F = {handForceN} N (~{handKg} kg)</text>
         </svg>
+      </div>
+
+      {/* Control Buttons */}
+      <div style={{ marginTop: '12px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <button
+          onClick={() => { sound.playClick(); setIsHoisting(!isHoisting); }}
+          style={{
+            background: isHoisting ? '#ea580c' : '#059669',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          {isHoisting ? <Pause size={14} /> : <Play size={14} />}
+          {isHoisting ? 'Hentikan Kerek' : 'Kerek Mesin Otomatis (Auto Hoist)'}
+        </button>
+
+        <button
+          onClick={handleStepUp}
+          style={{
+            background: '#0f172a',
+            color: '#ffffff',
+            border: 'none',
+            padding: '8px 14px',
+            borderRadius: '6px',
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <ArrowUp size={14} />
+          Kerek Naik 1 Langkah
+        </button>
+
+        <button
+          onClick={handleResetFloor}
+          style={{
+            background: '#f1f5f9',
+            border: '1px solid #cbd5e1',
+            padding: '8px 14px',
+            borderRadius: '6px',
+            fontSize: '0.82rem',
+            fontWeight: 800,
+            color: '#475569',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <RotateCcw size={14} />
+          Turunkan ke Lantai (Reset)
+        </button>
       </div>
     </div>
   );
 }
 
 // =============================================================================
-// INTERACTIVE SIMULATOR 6: GESEKAN & BIDANG MIRING
+// INTERACTIVE SIMULATOR 6: GESEKAN & BIDANG MIRING (ANIMASI MEROSOT vs DIAM)
 // =============================================================================
 function FrictionInteractiveSimulator({
   alpha,
@@ -1819,6 +2318,9 @@ function FrictionInteractiveSimulator({
   surface,
   setSurface
 }) {
+  const [isReleased, setIsReleased] = useState(false);
+  const [slidePercent, setSlidePercent] = useState(0);
+
   const wN = 2940;
   let mu = 0.35;
   if (surface === 'dry') mu = 0.55;
@@ -1830,20 +2332,65 @@ function FrictionInteractiveSimulator({
   const fsMax = Math.round(mu * normalN);
   const isSliding = wxN > fsMax;
 
+  // Sliding down animation
+  useEffect(() => {
+    let interval = null;
+    if (isReleased && isSliding) {
+      interval = setInterval(() => {
+        setSlidePercent((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return prev + 4;
+        });
+      }, 35);
+    } else if (!isReleased) {
+      setSlidePercent(0);
+    }
+    return () => clearInterval(interval);
+  }, [isReleased, isSliding]);
+
+  const releaseCrate = () => {
+    sound.playClick();
+    setIsReleased(true);
+    if (isSliding) {
+      if (sound.playError) sound.playError();
+    } else {
+      sound.playSuccess();
+    }
+  };
+
+  const resetCrate = () => {
+    sound.playClick();
+    setIsReleased(false);
+    setSlidePercent(0);
+  };
+
+  // Slope line coordinates
+  const rampTopX = 80;
+  const rampTopY = 120 - Math.min(80, Math.tan(rad) * 260);
+  const rampBottomX = 340;
+  const rampBottomY = 120;
+
+  // Crate current position along ramp
+  const crateX = rampTopX + 70 + (slidePercent / 100) * 150;
+  const crateY = rampTopY + 25 + (slidePercent / 100) * (rampBottomY - rampTopY - 25);
+
   return (
     <div style={{
       background: '#ffffff',
       borderRadius: '16px',
       padding: '20px',
-      border: `2px solid ${isSliding ? '#dc2626' : '#10b981'}`,
-      boxShadow: `0 4px 16px ${isSliding ? '#dc262620' : '#10b98120'}`,
+      border: isSliding ? '2px solid #dc2626' : '2px solid #10b981',
+      boxShadow: isSliding ? '0 4px 16px rgba(220, 38, 38, 0.15)' : '0 4px 16px rgba(16, 185, 129, 0.15)',
       marginBottom: '20px'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Sliders size={20} color={isSliding ? '#dc2626' : '#10b981'} />
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0f172a' }}>
-            Simulator Interaktif: Bidang Miring &amp; Gesekan Statis Ramp
+            Simulator Interaktif: Animasi Merosot vs Diam di Bidang Miring
           </h4>
         </div>
         <span style={{ background: isSliding ? '#fee2e2' : '#dcfce7', color: isSliding ? '#991b1b' : '#166534', padding: '3px 10px', borderRadius: '999px', fontSize: '0.74rem', fontWeight: 800 }}>
@@ -1851,6 +2398,7 @@ function FrictionInteractiveSimulator({
         </span>
       </div>
 
+      {/* Preset Surfaces */}
       <div style={{ marginBottom: '14px', background: '#f8fafc', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
         <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
           KONDISI PERMUKAAN RAMP:
@@ -1863,7 +2411,7 @@ function FrictionInteractiveSimulator({
           ].map(s => (
             <button
               key={s.id}
-              onClick={() => { sound.playClick(); setSurface(s.id); }}
+              onClick={() => { sound.playClick(); setSurface(s.id); resetCrate(); }}
               style={{
                 padding: '6px 8px',
                 borderRadius: '6px',
@@ -1882,12 +2430,21 @@ function FrictionInteractiveSimulator({
         </div>
       </div>
 
+      {/* Slope Angle Slider */}
       <div style={{ background: '#f0f9ff', padding: '10px 14px', borderRadius: '8px', border: '1px solid #bae6fd', marginBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', fontWeight: 800, color: '#0369a1', marginBottom: '4px' }}>
           <span>Sudut Kemiringan Ramp (α):</span>
           <span>{alpha}°</span>
         </div>
-        <input type="range" min="5" max="45" step="1" value={alpha} onChange={(e) => setAlpha(Number(e.target.value))} style={{ width: '100%', accentColor: '#0284c7' }} />
+        <input
+          type="range"
+          min="5"
+          max="45"
+          step="1"
+          value={alpha}
+          onChange={(e) => { resetCrate(); setAlpha(Number(e.target.value)); }}
+          style={{ width: '100%', accentColor: '#0284c7' }}
+        />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.66rem', color: '#64748b', marginTop: '2px' }}>
           <span>5° (Sangat Landai)</span>
           <span>25° (Standar Bongkar Muat)</span>
@@ -1895,6 +2452,7 @@ function FrictionInteractiveSimulator({
         </div>
       </div>
 
+      {/* Force Output Banner */}
       <div style={{
         background: '#0f172a',
         borderRadius: '12px',
@@ -1926,19 +2484,35 @@ function FrictionInteractiveSimulator({
         </div>
       </div>
 
+      {/* Live Animated Ramp Canvas */}
       <div style={{ background: '#0b132b', borderRadius: '12px', padding: '14px', border: '1px solid #1e293b' }}>
-        <svg viewBox="0 0 460 140" width="100%" height="auto" style={{ display: 'block' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 800, color: isSliding ? '#f87171' : '#34d399', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Activity size={14} color={isSliding ? '#f87171' : '#34d399'} />
+            Visual Bergerak: Gerak Meluncur vs Cengkeraman Gesek
+          </span>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+            Status: {isReleased ? (isSliding ? 'Meluncur Bebas ke Bawah!' : 'Terkunci Diam!') : 'Menunggu Uji Lepas'}
+          </span>
+        </div>
+
+        <svg viewBox="0 0 460 145" width="100%" height="auto" style={{ display: 'block' }}>
           <line x1="20" y1="120" x2="440" y2="120" stroke="#475569" strokeWidth="2" />
 
+          {/* Ramp Triangle */}
           <polygon
-            points={`80,${120 - Math.min(80, Math.tan(rad) * 260)} 340,120 80,120`}
+            points={`${rampTopX},${rampTopY} ${rampBottomX},${rampBottomY} ${rampTopX},${rampBottomY}`}
             fill="#1e293b"
             stroke="#f59e0b"
             strokeWidth="2"
           />
           <text x="280" y="114" fill="#fbbf24" fontSize="8.5" fontWeight="bold">α = {alpha}°</text>
 
-          <g transform={`translate(${180}, ${120 - Math.tan(rad) * 160}) rotate(${alpha})`}>
+          {/* Sliding Genset Crate */}
+          <g
+            transform={`translate(${crateX}, ${crateY}) rotate(${alpha})`}
+            style={{ transition: isReleased && isSliding ? 'none' : 'transform 0.3s ease-out' }}
+          >
             <rect x="-20" y="-28" width="40" height="28" rx="3" fill="#dc2626" stroke="#fca5a5" strokeWidth="1.5" />
             <text x="0" y="-12" fill="#ffffff" fontSize="7" fontWeight="bold" textAnchor="middle">Genset 300kg</text>
             <line x1="0" y1="-14" x2="30" y2="-14" stroke="#ef4444" strokeWidth="2" />
@@ -1947,13 +2521,74 @@ function FrictionInteractiveSimulator({
             <polygon points="-26,-17 -32,-14 -26,-11" fill="#10b981" />
           </g>
 
+          {/* Skid marks if slid down */}
+          {slidePercent > 20 && isSliding && (
+            <line x1="150" y1={rampTopY + 30} x2={crateX - 10} y2={crateY - 5} stroke="#ef4444" strokeWidth="2" strokeDasharray="4,3" />
+          )}
+
           {surface === 'grease' && (
             <g transform="translate(220, 95)">
               <circle cx="0" cy="0" r="4" fill="#0f172a" stroke="#fbbf24" strokeWidth="1.5" />
-              <text x="8" y="3" fill="#fbbf24" fontSize="7.5" fontWeight="bold">Tumpahan Oli Licin!</text>
+              <text x="8" y="3" fill="#fbbf24" fontSize="7.5" fontWeight="bold">Ceceran Oli Licin!</text>
             </g>
           )}
         </svg>
+      </div>
+
+      {/* Control Buttons */}
+      <div style={{ marginTop: '12px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+        <button
+          onClick={releaseCrate}
+          style={{
+            background: isSliding ? '#dc2626' : '#10b981',
+            color: '#ffffff',
+            border: 'none',
+            padding: '10px 18px',
+            borderRadius: '8px',
+            fontWeight: 800,
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          <Play size={16} />
+          LEPASKAN GENSET (UJI MEROSOT)
+        </button>
+
+        <button
+          onClick={resetCrate}
+          style={{
+            background: '#f1f5f9',
+            border: '1px solid #cbd5e1',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            fontSize: '0.85rem',
+            fontWeight: 800,
+            color: '#475569',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <RotateCcw size={16} />
+          Kembalikan ke Puncak Ramp (Reset)
+        </button>
+
+        {isReleased && (
+          <span style={{
+            background: isSliding ? '#fee2e2' : '#dcfce7',
+            color: isSliding ? '#991b1b' : '#166534',
+            padding: '6px 14px',
+            borderRadius: '6px',
+            fontSize: '0.8rem',
+            fontWeight: 800
+          }}>
+            {isSliding ? '[BAHAYA!] Mesin meluncur jatuh bebas karena oli/curam!' : '[AMAN] Gaya gesek statis mengunci mesin tetap diam!'}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -4997,6 +5632,33 @@ export default function MekanikaTeknikLab({ initialTab = 'torque', addXP = () =>
       fontFamily: "'Segoe UI', Roboto, sans-serif",
       color: '#0f172a'
     }}>
+      {/* Dynamic Keyframe Animations for Mechanics Simulators */}
+      <style>{`
+        @keyframes ratchetSwing {
+          0% { transform: rotate(0deg); }
+          50% { transform: rotate(-16deg); }
+          100% { transform: rotate(0deg); }
+        }
+        @keyframes strainVibrate {
+          0%, 100% { transform: translate(0, 0); }
+          20% { transform: translate(-1.5px, 1.5px); }
+          40% { transform: translate(1.5px, -1.5px); }
+          60% { transform: translate(-1.5px, -1.5px); }
+          80% { transform: translate(1.5px, 1.5px); }
+        }
+        @keyframes spinGearWheel {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes flowHoistChain {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: 24; }
+        }
+        @keyframes cablePendulum {
+          0%, 100% { transform: rotate(-3deg); }
+          50% { transform: rotate(3deg); }
+        }
+      `}</style>
       <LabDiagnosticBanner
         labTitle="Mekanika Teknik & Statika Struktur"
         desc="Diagnosa 10 soal konsep torsi momen gaya, hukum tuas, kesetimbangan statis, dan kurva tegangan-regangan material."

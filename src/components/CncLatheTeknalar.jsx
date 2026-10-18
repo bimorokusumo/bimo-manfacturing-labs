@@ -382,6 +382,54 @@ const DEFAULT_TURRET_TOOLS = [
 ];
 
 // =============================================================================
+// MODE SELECTION ANGLES & OVERRIDE KNOB COMPONENT
+// =============================================================================
+const MODES = [
+  { mode: 'AUTO', label: 'MEM', angle: -95 },
+  { mode: 'EDIT', label: 'EDIT', angle: -45 },
+  { mode: 'MDI', label: 'MDI', angle: 0 },
+  { mode: 'JOG', label: 'JOG', angle: 45 },
+  { mode: 'REF', label: 'ZERO RETURN', angle: 130 },
+  { mode: 'HANDLE', label: 'HANDLE', angle: -135 }
+];
+
+const OverrideKnob = ({ label, value, steps, onChange, disabled }) => {
+  const o = Math.max(0, steps.indexOf(value));
+  const deg = -135 + (270 * o) / Math.max(1, steps.length - 1);
+  const stepBy = (dir) => {
+    const nextIdx = Math.min(steps.length - 1, Math.max(0, o + dir));
+    onChange(steps[nextIdx]);
+  };
+
+  return (
+    <div className="teknalar-ovrItem">
+      <span>{label}</span>
+      <div
+        role="slider"
+        tabIndex={disabled ? -1 : 0}
+        aria-label={label}
+        className="teknalar-ovrKnob"
+        style={{ '--a': `${deg}deg` }}
+        onClick={(e) => {
+          if (disabled) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          stepBy(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
+        }}
+      />
+      <span className="teknalar-ovrVal">{value}%</span>
+      <div className="teknalar-ovrBtns">
+        <button type="button" disabled={disabled} onClick={() => stepBy(-1)}>
+          −
+        </button>
+        <button type="button" disabled={disabled} onClick={() => stepBy(1)}>
+          +
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// =============================================================================
 // KOMPONEN UTAMA SIMULATOR CNC BUBUT TEKNALAR
 // =============================================================================
 const CncLatheTeknalar = ({ addXP }) => {
@@ -714,6 +762,17 @@ const CncLatheTeknalar = ({ addXP }) => {
       setPosition(p => ({ ...p, z: Number((p.z + delta).toFixed(3)) }));
       setMachinePos(m => ({ ...m, z: Number((m.z + delta).toFixed(2)) }));
     }
+  };
+
+  const handleTurretIndex = (dir) => {
+    sound.playClick();
+    if (isRunning) return;
+    setActiveToolStation((prev) => {
+      let next = prev + dir;
+      if (next > 8) next = 1;
+      if (next < 1) next = 8;
+      return next;
+    });
   };
 
   // Stock Actions
@@ -1291,314 +1350,674 @@ const CncLatheTeknalar = ({ addXP }) => {
           </div>
         </div>
 
-        {/* RIGHT: FANUC CRT DISPLAY & SOFTEKY PANEL */}
-        <div className="teknalar-panel">
-          <div className="teknalar-panelHeader">
-            <span className="teknalar-panelTitle">FANUC Series 0i-TD</span>
-            <div className="teknalar-headerIndicators">
-              <span className={`teknalar-led ${powerOn ? 'on' : ''}`}>PWR</span>
-              <span className={`teknalar-led ${isRunning ? 'run' : ''}`}>RUN</span>
-              <span className={`teknalar-led ${alarmMessage ? 'alarm' : ''}`}>ALM</span>
-            </div>
+        {/* RIGHT: FANUC CRT DISPLAY CHASSIS */}
+        <div className="teknalar-control">
+          <div className="teknalar-nameplate">
+            <strong>FANUC Series 0i-TD</strong>
+            <span>[{modeSelect}]</span>
           </div>
 
-          {/* CRT SCREEN */}
-          <div className="teknalar-crt">
-            <div className="teknalar-crtInner">
-              {/* Top CRT Status Banner */}
-              <div className="teknalar-crtTop">
-                <span className="teknalar-crtMode">[{modeSelect}]</span>
-                <span className="teknalar-crtProg">O0001 (PRESET-{selectedPresetId.toUpperCase()})</span>
-                <span className="teknalar-crtState">
-                  {eStop ? 'EMG STOP' : isRunning ? 'EXECUTING' : 'READY'}
-                </span>
-              </div>
-
-              {/* TAB 1: POS (ACTUAL POSITION READOUT) */}
-              {lcdTab === 'POS' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-posBlock">
-                    <div className="teknalar-posRow">
-                      <span className="teknalar-posAxis">X (DIA)</span>
-                      <span className="teknalar-posVal">{position.x.toFixed(3)}</span>
-                      <span className="teknalar-posUnit">mm</span>
-                    </div>
-                    <div className="teknalar-posRow">
-                      <span className="teknalar-posAxis">Z (POS)</span>
-                      <span className="teknalar-posVal">{position.z.toFixed(3)}</span>
-                      <span className="teknalar-posUnit">mm</span>
-                    </div>
+          <div className="teknalar-bezel">
+            <div className={`teknalar-lcd ${!powerOn ? 'teknalar-lcdOff' : ''}`}>
+              {!powerOn ? (
+                <div className="teknalar-blank">— POWER OFF —</div>
+              ) : (
+                <>
+                  {/* Top CRT Status Header */}
+                  <div className="teknalar-lcdHead">
+                    <span>O0001 (PRESET-{selectedPresetId.toUpperCase()})</span>
+                    <span>{eStop ? 'EMG STOP' : isRunning ? 'MEM · STRT' : 'READY'}</span>
                   </div>
 
-                  <div className="teknalar-posSub">
-                    <div>
-                      <span>MACHINE X:</span>
-                      <strong>{machinePos.x.toFixed(2)}</strong>
-                    </div>
-                    <div>
-                      <span>MACHINE Z:</span>
-                      <strong>{machinePos.z.toFixed(2)}</strong>
-                    </div>
-                    <div>
-                      <span>DISTANCE TO GO X:</span>
-                      <strong>{(0.0).toFixed(3)}</strong>
-                    </div>
-                    <div>
-                      <span>DISTANCE TO GO Z:</span>
-                      <strong>{(0.0).toFixed(3)}</strong>
-                    </div>
-                  </div>
+                  {/* TAB 1: POS (ACTUAL POSITION READOUT & PROGRAM SPLIT) */}
+                  {lcdTab === 'POS' && (
+                    <div className="teknalar-lcdBody teknalar-split">
+                      {/* Left Column: Coordinates & Machine Status */}
+                      <div style={{ display: 'grid', gap: 6, alignContent: 'start' }}>
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">ACTUAL POSITION (ABS)</p>
+                          <div className="teknalar-bigAxis">
+                            <span>X</span>
+                            {position.x.toFixed(3).padStart(9, ' ')}
+                          </div>
+                          <div className="teknalar-bigAxis">
+                            <span>Z</span>
+                            {position.z.toFixed(3).padStart(9, ' ')}
+                          </div>
+                        </div>
 
-                  {/* Active G-Codes List */}
-                  <div className="teknalar-gCodeModalList">
-                    <span>G18 (ZX)</span>
-                    <span>G21 (MM)</span>
-                    <span>G40 (COMP OFF)</span>
-                    <span>G54 (WORK 1)</span>
-                    <span>G99 (FEED/REV)</span>
-                    <span>G97 (RPM)</span>
-                  </div>
-                </div>
-              )}
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">MACHINE STATUS</p>
+                          <div className="teknalar-status">
+                            <p><b>S</b> {spindleRpm.toFixed(0)} rpm</p>
+                            <p><b>F</b> {feedRate.toFixed(3)} mm/rev</p>
+                            <p><b>T</b> {activeToolObj.code}</p>
+                            <p><b>LOAD</b> {isRunning ? '42% (estimasi)' : '0% (IDLE)'}</p>
+                            <p style={{ color: spindleState === 3 || spindleState === 4 ? '#4ade80' : '#94a3b8' }}>
+                              {spindleState === 3 ? 'M03 (Spindle CW)' : spindleState === 4 ? 'M04 (Spindle CCW)' : 'M05 (Spindle Stop)'}
+                            </p>
+                            <p style={{ color: coolant ? '#38bdf8' : '#94a3b8' }}>
+                              {coolant ? 'M08 (Coolant ON)' : 'M09 (Coolant OFF)'}
+                            </p>
+                          </div>
+                        </div>
 
-              {/* TAB 2: PROG (G-CODE PROGRAM VIEWER WITH LINE HIGHLIGHT) */}
-              {lcdTab === 'PROG' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-codeViewer">
-                    {programText.split('\n').map((line, idx) => (
-                      <div
-                        key={idx}
-                        className={`teknalar-codeLine ${activeLine === idx && isRunning ? 'active' : ''}`}
-                      >
-                        <span className="teknalar-lineNumber">{String(idx + 1).padStart(3, '0')}</span>
-                        <span className="teknalar-lineText">{line}</span>
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">MODAL G-CODES</p>
+                          <div className="teknalar-status" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4 }}>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G18</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G21</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G40</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G54</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G99</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G97</span>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Right Column: Program Code View */}
+                      <div className="teknalar-box" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <p className="teknalar-boxTitle">PROGRAM (O0001)</p>
+                        <div className="teknalar-prog" style={{ flex: 1, minHeight: 0, maxHeight: 320 }}>
+                          {programText.split('\n').map((line, idx) => (
+                            <div
+                              key={idx}
+                              className={activeLine === idx && isRunning ? 'teknalar-cur' : ''}
+                            >
+                              {String(idx + 1).padStart(3, '0')} {line}
+                            </div>
+                          ))}
+                          <div>%</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 2: PROG (G-CODE PROGRAM VIEWER & KEYPAD EDITOR) */}
+                  {lcdTab === 'PROG' && (
+                    <div className="teknalar-lcdBody">
+                      {modeSelect === 'EDIT' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          <textarea
+                            className="teknalar-editor"
+                            aria-label="Editor Program G-Code Lathe"
+                            value={programText}
+                            spellCheck={false}
+                            onChange={(e) => setProgramText(e.target.value)}
+                          />
+                          <div className="teknalar-keys" aria-label="Keypad Program">
+                            {"OXZUWGMIKRFPQTSN0123456789-.".split("").map((k) => (
+                              <button
+                                key={k}
+                                type="button"
+                                onClick={() => {
+                                  sound.playClick();
+                                  setProgramText((prev) => prev + k);
+                                }}
+                              >
+                                {k}
+                              </button>
+                            ))}
+                            <button
+                              type="button"
+                              className="teknalar-wide"
+                              onClick={() => {
+                                sound.playClick();
+                                setProgramText((prev) => prev + '\n');
+                              }}
+                            >
+                              EOB
+                            </button>
+                            <button
+                              type="button"
+                              className="teknalar-wide"
+                              onClick={() => {
+                                sound.playClick();
+                                setProgramText((prev) => prev.slice(0, -1));
+                              }}
+                            >
+                              CAN
+                            </button>
+                          </div>
+                          <div>
+                            <button
+                              type="button"
+                              className="teknalar-lcdBtn"
+                              onClick={() => {
+                                sound.playClick();
+                                setAlarmMessage('[PROGRAM VALID] Sintaks G-code siap dieksekusi.');
+                              }}
+                            >
+                              [PERIKSA PROGRAM]
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">PROGRAM (O0001) · MODE MEM/AUTO</p>
+                          <div className="teknalar-prog" style={{ maxHeight: 340 }}>
+                            {programText.split('\n').map((line, idx) => (
+                              <div
+                                key={idx}
+                                className={activeLine === idx && isRunning ? 'teknalar-cur' : ''}
+                              >
+                                {String(idx + 1).padStart(3, '0')} {line}
+                              </div>
+                            ))}
+                            <div>%</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* TAB 3: OFFSET (GEOMETRY & WEAR TABLE) */}
+                  {lcdTab === 'OFFSET' && (
+                    <div className="teknalar-lcdBody">
+                      <div className="teknalar-box">
+                        <p className="teknalar-boxTitle">TOOL GEOMETRY & WEAR OFFSET</p>
+                        <div style={{ overflowX: 'auto', padding: 4 }}>
+                          <table className="teknalar-table">
+                            <thead>
+                              <tr>
+                                <th>NO</th>
+                                <th>PAHAT</th>
+                                <th>GEO X</th>
+                                <th>GEO Z</th>
+                                <th>WEAR X</th>
+                                <th>WEAR Z</th>
+                                <th>R / Ø</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {tools.map((t) => (
+                                <tr key={t.tool} className={t.tool === activeToolStation ? 'act' : ''}>
+                                  <td>{t.code}</td>
+                                  <td>{t.name}</td>
+                                  <td>{t.geometryX.toFixed(3)}</td>
+                                  <td>{t.geometryZ.toFixed(3)}</td>
+                                  <td>{t.wearX.toFixed(3)}</td>
+                                  <td>{t.wearZ.toFixed(3)}</td>
+                                  <td>{t.noseRadius ? `R${t.noseRadius.toFixed(2)}` : `Ø${t.width}`}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 4: UKUR (INSPECTION & TOLERANCE) */}
+                  {lcdTab === 'UKUR' && (
+                    <div className="teknalar-lcdBody">
+                      <div className="teknalar-box" style={{ padding: 10 }}>
+                        <p className="teknalar-boxTitle">PENGUKURAN DIAMETER POROS & WEAR COMPENSATION</p>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 10 }}>
+                          <div>
+                            <span style={{ fontSize: 11, color: '#94a3b8' }}>Posisi Z Ukur:</span>
+                            <input
+                              type="number"
+                              value={measureZ}
+                              onChange={(e) => setMeasureZ(Number(e.target.value))}
+                              style={{ width: '100%', background: '#0a1610', border: '1px solid #2e6a45', color: '#fff', padding: '6px 8px', borderRadius: 4, font: '700 13px Consolas, monospace' }}
+                            />
+                          </div>
+                          <div>
+                            <span style={{ fontSize: 11, color: '#94a3b8' }}>Target Diameter Ø (mm):</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={measureDiaInput}
+                              onChange={(e) => setMeasureDiaInput(e.target.value)}
+                              style={{ width: '100%', background: '#0a1610', border: '1px solid #2e6a45', color: '#fff', padding: '6px 8px', borderRadius: 4, font: '700 13px Consolas, monospace' }}
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            sound.playSuccess();
+                            const diff = Number(measureDiaInput) - 46.0;
+                            setTools(prev => prev.map(t => t.tool === activeToolStation ? { ...t, wearX: Number(diff.toFixed(3)) } : t));
+                            setAlarmMessage(`[SUKSES] Wear X terkompensasi: ${diff.toFixed(3)} mm`);
+                          }}
+                          className="teknalar-lcdBtn"
+                          style={{ marginTop: 12, width: '100%' }}
+                        >
+                          [TERAPKAN WEAR COMPENSATION]
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 5: DIAG (DIAGNOSTICS) */}
+                  {lcdTab === 'DIAG' && (
+                    <div className="teknalar-lcdBody">
+                      <div className="teknalar-box" style={{ padding: 10 }}>
+                        <p className="teknalar-boxTitle">DIAGNOSTIK & STATUS SISTEM CNC</p>
+                        <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 8, color: '#94a3b8', marginTop: 8 }}>
+                          <div>Spindle Load: <strong style={{ color: '#fff' }}>{isRunning ? '42% (3.1 kW)' : '0% (IDLE)'}</strong></div>
+                          <div>Motor Temperature: <strong style={{ color: '#4ade80' }}>38.4 °C (NORMAL)</strong></div>
+                          <div>Door Interlock: <strong style={{ color: doorClosed ? '#4ade80' : '#ef4444' }}>{doorClosed ? 'TERKUNCI AMAN' : 'TERBUKA'}</strong></div>
+                          <div>Chuck Hydraulic Pressure: <strong style={{ color: '#4ade80' }}>3.2 MPa (NORMAL)</strong></div>
+                          <div>CNC System Cycle: <strong style={{ color: '#38bdf8' }}>FANUC 0i-TD EMBEDDED RT-KERNEL</strong></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Alarm Banner */}
+                  {alarmMessage && (
+                    <div className="teknalar-crtAlarm">
+                      <AlertTriangle size={14} style={{ display: 'inline', marginRight: 4 }} />
+                      {alarmMessage}
+                    </div>
+                  )}
+
+                  {/* Softkeys Strip */}
+                  <div className="teknalar-softkeys">
+                    {[
+                      ['POS', 'POS'],
+                      ['PROG', 'PROG'],
+                      ['OFFSET', 'OFS/SET'],
+                      ['UKUR', 'UKUR'],
+                      ['DIAG', 'DIAG'],
+                    ].map(([tabKey, tabLabel]) => (
+                      <button
+                        key={tabKey}
+                        type="button"
+                        onClick={() => {
+                          sound.playClick();
+                          setLcdTab(tabKey);
+                        }}
+                        className={lcdTab === tabKey ? 'active' : ''}
+                      >
+                        [{tabLabel}]
+                      </button>
                     ))}
                   </div>
-                </div>
+                </>
               )}
+            </div>
 
-              {/* TAB 3: OFFSET (GEOMETRY & WEAR TABLE) */}
-              {lcdTab === 'OFFSET' && (
-                <div className="teknalar-lcdBody" style={{ overflowY: 'auto' }}>
-                  <table className="teknalar-table">
-                    <thead>
-                      <tr>
-                        <th>NO</th>
-                        <th>PAHAT</th>
-                        <th>GEO X</th>
-                        <th>GEO Z</th>
-                        <th>WEAR X</th>
-                        <th>WEAR Z</th>
-                        <th>R / Ø</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {tools.map((t) => (
-                        <tr key={t.tool} className={t.tool === activeToolStation ? 'act' : ''}>
-                          <td>{t.code}</td>
-                          <td>{t.name}</td>
-                          <td>{t.geometryX.toFixed(3)}</td>
-                          <td>{t.geometryZ.toFixed(3)}</td>
-                          <td>{t.wearX.toFixed(3)}</td>
-                          <td>{t.wearZ.toFixed(3)}</td>
-                          <td>{t.noseRadius ? `R${t.noseRadius.toFixed(2)}` : `Ø${t.width}`}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+            {/* Side Blank Membrane Keys */}
+            <div className="teknalar-sideKeys" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, i) => (
+                <span key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* TAB 4: UKUR (INSPECTION & TOLERANCE) */}
-              {lcdTab === 'UKUR' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-box" style={{ padding: 10 }}>
-                    <p className="teknalar-boxTitle">HASIL PENGUKURAN POROS BUBUT</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 8 }}>
-                      <div>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Posisi Z Ukur:</span>
-                        <input
-                          type="number"
-                          value={measureZ}
-                          onChange={(e) => setMeasureZ(Number(e.target.value))}
-                          style={{ width: '100%', background: '#0a1610', border: '1px solid #2e6a45', color: '#fff', padding: 4 }}
-                        />
-                      </div>
-                      <div>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Target Diameter Ø (mm):</span>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={measureDiaInput}
-                          onChange={(e) => setMeasureDiaInput(e.target.value)}
-                          style={{ width: '100%', background: '#0a1610', border: '1px solid #2e6a45', color: '#fff', padding: 4 }}
-                        />
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        sound.playSuccess();
-                        const diff = Number(measureDiaInput) - 46.0;
-                        setTools(prev => prev.map(t => t.tool === activeToolStation ? { ...t, wearX: Number(diff.toFixed(3)) } : t));
-                        setAlarmMessage(`[SUKSES] Wear X terkompensasi: ${diff.toFixed(3)} mm`);
-                      }}
-                      className="teknalar-lcdBtn"
-                      style={{ marginTop: 10, width: '100%' }}
-                    >
-                      [TERAPKAN WEAR COMPENSATION]
-                    </button>
-                  </div>
-                </div>
-              )}
+      {/* 3. LOWER OPERATOR CONSOLE SWITCHBOARD */}
+      <div className="teknalar-panel" aria-label="Panel operator mesin">
+        {/* Stack 1: E-STOP + POWER */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>EMERGENCY STOP</h4>
+            <button
+              type="button"
+              className={`teknalar-estop ${eStop ? 'teknalar-estopDown' : ''}`}
+              aria-pressed={eStop}
+              aria-label={eStop ? 'Lepaskan emergency stop' : 'Tekan emergency stop'}
+              onClick={() => {
+                sound.playClick();
+                setEStop(!eStop);
+                if (!eStop) setIsRunning(false);
+              }}
+            >
+              E-STOP
+            </button>
+          </div>
+          <div className="teknalar-group">
+            <h4>POWER</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${powerOn ? 'teknalar-lampOn' : ''}`}
+                aria-pressed={powerOn}
+                onClick={() => { sound.playClick(); setPowerOn(true); }}
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-red2"
+                onClick={() => { sound.playClick(); setPowerOn(false); setIsRunning(false); }}
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+        </div>
 
-              {/* TAB 5: DIAG (DIAGNOSTICS) */}
-              {lcdTab === 'DIAG' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-box" style={{ padding: 10 }}>
-                    <p className="teknalar-boxTitle">DIAGNOSTIK & STATUS MESIN</p>
-                    <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 6, color: '#94a3b8' }}>
-                      <div>Spindle Load: <strong>{isRunning ? '42% (3.1 kW)' : '0% (IDLE)'}</strong></div>
-                      <div>Motor Temperature: <strong>38.4 °C (NORMAL)</strong></div>
-                      <div>Door Interlock: <strong>{doorClosed ? 'TERKUNCI AMAN' : 'TERBUKA'}</strong></div>
-                      <div>Chuck Hydraulic Pressure: <strong>3.2 MPa (NORMAL)</strong></div>
-                    </div>
-                  </div>
-                </div>
-              )}
+        {/* Group 2: MODE SELECT Rotary Dial */}
+        <div className="teknalar-group">
+          <h4>MODE SELECT</h4>
+          <div className="teknalar-dial">
+            {MODES.map((m) => {
+              const rad = (m.angle * Math.PI) / 180;
+              return (
+                <button
+                  key={m.mode}
+                  type="button"
+                  className={`teknalar-lbl ${modeSelect === m.mode ? 'teknalar-on' : ''}`}
+                  style={{
+                    left: `${50 + 40 * Math.sin(rad)}%`,
+                    top: `${55 - 47 * Math.cos(rad)}%`,
+                  }}
+                  disabled={!powerOn || isRunning}
+                  aria-pressed={modeSelect === m.mode}
+                  onClick={() => {
+                    sound.playClick();
+                    setModeSelect(m.mode);
+                  }}
+                >
+                  {m.label}
+                </button>
+              );
+            })}
+            <div
+              className="teknalar-knob"
+              style={{
+                transform: `rotate(${MODES.find((m) => m.mode === modeSelect)?.angle || 0}deg)`,
+              }}
+              aria-hidden="true"
+            />
+          </div>
+        </div>
 
-              {/* Alarm Banner if present */}
-              {alarmMessage && (
-                <div className="teknalar-crtAlarm">
-                  <AlertTriangle size={14} style={{ display: 'inline', marginRight: 4 }} />
-                  {alarmMessage}
-                </div>
-              )}
+        {/* Group 3: CYCLE OPERATION */}
+        <div className="teknalar-group">
+          <h4>CYCLE OPERATION</h4>
+          <div className="teknalar-cycleRow">
+            <button
+              type="button"
+              className={`teknalar-key teknalar-big teknalar-green2 ${isRunning ? 'teknalar-lampOn' : ''}`}
+              disabled={!powerOn || eStop}
+              aria-label="Cycle start"
+              onClick={handleCycleStart}
+            >
+              START
+            </button>
+            <span>CYCLE START</span>
 
-              {/* Softkey Navigation Strips */}
-              <div className="teknalar-softkeys">
-                {['POS', 'PROG', 'OFFSET', 'UKUR', 'DIAG'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => { sound.playClick(); setLcdTab(tab); }}
-                    className={`teknalar-softBtn ${lcdTab === tab ? 'active' : ''}`}
-                  >
-                    [{tab}]
-                  </button>
-                ))}
-              </div>
+            <button
+              type="button"
+              className="teknalar-key teknalar-big teknalar-yellow2"
+              disabled={!powerOn || !isRunning}
+              aria-label="Feed hold"
+              onClick={handleFeedHold}
+            >
+              HOLD
+            </button>
+            <span>FEED HOLD</span>
+
+            <button
+              type="button"
+              className="teknalar-key teknalar-big teknalar-red2"
+              disabled={!powerOn}
+              aria-label="Reset"
+              onClick={handleReset}
+            >
+              RESET
+            </button>
+            <span>RESET</span>
+          </div>
+        </div>
+
+        {/* Stack 4: AXIS JOG & INCREMENT */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>AXIS JOG</h4>
+            <div className="teknalar-jog">
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('X', 1)}
+              >
+                +X
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Z', 1)}
+              >
+                +Z
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('X', -1)}
+              >
+                −X
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Z', -1)}
+              >
+                −Z
+              </button>
             </div>
           </div>
 
-          {/* HARDWARE MEMBRANE KEYPAD & CONTROLS */}
-          <div className="teknalar-hardware">
-            {/* Mode Select Buttons */}
-            <div className="teknalar-modeRow">
-              {['AUTO', 'EDIT', 'MDI', 'JOG', 'REF'].map((m) => (
+          <div className="teknalar-group">
+            <h4>JOG INCREMENT</h4>
+            <div className="teknalar-row">
+              {[0.001, 0.01, 0.1, 1].map((step, idx) => (
                 <button
-                  key={m}
-                  onClick={() => { sound.playClick(); setModeSelect(m); }}
-                  className={`teknalar-btnMode ${modeSelect === m ? 'active' : ''}`}
+                  key={step}
+                  type="button"
+                  className={`teknalar-key ${jogStep === step ? 'teknalar-keyOn' : ''}`}
+                  disabled={!powerOn}
+                  onClick={() => {
+                    sound.playClick();
+                    setJogStep(step);
+                  }}
+                  title={`${step} mm per step`}
                 >
-                  {m}
+                  ×{Math.pow(10, idx)}
                 </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* Execution Controls: Cycle Start, Feed Hold, Reset */}
-            <div className="teknalar-execRow">
+        {/* Stack 5: SPINDLE & COOLANT */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>SPINDLE</h4>
+            <div className="teknalar-row">
               <button
-                onClick={handleCycleStart}
-                className="teknalar-btnCycleStart"
-                title="CYCLE START (Mulai Eksekusi G-Code)"
-              >
-                <Play size={16} /> CYCLE START
-              </button>
-
-              <button
-                onClick={handleFeedHold}
-                className="teknalar-btnFeedHold"
-                title="FEED HOLD (Jeda Gerak Sayat)"
-              >
-                <Pause size={16} /> FEED HOLD
-              </button>
-
-              <button
-                onClick={handleReset}
-                className="teknalar-btnReset"
-                title="RESET (Kembali ke Awal Program)"
-              >
-                <RotateCcw size={16} /> RESET
-              </button>
-
-              <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${spindleState === 3 ? 'teknalar-lampOn' : ''}`}
+                disabled={!powerOn || eStop}
                 onClick={() => {
                   sound.playClick();
-                  setEStop(!eStop);
-                  if (!eStop) setIsRunning(false);
+                  setSpindleState(3);
+                  setSpindleRpm(900);
                 }}
-                className={`teknalar-btnEStop ${eStop ? 'active' : ''}`}
-                title="EMERGENCY STOP (Tombol Darurat)"
               >
-                E-STOP
+                FWD
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-red2"
+                disabled={!powerOn}
+                onClick={() => {
+                  sound.playClick();
+                  setSpindleState(0);
+                  setSpindleRpm(0);
+                }}
+              >
+                STOP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${spindleState === 4 ? 'teknalar-lampOn' : ''}`}
+                disabled={!powerOn || eStop}
+                onClick={() => {
+                  sound.playClick();
+                  setSpindleState(4);
+                  setSpindleRpm(900);
+                }}
+              >
+                REV
               </button>
             </div>
+          </div>
 
-            {/* Sub-Toggles: Single Block, Dry Run, Coolant */}
-            <div className="teknalar-toggleGrid">
+          <div className="teknalar-group">
+            <h4>COOLANT</h4>
+            <div className="teknalar-row">
               <button
+                type="button"
+                className={`teknalar-key ${coolant ? 'teknalar-teal2 teknalar-lampOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setCoolant(true); }}
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!coolant ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setCoolant(false); }}
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stack 6: CHUCK, PINTU & TURRET */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>CHUCK & PINTU</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key ${chuckClamped ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn || isRunning}
+                onClick={() => { sound.playClick(); setChuckClamped(true); }}
+              >
+                CLAMP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!chuckClamped ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn || isRunning}
+                onClick={() => { sound.playClick(); setChuckClamped(false); }}
+              >
+                UNCLAMP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${doorClosed ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setDoorClosed(true); }}
+                title="Tutup pintu pelindung"
+              >
+                TUTUP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!doorClosed ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setDoorClosed(false); }}
+                title="Buka pintu pelindung"
+              >
+                BUKA
+              </button>
+            </div>
+          </div>
+
+          <div className="teknalar-group">
+            <h4>TURRET INDEX</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || isRunning}
+                onClick={() => handleTurretIndex(1)}
+              >
+                INDEX +
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || isRunning}
+                onClick={() => handleTurretIndex(-1)}
+              >
+                INDEX −
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stack 7: OVERRIDE & OPTION */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>OVERRIDE</h4>
+            <div className="teknalar-ovr">
+              <OverrideKnob
+                label="FEED OVERRIDE"
+                value={feedOverride}
+                steps={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]}
+                onChange={setFeedOverride}
+                disabled={!powerOn}
+              />
+              <OverrideKnob
+                label="RAPID OVERRIDE"
+                value={rapidOverride}
+                steps={[5, 25, 50, 100]}
+                onChange={setRapidOverride}
+                disabled={!powerOn}
+              />
+              <OverrideKnob
+                label="SPINDLE OVERRIDE"
+                value={spindleOverride}
+                steps={[50, 60, 70, 80, 90, 100, 110, 120]}
+                onChange={setSpindleOverride}
+                disabled={!powerOn}
+              />
+            </div>
+          </div>
+
+          <div className="teknalar-group">
+            <h4>OPTION</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key ${singleBlock ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
                 onClick={() => { sound.playClick(); setSingleBlock(!singleBlock); }}
-                className={`teknalar-btnToggle ${singleBlock ? 'on' : ''}`}
               >
-                SINGLE BLOCK: {singleBlock ? 'ON' : 'OFF'}
+                SINGLE BLOCK
               </button>
-
               <button
-                onClick={() => { sound.playClick(); setCoolant(!coolant); }}
-                className={`teknalar-btnToggle ${coolant ? 'on' : ''}`}
+                type="button"
+                className={`teknalar-key ${optionalStop ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setOptionalStop(!optionalStop); }}
               >
-                COOLANT: {coolant ? 'M08' : 'M09'}
+                OPTIONAL STOP
               </button>
-
               <button
-                onClick={() => { sound.playClick(); setChuckClamped(!chuckClamped); }}
-                className={`teknalar-btnToggle ${chuckClamped ? 'on' : ''}`}
-              >
-                CHUCK: {chuckClamped ? 'CLAMPED' : 'UNCLAMP'}
-              </button>
-
-              <button
+                type="button"
+                className={`teknalar-key ${dryRun ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
                 onClick={() => { sound.playClick(); setDryRun(!dryRun); }}
-                className={`teknalar-btnToggle ${dryRun ? 'on' : ''}`}
               >
-                DRY RUN: {dryRun ? 'ON' : 'OFF'}
+                DRY RUN
               </button>
-            </div>
-
-            {/* JOG Axis Pad */}
-            <div className="teknalar-jogSection">
-              <span className="teknalar-jogTitle">MANUAL JOG (FEED PER STEP: {jogStep} mm)</span>
-              <div className="teknalar-jogPad">
-                <button onClick={() => handleJog('X', 1)} className="teknalar-jogBtn">[+X DIA]</button>
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button onClick={() => handleJog('Z', -1)} className="teknalar-jogBtn">[-Z MUKA]</button>
-                  <button onClick={() => handleJog('Z', 1)} className="teknalar-jogBtn">[+Z CHUCK]</button>
-                </div>
-                <button onClick={() => handleJog('X', -1)} className="teknalar-jogBtn">[-X DIA]</button>
-              </div>
-
-              {/* Step multiplier */}
-              <div className="teknalar-stepRow">
-                {[0.001, 0.01, 0.1, 1.0].map((step) => (
-                  <button
-                    key={step}
-                    onClick={() => { sound.playClick(); setJogStep(step); }}
-                    className={`teknalar-stepBtn ${jogStep === step ? 'active' : ''}`}
-                  >
-                    x{step}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </div>

@@ -294,6 +294,54 @@ const DEFAULT_MILL_TOOLS = [
 ];
 
 // =============================================================================
+// MODE SELECTION ANGLES & OVERRIDE KNOB COMPONENT
+// =============================================================================
+const MODES = [
+  { mode: 'AUTO', label: 'MEM', angle: -95 },
+  { mode: 'EDIT', label: 'EDIT', angle: -45 },
+  { mode: 'MDI', label: 'MDI', angle: 0 },
+  { mode: 'JOG', label: 'JOG', angle: 45 },
+  { mode: 'REF', label: 'ZERO RETURN', angle: 130 },
+  { mode: 'HANDLE', label: 'HANDLE', angle: -135 }
+];
+
+const OverrideKnob = ({ label, value, steps, onChange, disabled }) => {
+  const o = Math.max(0, steps.indexOf(value));
+  const deg = -135 + (270 * o) / Math.max(1, steps.length - 1);
+  const stepBy = (dir) => {
+    const nextIdx = Math.min(steps.length - 1, Math.max(0, o + dir));
+    onChange(steps[nextIdx]);
+  };
+
+  return (
+    <div className="teknalar-ovrItem">
+      <span>{label}</span>
+      <div
+        role="slider"
+        tabIndex={disabled ? -1 : 0}
+        aria-label={label}
+        className="teknalar-ovrKnob"
+        style={{ '--a': `${deg}deg` }}
+        onClick={(e) => {
+          if (disabled) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          stepBy(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
+        }}
+      />
+      <span className="teknalar-ovrVal">{value}%</span>
+      <div className="teknalar-ovrBtns">
+        <button type="button" disabled={disabled} onClick={() => stepBy(-1)}>
+          −
+        </button>
+        <button type="button" disabled={disabled} onClick={() => stepBy(1)}>
+          +
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// =============================================================================
 // KOMPONEN UTAMA SIMULATOR CNC FRAIS (VMC) TEKNALAR
 // =============================================================================
 const CncMillTeknalar = ({ addXP }) => {
@@ -330,12 +378,14 @@ const CncMillTeknalar = ({ addXP }) => {
   const [spindleRpm, setSpindleRpm] = useState(1800);
   const [coolant, setCoolant] = useState(false);
   const [doorClosed, setDoorClosed] = useState(true);
+  const [viseClamped, setViseClamped] = useState(true);
 
   // Overrides & Execution Switches
   const [rapidOverride, setRapidOverride] = useState(100);
   const [feedOverride, setFeedOverride] = useState(100);
   const [spindleOverride, setSpindleOverride] = useState(100);
   const [singleBlock, setSingleBlock] = useState(false);
+  const [optionalStop, setOptionalStop] = useState(true);
   const [dryRun, setDryRun] = useState(false);
   const [jogStep, setJogStep] = useState(0.1);
 
@@ -572,6 +622,17 @@ const CncMillTeknalar = ({ addXP }) => {
     } else {
       setPosition(p => ({ ...p, z: Number((p.z + delta).toFixed(3)) }));
     }
+  };
+
+  const handleAtcIndex = (dir) => {
+    sound.playClick();
+    if (isRunning) return;
+    setActiveToolStation((prev) => {
+      let next = prev + dir;
+      if (next > 6) next = 1;
+      if (next < 1) next = 6;
+      return next;
+    });
   };
 
   // Stock Actions
@@ -975,237 +1036,646 @@ const CncMillTeknalar = ({ addXP }) => {
           </div>
         </div>
 
-        {/* RIGHT: FANUC CRT DISPLAY */}
-        <div className="teknalar-panel">
-          <div className="teknalar-panelHeader">
-            <span className="teknalar-panelTitle">FANUC Series 0i-MD</span>
-            <div className="teknalar-headerIndicators">
-              <span className={`teknalar-led ${powerOn ? 'on' : ''}`}>PWR</span>
-              <span className={`teknalar-led ${isRunning ? 'run' : ''}`}>RUN</span>
-              <span className={`teknalar-led ${alarmMessage ? 'alarm' : ''}`}>ALM</span>
-            </div>
+        {/* RIGHT: FANUC CRT DISPLAY CHASSIS */}
+        <div className="teknalar-control">
+          <div className="teknalar-nameplate">
+            <strong>FANUC Series 0i-MD</strong>
+            <span>[{modeSelect}]</span>
           </div>
 
-          {/* CRT SCREEN */}
-          <div className="teknalar-crt">
-            <div className="teknalar-crtInner">
-              <div className="teknalar-crtTop">
-                <span className="teknalar-crtMode">[{modeSelect}]</span>
-                <span className="teknalar-crtProg">O1001 (PRESET-{selectedPresetId.toUpperCase()})</span>
-                <span className="teknalar-crtState">
-                  {eStop ? 'EMG STOP' : isRunning ? 'EXECUTING' : 'READY'}
-                </span>
-              </div>
-
-              {/* POS */}
-              {lcdTab === 'POS' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-posBlock">
-                    <div className="teknalar-posRow">
-                      <span className="teknalar-posAxis">X (MEJA)</span>
-                      <span className="teknalar-posVal">{position.x.toFixed(3)}</span>
-                      <span className="teknalar-posUnit">mm</span>
-                    </div>
-                    <div className="teknalar-posRow">
-                      <span className="teknalar-posAxis">Y (SADDLE)</span>
-                      <span className="teknalar-posVal">{position.y.toFixed(3)}</span>
-                      <span className="teknalar-posUnit">mm</span>
-                    </div>
-                    <div className="teknalar-posRow">
-                      <span className="teknalar-posAxis">Z (HEAD)</span>
-                      <span className="teknalar-posVal">{position.z.toFixed(3)}</span>
-                      <span className="teknalar-posUnit">mm</span>
-                    </div>
+          <div className="teknalar-bezel">
+            <div className={`teknalar-lcd ${!powerOn ? 'teknalar-lcdOff' : ''}`}>
+              {!powerOn ? (
+                <div className="teknalar-blank">— POWER OFF —</div>
+              ) : (
+                <>
+                  {/* Top CRT Status Header */}
+                  <div className="teknalar-lcdHead">
+                    <span>O1001 (PRESET-{selectedPresetId.toUpperCase()})</span>
+                    <span>{eStop ? 'EMG STOP' : isRunning ? 'MEM · STRT' : 'READY'}</span>
                   </div>
 
-                  <div className="teknalar-posSub">
-                    <div>
-                      <span>MACHINE X:</span>
-                      <strong>{machinePos.x.toFixed(2)}</strong>
-                    </div>
-                    <div>
-                      <span>MACHINE Y:</span>
-                      <strong>{machinePos.y.toFixed(2)}</strong>
-                    </div>
-                    <div>
-                      <span>MACHINE Z:</span>
-                      <strong>{machinePos.z.toFixed(2)}</strong>
-                    </div>
-                  </div>
+                  {/* TAB 1: POS (ACTUAL POSITION READOUT & PROGRAM SPLIT) */}
+                  {lcdTab === 'POS' && (
+                    <div className="teknalar-lcdBody teknalar-split">
+                      {/* Left Column: Coordinates & Machine Status */}
+                      <div style={{ display: 'grid', gap: 6, alignContent: 'start' }}>
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">ACTUAL POSITION (ABS)</p>
+                          <div className="teknalar-bigAxis">
+                            <span>X</span>
+                            {position.x.toFixed(3).padStart(9, ' ')}
+                          </div>
+                          <div className="teknalar-bigAxis">
+                            <span>Y</span>
+                            {position.y.toFixed(3).padStart(9, ' ')}
+                          </div>
+                          <div className="teknalar-bigAxis">
+                            <span>Z</span>
+                            {position.z.toFixed(3).padStart(9, ' ')}
+                          </div>
+                        </div>
 
-                  <div className="teknalar-gCodeModalList">
-                    <span>G17 (XY)</span>
-                    <span>G21 (MM)</span>
-                    <span>G40 (COMP OFF)</span>
-                    <span>G54 (WORK 1)</span>
-                    <span>G90 (ABS)</span>
-                    <span>G94 (F/MIN)</span>
-                  </div>
-                </div>
-              )}
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">MACHINE STATUS</p>
+                          <div className="teknalar-status">
+                            <p><b>S</b> {spindleRpm.toFixed(0)} rpm</p>
+                            <p><b>F</b> {feedRate.toFixed(1)} mm/min</p>
+                            <p><b>T</b> {activeToolObj.code}</p>
+                            <p><b>LOAD</b> {isRunning ? '48% (estimasi)' : '0% (IDLE)'}</p>
+                            <p style={{ color: spindleState === 3 || spindleState === 4 ? '#4ade80' : '#94a3b8' }}>
+                              {spindleState === 3 ? 'M03 (Spindle CW)' : spindleState === 4 ? 'M04 (Spindle CCW)' : 'M05 (Spindle Stop)'}
+                            </p>
+                            <p style={{ color: coolant ? '#38bdf8' : '#94a3b8' }}>
+                              {coolant ? 'M08 (Coolant ON)' : 'M09 (Coolant OFF)'}
+                            </p>
+                          </div>
+                        </div>
 
-              {/* PROG */}
-              {lcdTab === 'PROG' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-codeViewer">
-                    {programText.split('\n').map((line, idx) => (
-                      <div
-                        key={idx}
-                        className={`teknalar-codeLine ${activeLine === idx && isRunning ? 'active' : ''}`}
-                      >
-                        <span className="teknalar-lineNumber">{String(idx + 1).padStart(3, '0')}</span>
-                        <span className="teknalar-lineText">{line}</span>
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">MODAL G-CODES</p>
+                          <div className="teknalar-status" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4 }}>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G17</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G21</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G40</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G54</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G90</span>
+                            <span style={{ background: 'rgba(56,189,248,0.12)', padding: '2px 5px', borderRadius: 3, border: '1px solid rgba(56,189,248,0.25)', fontSize: 10, color: '#7dd3fc' }}>G94</span>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* Right Column: Program Code View */}
+                      <div className="teknalar-box" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                        <p className="teknalar-boxTitle">PROGRAM (O1001)</p>
+                        <div className="teknalar-prog" style={{ flex: 1, minHeight: 0, maxHeight: 320 }}>
+                          {programText.split('\n').map((line, idx) => (
+                            <div
+                              key={idx}
+                              className={activeLine === idx && isRunning ? 'teknalar-cur' : ''}
+                            >
+                              {String(idx + 1).padStart(3, '0')} {line}
+                            </div>
+                          ))}
+                          <div>%</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 2: PROG (G-CODE PROGRAM VIEWER & KEYPAD EDITOR) */}
+                  {lcdTab === 'PROG' && (
+                    <div className="teknalar-lcdBody">
+                      {modeSelect === 'EDIT' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          <textarea
+                            className="teknalar-editor"
+                            aria-label="Editor Program G-Code Frais"
+                            value={programText}
+                            spellCheck={false}
+                            onChange={(e) => setProgramText(e.target.value)}
+                          />
+                          <div className="teknalar-keys" aria-label="Keypad Program">
+                            {"OXYZGMIKRFPQTSN0123456789-.".split("").map((k) => (
+                              <button
+                                key={k}
+                                type="button"
+                                onClick={() => {
+                                  sound.playClick();
+                                  setProgramText((prev) => prev + k);
+                                }}
+                              >
+                                {k}
+                              </button>
+                            ))}
+                            <button
+                              type="button"
+                              className="teknalar-wide"
+                              onClick={() => {
+                                sound.playClick();
+                                setProgramText((prev) => prev + '\n');
+                              }}
+                            >
+                              EOB
+                            </button>
+                            <button
+                              type="button"
+                              className="teknalar-wide"
+                              onClick={() => {
+                                sound.playClick();
+                                setProgramText((prev) => prev.slice(0, -1));
+                              }}
+                            >
+                              CAN
+                            </button>
+                          </div>
+                          <div>
+                            <button
+                              type="button"
+                              className="teknalar-lcdBtn"
+                              onClick={() => {
+                                sound.playClick();
+                                setAlarmMessage('[PROGRAM VALID] Sintaks G-code siap dieksekusi.');
+                              }}
+                            >
+                              [PERIKSA PROGRAM]
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="teknalar-box">
+                          <p className="teknalar-boxTitle">PROGRAM (O1001) · MODE MEM/AUTO</p>
+                          <div className="teknalar-prog" style={{ maxHeight: 340 }}>
+                            {programText.split('\n').map((line, idx) => (
+                              <div
+                                key={idx}
+                                className={activeLine === idx && isRunning ? 'teknalar-cur' : ''}
+                              >
+                                {String(idx + 1).padStart(3, '0')} {line}
+                              </div>
+                            ))}
+                            <div>%</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* TAB 3: OFFSET (ATC MAGAZINE & LENGTH TABLE) */}
+                  {lcdTab === 'OFFSET' && (
+                    <div className="teknalar-lcdBody">
+                      <div className="teknalar-box">
+                        <p className="teknalar-boxTitle">ATC TOOL OFFSET & GEOMETRY</p>
+                        <div style={{ overflowX: 'auto', padding: 4 }}>
+                          <table className="teknalar-table">
+                            <thead>
+                              <tr>
+                                <th>NO</th>
+                                <th>PAHAT</th>
+                                <th>DIAMETER</th>
+                                <th>PANJANG H</th>
+                                <th>WEAR H</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {tools.map((t) => (
+                                <tr key={t.tool} className={t.tool === activeToolStation ? 'act' : ''}>
+                                  <td>{t.code}</td>
+                                  <td>{t.name}</td>
+                                  <td>Ø{t.diameter}</td>
+                                  <td>{t.lengthH.toFixed(3)}</td>
+                                  <td>{t.wearH.toFixed(3)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 4: DIAG (DIAGNOSTICS) */}
+                  {lcdTab === 'DIAG' && (
+                    <div className="teknalar-lcdBody">
+                      <div className="teknalar-box" style={{ padding: 10 }}>
+                        <p className="teknalar-boxTitle">STATUS VMC 3-AXIS & KERNEL CNC</p>
+                        <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 8, color: '#94a3b8', marginTop: 8 }}>
+                          <div>Spindle Power: <strong style={{ color: '#fff' }}>{isRunning ? '55% (4.2 kW)' : '0% (IDLE)'}</strong></div>
+                          <div>Axis Servo Load: <strong style={{ color: '#4ade80' }}>X: 18% · Y: 22% · Z: 35%</strong></div>
+                          <div>ATC Magazine Pockets: <strong style={{ color: '#38bdf8' }}>6 Pockets Ready</strong></div>
+                          <div>Air Pressure: <strong style={{ color: '#4ade80' }}>0.6 MPa (NORMAL)</strong></div>
+                          <div>Door Interlock: <strong style={{ color: doorClosed ? '#4ade80' : '#ef4444' }}>{doorClosed ? 'TERKUNCI AMAN' : 'TERBUKA'}</strong></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Alarm Banner */}
+                  {alarmMessage && (
+                    <div className="teknalar-crtAlarm">
+                      <AlertTriangle size={14} style={{ display: 'inline', marginRight: 4 }} />
+                      {alarmMessage}
+                    </div>
+                  )}
+
+                  {/* Softkeys Strip */}
+                  <div className="teknalar-softkeys">
+                    {[
+                      ['POS', 'POS'],
+                      ['PROG', 'PROG'],
+                      ['OFFSET', 'OFS/SET'],
+                      ['DIAG', 'DIAG'],
+                    ].map(([tabKey, tabLabel]) => (
+                      <button
+                        key={tabKey}
+                        type="button"
+                        onClick={() => {
+                          sound.playClick();
+                          setLcdTab(tabKey);
+                        }}
+                        className={lcdTab === tabKey ? 'active' : ''}
+                      >
+                        [{tabLabel}]
+                      </button>
                     ))}
                   </div>
-                </div>
+                </>
               )}
+            </div>
 
-              {/* OFFSET */}
-              {lcdTab === 'OFFSET' && (
-                <div className="teknalar-lcdBody" style={{ overflowY: 'auto' }}>
-                  <table className="teknalar-table">
-                    <thead>
-                      <tr>
-                        <th>NO</th>
-                        <th>PAHAT</th>
-                        <th>DIAMETER</th>
-                        <th>PANJANG H</th>
-                        <th>WEAR H</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {tools.map((t) => (
-                        <tr key={t.tool} className={t.tool === activeToolStation ? 'act' : ''}>
-                          <td>{t.code}</td>
-                          <td>{t.name}</td>
-                          <td>Ø{t.diameter}</td>
-                          <td>{t.lengthH.toFixed(3)}</td>
-                          <td>{t.wearH.toFixed(3)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+            {/* Side Blank Membrane Keys */}
+            <div className="teknalar-sideKeys" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, i) => (
+                <span key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* DIAG */}
-              {lcdTab === 'DIAG' && (
-                <div className="teknalar-lcdBody">
-                  <div className="teknalar-box" style={{ padding: 10 }}>
-                    <p className="teknalar-boxTitle">STATUS VMC 3-AXIS</p>
-                    <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 6, color: '#94a3b8' }}>
-                      <div>Spindle Power: <strong>{isRunning ? '55% (4.2 kW)' : '0% (IDLE)'}</strong></div>
-                      <div>Axis Servo Load: <strong>X: 18% · Y: 22% · Z: 35%</strong></div>
-                      <div>ATC Magazine Pockets: <strong>6 Ready</strong></div>
-                      <div>Air Pressure: <strong>0.6 MPa (NORMAL)</strong></div>
-                    </div>
-                  </div>
-                </div>
-              )}
+      {/* 3. LOWER OPERATOR CONSOLE SWITCHBOARD */}
+      <div className="teknalar-panel" aria-label="Panel operator mesin">
+        {/* Stack 1: E-STOP + POWER */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>EMERGENCY STOP</h4>
+            <button
+              type="button"
+              className={`teknalar-estop ${eStop ? 'teknalar-estopDown' : ''}`}
+              aria-pressed={eStop}
+              aria-label={eStop ? 'Lepaskan emergency stop' : 'Tekan emergency stop'}
+              onClick={() => {
+                sound.playClick();
+                setEStop(!eStop);
+                if (!eStop) setIsRunning(false);
+              }}
+            >
+              E-STOP
+            </button>
+          </div>
+          <div className="teknalar-group">
+            <h4>POWER</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${powerOn ? 'teknalar-lampOn' : ''}`}
+                aria-pressed={powerOn}
+                onClick={() => { sound.playClick(); setPowerOn(true); }}
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-red2"
+                onClick={() => { sound.playClick(); setPowerOn(false); setIsRunning(false); }}
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+        </div>
 
-              {alarmMessage && (
-                <div className="teknalar-crtAlarm">
-                  <AlertTriangle size={14} style={{ display: 'inline', marginRight: 4 }} />
-                  {alarmMessage}
-                </div>
-              )}
+        {/* Group 2: MODE SELECT Rotary Dial */}
+        <div className="teknalar-group">
+          <h4>MODE SELECT</h4>
+          <div className="teknalar-dial">
+            {MODES.map((m) => {
+              const rad = (m.angle * Math.PI) / 180;
+              return (
+                <button
+                  key={m.mode}
+                  type="button"
+                  className={`teknalar-lbl ${modeSelect === m.mode ? 'teknalar-on' : ''}`}
+                  style={{
+                    left: `${50 + 40 * Math.sin(rad)}%`,
+                    top: `${55 - 47 * Math.cos(rad)}%`,
+                  }}
+                  disabled={!powerOn || isRunning}
+                  aria-pressed={modeSelect === m.mode}
+                  onClick={() => {
+                    sound.playClick();
+                    setModeSelect(m.mode);
+                  }}
+                >
+                  {m.label}
+                </button>
+              );
+            })}
+            <div
+              className="teknalar-knob"
+              style={{
+                transform: `rotate(${MODES.find((m) => m.mode === modeSelect)?.angle || 0}deg)`,
+              }}
+              aria-hidden="true"
+            />
+          </div>
+        </div>
 
-              {/* Softkeys */}
-              <div className="teknalar-softkeys">
-                {['POS', 'PROG', 'OFFSET', 'DIAG'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => { sound.playClick(); setLcdTab(tab); }}
-                    className={`teknalar-softBtn ${lcdTab === tab ? 'active' : ''}`}
-                  >
-                    [{tab}]
-                  </button>
-                ))}
-              </div>
+        {/* Group 3: CYCLE OPERATION */}
+        <div className="teknalar-group">
+          <h4>CYCLE OPERATION</h4>
+          <div className="teknalar-cycleRow">
+            <button
+              type="button"
+              className={`teknalar-key teknalar-big teknalar-green2 ${isRunning ? 'teknalar-lampOn' : ''}`}
+              disabled={!powerOn || eStop}
+              aria-label="Cycle start"
+              onClick={handleCycleStart}
+            >
+              START
+            </button>
+            <span>CYCLE START</span>
+
+            <button
+              type="button"
+              className="teknalar-key teknalar-big teknalar-yellow2"
+              disabled={!powerOn || !isRunning}
+              aria-label="Feed hold"
+              onClick={handleFeedHold}
+            >
+              HOLD
+            </button>
+            <span>FEED HOLD</span>
+
+            <button
+              type="button"
+              className="teknalar-key teknalar-big teknalar-red2"
+              disabled={!powerOn}
+              aria-label="Reset"
+              onClick={handleReset}
+            >
+              RESET
+            </button>
+            <span>RESET</span>
+          </div>
+        </div>
+
+        {/* Stack 4: AXIS JOG & INCREMENT */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>AXIS JOG 3-SUMBU</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 54px)', gap: 6 }}>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('X', -1)}
+              >
+                −X
+              </button>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Y', 1)}
+              >
+                +Y
+              </button>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('X', 1)}
+              >
+                +X
+              </button>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Z', 1)}
+              >
+                +Z
+              </button>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Y', -1)}
+              >
+                −Y
+              </button>
+              <button
+                type="button"
+                className="teknalar-key"
+                disabled={!powerOn || eStop}
+                onClick={() => handleJog('Z', -1)}
+              >
+                −Z
+              </button>
             </div>
           </div>
 
-          {/* HARDWARE MEMBRANE KEYPAD */}
-          <div className="teknalar-hardware">
-            <div className="teknalar-modeRow">
-              {['AUTO', 'EDIT', 'MDI', 'JOG', 'REF'].map((m) => (
+          <div className="teknalar-group">
+            <h4>JOG INCREMENT</h4>
+            <div className="teknalar-row">
+              {[0.001, 0.01, 0.1, 1].map((step, idx) => (
                 <button
-                  key={m}
-                  onClick={() => { sound.playClick(); setModeSelect(m); }}
-                  className={`teknalar-btnMode ${modeSelect === m ? 'active' : ''}`}
+                  key={step}
+                  type="button"
+                  className={`teknalar-key ${jogStep === step ? 'teknalar-keyOn' : ''}`}
+                  disabled={!powerOn}
+                  onClick={() => {
+                    sound.playClick();
+                    setJogStep(step);
+                  }}
+                  title={`${step} mm per step`}
                 >
-                  {m}
+                  ×{Math.pow(10, idx)}
                 </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            <div className="teknalar-execRow">
-              <button onClick={handleCycleStart} className="teknalar-btnCycleStart">
-                <Play size={16} /> CYCLE START
-              </button>
-              <button onClick={handleFeedHold} className="teknalar-btnFeedHold">
-                <Pause size={16} /> FEED HOLD
-              </button>
-              <button onClick={handleReset} className="teknalar-btnReset">
-                <RotateCcw size={16} /> RESET
-              </button>
+        {/* Stack 5: SPINDLE & COOLANT */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>SPINDLE</h4>
+            <div className="teknalar-row">
               <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${spindleState === 3 ? 'teknalar-lampOn' : ''}`}
+                disabled={!powerOn || eStop}
                 onClick={() => {
                   sound.playClick();
-                  setEStop(!eStop);
-                  if (!eStop) setIsRunning(false);
+                  setSpindleState(3);
+                  setSpindleRpm(1800);
                 }}
-                className={`teknalar-btnEStop ${eStop ? 'active' : ''}`}
               >
-                E-STOP
+                FWD
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-red2"
+                disabled={!powerOn}
+                onClick={() => {
+                  sound.playClick();
+                  setSpindleState(0);
+                  setSpindleRpm(0);
+                }}
+              >
+                STOP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key teknalar-green2 ${spindleState === 4 ? 'teknalar-lampOn' : ''}`}
+                disabled={!powerOn || eStop}
+                onClick={() => {
+                  sound.playClick();
+                  setSpindleState(4);
+                  setSpindleRpm(1800);
+                }}
+              >
+                REV
               </button>
             </div>
+          </div>
 
-            <div className="teknalar-toggleGrid">
+          <div className="teknalar-group">
+            <h4>COOLANT</h4>
+            <div className="teknalar-row">
               <button
+                type="button"
+                className={`teknalar-key ${coolant ? 'teknalar-teal2 teknalar-lampOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setCoolant(true); }}
+              >
+                ON
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!coolant ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setCoolant(false); }}
+              >
+                OFF
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stack 6: RAGUM, PINTU & ATC MAGAZINE */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>RAGUM & PINTU</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key ${viseClamped ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn || isRunning}
+                onClick={() => { sound.playClick(); setViseClamped(true); }}
+              >
+                CLAMP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!viseClamped ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn || isRunning}
+                onClick={() => { sound.playClick(); setViseClamped(false); }}
+              >
+                UNCLAMP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${doorClosed ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setDoorClosed(true); }}
+                title="Tutup pintu pelindung"
+              >
+                TUTUP
+              </button>
+              <button
+                type="button"
+                className={`teknalar-key ${!doorClosed ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setDoorClosed(false); }}
+                title="Buka pintu pelindung"
+              >
+                BUKA
+              </button>
+            </div>
+          </div>
+
+          <div className="teknalar-group">
+            <h4>ATC MAGAZINE</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || isRunning}
+                onClick={() => handleAtcIndex(1)}
+              >
+                TOOL +
+              </button>
+              <button
+                type="button"
+                className="teknalar-key teknalar-big"
+                disabled={!powerOn || isRunning}
+                onClick={() => handleAtcIndex(-1)}
+              >
+                TOOL −
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stack 7: OVERRIDE & OPTION */}
+        <div className="teknalar-stack">
+          <div className="teknalar-group">
+            <h4>OVERRIDE</h4>
+            <div className="teknalar-ovr">
+              <OverrideKnob
+                label="FEED OVERRIDE"
+                value={feedOverride}
+                steps={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]}
+                onChange={setFeedOverride}
+                disabled={!powerOn}
+              />
+              <OverrideKnob
+                label="RAPID OVERRIDE"
+                value={rapidOverride}
+                steps={[5, 25, 50, 100]}
+                onChange={setRapidOverride}
+                disabled={!powerOn}
+              />
+              <OverrideKnob
+                label="SPINDLE OVERRIDE"
+                value={spindleOverride}
+                steps={[50, 60, 70, 80, 90, 100, 110, 120]}
+                onChange={setSpindleOverride}
+                disabled={!powerOn}
+              />
+            </div>
+          </div>
+
+          <div className="teknalar-group">
+            <h4>OPTION</h4>
+            <div className="teknalar-row">
+              <button
+                type="button"
+                className={`teknalar-key ${singleBlock ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
                 onClick={() => { sound.playClick(); setSingleBlock(!singleBlock); }}
-                className={`teknalar-btnToggle ${singleBlock ? 'on' : ''}`}
               >
-                SINGLE BLOCK: {singleBlock ? 'ON' : 'OFF'}
+                SINGLE BLOCK
               </button>
               <button
-                onClick={() => { sound.playClick(); setCoolant(!coolant); }}
-                className={`teknalar-btnToggle ${coolant ? 'on' : ''}`}
+                type="button"
+                className={`teknalar-key ${optionalStop ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
+                onClick={() => { sound.playClick(); setOptionalStop(!optionalStop); }}
               >
-                COOLANT: {coolant ? 'M08' : 'M09'}
+                OPTIONAL STOP
               </button>
               <button
+                type="button"
+                className={`teknalar-key ${dryRun ? 'teknalar-keyOn' : ''}`}
+                disabled={!powerOn}
                 onClick={() => { sound.playClick(); setDryRun(!dryRun); }}
-                className={`teknalar-btnToggle ${dryRun ? 'on' : ''}`}
               >
-                DRY RUN: {dryRun ? 'ON' : 'OFF'}
+                DRY RUN
               </button>
-            </div>
-
-            {/* JOG 3-Axis Pad */}
-            <div className="teknalar-jogSection">
-              <span className="teknalar-jogTitle">MANUAL JOG 3-SUMBU ({jogStep} mm)</span>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
-                <button onClick={() => handleJog('X', -1)} className="teknalar-jogBtn">[-X KIRI]</button>
-                <button onClick={() => handleJog('Y', 1)} className="teknalar-jogBtn">[+Y MAJU]</button>
-                <button onClick={() => handleJog('X', 1)} className="teknalar-jogBtn">[+X KANAN]</button>
-                <button onClick={() => handleJog('Z', 1)} className="teknalar-jogBtn">[+Z NAIK]</button>
-                <button onClick={() => handleJog('Y', -1)} className="teknalar-jogBtn">[-Y MUNDUR]</button>
-                <button onClick={() => handleJog('Z', -1)} className="teknalar-jogBtn">[-Z TURUN]</button>
-              </div>
-
-              <div className="teknalar-stepRow">
-                {[0.001, 0.01, 0.1, 1.0].map((step) => (
-                  <button
-                    key={step}
-                    onClick={() => { sound.playClick(); setJogStep(step); }}
-                    className={`teknalar-stepBtn ${jogStep === step ? 'active' : ''}`}
-                  >
-                    x{step}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </div>

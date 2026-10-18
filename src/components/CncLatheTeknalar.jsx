@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import '../styles/teknalar_cnc.css';
+import CncLathe3DScene from './CncLathe3DScene';
 import {
   Play, Pause, RotateCcw, Activity, Shield, Settings,
   CheckCircle2, AlertTriangle, Eye, ArrowLeft, ArrowRight,
-  Maximize2, Minimize2, Wrench, RefreshCw, Scissors, Compass
+  Maximize2, Minimize2, Wrench, RefreshCw, Scissors, Compass,
+  Layers, Disc, Box, Crosshair, ChevronRight, Gauge
 } from 'lucide-react';
 
 // =============================================================================
@@ -102,19 +104,17 @@ M30`
   },
   {
     id: "repair",
-    title: "06 · Perbaiki G00",
-    goal: "G00 cepat pada kedalaman sayat dapat menabrak bahu bahan. Hindari bahaya tabrakan pahat dengan selalu menarik X terlebih dahulu.",
+    title: "06 · Perbaikan program",
+    goal: "Perbaiki urutan gerak agar pahat tidak memotong saat kembali ke Z positif (hindari tabrakan lintasan kembali).",
     program: `G21 G18 G40 G54 G99
 T0101
 G97 S900 M3
 M8
 G0 X52 Z2
-G1 X48 F0.2
-G1 Z-20
+G1 X46 F0.2
+G1 Z-30
 G0 X54
 G0 Z2
-G1 X46
-G1 Z-35
 G0 X66 Z10
 M9
 M5
@@ -123,32 +123,27 @@ M30`
   {
     id: "thread",
     title: "07 · Ulir luar G32",
-    goal: "Bubut diameter mayor Ø46 dengan T0101, lalu buat ulir metrik M46×1,5 dari Z0 sampai Z−30 memakai T0505 dalam pass bertahap.",
+    goal: "Pembuatan ulir luar metris M48x2 dengan perintah G32 dalam beberapa kedalaman penyayatan (passes).",
     program: `G21 G18 G40 G54 G99
-T0101
-G50 S2000
-G96 S180 M3
-M8
-G0 X52 Z2
-G0 X46
-G1 Z-32 F0.15
-G0 X52
-G0 Z10
-M5
 T0505
 G97 S600 M3
-G0 X50 Z5
-G0 X45.5
-G32 Z-30 F1.5
-G0 X50
-G0 Z5
-G0 X44.8
-G32 Z-30 F1.5
-G0 X50
-G0 Z5
-G0 X44.16
-G32 Z-30 F1.5
-G0 X50
+M8
+G0 X52 Z4
+G0 X47.4
+G32 Z-25 F2.0
+G0 X54
+G0 Z4
+G0 X46.8
+G32 Z-25 F2.0
+G0 X54
+G0 Z4
+G0 X46.2
+G32 Z-25 F2.0
+G0 X54
+G0 Z4
+G0 X45.55
+G32 Z-25 F2.0
+G0 X66
 G0 Z10
 M9
 M5
@@ -156,18 +151,19 @@ M30`
   },
   {
     id: "css",
-    title: "08 · CSS G96 & clamp G50",
-    goal: "Kecepatan potong konstan (G96): RPM spindle otomatis naik saat diameter mengecil, dan dibatasi aman oleh clamp G50 S1800.",
+    title: "08 · CSS / G96",
+    goal: "Kecepatan potong konstan (Constant Surface Speed). RPM naik otomatis saat mendekati pusat X0 untuk menjaga kualitas permukaan.",
     program: `G21 G18 G40 G54 G99
-T0202
-G50 S1800
+T0101
+G50 S2200
 G96 S140 M3
 M8
-G0 X52 Z2
-G1 X48 F0.2
-G1 Z-30
-G0 X54
-G0 Z10
+G0 X54 Z2
+G0 Z0
+G1 X-1.6 F0.12
+G0 Z2
+G0 X66 Z10
+G97 S900
 M9
 M5
 M30`
@@ -175,29 +171,28 @@ M30`
   {
     id: "cycle-g76",
     title: "09 · Siklus ulir G76",
-    goal: "Jalankan siklus dua-blok G76: roughing otomatis bertahap, pass penyelesaian akhir, dan penarikan otomatis ke titik awal.",
+    goal: "Siklus ulir otomatis majemuk G76 dengan pemakanan berkurang (flank infeed) untuk mencegah keausan insert pahat.",
     program: `G21 G18 G40 G54 G99
 T0505
-G50 S1200
-G97 S600 M3
+G97 S650 M3
 M8
-G0 X52 Z2
-G76 P020060 Q50 R0.05
-G76 X48.8 Z-30 P600 Q250 F1.5
-G0 X54 Z10
+G0 X52 Z5
+G76 P010060 Q100 R0.05
+G76 X45.55 Z-25 P1226 Q250 F2.0
+G0 X66 Z10
 M9
 M5
 M30`
   },
   {
     id: "cycle-g90",
-    title: "10 · Siklus G90",
-    goal: "G90 menggabungkan 4 gerakan dalam 1 blok: masuk X, sayat Z, keluar X, dan mundur Z. Blok berikutnya cukup diisi nilai X.",
+    title: "10 · Siklus bubut G90",
+    goal: "Siklus pembubutan luar bertingkat G90 berulang dalam kotak gerak otomatis.",
     program: `G21 G18 G40 G54 G99
 T0101
 G97 S900 M3
 M8
-G0 X52 Z2
+G0 X54 Z2
 G90 X48 Z-30 F0.2
 X46
 X44
@@ -208,26 +203,21 @@ M30`
   },
   {
     id: "cycle-g71",
-    title: "11 · Roughing G71 & finishing G70",
-    goal: "G71 membuang material berlapis mengikuti kontur profil N10–N20. Lalu G70 menggunakan pahat finishing T0202 menyusuri kontur halus.",
+    title: "11 · Siklus pengasaran G71",
+    goal: "Siklus pembubutan kontur kasar G71 yang memotong material tebal secara otomatis lapis demi lapis sesuai profil N10-N20.",
     program: `G21 G18 G40 G54 G99
 T0101
 G97 S900 M3
 M8
-G0 X52 Z2
-G71 U1.5 R0.5
-G71 P10 Q20 U0.4 W0.1 F0.25
+G0 X54 Z2
+G71 U2.0 R1.0
+G71 P10 Q20 U0.5 W0.1 F0.25
 N10 G0 X30
-G1 Z0
-G1 X40 Z-15
-G1 Z-30
-N20 G1 X52
-G0 X66 Z10
-M5
-T0202
-G97 S1200 M3
-G0 X52 Z2
-G70 P10 Q20
+G1 Z-15 F0.15
+X40 Z-25
+Z-40
+X50
+N20 G1 Z-45
 G0 X66 Z10
 M9
 M5
@@ -236,17 +226,16 @@ M30`
   {
     id: "cycle-g92",
     title: "12 · Siklus ulir G92",
-    goal: "Siklus ulir G92 sederhana: mengulang lintasan ulir sinkron dengan pitch F. Setiap baris baru cukup memasukkan diameter X lebih dalam.",
+    goal: "Siklus pembuatan ulir sederhana kotak G92 dalam 4 tahapan kedalaman pemakanan.",
     program: `G21 G18 G40 G54 G99
 T0505
 G97 S600 M3
 M8
-G0 X50 Z4
-G92 X45.5 Z-25 F1.5
-X45.0
-X44.6
-X44.3
-X44.16
+G0 X54 Z4
+G92 X47.4 Z-24 F2.0
+X46.8
+X46.2
+X45.55
 G0 X66 Z10
 M9
 M5
@@ -255,85 +244,221 @@ M30`
 ];
 
 // =============================================================================
-// DATABASE TOOL TURRET (STANDAR INDUSTRI TEKNALAR)
+// DAFTAR ALAT POTONG TURRET 8 STASIUN (STANDAR INDUSTRI & ISO)
 // =============================================================================
-const INITIAL_TOOLS = [
-  { tool: 1, offset: 1, code: "T0101", name: "OD turning / facing", type: "od", insert: "diamond", noseRadius: 0.8, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#e7b85d", insertAngle: 80, approach: 95 },
-  { tool: 2, offset: 2, code: "T0202", name: "Finishing 35°", type: "finish", insert: "diamond", noseRadius: 0.4, geometryX: -0.12, geometryZ: 0.08, wearX: 0, wearZ: 0, color: "#8fd3c8", insertAngle: 35, approach: 93 },
-  { tool: 3, offset: 3, code: "T0303", name: "Grooving 3 mm", type: "groove", insert: "blade", noseRadius: 0.15, width: 3, geometryX: 0, geometryZ: 0.12, wearX: 0, wearZ: 0, color: "#f6a36b" },
-  { tool: 4, offset: 4, code: "T0404", name: "Boring bar Ø8", type: "boring", insert: "bar", noseRadius: 0.4, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#9db7e8", bar: 8, reach: 60 },
-  { tool: 5, offset: 5, code: "T0505", name: "Threading 60°", type: "thread", insert: "triangle", noseRadius: 0.1, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#d6a4e8" },
-  { tool: 6, offset: 6, code: "T0606", name: "Center drill 90° Ø10", type: "drill", insert: "drill", noseRadius: 0, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#c9ced3", point: 90 },
-  { tool: 7, offset: 7, code: "T0707", name: "Twist drill Ø12", type: "drill", insert: "drill", noseRadius: 0, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#d9b76a", point: 118 },
-  { tool: 8, offset: 8, code: "T0808", name: "Twist drill Ø20", type: "drill", insert: "drill", noseRadius: 0, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#d9b76a", point: 118 },
-  { tool: 9, offset: 9, code: "T0909", name: "Ulir dalam 60° Ø10", type: "threadIn", insert: "bar", noseRadius: 0.1, geometryX: 0, geometryZ: 0, wearX: 0, wearZ: 0, color: "#d6a4e8", bar: 10, reach: 45 }
+const DEFAULT_TURRET_TOOLS = [
+  {
+    tool: 1,
+    offset: 1,
+    code: "T0101",
+    name: "OD Roughing / Facing (80°)",
+    type: "od",
+    insert: "CNMG 120408",
+    noseRadius: 0.8,
+    insertAngle: 80,
+    approach: 95,
+    maxDepth: 4.0,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#e7b85d"
+  },
+  {
+    tool: 2,
+    offset: 2,
+    code: "T0202",
+    name: "Finishing Tajam 35°",
+    type: "finish",
+    insert: "VNMG 160404",
+    noseRadius: 0.4,
+    insertAngle: 35,
+    approach: 93,
+    maxDepth: 1.5,
+    geometryX: -0.12,
+    geometryZ: 0.08,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#8fd3c8"
+  },
+  {
+    tool: 3,
+    offset: 3,
+    code: "T0303",
+    name: "Alur Luar (Grooving 3mm)",
+    type: "groove",
+    insert: "CoroCut 3.0mm",
+    noseRadius: 0.15,
+    width: 3.0,
+    reach: 26,
+    geometryX: 0.0,
+    geometryZ: 0.12,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#f6a36b"
+  },
+  {
+    tool: 4,
+    offset: 4,
+    code: "T0404",
+    name: "Boring Bar Lubang Ø8",
+    type: "boring",
+    insert: "CCMT 060204",
+    noseRadius: 0.4,
+    bar: 8,
+    reach: 55,
+    insertAngle: 55,
+    approach: 93,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#9db7e8"
+  },
+  {
+    tool: 5,
+    offset: 5,
+    code: "T0505",
+    name: "Ulir Luar 60° (Threading)",
+    type: "thread",
+    insert: "ISO 16ER AG60",
+    noseRadius: 0.1,
+    insertAngle: 60,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#d6a4e8"
+  },
+  {
+    tool: 6,
+    offset: 6,
+    code: "T0606",
+    name: "Center Drill 90° Ø10",
+    type: "drill",
+    insert: "HSS Center Drill",
+    noseRadius: 0.0,
+    width: 10,
+    point: 90,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#c9ced3"
+  },
+  {
+    tool: 7,
+    offset: 7,
+    code: "T0707",
+    name: "Twist Drill Spiral Ø12",
+    type: "drill",
+    insert: "HSS Twist Drill",
+    noseRadius: 0.0,
+    width: 12,
+    point: 118,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#fcd34d"
+  },
+  {
+    tool: 8,
+    offset: 8,
+    code: "T0808",
+    name: "Ulir Dalam 60° (Internal)",
+    type: "threadIn",
+    insert: "ISO 11IR A60",
+    noseRadius: 0.1,
+    bar: 10,
+    reach: 45,
+    insertAngle: 60,
+    geometryX: 0.0,
+    geometryZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    color: "#a78bfa"
+  }
 ];
 
-export default function CncLatheTeknalar({ onBack, addXP }) {
-  // Workpiece Configuration
+// =============================================================================
+// KOMPONEN UTAMA SIMULATOR CNC BUBUT TEKNALAR
+// =============================================================================
+const CncLatheTeknalar = ({ addXP }) => {
+  // Preset & Editor Program
+  const [selectedPresetId, setSelectedPresetId] = useState("turn");
+  const [programText, setProgramText] = useState(LATHE_PRESETS[0].program);
+
+  // Setup Benda Kerja (Raw Stock)
   const [stock, setStock] = useState({
     diameter: 50,
     length: 90,
     grip: 25,
-    zeroZ: 0,
-    correctionX: 0
+    zeroZ: 0.0
   });
-
-  const [showStockConfig, setShowStockConfig] = useState(false);
+  const [showStockDrawer, setShowStockDrawer] = useState(false);
   const [stockDraft, setStockDraft] = useState({ ...stock });
 
-  // Tool Turret Table
-  const [tools, setTools] = useState(INITIAL_TOOLS);
+  // Tool Turret & Library
+  const [tools, setTools] = useState(DEFAULT_TURRET_TOOLS);
   const [activeToolStation, setActiveToolStation] = useState(1);
+  const [showTurretDrawer, setShowTurretDrawer] = useState(false);
+  const [selectedToolForEdit, setSelectedToolForEdit] = useState(1);
 
-  // Active Program & Mode
-  const [selectedPresetId, setSelectedPresetId] = useState("turn");
-  const [programText, setProgramText] = useState(LATHE_PRESETS[0].program);
-  const [machineMode, setMachineMode] = useState("AUTO"); // AUTO, EDIT, MDI, JOG, HANDLE, ZERO RETURN
-  const [lcdTab, setLcdTab] = useState("POS"); // POS, PROG, OFFSET, UKUR, DIAG
+  // Display Softkeys & Modes
+  const [modeSelect, setModeSelect] = useState("AUTO"); // AUTO, EDIT, MDI, JOG, HANDLE, REF
+  const [lcdTab, setLcdTab] = useState("POS"); // POS, PROG, OFFSET, GRAPHIC, MDI, BAHAN, UKUR, DIAG
+  const [viewMode, setViewMode] = useState("2d"); // "2d" (Blueprint SVG) or "3d" (Slant-bed Canvas)
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Machine States
-  const [position, setPosition] = useState({ x: 66, z: 10 });
-  const [machinePos, setMachinePos] = useState({ x: 150, z: 250 });
-  const [rpm, setRpm] = useState(0);
-  const [targetRpm, setTargetRpm] = useState(900);
-  const [feedRate, setFeedRate] = useState(0.2);
-  const [spindleState, setSpindleState] = useState(0); // 0=stop, 1=CW, 2=CCW
+  // Machine Hardware & Status
+  const [powerOn, setPowerOn] = useState(true);
+  const [eStop, setEStop] = useState(false);
+  const [spindleState, setSpindleState] = useState(0); // 0=stop, 1=CW (M3), 2=CCW (M4)
+  const [spindleRpm, setSpindleRpm] = useState(900);
   const [coolant, setCoolant] = useState(false);
   const [doorClosed, setDoorClosed] = useState(true);
   const [chuckClamped, setChuckClamped] = useState(true);
-  const [eStop, setEStop] = useState(false);
 
-  // Overrides & Modals
+  // Overrides & Execution Switches
   const [rapidOverride, setRapidOverride] = useState(100);
   const [feedOverride, setFeedOverride] = useState(100);
   const [spindleOverride, setSpindleOverride] = useState(100);
   const [singleBlock, setSingleBlock] = useState(false);
+  const [optionalStop, setOptionalStop] = useState(true);
+  const [blockDelete, setBlockDelete] = useState(false);
   const [dryRun, setDryRun] = useState(false);
   const [jogStep, setJogStep] = useState(0.1);
 
-  // View States
-  const [viewMode, setViewMode] = useState("2d"); // "2d" (Blueprint SVG) or "3d" (Realistic)
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Execution & Simulation Engine State
+  // Running State & Profile Data
   const [isRunning, setIsRunning] = useState(false);
   const [activeLine, setActiveLine] = useState(0);
   const [simFrames, setSimFrames] = useState([]);
   const [currentFrameIdx, setCurrentFrameIdx] = useState(0);
-  const [stats, setStats] = useState({ rapidMm: 0, feedMm: 0, cutMm: 0, timeSec: 0, minDia: 50 });
   const [profileCut, setProfileCut] = useState([]);
+  const [threads, setThreads] = useState([]);
   const [alarmMessage, setAlarmMessage] = useState("");
+  const [mdiInput, setMdiInput] = useState("G0 U2");
 
-  // Measurement Cursor (UKUR)
+  // Coordinates
+  const [position, setPosition] = useState({ x: 66, z: 10 });
+  const [machinePos, setMachinePos] = useState({ x: 200, z: 250 });
+  const [relPos, setRelPos] = useState({ u: 0, w: 0 });
+  const [feedRate, setFeedRate] = useState(0.2);
+
+  // UKUR & Pengukuran
   const [measureZ, setMeasureZ] = useState(-15);
-  const [measureInputDia, setMeasureInputDia] = useState("50.00");
+  const [measureDiaInput, setMeasureDiaInput] = useState("46.00");
+
+  const activeToolObj = useMemo(() => {
+    return tools.find(t => t.tool === activeToolStation) || tools[0];
+  }, [tools, activeToolStation]);
 
   const activePreset = useMemo(() => {
     return LATHE_PRESETS.find(p => p.id === selectedPresetId) || LATHE_PRESETS[0];
   }, [selectedPresetId]);
 
-  // Load Preset
+  // Handle Preset Select
   const handleSelectPreset = (id) => {
     sound.playClick();
     setSelectedPresetId(id);
@@ -346,68 +471,70 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
     }
   };
 
-  // Compile / Parse G-Code into Simulation Frames
-  const parseGCode = (text, stockConfig, currentTools) => {
-    const lines = text.split(/\r?\n/);
+  // ===========================================================================
+  // INTERPRETER G-CODE & SIMULATION ENGINE LENGKAP DENGAN MODAL G0/G1
+  // ===========================================================================
+  const compileProgram = (text, stk, curTools) => {
+    const rawLines = text.split(/\r?\n/);
     const frames = [];
-    let curX = 66;
-    let curZ = 10;
-    let curTool = 1;
-    let curSpindle = 0;
+    const exposedLen = stk.length - stk.grip;
+    const zResolution = 0.25; // mm per segment along Z
+    const zSteps = Math.ceil(exposedLen / zResolution);
+    const rawRadius = stk.diameter / 2;
+
+    // Workpiece radius array along Z from 0 down to -exposedLen
+    let workProfile = new Float32Array(zSteps).fill(rawRadius);
+    let threadList = [];
+
+    let curX = 66.0;
+    let curZ = 10.0;
+    let activeToolNum = 1;
+    let activeMotion = 0; // 0=G00, 1=G01, 2=G02, 3=G03, 32=G32, 90=G90, 92=G92, 76=G76
     let curRpm = 900;
     let curFeed = 0.2;
+    let curSpindle = 0;
     let curCoolant = false;
-    let isMetric = true;
-    let isAbsolute = true;
-    let isFeedPerRev = true;
-    let isCSS = false;
-    let g50Limit = 2500;
+    let errorAlarm = "";
 
-    let rapidDist = 0;
-    let feedDist = 0;
-    let cutDist = 0;
-    let totalTime = 0;
-    let minD = stockConfig.diameter;
+    for (let lineIdx = 0; lineIdx < rawLines.length; lineIdx++) {
+      let line = rawLines[lineIdx].replace(/\([^)]*\)/g, '').trim().toUpperCase();
+      if (!line || line.startsWith('%') || line.startsWith('O')) continue;
 
-    // Initial stock profile radius points along Z from 0 down to -(length - grip)
-    const zSteps = Math.ceil(stockConfig.length);
-    let workProfile = new Float32Array(zSteps).fill(stockConfig.diameter / 2);
-
-    for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
-      let raw = lines[lineIdx].replace(/\([^)]*\)/g, '').trim().toUpperCase();
-      if (!raw || raw.startsWith('%') || raw.startsWith('O')) continue;
-
-      // Extract words
+      // Parse Words
       const words = {};
-      const matches = raw.match(/[A-Z][+-]?\d*\.?\d+/g) || [];
+      const matches = line.match(/([A-Z])([+-]?\d*\.?\d+)/g) || [];
       for (const m of matches) {
-        words[m[0]] = parseFloat(m.slice(1));
+        const letter = m[0];
+        const val = parseFloat(m.slice(1));
+        words[letter] = val;
       }
 
-      // Check tool change
-      if (raw.includes('T')) {
-        const tMatch = raw.match(/T(\d{2})(\d{2})/);
-        if (tMatch) {
-          curTool = parseInt(tMatch[1], 10);
-        }
+      // Check Motion Mode
+      if (line.includes('G00') || (line.includes('G0') && !line.includes('G01') && !line.includes('G02') && !line.includes('G03'))) activeMotion = 0;
+      else if (line.includes('G01') || line.includes('G1')) activeMotion = 1;
+      else if (line.includes('G02') || line.includes('G2')) activeMotion = 2;
+      else if (line.includes('G03') || line.includes('G3')) activeMotion = 3;
+      else if (line.includes('G32')) activeMotion = 32;
+      else if (line.includes('G92')) activeMotion = 92;
+      else if (line.includes('G76')) activeMotion = 76;
+      else if (line.includes('G90')) activeMotion = 90;
+
+      // Tool change
+      if (line.includes('T')) {
+        const tMatch = line.match(/T(\d{2})(\d{2})/);
+        if (tMatch) activeToolNum = parseInt(tMatch[1], 10);
       }
 
       // Spindle & Feed
-      if (words.S !== undefined) {
-        if (raw.includes('G50')) {
-          g50Limit = words.S;
-        } else {
-          curRpm = words.S;
-        }
-      }
+      if (words.S !== undefined) curRpm = words.S;
       if (words.F !== undefined) curFeed = words.F;
-      if (raw.includes('M3') || raw.includes('M03')) curSpindle = 1;
-      if (raw.includes('M4') || raw.includes('M04')) curSpindle = 2;
-      if (raw.includes('M5') || raw.includes('M05')) curSpindle = 0;
-      if (raw.includes('M8') || raw.includes('M08')) curCoolant = true;
-      if (raw.includes('M9') || raw.includes('M09')) curCoolant = false;
+      if (line.includes('M3') || line.includes('M03')) curSpindle = 1;
+      if (line.includes('M4') || line.includes('M04')) curSpindle = 2;
+      if (line.includes('M5') || line.includes('M05')) curSpindle = 0;
+      if (line.includes('M8') || line.includes('M08')) curCoolant = true;
+      if (line.includes('M9') || line.includes('M09')) curCoolant = false;
 
-      // Coordinate Motion target
+      // Coordinate Motion target (Modal memory for X and Z!)
       let targetX = curX;
       let targetZ = curZ;
 
@@ -416,41 +543,46 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
       if (words.U !== undefined) targetX = curX + words.U;
       if (words.W !== undefined) targetZ = curZ + words.W;
 
-      const isRapid = raw.includes('G0') || raw.includes('G00');
-      const isFeed = raw.includes('G1') || raw.includes('G01') || raw.includes('G32') || raw.includes('G90') || raw.includes('G76');
+      // Chuck Collision Alarm Check!
+      const chuckZLimit = -exposedLen;
+      if (targetZ < chuckZLimit) {
+        errorAlarm = `[ALARM TABRAKAN CHUCK] Pahat melampaui batas cekam ragum Z${chuckZLimit.toFixed(1)} mm!`;
+      }
 
-      if (isRapid || isFeed) {
+      const hasMove = words.X !== undefined || words.Z !== undefined || words.U !== undefined || words.W !== undefined;
+
+      if (hasMove) {
         const dX = targetX - curX;
         const dZ = targetZ - curZ;
         const dist = Math.hypot(dX / 2, dZ);
+        const steps = Math.max(1, Math.ceil(dist / 1.5));
 
-        // Check if tool tip is cutting into material (Z <= 0 and X/2 < stockRadius)
-        const isCutting = (targetZ <= 0 || curZ <= 0) && (targetX < stockConfig.diameter || curX < stockConfig.diameter);
+        // Is tool currently cutting into stock?
+        const isCutting = (activeMotion === 1 || activeMotion === 32 || activeMotion === 92 || activeMotion === 76) &&
+          (targetZ <= 0 || curZ <= 0) &&
+          (targetX < stk.diameter || curX < stk.diameter);
 
-        if (isRapid) {
-          rapidDist += dist;
-          totalTime += dist / 80; // Rapid ~80mm/s
-        } else {
-          feedDist += dist;
-          if (isCutting) cutDist += dist;
-          const actualRpm = curRpm > 0 ? curRpm : 800;
-          const speedMmS = isFeedPerRev ? (curFeed * actualRpm) / 60 : curFeed / 60;
-          totalTime += dist / Math.max(0.5, speedMmS);
+        // Record Thread segment ONLY on actual thread commands
+        if ((activeMotion === 32 || activeMotion === 92 || activeMotion === 76) && targetZ < 0) {
+          threadList.push({
+            startZ: Math.min(curZ, targetZ),
+            endZ: Math.max(curZ, targetZ),
+            dia: targetX,
+            pitch: words.F || 2.0
+          });
         }
 
-        // Subdivide move into fine animation samples
-        const steps = Math.max(1, Math.min(25, Math.ceil(dist / 1.5)));
+        // Interpolate along line segment
         for (let s = 1; s <= steps; s++) {
           const interpX = curX + (dX * s) / steps;
           const interpZ = curZ + (dZ * s) / steps;
 
-          // Update workpiece profile if cutting
-          if (interpZ <= 0 && interpZ >= -(stockConfig.length - stockConfig.grip)) {
-            const zIdx = Math.min(zSteps - 1, Math.max(0, Math.floor(-interpZ)));
-            const radiusAtZ = interpX / 2;
-            if (radiusAtZ < workProfile[zIdx]) {
-              workProfile[zIdx] = Math.max(0, radiusAtZ);
-              if (radiusAtZ * 2 < minD) minD = radiusAtZ * 2;
+          // Material Removal Math: update workProfile array
+          if (isCutting && interpZ <= 0 && interpZ >= -exposedLen) {
+            const zIdx = Math.min(zSteps - 1, Math.max(0, Math.floor(-interpZ / zResolution)));
+            const currentCutRadius = interpX / 2;
+            if (currentCutRadius < workProfile[zIdx]) {
+              workProfile[zIdx] = Math.max(0, currentCutRadius);
             }
           }
 
@@ -458,14 +590,16 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
             line: lineIdx,
             x: interpX,
             z: interpZ,
-            isRapid,
+            motion: activeMotion,
+            isRapid: activeMotion === 0,
             isCutting,
-            tool: curTool,
-            spindle: curSpindle,
+            tool: activeToolNum,
             rpm: curRpm,
             feed: curFeed,
+            spindle: curSpindle,
             coolant: curCoolant,
-            profileSnapshot: Array.from(workProfile)
+            profileSnapshot: Array.from(workProfile),
+            threadSnapshot: [...threadList]
           });
         }
 
@@ -476,69 +610,77 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
 
     return {
       frames,
-      stats: {
-        rapidMm: Math.round(rapidDist),
-        feedMm: Math.round(feedDist),
-        cutMm: Math.round(cutDist),
-        timeSec: Math.round(totalTime),
-        minDia: Math.round(minD * 10) / 10
-      }
+      alarm: errorAlarm,
+      finalProfile: Array.from(workProfile),
+      finalThreads: [...threadList]
     };
   };
 
-  // Compile on programText change or stock change
+  // Compile on program, stock, or tool change
   useEffect(() => {
-    const res = parseGCode(programText, stock, tools);
+    const res = compileProgram(programText, stock, tools);
     setSimFrames(res.frames);
-    setStats(res.stats);
     if (res.frames.length > 0) {
       setProfileCut(res.frames[0].profileSnapshot);
+      setThreads(res.frames[0].threadSnapshot);
     }
+    if (res.alarm) setAlarmMessage(res.alarm);
   }, [programText, stock, tools]);
 
-  // Playback Animation Loop
+  // Live Animation Loop
   useEffect(() => {
-    let animId = null;
+    let timer = null;
     if (isRunning && simFrames.length > 0) {
-      const intervalMs = Math.max(16, 75 - rapidOverride * 0.4);
-      const timer = setInterval(() => {
-        setCurrentFrameIdx((prev) => {
-          if (prev >= simFrames.length - 1) {
+      const intervalMs = Math.max(16, 75 - rapidOverride * 0.45);
+      timer = setInterval(() => {
+        setCurrentFrameIdx(prev => {
+          const next = prev + 1;
+          if (next >= simFrames.length) {
             setIsRunning(false);
             sound.playSuccess();
-            if (addXP) addXP(150);
+            if (addXP) addXP(300);
             return prev;
           }
-          const next = prev + 1;
           const f = simFrames[next];
-          setPosition({ x: Number(f.x.toFixed(2)), z: Number(f.z.toFixed(2)) });
-          setMachinePos({ x: Number((f.x + 100).toFixed(2)), z: Number((f.z + 240).toFixed(2)) });
+          setPosition({ x: Number(f.x.toFixed(3)), z: Number(f.z.toFixed(3)) });
+          setMachinePos({ x: Number((f.x + 150).toFixed(2)), z: Number((f.z + 240).toFixed(2)) });
           setActiveLine(f.line);
           setProfileCut(f.profileSnapshot);
+          setThreads(f.threadSnapshot);
           setActiveToolStation(f.tool);
+          setSpindleState(f.spindle);
+          setSpindleRpm(f.rpm);
+          setCoolant(f.coolant);
+          setFeedRate(f.feed);
+
+          // Single block pause
+          if (singleBlock && next < simFrames.length - 1 && f.line !== simFrames[next + 1]?.line) {
+            setIsRunning(false);
+          }
+
           return next;
         });
       }, intervalMs);
-
-      return () => clearInterval(timer);
     }
-  }, [isRunning, simFrames, rapidOverride, addXP]);
 
-  // Operator Actions
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isRunning, simFrames, rapidOverride, singleBlock, addXP]);
+
+  // Cycle Start
   const handleCycleStart = () => {
-    if (eStop) {
-      setAlarmMessage("[ALARM] Emergency Stop aktif! Lepaskan E-Stop terlebih dahulu.");
-      return;
-    }
-    if (!doorClosed) {
-      setAlarmMessage("[PERINGATAN] Pintu pelindung terbuka! Tutup pintu demi keselamatan.");
-      return;
-    }
     sound.playClick();
+    if (eStop) {
+      setAlarmMessage("[ALARM] Emergency Stop aktif! Lepas tombol darurat terlebih dahulu.");
+      return;
+    }
+    if (!chuckClamped) {
+      setAlarmMessage("[ALARM] Cekam Chuck belum menjepit benda kerja!");
+      return;
+    }
     setAlarmMessage("");
     setIsRunning(true);
-    setSpindleState(1);
-    setRpm(targetRpm);
   };
 
   const handleFeedHold = () => {
@@ -552,12 +694,12 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
     setCurrentFrameIdx(0);
     setActiveLine(0);
     setPosition({ x: 66, z: 10 });
-    setMachinePos({ x: 150, z: 250 });
     setSpindleState(0);
-    setRpm(0);
+    setCoolant(false);
     setAlarmMessage("");
     if (simFrames.length > 0) {
       setProfileCut(simFrames[0].profileSnapshot);
+      setThreads([]);
     }
   };
 
@@ -567,120 +709,302 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
     const delta = jogStep * dir;
     if (axis === 'X') {
       setPosition(p => ({ ...p, x: Number((p.x + delta * 2).toFixed(3)) }));
-      setMachinePos(m => ({ ...m, x: Number((m.x + delta * 2).toFixed(3)) }));
-    } else if (axis === 'Z') {
+      setMachinePos(m => ({ ...m, x: Number((m.x + delta * 2).toFixed(2)) }));
+    } else {
       setPosition(p => ({ ...p, z: Number((p.z + delta).toFixed(3)) }));
-      setMachinePos(m => ({ ...m, z: Number((m.z + delta).toFixed(3)) }));
+      setMachinePos(m => ({ ...m, z: Number((m.z + delta).toFixed(2)) }));
     }
   };
 
+  // Stock Actions
   const applyStockChanges = () => {
     sound.playClick();
     setStock({ ...stockDraft });
-    setShowStockConfig(false);
+    setShowStockDrawer(false);
+    setAlarmMessage("[SUKSES] Ukuran bahan benda kerja berhasil diperbarui.");
   };
 
-  // SVG Dimension Scale Calculations for 2D View
-  const maxZ = stock.length;
-  const maxRadius = stock.diameter / 2;
-  const svgW = 620;
-  const svgH = 260;
-  const scale = Math.min((svgW - 80) / (maxZ + 25), (svgH - 60) / (maxRadius + 15));
+  const handleFlipWorkpiece = () => {
+    sound.playClick();
+    if (profileCut.length > 0) {
+      const reversed = [...profileCut].reverse();
+      setProfileCut(reversed);
+      setAlarmMessage("[SUKSES] Benda kerja berhasil dibalik dan dicekam ulang.");
+    }
+  };
 
-  const originSvgX = 480;
-  const originSvgY = 150;
+  // 2D SVG Blueprint Path Calculations
+  const svgW = 600;
+  const svgH = 340;
+  const originSvgX = 460;
+  const originSvgY = 170;
+  const scale = 3.6;
 
   const toSvgX = (z) => originSvgX + z * scale;
-  const toSvgY = (radius) => originSvgY - radius * scale;
+  const toSvgY = (r) => originSvgY - r * scale;
 
-  // Workpiece Polygon Points
-  const workpiecePoints = useMemo(() => {
+  const maxRadius = stock.diameter / 2;
+  const exposedLen = stock.length - stock.grip;
+
+  // Workpiece Top and Bottom Outline Path
+  const workpiecePolygonPoints = useMemo(() => {
     const pts = [];
-    const gripZ = -(stock.length - stock.grip);
+    const gripZ = -exposedLen;
 
-    // Top profile along Z
+    // Top Profile along Z from grip to face (Z=0)
     pts.push(`${toSvgX(gripZ)},${toSvgY(0)}`);
     pts.push(`${toSvgX(gripZ)},${toSvgY(maxRadius)}`);
 
     if (profileCut && profileCut.length > 0) {
-      for (let i = 0; i < Math.min(profileCut.length, stock.length - stock.grip); i++) {
-        const curZ = -i;
-        const curR = profileCut[i] !== undefined ? profileCut[i] : maxRadius;
+      const zResolution = exposedLen / profileCut.length;
+      for (let i = 0; i < profileCut.length; i++) {
+        const curZ = gripZ + i * zResolution;
+        const curR = profileCut[profileCut.length - 1 - i] !== undefined ? profileCut[profileCut.length - 1 - i] : maxRadius;
         pts.push(`${toSvgX(curZ)},${toSvgY(curR)}`);
       }
     } else {
       pts.push(`${toSvgX(0)},${toSvgY(maxRadius)}`);
     }
 
+    // Right face
     pts.push(`${toSvgX(0)},${toSvgY(0)}`);
-    return pts.join(' ');
-  }, [stock, profileCut, scale, maxRadius]);
 
-  const activeToolObj = tools.find(t => t.tool === activeToolStation) || tools[0];
+    // Bottom Profile along Z (Mirrored)
+    if (profileCut && profileCut.length > 0) {
+      const zResolution = exposedLen / profileCut.length;
+      for (let i = profileCut.length - 1; i >= 0; i--) {
+        const curZ = gripZ + i * zResolution;
+        const curR = profileCut[profileCut.length - 1 - i] !== undefined ? profileCut[profileCut.length - 1 - i] : maxRadius;
+        pts.push(`${toSvgX(curZ)},${toSvgY(-curR)}`);
+      }
+    } else {
+      pts.push(`${toSvgX(0)},${toSvgY(-maxRadius)}`);
+    }
+
+    pts.push(`${toSvgX(gripZ)},${toSvgY(-maxRadius)}`);
+    pts.push(`${toSvgX(gripZ)},${toSvgY(0)}`);
+
+    return pts.join(' ');
+  }, [stock, profileCut, exposedLen, maxRadius]);
 
   return (
     <div className={`teknalar-cnc-root ${isFullscreen ? 'fullscreen' : ''}`}>
-      {/* 1. TOP BAR */}
+      {/* =====================================================================
+          1. TOP NAVIGATION & WORKSHOP STATUS BAR
+      ===================================================================== */}
       <div className="teknalar-topbar">
         <div className="teknalar-brand">
-          <strong>TEKNALAR CNC LATHE</strong>
-          <span>2-AXIS (XZ) · FANUC Oi-TF</span>
+          <strong>TEKNALAR</strong>
+          <span>CNC LATHE SIMULATOR · FANUC Series 0i-TD</span>
         </div>
 
-        <div className="teknalar-topActions">
+        <div className="teknalar-topControls">
+          {/* Preset Selector */}
           <select
             value={selectedPresetId}
             onChange={(e) => handleSelectPreset(e.target.value)}
-            className="teknalar-topBtn"
-            style={{ fontWeight: 700, color: '#facc15', background: '#1c1917' }}
+            className="teknalar-presetSelect"
           >
-            {LATHE_PRESETS.map(p => (
-              <option key={p.id} value={p.id}>{p.title}</option>
+            {LATHE_PRESETS.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.title}
+              </option>
             ))}
           </select>
 
+          {/* Drawer 1: Tool Magazine & Turret */}
           <button
-            onClick={() => setShowStockConfig(!showStockConfig)}
+            onClick={() => { sound.playClick(); setShowTurretDrawer(!showTurretDrawer); setShowStockDrawer(false); }}
             className="teknalar-topBtn"
-            style={{ color: '#38bdf8', borderColor: '#0284c7' }}
+            style={{
+              background: showTurretDrawer ? 'rgba(56, 189, 248, 0.25)' : '#1e293b',
+              color: '#38bdf8',
+              borderColor: '#0284c7',
+              fontWeight: 700
+            }}
           >
-            <Settings size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: -2 }} />
-            Bahan Ø{stock.diameter}×{stock.length}mm
+            <Disc size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: -2 }} />
+            [TURRET MAGAZINE] ({activeToolObj.code})
           </button>
 
+          {/* Drawer 2: Bahan Benda Kerja */}
           <button
-            onClick={() => setViewMode(v => v === '2d' ? '3d' : '2d')}
+            onClick={() => { sound.playClick(); setShowStockDrawer(!showStockDrawer); setShowTurretDrawer(false); }}
             className="teknalar-topBtn"
-            style={{ background: viewMode === '3d' ? '#0369a1' : '#1e293b', color: '#fff' }}
+            style={{
+              background: showStockDrawer ? 'rgba(245, 158, 11, 0.25)' : '#1e293b',
+              color: '#fbbf24',
+              borderColor: '#d97706',
+              fontWeight: 700
+            }}
+          >
+            <Box size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: -2 }} />
+            [BAHAN] Ø{stock.diameter} × {exposedLen}mm
+          </button>
+
+          {/* View Toggle: 2D Blueprint vs 3D Realistic Slant-bed */}
+          <button
+            onClick={() => { sound.playClick(); setViewMode(v => v === '2d' ? '3d' : '2d'); }}
+            className="teknalar-topBtn"
+            style={{
+              background: viewMode === '3d' ? '#0369a1' : '#1e293b',
+              color: '#ffffff',
+              borderColor: '#38bdf8'
+            }}
           >
             <Eye size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: -2 }} />
-            {viewMode === '2d' ? 'Mode 2D Lintasan SVG' : 'Mode 3D Realistis'}
+            {viewMode === '2d' ? 'Mode 2D Samping XZ' : 'Mode 3D Slant-Bed'}
           </button>
 
+          {/* Fullscreen */}
           <button
-            onClick={() => setIsFullscreen(!isFullscreen)}
+            onClick={() => { sound.playClick(); setIsFullscreen(!isFullscreen); }}
             className="teknalar-topBtn"
-            title="Toggle Layar Penuh"
+            title="Layar Penuh"
           >
             {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
         </div>
       </div>
 
-      {/* Stock Customization Drawer */}
-      {showStockConfig && (
-        <div className="teknalar-stockPanel">
+      {/* =====================================================================
+          DRAWER 1: TOOL TURRET & OFFSET LIBRARY (8 STATIONS)
+      ===================================================================== */}
+      {showTurretDrawer && (
+        <div className="teknalar-stockPanel" style={{ background: '#09151e', borderBottom: '2px solid #0284c7' }}>
           <div className="teknalar-stockHead">
-            <strong>KONFIGURASI BENDA KERJA (RAW STOCK):</strong>
-            <span>Atur diameter, panjang total, dan kedalaman jepit cekam chuck</span>
+            <strong style={{ color: '#38bdf8' }}>TURRET MAGAZINE & OFFSET PAHAT CNC (8 STASIUN):</strong>
+            <span>Pilih stasiun turret untuk memutar pahat aktif atau mengubah tabel geometri & wear offset</span>
             <button
-              onClick={() => setShowStockConfig(false)}
+              onClick={() => setShowTurretDrawer(false)}
               className="teknalar-lcdBtn"
               style={{ marginLeft: 'auto' }}
             >
-              Tutup
+              [TUTUP]
             </button>
           </div>
+
+          {/* Visual Turret Disc Station Selectors */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', margin: '10px 0' }}>
+            {tools.map((t) => (
+              <button
+                key={t.tool}
+                onClick={() => {
+                  sound.playClick();
+                  setActiveToolStation(t.tool);
+                  setSelectedToolForEdit(t.tool);
+                }}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  border: t.tool === activeToolStation ? '2px solid #38bdf8' : '1px solid #334155',
+                  background: t.tool === activeToolStation ? 'rgba(56, 189, 248, 0.25)' : '#1e293b',
+                  color: t.tool === activeToolStation ? '#38bdf8' : '#94a3b8',
+                  fontWeight: 800,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: t.color }} />
+                <span>{t.code} - {t.name.split(' ')[0]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Geometry & Wear Offset Table */}
+          <div style={{ maxHeight: '180px', overflowY: 'auto', marginBottom: '10px' }}>
+            <table className="teknalar-table">
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>PAHAT</th>
+                  <th>GEO X</th>
+                  <th>GEO Z</th>
+                  <th>WEAR X</th>
+                  <th>WEAR Z</th>
+                  <th>R / DIAMETER</th>
+                  <th>INSERT / TIPE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tools.map((t) => (
+                  <tr
+                    key={t.tool}
+                    className={t.tool === activeToolStation ? 'act' : ''}
+                    onClick={() => { setSelectedToolForEdit(t.tool); setActiveToolStation(t.tool); }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td>{t.code}</td>
+                    <td style={{ color: t.color, fontWeight: 700 }}>{t.name}</td>
+                    <td>{t.geometryX.toFixed(3)}</td>
+                    <td>{t.geometryZ.toFixed(3)}</td>
+                    <td>{t.wearX.toFixed(3)}</td>
+                    <td>{t.wearZ.toFixed(3)}</td>
+                    <td>{t.noseRadius ? `R${t.noseRadius.toFixed(2)}` : `Ø${t.width || '-'}`}</td>
+                    <td>{t.insert}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Quick Tool Touch-off (MEASURE) */}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => {
+                sound.playSuccess();
+                setTools(prev => prev.map(t => t.tool === activeToolStation ? { ...t, geometryX: Number((position.x - stock.diameter).toFixed(3)) } : t));
+                setAlarmMessage(`[MEASURE X] Geometri X untuk ${activeToolObj.code} disimpan.`);
+              }}
+              className="teknalar-lcdBtn"
+            >
+              [MEASURE X] Sentuh Diameter Luar
+            </button>
+            <button
+              onClick={() => {
+                sound.playSuccess();
+                setTools(prev => prev.map(t => t.tool === activeToolStation ? { ...t, geometryZ: Number((position.z - 0).toFixed(3)) } : t));
+                setAlarmMessage(`[MEASURE Z] Geometri Z untuk ${activeToolObj.code} diset di muka Z0.`);
+              }}
+              className="teknalar-lcdBtn"
+            >
+              [MEASURE Z] Sentuh Muka Benda Z0
+            </button>
+            <button
+              onClick={() => {
+                sound.playClick();
+                setTools(DEFAULT_TURRET_TOOLS);
+                setAlarmMessage("[SUKSES] Semua geometri & wear offset dikembalikan ke nilai default pabrik.");
+              }}
+              className="teknalar-lcdBtn"
+              style={{ marginLeft: 'auto' }}
+            >
+              [RESET NILAI BAWAAN]
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================================
+          DRAWER 2: BAHAN BENDA KERJA (STOCK CONFIGURATION)
+      ===================================================================== */}
+      {showStockDrawer && (
+        <div className="teknalar-stockPanel">
+          <div className="teknalar-stockHead">
+            <strong style={{ color: '#fbbf24' }}>KONFIGURASI BAHAN BENDA KERJA (RAW BILLET):</strong>
+            <span>Atur diameter, panjang total, dan kedalaman jepit cekam chuck</span>
+            <button
+              onClick={() => setShowStockDrawer(false)}
+              className="teknalar-lcdBtn"
+              style={{ marginLeft: 'auto' }}
+            >
+              [TUTUP]
+            </button>
+          </div>
+
           <div className="teknalar-stockFields">
             <label>
               Diameter Bahan (mm):
@@ -703,7 +1027,7 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
               />
             </label>
             <label>
-              Panjang Dijepit Chuck (mm):
+              Panjang Dicekam Chuck (mm):
               <input
                 type="number"
                 min="15"
@@ -713,7 +1037,7 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
               />
             </label>
             <label>
-              Work Offset G54 Z (mm):
+              Work Shift G54 Z (mm):
               <input
                 type="number"
                 step="0.1"
@@ -722,173 +1046,231 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
               />
             </label>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: 10 }}>
             <button onClick={applyStockChanges} className="teknalar-lcdBtn" style={{ background: '#f59e0b', color: '#000', fontWeight: 800 }}>
-              Terapkan Benda Kerja Baru
+              [PASANG BAHAN BARU]
+            </button>
+            <button onClick={handleFlipWorkpiece} className="teknalar-lcdBtn">
+              [⇄ BALIK BENDA & CEKAM]
             </button>
           </div>
         </div>
       )}
 
-      {/* 2. MAIN UPPER STAGE (MACHINE CANVAS + FANUC CNC PANEL) */}
+      {/* =====================================================================
+          2. MAIN STAGE (MACHINE VISUALIZER & FANUC OPERATOR PANEL)
+      ===================================================================== */}
       <div className="teknalar-upper">
-        {/* LEFT: MACHINE VISUALIZER WINDOW */}
+        {/* LEFT: MACHINE VISUALIZER VIEWPORT */}
         <div className="teknalar-machine">
           <div className="teknalar-window">
             {viewMode === '2d' ? (
               /* 2D HIGH-PRECISION BLUEPRINT SVG CANVAS */
               <svg viewBox={`0 0 ${svgW} ${svgH}`} role="img" aria-label="Visual Lintasan Pahat Bubut CNC">
-                {/* Background Grid */}
                 <defs>
-                  <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <pattern id="latheGrid" width="20" height="20" patternUnits="userSpaceOnUse">
                     <line x1="0" y1="0" x2="20" y2="0" stroke="#141f26" strokeWidth="0.5" />
                     <line x1="0" y1="0" x2="0" y2="20" stroke="#141f26" strokeWidth="0.5" />
                   </pattern>
+                  <linearGradient id="turnedSteelGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#64748b" />
+                    <stop offset="25%" stopColor="#94a3b8" />
+                    <stop offset="50%" stopColor="#f1f5f9" />
+                    <stop offset="75%" stopColor="#94a3b8" />
+                    <stop offset="100%" stopColor="#475569" />
+                  </linearGradient>
                 </defs>
-                <rect width="100%" height="100%" fill="url(#gridPattern)" />
+
+                <rect width="100%" height="100%" fill="url(#latheGrid)" />
 
                 {/* Spindle Centerline Axis */}
-                <line x1="20" x2={svgW - 20} y1={originSvgY} y2={originSvgY} stroke="#38bdf8" strokeWidth="1" strokeDasharray="8 4 2 4" opacity="0.6" />
-                <text x={svgW - 30} y={originSvgY - 4} fill="#64748b" fontSize="10" textAnchor="end">Sumbu Putar X0</text>
+                <line
+                  x1="10"
+                  y1={originSvgY}
+                  x2={svgW - 10}
+                  y2={originSvgY}
+                  stroke="#ef4444"
+                  strokeWidth="1"
+                  strokeDasharray="8 4 2 4"
+                />
 
-                {/* 3-Jaw Chuck Block */}
-                <rect
-                  x={toSvgX(-(stock.length - stock.grip) - 60)}
-                  y={toSvgY(maxRadius + 28)}
-                  width="60"
-                  height={(maxRadius + 28) * 2 * scale}
-                  fill="#1e293b"
-                  stroke="#475569"
-                  strokeWidth="2"
-                  rx="3"
-                />
-                {/* Top & Bottom Chuck Jaws */}
-                <rect
-                  x={toSvgX(-(stock.length - stock.grip) - 10)}
-                  y={toSvgY(maxRadius + 14)}
-                  width="20"
-                  height="26"
-                  fill="#334155"
-                  stroke="#94a3b8"
-                  strokeWidth="1.5"
-                />
-                <rect
-                  x={toSvgX(-(stock.length - stock.grip) - 10)}
-                  y={originSvgY + (maxRadius - 12) * scale}
-                  width="20"
-                  height="26"
-                  fill="#334155"
-                  stroke="#94a3b8"
-                  strokeWidth="1.5"
-                />
-                <text x={toSvgX(-(stock.length - stock.grip)) - 14} y={24} fill="#f43f5e" fontSize="10" fontWeight="bold">Rahang Chuck</text>
-
-                {/* Workpiece Body (Symmetrical Bottom & Top) */}
-                <polygon points={workpiecePoints} fill="#38bdf8" fillOpacity="0.22" stroke="#38bdf8" strokeWidth="1.5" />
-                {/* Mirror for lower half cylinder */}
-                <g transform={`translate(0, ${originSvgY * 2}) scale(1, -1)`}>
-                  <polygon points={workpiecePoints} fill="#38bdf8" fillOpacity="0.12" stroke="#38bdf8" strokeWidth="1" strokeDasharray="3 2" />
+                {/* Chuck Jaws (Left Side) */}
+                <g>
+                  {/* Chuck Body */}
+                  <rect
+                    x={toSvgX(-exposedLen) - 80}
+                    y={originSvgY - 110}
+                    width="80"
+                    height="220"
+                    fill="#1e293b"
+                    stroke="#475569"
+                    strokeWidth="2"
+                  />
+                  {/* Top Jaw */}
+                  <rect
+                    x={toSvgX(-exposedLen) - 35}
+                    y={originSvgY - maxRadius * scale - 30}
+                    width="35"
+                    height="32"
+                    fill="#94a3b8"
+                    stroke="#cbd5e1"
+                    strokeWidth="1.5"
+                  />
+                  {/* Bottom Jaw */}
+                  <rect
+                    x={toSvgX(-exposedLen) - 35}
+                    y={originSvgY + maxRadius * scale - 2}
+                    width="35"
+                    height="32"
+                    fill="#94a3b8"
+                    stroke="#cbd5e1"
+                    strokeWidth="1.5"
+                  />
+                  {/* Chuck Boundary Limit Line */}
+                  <line
+                    x1={toSvgX(-exposedLen)}
+                    y1="20"
+                    x2={toSvgX(-exposedLen)}
+                    y2={svgH - 20}
+                    stroke="#ef4444"
+                    strokeWidth="1.5"
+                    strokeDasharray="4 4"
+                  />
+                  <text
+                    x={toSvgX(-exposedLen) - 5}
+                    y="30"
+                    fill="#ef4444"
+                    fontSize="9"
+                    textAnchor="end"
+                    fontWeight="bold"
+                  >
+                    BATAS CEKAM CHUCK
+                  </text>
                 </g>
 
-                {/* G54 Z0 Face Datum Line */}
-                <line x1={toSvgX(0)} x2={toSvgX(0)} y1="20" y2={svgH - 20} stroke="#10b981" strokeWidth="1.5" strokeDasharray="4 3" />
-                <text x={toSvgX(0) + 4} y="32" fill="#10b981" fontSize="11" fontWeight="bold">Z0 (G54 Face)</text>
+                {/* Workpiece Body (Real dynamic profile cutout) */}
+                <polygon
+                  points={workpiecePolygonPoints}
+                  fill="url(#turnedSteelGrad)"
+                  stroke="#cbd5e1"
+                  strokeWidth="1.5"
+                />
 
-                {/* Tool Turret Head & Active Cutting Tip */}
+                {/* Thread Ridges Overlay (Only drawn when G32/G76/G92 are executed!) */}
+                {threads.map((th, tidx) => {
+                  const startX = toSvgX(th.startZ);
+                  const endX = toSvgX(th.endZ);
+                  const radY = toSvgY(th.dia / 2);
+                  const pitchPx = (th.pitch || 2.0) * scale;
+                  const lines = [];
+                  for (let px = startX; px <= endX; px += pitchPx) {
+                    lines.push(
+                      <line
+                        key={`th-${tidx}-${px}`}
+                        x1={px}
+                        y1={radY}
+                        x2={px + pitchPx * 0.5}
+                        y2={radY + 6}
+                        stroke="#c084fc"
+                        strokeWidth="1.5"
+                      />
+                    );
+                  }
+                  return <g key={`thread-group-${tidx}`}>{lines}</g>;
+                })}
+
+                {/* Z0 Datum Zero Line */}
+                <line
+                  x1={toSvgX(0)}
+                  y1={originSvgY - 80}
+                  x2={toSvgX(0)}
+                  y2={originSvgY + 80}
+                  stroke="#10b981"
+                  strokeWidth="1"
+                  strokeDasharray="4 2"
+                />
+                <text x={toSvgX(0) + 4} y={originSvgY - 65} fill="#10b981" fontSize="9" fontWeight="bold">
+                  Z0 (G54)
+                </text>
+
+                {/* Toolpath Motion Trails */}
+                {simFrames.length > 0 && (
+                  <g>
+                    {simFrames.map((f, i) => {
+                      if (i === 0) return null;
+                      const prevF = simFrames[i - 1];
+                      const isRapid = f.isRapid;
+                      return (
+                        <line
+                          key={i}
+                          x1={toSvgX(prevF.z)}
+                          y1={toSvgY(prevF.x / 2)}
+                          x2={toSvgX(f.z)}
+                          y2={toSvgY(f.x / 2)}
+                          stroke={isRapid ? '#38bdf8' : '#f59e0b'}
+                          strokeWidth={isRapid ? 1 : 1.8}
+                          strokeDasharray={isRapid ? '3 3' : 'none'}
+                          opacity={i <= currentFrameIdx ? 1 : 0.35}
+                        />
+                      );
+                    })}
+                  </g>
+                )}
+
+                {/* Current Active Tool Head & Insert */}
                 <g transform={`translate(${toSvgX(position.z)}, ${toSvgY(position.x / 2)})`}>
                   {/* Tool Holder Shank */}
-                  <rect x="0" y="-12" width="55" height="24" fill="#334155" stroke="#94a3b8" strokeWidth="1.5" rx="2" />
+                  <rect x="0" y="-12" width="60" height="24" fill="#334155" stroke="#94a3b8" strokeWidth="1.5" rx="2" />
                   {/* Carbide Cutting Insert */}
                   <polygon
-                    points="0,0 12,-10 24,-10 12,0"
-                    fill={activeToolObj.color || "#f59e0b"}
+                    points="0,0 14,-12 28,-12 14,0"
+                    fill={activeToolObj.color || "#e7b85d"}
                     stroke="#ffffff"
                     strokeWidth="1.5"
                   />
-                  {/* Tool Tip Marker Dot */}
-                  <circle cx="0" cy="0" r="3" fill="#ffffff" stroke="#ef4444" strokeWidth="1.5" />
+                  {/* Tool Tip Red Dot */}
+                  <circle cx="0" cy="0" r="3" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
                   <text x="14" y="16" fill="#e2e8f0" fontSize="9" fontWeight="bold">{activeToolObj.code}</text>
                 </g>
 
                 {/* Spindle Rotation Indicator */}
                 {spindleState > 0 && (
-                  <g transform={`translate(${toSvgX(0) + 20}, ${originSvgY})`}>
+                  <g transform={`translate(${toSvgX(0) + 25}, ${originSvgY})`}>
                     <path d="M 0,-18 A 18 18 0 0 1 18,0" fill="none" stroke="#facc15" strokeWidth="2" strokeDasharray="3 2" />
                     <polygon points="18,-3 22,2 16,3" fill="#facc15" />
-                    <text x="24" y="4" fill="#facc15" fontSize="9" fontWeight="bold">{rpm} RPM</text>
+                    <text x="24" y="4" fill="#facc15" fontSize="9" fontWeight="bold">{spindleRpm} RPM</text>
                   </g>
                 )}
               </svg>
             ) : (
-              /* 3D REALISTIC CANVASCAP (PERSPECTIVE WORKBENCH) */
-              <div style={{ width: '100%', height: '100%', minHeight: 320, background: 'radial-gradient(circle at 50% 50%, #1e293b 0%, #090d12 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                <div style={{ position: 'relative', width: '380px', height: '160px', display: 'flex', alignItems: 'center' }}>
-                  {/* Chuck 3D cylinder */}
-                  <div style={{ width: '70px', height: '140px', background: 'linear-gradient(90deg, #334155 0%, #64748b 50%, #1e293b 100%)', borderRadius: '8px 0 0 8px', border: '2px solid #94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ width: '10px', height: '110px', background: '#0f172a', borderRadius: '4px' }} />
-                  </div>
-
-                  {/* Stock Bar 3D cylinder */}
-                  <div style={{
-                    width: `${Math.min(220, stock.length * 1.8)}px`,
-                    height: `${stock.diameter * 1.8}px`,
-                    background: 'linear-gradient(180deg, #94a3b8 0%, #e2e8f0 30%, #475569 80%, #1e293b 100%)',
-                    borderRadius: '0 6px 6px 0',
-                    boxShadow: spindleState > 0 ? '0 0 16px rgba(56, 189, 248, 0.4)' : 'none',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}>
-                    {/* Turned stepped profile simulation */}
-                    <div style={{
-                      position: 'absolute',
-                      right: 0,
-                      top: '15%',
-                      bottom: '15%',
-                      width: '60%',
-                      background: 'linear-gradient(180deg, #38bdf8 0%, #bae6fd 40%, #0284c7 90%)',
-                      borderLeft: '2px solid #fff'
-                    }} />
-                  </div>
-
-                  {/* 3D Tool Holder */}
-                  <div style={{
-                    position: 'absolute',
-                    right: `${Math.max(20, 180 - position.z * 1.5)}px`,
-                    top: `${Math.max(10, 60 - position.x * 0.8)}px`,
-                    width: '60px',
-                    height: '35px',
-                    background: '#334155',
-                    border: '2px solid #cbd5e1',
-                    borderRadius: '4px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
-                    transition: isRunning ? 'none' : 'all 0.1s linear'
-                  }}>
-                    <div style={{ width: '12px', height: '12px', background: activeToolObj.color, transform: 'rotate(45deg)', margin: '-4px 0 0 -4px' }} />
-                  </div>
-                </div>
-
-                <div style={{ position: 'absolute', bottom: 12, fontSize: 11, color: '#94a3b8', display: 'flex', gap: 16 }}>
-                  <span>Spindle: {spindleState > 0 ? `${rpm} RPM (BERPUTAR)` : 'BERHENTI'}</span>
-                  <span>Coolant: {coolant ? 'AKTIF (M08)' : 'MATI'}</span>
-                  <span>Alat: {activeToolObj.name}</span>
-                </div>
-              </div>
+              /* 3D REALISTIC SLANT-BED CANVASCAP */
+              <CncLathe3DScene
+                stock={stock}
+                profileCut={profileCut}
+                toolPos={position}
+                activeTool={activeToolObj}
+                rpm={spindleState > 0 ? spindleRpm : 0}
+                coolant={coolant}
+                isCutting={isRunning && position.z <= 0}
+                doorOpen={!doorClosed}
+              />
             )}
           </div>
 
           {/* DIGITAL READOUT STRIP */}
           <div className="teknalar-readStrip read8">
             <div>
-              <span>X (ABSOLUT)</span>
+              <span>X (DIAMETER)</span>
               <strong>{position.x.toFixed(3)}<small>mm</small></strong>
             </div>
             <div>
-              <span>Z (ABSOLUT)</span>
+              <span>Z (PANJANG)</span>
               <strong>{position.z.toFixed(3)}<small>mm</small></strong>
             </div>
             <div>
               <span>SPINDLE RPM</span>
-              <strong style={{ color: spindleState > 0 ? '#4ade80' : '#fff' }}>{rpm}</strong>
+              <strong style={{ color: spindleState > 0 ? '#4ade80' : '#fff' }}>{spindleRpm}</strong>
             </div>
             <div>
               <span>FEED F</span>
@@ -899,102 +1281,116 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
               <strong style={{ color: activeToolObj.color }}>{activeToolObj.code}</strong>
             </div>
             <div>
-              <span>MODAL</span>
-              <strong style={{ fontSize: 12, color: '#38bdf8' }}>G18 G54 G99</strong>
+              <span>MOTION</span>
+              <strong>{simFrames[currentFrameIdx]?.isRapid ? 'G00 RAPID' : isRunning ? 'G01 FEED' : 'IDLE'}</strong>
             </div>
             <div>
-              <span>WAKTU SIKLUS</span>
-              <strong>{stats.timeSec}s</strong>
-            </div>
-            <div>
-              <span>STATUS</span>
-              <strong style={{ color: isRunning ? '#4ade80' : '#f59e0b' }}>
-                {isRunning ? 'RUN' : 'IDLE'}
-              </strong>
+              <span>COOLANT</span>
+              <strong style={{ color: coolant ? '#38bdf8' : '#94a3b8' }}>{coolant ? 'M08' : 'M09'}</strong>
             </div>
           </div>
         </div>
 
-        {/* RIGHT: INDUSTRIAL FANUC OPERATOR CONTROLLER */}
-        <div className="teknalar-control">
-          <div className="teknalar-nameplate">
-            FANUC Series 0i-TF
-            <span>CNC OPERATING SYSTEM</span>
+        {/* RIGHT: FANUC CRT DISPLAY & SOFTEKY PANEL */}
+        <div className="teknalar-panel">
+          <div className="teknalar-panelHeader">
+            <span className="teknalar-panelTitle">FANUC Series 0i-TD</span>
+            <div className="teknalar-headerIndicators">
+              <span className={`teknalar-led ${powerOn ? 'on' : ''}`}>PWR</span>
+              <span className={`teknalar-led ${isRunning ? 'run' : ''}`}>RUN</span>
+              <span className={`teknalar-led ${alarmMessage ? 'alarm' : ''}`}>ALM</span>
+            </div>
           </div>
 
-          <div className="teknalar-bezel">
-            {/* CRT LCD DISPLAY */}
-            <div className="teknalar-lcd">
-              <div className="teknalar-lcdHead">
-                <span>MODE: {machineMode}</span>
-                <span>O0001 (LATHE PROGRAM)</span>
-                <span>{singleBlock ? 'S-BLK' : 'CONT'}</span>
+          {/* CRT SCREEN */}
+          <div className="teknalar-crt">
+            <div className="teknalar-crtInner">
+              {/* Top CRT Status Banner */}
+              <div className="teknalar-crtTop">
+                <span className="teknalar-crtMode">[{modeSelect}]</span>
+                <span className="teknalar-crtProg">O0001 (PRESET-{selectedPresetId.toUpperCase()})</span>
+                <span className="teknalar-crtState">
+                  {eStop ? 'EMG STOP' : isRunning ? 'EXECUTING' : 'READY'}
+                </span>
               </div>
 
-              {/* TAB 1: POS (POSITION SCREEN) */}
+              {/* TAB 1: POS (ACTUAL POSITION READOUT) */}
               {lcdTab === 'POS' && (
-                <div className="teknalar-lcdBody split">
-                  <div className="teknalar-box">
-                    <p className="teknalar-boxTitle">ACTUAL POSITION (ABSOLUTE)</p>
-                    <div className="teknalar-bigAxis">
-                      <span>X</span> {position.x.toFixed(3)}
+                <div className="teknalar-lcdBody">
+                  <div className="teknalar-posBlock">
+                    <div className="teknalar-posRow">
+                      <span className="teknalar-posAxis">X (DIA)</span>
+                      <span className="teknalar-posVal">{position.x.toFixed(3)}</span>
+                      <span className="teknalar-posUnit">mm</span>
                     </div>
-                    <div className="teknalar-bigAxis">
-                      <span>Z</span> {position.z.toFixed(3)}
-                    </div>
-                    <div style={{ padding: '6px 10px', fontSize: 11, color: '#94a3b8' }}>
-                      <div>DIST TO GO: X 0.000  Z 0.000</div>
-                      <div>MACHINE: X {machinePos.x.toFixed(3)}  Z {machinePos.z.toFixed(3)}</div>
+                    <div className="teknalar-posRow">
+                      <span className="teknalar-posAxis">Z (POS)</span>
+                      <span className="teknalar-posVal">{position.z.toFixed(3)}</span>
+                      <span className="teknalar-posUnit">mm</span>
                     </div>
                   </div>
 
-                  <div className="teknalar-box">
-                    <p className="teknalar-boxTitle">ACTIVE PROGRAM BLOCK</p>
-                    <div className="teknalar-prog">
-                      {programText.split('\n').map((line, idx) => (
-                        <div key={idx} className={idx === activeLine ? 'cur' : ''}>
-                          N{(idx + 1) * 10} {line}
-                        </div>
-                      ))}
+                  <div className="teknalar-posSub">
+                    <div>
+                      <span>MACHINE X:</span>
+                      <strong>{machinePos.x.toFixed(2)}</strong>
                     </div>
+                    <div>
+                      <span>MACHINE Z:</span>
+                      <strong>{machinePos.z.toFixed(2)}</strong>
+                    </div>
+                    <div>
+                      <span>DISTANCE TO GO X:</span>
+                      <strong>{(0.0).toFixed(3)}</strong>
+                    </div>
+                    <div>
+                      <span>DISTANCE TO GO Z:</span>
+                      <strong>{(0.0).toFixed(3)}</strong>
+                    </div>
+                  </div>
+
+                  {/* Active G-Codes List */}
+                  <div className="teknalar-gCodeModalList">
+                    <span>G18 (ZX)</span>
+                    <span>G21 (MM)</span>
+                    <span>G40 (COMP OFF)</span>
+                    <span>G54 (WORK 1)</span>
+                    <span>G99 (FEED/REV)</span>
+                    <span>G97 (RPM)</span>
                   </div>
                 </div>
               )}
 
-              {/* TAB 2: PROG (G-CODE EDITOR) */}
+              {/* TAB 2: PROG (G-CODE PROGRAM VIEWER WITH LINE HIGHLIGHT) */}
               {lcdTab === 'PROG' && (
-                <div className="teknalar-lcdBody" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 6px', background: '#0e2a1a', fontSize: 11 }}>
-                    <span>EDIT MODE G-CODE</span>
-                    <button
-                      onClick={() => handleReset()}
-                      style={{ background: '#1e3a2b', color: '#6ee7b7', border: '1px solid #34d399', borderRadius: 3, padding: '2px 6px' }}
-                    >
-                      Kompilasi Ulang
-                    </button>
+                <div className="teknalar-lcdBody">
+                  <div className="teknalar-codeViewer">
+                    {programText.split('\n').map((line, idx) => (
+                      <div
+                        key={idx}
+                        className={`teknalar-codeLine ${activeLine === idx && isRunning ? 'active' : ''}`}
+                      >
+                        <span className="teknalar-lineNumber">{String(idx + 1).padStart(3, '0')}</span>
+                        <span className="teknalar-lineText">{line}</span>
+                      </div>
+                    ))}
                   </div>
-                  <textarea
-                    value={programText}
-                    onChange={(e) => setProgramText(e.target.value)}
-                    className="teknalar-editor"
-                    spellCheck="false"
-                  />
                 </div>
               )}
 
-              {/* TAB 3: OFFSET (TOOL GEOMETRY & WEAR TABLE) */}
+              {/* TAB 3: OFFSET (GEOMETRY & WEAR TABLE) */}
               {lcdTab === 'OFFSET' && (
                 <div className="teknalar-lcdBody" style={{ overflowY: 'auto' }}>
                   <table className="teknalar-table">
                     <thead>
                       <tr>
                         <th>NO</th>
-                        <th>NAMA ALAT</th>
-                        <th>GEOM X</th>
-                        <th>GEOM Z</th>
+                        <th>PAHAT</th>
+                        <th>GEO X</th>
+                        <th>GEO Z</th>
                         <th>WEAR X</th>
                         <th>WEAR Z</th>
-                        <th>RADIUS</th>
+                        <th>R / Ø</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1006,7 +1402,7 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
                           <td>{t.geometryZ.toFixed(3)}</td>
                           <td>{t.wearX.toFixed(3)}</td>
                           <td>{t.wearZ.toFixed(3)}</td>
-                          <td>R{t.noseRadius.toFixed(2)}</td>
+                          <td>{t.noseRadius ? `R${t.noseRadius.toFixed(2)}` : `Ø${t.width}`}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1014,11 +1410,11 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
                 </div>
               )}
 
-              {/* TAB 4: UKUR (MEASUREMENT & TOUCH-OFF CALIPER) */}
+              {/* TAB 4: UKUR (INSPECTION & TOLERANCE) */}
               {lcdTab === 'UKUR' && (
                 <div className="teknalar-lcdBody">
                   <div className="teknalar-box" style={{ padding: 10 }}>
-                    <p className="teknalar-boxTitle">PENGUKURAN DIAMETER POROS & WEAR COMPENSATION</p>
+                    <p className="teknalar-boxTitle">HASIL PENGUKURAN POROS BUBUT</p>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 8 }}>
                       <div>
                         <span style={{ fontSize: 11, color: '#94a3b8' }}>Posisi Z Ukur:</span>
@@ -1030,12 +1426,12 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
                         />
                       </div>
                       <div>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Hasil Ukur Mikrometer Ø (mm):</span>
+                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Target Diameter Ø (mm):</span>
                         <input
                           type="number"
                           step="0.01"
-                          value={measureInputDia}
-                          onChange={(e) => setMeasureInputDia(e.target.value)}
+                          value={measureDiaInput}
+                          onChange={(e) => setMeasureDiaInput(e.target.value)}
                           style={{ width: '100%', background: '#0a1610', border: '1px solid #2e6a45', color: '#fff', padding: 4 }}
                         />
                       </div>
@@ -1043,249 +1439,172 @@ export default function CncLatheTeknalar({ onBack, addXP }) {
                     <button
                       onClick={() => {
                         sound.playSuccess();
-                        const diff = Number(measureInputDia) - 46.0;
+                        const diff = Number(measureDiaInput) - 46.0;
                         setTools(prev => prev.map(t => t.tool === activeToolStation ? { ...t, wearX: Number(diff.toFixed(3)) } : t));
                         setAlarmMessage(`[SUKSES] Wear X terkompensasi: ${diff.toFixed(3)} mm`);
                       }}
                       className="teknalar-lcdBtn"
-                      style={{ marginTop: 10, width: '100%', background: '#059669', color: '#fff', fontWeight: 800 }}
+                      style={{ marginTop: 10, width: '100%' }}
                     >
-                      Hitung & Terapkan Koreksi Wear X Otomatis
+                      [TERAPKAN WEAR COMPENSATION]
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* TAB 5: DIAG / ALARM */}
+              {/* TAB 5: DIAG (DIAGNOSTICS) */}
               {lcdTab === 'DIAG' && (
                 <div className="teknalar-lcdBody">
                   <div className="teknalar-box" style={{ padding: 10 }}>
-                    <p className="teknalar-boxTitle">DIAGNOSIS MESIN & ALARM STATUS</p>
-                    <div style={{ color: alarmMessage ? '#f87171' : '#34d399', fontSize: 12, marginTop: 8 }}>
-                      {alarmMessage || '[NORMAL] Tidak ada alarm. Semua sumbu dalam kondisi siap operasi (READY).'}
+                    <p className="teknalar-boxTitle">DIAGNOSTIK & STATUS MESIN</p>
+                    <div style={{ fontSize: 12, display: 'flex', flexDirection: 'column', gap: 6, color: '#94a3b8' }}>
+                      <div>Spindle Load: <strong>{isRunning ? '42% (3.1 kW)' : '0% (IDLE)'}</strong></div>
+                      <div>Motor Temperature: <strong>38.4 °C (NORMAL)</strong></div>
+                      <div>Door Interlock: <strong>{doorClosed ? 'TERKUNCI AMAN' : 'TERBUKA'}</strong></div>
+                      <div>Chuck Hydraulic Pressure: <strong>3.2 MPa (NORMAL)</strong></div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* SOFTKEYS (SCREEN BOTTOM BUTTONS) */}
+              {/* Alarm Banner if present */}
+              {alarmMessage && (
+                <div className="teknalar-crtAlarm">
+                  <AlertTriangle size={14} style={{ display: 'inline', marginRight: 4 }} />
+                  {alarmMessage}
+                </div>
+              )}
+
+              {/* Softkey Navigation Strips */}
               <div className="teknalar-softkeys">
-                {['POS', 'PROG', 'OFFSET', 'UKUR', 'DIAG'].map(tab => (
+                {['POS', 'PROG', 'OFFSET', 'UKUR', 'DIAG'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => { sound.playClick(); setLcdTab(tab); }}
-                    className={lcdTab === tab ? 'on' : ''}
+                    className={`teknalar-softBtn ${lcdTab === tab ? 'active' : ''}`}
                   >
-                    {tab}
+                    [{tab}]
                   </button>
                 ))}
               </div>
             </div>
-
-            {/* Side Bezel Strips */}
-            <div className="teknalar-sideKeys">
-              {[...Array(8)].map((_, i) => <span key={i} />)}
-            </div>
           </div>
-        </div>
-      </div>
 
-      {/* 3. BOTTOM CNC OPERATOR CONTROL PANEL */}
-      <div className="teknalar-panel">
-        {/* MODE SELECTOR */}
-        <div className="teknalar-group">
-          <h4>MODE OPERASI</h4>
-          <div className="teknalar-row">
-            {['AUTO', 'EDIT', 'MDI', 'JOG', 'ZERO RETURN'].map(m => (
-              <button
-                key={m}
-                onClick={() => { sound.playClick(); setMachineMode(m); }}
-                className={`teknalar-key ${machineMode === m ? 'keyOn' : ''}`}
-              >
-                {m === 'AUTO' ? 'MEM' : m === 'ZERO RETURN' ? 'REF' : m}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* CYCLE CONTROL (CYCLE START & FEED HOLD) */}
-        <div className="teknalar-group">
-          <h4>SIKLUS PROGRAM</h4>
-          <div className="teknalar-row">
-            <button
-              onClick={handleCycleStart}
-              disabled={isRunning}
-              className="teknalar-key green2"
-              style={{ minWidth: 64, minHeight: 46, fontWeight: 900 }}
-            >
-              <Play size={16} />
-              START
-            </button>
-            <button
-              onClick={handleFeedHold}
-              disabled={!isRunning}
-              className="teknalar-key yellow2"
-              style={{ minWidth: 64, minHeight: 46, fontWeight: 900 }}
-            >
-              <Pause size={16} />
-              HOLD
-            </button>
-            <button
-              onClick={handleReset}
-              className="teknalar-key"
-              style={{ minWidth: 64, minHeight: 46 }}
-            >
-              <RotateCcw size={16} />
-              RESET
-            </button>
-          </div>
-        </div>
-
-        {/* OPTION SWITCHES */}
-        <div className="teknalar-group">
-          <h4>OPSI EKSEKUSI</h4>
-          <div className="teknalar-row">
-            <button
-              onClick={() => { sound.playClick(); setSingleBlock(!singleBlock); }}
-              className={`teknalar-key ${singleBlock ? 'keyOn' : ''}`}
-            >
-              S-BLOCK
-            </button>
-            <button
-              onClick={() => { sound.playClick(); setDryRun(!dryRun); }}
-              className={`teknalar-key ${dryRun ? 'keyOn' : ''}`}
-            >
-              DRY RUN
-            </button>
-          </div>
-        </div>
-
-        {/* JOG AXIS CONTROLS */}
-        <div className="teknalar-group">
-          <h4>JOG AXIS (MANUAL)</h4>
-          <div className="teknalar-row">
-            <div className="teknalar-jog">
-              <button onClick={() => handleJog('X', 1)} className="teknalar-key">+X</button>
-              <button onClick={() => handleJog('Z', 1)} className="teknalar-key">+Z</button>
-              <button onClick={() => handleJog('X', -1)} className="teknalar-key">-X</button>
-              <button onClick={() => handleJog('Z', -1)} className="teknalar-key">-Z</button>
-            </div>
-            <div className="teknalar-stack">
-              {[0.001, 0.01, 0.1, 1.0].map(s => (
+          {/* HARDWARE MEMBRANE KEYPAD & CONTROLS */}
+          <div className="teknalar-hardware">
+            {/* Mode Select Buttons */}
+            <div className="teknalar-modeRow">
+              {['AUTO', 'EDIT', 'MDI', 'JOG', 'REF'].map((m) => (
                 <button
-                  key={s}
-                  onClick={() => { sound.playClick(); setJogStep(s); }}
-                  className={`teknalar-key ${jogStep === s ? 'keyOn' : ''}`}
-                  style={{ minWidth: 42, minHeight: 20, fontSize: 9 }}
+                  key={m}
+                  onClick={() => { sound.playClick(); setModeSelect(m); }}
+                  className={`teknalar-btnMode ${modeSelect === m ? 'active' : ''}`}
                 >
-                  x{s}
+                  {m}
                 </button>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* SPINDLE & COOLANT */}
-        <div className="teknalar-group">
-          <h4>SPINDLE & PENDINGIN</h4>
-          <div className="teknalar-row">
-            <button
-              onClick={() => { sound.playClick(); setSpindleState(1); setRpm(targetRpm); }}
-              className={`teknalar-key ${spindleState === 1 ? 'keyOn teal2' : ''}`}
-            >
-              CW (M03)
-            </button>
-            <button
-              onClick={() => { sound.playClick(); setSpindleState(0); setRpm(0); }}
-              className={`teknalar-key ${spindleState === 0 ? 'red2' : ''}`}
-            >
-              STOP (M05)
-            </button>
-            <button
-              onClick={() => { sound.playClick(); setCoolant(!coolant); }}
-              className={`teknalar-key ${coolant ? 'keyOn teal2' : ''}`}
-            >
-              COOLANT
-            </button>
-          </div>
-        </div>
+            {/* Execution Controls: Cycle Start, Feed Hold, Reset */}
+            <div className="teknalar-execRow">
+              <button
+                onClick={handleCycleStart}
+                className="teknalar-btnCycleStart"
+                title="CYCLE START (Mulai Eksekusi G-Code)"
+              >
+                <Play size={16} /> CYCLE START
+              </button>
 
-        {/* OVERRIDES */}
-        <div className="teknalar-group">
-          <h4>OVERRIDE KECEPATAN</h4>
-          <div className="teknalar-ovr">
-            <div className="teknalar-ovrItem">
-              <span>RAPID</span>
-              <div className="teknalar-ovrVal">{rapidOverride}%</div>
-              <div className="teknalar-ovrBtns">
-                {[25, 50, 100].map(r => (
+              <button
+                onClick={handleFeedHold}
+                className="teknalar-btnFeedHold"
+                title="FEED HOLD (Jeda Gerak Sayat)"
+              >
+                <Pause size={16} /> FEED HOLD
+              </button>
+
+              <button
+                onClick={handleReset}
+                className="teknalar-btnReset"
+                title="RESET (Kembali ke Awal Program)"
+              >
+                <RotateCcw size={16} /> RESET
+              </button>
+
+              <button
+                onClick={() => {
+                  sound.playClick();
+                  setEStop(!eStop);
+                  if (!eStop) setIsRunning(false);
+                }}
+                className={`teknalar-btnEStop ${eStop ? 'active' : ''}`}
+                title="EMERGENCY STOP (Tombol Darurat)"
+              >
+                E-STOP
+              </button>
+            </div>
+
+            {/* Sub-Toggles: Single Block, Dry Run, Coolant */}
+            <div className="teknalar-toggleGrid">
+              <button
+                onClick={() => { sound.playClick(); setSingleBlock(!singleBlock); }}
+                className={`teknalar-btnToggle ${singleBlock ? 'on' : ''}`}
+              >
+                SINGLE BLOCK: {singleBlock ? 'ON' : 'OFF'}
+              </button>
+
+              <button
+                onClick={() => { sound.playClick(); setCoolant(!coolant); }}
+                className={`teknalar-btnToggle ${coolant ? 'on' : ''}`}
+              >
+                COOLANT: {coolant ? 'M08' : 'M09'}
+              </button>
+
+              <button
+                onClick={() => { sound.playClick(); setChuckClamped(!chuckClamped); }}
+                className={`teknalar-btnToggle ${chuckClamped ? 'on' : ''}`}
+              >
+                CHUCK: {chuckClamped ? 'CLAMPED' : 'UNCLAMP'}
+              </button>
+
+              <button
+                onClick={() => { sound.playClick(); setDryRun(!dryRun); }}
+                className={`teknalar-btnToggle ${dryRun ? 'on' : ''}`}
+              >
+                DRY RUN: {dryRun ? 'ON' : 'OFF'}
+              </button>
+            </div>
+
+            {/* JOG Axis Pad */}
+            <div className="teknalar-jogSection">
+              <span className="teknalar-jogTitle">MANUAL JOG (FEED PER STEP: {jogStep} mm)</span>
+              <div className="teknalar-jogPad">
+                <button onClick={() => handleJog('X', 1)} className="teknalar-jogBtn">[+X DIA]</button>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <button onClick={() => handleJog('Z', -1)} className="teknalar-jogBtn">[-Z MUKA]</button>
+                  <button onClick={() => handleJog('Z', 1)} className="teknalar-jogBtn">[+Z CHUCK]</button>
+                </div>
+                <button onClick={() => handleJog('X', -1)} className="teknalar-jogBtn">[-X DIA]</button>
+              </div>
+
+              {/* Step multiplier */}
+              <div className="teknalar-stepRow">
+                {[0.001, 0.01, 0.1, 1.0].map((step) => (
                   <button
-                    key={r}
-                    onClick={() => { sound.playClick(); setRapidOverride(r); }}
-                    style={{ background: rapidOverride === r ? '#f59e0b' : '#334155' }}
+                    key={step}
+                    onClick={() => { sound.playClick(); setJogStep(step); }}
+                    className={`teknalar-stepBtn ${jogStep === step ? 'active' : ''}`}
                   >
-                    {r === 100 ? '100' : r}
+                    x{step}
                   </button>
                 ))}
               </div>
-            </div>
-
-            <div className="teknalar-ovrItem">
-              <span>FEED</span>
-              <div className="teknalar-ovrVal">{feedOverride}%</div>
-              <div className="teknalar-ovrBtns">
-                <button onClick={() => setFeedOverride(o => Math.max(0, o - 10))}>-</button>
-                <button onClick={() => setFeedOverride(100)}>100</button>
-                <button onClick={() => setFeedOverride(o => Math.min(150, o + 10))}>+</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* SAFETY & E-STOP */}
-        <div className="teknalar-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <button
-            onClick={() => {
-              sound.playClick();
-              setEStop(!eStop);
-              if (!eStop) {
-                setIsRunning(false);
-                setSpindleState(0);
-                setRpm(0);
-                setAlarmMessage("[EMERGENCY STOP] Mesin dihentikan darurat!");
-              } else {
-                setAlarmMessage("");
-              }
-            }}
-            className={`teknalar-estop ${eStop ? 'estopDown' : ''}`}
-            title="Emergency Stop"
-          >
-            E-STOP
-          </button>
-        </div>
-      </div>
-
-      {/* 4. WORKSHOP CASE NOTES & GOAL (TEKNALAR STYLE) */}
-      <div className="teknalar-notes">
-        <div className="teknalar-notesGrid">
-          <div className="teknalar-card">
-            <h3>TARGET & SASARAN PRAKTIK:</h3>
-            <p className="teknalar-goal">
-              {activePreset.goal}
-            </p>
-          </div>
-
-          <div className="teknalar-card">
-            <h3>INFORMASI PAHAT & BENDA KERJA:</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 11, color: '#334155' }}>
-              <div>Bahan: <strong>Baja St 37 (Ø{stock.diameter} × {stock.length} mm)</strong></div>
-              <div>Pencekaman: <strong>3-Jaw Chuck ({stock.grip} mm dijepit)</strong></div>
-              <div>Pahat Aktif: <strong>{activeToolObj.name} ({activeToolObj.code})</strong></div>
-              <div>Panjang Sayat: <strong>{stats.cutMm} mm (Feed {stats.feedMm} mm)</strong></div>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default CncLatheTeknalar;

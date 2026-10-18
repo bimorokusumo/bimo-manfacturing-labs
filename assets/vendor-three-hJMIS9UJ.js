@@ -4287,4 +4287,4 @@ No matching component was found for:
 `)}function m(e,t,r){u.subVectors(r,t),d.subVectors(e,t),u.cross(d).normalize(),f.copy(u).normalize(),n===!0?(a.setFloat32(o,f.x,!0),o+=4,a.setFloat32(o,f.y,!0),o+=4,a.setFloat32(o,f.z,!0),o+=4):(a+=`	facet normal `+f.x+` `+f.y+` `+f.z+`
 `,a+=`		outer loop
 `)}function h(e){n===!0?(a.setFloat32(o,e.x,!0),o+=4,a.setFloat32(o,e.y,!0),o+=4,a.setFloat32(o,e.z,!0),o+=4):a+=`			vertex `+e.x+` `+e.y+` `+e.z+`
-`}}};export{hl as C,el as D,nc as E,H as O,Na as S,Kc as T,Ts as _,hy as a,Wc as b,Tv as c,ms as d,Ci as f,_s as g,Fs as h,_y as i,U as k,uv as l,ls as m,yy as n,iy as o,J as p,vy as r,Wv as s,by as t,Yg as u,Bc as v,tc as w,A as x,q as y};
+`}}};export{tc as A,U as B,q as C,An as D,A as E,Yo as F,zr as I,nc as L,Kc as M,wu as N,Na as O,es as P,el as R,Bc as S,Wc as T,Fs as _,hy as a,Du as b,Tv as c,og as d,Ou as f,ls as g,J as h,_y as i,Z as j,hl as k,uv as l,Ci as m,yy as n,iy as o,ms as p,vy as r,Wv as s,by as t,Yg as u,K as v,kr as w,Ts as x,_s as y,H as z};

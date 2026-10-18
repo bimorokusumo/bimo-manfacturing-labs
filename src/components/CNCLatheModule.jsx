@@ -1,77 +1,187 @@
 import {
   Shield, Calculator, Edit3, Eye, EyeOff, Compass,
   Zap, Circle, Wrench, Settings, Droplets, FileText,
-  Award, Loader2, Play, Square, Lightbulb
+  Award, Loader2, Play, Pause, RotateCcw, Square, Lightbulb,
+  AlertTriangle, CheckCircle2, ChevronRight, RefreshCw
 } from 'lucide-react';
-import React, { useState, Suspense, useEffect, useRef } from 'react';
+import React, { useState, Suspense, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
 import Lathe3D from './Lathe3D';
 import PreparationModal from './PreparationModal';
 import LatheFormulaCalculatorModal from './LatheFormulaCalculatorModal';
 import { PROFILE_RESOLUTION } from '../utils/latheToolpath';
-import CncLatheTeknalar from './CncLatheTeknalar';
+import '../styles/teknalar_cnc.css';
 
 // =========================================================================
-// DATA KONFIGURASI TOOLING PAHAT CNC (STANDAR INDUSTRI & ISO)
+// DATA 8-STASIUN TURRET TOOL MAGAZINE CNC BUBUT (FANUC SERIES 0i-TD)
 // =========================================================================
-const TOOLS_CONFIG = {
-  rata: {
+const DEFAULT_TURRET_STATIONS = [
+  {
+    station: 1,
     id: 'rata',
     code: 'T0101',
-    name: 'Pahat Rata Kanan',
+    name: 'Pahat Rata Kanan (Roughing)',
     enName: 'Right-Hand Turning / Roughing Tool',
     icon: '[T01]',
-    insert: 'WNMG 080408 / CNMG 120408 (Rhombic 80° Gold Carbide)',
+    insert: 'WNMG 080408 (Rhombic 80° Gold Carbide)',
     leadAngle: '95° (ISO PCLNR 2020K12)',
-    orientation: 'Vertikal (CNC Turret)',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.8,
     color: '#38bdf8',
     bg: 'rgba(56, 189, 248, 0.12)',
     border: '#0284c7',
-    desc: 'Untuk pembubutan diameter luar memanjang (longitudinal turning), pemakanan bertingkat kasar dan halus dari Z0 ke Z-.'
+    desc: 'Untuk pembubutan diameter luar memanjang kasar dan bertingkat dari Z0 ke Z-.'
   },
-  alur: {
-    id: 'alur',
+  {
+    station: 2,
+    id: 'finishing',
     code: 'T0202',
-    name: 'Pahat Alur (Grooving)',
-    enName: 'Grooving / Parting Off Tool',
+    name: 'Pahat Finishing Kanan',
+    enName: 'Precision Finishing Tool',
     icon: '[T02]',
-    insert: 'CoroCut / Iscar Blade 3.0 mm (Slender Flat-Edge TiAlN)',
-    leadAngle: '90° Tegak Lurus Poros (Plunging Blade)',
-    orientation: 'Vertikal (CNC Turret)',
-    color: '#fbbf24',
-    bg: 'rgba(251, 191, 36, 0.12)',
-    border: '#d97706',
-    desc: 'Bilah ramping khusus alur celah (groove), snap ring, alur oli, dan pemotongan benda kerja (parting off) secara melintang ke X.'
+    insert: 'TNMG 160404 (Triangular 60° TiAlN)',
+    leadAngle: '93° (ISO MTJNR 2020K16)',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.4,
+    color: '#06b6d4',
+    bg: 'rgba(6, 182, 212, 0.12)',
+    border: '#0891b2',
+    desc: 'Penyayatan halus presisi tinggi dengan radius ujung R0.4 untuk kualitas permukaan halus.'
   },
-  ulir: {
-    id: 'ulir',
-    code: 'T0404',
-    name: 'Pahat Ulir Luar (Threading)',
-    enName: 'External Threading Tool (60° ISO Metric)',
-    icon: '[T03]',
-    insert: 'ISO 16ER AG60 (Equilateral 60° Laydown Carbide TiAlN)',
-    leadAngle: '60° Profil Gigi Ulir Metris (ISO 16ER)',
-    orientation: 'Vertikal (CNC Turret)',
-    color: '#c084fc',
-    bg: 'rgba(192, 132, 252, 0.12)',
-    border: '#9333ea',
-    desc: 'Insert segitiga sama sisi 60° khusus pembuatan ulir luar (external thread) metris standar dengan siklus G92/G76 pada permukaan poros.'
-  },
-  facing: {
+  {
+    station: 3,
     id: 'facing',
     code: 'T0303',
     name: 'Pahat Facing (Muka)',
     enName: 'Transversal Facing Tool',
-    icon: '[T04]',
-    insert: 'PCLNL 93° / TNMG 160408 (Triangular Sharp Wedge)',
-    leadAngle: '93° / 75° Facing Angle',
-    orientation: 'Vertikal (CNC Turret)',
+    icon: '[T03]',
+    insert: 'PCLNL 93° / WNMG 080408',
+    leadAngle: '93° Facing Angle',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.8,
     color: '#34d399',
     bg: 'rgba(52, 211, 153, 0.12)',
     border: '#059669',
-    desc: 'Khusus meratakan dan membersihkan permukaan ujung muka benda kerja pada bidang Z0 dari diameter luar ke titik pusat X0.'
+    desc: 'Meratakan permukaan ujung muka benda kerja pada bidang Z0 dari diameter luar ke X0.'
+  },
+  {
+    station: 4,
+    id: 'alur',
+    code: 'T0404',
+    name: 'Pahat Alur Potong (Grooving)',
+    enName: 'Grooving / Parting Off Tool',
+    icon: '[T04]',
+    insert: 'CoroCut Blade 3.0 mm (Slender Flat-Edge)',
+    leadAngle: '90° Tegak Lurus Poros',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.2,
+    color: '#fbbf24',
+    bg: 'rgba(251, 191, 36, 0.12)',
+    border: '#d97706',
+    desc: 'Bilah ramping khusus alur celah, snap ring, dan potong bahan (parting-off).'
+  },
+  {
+    station: 5,
+    id: 'ulir',
+    code: 'T0505',
+    name: 'Pahat Ulir Luar 60° (Threading)',
+    enName: 'External Threading Tool 60°',
+    icon: '[T05]',
+    insert: 'ISO 16ER AG60 (Laydown Carbide)',
+    leadAngle: '60° Profil Gigi Ulir Metris',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.1,
+    color: '#c084fc',
+    bg: 'rgba(192, 132, 252, 0.12)',
+    border: '#9333ea',
+    desc: 'Pembuatan ulir luar metris standar dengan siklus pemakanan bertahap G92/G76.'
+  },
+  {
+    station: 6,
+    id: 'ratakiri',
+    code: 'T0606',
+    name: 'Pahat Rata Kiri',
+    enName: 'Left-Hand Turning Tool',
+    icon: '[T06]',
+    insert: 'WNMG 080408L (Left Hand Rhombic)',
+    leadAngle: '95° (ISO PCLNL)',
+    orientation: 'Vertikal (Upper Turret)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.8,
+    color: '#f43f5e',
+    bg: 'rgba(244, 63, 94, 0.12)',
+    border: '#e11d48',
+    desc: 'Penyayatan arah kiri untuk pembubutan kontur balik atau pencekaman berlawanan.'
+  },
+  {
+    station: 7,
+    id: 'centerdrill',
+    code: 'T0707',
+    name: 'Pahat Bor Pusat (Center Drill)',
+    enName: 'HSS Center Drill Tool',
+    icon: '[T07]',
+    insert: 'HSS DIN 333-A Ø3.15x60°',
+    leadAngle: '60° Countersink Point',
+    orientation: 'Aksial Pusat (Turret Center)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.0,
+    color: '#a3e635',
+    bg: 'rgba(163, 230, 53, 0.12)',
+    border: '#65a30d',
+    desc: 'Pembuatan lubang senter awal pada muka benda kerja sebelum pengeboran poros.'
+  },
+  {
+    station: 8,
+    id: 'udrill',
+    code: 'T0808',
+    name: 'Pahat Bor U-Drill Ø20',
+    enName: 'Indexable U-Drill Ø20mm',
+    icon: '[T08]',
+    insert: 'WCMX 040208 Indexable Carbide',
+    leadAngle: '180° Flat Bottom',
+    orientation: 'Aksial Pusat (Turret Center)',
+    geoX: 0.0,
+    geoZ: 0.0,
+    wearX: 0.0,
+    wearZ: 0.0,
+    radiusR: 0.0,
+    color: '#f97316',
+    bg: 'rgba(249, 115, 22, 0.12)',
+    border: '#ea580c',
+    desc: 'Pengeboran lubang dalam inti poros secara langsung dengan sisipan karbida indeksabel.'
   }
-};
+];
+
+const TOOLS_CONFIG = DEFAULT_TURRET_STATIONS.reduce((acc, t) => {
+  acc[t.id] = t;
+  return acc;
+}, {});
 
 // =========================================================================
 // PRESET BENDA KERJA
@@ -87,15 +197,48 @@ const WORKPIECE_PRESETS = [
 // GENERATOR TEMPLATE G-CODE DINAMIS SESUAI UKURAN & PAHAT
 // =========================================================================
 const getGcodeTemplate = (tool = 'rata', dia = 50, len = 100) => {
+  if (tool === 'finishing') {
+    const dFinish = (dia - 4).toFixed(1);
+    const zFinish = -(len * 0.45).toFixed(1);
+    return `(PROGRAM BUBUT FINISHING - T0202)
+G21 G18 G40 G54 G99
+T0202 M06 (PAHAT FINISHING TNMG 60 DEG)
+M03 S1500 M08
+G00 X${(dia + 2).toFixed(1)} Z2.0
+G01 X${dFinish} Z2.0 F0.10
+G01 X${dFinish} Z${zFinish} F0.10
+G00 X${(dia + 4).toFixed(1)} Z2.0
+G00 X${(dia + 10).toFixed(1)} Z10.0
+M09 M05
+M30`;
+  }
+
+  if (tool === 'facing') {
+    return `(PROGRAM BUBUT FACING MUKA - T0303)
+G21 G18 G40 G54 G99
+T0303 M06 (PAHAT FACING PCLNL)
+M03 S1400 M08
+G00 X${(dia + 4).toFixed(1)} Z2.0
+G00 X${(dia + 4).toFixed(1)} Z0.5
+G01 X-1.6 Z0.5 F0.12 (SAYAT MUKA KASAR)
+G00 Z2.0
+G00 X${(dia + 4).toFixed(1)} Z0.0
+G01 X-1.6 Z0.0 F0.08 (FINISHING MUKA Z0)
+G00 Z3.0
+G00 X${(dia + 10).toFixed(1)} Z10.0
+M09 M05
+M30`;
+  }
+
   if (tool === 'alur') {
     const z1 = -(len * 0.25).toFixed(1);
     const z2 = -(len * 0.50).toFixed(1);
     const d1 = (dia - 12).toFixed(1);
     const d2 = (dia - 16).toFixed(1);
-    return `(PROGRAM BUBUT ALUR 3MM - T0202)
-G21 G90 G54
-T0202 M06 (PAHAT ALUR 3MM VERTIKAL)
-M03 S800
+    return `(PROGRAM BUBUT ALUR 3MM - T0404)
+G21 G18 G40 G54 G99
+T0404 M06 (PAHAT ALUR 3MM COROCUT)
+M03 S800 M08
 G00 X${(dia + 2).toFixed(1)} Z${z1}
 G01 X${d1} Z${z1} F0.08 (SAYAT ALUR 1)
 G04 P500 (DWELL 0.5 DETIK)
@@ -105,57 +248,80 @@ G01 X${d2} Z${z2} F0.08 (SAYAT ALUR 2)
 G04 P500
 G00 X${(dia + 2).toFixed(1)} Z${z2}
 G00 X${(dia + 10).toFixed(1)} Z10.0
-M05
+M09 M05
 M30`;
   }
 
   if (tool === 'ulir') {
-    const threadZ = -(len * 0.50).toFixed(1);
+    const threadZ = -(len * 0.45).toFixed(1);
     const pitch = 2.0;
     const coreDia = (dia - 2.4).toFixed(1);
-    return `(PROGRAM BUBUT ULIR METRIS M${dia}x${pitch} - T0404)
-G21 G90 G54
-T0404 M06 (PAHAT ULIR LUAR 60 DERAJAT 16ER)
-M03 S600 (RPM RENDAH UNTUK SIKLUS ULIR)
+    return `(PROGRAM BUBUT ULIR METRIS M${dia}x${pitch} - T0505)
+G21 G18 G40 G54 G99
+T0505 M06 (PAHAT ULIR 60 DEG 16ER)
+M03 S600 M08
 G00 X${(dia + 4).toFixed(1)} Z4.0
-(SIKLUS PEMBUATAN ULIR DENGAN G92)
-G92 X${(dia - 0.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 1 KEDALAMAN 0.25MM)
-G92 X${(dia - 1.0).toFixed(1)} Z${threadZ} F${pitch} (PASS 2 KEDALAMAN 0.50MM)
-G92 X${(dia - 1.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 3 KEDALAMAN 0.75MM)
-G92 X${(dia - 2.0).toFixed(1)} Z${threadZ} F${pitch} (PASS 4 KEDALAMAN 1.00MM)
-G92 X${coreDia} Z${threadZ} F${pitch} (PASS 5 FINISHING DIAMETER INTI)
+G92 X${(dia - 0.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 1)
+G92 X${(dia - 1.0).toFixed(1)} Z${threadZ} F${pitch} (PASS 2)
+G92 X${(dia - 1.5).toFixed(1)} Z${threadZ} F${pitch} (PASS 3)
+G92 X${coreDia} Z${threadZ} F${pitch} (PASS 4 INTI)
 G00 X${(dia + 10).toFixed(1)} Z10.0
-M05
+M09 M05
 M30`;
   }
 
-  if (tool === 'facing') {
-    return `(PROGRAM BUBUT FACING MUKA - T0303)
-G21 G90 G54
-T0303 M06 (PAHAT FACING VERTIKAL)
-M03 S1400
-G00 X${(dia + 4).toFixed(1)} Z2.0
-G00 X${(dia + 4).toFixed(1)} Z0.5
-G01 X-1.0 Z0.5 F0.15 (SAYAT MUKA KASAR)
-G00 Z2.0
-G00 X${(dia + 4).toFixed(1)} Z2.0
-G00 X${(dia + 4).toFixed(1)} Z0.0
-G01 X-1.0 Z0.0 F0.10 (FINISHING MUKA Z0)
-G00 Z3.0
+  if (tool === 'ratakiri') {
+    const d1 = (dia - 8).toFixed(1);
+    const z1 = -(len * 0.5).toFixed(1);
+    return `(PROGRAM BUBUT RATA KIRI - T0606)
+G21 G18 G40 G54 G99
+T0606 M06 (PAHAT RATA KIRI)
+M03 S1100 M08
+G00 X${(dia + 2).toFixed(1)} Z${z1}
+G01 X${d1} Z${z1} F0.18
+G01 X${d1} Z0.0 F0.18 (SAYAT ARAH MUKA KIRI)
 G00 X${(dia + 10).toFixed(1)} Z10.0
-M05
+M09 M05
 M30`;
   }
 
-  // Default: Pahat Rata Kanan
+  if (tool === 'centerdrill') {
+    return `(PROGRAM BOR PUSAT - T0707)
+G21 G18 G40 G54 G99
+T0707 M06 (CENTER DRILL DIN 333-A)
+M03 S1600 M08
+G00 X0.0 Z5.0
+G01 Z-4.0 F0.06 (BOR SENTER 60 DEG)
+G04 P300
+G00 Z10.0
+G00 X40.0
+M09 M05
+M30`;
+  }
+
+  if (tool === 'udrill') {
+    return `(PROGRAM U-DRILL Ø20 - T0808)
+G21 G18 G40 G54 G99
+T0808 M06 (U-DRILL Ø20 INDEXABLE)
+M03 S1200 M08
+G00 X0.0 Z5.0
+G01 Z-25.0 F0.12 (BOR LUBANG Ø20)
+G04 P200
+G00 Z10.0
+G00 X45.0
+M09 M05
+M30`;
+  }
+
+  // Default: T0101 Pahat Rata Kanan (Roughing)
   const dStep1 = (dia - 6).toFixed(1);
   const zStep1 = -(len * 0.6).toFixed(1);
   const dStep2 = (dia - 12).toFixed(1);
   const zStep2 = -(len * 0.35).toFixed(1);
   return `(PROGRAM BUBUT RATA KANAN - T0101)
-G21 G90 G54
-T0101 M06 (PAHAT RATA KANAN VERTIKAL)
-M03 S1200
+G21 G18 G40 G54 G99
+T0101 M06 (PAHAT RATA KANAN WNMG)
+M03 S1200 M08
 G00 X${(dia + 2).toFixed(1)} Z2.0
 G01 X${dStep1} Z2.0 F0.2
 G01 X${dStep1} Z${zStep1} F0.2
@@ -166,15 +332,14 @@ G01 X${dStep2} Z${zStep2} F0.2
 G00 X${(dia - 10).toFixed(1)} Z${zStep2}
 G00 Z2.0
 G00 X${(dia + 10).toFixed(1)} Z10.0
-M05
+M09 M05
 M30`;
 };
 
 const CNCLatheModule = ({ addXP }) => {
-  const [viewMode, setViewMode] = useState('teknalar'); // 'teknalar' (default, referensi Fanuc 0i) or 'studio3d'
   const [isPrepared, setIsPrepared] = useState(true);
   const [showCalculator, setShowCalculator] = useState(false);
-  const [activeTab, setActiveTab] = useState('4'); // '1': Benda Kerja, '2': Tooling, '3': Spindel, '4': Program, '5': Proses, '6': Hasil
+  const [activeTab, setActiveTab] = useState('4'); // '1': Benda Kerja, '2': Tooling/Turret, '3': Spindel, '4': Program, '5': Proses, '6': Hasil
   
   // ==========================================
   // 1. BENDA KERJA STATE (UKURAN & MATERIAL)
@@ -185,20 +350,31 @@ const CNCLatheModule = ({ addXP }) => {
   const [showWorkpieceModal, setShowWorkpieceModal] = useState(false);
 
   // ==========================================
-  // 2. TOOLING STATE (PAHAT CNC & ORIENTASI)
+  // 2. 8-STATION TURRET TOOL MAGAZINE STATE
   // ==========================================
-  const [toolType, setToolType] = useState('rata'); // 'rata', 'alur', 'facing'
-  const toolOrientation = 'vertical'; // Posisi Vertikal sesuai permintaan user!
+  const [activeTurretStation, setActiveTurretStation] = useState(1);
+  const [turretStations, setTurretStations] = useState(DEFAULT_TURRET_STATIONS);
+  const [toolType, setToolType] = useState('rata'); // 'rata', 'finishing', 'facing', 'alur', 'ulir', 'ratakiri', 'centerdrill', 'udrill'
+  const toolOrientation = 'vertical'; // Posisi Vertikal sesuai standar CNC Turret Atas
 
   // ==========================================
-  // 3. PARAMETER MESIN
+  // 3. FANUC SERIES 0i-TD CONTROLLER STATE
+  // ==========================================
+  const [fanucMode, setFanucMode] = useState('AUTO'); // 'AUTO', 'EDIT', 'JOG', 'MDI'
+  const [crtScreen, setCrtScreen] = useState('POS'); // 'POS', 'PROG', 'OFFSET', 'ALARM'
+  const [eStop, setEStop] = useState(false);
+  const [jogStep, setJogStep] = useState(0.1);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // ==========================================
+  // 4. PARAMETER MESIN
   // ==========================================
   const [spindleRpm, setSpindleRpm] = useState(1200);
   const [feedRate, setFeedRate] = useState(0.20);
   const [coolant, setCoolant] = useState(true);
 
   // ==========================================
-  // 4. PROGRAM G-CODE & EKSEKUSI
+  // 5. PROGRAM G-CODE & EKSEKUSI
   // ==========================================
   const [gcodeText, setGcodeText] = useState(() => getGcodeTemplate('rata', 50, 100));
   const [currentLine, setCurrentLine] = useState(-1);
@@ -243,11 +419,86 @@ const CNCLatheModule = ({ addXP }) => {
     setShowWorkpieceModal(false);
   };
 
-  // Change Tool Handler
+  // Turret Tool Selection & Indexing Handlers
+  const handleSelectTurretStation = (stationNum) => {
+    sound.playClick();
+    const station = DEFAULT_TURRET_STATIONS.find(t => t.station === stationNum);
+    if (station) {
+      setActiveTurretStation(stationNum);
+      setToolType(station.id);
+      setGcodeText(getGcodeTemplate(station.id, workpieceDiameter, workpieceLength));
+    }
+  };
+
+  const handleTurretIndex = (direction) => {
+    sound.playClick();
+    const nextStation = ((activeTurretStation - 1 + direction + 8) % 8) + 1;
+    handleSelectTurretStation(nextStation);
+  };
+
   const handleSelectTool = (newToolId) => {
     sound.playClick();
+    const station = DEFAULT_TURRET_STATIONS.find(t => t.id === newToolId);
+    if (station) {
+      setActiveTurretStation(station.station);
+    }
     setToolType(newToolId);
     setGcodeText(getGcodeTemplate(newToolId, workpieceDiameter, workpieceLength));
+  };
+
+  // Manual JOG Movement Handler (FANUC Mode JOG)
+  const handleManualJog = (axis, direction) => {
+    if (isMachining) return;
+    sound.playClick();
+    const delta = direction * jogStep;
+    if (axis === 'X') {
+      const nextD = Math.max(0, Math.min(120, toolPosRef.current.d + delta));
+      toolPosRef.current = { ...toolPosRef.current, d: nextD, x: nextD };
+      setToolPosForRender({ ...toolPosRef.current, d: nextD, x: nextD });
+    } else if (axis === 'Z') {
+      const nextZ = Math.max(-workpieceLength - 20, Math.min(40, toolPosRef.current.z + delta));
+      toolPosRef.current = { ...toolPosRef.current, z: nextZ };
+      setToolPosForRender({ ...toolPosRef.current, z: nextZ });
+    }
+  };
+
+  // Emergency Stop Switch Handler
+  const handleToggleEStop = () => {
+    sound.playAlarm?.() || sound.playClick();
+    setEStop(prev => {
+      const next = !prev;
+      if (next) {
+        setIsMachining(false);
+        setIsPaused(false);
+        setFanucMode('JOG');
+      }
+      return next;
+    });
+  };
+
+  // Cycle Start Pushbutton Handler
+  const handleCycleStart = () => {
+    if (eStop) {
+      sound.playAlarm?.() || sound.playClick();
+      return;
+    }
+    sound.playClick();
+    if (isPaused) {
+      setIsPaused(false);
+      return;
+    }
+    setIsMachining(true);
+    setShowResult(false);
+    setCurrentLine(0);
+    targetPosRef.current = null;
+  };
+
+  // Feed Hold Pushbutton Handler
+  const handleFeedHold = () => {
+    sound.playClick();
+    if (isMachining) {
+      setIsPaused(prev => !prev);
+    }
   };
 
   // Cutting Calculation Engine (Penyayatan Presisi Sudut 90 Derajat Tanpa Tirus)
@@ -330,6 +581,8 @@ const CNCLatheModule = ({ addXP }) => {
   useEffect(() => {
     let animFrame;
     let frameCount = 0;
+
+    if (eStop || isPaused) return;
     
     if (isMachining && currentLine >= 0) {
       const lines = gcodeText.split('\n');
@@ -348,11 +601,15 @@ const CNCLatheModule = ({ addXP }) => {
       
       const line = lines[currentLine].trim().toUpperCase();
       
-      // Deteksi Tool Change di dalam G-Code (T0101, T0202, T0303, T0404)
-      if (line.includes('T0101') || line.includes('T01')) setToolType('rata');
-      else if (line.includes('T0202') || line.includes('T02')) setToolType('alur');
-      else if (line.includes('T0404') || line.includes('T04') || line.includes('G92') || line.includes('G76')) setToolType('ulir');
-      else if (line.includes('T0303') || line.includes('T03')) setToolType('facing');
+      // Deteksi Tool Change di dalam G-Code (T0101 s/d T0808)
+      if (line.includes('T0101') || line.includes('T01')) { setToolType('rata'); setActiveTurretStation(1); }
+      else if (line.includes('T0202') || line.includes('T02')) { setToolType('finishing'); setActiveTurretStation(2); }
+      else if (line.includes('T0303') || line.includes('T03')) { setToolType('facing'); setActiveTurretStation(3); }
+      else if (line.includes('T0404') || line.includes('T04')) { setToolType('alur'); setActiveTurretStation(4); }
+      else if (line.includes('T0505') || line.includes('T05') || line.includes('G92') || line.includes('G76')) { setToolType('ulir'); setActiveTurretStation(5); }
+      else if (line.includes('T0606') || line.includes('T06')) { setToolType('ratakiri'); setActiveTurretStation(6); }
+      else if (line.includes('T0707') || line.includes('T07')) { setToolType('centerdrill'); setActiveTurretStation(7); }
+      else if (line.includes('T0808') || line.includes('T08')) { setToolType('udrill'); setActiveTurretStation(8); }
 
       if (!line || line.startsWith('(') || line.startsWith('O') || line.includes('M03') || line.includes('M05') || line.includes('M30') || line.includes('G21') || line.includes('G90') || line.includes('G54') || line.includes('G28')) {
         setTimeout(() => setCurrentLine(prev => prev + 1), 160);
@@ -430,86 +687,16 @@ const CNCLatheModule = ({ addXP }) => {
 
   const sidebarMenus = [
     { id: '1', title: '1. BENDA KERJA', desc: `Ø${workpieceDiameter} x ${workpieceLength} mm` },
-    { id: '2', title: '2. TOOLING / PAHAT', desc: `${activeToolData.name} (Vertikal)` },
+    { id: '2', title: '2. MAGAZINE TURRET', desc: `T0${activeTurretStation}: ${activeToolData.name}` },
     { id: '3', title: '3. SPINDEL & COOLANT', desc: `S${spindleRpm} / ${coolant ? 'M08' : 'M09'}` },
-    { id: '4', title: '4. PROGRAM G-CODE', desc: 'Editor Program ISO' },
-    { id: '5', title: '5. PROSES SIMULASI', desc: isMachining ? 'RUNNING...' : 'Siap Mulai' },
+    { id: '4', title: '4. PROGRAM G-CODE', desc: activeToolData.code },
+    { id: '5', title: '5. PROSES SIMULASI', desc: isMachining ? (isPaused ? 'FEED HOLD' : 'RUNNING...') : 'Siap Mulai' },
     { id: '6', title: '6. HASIL & EVALUASI', desc: showResult ? 'Score 100%' : 'Menunggu' }
   ];
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      {/* MODE SWITCHER: FANUC 0i TEKNALAR VS 3D STUDIO */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-light)',
-        borderRadius: '12px',
-        padding: '10px 16px',
-        marginBottom: '16px',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{
-            background: viewMode === 'teknalar' ? '#10b981' : '#0284c7',
-            color: viewMode === 'teknalar' ? '#000' : '#fff',
-            fontWeight: 800,
-            fontSize: '0.75rem',
-            padding: '4px 10px',
-            borderRadius: '6px',
-            letterSpacing: '0.5px'
-          }}>
-            {viewMode === 'teknalar' ? '[MODE FANUC 0i TEKNALAR]' : '[MODE 3D WEBGL STUDIO]'}
-          </div>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>
-            {viewMode === 'teknalar'
-              ? 'Simulator CNC Bubut Industri Fanuc 0i sesuai standar referensi Teknalar'
-              : 'Simulator Bubut CNC Interaktif 3D Step-by-Step'}
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button
-            onClick={() => { sound.playClick(); setViewMode('teknalar'); }}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '6px',
-              border: viewMode === 'teknalar' ? '2px solid #10b981' : '1px solid var(--border-light)',
-              background: viewMode === 'teknalar' ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
-              color: viewMode === 'teknalar' ? '#10b981' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            Fanuc 0i Industrial (Teknalar)
-          </button>
-          <button
-            onClick={() => { sound.playClick(); setViewMode('studio3d'); }}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '6px',
-              border: viewMode === 'studio3d' ? '2px solid #0284c7' : '1px solid var(--border-light)',
-              background: viewMode === 'studio3d' ? 'rgba(2, 132, 199, 0.18)' : 'transparent',
-              color: viewMode === 'studio3d' ? '#0284c7' : 'var(--text-muted)',
-              fontWeight: 700,
-              fontSize: '0.82rem',
-              cursor: 'pointer'
-            }}
-          >
-            Studio 3D Step-by-Step
-          </button>
-        </div>
-      </div>
-
-      {viewMode === 'teknalar' ? (
-        <CncLatheTeknalar addXP={addXP} />
-      ) : (
-        <>
-          {!isPrepared && <PreparationModal machineName="MESIN CNC BUBUT" onComplete={() => setIsPrepared(true)} />}
+      {!isPrepared && <PreparationModal machineName="MESIN CNC BUBUT" onComplete={() => setIsPrepared(true)} />}
       
       {/* HEADER UTAMA */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
@@ -839,84 +1026,278 @@ const CNCLatheModule = ({ addXP }) => {
               </div>
             )}
 
-            {/* TAB 2: TOOLING & PAHAT CNC */}
+            {/* TAB 2: 8-STATION TURRET TOOL MAGAZINE & OFFSET */}
             {activeTab === '2' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
-                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Wrench size={16} className="inline mr-1.5 text-sky-400" />
-                    <span>Pilihan Pahat Turret CNC Bubut (Posisi Vertikal)</span>
-                  </h3>
-                  <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700 }}>Turret Indexing Station: 8-Tool Turret</span>
+                {/* TURRET HEADER & INDEXING CONTROLS */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottom: '1px solid var(--border-light)',
+                  paddingBottom: '12px',
+                  flexWrap: 'wrap',
+                  gap: '10px'
+                }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Wrench size={16} className="inline mr-1 text-sky-400" />
+                      <span>MAGAZINE TURRET 8-STASIUN (UPPER TURRET DISC)</span>
+                    </h3>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                      Piringan Turret CNC Bubut Industri Fanuc 0i-TD dengan 8 stasiun pahat vertikal.
+                    </div>
+                  </div>
+
+                  {/* TURRET INDEXING BUTTONS */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      onClick={() => handleTurretIndex(-1)}
+                      style={{
+                        padding: '6px 12px',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        border: '1px solid #0284c7',
+                        color: '#38bdf8',
+                        borderRadius: '6px',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer'
+                      }}
+                      title="Putar Turret Berlawanan Arah Jarum Jam (CCW)"
+                    >
+                      [INDEX CCW (T-)]
+                    </button>
+
+                    <div style={{
+                      background: 'rgba(244, 194, 27, 0.15)',
+                      border: '1.5px solid #f4c21b',
+                      color: '#f4c21b',
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontFamily: 'monospace',
+                      fontWeight: 900,
+                      fontSize: '0.85rem'
+                    }}>
+                      POSISI POTONG: ST-{activeTurretStation} ({activeToolData.code})
+                    </div>
+
+                    <button
+                      onClick={() => handleTurretIndex(1)}
+                      style={{
+                        padding: '6px 12px',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        border: '1px solid #0284c7',
+                        color: '#38bdf8',
+                        borderRadius: '6px',
+                        fontWeight: 800,
+                        fontSize: '0.78rem',
+                        cursor: 'pointer'
+                      }}
+                      title="Putar Turret Searah Jarum Jam (CW)"
+                    >
+                      [INDEX CW (T+)]
+                    </button>
+                  </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-                  {Object.values(TOOLS_CONFIG).map(tool => {
-                    const isSelected = toolType === tool.id;
+                {/* 8-STATION TURRET CAROUSEL PODS */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                  {DEFAULT_TURRET_STATIONS.map(st => {
+                    const isIndexed = activeTurretStation === st.station;
                     return (
                       <div
-                        key={tool.id}
-                        onClick={() => handleSelectTool(tool.id)}
+                        key={st.station}
+                        onClick={() => handleSelectTurretStation(st.station)}
                         style={{
-                          background: isSelected ? tool.bg : 'var(--bg-game)',
-                          border: isSelected ? `2px solid ${tool.border}` : '1px solid var(--border-light)',
-                          borderRadius: '12px',
-                          padding: '16px',
+                          background: isIndexed ? st.bg : 'var(--bg-game)',
+                          border: isIndexed ? `2px solid ${st.border}` : '1px solid var(--border-light)',
+                          borderRadius: '10px',
+                          padding: '12px',
                           cursor: 'pointer',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '10px',
-                          transition: 'all 0.2s',
-                          boxShadow: isSelected ? `0 4px 16px ${tool.bg}` : 'none'
+                          gap: '8px',
+                          transition: 'all 0.18s ease',
+                          boxShadow: isIndexed ? `0 0 16px ${st.bg}` : 'none',
+                          position: 'relative'
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ fontSize: '1.4rem' }}>{tool.icon}</span>
-                            <div>
-                              <div style={{ fontWeight: 900, color: 'var(--text-main)', fontSize: '0.95rem' }}>{tool.name}</div>
-                              <div style={{ fontSize: '0.72rem', color: tool.color, fontWeight: 800 }}>{tool.code} &bull; {tool.orientation}</div>
-                            </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{
+                              background: isIndexed ? st.border : 'rgba(255,255,255,0.08)',
+                              color: '#ffffff',
+                              fontWeight: 900,
+                              fontSize: '0.7rem',
+                              padding: '2px 6px',
+                              borderRadius: '4px'
+                            }}>
+                              ST-{st.station}
+                            </span>
+                            <span style={{ fontWeight: 800, color: st.color, fontSize: '0.82rem' }}>
+                              {st.code}
+                            </span>
                           </div>
-                          {isSelected && (
-                            <span style={{ background: tool.border, color: '#ffffff', fontSize: '0.65rem', fontWeight: 900, padding: '3px 8px', borderRadius: '6px' }}>
-                              AKTIF
+
+                          {isIndexed ? (
+                            <span style={{
+                              background: '#10b981',
+                              color: '#000000',
+                              fontWeight: 900,
+                              fontSize: '0.65rem',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              letterSpacing: '0.5px'
+                            }}>
+                              [INDEXED / AKTIF]
+                            </span>
+                          ) : (
+                            <span style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', fontWeight: 700 }}>
+                              STANDBY
                             </span>
                           )}
                         </div>
 
-                        <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                          {tool.desc}
+                        <div>
+                          <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: '0.85rem' }}>
+                            {st.name}
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                            {st.enName}
+                          </div>
                         </div>
 
-                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: '8px 10px', borderRadius: '6px', fontSize: '0.72rem', border: '1px solid rgba(255,255,255,0.06)' }}>
-                          <div><strong style={{ color: 'var(--text-main)' }}>Insert:</strong> {tool.insert}</div>
-                          <div><strong style={{ color: 'var(--text-main)' }}>Sudut:</strong> {tool.leadAngle}</div>
+                        <div style={{
+                          background: 'rgba(0,0,0,0.25)',
+                          borderRadius: '6px',
+                          padding: '6px 8px',
+                          fontSize: '0.7rem',
+                          border: '1px solid rgba(255,255,255,0.05)'
+                        }}>
+                          <div><strong style={{ color: 'var(--text-main)' }}>Insert:</strong> {st.insert}</div>
+                          <div><strong style={{ color: 'var(--text-main)' }}>Sudut Potong:</strong> {st.leadAngle}</div>
+                        </div>
+
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                          {st.desc}
                         </div>
 
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleSelectTool(tool.id);
+                            handleSelectTurretStation(st.station);
                             setActiveTab('4');
                           }}
                           style={{
                             marginTop: 'auto',
-                            padding: '6px 12px',
+                            padding: '6px 10px',
                             borderRadius: '6px',
-                            background: isSelected ? tool.border : 'rgba(255,255,255,0.08)',
+                            background: isIndexed ? st.border : 'rgba(255,255,255,0.08)',
                             color: '#ffffff',
                             border: 'none',
-                            fontSize: '0.75rem',
+                            fontSize: '0.72rem',
                             fontWeight: 800,
                             cursor: 'pointer'
                           }}
                         >
-                          {isSelected ? '[TERMUAT] Program G-Code Termuat (Lihat Editor)' : 'Pilih & Muat Program'}
+                          {isIndexed ? '[TERPASANG] Muat ke Editor G-Code' : 'Index ke Stasiun Ini'}
                         </button>
                       </div>
                     );
                   })}
+                </div>
+
+                {/* FANUC SERIES 0i-TD GEOMETRY & WEAR OFFSET TABLE */}
+                <div style={{
+                  background: 'var(--bg-game)',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-light)',
+                  padding: '14px',
+                  marginTop: '8px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
+                      TABEL OFFSET GEOMETRI &amp; KEAUSAN PAHAT (FANUC 0i-TD OFFSET/GEOM)
+                    </div>
+                    <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700 }}>
+                      DATUM SISTEM KOORDINAT: G54 (X0 Z0 MUKA BENDA)
+                    </span>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                      <thead>
+                        <tr style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-light)' }}>
+                          <th style={{ padding: '6px 8px' }}>ST</th>
+                          <th style={{ padding: '6px 8px' }}>TOOL</th>
+                          <th style={{ padding: '6px 8px' }}>NAMA PAHAT</th>
+                          <th style={{ padding: '6px 8px' }}>INSERT ISO</th>
+                          <th style={{ padding: '6px 8px' }}>GEO X (mm)</th>
+                          <th style={{ padding: '6px 8px' }}>GEO Z (mm)</th>
+                          <th style={{ padding: '6px 8px' }}>WEAR X</th>
+                          <th style={{ padding: '6px 8px' }}>WEAR Z</th>
+                          <th style={{ padding: '6px 8px' }}>RADIUS R</th>
+                          <th style={{ padding: '6px 8px' }}>STATUS</th>
+                          <th style={{ padding: '6px 8px' }}>KONTROL</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {DEFAULT_TURRET_STATIONS.map(st => {
+                          const isCur = activeTurretStation === st.station;
+                          return (
+                            <tr
+                              key={st.station}
+                              style={{
+                                borderBottom: '1px solid rgba(255,255,255,0.04)',
+                                background: isCur ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
+                                color: isCur ? '#38bdf8' : 'var(--text-main)'
+                              }}
+                            >
+                              <td style={{ padding: '6px 8px', fontWeight: 900 }}>{st.station}</td>
+                              <td style={{ padding: '6px 8px', fontWeight: 800 }}>{st.code}</td>
+                              <td style={{ padding: '6px 8px', color: isCur ? '#ffffff' : 'var(--text-muted)' }}>{st.name}</td>
+                              <td style={{ padding: '6px 8px' }}>{st.insert.split(' ')[0]}</td>
+                              <td style={{ padding: '6px 8px', color: '#10b981' }}>{st.geoX.toFixed(3)}</td>
+                              <td style={{ padding: '6px 8px', color: '#10b981' }}>{st.geoZ.toFixed(3)}</td>
+                              <td style={{ padding: '6px 8px', color: '#fbbf24' }}>{st.wearX.toFixed(3)}</td>
+                              <td style={{ padding: '6px 8px', color: '#fbbf24' }}>{st.wearZ.toFixed(3)}</td>
+                              <td style={{ padding: '6px 8px' }}>{st.radiusR.toFixed(2)}</td>
+                              <td style={{ padding: '6px 8px' }}>
+                                <span style={{
+                                  padding: '2px 6px',
+                                  borderRadius: '3px',
+                                  fontSize: '0.65rem',
+                                  fontWeight: 900,
+                                  background: isCur ? '#0284c7' : 'rgba(255,255,255,0.06)',
+                                  color: '#ffffff'
+                                }}>
+                                  {isCur ? 'CUTTING' : 'STANDBY'}
+                                </span>
+                              </td>
+                              <td style={{ padding: '6px 8px' }}>
+                                <button
+                                  onClick={() => handleSelectTurretStation(st.station)}
+                                  disabled={isCur}
+                                  style={{
+                                    padding: '3px 8px',
+                                    borderRadius: '4px',
+                                    background: isCur ? '#10b981' : 'rgba(255,255,255,0.08)',
+                                    color: isCur ? '#000000' : 'var(--text-main)',
+                                    border: 'none',
+                                    fontWeight: 800,
+                                    fontSize: '0.68rem',
+                                    cursor: isCur ? 'default' : 'pointer'
+                                  }}
+                                >
+                                  {isCur ? '[INDEXED]' : 'Pilih Tool'}
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             )}
@@ -1186,59 +1567,272 @@ const CNCLatheModule = ({ addXP }) => {
           </div>
         </div>
 
-        {/* RIGHT SIDEBAR: HASIL & MONITOR */}
-        <div style={{ width: '270px', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-light)', padding: '18px', display: 'flex', flexDirection: 'column' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)', textTransform: 'uppercase', marginBottom: '14px', textAlign: 'center', letterSpacing: '0.5px' }}>
-            STATUS MONITOR CNC
-          </h3>
-          
-          {/* Workpiece & Tool Info Box */}
-          <div style={{ background: 'var(--bg-game)', borderRadius: '10px', padding: '12px', border: '1px solid var(--border-light)', marginBottom: '14px', fontSize: '0.78rem' }}>
-            <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Benda Kerja:</div>
-            <div style={{ fontWeight: 800, color: 'var(--text-main)', marginBottom: '8px' }}>
-              Ø {workpieceDiameter} mm &times; {workpieceLength} mm
+        {/* RIGHT SIDEBAR: FANUC SERIES 0i-TD OPERATOR CONTROLLER */}
+        <div style={{ width: '350px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div className="teknalar-control" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            
+            {/* 1. GOLDEN NAMEPLATE */}
+            <div className="teknalar-nameplate">
+              <div>
+                <strong>FANUC Series 0i-TD</strong>
+              </div>
+              <span>CNC TURNING</span>
             </div>
 
-            <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Pahat Terpasang:</div>
-            <div style={{ fontWeight: 800, color: activeToolData.color, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span>{activeToolData.icon}</span>
-              <span>{activeToolData.name}</span>
+            {/* 2. CRT PHOSPHOR SCREEN & BEZEL */}
+            <div className="teknalar-bezel" style={{ minHeight: '340px' }}>
+              <div className="teknalar-lcd">
+                {/* CRT HEADER */}
+                <div className="teknalar-lcdHead">
+                  <span>[{fanucMode}] [MEM] [G54]</span>
+                  <span style={{ color: eStop ? '#ef4444' : (isPaused ? '#f59e0b' : '#34d399') }}>
+                    {eStop ? '[ALM 1001 EMG]' : (isPaused ? '[FEED HOLD]' : (isMachining ? '[RUNNING]' : '[READY]'))}
+                  </span>
+                </div>
+
+                {/* CRT BODY */}
+                <div className="teknalar-lcdBody">
+                  {crtScreen === 'POS' && (
+                    <>
+                      {/* DRO ACTUAL POSITION */}
+                      <div className="teknalar-box">
+                        <div className="teknalar-boxTitle">ACTUAL POSITION (G54 WORKPIECE)</div>
+                        <div className="teknalar-bigAxis">
+                          <span>X (DIA)</span>
+                          <strong>{toolPosForRender.d.toFixed(3)} <small>mm</small></strong>
+                        </div>
+                        <div className="teknalar-bigAxis">
+                          <span>Z (POS)</span>
+                          <strong>{toolPosForRender.z.toFixed(3)} <small>mm</small></strong>
+                        </div>
+                      </div>
+
+                      {/* SPINDLE & FEED STATUS */}
+                      <div className="teknalar-box">
+                        <div className="teknalar-boxTitle">SPINDLE &amp; FEED RATE STATUS</div>
+                        <div className="teknalar-status">
+                          <p>
+                            <b>S:</b> {isMachining ? spindleRpm : 0} RPM (M03) &bull; 
+                            <b>F:</b> {feedRate.toFixed(2)} mm/rev
+                          </p>
+                          <p>
+                            <b>T:</b> ST-{activeTurretStation} ({activeToolData.code}) &bull; 
+                            <b>COOL:</b> {coolant ? 'M08 ON' : 'M09 OFF'}
+                          </p>
+                          <p style={{ fontSize: '10px', color: '#94a3b8' }}>
+                            <b>MODAL:</b> G01 G18 G21 G40 G54 G99
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* MINI PROGRAM BLOCK TRACER */}
+                      <div className="teknalar-box" style={{ flex: 1, minHeight: '70px' }}>
+                        <div className="teknalar-boxTitle">ACTIVE PROGRAM BLOCK TRACER</div>
+                        <div className="teknalar-prog" style={{ maxHeight: '90px' }}>
+                          {gcodeText.split('\n').slice(Math.max(0, currentLine - 1), currentLine + 3).map((line, lIdx) => (
+                            <div key={lIdx} className={line === gcodeText.split('\n')[currentLine] && isMachining ? 'teknalar-cur' : ''}>
+                              {line || '(BLANK)'}
+                            </div>
+                          ))}
+                          {!isMachining && (
+                            <div style={{ color: '#64748b', padding: '4px 8px' }}>
+                              [STANDBY] Tekan CYCLE START untuk mengeksekusi
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {crtScreen === 'PROG' && (
+                    <div className="teknalar-box" style={{ flex: 1 }}>
+                      <div className="teknalar-boxTitle">PROGRAM ISO (O1001)</div>
+                      <div className="teknalar-prog" style={{ maxHeight: '240px' }}>
+                        {gcodeText.split('\n').map((line, idx) => (
+                          <div key={idx} className={idx === currentLine && isMachining ? 'teknalar-cur' : ''}>
+                            {String(idx + 1).padStart(3, '0')}: {line}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {crtScreen === 'OFFSET' && (
+                    <div className="teknalar-box" style={{ flex: 1 }}>
+                      <div className="teknalar-boxTitle">TOOL GEOMETRY OFFSET (ST-{activeTurretStation})</div>
+                      <div className="teknalar-status" style={{ fontSize: '11px' }}>
+                        <p><b>TOOL:</b> {activeToolData.code} - {activeToolData.name}</p>
+                        <p><b>GEO X:</b> +{activeToolData.geoX.toFixed(3)} mm</p>
+                        <p><b>GEO Z:</b> +{activeToolData.geoZ.toFixed(3)} mm</p>
+                        <p><b>RADIUS R:</b> {activeToolData.radiusR.toFixed(2)} mm</p>
+                        <p><b>WEAR X:</b> {activeToolData.wearX.toFixed(3)} mm</p>
+                        <p><b>WEAR Z:</b> {activeToolData.wearZ.toFixed(3)} mm</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {crtScreen === 'ALARM' && (
+                    <div className="teknalar-box" style={{ flex: 1 }}>
+                      <div className="teknalar-boxTitle">ALARM MESSAGE SCREEN</div>
+                      {eStop ? (
+                        <div style={{ color: '#ef4444', padding: '12px', fontWeight: 800 }}>
+                          ALARM 1001: EMERGENCY STOP TERTOMBO!
+                          <div style={{ color: '#fca5a5', fontSize: '10px', marginTop: '6px' }}>
+                            Lepaskan tombol E-STOP merah untuk melanjutkan operasi CNC.
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ color: '#10b981', padding: '12px' }}>
+                          000 NO ALARM PRESENT
+                          <div style={{ color: '#94a3b8', fontSize: '10px', marginTop: '6px' }}>
+                            Semua interlocking dan limit switch mesin berstatus normal.
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* CRT SOFTKEYS (BOTTOM OF SCREEN) */}
+                <div className="teknalar-softkeys">
+                  {['POS', 'PROG', 'OFFSET', 'ALARM'].map(sk => (
+                    <button
+                      key={sk}
+                      className={crtScreen === sk ? 'active' : ''}
+                      onClick={() => { sound.playClick(); setCrtScreen(sk); }}
+                    >
+                      [{sk}]
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* BEZEL SIDE BUTTONS */}
+              <div className="teknalar-sideKeys">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <span key={i} />
+                ))}
+              </div>
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#10b981', fontWeight: 700, marginTop: '2px' }}>
-              Orientasi: Vertikal (Upper Turret)
+
+            {/* 3. TACTILE OPERATOR CONSOLE SWITCHBOARD */}
+            <div className="teknalar-panel" style={{ padding: '8px', gap: '8px' }}>
+              {/* ROW 1: MODE SELECTOR & TURRET INDEX */}
+              <div style={{ display: 'flex', gap: '6px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  {['AUTO', 'EDIT', 'JOG', 'MDI'].map(m => (
+                    <button
+                      key={m}
+                      onClick={() => { sound.playClick(); setFanucMode(m); }}
+                      className={`teknalar-key ${fanucMode === m ? 'active' : ''}`}
+                      style={{ minWidth: '42px', minHeight: '30px', fontSize: '10px' }}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+
+                {/* TURRET INDEX BUTTON */}
+                <button
+                  onClick={() => handleTurretIndex(1)}
+                  className="teknalar-key teknalar-teal2"
+                  style={{ minWidth: '60px', minHeight: '30px', fontSize: '10px', fontWeight: 900 }}
+                  title="Putar Turret ke stasiun berikutnya"
+                >
+                  <RefreshCw size={11} className="inline mr-1" /> TURRET T+
+                </button>
+              </div>
+
+              {/* ROW 2: MANUAL JOG KEYS */}
+              <div style={{
+                background: '#15191d',
+                borderRadius: '6px',
+                padding: '6px',
+                width: '100%',
+                border: '1px solid #28313a',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '6px'
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 800 }}>STEP JOG</span>
+                  <div style={{ display: 'flex', gap: '2px' }}>
+                    {[0.01, 0.1, 1.0].map(s => (
+                      <button
+                        key={s}
+                        onClick={() => { sound.playClick(); setJogStep(s); }}
+                        style={{
+                          padding: '2px 5px',
+                          borderRadius: '3px',
+                          fontSize: '9px',
+                          fontWeight: 800,
+                          background: jogStep === s ? '#0284c7' : '#222830',
+                          color: '#ffffff',
+                          border: 'none',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '3px' }}>
+                  <button onClick={() => handleManualJog('X', 1)} className="teknalar-key" style={{ minWidth: '34px', minHeight: '28px', fontSize: '10px' }}>+X</button>
+                  <button onClick={() => handleManualJog('X', -1)} className="teknalar-key" style={{ minWidth: '34px', minHeight: '28px', fontSize: '10px' }}>-X</button>
+                  <button onClick={() => handleManualJog('Z', 1)} className="teknalar-key" style={{ minWidth: '34px', minHeight: '28px', fontSize: '10px' }}>+Z</button>
+                  <button onClick={() => handleManualJog('Z', -1)} className="teknalar-key" style={{ minWidth: '34px', minHeight: '28px', fontSize: '10px' }}>-Z</button>
+                </div>
+              </div>
+
+              {/* ROW 3: HARDWARE PRIMARY PUSHBUTTONS & ESTOP */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '8px', paddingTop: '4px' }}>
+                <div style={{ display: 'flex', gap: '6px', flex: 1 }}>
+                  {/* CYCLE START */}
+                  <button
+                    onClick={handleCycleStart}
+                    disabled={eStop}
+                    className="teknalar-key teknalar-green2 teknalar-big"
+                    style={{ flex: 1, minHeight: '44px', fontWeight: 900, fontSize: '10.5px' }}
+                  >
+                    <Play size={12} className="inline mr-0.5" /> START
+                  </button>
+
+                  {/* FEED HOLD */}
+                  <button
+                    onClick={handleFeedHold}
+                    disabled={!isMachining || eStop}
+                    className="teknalar-key teknalar-yellow2 teknalar-big"
+                    style={{ flex: 1, minHeight: '44px', fontWeight: 900, fontSize: '10.5px' }}
+                  >
+                    <Pause size={12} className="inline mr-0.5" /> HOLD
+                  </button>
+
+                  {/* RESET */}
+                  <button
+                    onClick={handleReset}
+                    className="teknalar-key teknalar-red2 teknalar-big"
+                    style={{ flex: 1, minHeight: '44px', fontWeight: 900, fontSize: '10.5px' }}
+                  >
+                    <RotateCcw size={12} className="inline mr-0.5" /> RESET
+                  </button>
+                </div>
+
+                {/* EMERGENCY STOP MUSHROOM */}
+                <button
+                  onClick={handleToggleEStop}
+                  className={`teknalar-estop ${eStop ? 'teknalar-estopDown' : ''}`}
+                  title="EMERGENCY STOP (Tekan untuk berhenti darurat)"
+                  style={{ width: '54px', height: '54px', fontSize: '9px', flexShrink: 0 }}
+                >
+                  E-STOP
+                </button>
+              </div>
             </div>
+
           </div>
-
-          <div style={{ height: '120px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', marginBottom: '14px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', border: '1px dashed var(--border-light)' }}>
-            {showResult ? (
-              <img src="https://images.unsplash.com/photo-1620803454743-305f884bf60c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Benda Kerja CNC" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <div style={{ color: 'var(--text-subtle)', fontSize: '0.78rem', textAlign: 'center', padding: '10px' }}>
-                {isMachining ? 'Sedang Proses Pemotongan (G01)...' : 'Menunggu Cycle Start...'}
-              </div>
-            )}
-          </div>
-
-          {showResult ? (
-            <div className="animate-fade-in">
-              <div style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', padding: '8px', borderRadius: '6px', textAlign: 'center', fontWeight: 800, fontSize: '0.82rem', marginBottom: '12px', border: '1px solid #60a5fa' }}>
-                [OK] SIKLUS SELESAI
-              </div>
-
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
-                Program bubut CNC berhasil dieksekusi dengan pahat {activeToolData.name}.
-              </div>
-
-              <div style={{ textAlign: 'center', background: 'rgba(59, 130, 246, 0.08)', padding: '12px', borderRadius: '10px' }}>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2px' }}>REWARD XP</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#60a5fa' }}>+250 XP</div>
-              </div>
-            </div>
-          ) : (
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-              <Lightbulb size={13} className="inline mr-1 text-amber-400" /> <em>Tips:</em> Pilih tab <strong>1. BENDA KERJA</strong> untuk mengubah ukuran billet, atau klik tombol <strong>Pahat</strong> untuk mengganti tipe pahat ke Rata Kanan, Alur 3mm, atau Facing Muka.
-            </div>
-          )}
         </div>
       </div>
 
@@ -1255,8 +1849,6 @@ const CNCLatheModule = ({ addXP }) => {
           setGcodeText(prev => prev.replace(/S\d+/, `S${newRpm}`));
         }}
       />
-        </>
-      )}
     </div>
   );
 };

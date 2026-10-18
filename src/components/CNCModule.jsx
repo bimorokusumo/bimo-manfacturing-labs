@@ -2,8 +2,10 @@ import React, { useState, Suspense, useEffect, useRef } from 'react';
 import { sound } from '../utils/audio';
 import CNC3D from './CNC3D';
 import PreparationModal from './PreparationModal';
+import CncMillTeknalar from './CncMillTeknalar';
 
 const CNCModule = ({ addXP }) => {
+  const [viewMode, setViewMode] = useState('teknalar'); // 'teknalar' (default, referensi Fanuc 0i) or 'studio3d'
   const [isPrepared, setIsPrepared] = useState(true);
   const [activeTab, setActiveTab] = useState('4');
   const [workpieceSize, setWorkpieceSize] = useState({ x: 50, y: 50, z: 20 });
@@ -159,9 +161,79 @@ const CNCModule = ({ addXP }) => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
-      {!isPrepared && <PreparationModal machineName="MESIN CNC" onComplete={() => setIsPrepared(true)} />}
-      
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+      {/* MODE SWITCHER: FANUC 0i TEKNALAR VS 3D STUDIO */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-light)',
+        borderRadius: '12px',
+        padding: '10px 16px',
+        marginBottom: '16px',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            background: viewMode === 'teknalar' ? '#10b981' : '#0284c7',
+            color: viewMode === 'teknalar' ? '#000' : '#fff',
+            fontWeight: 800,
+            fontSize: '0.75rem',
+            padding: '4px 10px',
+            borderRadius: '6px',
+            letterSpacing: '0.5px'
+          }}>
+            {viewMode === 'teknalar' ? '[MODE FANUC 0i TEKNALAR]' : '[MODE 3D WEBGL STUDIO]'}
+          </div>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>
+            {viewMode === 'teknalar'
+              ? 'Simulator CNC Frais Industri Fanuc 0i (3-Axis) sesuai standar referensi Teknalar'
+              : 'Simulator Frais CNC Interaktif 3D Step-by-Step'}
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => { sound.playClick(); setViewMode('teknalar'); }}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              border: viewMode === 'teknalar' ? '2px solid #10b981' : '1px solid var(--border-light)',
+              background: viewMode === 'teknalar' ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
+              color: viewMode === 'teknalar' ? '#10b981' : 'var(--text-muted)',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            Fanuc 0i Industrial (Teknalar)
+          </button>
+          <button
+            onClick={() => { sound.playClick(); setViewMode('studio3d'); }}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              border: viewMode === 'studio3d' ? '2px solid #0284c7' : '1px solid var(--border-light)',
+              background: viewMode === 'studio3d' ? 'rgba(2, 132, 199, 0.18)' : 'transparent',
+              color: viewMode === 'studio3d' ? '#0284c7' : 'var(--text-muted)',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer'
+            }}
+          >
+            Studio 3D Step-by-Step
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'teknalar' ? (
+        <CncMillTeknalar addXP={addXP} />
+      ) : (
+        <>
+          {!isPrepared && <PreparationModal machineName="MESIN CNC" onComplete={() => setIsPrepared(true)} />}
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>VIRTUAL CNC SIMULATION</h2>
         <button
           onClick={() => { sound.playClick(); setIsPrepared(false); }}
@@ -340,6 +412,8 @@ const CNCModule = ({ addXP }) => {
         </div>
 
       </div>
+        </>
+      )}
     </div>
   );
 };

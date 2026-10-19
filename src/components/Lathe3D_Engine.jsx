@@ -185,8 +185,8 @@ const ToolAssembly = ({
   coolant,
   rawDiameter = 50,
   rawLength = 100,
-  toolType = 'rata', // 'rata', 'alur', 'facing'
-  toolOrientation = 'vertical' // 'vertical' (posisi vertikal sesuai request)
+  toolType = 'rata', // 'rata', 'finishing', 'facing', 'alur', 'ulir', 'ratakiri', 'centerdrill', 'udrill'
+  toolOrientation = 'front' // 'front' (posisi di depan menghadap operator)
 }) => {
   const toolZ = toolPosition && toolPosition.z !== undefined ? toolPosition.z : 0;
   const toolD = toolPosition && toolPosition.d !== undefined ? (toolPosition.d ?? toolPosition.x) : rawDiameter;
@@ -206,7 +206,7 @@ const ToolAssembly = ({
   const cuttingContactPos = [tipX, tipY, tipZ];
   const isVertical = toolOrientation === 'vertical';
 
-  // 1. Rhombic 80° turning insert (Pahat Rata Kanan, T0101):
+  // 1. Rhombic 80 deg turning insert (Pahat Rata Kanan, T0101 / WNMG 080408):
   // Nose at [0, 0, 0] points strictly LEFT (-X) and into cut (-Z).
   // ALL other vertices are at +X and +Z with negative Y for clearance.
   const rhombicInsertGeo = useMemo(() => {
@@ -241,9 +241,32 @@ const ToolAssembly = ({
     return geo;
   }, []);
 
-  // 2. Grooving blade insert 3mm (Pahat Alur, T0202):
+  // 2. Finishing Triangular 60 deg Insert (Pahat Finishing Kanan, T0202 / TNMG 160404):
+  // Equilateral triangle 60 deg nose for fine precision finishing turning
+  const finishingInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face (Y = 0)
+      0, 0, 0,        0.008, 0, 0.052,     0.052, 0, 0.024,
+      // Bottom face (relieved at Y = -0.024)
+      0.002, -0.024, 0.002,   0.050, -0.024, 0.024,   0.010, -0.024, 0.050,
+      // Leading cutting edge (faces -X)
+      0, 0, 0,        0.002, -0.024, 0.002,   0.010, -0.024, 0.050,
+      0, 0, 0,        0.010, -0.024, 0.050,   0.008, 0, 0.052,
+      // Trailing edge
+      0, 0, 0,        0.052, 0, 0.024,        0.050, -0.024, 0.024,
+      0, 0, 0,        0.050, -0.024, 0.024,   0.002, -0.024, 0.002,
+      // Rear flank
+      0.008, 0, 0.052, 0.010, -0.024, 0.050,   0.050, -0.024, 0.024,
+      0.008, 0, 0.052, 0.050, -0.024, 0.024,   0.052, 0, 0.024,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  // 3. Grooving blade insert 3mm (Pahat Alur, T0404):
   // Slender flat-front rectangular blade: width 3mm (0.018 in X) at Z=0.
-  // Deep neck reach extending back to Z = 0.058 with side relief.
   const groovingInsertGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const vertices = new Float32Array([
@@ -271,9 +294,8 @@ const ToolAssembly = ({
     return geo;
   }, []);
 
-  // 3. Threading 60° Laydown Insert (Pahat Ulir Luar 60°, T0404 / ISO 16ER):
-  // Equilateral 60° triangle with sharp 60° V-crest apex at [0, 0, 0] plunging radially along -Z.
-  // Left flank at -30°, right flank at +30°.
+  // 4. Threading 60 deg Laydown Insert (Pahat Ulir Luar 60 deg, T0505 / ISO 16ER):
+  // Equilateral 60 deg triangle with sharp 60 deg V-crest apex at [0, 0, 0] plunging radially along -Z.
   const threadingInsertGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const vertices = new Float32Array([
@@ -281,10 +303,10 @@ const ToolAssembly = ({
       0, 0, 0,        0.024, 0, 0.042,     -0.024, 0, 0.042,
       // Bottom face (relieved at Y = -0.022)
       0, -0.022, 0.003,   -0.021, -0.022, 0.040,   0.021, -0.022, 0.040,
-      // Left 60° thread cutting flank
+      // Left 60 deg thread cutting flank
       0, 0, 0,        -0.024, 0, 0.042,    -0.021, -0.022, 0.040,
       0, 0, 0,        -0.021, -0.022, 0.040, 0, -0.022, 0.003,
-      // Right 60° thread cutting flank
+      // Right 60 deg thread cutting flank
       0, 0, 0,        0, -0.022, 0.003,     0.021, -0.022, 0.040,
       0, 0, 0,        0.021, -0.022, 0.040, 0.024, 0, 0.042,
       // Back face
@@ -296,7 +318,7 @@ const ToolAssembly = ({
     return geo;
   }, []);
 
-  // 4. Facing insert (Pahat Facing, T0303):
+  // 5. Facing insert (Pahat Facing 93 deg, T0303):
   // Triangular insert, sharp nose at [0,0,0] points directly LEFT (-X) into end face.
   const facingInsertGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
@@ -320,6 +342,205 @@ const ToolAssembly = ({
     return geo;
   }, []);
 
+  // 6. Left-hand Rhombic 80 deg Insert (Pahat Rata Kiri, T0606 / WNMG-L):
+  // Nose at [0,0,0], cutting edge facing +X towards tailstock
+  const ratakiriInsertGeo = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      // Top face
+      0, 0, 0,   -0.010, 0, 0.055,   -0.065, 0, 0.065,
+      0, 0, 0,   -0.065, 0, 0.065,   -0.055, 0, 0.010,
+      // Bottom face
+      -0.003, -0.024, 0.003,  -0.062, -0.024, 0.062,  -0.012, -0.024, 0.052,
+      -0.003, -0.024, 0.003,  -0.052, -0.024, 0.012,  -0.062, -0.024, 0.062,
+      // Cutting edge (faces +X towards tailstock)
+      0, 0, 0,   -0.010, 0, 0.055,   -0.012, -0.024, 0.052,
+      0, 0, 0,   -0.012, -0.024, 0.052, -0.003, -0.024, 0.003,
+      // Trailing edge
+      0, 0, 0,   -0.003, -0.024, 0.003, -0.052, -0.024, 0.012,
+      0, 0, 0,   -0.052, -0.024, 0.012, -0.055, 0, 0.010,
+      // Rear flanks
+      -0.010, 0, 0.055,  -0.065, 0, 0.065,  -0.062, -0.024, 0.062,
+      -0.010, 0, 0.055,  -0.062, -0.024, 0.062, -0.012, -0.024, 0.052,
+      -0.055, 0, 0.010,  -0.052, -0.024, 0.012, -0.062, -0.024, 0.062,
+      -0.055, 0, 0.010,  -0.062, -0.024, 0.062, -0.065, 0, 0.065,
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    return geo;
+  }, []);
+
+  // Shared Insert Component Rendered at Exact Cutting Tip [tipX, tipY, tipZ]
+  const renderInsertAtTip = () => (
+    <group position={[tipX, tipY, tipZ]}>
+      {/* 1. PAHAT RATA KANAN (WNMG 80 deg Gold TiN Carbide) */}
+      {(toolType === 'rata' || !toolType) && (
+        <group>
+          <mesh geometry={rhombicInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#eab308"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#b45309" : "#000000"}
+              emissiveIntensity={isCutting ? 0.8 : 0}
+            />
+          </mesh>
+          <mesh position={[0.032, 0.001, 0.032]}>
+            <cylinderGeometry args={[0.008, 0.008, 0.004, 12]} />
+            <meshStandardMaterial color="#713f12" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 2. PAHAT FINISHING KANAN (TNMG 60 deg Precision Triangular) */}
+      {toolType === 'finishing' && (
+        <group>
+          <mesh geometry={finishingInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#38bdf8" : "#06b6d4"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#0284c7" : "#000000"}
+              emissiveIntensity={isCutting ? 0.8 : 0}
+            />
+          </mesh>
+          <mesh position={[0.022, 0.001, 0.024]}>
+            <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
+            <meshStandardMaterial color="#164e63" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 3. PAHAT FACING (93 deg Facing Wedge) */}
+      {toolType === 'facing' && (
+        <group>
+          <mesh geometry={facingInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#10b981"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#047857" : "#000000"}
+              emissiveIntensity={isCutting ? 0.8 : 0}
+            />
+          </mesh>
+          <mesh position={[0.022, 0.001, 0.022]}>
+            <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
+            <meshStandardMaterial color="#064e3b" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 4. PAHAT ALUR (CoroCut 3mm Parting Blade) */}
+      {toolType === 'alur' && (
+        <group>
+          <mesh geometry={groovingInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#d97706"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#b45309" : "#000000"}
+              emissiveIntensity={isCutting ? 0.8 : 0}
+            />
+          </mesh>
+          <mesh position={[0, 0.015, 0.048]}>
+            <boxGeometry args={[0.024, 0.020, 0.025]} />
+            <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0.028, 0.048]}>
+            <cylinderGeometry args={[0.006, 0.006, 0.008, 10]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 5. PAHAT ULIR (16ER 60 deg Laydown Threading Insert) */}
+      {toolType === 'ulir' && (
+        <group>
+          <mesh geometry={threadingInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#a855f7"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#7e22ce" : "#000000"}
+              emissiveIntensity={isCutting ? 0.85 : 0}
+            />
+          </mesh>
+          <mesh position={[0, -0.028, 0.028]}>
+            <boxGeometry args={[0.046, 0.008, 0.038]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.8} />
+          </mesh>
+          <mesh position={[0, 0.001, 0.026]}>
+            <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
+            <meshStandardMaterial color="#581c87" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 6. PAHAT RATA KIRI (Left-Hand Rhombic 80 deg) */}
+      {toolType === 'ratakiri' && (
+        <group>
+          <mesh geometry={ratakiriInsertGeo} castShadow>
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#818cf8"}
+              metalness={0.95}
+              roughness={0.15}
+              emissive={isCutting ? "#4338ca" : "#000000"}
+              emissiveIntensity={isCutting ? 0.8 : 0}
+            />
+          </mesh>
+          <mesh position={[-0.032, 0.001, 0.032]}>
+            <cylinderGeometry args={[0.008, 0.008, 0.004, 12]} />
+            <meshStandardMaterial color="#312e81" metalness={0.9} />
+          </mesh>
+        </group>
+      )}
+
+      {/* 7. PAHAT BOR PUSAT / CENTER DRILL (DIN 333-A 60 deg Conical Tip) */}
+      {toolType === 'centerdrill' && (
+        <group position={[0, 0, 0.02]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} position={[-0.04, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.016, 0.016, 0.08, 16]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} />
+          </mesh>
+          <mesh rotation={[0, 0, -Math.PI / 2]} position={[0, 0, 0]} castShadow>
+            <coneGeometry args={[0.016, 0.028, 16]} />
+            <meshStandardMaterial
+              color={isCutting ? "#f59e0b" : "#38bdf8"}
+              metalness={0.95}
+              roughness={0.15}
+            />
+          </mesh>
+        </group>
+      )}
+
+      {/* 8. PAHAT BOR U-DRILL (Twin Carbide Insert Drill Body) */}
+      {toolType === 'udrill' && (
+        <group position={[0, 0, 0.02]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} position={[-0.05, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.022, 0.022, 0.10, 20]} />
+            <meshStandardMaterial color="#475569" metalness={0.85} roughness={0.3} />
+          </mesh>
+          <mesh position={[-0.01, 0.010, 0]} castShadow>
+            <boxGeometry args={[0.014, 0.014, 0.014]} />
+            <meshStandardMaterial color={isCutting ? "#f59e0b" : "#38bdf8"} metalness={0.95} />
+          </mesh>
+          <mesh position={[-0.01, -0.010, 0]} castShadow>
+            <boxGeometry args={[0.014, 0.014, 0.014]} />
+            <meshStandardMaterial color={isCutting ? "#f59e0b" : "#38bdf8"} metalness={0.95} />
+          </mesh>
+        </group>
+      )}
+
+      {/* Glowing Spark Point when cutting - EXACTLY at sharp tip [0,0,0] */}
+      {isCutting && (
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.010, 8, 8]} />
+          <meshBasicMaterial color="#fbbf24" />
+        </mesh>
+      )}
+    </group>
+  );
+
   return (
     <group>
       {/* SADDLE / CNC SLIDE BASE on the Bedways - slides along X with tipX */}
@@ -336,7 +557,7 @@ const ToolAssembly = ({
 
       {isVertical ? (
         /* ========================================================================= */
-        /* VERTICAL CNC TURRET & TOOL HOLDER (POSISI VERTIKAL SESUAI PERMINTAAN)    */
+        /* OPTIONAL VERTICAL CNC TURRET (JIKA DIPILIH SECARA EKSPLISIT)             */
         /* ========================================================================= */
         <group>
           {/* Vertical Turret Column / Support Bracket */}
@@ -351,7 +572,6 @@ const ToolAssembly = ({
               <cylinderGeometry args={[0.18, 0.18, 0.20, 24]} />
               <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
             </mesh>
-            {/* Turret Station Badge Indicator */}
             <mesh position={[0, 0.11, 0]}>
               <cylinderGeometry args={[0.07, 0.07, 0.02, 16]} />
               <meshStandardMaterial
@@ -364,8 +584,7 @@ const ToolAssembly = ({
             </mesh>
           </group>
 
-          {/* VERTICAL TOOL SHANK (Batang Pahat Menjulur Vertikal di Belakang Pahat) */}
-          {/* Positioned safely at +X and +Z so ONLY the insert tip touches the workpiece! */}
+          {/* Vertical Tool Shank */}
           <mesh position={[tipX + 0.048, tipY + 0.14, tipZ + 0.055]} castShadow>
             <boxGeometry args={[0.045, 0.28, 0.045]} />
             <meshStandardMaterial color="#18181b" metalness={0.9} roughness={0.2} />
@@ -377,132 +596,151 @@ const ToolAssembly = ({
             <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.25} />
           </mesh>
 
-          {/* Tool Clamping Wedge Screws */}
+          {/* Clamping Wedge Screws */}
           <mesh position={[tipX + 0.048, tipY + 0.20, tipZ + 0.082]}>
             <cylinderGeometry args={[0.010, 0.010, 0.018, 12]} />
             <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
           </mesh>
 
-          {/* INSERT SELECTION AT CUTTING TIP (tipX, tipY, tipZ) - HADAP KIRI */}
-          <group position={[tipX, tipY, tipZ]}>
-            {toolType === 'rata' && (
-              /* 1. PAHAT RATA KANAN (Rhombic 80 deg Insert - Hadap KIRI, HANYA Ujung Lancip Menyentuh) */
-              <group>
-                <mesh geometry={rhombicInsertGeo} castShadow>
-                  <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#eab308"}
-                    metalness={0.95}
-                    roughness={0.15}
-                    emissive={isCutting ? "#b45309" : "#000000"}
-                    emissiveIntensity={isCutting ? 0.8 : 0}
-                  />
-                </mesh>
-                {/* Torx Clamping Screw in Center of Insert */}
-                <mesh position={[0.032, 0.001, 0.032]}>
-                  <cylinderGeometry args={[0.008, 0.008, 0.004, 12]} />
-                  <meshStandardMaterial color="#713f12" metalness={0.9} />
-                </mesh>
-              </group>
-            )}
-
-            {toolType === 'alur' && (
-              /* 2. PAHAT ALUR (Slender 3mm Grooving / Parting Blade) */
-              <group>
-                <mesh geometry={groovingInsertGeo} castShadow>
-                  <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#d97706"}
-                    metalness={0.95}
-                    roughness={0.15}
-                    emissive={isCutting ? "#b45309" : "#000000"}
-                    emissiveIntensity={isCutting ? 0.8 : 0}
-                  />
-                </mesh>
-                {/* Blade Holder Clamp Head */}
-                <mesh position={[0, 0.015, 0.048]}>
-                  <boxGeometry args={[0.024, 0.020, 0.025]} />
-                  <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.3} />
-                </mesh>
-                <mesh position={[0, 0.028, 0.048]}>
-                  <cylinderGeometry args={[0.006, 0.006, 0.008, 10]} />
-                  <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
-                </mesh>
-              </group>
-            )}
-
-            {toolType === 'ulir' && (
-              /* 3. PAHAT ULIR (Equilateral 60° Triangular Laydown Insert 16ER) */
-              <group>
-                <mesh geometry={threadingInsertGeo} castShadow>
-                  <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#a855f7"}
-                    metalness={0.95}
-                    roughness={0.15}
-                    emissive={isCutting ? "#7e22ce" : "#000000"}
-                    emissiveIntensity={isCutting ? 0.85 : 0}
-                  />
-                </mesh>
-                {/* Anvil Shim underneath */}
-                <mesh position={[0, -0.028, 0.028]}>
-                  <boxGeometry args={[0.046, 0.008, 0.038]} />
-                  <meshStandardMaterial color="#1e293b" metalness={0.8} />
-                </mesh>
-                {/* Central Torx Screw */}
-                <mesh position={[0, 0.001, 0.026]}>
-                  <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
-                  <meshStandardMaterial color="#581c87" metalness={0.9} />
-                </mesh>
-              </group>
-            )}
-
-            {toolType === 'facing' && (
-              /* 4. PAHAT FACING (Sharp Wedge Triangular Facing Insert - Hadap KIRI ke Muka) */
-              <group>
-                <mesh geometry={facingInsertGeo} castShadow>
-                  <meshStandardMaterial
-                    color={isCutting ? "#f59e0b" : "#10b981"}
-                    metalness={0.95}
-                    roughness={0.15}
-                    emissive={isCutting ? "#047857" : "#000000"}
-                    emissiveIntensity={isCutting ? 0.8 : 0}
-                  />
-                </mesh>
-                {/* Torx Screw */}
-                <mesh position={[0.022, 0.001, 0.022]}>
-                  <cylinderGeometry args={[0.007, 0.007, 0.004, 12]} />
-                  <meshStandardMaterial color="#064e3b" metalness={0.9} />
-                </mesh>
-              </group>
-            )}
-
-            {/* Glowing Spark Point when cutting - EXACTLY at sharp tip [0,0,0] */}
-            {isCutting && (
-              <mesh position={[0, 0, 0]}>
-                <sphereGeometry args={[0.010, 8, 8]} />
-                <meshBasicMaterial color="#fbbf24" />
-              </mesh>
-            )}
-          </group>
+          {renderInsertAtTip()}
         </group>
       ) : (
-        /* HORIZONTAL FALLBACK (jika mode manual) */
+        /* ========================================================================= */
+        /* FRONT TOOL POST FACING OPERATOR (POSISI DI DEPAN MENGHADAP KE OPERATOR)  */
+        /* ========================================================================= */
         <group>
-          <mesh position={[tipX + 0.05, 1.05, tipZ + 0.22]} castShadow>
-            <boxGeometry args={[0.22, 0.18, 0.22]} />
-            <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} />
+          {/* 1. FRONT CROSS-SLIDE APRON & HANDWHEEL (Menghadap Operator +Z) */}
+          {/* Graduated Micrometer Dial Ring */}
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.66]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.048, 0.048, 0.014, 24]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.9} roughness={0.2} />
           </mesh>
-          <mesh position={[tipX + 0.045, 1.18, tipZ + 0.06]} castShadow>
-            <boxGeometry args={[0.05, 0.05, 0.12]} />
-            <meshStandardMaterial color="#18181b" metalness={0.85} roughness={0.2} />
+
+          {/* Handwheel Outer Rim */}
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.68]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.065, 0.010, 12, 32]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.95} roughness={0.15} />
           </mesh>
-          <group position={[tipX, tipY, tipZ]}>
-            <mesh geometry={rhombicInsertGeo} castShadow>
-              <meshStandardMaterial
-                color={isCutting ? "#f59e0b" : "#eab308"}
-                metalness={0.92}
-                roughness={0.15}
-              />
+
+          {/* Handwheel Center Hub */}
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.68]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.020, 0.020, 0.024, 16]} />
+            <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.25} />
+          </mesh>
+
+          {/* Handwheel Spokes */}
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.68]}>
+            <boxGeometry args={[0.12, 0.008, 0.008]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.68]} rotation={[0, 0, Math.PI / 3]}>
+            <boxGeometry args={[0.12, 0.008, 0.008]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.10, 0.88, tipZ + 0.68]} rotation={[0, 0, -Math.PI / 3]}>
+            <boxGeometry args={[0.12, 0.008, 0.008]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+
+          {/* Handwheel Revolving Crank Handle Knob (Menghadap Operator) */}
+          <mesh position={[tipX + 0.10 + 0.05, 0.88 + 0.02, tipZ + 0.71]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.008, 0.010, 0.040, 12]} />
+            <meshStandardMaterial color="#18181b" metalness={0.5} roughness={0.4} />
+          </mesh>
+
+          {/* 2. COMPOUND SLIDE / SWIVEL BASE (Eretan Atas / Piringan Sudut Putar) */}
+          <mesh position={[tipX + 0.08, 0.98, tipZ + 0.24]} castShadow>
+            <cylinderGeometry args={[0.13, 0.14, 0.04, 28]} />
+            <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
+          </mesh>
+          {/* Angle Scale Rim */}
+          <mesh position={[tipX + 0.08, 0.99, tipZ + 0.24]}>
+            <cylinderGeometry args={[0.132, 0.132, 0.012, 28]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} />
+          </mesh>
+          {/* Compound Slide Upper Base */}
+          <mesh position={[tipX + 0.08, 1.02, tipZ + 0.24]} castShadow>
+            <boxGeometry args={[0.26, 0.04, 0.26]} />
+            <meshStandardMaterial color="#334155" metalness={0.75} roughness={0.35} />
+          </mesh>
+
+          {/* 3. 4-WAY SQUARE TOOL POST (Post Pahat Persegi 4-Arah Menghadap Operator) */}
+          {/* Main Square Tool Post Body */}
+          <mesh position={[tipX + 0.08, 1.14, tipZ + 0.22]} castShadow>
+            <boxGeometry args={[0.22, 0.22, 0.22]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.85} roughness={0.25} />
+          </mesh>
+
+          {/* Operator-Facing Nameplate Badge (Menghadap langsung ke Operator +Z) */}
+          <mesh position={[tipX + 0.08, 1.14, tipZ + 0.332]}>
+            <boxGeometry args={[0.15, 0.055, 0.004]} />
+            <meshStandardMaterial color="#0284c7" metalness={0.8} roughness={0.3} />
+          </mesh>
+          <mesh position={[tipX + 0.02, 1.14, tipZ + 0.334]}>
+            <cylinderGeometry args={[0.004, 0.004, 0.006, 8]} rotation={[Math.PI / 2, 0, 0]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.14, 1.14, tipZ + 0.334]}>
+            <cylinderGeometry args={[0.004, 0.004, 0.006, 8]} rotation={[Math.PI / 2, 0, 0]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+
+          {/* Central Locking Stud Post */}
+          <mesh position={[tipX + 0.08, 1.27, tipZ + 0.22]}>
+            <cylinderGeometry args={[0.024, 0.024, 0.04, 16]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} roughness={0.15} />
+          </mesh>
+          <mesh position={[tipX + 0.08, 1.29, tipZ + 0.22]}>
+            <cylinderGeometry args={[0.034, 0.034, 0.02, 16]} />
+            <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} />
+          </mesh>
+
+          {/* Quick-Lock Clamping Handle Lever (Menghadap ke arah Operator) */}
+          <group position={[tipX + 0.08, 1.30, tipZ + 0.22]} rotation={[0.35, 0.35, 0]}>
+            {/* Chrome Handle Rod */}
+            <mesh position={[0, 0.08, 0]}>
+              <cylinderGeometry args={[0.007, 0.007, 0.16, 12]} />
+              <meshStandardMaterial color="#f1f5f9" metalness={0.95} roughness={0.1} />
+            </mesh>
+            {/* Red Phenolic Ball Knob for Operator Hand */}
+            <mesh position={[0, 0.17, 0]}>
+              <sphereGeometry args={[0.022, 16, 16]} />
+              <meshStandardMaterial color="#ef4444" roughness={0.2} metalness={0.2} />
             </mesh>
           </group>
+
+          {/* 4 Square-Head Tool Shank Clamping Bolts */}
+          <mesh position={[tipX + 0.015, 1.26, tipZ + 0.15]}>
+            <boxGeometry args={[0.016, 0.022, 0.016]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.015, 1.26, tipZ + 0.22]}>
+            <boxGeometry args={[0.016, 0.022, 0.016]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.015, 1.26, tipZ + 0.29]}>
+            <boxGeometry args={[0.016, 0.022, 0.016]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+          <mesh position={[tipX + 0.065, 1.26, tipZ + 0.15]}>
+            <boxGeometry args={[0.016, 0.022, 0.016]} />
+            <meshStandardMaterial color="#cbd5e1" metalness={0.95} />
+          </mesh>
+
+          {/* 4. HORIZONTAL TOOL SHANK (Batang Pahat Mendatar di Center Height Y = 1.20) */}
+          <mesh position={[tipX + 0.044, tipY, tipZ + 0.12]} castShadow>
+            <boxGeometry args={[0.044, 0.044, 0.16]} />
+            <meshStandardMaterial color="#18181b" metalness={0.9} roughness={0.2} />
+          </mesh>
+
+          {/* Carbide Shim Seat Under Insert */}
+          <mesh position={[tipX + 0.038, tipY - 0.012, tipZ + 0.038]}>
+            <boxGeometry args={[0.048, 0.010, 0.048]} />
+            <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.25} />
+          </mesh>
+
+          {/* 5. CUTTING INSERT AT TIP [tipX, tipY, tipZ] */}
+          {renderInsertAtTip()}
         </group>
       )}
 
@@ -686,7 +924,7 @@ const Lathe3D_Engine = ({
   rawDiameter = 50,
   rawLength = 100,
   toolType = 'rata',
-  toolOrientation = 'vertical',
+  toolOrientation = 'front',
   rpm = 800,
   isCutting = false,
   coolant = false,

@@ -15,7 +15,7 @@ const Lathe2D = ({
   rawDiameter = 50,
   rawLength = 100,
   toolType = 'rata', // 'rata', 'alur', 'facing'
-  toolOrientation = 'vertical', // 'vertical' (sesuai permintaan user)
+  toolOrientation = 'front', // 'front' (posisi di depan menghadap operator)
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
@@ -340,123 +340,65 @@ const Lathe2D = ({
           </g>
         )}
 
-        {/* CUTTING TOOL - VERTIKAL, HADAP KIRI, HANYA UJUNG LANCIP MENGENAI BENDA KERJA */}
+        {/* CUTTING TOOL - FRONT TOOL POST MENGHADAP OPERATOR (ATAU VERTIKAL TURRET) */}
         <g transform={`translate(${toolTipX}, ${toolTipY})`} style={{ transition: isRunning ? 'none' : 'all 0.05s linear' }}>
-          {toolOrientation === 'vertical' ? (
-            /* VERTICAL TOOL HOLDER & TURRET CLAMP (HADAP KIRI) */
+          {toolOrientation === 'front' || toolOrientation === 'vertical' || !toolOrientation ? (
+            /* FRONT TOOL POST / QUICK CHANGE TOOL POST FACING OPERATOR */
             <g>
-              {/* CUTTING INSERT AT TIP (0, 0) - HANYA UJUNG LANCIP INI YANG MENYENTUH BENDA KERJA */}
-              {toolType === 'rata' && (
-                /* 1. Pahat Rata Kanan - Hadap KIRI (ke arah cekam/spindel Z-) */
+              {/* Tool Shank Clamped in Slot */}
+              <rect x="8" y="24" width="22" height="92" rx="3" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5" />
+              
+              {/* Square Tool Post Block (Body) */}
+              <rect x="2" y="52" width="34" height="56" rx="4" fill="#1e293b" stroke="#64748b" strokeWidth="1.2" />
+              {/* 3 Top Clamping Bolts */}
+              <circle cx="12" cy="65" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
+              <circle cx="26" cy="65" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
+              <circle cx="19" cy="85" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
+
+              {/* Quick-Lock Lever Handle with Red Ball Knob */}
+              <line x1="28" y1="95" x2="42" y2="114" stroke="#f1f5f9" strokeWidth="2.5" />
+              <circle cx="42" cy="114" r="5" fill="#ef4444" stroke="#991b1b" strokeWidth="1" />
+
+              {/* Orientation Indicator Badge */}
+              <rect x="-14" y="112" width="66" height="16" rx="4" fill="rgba(15,23,42,0.92)" stroke="#38bdf8" strokeWidth="0.8" />
+              <text x="19" y="124" fill="#38bdf8" fontSize="7.5" fontWeight="bold" textAnchor="middle">
+                {toolOrientation === 'vertical' ? 'UPPER TURRET' : 'TOOL POST DEPAN'}
+              </text>
+
+              {/* 1. PAHAT RATA KANAN (T01 - WNMG 80 deg) */}
+              {(toolType === 'rata' || !toolType) && (
                 <g>
-                  {/* Vertical Tool Shank set back to the right (x: 8 to 28) and below (y: 24 to 120) */}
-                  <rect x="8" y="24" width="20" height="95" rx="3" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5" />
-                  
-                  {/* Tool Clamping Block */}
-                  <rect x="4" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
-                  <circle cx="14" cy="70" r="3" fill="#cbd5e1" />
-                  <circle cx="22" cy="70" r="3" fill="#cbd5e1" />
-                  <circle cx="18" cy="90" r="3" fill="#cbd5e1" />
-
-                  {/* Vertical Orientation Indicator */}
-                  <rect x="-6" y="112" width="48" height="16" rx="4" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" strokeWidth="0.8" />
-                  <text x="18" y="124" fill="#38bdf8" fontSize="8" fontWeight="bold" textAnchor="middle">VERTIKAL</text>
-
-                  {/* Gold Carbide Rhombic 80 deg Insert - Pointing LEFT at (0, 0) */}
-                  {/* Apex nose is EXACTLY at (0,0). Trailing edge slopes to (18, 6) giving wide clearance.
-                      Leading edge slopes to (3, 18) clear of the uncut shoulder. Only (0,0) touches! */}
                   <polygon
                     points="0,0 3,18 21,24 18,6"
                     fill={isCutting ? "#f59e0b" : "#eab308"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  {/* Chipbreaker groove */}
-                  <polygon
-                    points="2,3 4,15 17,20 15,8"
-                    fill="rgba(0,0,0,0.22)"
-                  />
+                  <polygon points="2,3 4,15 17,20 15,8" fill="rgba(0,0,0,0.22)" />
                   <circle cx="10" cy="12" r="2.5" fill="#713f12" stroke="#451a03" strokeWidth="0.8" />
-
-                  {/* Nose radius shiny sharp tip highlight */}
                   <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
-
-                  {/* Direction arrow & label: HADAP KIRI */}
-                  <text x="28" y="18" fill="#38bdf8" fontSize="9" fontWeight="800">T01 ◄ HADAP KIRI</text>
+                  <text x="28" y="18" fill="#38bdf8" fontSize="8.5" fontWeight="800">T01 RATA KANAN</text>
                 </g>
               )}
 
-              {toolType === 'alur' && (
-                /* 2. Pahat Alur (Slender 3mm Grooving / Parting Blade) */
+              {/* 2. PAHAT FINISHING KANAN (T02 - TNMG 60 deg) */}
+              {toolType === 'finishing' && (
                 <g>
-                  {/* Heavy-duty vertical toolholder with CoroCut blade clamp */}
-                  <rect x="-8" y="28" width="22" height="92" rx="3" fill="#18181b" stroke="#f59e0b" strokeWidth="1.5" />
-                  
-                  {/* Blade clamping jaw */}
-                  <polygon points="-10,26 8,26 6,36 -8,36" fill="#334155" stroke="#64748b" strokeWidth="1" />
-                  <circle cx="-1" cy="46" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
-                  <circle cx="-1" cy="70" r="3" fill="#cbd5e1" stroke="#475569" strokeWidth="0.8" />
-
-                  {/* Slender Grooving Blade: flat 3mm edge at (0,0) to (6,0) with deep neck */}
                   <polygon
-                    points="0,0 6,0 5.2,30 0.8,30"
-                    fill={isCutting ? "#f59e0b" : "#d97706"}
+                    points="0,0 4,22 22,18 16,4"
+                    fill={isCutting ? "#38bdf8" : "#06b6d4"}
                     stroke="#ffffff"
                     strokeWidth="1.2"
                   />
-                  {/* Flat cutting edge highlight */}
-                  <line x1="0" y1="0" x2="6" y2="0" stroke="#ffffff" strokeWidth="2.5" />
-                  {/* Chip curling concave notch */}
-                  <path d="M 0.8,2 Q 3,4.5 5.2,2 L 4.8,8 Q 3,10 1.2,8 Z" fill="rgba(0,0,0,0.3)" />
-                  <circle cx="3" cy="18" r="1.8" fill="#78350f" />
-
-                  {/* Label & Indicator */}
-                  <text x="14" y="16" fill="#fbbf24" fontSize="9" fontWeight="800">T02 ALUR 3mm (BILAH)</text>
-                </g>
-              )}
-
-              {toolType === 'ulir' && (
-                /* 3. Pahat Ulir Luar 60° (Equilateral 60° Triangular Laydown Insert 16ER) */
-                <g>
-                  {/* Vertical SER Toolholder Shank */}
-                  <rect x="-10" y="24" width="22" height="96" rx="3" fill="#18181b" stroke="#a855f7" strokeWidth="1.5" />
-                  <circle cx="1" cy="55" r="3" fill="#cbd5e1" />
-                  <circle cx="1" cy="80" r="3" fill="#cbd5e1" />
-
-                  {/* Anvil shim seat */}
-                  <polygon points="-12,20 12,20 10,25 -10,25" fill="#334155" />
-
-                  {/* 60° Equilateral Triangle 16ER Threading Insert */}
-                  {/* Apex is at (0,0), flanks at -30 deg and +30 deg creating exact 60 deg V-thread tooth */}
-                  <polygon
-                    points="0,0 -12,21 12,21"
-                    fill={isCutting ? "#f59e0b" : "#a855f7"}
-                    stroke="#ffffff"
-                    strokeWidth="1.2"
-                  />
-                  {/* Chipbreaker triangular groove */}
-                  <polygon
-                    points="0,3 -8,19 8,19"
-                    fill="rgba(0,0,0,0.28)"
-                  />
-                  {/* Central Torx Countersunk Screw */}
-                  <circle cx="0" cy="14" r="2.8" fill="#581c87" stroke="#e9d5ff" strokeWidth="0.8" />
-                  {/* Sharp 60° V-crest highlight */}
+                  <circle cx="11" cy="12" r="2.5" fill="#164e63" />
                   <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
-
-                  {/* Label */}
-                  <text x="18" y="16" fill="#c084fc" fontSize="9" fontWeight="800">T04 ◄ ULIR 60° (16ER)</text>
+                  <text x="28" y="18" fill="#06b6d4" fontSize="8.5" fontWeight="800">T02 FINISHING</text>
                 </g>
               )}
 
+              {/* 3. PAHAT FACING (T03 - 93 deg) */}
               {toolType === 'facing' && (
-                /* 4. Pahat Facing (Wedge Facing Insert Angled to Face) */
                 <g>
-                  <rect x="8" y="26" width="20" height="95" rx="3" fill="#18181b" stroke="#34d399" strokeWidth="1.5" />
-                  <rect x="4" y="55" width="28" height="50" rx="4" fill="#334155" stroke="#64748b" strokeWidth="1.2" />
-                  <circle cx="18" cy="70" r="3" fill="#cbd5e1" />
-
-                  {/* Sharp triangular facing insert pointing left towards face */}
                   <polygon
                     points="0,0 2,22 18,26 16,8"
                     fill={isCutting ? "#f59e0b" : "#10b981"}
@@ -465,7 +407,79 @@ const Lathe2D = ({
                   />
                   <circle cx="9" cy="14" r="2.2" fill="#064e3b" />
                   <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
-                  <text x="26" y="18" fill="#34d399" fontSize="9" fontWeight="800">T03 ◄ FACING</text>
+                  <text x="26" y="18" fill="#34d399" fontSize="8.5" fontWeight="800">T03 FACING</text>
+                </g>
+              )}
+
+              {/* 4. PAHAT ALUR (T04 - 3mm Blade) */}
+              {toolType === 'alur' && (
+                <g>
+                  <polygon
+                    points="0,0 6,0 5.2,30 0.8,30"
+                    fill={isCutting ? "#f59e0b" : "#d97706"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <line x1="0" y1="0" x2="6" y2="0" stroke="#ffffff" strokeWidth="2.5" />
+                  <path d="M 0.8,2 Q 3,4.5 5.2,2 L 4.8,8 Q 3,10 1.2,8 Z" fill="rgba(0,0,0,0.3)" />
+                  <circle cx="3" cy="18" r="1.8" fill="#78350f" />
+                  <text x="14" y="16" fill="#fbbf24" fontSize="8.5" fontWeight="800">T04 ALUR 3mm</text>
+                </g>
+              )}
+
+              {/* 5. PAHAT ULIR (T05 - 16ER 60 deg) */}
+              {toolType === 'ulir' && (
+                <g>
+                  <polygon
+                    points="0,0 -12,21 12,21"
+                    fill={isCutting ? "#f59e0b" : "#a855f7"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <polygon points="0,3 -8,19 8,19" fill="rgba(0,0,0,0.28)" />
+                  <circle cx="0" cy="14" r="2.8" fill="#581c87" stroke="#e9d5ff" strokeWidth="0.8" />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+                  <text x="18" y="16" fill="#c084fc" fontSize="8.5" fontWeight="800">T05 ULIR 60°</text>
+                </g>
+              )}
+
+              {/* 6. PAHAT RATA KIRI (T06 - Left Hand Rhombic) */}
+              {toolType === 'ratakiri' && (
+                <g>
+                  <polygon
+                    points="0,0 -3,18 -21,24 -18,6"
+                    fill={isCutting ? "#f59e0b" : "#818cf8"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <circle cx="-10" cy="12" r="2.5" fill="#312e81" />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+                  <text x="14" y="18" fill="#818cf8" fontSize="8.5" fontWeight="800">T06 RATA KIRI</text>
+                </g>
+              )}
+
+              {/* 7. PAHAT BOR SENTER (T07 - Center Drill DIN 333) */}
+              {toolType === 'centerdrill' && (
+                <g>
+                  <polygon
+                    points="0,0 -6,-6 -20,-6 -20,6 -6,6"
+                    fill={isCutting ? "#f59e0b" : "#38bdf8"}
+                    stroke="#ffffff"
+                    strokeWidth="1.2"
+                  />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+                  <text x="14" y="18" fill="#38bdf8" fontSize="8.5" fontWeight="800">T07 BOR SENTER</text>
+                </g>
+              )}
+
+              {/* 8. PAHAT BOR U-DRILL (T08 - Indexable Twin Insert) */}
+              {toolType === 'udrill' && (
+                <g>
+                  <rect x="-24" y="-8" width="24" height="16" rx="2" fill="#475569" stroke="#94a3b8" strokeWidth="1" />
+                  <rect x="-6" y="-7" width="6" height="6" fill={isCutting ? "#f59e0b" : "#38bdf8"} />
+                  <rect x="-6" y="1" width="6" height="6" fill={isCutting ? "#f59e0b" : "#38bdf8"} />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" />
+                  <text x="14" y="18" fill="#38bdf8" fontSize="8.5" fontWeight="800">T08 U-DRILL Ø20</text>
                 </g>
               )}
             </g>
@@ -541,7 +555,7 @@ const Lathe3D = ({
   rawDiameter = 50,
   rawLength = 100,
   toolType = 'rata',
-  toolOrientation = 'vertical',
+  toolOrientation = 'front',
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,

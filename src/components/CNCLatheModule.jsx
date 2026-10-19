@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import React, { useState, Suspense, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/assets';
 import Lathe3D from './Lathe3D';
 import PreparationModal from './PreparationModal';
 import LatheFormulaCalculatorModal from './LatheFormulaCalculatorModal';
@@ -112,13 +113,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Rata Kanan (Roughing)',
     enName: 'Right-Hand Turning / Roughing Tool',
     icon: '[T01]',
-    image: '/assets/images/machine_cutting_tools/pahat_rata_kanan.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_rata_kanan.jpg'),
     insert: 'WNMG 080408 (Rhombic 80° Gold Carbide)',
     leadAngle: '95° (ISO PCLNR 2020K12)',
     shapeType: 'rhombic-80',
     shapeName: 'Belah Ketupat 80° (WNMG)',
     cuttingMotion: 'Penyayatan Memanjang (Z+ -> Z-)',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -136,13 +137,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Finishing Kanan',
     enName: 'Precision Finishing Tool',
     icon: '[T02]',
-    image: '/assets/images/machine_cutting_tools/pahat_finishing_tnmg.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_finishing_tnmg.jpg'),
     insert: 'TNMG 160404 (Triangular 60° TiAlN)',
     leadAngle: '93° (ISO MTJNR 2020K16)',
     shapeType: 'triangle-60',
     shapeName: 'Segitiga 60° (TNMG)',
     cuttingMotion: 'Penyayatan Halus Presisi',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -160,13 +161,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Facing (Muka)',
     enName: 'Transversal Facing Tool',
     icon: '[T03]',
-    image: '/assets/images/machine_cutting_tools/pahat_muka.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_muka.jpg'),
     insert: 'PCLNL 93° / WNMG 080408',
     leadAngle: '93° Facing Angle',
     shapeType: 'facing-93',
     shapeName: 'Sudut Muka 93° (PCLNL)',
     cuttingMotion: 'Penyayatan Melintang Muka (X+ -> X0)',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -184,13 +185,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Alur Potong (Grooving)',
     enName: 'Grooving / Parting Off Tool',
     icon: '[T04]',
-    image: '/assets/images/machine_cutting_tools/pahat_alur.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_alur.jpg'),
     insert: 'CoroCut Blade 3.0 mm (Slender Flat-Edge)',
     leadAngle: '90° Tegak Lurus Poros',
     shapeType: 'groove-blade',
     shapeName: 'Bilah Alur 3.0mm (Parting)',
     cuttingMotion: 'Penyayatan Radial Tembus (X+ -> X-)',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -208,13 +209,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Ulir Luar 60° (Threading)',
     enName: 'External Threading Tool 60°',
     icon: '[T05]',
-    image: '/assets/images/machine_cutting_tools/pahat_ulir_holder.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_ulir_holder.jpg'),
     insert: 'SER 2020K16 / 16ER AG60 (Laydown Carbide)',
     leadAngle: '60° Profil Gigi Ulir Metris',
     shapeType: 'thread-60',
     shapeName: 'Gigi Segitiga Ulir 60° (16ER)',
     cuttingMotion: 'Siklus Ulir Bertingkat (G92/G76)',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -232,13 +233,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Rata Kiri',
     enName: 'Left-Hand Turning Tool',
     icon: '[T06]',
-    image: '/assets/images/machine_cutting_tools/pahat_rata_kiri.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/pahat_rata_kiri.jpg'),
     insert: 'WNMG 080408L (Left Hand Rhombic)',
     leadAngle: '95° (ISO PCLNL 2020K12)',
     shapeType: 'rhombic-left',
     shapeName: 'Belah Ketupat Kiri 80°',
     cuttingMotion: 'Penyayatan Balik Kiri (Z- -> Z+)',
-    orientation: 'Vertikal (Upper Turret)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -256,13 +257,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Bor Pusat (Center Drill)',
     enName: 'HSS Center Drill Tool',
     icon: '[T07]',
-    image: '/assets/images/machine_cutting_tools/bor_senter.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/bor_senter.jpg'),
     insert: 'HSS DIN 333-A Ø3.15x60°',
     leadAngle: '60° Countersink Point',
     shapeType: 'center-drill',
     shapeName: 'Mata Bor Konis 60° (DIN 333-A)',
     cuttingMotion: 'Penetrasi Aksial Muka Pusat (Z-)',
-    orientation: 'Aksial Pusat (Turret Center)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -280,13 +281,13 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Bor U-Drill Ø20',
     enName: 'Indexable U-Drill Ø20mm',
     icon: '[T08]',
-    image: '/assets/images/machine_cutting_tools/u_drill_cnc.jpg',
+    image: getAssetUrl('/assets/images/machine_cutting_tools/u_drill_cnc.jpg'),
     insert: 'WCMX 040208 Indexable Carbide Ø20',
     leadAngle: '180° Flat Bottom / Twin Insert',
     shapeType: 'u-drill',
     shapeName: 'Bor Karbida Sisipan Kembar Ø20mm',
     cuttingMotion: 'Pengeboran Lubang Tembus Inti (Z-)',
-    orientation: 'Aksial Pusat (Turret Center)',
+    orientation: 'Depan (Menghadap Operator)',
     geoX: 0.0,
     geoZ: 0.0,
     wearX: 0.0,
@@ -476,7 +477,7 @@ const CNCLatheModule = ({ addXP }) => {
   const [activeTurretStation, setActiveTurretStation] = useState(1);
   const [turretStations, setTurretStations] = useState(DEFAULT_TURRET_STATIONS);
   const [toolType, setToolType] = useState('rata'); // 'rata', 'finishing', 'facing', 'alur', 'ulir', 'ratakiri', 'centerdrill', 'udrill'
-  const toolOrientation = 'vertical'; // Posisi Vertikal sesuai standar CNC Turret Atas
+  const toolOrientation = 'front'; // Posisi Tool Post Depan Menghadap ke Operator
 
   // Dropdown list states (hanya terlihat 1, diklik muncul list)
   const [isToolDropdownOpen, setIsToolDropdownOpen] = useState(false);
@@ -957,7 +958,7 @@ const CNCLatheModule = ({ addXP }) => {
             title="Klik untuk memilih jenis pahat CNC lainnya"
           >
             <img
-              src={activeToolData.image}
+              src={getAssetUrl(activeToolData.image)}
               alt={activeToolData.name}
               style={{
                 width: '28px',
@@ -965,6 +966,9 @@ const CNCLatheModule = ({ addXP }) => {
                 objectFit: 'cover',
                 borderRadius: '4px',
                 border: `1px solid ${activeToolData.border}`
+              }}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
               }}
             />
             <span style={{
@@ -1054,9 +1058,12 @@ const CNCLatheModule = ({ addXP }) => {
                         border: isSelected ? `1.5px solid ${st.border}` : '1px solid rgba(255,255,255,0.12)'
                       }}>
                         <img
-                          src={st.image}
+                          src={getAssetUrl(st.image)}
                           alt={st.name}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
                       </div>
                       <span style={{
@@ -1581,9 +1588,12 @@ const CNCLatheModule = ({ addXP }) => {
                         border: '1.5px solid rgba(255, 255, 255, 0.2)'
                       }}>
                         <img
-                          src={activeToolData.image}
+                          src={getAssetUrl(activeToolData.image)}
                           alt={activeToolData.name}
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
                         />
                       </div>
 
@@ -1738,13 +1748,16 @@ const CNCLatheModule = ({ addXP }) => {
                           border: isIndexed ? `1.5px solid ${st.border}` : '1px solid rgba(255, 255, 255, 0.1)'
                         }}>
                           <img
-                            src={st.image}
+                            src={getAssetUrl(st.image)}
                             alt={st.name}
                             style={{
                               width: '100%',
                               height: '100%',
                               objectFit: 'cover',
                               transition: 'transform 0.3s ease'
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
                             }}
                           />
 
@@ -1900,7 +1913,7 @@ const CNCLatheModule = ({ addXP }) => {
                                     background: '#090d16',
                                     border: '1px solid rgba(255, 255, 255, 0.15)'
                                   }}>
-                                    <img src={st.image} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={getAssetUrl(st.image)} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                                   </div>
                                   <ToolShapeSvg type={st.shapeType} color={st.color} size={14} />
                                 </div>
@@ -2122,7 +2135,7 @@ const CNCLatheModule = ({ addXP }) => {
                                   flexShrink: 0,
                                   border: '1px solid rgba(255, 255, 255, 0.15)'
                                 }}>
-                                  <img src={st.image} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  <img src={getAssetUrl(st.image)} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                                 </div>
                                 <span>{st.code}: {st.name}</span>
                               </div>

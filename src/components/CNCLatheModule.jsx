@@ -14,6 +14,94 @@ import { PROFILE_RESOLUTION } from '../utils/latheToolpath';
 import '../styles/teknalar_cnc.css';
 
 // =========================================================================
+// HELPER VISUALISASI BENTUK GEOMETRI PAHAT CNC (SVG SCHEMATIC BADGE)
+// =========================================================================
+const ToolShapeSvg = ({ type, color = '#f59e0b', size = 32 }) => {
+  switch (type) {
+    case 'rhombic-80':
+      // Sisipan Karbida Belah Ketupat 80° (WNMG / CNMG)
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,4 35,20 20,36 5,20" fill={color} stroke="#000" strokeWidth="1.5" />
+          <circle cx="20" cy="20" r="4.5" fill="#1e293b" stroke="#000" strokeWidth="1" />
+        </svg>
+      );
+    case 'triangle-60':
+      // Sisipan Segitiga Sama Sisi 60° (TNMG)
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,6 36,32 4,32" fill={color} stroke="#000" strokeWidth="1.5" />
+          <circle cx="20" cy="23" r="4.5" fill="#1e293b" stroke="#000" strokeWidth="1" />
+        </svg>
+      );
+    case 'facing-93':
+      // Pahat Sayat Muka 93° (PCLNR Facing)
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="18" y="10" width="18" height="20" fill="#475569" rx="2" />
+          <polygon points="6,20 18,8 24,14 12,26" fill={color} stroke="#000" strokeWidth="1.5" />
+          <circle cx="15" cy="17" r="3" fill="#1e293b" />
+          <path d="M4 28 L4 12 L14 12" stroke="#10b981" strokeWidth="1.5" strokeDasharray="2 2" fill="none" />
+        </svg>
+      );
+    case 'groove-blade':
+      // Bilah Pahat Alur Potong 3mm
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="16" width="32" height="12" fill="#334155" rx="1" />
+          <rect x="2" y="15" width="8" height="14" fill={color} stroke="#000" strokeWidth="1.2" rx="1" />
+          <line x1="2" y1="12" x2="10" y2="12" stroke="#38bdf8" strokeWidth="1.5" />
+          <text x="6" y="9" fontSize="6" fill="#38bdf8" textAnchor="middle" fontWeight="bold">3mm</text>
+        </svg>
+      );
+    case 'thread-60':
+      // Gigi Sisipan Ulir Luar 60° (16ER Laydown)
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,6 36,32 4,32" fill="#334155" stroke="#000" strokeWidth="1.2" />
+          <polygon points="20,6 27,18 13,18" fill={color} stroke="#000" strokeWidth="1.2" />
+          <circle cx="20" cy="24" r="3.5" fill="#1e293b" />
+          <path d="M12 18 L20 6 L28 18" stroke="#fbbf24" strokeWidth="1.5" fill="none" />
+          <text x="20" y="38" fontSize="6.5" fill="#fbbf24" textAnchor="middle" fontWeight="bold">60 DEG</text>
+        </svg>
+      );
+    case 'rhombic-left':
+      // Sisipan Belah Ketupat Kiri (WNMG-L)
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="12" width="18" height="18" fill="#475569" rx="2" />
+          <polygon points="22,6 34,18 22,30 10,18" fill={color} stroke="#000" strokeWidth="1.5" />
+          <circle cx="22" cy="18" r="4" fill="#1e293b" />
+        </svg>
+      );
+    case 'center-drill':
+      // Bor Senter Konis 60° DIN 333-A
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="14" width="16" height="12" fill="#64748b" />
+          <polygon points="20,14 30,17 30,23 20,26" fill={color} stroke="#000" strokeWidth="1" />
+          <rect x="30" y="18" width="6" height="4" fill="#cbd5e1" stroke="#000" strokeWidth="1" />
+          <polygon points="36,18 39,20 36,22" fill="#cbd5e1" />
+        </svg>
+      );
+    case 'u-drill':
+      // U-Drill Sisipan Karbida Ganda Ø20mm
+      return (
+        <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="10" width="22" height="20" fill="#475569" rx="2" />
+          <path d="M16 10 C18 16 18 24 16 30" stroke="#0f172a" strokeWidth="2" fill="none" />
+          <rect x="22" y="11" width="8" height="8" fill={color} stroke="#000" strokeWidth="1" rx="1" />
+          <rect x="26" y="21" width="8" height="8" fill={color} stroke="#000" strokeWidth="1" rx="1" />
+          <circle cx="12" cy="15" r="1.5" fill="#38bdf8" />
+          <circle cx="12" cy="25" r="1.5" fill="#38bdf8" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
+
+// =========================================================================
 // DATA 8-STASIUN TURRET TOOL MAGAZINE CNC BUBUT (FANUC SERIES 0i-TD)
 // =========================================================================
 const DEFAULT_TURRET_STATIONS = [
@@ -24,8 +112,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Rata Kanan (Roughing)',
     enName: 'Right-Hand Turning / Roughing Tool',
     icon: '[T01]',
+    image: '/assets/images/machine_cutting_tools/pahat_rata_kanan.jpg',
     insert: 'WNMG 080408 (Rhombic 80° Gold Carbide)',
     leadAngle: '95° (ISO PCLNR 2020K12)',
+    shapeType: 'rhombic-80',
+    shapeName: 'Belah Ketupat 80° (WNMG)',
+    cuttingMotion: 'Penyayatan Memanjang (Z+ -> Z-)',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -44,8 +136,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Finishing Kanan',
     enName: 'Precision Finishing Tool',
     icon: '[T02]',
+    image: '/assets/images/machine_cutting_tools/pahat_finishing_tnmg.jpg',
     insert: 'TNMG 160404 (Triangular 60° TiAlN)',
     leadAngle: '93° (ISO MTJNR 2020K16)',
+    shapeType: 'triangle-60',
+    shapeName: 'Segitiga 60° (TNMG)',
+    cuttingMotion: 'Penyayatan Halus Presisi',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -64,8 +160,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Facing (Muka)',
     enName: 'Transversal Facing Tool',
     icon: '[T03]',
+    image: '/assets/images/machine_cutting_tools/pahat_muka.jpg',
     insert: 'PCLNL 93° / WNMG 080408',
     leadAngle: '93° Facing Angle',
+    shapeType: 'facing-93',
+    shapeName: 'Sudut Muka 93° (PCLNL)',
+    cuttingMotion: 'Penyayatan Melintang Muka (X+ -> X0)',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -84,8 +184,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Alur Potong (Grooving)',
     enName: 'Grooving / Parting Off Tool',
     icon: '[T04]',
+    image: '/assets/images/machine_cutting_tools/pahat_alur.jpg',
     insert: 'CoroCut Blade 3.0 mm (Slender Flat-Edge)',
     leadAngle: '90° Tegak Lurus Poros',
+    shapeType: 'groove-blade',
+    shapeName: 'Bilah Alur 3.0mm (Parting)',
+    cuttingMotion: 'Penyayatan Radial Tembus (X+ -> X-)',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -104,8 +208,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Ulir Luar 60° (Threading)',
     enName: 'External Threading Tool 60°',
     icon: '[T05]',
-    insert: 'ISO 16ER AG60 (Laydown Carbide)',
+    image: '/assets/images/machine_cutting_tools/pahat_ulir_holder.jpg',
+    insert: 'SER 2020K16 / 16ER AG60 (Laydown Carbide)',
     leadAngle: '60° Profil Gigi Ulir Metris',
+    shapeType: 'thread-60',
+    shapeName: 'Gigi Segitiga Ulir 60° (16ER)',
+    cuttingMotion: 'Siklus Ulir Bertingkat (G92/G76)',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -124,8 +232,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Rata Kiri',
     enName: 'Left-Hand Turning Tool',
     icon: '[T06]',
+    image: '/assets/images/machine_cutting_tools/pahat_rata_kiri.jpg',
     insert: 'WNMG 080408L (Left Hand Rhombic)',
-    leadAngle: '95° (ISO PCLNL)',
+    leadAngle: '95° (ISO PCLNL 2020K12)',
+    shapeType: 'rhombic-left',
+    shapeName: 'Belah Ketupat Kiri 80°',
+    cuttingMotion: 'Penyayatan Balik Kiri (Z- -> Z+)',
     orientation: 'Vertikal (Upper Turret)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -144,8 +256,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Bor Pusat (Center Drill)',
     enName: 'HSS Center Drill Tool',
     icon: '[T07]',
+    image: '/assets/images/machine_cutting_tools/bor_senter.jpg',
     insert: 'HSS DIN 333-A Ø3.15x60°',
     leadAngle: '60° Countersink Point',
+    shapeType: 'center-drill',
+    shapeName: 'Mata Bor Konis 60° (DIN 333-A)',
+    cuttingMotion: 'Penetrasi Aksial Muka Pusat (Z-)',
     orientation: 'Aksial Pusat (Turret Center)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -164,8 +280,12 @@ const DEFAULT_TURRET_STATIONS = [
     name: 'Pahat Bor U-Drill Ø20',
     enName: 'Indexable U-Drill Ø20mm',
     icon: '[T08]',
-    insert: 'WCMX 040208 Indexable Carbide',
-    leadAngle: '180° Flat Bottom',
+    image: '/assets/images/machine_cutting_tools/u_drill_cnc.jpg',
+    insert: 'WCMX 040208 Indexable Carbide Ø20',
+    leadAngle: '180° Flat Bottom / Twin Insert',
+    shapeType: 'u-drill',
+    shapeName: 'Bor Karbida Sisipan Kembar Ø20mm',
+    cuttingMotion: 'Pengeboran Lubang Tembus Inti (Z-)',
     orientation: 'Aksial Pusat (Turret Center)',
     geoX: 0.0,
     geoZ: 0.0,
@@ -836,6 +956,17 @@ const CNCLatheModule = ({ addXP }) => {
             }}
             title="Klik untuk memilih jenis pahat CNC lainnya"
           >
+            <img
+              src={activeToolData.image}
+              alt={activeToolData.name}
+              style={{
+                width: '28px',
+                height: '20px',
+                objectFit: 'cover',
+                borderRadius: '4px',
+                border: `1px solid ${activeToolData.border}`
+              }}
+            />
             <span style={{
               background: activeToolData.border,
               color: '#ffffff',
@@ -864,13 +995,13 @@ const CNCLatheModule = ({ addXP }) => {
                 border: '1px solid var(--border-light)',
                 borderRadius: '10px',
                 boxShadow: '0 12px 32px rgba(0, 0, 0, 0.65)',
-                minWidth: '320px',
-                maxWidth: '420px',
+                minWidth: '340px',
+                maxWidth: '440px',
                 padding: '6px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '4px',
-                maxHeight: '380px',
+                maxHeight: '400px',
                 overflowY: 'auto'
               }}
             >
@@ -885,7 +1016,7 @@ const CNCLatheModule = ({ addXP }) => {
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-                <span>DAFTAR 8 PAHAT CNC TURRET</span>
+                <span>DAFTAR 8 BENTUK PAHAT CNC TURRET</span>
                 <span style={{ fontSize: '0.68rem', color: '#10b981' }}>KLIK UNTUK MEMILIH</span>
               </div>
 
@@ -912,7 +1043,22 @@ const CNCLatheModule = ({ addXP }) => {
                       transition: 'all 0.12s'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <div style={{
+                        width: '42px',
+                        height: '28px',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                        background: '#090d16',
+                        border: isSelected ? `1.5px solid ${st.border}` : '1px solid rgba(255,255,255,0.12)'
+                      }}>
+                        <img
+                          src={st.image}
+                          alt={st.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
                       <span style={{
                         background: isSelected ? st.border : 'rgba(255,255,255,0.08)',
                         color: '#ffffff',
@@ -925,7 +1071,7 @@ const CNCLatheModule = ({ addXP }) => {
                       </span>
                       <div>
                         <div style={{ fontWeight: 800, fontSize: '0.8rem' }}>{st.name}</div>
-                        <div style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>{st.code} &bull; {st.insert.split(' ')[0]}</div>
+                        <div style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>{st.code} &bull; {st.shapeName}</div>
                       </div>
                     </div>
 
@@ -1198,7 +1344,7 @@ const CNCLatheModule = ({ addXP }) => {
                       <span>MAGAZINE TURRET 8-STASIUN (UPPER TURRET DISC)</span>
                     </h3>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      Piringan Turret CNC Bubut Industri Fanuc 0i-TD dengan 8 stasiun pahat vertikal.
+                      Piringan Turret Revolver CNC Bubut Fanuc Series 0i-TD dengan visualisasi bentuk fisik asli tiap pahat.
                     </div>
                   </div>
 
@@ -1253,8 +1399,278 @@ const CNCLatheModule = ({ addXP }) => {
                   </div>
                 </div>
 
-                {/* 8-STATION TURRET CAROUSEL PODS */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                {/* INTERACTIVE UPPER TURRET DISC & ACTIVE CUTTING TOOL LIVE SHOWCASE */}
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92))',
+                  borderRadius: '12px',
+                  border: '1.5px solid rgba(56, 189, 248, 0.3)',
+                  padding: '16px',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '20px',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)'
+                }}>
+                  {/* LEFT: DISC DIAGRAM */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', minWidth: '220px', margin: '0 auto' }}>
+                    <div style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', letterSpacing: '0.5px' }}>
+                      PIRINGAN TURRET 8-STASIUN (DISC REVOLVER VIEW)
+                    </div>
+
+                    <div style={{ position: 'relative', width: '220px', height: '220px' }}>
+                      {/* FIXED CUTTING POINT POINTER (TOP AT 12 O'CLOCK POINTING AT SPINDLE / BENDA KERJA) */}
+                      <div style={{
+                        position: 'absolute',
+                        top: '-12px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: '#ef4444',
+                        color: '#ffffff',
+                        fontSize: '0.62rem',
+                        fontWeight: 900,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.7)',
+                        whiteSpace: 'nowrap',
+                        zIndex: 10
+                      }}>
+                        [POSISI POTONG AKTIF]
+                      </div>
+
+                      {/* ROTATING SVG TURRET DISC */}
+                      <svg
+                        width="220"
+                        height="220"
+                        viewBox="0 0 220 220"
+                        style={{
+                          transform: `rotate(${-(activeTurretStation - 1) * 45}deg)`,
+                          transition: 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                        }}
+                      >
+                        {/* OUTER TURRET STEEL RING */}
+                        <circle cx="110" cy="110" r="102" fill="#1e293b" stroke="#334155" strokeWidth="3" />
+                        <circle cx="110" cy="110" r="90" fill="#0f172a" stroke="#475569" strokeWidth="1.5" />
+
+                        {/* 8 RADIAL POCKET SLOTS */}
+                        {DEFAULT_TURRET_STATIONS.map((st, idx) => {
+                          const angle = idx * 45;
+                          const isAct = activeTurretStation === st.station;
+                          const rad = (angle - 90) * (Math.PI / 180);
+                          const x = 110 + 64 * Math.cos(rad);
+                          const y = 110 + 64 * Math.sin(rad);
+                          const px = 110 + 90 * Math.cos(rad);
+                          const py = 110 + 90 * Math.sin(rad);
+
+                          return (
+                            <g
+                              key={st.station}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectTurretStation(st.station);
+                              }}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              {/* Radial tool block */}
+                              <line
+                                x1={x}
+                                y1={y}
+                                x2={px}
+                                y2={py}
+                                stroke={isAct ? st.border : '#475569'}
+                                strokeWidth={isAct ? '6' : '3'}
+                              />
+                              {/* Pocket node circle */}
+                              <circle
+                                cx={x}
+                                cy={y}
+                                r={isAct ? '15' : '13'}
+                                fill={isAct ? st.border : '#1e293b'}
+                                stroke={isAct ? '#ffffff' : '#475569'}
+                                strokeWidth={isAct ? '2.5' : '1.5'}
+                              />
+                              <text
+                                x={x}
+                                y={y + 3.5}
+                                textAnchor="middle"
+                                fill={isAct ? '#ffffff' : '#cbd5e1'}
+                                fontSize={isAct ? '9.5' : '8.5'}
+                                fontWeight="900"
+                                fontFamily="monospace"
+                              >
+                                {st.station}
+                              </text>
+                            </g>
+                          );
+                        })}
+
+                        {/* CENTER SERVO AXIS HUB */}
+                        <circle cx="110" cy="110" r="32" fill="#1e293b" stroke="#0284c7" strokeWidth="2.5" />
+                        <circle cx="110" cy="110" r="16" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.5" />
+                        <circle cx="110" cy="110" r="4" fill="#38bdf8" />
+                        {/* 4 Indexer bolt holes */}
+                        <circle cx="95" cy="110" r="2.5" fill="#475569" />
+                        <circle cx="125" cy="110" r="2.5" fill="#475569" />
+                        <circle cx="110" cy="95" r="2.5" fill="#475569" />
+                        <circle cx="110" cy="125" r="2.5" fill="#475569" />
+                      </svg>
+                    </div>
+
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      Piringan berputar servo 45&deg;/step &bull; Klik stasiun untuk rotasi
+                    </div>
+                  </div>
+
+                  {/* RIGHT: ACTIVE CUTTING TOOL LIVE CARD */}
+                  <div style={{
+                    flex: '1 1 340px',
+                    background: 'rgba(15, 23, 42, 0.8)',
+                    borderRadius: '10px',
+                    border: `2px solid ${activeToolData.border}`,
+                    padding: '14px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    boxShadow: `0 0 20px ${activeToolData.bg}`
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{
+                          background: activeToolData.border,
+                          color: '#ffffff',
+                          fontWeight: 900,
+                          fontSize: '0.75rem',
+                          padding: '3px 8px',
+                          borderRadius: '4px'
+                        }}>
+                          ST-{activeTurretStation}
+                        </span>
+                        <span style={{ fontWeight: 900, color: activeToolData.color, fontSize: '0.95rem' }}>
+                          {activeToolData.code}
+                        </span>
+                      </div>
+                      <span style={{
+                        background: '#10b981',
+                        color: '#000000',
+                        fontWeight: 900,
+                        fontSize: '0.68rem',
+                        padding: '3px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        [SEDANG TERPASANG DI SPINDEL]
+                      </span>
+                    </div>
+
+                    {/* TOOL PHOTO & REAL VISUAL */}
+                    <div style={{
+                      display: 'flex',
+                      gap: '14px',
+                      alignItems: 'center',
+                      background: '#090d16',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(255, 255, 255, 0.08)'
+                    }}>
+                      <div style={{
+                        width: '130px',
+                        height: '88px',
+                        borderRadius: '6px',
+                        overflow: 'hidden',
+                        background: '#000',
+                        flexShrink: 0,
+                        border: '1.5px solid rgba(255, 255, 255, 0.2)'
+                      }}>
+                        <img
+                          src={activeToolData.image}
+                          alt={activeToolData.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 900, fontSize: '0.92rem', color: '#ffffff' }}>
+                          {activeToolData.name}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                          {activeToolData.enName}
+                        </div>
+                        <div style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          background: 'rgba(255, 255, 255, 0.06)',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.7rem',
+                          color: activeToolData.color,
+                          fontWeight: 800
+                        }}>
+                          <ToolShapeSvg type={activeToolData.shapeType} color={activeToolData.color} size={16} />
+                          <span>BENTUK: {activeToolData.shapeName}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* TOOL SPECS */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '6px',
+                      fontSize: '0.72rem',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      padding: '8px 10px',
+                      borderRadius: '6px'
+                    }}>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Insert:</span> <strong style={{ color: '#ffffff' }}>{activeToolData.insert}</strong></div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Sudut Potong:</span> <strong style={{ color: '#ffffff' }}>{activeToolData.leadAngle}</strong></div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Radius Ujung:</span> <strong style={{ color: '#38bdf8' }}>R{activeToolData.radiusR} mm</strong></div>
+                      <div><span style={{ color: 'var(--text-muted)' }}>Gerak Sayat:</span> <strong style={{ color: '#fbbf24' }}>{activeToolData.cuttingMotion}</strong></div>
+                    </div>
+
+                    {/* ROTATION BUTTONS */}
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '2px' }}>
+                      <button
+                        onClick={() => handleTurretIndex(-1)}
+                        style={{
+                          flex: 1,
+                          padding: '7px 10px',
+                          background: 'rgba(56, 189, 248, 0.15)',
+                          border: '1px solid #0284c7',
+                          color: '#38bdf8',
+                          borderRadius: '6px',
+                          fontWeight: 800,
+                          fontSize: '0.75rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        [INDEX CCW (T-)]
+                      </button>
+                      <button
+                        onClick={() => handleTurretIndex(1)}
+                        style={{
+                          flex: 1,
+                          padding: '7px 10px',
+                          background: 'rgba(56, 189, 248, 0.15)',
+                          border: '1px solid #0284c7',
+                          color: '#38bdf8',
+                          borderRadius: '6px',
+                          fontWeight: 800,
+                          fontSize: '0.75rem',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        [INDEX CW (T+)]
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 8-STATION TURRET CAROUSEL PODS WITH REAL TOOL SHAPE PHOTOS */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '14px'
+                }}>
                   {DEFAULT_TURRET_STATIONS.map(st => {
                     const isIndexed = activeTurretStation === st.station;
                     return (
@@ -1269,25 +1685,26 @@ const CNCLatheModule = ({ addXP }) => {
                           cursor: 'pointer',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '8px',
+                          gap: '10px',
                           transition: 'all 0.18s ease',
-                          boxShadow: isIndexed ? `0 0 16px ${st.bg}` : 'none',
+                          boxShadow: isIndexed ? `0 0 18px ${st.bg}` : 'none',
                           position: 'relative'
                         }}
                       >
+                        {/* CARD HEADER */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <span style={{
-                              background: isIndexed ? st.border : 'rgba(255,255,255,0.08)',
+                              background: isIndexed ? st.border : 'rgba(255, 255, 255, 0.08)',
                               color: '#ffffff',
                               fontWeight: 900,
-                              fontSize: '0.7rem',
-                              padding: '2px 6px',
+                              fontSize: '0.72rem',
+                              padding: '2px 8px',
                               borderRadius: '4px'
                             }}>
                               ST-{st.station}
                             </span>
-                            <span style={{ fontWeight: 800, color: st.color, fontSize: '0.82rem' }}>
+                            <span style={{ fontWeight: 800, color: st.color, fontSize: '0.85rem' }}>
                               {st.code}
                             </span>
                           </div>
@@ -1311,8 +1728,67 @@ const CNCLatheModule = ({ addXP }) => {
                           )}
                         </div>
 
+                        {/* PROMINENT TOOL SHAPE PHOTO & GEOMETRY VISUAL */}
+                        <div style={{
+                          position: 'relative',
+                          height: '140px',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          background: '#090d16',
+                          border: isIndexed ? `1.5px solid ${st.border}` : '1px solid rgba(255, 255, 255, 0.1)'
+                        }}>
+                          <img
+                            src={st.image}
+                            alt={st.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              transition: 'transform 0.3s ease'
+                            }}
+                          />
+
+                          {/* SHAPE BADGE OVERLAY (TOP-RIGHT) */}
+                          <div style={{
+                            position: 'absolute',
+                            top: '6px',
+                            right: '6px',
+                            background: 'rgba(15, 23, 42, 0.88)',
+                            backdropFilter: 'blur(4px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '6px',
+                            padding: '3px 6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)'
+                          }}>
+                            <ToolShapeSvg type={st.shapeType} color={st.color} size={16} />
+                            <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#ffffff' }}>
+                              {st.shapeName}
+                            </span>
+                          </div>
+
+                          {/* CUTTING MOTION BADGE (BOTTOM-LEFT) */}
+                          <div style={{
+                            position: 'absolute',
+                            bottom: '6px',
+                            left: '6px',
+                            background: 'rgba(0, 0, 0, 0.78)',
+                            backdropFilter: 'blur(4px)',
+                            borderRadius: '4px',
+                            padding: '2px 6px',
+                            fontSize: '0.62rem',
+                            color: '#e2e8f0',
+                            border: '1px solid rgba(255, 255, 255, 0.1)'
+                          }}>
+                            {st.cuttingMotion}
+                          </div>
+                        </div>
+
+                        {/* TOOL TITLE */}
                         <div>
-                          <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: '0.85rem' }}>
+                          <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: '0.88rem' }}>
                             {st.name}
                           </div>
                           <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
@@ -1320,21 +1796,27 @@ const CNCLatheModule = ({ addXP }) => {
                           </div>
                         </div>
 
+                        {/* TECHNICAL SPECS */}
                         <div style={{
-                          background: 'rgba(0,0,0,0.25)',
+                          background: 'rgba(0, 0, 0, 0.25)',
                           borderRadius: '6px',
-                          padding: '6px 8px',
+                          padding: '8px',
                           fontSize: '0.7rem',
-                          border: '1px solid rgba(255,255,255,0.05)'
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '3px'
                         }}>
                           <div><strong style={{ color: 'var(--text-main)' }}>Insert:</strong> {st.insert}</div>
                           <div><strong style={{ color: 'var(--text-main)' }}>Sudut Potong:</strong> {st.leadAngle}</div>
+                          <div><strong style={{ color: 'var(--text-main)' }}>Radius Ujung:</strong> R{st.radiusR} mm</div>
                         </div>
 
                         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
                           {st.desc}
                         </div>
 
+                        {/* ACTION BUTTON */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1343,9 +1825,9 @@ const CNCLatheModule = ({ addXP }) => {
                           }}
                           style={{
                             marginTop: 'auto',
-                            padding: '6px 10px',
+                            padding: '7px 10px',
                             borderRadius: '6px',
-                            background: isIndexed ? st.border : 'rgba(255,255,255,0.08)',
+                            background: isIndexed ? st.border : 'rgba(255, 255, 255, 0.08)',
                             color: '#ffffff',
                             border: 'none',
                             fontSize: '0.72rem',
@@ -1353,7 +1835,7 @@ const CNCLatheModule = ({ addXP }) => {
                             cursor: 'pointer'
                           }}
                         >
-                          {isIndexed ? '[TERPASANG] Muat ke Editor G-Code' : 'Index ke Stasiun Ini'}
+                          {isIndexed ? '[TERPASANG] Muat ke Editor G-Code' : `Index ke ST-${st.station}`}
                         </button>
                       </div>
                     );
@@ -1380,8 +1862,9 @@ const CNCLatheModule = ({ addXP }) => {
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem', fontFamily: 'monospace' }}>
                       <thead>
-                        <tr style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-light)' }}>
+                        <tr style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-light)' }}>
                           <th style={{ padding: '6px 8px' }}>ST</th>
+                          <th style={{ padding: '6px 8px' }}>BENTUK</th>
                           <th style={{ padding: '6px 8px' }}>TOOL</th>
                           <th style={{ padding: '6px 8px' }}>NAMA PAHAT</th>
                           <th style={{ padding: '6px 8px' }}>INSERT ISO</th>
@@ -1401,12 +1884,27 @@ const CNCLatheModule = ({ addXP }) => {
                             <tr
                               key={st.station}
                               style={{
-                                borderBottom: '1px solid rgba(255,255,255,0.04)',
+                                borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
                                 background: isCur ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
                                 color: isCur ? '#38bdf8' : 'var(--text-main)'
                               }}
                             >
                               <td style={{ padding: '6px 8px', fontWeight: 900 }}>{st.station}</td>
+                              <td style={{ padding: '4px 6px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <div style={{
+                                    width: '32px',
+                                    height: '22px',
+                                    borderRadius: '3px',
+                                    overflow: 'hidden',
+                                    background: '#090d16',
+                                    border: '1px solid rgba(255, 255, 255, 0.15)'
+                                  }}>
+                                    <img src={st.image} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  </div>
+                                  <ToolShapeSvg type={st.shapeType} color={st.color} size={14} />
+                                </div>
+                              </td>
                               <td style={{ padding: '6px 8px', fontWeight: 800 }}>{st.code}</td>
                               <td style={{ padding: '6px 8px', color: isCur ? '#ffffff' : 'var(--text-muted)' }}>{st.name}</td>
                               <td style={{ padding: '6px 8px' }}>{st.insert.split(' ')[0]}</td>
@@ -1421,7 +1919,7 @@ const CNCLatheModule = ({ addXP }) => {
                                   borderRadius: '3px',
                                   fontSize: '0.65rem',
                                   fontWeight: 900,
-                                  background: isCur ? '#0284c7' : 'rgba(255,255,255,0.06)',
+                                  background: isCur ? '#0284c7' : 'rgba(255, 255, 255, 0.06)',
                                   color: '#ffffff'
                                 }}>
                                   {isCur ? 'CUTTING' : 'STANDBY'}
@@ -1434,7 +1932,7 @@ const CNCLatheModule = ({ addXP }) => {
                                   style={{
                                     padding: '3px 8px',
                                     borderRadius: '4px',
-                                    background: isCur ? '#10b981' : 'rgba(255,255,255,0.08)',
+                                    background: isCur ? '#10b981' : 'rgba(255, 255, 255, 0.08)',
                                     color: isCur ? '#000000' : 'var(--text-main)',
                                     border: 'none',
                                     fontWeight: 800,
@@ -1614,7 +2112,20 @@ const CNCLatheModule = ({ addXP }) => {
                                 textAlign: 'left'
                               }}
                             >
-                              <span>{st.code}: {st.name}</span>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <div style={{
+                                  width: '32px',
+                                  height: '22px',
+                                  borderRadius: '3px',
+                                  overflow: 'hidden',
+                                  background: '#090d16',
+                                  flexShrink: 0,
+                                  border: '1px solid rgba(255, 255, 255, 0.15)'
+                                }}>
+                                  <img src={st.image} alt={st.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                </div>
+                                <span>{st.code}: {st.name}</span>
+                              </div>
                               {isSel && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800 }}>[TERMUAT]</span>}
                             </button>
                           );

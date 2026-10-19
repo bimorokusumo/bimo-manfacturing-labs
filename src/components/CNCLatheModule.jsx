@@ -2,7 +2,8 @@ import {
   Shield, Calculator, Edit3, Eye, EyeOff, Compass,
   Zap, Circle, Wrench, Settings, Droplets, FileText,
   Award, Loader2, Play, Pause, RotateCcw, Square, Lightbulb,
-  AlertTriangle, CheckCircle2, ChevronRight, RefreshCw
+  AlertTriangle, CheckCircle2, ChevronRight, RefreshCw,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 import React, { useState, Suspense, useEffect, useRef, useMemo } from 'react';
 import { sound } from '../utils/audio';
@@ -356,6 +357,27 @@ const CNCLatheModule = ({ addXP }) => {
   const [turretStations, setTurretStations] = useState(DEFAULT_TURRET_STATIONS);
   const [toolType, setToolType] = useState('rata'); // 'rata', 'finishing', 'facing', 'alur', 'ulir', 'ratakiri', 'centerdrill', 'udrill'
   const toolOrientation = 'vertical'; // Posisi Vertikal sesuai standar CNC Turret Atas
+
+  // Dropdown list states (hanya terlihat 1, diklik muncul list)
+  const [isToolDropdownOpen, setIsToolDropdownOpen] = useState(false);
+  const toolDropdownRef = useRef(null);
+  const [isProgDropdownOpen, setIsProgDropdownOpen] = useState(false);
+  const progDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (toolDropdownRef.current && !toolDropdownRef.current.contains(event.target)) {
+        setIsToolDropdownOpen(false);
+      }
+      if (progDropdownRef.current && !progDropdownRef.current.contains(event.target)) {
+        setIsProgDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // ==========================================
   // 3. FANUC SERIES 0i-TD CONTROLLER STATE
@@ -791,32 +813,163 @@ const CNCLatheModule = ({ addXP }) => {
           </button>
         </div>
 
-        {/* PILIHAN PAHAT CEPAT */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+        {/* PILIHAN PAHAT CNC: HANYA TERLIHAT 1, DIKLIK BARU MUNCUL LIST */}
+        <div ref={toolDropdownRef} style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>[PAHAT CNC]:</span>
-          {Object.values(TOOLS_CONFIG).map(t => (
-            <button
-              key={t.id}
-              onClick={() => handleSelectTool(t.id)}
+          
+          <button
+            onClick={() => { sound.playClick(); setIsToolDropdownOpen(prev => !prev); }}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: `1.5px solid ${activeToolData.border}`,
+              background: activeToolData.bg,
+              color: activeToolData.color,
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.15s',
+              boxShadow: isToolDropdownOpen ? `0 0 12px ${activeToolData.bg}` : 'none'
+            }}
+            title="Klik untuk memilih jenis pahat CNC lainnya"
+          >
+            <span style={{
+              background: activeToolData.border,
+              color: '#ffffff',
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontSize: '0.7rem',
+              fontWeight: 900
+            }}>
+              ST-{activeTurretStation}
+            </span>
+            <span>{activeToolData.name}</span>
+            <span style={{ fontSize: '0.72rem', opacity: 0.8 }}>({activeToolData.code})</span>
+            {isToolDropdownOpen ? <ChevronUp size={14} className="inline ml-1" /> : <ChevronDown size={14} className="inline ml-1" />}
+          </button>
+
+          {/* LIST DROPDOWN SAAT DIKLIK */}
+          {isToolDropdownOpen && (
+            <div
+              className="animate-fade-in"
               style={{
-                padding: '5px 10px',
-                borderRadius: '6px',
-                border: toolType === t.id ? `1.5px solid ${t.border}` : '1px solid var(--border-light)',
-                background: toolType === t.id ? t.bg : 'transparent',
-                color: toolType === t.id ? t.color : 'var(--text-main)',
-                fontSize: '0.75rem',
-                fontWeight: toolType === t.id ? 800 : 600,
-                cursor: 'pointer',
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                left: 0,
+                zIndex: 100,
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-light)',
+                borderRadius: '10px',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.65)',
+                minWidth: '320px',
+                maxWidth: '420px',
+                padding: '6px',
                 display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                transition: 'all 0.15s'
+                flexDirection: 'column',
+                gap: '4px',
+                maxHeight: '380px',
+                overflowY: 'auto'
               }}
             >
-              <span>{t.icon}</span>
-              <span>{t.name}</span>
-            </button>
-          ))}
+              <div style={{
+                padding: '8px 10px',
+                borderBottom: '1px solid var(--border-light)',
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                color: 'var(--text-muted)',
+                letterSpacing: '0.5px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span>DAFTAR 8 PAHAT CNC TURRET</span>
+                <span style={{ fontSize: '0.68rem', color: '#10b981' }}>KLIK UNTUK MEMILIH</span>
+              </div>
+
+              {DEFAULT_TURRET_STATIONS.map(st => {
+                const isSelected = toolType === st.id;
+                return (
+                  <button
+                    key={st.station}
+                    onClick={() => {
+                      handleSelectTool(st.id);
+                      setIsToolDropdownOpen(false);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 10px',
+                      borderRadius: '6px',
+                      border: isSelected ? `1.5px solid ${st.border}` : '1px solid transparent',
+                      background: isSelected ? st.bg : 'transparent',
+                      color: isSelected ? st.color : 'var(--text-main)',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.12s'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        background: isSelected ? st.border : 'rgba(255,255,255,0.08)',
+                        color: '#ffffff',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '0.68rem',
+                        fontWeight: 900
+                      }}>
+                        ST-{st.station}
+                      </span>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '0.8rem' }}>{st.name}</div>
+                        <div style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>{st.code} &bull; {st.insert.split(' ')[0]}</div>
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <span style={{
+                        background: '#10b981',
+                        color: '#000000',
+                        fontSize: '0.65rem',
+                        fontWeight: 900,
+                        padding: '2px 6px',
+                        borderRadius: '4px'
+                      }}>
+                        [AKTIF]
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+
+              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '4px', marginTop: '2px' }}>
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setActiveTab('2');
+                    setIsToolDropdownOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    background: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                    color: '#38bdf8',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <Wrench size={11} className="inline mr-1" /> Buka Tab Magazine Turret &amp; Tabel Offset
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* TOGGLE ALUR GERAKAN PAHAT (TOOLPATH) */}
@@ -1389,32 +1542,85 @@ const CNCLatheModule = ({ addXP }) => {
                     </label>
                   </div>
 
-                  {/* QUICK TEMPLATE LOADERS */}
-                  <div style={{ display: 'flex', gap: '6px' }}>
+                  {/* DROPDOWN TEMPLATE G-CODE: HANYA TERLIHAT 1, DIKLIK BARU MUNCUL LIST */}
+                  <div ref={progDropdownRef} style={{ position: 'relative' }}>
                     <button
-                      onClick={() => handleSelectTool('rata')}
-                      style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'rata' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.06)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
+                      onClick={() => { sound.playClick(); setIsProgDropdownOpen(prev => !prev); }}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        color: '#38bdf8',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      title="Klik untuk memilih template G-code program lainnya"
                     >
-                      <FileText size={12} className="inline mr-1" /> Prog. Rata
+                      <FileText size={13} className="inline text-sky-400" />
+                      <span>Program: {activeToolData.name} ({activeToolData.code})</span>
+                      {isProgDropdownOpen ? <ChevronUp size={13} className="inline ml-1" /> : <ChevronDown size={13} className="inline ml-1" />}
                     </button>
-                    <button
-                      onClick={() => handleSelectTool('alur')}
-                      style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'alur' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255,255,255,0.06)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
-                    >
-                      <FileText size={12} className="inline mr-1" /> Prog. Alur
-                    </button>
-                    <button
-                      onClick={() => handleSelectTool('ulir')}
-                      style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'ulir' ? 'rgba(192, 132, 252, 0.2)' : 'rgba(255,255,255,0.06)', color: '#c084fc', border: '1px solid rgba(192, 132, 252, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
-                    >
-                      <FileText size={12} className="inline mr-1" /> Prog. Ulir
-                    </button>
-                    <button
-                      onClick={() => handleSelectTool('facing')}
-                      style={{ padding: '4px 8px', borderRadius: '4px', background: toolType === 'facing' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255,255,255,0.06)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}
-                    >
-                      <FileText size={12} className="inline mr-1" /> Prog. Facing
-                    </button>
+
+                    {isProgDropdownOpen && (
+                      <div
+                        className="animate-fade-in"
+                        style={{
+                          position: 'absolute',
+                          top: 'calc(100% + 6px)',
+                          right: 0,
+                          zIndex: 100,
+                          background: 'var(--bg-card)',
+                          border: '1px solid var(--border-light)',
+                          borderRadius: '8px',
+                          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.65)',
+                          minWidth: '280px',
+                          padding: '4px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '2px',
+                          maxHeight: '320px',
+                          overflowY: 'auto'
+                        }}
+                      >
+                        <div style={{ padding: '6px 8px', fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-muted)', borderBottom: '1px solid var(--border-light)' }}>
+                          PILIH PROGRAM TEMPLATE PAHAT:
+                        </div>
+                        {DEFAULT_TURRET_STATIONS.map(st => {
+                          const isSel = toolType === st.id;
+                          return (
+                            <button
+                              key={st.station}
+                              onClick={() => {
+                                handleSelectTool(st.id);
+                                setIsProgDropdownOpen(false);
+                              }}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '6px 8px',
+                                borderRadius: '4px',
+                                border: 'none',
+                                background: isSel ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+                                color: isSel ? '#38bdf8' : 'var(--text-main)',
+                                fontSize: '0.72rem',
+                                fontWeight: isSel ? 800 : 600,
+                                cursor: 'pointer',
+                                textAlign: 'left'
+                              }}
+                            >
+                              <span>{st.code}: {st.name}</span>
+                              {isSel && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800 }}>[TERMUAT]</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
 

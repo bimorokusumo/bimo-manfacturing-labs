@@ -1,7 +1,8 @@
 import React, { useState, Suspense, useEffect, useRef, useMemo } from 'react';
 import {
   Shield, Play, Pause, RotateCcw, Wrench, RefreshCw,
-  Zap, FileText, CheckCircle2, AlertTriangle, Layers, Droplets
+  Zap, FileText, CheckCircle2, AlertTriangle, Layers, Droplets,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 import CNC3D from './CNC3D';
@@ -228,6 +229,27 @@ const CNCModule = ({ addXP }) => {
   // ==========================================
   const [activeAtcPocket, setActiveAtcPocket] = useState(3); // Default Pocket 3: Finish End Mill Ø10mm
   const [atcPockets, setAtcPockets] = useState(DEFAULT_ATC_POCKETS);
+
+  // Dropdown list states (hanya terlihat 1, diklik muncul list)
+  const [isToolDropdownOpen, setIsToolDropdownOpen] = useState(false);
+  const toolDropdownRef = useRef(null);
+  const [isProgDropdownOpen, setIsProgDropdownOpen] = useState(false);
+  const progDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (toolDropdownRef.current && !toolDropdownRef.current.contains(event.target)) {
+        setIsToolDropdownOpen(false);
+      }
+      if (progDropdownRef.current && !progDropdownRef.current.contains(event.target)) {
+        setIsProgDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // ==========================================
   // FANUC SERIES 0i-MD CONTROLLER STATE
@@ -533,6 +555,221 @@ const CNCModule = ({ addXP }) => {
           >
             <Shield size={14} className="inline mr-1 text-emerald-400" /> SOP &amp; K3
           </button>
+        </div>
+      </div>
+
+      {/* QUICK STATUS & SELECTION TOOLBAR DI ATAS SIMULATOR */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '12px',
+        background: 'var(--bg-card)',
+        padding: '10px 16px',
+        borderRadius: '12px',
+        border: '1px solid var(--border-light)',
+        marginBottom: '16px'
+      }}>
+        {/* PILIHAN BENDA KERJA CEPAT */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>[BENDA KERJA]:</span>
+          <button
+            onClick={() => { sound.playClick(); setActiveTab('1'); }}
+            style={{
+              background: 'rgba(16, 185, 129, 0.12)',
+              border: '1px solid #10b981',
+              color: '#10b981',
+              padding: '5px 12px',
+              borderRadius: '6px',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Klik untuk mengatur dimensi benda kerja"
+          >
+            <span>{workpieceSize.x} &times; {workpieceSize.y} &times; {workpieceSize.z} mm</span>
+            <Layers size={11} className="inline" />
+          </button>
+        </div>
+
+        {/* DROPDOWN LIST PILIHAN TOOL ATC (HANYA TERLIHAT 1, DIKLIK BARU MUNCUL LIST) */}
+        <div ref={toolDropdownRef} style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-muted)' }}>[TOOL ATC CNC]:</span>
+          
+          <button
+            onClick={() => { sound.playClick(); setIsToolDropdownOpen(prev => !prev); }}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: `1.5px solid ${activeToolData.border}`,
+              background: activeToolData.bg,
+              color: activeToolData.color,
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              transition: 'all 0.15s',
+              boxShadow: isToolDropdownOpen ? `0 0 12px ${activeToolData.bg}` : 'none'
+            }}
+            title="Klik untuk memilih tool ATC lainnya"
+          >
+            <span style={{
+              background: activeToolData.border,
+              color: '#ffffff',
+              padding: '2px 6px',
+              borderRadius: '4px',
+              fontSize: '0.7rem',
+              fontWeight: 900
+            }}>
+              {activeToolData.id}
+            </span>
+            <span>{activeToolData.name}</span>
+            <span style={{ fontSize: '0.72rem', opacity: 0.8 }}>(Ø{toolDiameter}mm)</span>
+            {isToolDropdownOpen ? <ChevronUp size={14} className="inline ml-1" /> : <ChevronDown size={14} className="inline ml-1" />}
+          </button>
+
+          {/* LIST DROPDOWN SAAT DIKLIK */}
+          {isToolDropdownOpen && (
+            <div
+              className="animate-fade-in"
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                left: 0,
+                zIndex: 100,
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-light)',
+                borderRadius: '10px',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.65)',
+                minWidth: '320px',
+                maxWidth: '420px',
+                padding: '6px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                maxHeight: '380px',
+                overflowY: 'auto'
+              }}
+            >
+              <div style={{
+                padding: '8px 10px',
+                borderBottom: '1px solid var(--border-light)',
+                fontSize: '0.72rem',
+                fontWeight: 900,
+                color: 'var(--text-muted)',
+                letterSpacing: '0.5px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span>DAFTAR TOOL ATC 6-STATION</span>
+                <span style={{ fontSize: '0.68rem', color: '#10b981' }}>KLIK UNTUK MEMILIH</span>
+              </div>
+
+              {DEFAULT_ATC_POCKETS.map(pocket => {
+                const isSelected = activeAtcPocket === pocket.pocket;
+                return (
+                  <button
+                    key={pocket.pocket}
+                    onClick={() => {
+                      handleSelectAtcPocket(pocket.pocket);
+                      setIsToolDropdownOpen(false);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 10px',
+                      borderRadius: '6px',
+                      border: isSelected ? `1.5px solid ${pocket.border}` : '1px solid transparent',
+                      background: isSelected ? pocket.bg : 'transparent',
+                      color: isSelected ? pocket.color : 'var(--text-main)',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.12s'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        background: isSelected ? pocket.border : 'rgba(255,255,255,0.08)',
+                        color: '#ffffff',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '0.68rem',
+                        fontWeight: 900
+                      }}>
+                        {pocket.id}
+                      </span>
+                      <div>
+                        <div style={{ fontWeight: 800, fontSize: '0.8rem' }}>{pocket.name}</div>
+                        <div style={{ fontSize: '0.68rem', color: 'var(--text-subtle)' }}>Ø{pocket.diameter}mm &bull; {pocket.holder}</div>
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <span style={{
+                        background: '#10b981',
+                        color: '#000000',
+                        fontSize: '0.65rem',
+                        fontWeight: 900,
+                        padding: '2px 6px',
+                        borderRadius: '4px'
+                      }}>
+                        [IN SPINDLE]
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+
+              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '4px', marginTop: '2px' }}>
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setActiveTab('2');
+                    setIsToolDropdownOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    color: '#10b981',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <Wrench size={11} className="inline mr-1" /> Buka Tab ATC Magazine &amp; Tabel Offset
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* STATUS ATC CAROUSEL */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          background: 'rgba(16, 185, 129, 0.12)',
+          border: '1px solid #10b981',
+          padding: '4px 10px',
+          borderRadius: '6px',
+          fontSize: '0.72rem',
+          fontWeight: 800,
+          color: '#047857'
+        }}>
+          <Wrench size={13} className="inline mr-1 text-emerald-400" />
+          <span>ATC: 6 POCKET CAROUSEL (BT40)</span>
         </div>
       </div>
 
@@ -965,26 +1202,85 @@ const CNCModule = ({ addXP }) => {
                     </label>
                   </div>
 
-                  {/* QUICK TEMPLATE SELECTORS */}
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    {DEFAULT_ATC_POCKETS.map(pocket => (
-                      <button
-                        key={pocket.pocket}
-                        onClick={() => handleSelectAtcPocket(pocket.pocket)}
+                  {/* DROPDOWN TEMPLATE G-CODE: HANYA TERLIHAT 1, DIKLIK BARU MUNCUL LIST */}
+                  <div ref={progDropdownRef} style={{ position: 'relative' }}>
+                    <button
+                      onClick={() => { sound.playClick(); setIsProgDropdownOpen(prev => !prev); }}
+                      style={{
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(16, 185, 129, 0.15)',
+                        color: '#10b981',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      title="Klik untuk memilih template program tool ATC lainnya"
+                    >
+                      <FileText size={13} className="inline text-emerald-400" />
+                      <span>Program: {activeToolData.id} - {activeToolData.name}</span>
+                      {isProgDropdownOpen ? <ChevronUp size={13} className="inline ml-1" /> : <ChevronDown size={13} className="inline ml-1" />}
+                    </button>
+
+                    {isProgDropdownOpen && (
+                      <div
+                        className="animate-fade-in"
                         style={{
-                          padding: '4px 8px',
-                          borderRadius: '4px',
-                          background: activeAtcPocket === pocket.pocket ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.06)',
-                          color: activeAtcPocket === pocket.pocket ? '#10b981' : 'var(--text-muted)',
-                          border: activeAtcPocket === pocket.pocket ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
-                          fontSize: '0.72rem',
-                          fontWeight: 700,
-                          cursor: 'pointer'
+                          position: 'absolute',
+                          top: 'calc(100% + 6px)',
+                          right: 0,
+                          zIndex: 100,
+                          background: 'var(--bg-card)',
+                          border: '1px solid var(--border-light)',
+                          borderRadius: '8px',
+                          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.65)',
+                          minWidth: '280px',
+                          padding: '4px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '2px',
+                          maxHeight: '320px',
+                          overflowY: 'auto'
                         }}
                       >
-                        {pocket.id}
-                      </button>
-                    ))}
+                        <div style={{ padding: '6px 8px', fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-muted)', borderBottom: '1px solid var(--border-light)' }}>
+                          PILIH PROGRAM TEMPLATE TOOL ATC:
+                        </div>
+                        {DEFAULT_ATC_POCKETS.map(pocket => {
+                          const isSel = activeAtcPocket === pocket.pocket;
+                          return (
+                            <button
+                              key={pocket.pocket}
+                              onClick={() => {
+                                handleSelectAtcPocket(pocket.pocket);
+                                setIsProgDropdownOpen(false);
+                              }}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '6px 8px',
+                                borderRadius: '4px',
+                                border: 'none',
+                                background: isSel ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
+                                color: isSel ? '#10b981' : 'var(--text-main)',
+                                fontSize: '0.72rem',
+                                fontWeight: isSel ? 800 : 600,
+                                cursor: 'pointer',
+                                textAlign: 'left'
+                              }}
+                            >
+                              <span>{pocket.id}: {pocket.name}</span>
+                              {isSel && <span style={{ fontSize: '0.65rem', color: '#10b981', fontWeight: 800 }}>[TERMUAT]</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
 

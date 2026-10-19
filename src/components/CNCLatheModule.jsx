@@ -1232,6 +1232,7 @@ const CNCLatheModule = ({ addXP }) => {
                 rawLength={workpieceLength}
                 toolType={toolType}
                 toolOrientation={toolOrientation}
+                activeTurretStation={activeTurretStation}
                 machineMode="rata"
                 rpm={spindleRpm}
                 isCutting={isMachining && currentLine >= 0}
@@ -1348,10 +1349,10 @@ const CNCLatheModule = ({ addXP }) => {
                   <div>
                     <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Wrench size={16} className="inline mr-1 text-sky-400" />
-                      <span>MAGAZINE TURRET 8-STASIUN (UPPER TURRET DISC)</span>
+                      <span>DATA PAHAT & OFFSET GEOMETRI CNC BUBUT (FANUC SERIES 0i-TD)</span>
                     </h3>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      Piringan Turret Revolver CNC Bubut Fanuc Series 0i-TD dengan visualisasi bentuk fisik asli tiap pahat.
+                      Magazine turret 8-stasiun terpasang fisik di dalam simulator 3D mesin di atas &bull; Pilih stasiun untuk mengindeks magazine 3D
                     </div>
                   </div>
 
@@ -1406,140 +1407,61 @@ const CNCLatheModule = ({ addXP }) => {
                   </div>
                 </div>
 
-                {/* INTERACTIVE UPPER TURRET DISC & ACTIVE CUTTING TOOL LIVE SHOWCASE */}
+                {/* QUICK STATION SELECTOR BAR */}
+                <div style={{
+                  display: 'flex',
+                  gap: '8px',
+                  flexWrap: 'wrap',
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-light)',
+                  alignItems: 'center'
+                }}>
+                  <span style={{ fontSize: '0.76rem', fontWeight: 800, color: 'var(--text-muted)' }}>
+                    PILIH STASIUN MAGAZINE 3D:
+                  </span>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: 1 }}>
+                    {DEFAULT_TURRET_STATIONS.map((st) => {
+                      const isAct = activeTurretStation === st.station;
+                      return (
+                        <button
+                          key={st.station}
+                          onClick={() => handleSelectTurretStation(st.station)}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: isAct ? `2px solid ${st.border}` : '1px solid rgba(255, 255, 255, 0.15)',
+                            background: isAct ? st.border : 'rgba(255, 255, 255, 0.05)',
+                            color: isAct ? '#ffffff' : 'var(--text-main)',
+                            fontWeight: 800,
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <span>ST-{st.station}</span>
+                          <span style={{ opacity: 0.8, fontSize: '0.7rem' }}>({st.code})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ACTIVE CUTTING TOOL LIVE CARD */}
                 <div style={{
                   background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92))',
                   borderRadius: '12px',
-                  border: '1.5px solid rgba(56, 189, 248, 0.3)',
+                  border: `2px solid ${activeToolData.border}`,
                   padding: '16px',
                   display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '20px',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)'
+                  flexDirection: 'column',
+                  gap: '12px',
+                  boxShadow: `0 8px 24px ${activeToolData.bg}`
                 }}>
-                  {/* LEFT: DISC DIAGRAM */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', minWidth: '220px', margin: '0 auto' }}>
-                    <div style={{ fontSize: '0.74rem', fontWeight: 900, color: '#38bdf8', letterSpacing: '0.5px' }}>
-                      PIRINGAN TURRET 8-STASIUN (DISC REVOLVER VIEW)
-                    </div>
-
-                    <div style={{ position: 'relative', width: '220px', height: '220px' }}>
-                      {/* FIXED CUTTING POINT POINTER (TOP AT 12 O'CLOCK POINTING AT SPINDLE / BENDA KERJA) */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '-12px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        background: '#ef4444',
-                        color: '#ffffff',
-                        fontSize: '0.62rem',
-                        fontWeight: 900,
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.7)',
-                        whiteSpace: 'nowrap',
-                        zIndex: 10
-                      }}>
-                        [POSISI POTONG AKTIF]
-                      </div>
-
-                      {/* ROTATING SVG TURRET DISC */}
-                      <svg
-                        width="220"
-                        height="220"
-                        viewBox="0 0 220 220"
-                        style={{
-                          transform: `rotate(${-(activeTurretStation - 1) * 45}deg)`,
-                          transition: 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                        }}
-                      >
-                        {/* OUTER TURRET STEEL RING */}
-                        <circle cx="110" cy="110" r="102" fill="#1e293b" stroke="#334155" strokeWidth="3" />
-                        <circle cx="110" cy="110" r="90" fill="#0f172a" stroke="#475569" strokeWidth="1.5" />
-
-                        {/* 8 RADIAL POCKET SLOTS */}
-                        {DEFAULT_TURRET_STATIONS.map((st, idx) => {
-                          const angle = idx * 45;
-                          const isAct = activeTurretStation === st.station;
-                          const rad = (angle - 90) * (Math.PI / 180);
-                          const x = 110 + 64 * Math.cos(rad);
-                          const y = 110 + 64 * Math.sin(rad);
-                          const px = 110 + 90 * Math.cos(rad);
-                          const py = 110 + 90 * Math.sin(rad);
-
-                          return (
-                            <g
-                              key={st.station}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectTurretStation(st.station);
-                              }}
-                              style={{ cursor: 'pointer' }}
-                            >
-                              {/* Radial tool block */}
-                              <line
-                                x1={x}
-                                y1={y}
-                                x2={px}
-                                y2={py}
-                                stroke={isAct ? st.border : '#475569'}
-                                strokeWidth={isAct ? '6' : '3'}
-                              />
-                              {/* Pocket node circle */}
-                              <circle
-                                cx={x}
-                                cy={y}
-                                r={isAct ? '15' : '13'}
-                                fill={isAct ? st.border : '#1e293b'}
-                                stroke={isAct ? '#ffffff' : '#475569'}
-                                strokeWidth={isAct ? '2.5' : '1.5'}
-                              />
-                              <text
-                                x={x}
-                                y={y + 3.5}
-                                textAnchor="middle"
-                                fill={isAct ? '#ffffff' : '#cbd5e1'}
-                                fontSize={isAct ? '9.5' : '8.5'}
-                                fontWeight="900"
-                                fontFamily="monospace"
-                              >
-                                {st.station}
-                              </text>
-                            </g>
-                          );
-                        })}
-
-                        {/* CENTER SERVO AXIS HUB */}
-                        <circle cx="110" cy="110" r="32" fill="#1e293b" stroke="#0284c7" strokeWidth="2.5" />
-                        <circle cx="110" cy="110" r="16" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.5" />
-                        <circle cx="110" cy="110" r="4" fill="#38bdf8" />
-                        {/* 4 Indexer bolt holes */}
-                        <circle cx="95" cy="110" r="2.5" fill="#475569" />
-                        <circle cx="125" cy="110" r="2.5" fill="#475569" />
-                        <circle cx="110" cy="95" r="2.5" fill="#475569" />
-                        <circle cx="110" cy="125" r="2.5" fill="#475569" />
-                      </svg>
-                    </div>
-
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      Piringan berputar servo 45&deg;/step &bull; Klik stasiun untuk rotasi
-                    </div>
-                  </div>
-
-                  {/* RIGHT: ACTIVE CUTTING TOOL LIVE CARD */}
-                  <div style={{
-                    flex: '1 1 340px',
-                    background: 'rgba(15, 23, 42, 0.8)',
-                    borderRadius: '10px',
-                    border: `2px solid ${activeToolData.border}`,
-                    padding: '14px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px',
-                    boxShadow: `0 0 20px ${activeToolData.bg}`
-                  }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{
@@ -1673,7 +1595,6 @@ const CNCLatheModule = ({ addXP }) => {
                       </button>
                     </div>
                   </div>
-                </div>
 
                 {/* 8-STATION TURRET CAROUSEL PODS WITH REAL TOOL SHAPE PHOTOS */}
                 <div style={{

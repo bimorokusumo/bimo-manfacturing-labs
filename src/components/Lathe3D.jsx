@@ -16,6 +16,7 @@ const Lathe2D = ({
   rawLength = 100,
   toolType = 'rata', // 'rata', 'alur', 'facing'
   toolOrientation = 'front', // 'front' (posisi di depan menghadap operator)
+  activeTurretStation = 1,
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
@@ -55,6 +56,17 @@ const Lathe2D = ({
   // Exact Tool Tip Position in 2D
   const toolTipX = 600 + (toolZ / rawLength) * workpieceWidthPx;
   const toolTipY = 200 + (toolD / 2) * (175 / 50);
+
+  const effectiveToolType = (
+    activeTurretStation === 1 ? 'rata' :
+    activeTurretStation === 2 ? 'finishing' :
+    activeTurretStation === 3 ? 'facing' :
+    activeTurretStation === 4 ? 'alur' :
+    activeTurretStation === 5 ? 'ulir' :
+    activeTurretStation === 6 ? 'ratakiri' :
+    activeTurretStation === 7 ? 'centerdrill' :
+    activeTurretStation === 8 ? 'udrill' : (toolType || 'rata')
+  );
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden', background: '#f8fafc' }}>
@@ -366,7 +378,7 @@ const Lathe2D = ({
               </text>
 
               {/* 1. PAHAT RATA KANAN (T01 - WNMG 80 deg) */}
-              {(toolType === 'rata' || !toolType) && (
+              {(effectiveToolType === 'rata' || !effectiveToolType) && (
                 <g>
                   <polygon
                     points="0,0 3,18 21,24 18,6"
@@ -382,7 +394,7 @@ const Lathe2D = ({
               )}
 
               {/* 2. PAHAT FINISHING KANAN (T02 - TNMG 60 deg) */}
-              {toolType === 'finishing' && (
+              {effectiveToolType === 'finishing' && (
                 <g>
                   <polygon
                     points="0,0 4,22 22,18 16,4"
@@ -397,7 +409,7 @@ const Lathe2D = ({
               )}
 
               {/* 3. PAHAT FACING (T03 - 93 deg) */}
-              {toolType === 'facing' && (
+              {effectiveToolType === 'facing' && (
                 <g>
                   <polygon
                     points="0,0 2,22 18,26 16,8"
@@ -412,7 +424,7 @@ const Lathe2D = ({
               )}
 
               {/* 4. PAHAT ALUR (T04 - 3mm Blade) */}
-              {toolType === 'alur' && (
+              {effectiveToolType === 'alur' && (
                 <g>
                   <polygon
                     points="0,0 6,0 5.2,30 0.8,30"
@@ -428,7 +440,7 @@ const Lathe2D = ({
               )}
 
               {/* 5. PAHAT ULIR (T05 - 16ER 60 deg) */}
-              {toolType === 'ulir' && (
+              {effectiveToolType === 'ulir' && (
                 <g>
                   <polygon
                     points="0,0 -12,21 12,21"
@@ -444,7 +456,7 @@ const Lathe2D = ({
               )}
 
               {/* 6. PAHAT RATA KIRI (T06 - Left Hand Rhombic) */}
-              {toolType === 'ratakiri' && (
+              {effectiveToolType === 'ratakiri' && (
                 <g>
                   <polygon
                     points="0,0 -3,18 -21,24 -18,6"
@@ -459,7 +471,7 @@ const Lathe2D = ({
               )}
 
               {/* 7. PAHAT BOR SENTER (T07 - Center Drill DIN 333) */}
-              {toolType === 'centerdrill' && (
+              {effectiveToolType === 'centerdrill' && (
                 <g>
                   <polygon
                     points="0,0 -6,-6 -20,-6 -20,6 -6,6"
@@ -473,7 +485,7 @@ const Lathe2D = ({
               )}
 
               {/* 8. PAHAT BOR U-DRILL (T08 - Indexable Twin Insert) */}
-              {toolType === 'udrill' && (
+              {effectiveToolType === 'udrill' && (
                 <g>
                   <rect x="-24" y="-8" width="24" height="16" rx="2" fill="#475569" stroke="#94a3b8" strokeWidth="1" />
                   <rect x="-6" y="-7" width="6" height="6" fill={isCutting ? "#f59e0b" : "#38bdf8"} />
@@ -556,6 +568,7 @@ const Lathe3D = ({
   rawLength = 100,
   toolType = 'rata',
   toolOrientation = 'front',
+  activeTurretStation = 1,
   machineMode = 'rata',
   rpm = 1200,
   isCutting = false,
@@ -628,6 +641,7 @@ const Lathe3D = ({
         rawLength={rawLength}
         toolType={toolType}
         toolOrientation={toolOrientation}
+        activeTurretStation={activeTurretStation}
         machineMode={machineMode}
         rpm={rpm}
         isCutting={isCutting}
@@ -663,6 +677,7 @@ const Lathe3D = ({
               rawLength={rawLength}
               toolType={toolType}
               toolOrientation={toolOrientation}
+              activeTurretStation={activeTurretStation}
               rpm={rpm}
               isCutting={isCutting}
               coolant={coolant}

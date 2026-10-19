@@ -220,7 +220,7 @@ M30`
 
 const CNCModule = ({ addXP }) => {
   const [isPrepared, setIsPrepared] = useState(true);
-  const [activeTab, setActiveTab] = useState('4'); // 1: Setup, 2: Tooling/ATC, 3: Coolant, 4: Program, 5: Proses, 6: Hasil
+  const [activeTab, setActiveTab] = useState('3'); // 1: Setup, 2: Spindel & Coolant, 3: Program G-Code, 4: Proses Simulasi, 5: Hasil Pemesinan
   const [workpieceSize, setWorkpieceSize] = useState({ x: 50, y: 50, z: 20 });
   const [toolDiameter, setToolDiameter] = useState(10);
 
@@ -513,11 +513,10 @@ const CNCModule = ({ addXP }) => {
 
   const sidebarMenus = [
     { id: '1', title: '1. SETUP', desc: `${workpieceSize.x}x${workpieceSize.y}x${workpieceSize.z} mm` },
-    { id: '2', title: '2. ATC MAGAZINE', desc: `T0${activeAtcPocket}: Ø${toolDiameter}mm` },
-    { id: '3', title: '3. SPINDEL & COOLANT', desc: `${spindleRpm} RPM • M08` },
-    { id: '4', title: '4. PROGRAM G-CODE', desc: activeToolData.id },
-    { id: '5', title: '5. PROSES SIMULASI', desc: isMachining ? (isPaused ? 'FEED HOLD' : 'RUNNING...') : 'Siap Mulai' },
-    { id: '6', title: '6. HASIL PEMESINAN', desc: showResult ? 'Score 100%' : 'Menunggu' }
+    { id: '2', title: '2. SPINDEL & COOLANT', desc: `${spindleRpm} RPM • M08` },
+    { id: '3', title: '3. PROGRAM G-CODE', desc: activeToolData.id },
+    { id: '4', title: '4. PROSES SIMULASI', desc: isMachining ? (isPaused ? 'FEED HOLD' : 'RUNNING...') : 'Siap Mulai' },
+    { id: '5', title: '5. HASIL PEMESINAN', desc: showResult ? 'Score 100%' : 'Menunggu' }
   ];
 
   return (
@@ -728,29 +727,7 @@ const CNCModule = ({ addXP }) => {
                 );
               })}
 
-              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '4px', marginTop: '2px' }}>
-                <button
-                  onClick={() => {
-                    sound.playClick();
-                    setActiveTab('2');
-                    setIsToolDropdownOpen(false);
-                  }}
-                  style={{
-                    width: '100%',
-                    padding: '6px 10px',
-                    borderRadius: '6px',
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    border: '1px solid rgba(16, 185, 129, 0.25)',
-                    color: '#10b981',
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    textAlign: 'center'
-                  }}
-                >
-                  <Wrench size={11} className="inline mr-1" /> Buka Tab ATC Magazine &amp; Tabel Offset
-                </button>
-              </div>
+
             </div>
           )}
         </div>
@@ -885,266 +862,8 @@ const CNCModule = ({ addXP }) => {
               </div>
             )}
 
-            {/* TAB 2: 6-STATION ATC TOOL MAGAZINE & TOOL OFFSET TABLE */}
+            {/* TAB 2: SPINDEL & COOLANT */}
             {activeTab === '2' && (
-              <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {/* ATC HEADER & INDEX CONTROLS */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderBottom: '1px solid var(--border-light)',
-                  paddingBottom: '12px',
-                  flexWrap: 'wrap',
-                  gap: '10px'
-                }}>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Wrench size={16} className="inline mr-1 text-emerald-400" />
-                      <span>AUTOMATIC TOOL CHANGER (ATC) 6-STATION CAROUSEL</span>
-                    </h3>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      Piringan Magazine Pemegang Tool Otomatis Standar BT40 Fanuc Series 0i-MD.
-                    </div>
-                  </div>
-
-                  {/* ATC INDEXING BUTTONS */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <button
-                      onClick={() => handleAtcIndex(-1)}
-                      style={{
-                        padding: '6px 12px',
-                        background: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid #10b981',
-                        color: '#10b981',
-                        borderRadius: '6px',
-                        fontWeight: 800,
-                        fontSize: '0.78rem',
-                        cursor: 'pointer'
-                      }}
-                      title="Putar ATC Berlawanan Jarum Jam"
-                    >
-                      [ATC CCW (T-)]
-                    </button>
-
-                    <div style={{
-                      background: 'rgba(244, 194, 27, 0.15)',
-                      border: '1.5px solid #f4c21b',
-                      color: '#f4c21b',
-                      padding: '5px 12px',
-                      borderRadius: '6px',
-                      fontFamily: 'monospace',
-                      fontWeight: 900,
-                      fontSize: '0.85rem'
-                    }}>
-                      SPINDEL: {activeToolData.id} (Ø{toolDiameter}mm)
-                    </div>
-
-                    <button
-                      onClick={() => handleAtcIndex(1)}
-                      style={{
-                        padding: '6px 12px',
-                        background: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid #10b981',
-                        color: '#10b981',
-                        borderRadius: '6px',
-                        fontWeight: 800,
-                        fontSize: '0.78rem',
-                        cursor: 'pointer'
-                      }}
-                      title="Putar ATC Searah Jarum Jam"
-                    >
-                      [ATC CW (T+)]
-                    </button>
-                  </div>
-                </div>
-
-                {/* 6-STATION ATC CAROUSEL PODS */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '12px' }}>
-                  {DEFAULT_ATC_POCKETS.map(pocket => {
-                    const isMounted = activeAtcPocket === pocket.pocket;
-                    return (
-                      <div
-                        key={pocket.pocket}
-                        onClick={() => handleSelectAtcPocket(pocket.pocket)}
-                        style={{
-                          background: isMounted ? pocket.bg : 'var(--bg-game)',
-                          border: isMounted ? `2px solid ${pocket.border}` : '1px solid var(--border-light)',
-                          borderRadius: '10px',
-                          padding: '12px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '8px',
-                          transition: 'all 0.18s ease',
-                          boxShadow: isMounted ? `0 0 16px ${pocket.bg}` : 'none'
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{
-                              background: isMounted ? pocket.border : 'rgba(255,255,255,0.08)',
-                              color: '#ffffff',
-                              fontWeight: 900,
-                              fontSize: '0.7rem',
-                              padding: '2px 6px',
-                              borderRadius: '4px'
-                            }}>
-                              POCKET {pocket.pocket}
-                            </span>
-                            <span style={{ fontWeight: 800, color: pocket.color, fontSize: '0.85rem' }}>
-                              {pocket.id}
-                            </span>
-                          </div>
-
-                          {isMounted ? (
-                            <span style={{
-                              background: '#10b981',
-                              color: '#000000',
-                              fontWeight: 900,
-                              fontSize: '0.65rem',
-                              padding: '2px 6px',
-                              borderRadius: '4px'
-                            }}>
-                              [IN SPINDLE]
-                            </span>
-                          ) : (
-                            <span style={{ color: 'var(--text-subtle)', fontSize: '0.68rem', fontWeight: 700 }}>
-                              ATC CAROUSEL
-                            </span>
-                          )}
-                        </div>
-
-                        <div>
-                          <div style={{ fontWeight: 800, color: 'var(--text-main)', fontSize: '0.85rem' }}>
-                            {pocket.name}
-                          </div>
-                          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                            Holder: {pocket.holder}
-                          </div>
-                        </div>
-
-                        <div style={{
-                          background: 'rgba(0,0,0,0.25)',
-                          borderRadius: '6px',
-                          padding: '6px 8px',
-                          fontSize: '0.7rem',
-                          border: '1px solid rgba(255,255,255,0.05)',
-                          display: 'flex',
-                          justifyContent: 'space-between'
-                        }}>
-                          <span><strong>Ø D:</strong> {pocket.diameter}mm</span>
-                          <span><strong>H-Offset:</strong> {pocket.hOffset.toFixed(2)}</span>
-                          <span><strong>Flutes:</strong> {pocket.flutes}F</span>
-                        </div>
-
-                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                          {pocket.desc}
-                        </div>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectAtcPocket(pocket.pocket);
-                            setActiveTab('4');
-                          }}
-                          style={{
-                            marginTop: 'auto',
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            background: isMounted ? pocket.border : 'rgba(255,255,255,0.08)',
-                            color: '#ffffff',
-                            border: 'none',
-                            fontSize: '0.72rem',
-                            fontWeight: 800,
-                            cursor: 'pointer'
-                          }}
-                        >
-                          {isMounted ? '[TERPASANG] Lihat Editor Program' : 'Pasang Tool ke Spindel (M06)'}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* FANUC SERIES 0i-MD TOOL OFFSET TABLE */}
-                <div style={{
-                  background: 'var(--bg-game)',
-                  borderRadius: '10px',
-                  border: '1px solid var(--border-light)',
-                  padding: '14px',
-                  marginTop: '8px'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-                      TABEL TOOL OFFSET LENGTH (H) &amp; GEOMETRY (D) - FANUC SERIES 0i-MD
-                    </div>
-                    <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700 }}>
-                      DATUM SISTEM KOORDINAT: G54
-                    </span>
-                  </div>
-
-                  <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem', fontFamily: 'monospace' }}>
-                      <thead>
-                        <tr style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-light)' }}>
-                          <th style={{ padding: '6px 8px' }}>POCKET</th>
-                          <th style={{ padding: '6px 8px' }}>TOOL ID</th>
-                          <th style={{ padding: '6px 8px' }}>NAMA TOOL</th>
-                          <th style={{ padding: '6px 8px' }}>DIAMETER (mm)</th>
-                          <th style={{ padding: '6px 8px' }}>LENGTH H (mm)</th>
-                          <th style={{ padding: '6px 8px' }}>RADIUS D (mm)</th>
-                          <th style={{ padding: '6px 8px' }}>WEAR H</th>
-                          <th style={{ padding: '6px 8px' }}>WEAR D</th>
-                          <th style={{ padding: '6px 8px' }}>HOLDER</th>
-                          <th style={{ padding: '6px 8px' }}>STATUS</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {DEFAULT_ATC_POCKETS.map(pocket => {
-                          const isCur = activeAtcPocket === pocket.pocket;
-                          return (
-                            <tr
-                              key={pocket.pocket}
-                              style={{
-                                borderBottom: '1px solid rgba(255,255,255,0.04)',
-                                background: isCur ? 'rgba(16, 185, 129, 0.08)' : 'transparent',
-                                color: isCur ? '#10b981' : 'var(--text-main)'
-                              }}
-                            >
-                              <td style={{ padding: '6px 8px', fontWeight: 900 }}>{pocket.pocket}</td>
-                              <td style={{ padding: '6px 8px', fontWeight: 800 }}>{pocket.id}</td>
-                              <td style={{ padding: '6px 8px', color: isCur ? '#ffffff' : 'var(--text-muted)' }}>{pocket.name}</td>
-                              <td style={{ padding: '6px 8px', color: '#38bdf8' }}>Ø{pocket.diameter}</td>
-                              <td style={{ padding: '6px 8px', color: '#10b981' }}>{pocket.hOffset.toFixed(2)}</td>
-                              <td style={{ padding: '6px 8px', color: '#10b981' }}>{pocket.dOffset.toFixed(2)}</td>
-                              <td style={{ padding: '6px 8px', color: '#fbbf24' }}>0.000</td>
-                              <td style={{ padding: '6px 8px', color: '#fbbf24' }}>0.000</td>
-                              <td style={{ padding: '6px 8px' }}>{pocket.holder}</td>
-                              <td style={{ padding: '6px 8px' }}>
-                                <span style={{
-                                  padding: '2px 6px',
-                                  borderRadius: '3px',
-                                  fontSize: '0.65rem',
-                                  fontWeight: 900,
-                                  background: isCur ? '#10b981' : 'rgba(255,255,255,0.06)',
-                                  color: isCur ? '#000000' : '#ffffff'
-                                }}>
-                                  {isCur ? 'SPINDLE' : 'STANDBY'}
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: SPINDEL & COOLANT */}
-            {activeTab === '3' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1200,8 +919,8 @@ const CNCModule = ({ addXP }) => {
               </div>
             )}
 
-            {/* TAB 4: G-CODE EDITOR (DEFAULT) */}
-            {activeTab === '4' && (
+            {/* TAB 3: G-CODE EDITOR (DEFAULT) */}
+            {activeTab === '3' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1327,7 +1046,7 @@ const CNCModule = ({ addXP }) => {
             )}
 
             {/* TAB 5: PROSES DRO READOUT */}
-            {activeTab === '5' && (
+            {activeTab === '4' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '10px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1369,7 +1088,7 @@ const CNCModule = ({ addXP }) => {
             )}
 
             {/* TAB 6: HASIL & EVALUASI */}
-            {activeTab === '6' && (
+            {activeTab === '5' && (
               <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-light)', paddingBottom: '8px' }}>
                   <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '8px' }}>

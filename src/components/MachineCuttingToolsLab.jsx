@@ -3499,14 +3499,15 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
         boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
       }}>
         {[
-          { id: 'milling', label: '1. Pisau Frais / Milling (8 Jenis Real)',  color: '#0284c7' },
-          { id: 'pahat', label: '2. Pahat Bubut (HSS & Karbida)',  color: '#2563eb' },
-          { id: 'insert', label: '3. Insert Karbida & Sudut Geometri',  color: '#ea580c' },
-          { id: 'hole-thread', label: '4. Mata Bor, Tap & Snei',  color: '#16a34a' },
-          { id: 'kalkulator', label: '5. Kalkulator Kecepatan Potong',  color: '#7c3aed' },
-          { id: 'quiz', label: '6. Kuis Asesmen (1000 XP)',  color: '#dc2626' }
+          { id: 'milling', label: '1. Pisau Frais / Milling (8 Jenis Real)', color: '#0284c7', icon: Layers },
+          { id: 'pahat', label: '2. Pahat Bubut (HSS & Karbida)', color: '#2563eb', icon: Wrench },
+          { id: 'insert', label: '3. Insert Karbida & Sudut Geometri', color: '#ea580c', icon: Compass },
+          { id: 'hole-thread', label: '4. Mata Bor, Tap & Snei', color: '#16a34a', icon: Cog },
+          { id: 'kalkulator', label: '5. Kalkulator Kecepatan Potong', color: '#7c3aed', icon: Calculator },
+          { id: 'quiz', label: '6. Kuis Asesmen (1000 XP)', color: '#dc2626', icon: Target }
         ].map(t => {
           const isSelected = activeTab === t.id;
+          const TabIcon = t.icon;
           return (
             <button
               key={t.id}
@@ -3527,7 +3528,7 @@ const MachineCuttingToolsLab = ({ addXP = () => {}, onNavigateToLathe, onNavigat
                 transition: 'all 0.15s'
               }}
             >
-              {renderTabIcon(t.id)}
+              <TabIcon size={16} />
               <span>{t.label}</span>
             </button>
           );

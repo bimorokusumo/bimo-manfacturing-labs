@@ -789,8 +789,8 @@ const CNCModule = ({ addXP }) => {
         <div style={{ flex: 1, background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-light)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           
           {/* 3D CANVAS PORTION */}
-          <div style={{ height: '350px', background: '#000', position: 'relative' }}>
-            <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: 'var(--game-success)' }}>MEMUAT ENGINE 3D CNC FRAIS...</div>}>
+          <div style={{ height: '350px', background: '#f8fafc', position: 'relative' }}>
+            <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: '#059669', fontWeight: 700 }}>MEMUAT ENGINE 3D CNC FRAIS...</div>}>
               <CNC3D
                 isRunning={isMachining}
                 toolPosRef={toolPosRef}

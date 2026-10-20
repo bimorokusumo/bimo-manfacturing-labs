@@ -1196,8 +1196,8 @@ const CNCLatheModule = ({ addXP }) => {
         <div style={{ flex: 1, position: 'relative', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-light)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           
           {/* 3D / 2D CANVAS PORTION */}
-          <div style={{ flex: '0 0 350px', width: '100%', background: '#000', position: 'relative', transition: 'all 0.3s' }}>
-            <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: '#60a5fa' }}>MEMUAT ENGINE BUBUT CNC...</div>}>
+          <div style={{ flex: '0 0 350px', width: '100%', background: '#f8fafc', position: 'relative', transition: 'all 0.3s' }}>
+            <Suspense fallback={<div className="flex-center" style={{ height: '100%', color: '#0284c7', fontWeight: 700 }}>MEMUAT ENGINE BUBUT CNC...</div>}>
               <Lathe3D
                 isRunning={isMachining}
                 activeComponent={null}

@@ -444,7 +444,7 @@ const CoolantParticles = ({ isRunning }) => {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial size={0.05} color="#e0f2fe" transparent opacity={0.6} />
+      <pointsMaterial size={0.05} color="#0284c7" transparent opacity={0.7} />
     </points>
   );
 };
@@ -473,18 +473,18 @@ const CNC3D = ({
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#020617',
-            color: '#f8fafc',
+            background: '#f8fafc',
+            color: '#0f172a',
             padding: '24px',
             textAlign: 'center',
             borderRadius: '12px',
             border: '1px solid rgba(16, 185, 129, 0.4)'
           }}>
-            <div className="flex justify-center" style={{ marginBottom: '12px' }}><Box size={48} className="text-sky-400" /></div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', marginBottom: '8px' }}>
+            <div className="flex justify-center" style={{ marginBottom: '12px' }}><Box size={48} className="text-sky-500" /></div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
               Simulator 3D Mesin CNC
             </div>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', maxWidth: '420px', lineHeight: 1.6, marginBottom: '20px' }}>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', maxWidth: '420px', lineHeight: 1.6, marginBottom: '20px' }}>
               Grafis 3D WebGL membutuhkan alokasi memori grafis. Eksekusi kode G-Code dan editor program tetap berfungsi normal di panel samping.
             </p>
             <button
@@ -506,12 +506,12 @@ const CNC3D = ({
         )}
       >
         <Canvas shadows camera={{ position: [0, 2, 6], fov: 50 }}>
-          <color attach="background" args={['#020617']} />
+          <color attach="background" args={['#f8fafc']} />
           
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, 10, 5]} intensity={1.5} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
-          <spotLight position={[0, 5, 0]} intensity={2} angle={0.5} penumbra={1} color="#38bdf8" />
-          <pointLight position={[-5, 5, -5]} intensity={0.5} />
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[5, 10, 5]} intensity={1.8} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
+          <spotLight position={[0, 5, 0]} intensity={2.5} angle={0.6} penumbra={1} color="#38bdf8" />
+          <pointLight position={[-5, 5, -5]} intensity={0.6} />
 
           <CNCMachine 
             isRunning={isRunning} 
@@ -523,21 +523,33 @@ const CNC3D = ({
           />
           <CoolantParticles isRunning={coolant || isRunning} />
 
-          <ContactShadows position={[0, -0.5, 0]} opacity={0.8} scale={20} blur={2} far={4} />
+          <ContactShadows position={[0, -1.01, 0]} opacity={0.5} scale={16} blur={2} far={4} />
           <OrbitControls enableZoom={true} enablePan={false} autoRotate={!isRunning} autoRotateSpeed={0.5} maxPolarAngle={Math.PI / 2} />
         </Canvas>
       </CanvasErrorBoundary>
       
       {/* HUD OVERLAY */}
-      <div style={{ position: 'absolute', bottom: '16px', right: '16px', pointerEvents: 'none', textAlign: 'right' }}>
-        <div className="cyber-font" style={{ color: isRunning ? '#10b981' : '#64748b', fontSize: '0.8rem', textShadow: isRunning ? '0 0 5px #10b981' : 'none' }}>
+      <div style={{
+        position: 'absolute',
+        bottom: '16px',
+        right: '16px',
+        pointerEvents: 'none',
+        textAlign: 'right',
+        background: 'rgba(255, 255, 255, 0.9)',
+        padding: '6px 12px',
+        borderRadius: '8px',
+        border: '1px solid rgba(148, 163, 184, 0.35)',
+        backdropFilter: 'blur(4px)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
+      }}>
+        <div className="cyber-font" style={{ color: isRunning ? '#059669' : '#334155', fontSize: '0.8rem', fontWeight: 800 }}>
           {isRunning ? 'RUNNING PROGRAM' : 'SYSTEM READY'}
         </div>
-        <div style={{ color: '#94a3b8', fontSize: '0.65rem' }}>COOLANT: {isRunning ? 'ON' : 'OFF'}</div>
+        <div style={{ color: '#64748b', fontSize: '0.68rem', fontWeight: 700 }}>COOLANT: {isRunning ? 'ON' : 'OFF'}</div>
       </div>
       
       {/* DIGITAL GRID OVERLAY */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px)', backgroundSize: '30px 30px', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(148, 163, 184, 0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.18) 1px, transparent 1px)', backgroundSize: '30px 30px', pointerEvents: 'none' }} />
     </div>
   );
 };

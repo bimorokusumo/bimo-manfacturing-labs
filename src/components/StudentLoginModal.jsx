@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useStudent } from '../context/StudentContext';
+import { useStudent, isTeacherUser } from '../context/StudentContext';
 import { sound } from '../utils/audio';
 import { MASTER_STUDENTS_LIST } from '../data/studentsData';
 import {
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 const CLASS_OPTIONS = [
+  'Pengajar (Guru)',
   'X TPM 1',
   'X TPM 2',
   'X TPM 3',
@@ -244,7 +245,7 @@ const StudentLoginModal = () => {
           </div>
 
           <p style={{ margin: 0, fontSize: '0.86rem', color: '#cbd5e1', lineHeight: 1.5, marginTop: '6px' }}>
-            Silakan masukkan nama lengkap dan nomor absen Anda. Hasil evaluasi & kuis akan terintegrasi langsung ke <strong>Spreadsheet Rekap Guru</strong>.
+            Silakan masukkan nama lengkap dan nomor absen Anda (untuk Pengajar: <strong>Bimoro Kusumo absen 1</strong> atau <strong>Sri Widada absen 2</strong>). Hasil kuis terintegrasi ke <strong>Spreadsheet Rekap Guru</strong>.
           </p>
         </div>
 
@@ -269,39 +270,6 @@ const StudentLoginModal = () => {
               <span>{errorMsg}</span>
             </div>
           )}
-
-          {/* TOMBOL MASUK CEPAT SEBAGAI PENGAJAR */}
-          <button
-            type="button"
-            onClick={() => {
-              sound.playSuccess();
-              login({
-                name: 'Bimoro Kusumo',
-                studentNumber: '1',
-                className: 'Pengajar (Guru)',
-                school: 'SMKN 2 DEPOK'
-              });
-            }}
-            style={{
-              padding: '11px 16px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-              border: '1.5px solid #93c5fd',
-              color: '#1d4ed8',
-              fontWeight: 800,
-              fontSize: '0.86rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 2px 8px rgba(29, 78, 216, 0.1)',
-              transition: 'all 0.15s'
-            }}
-          >
-            <GraduationCap size={16} />
-            <span>Masuk Cepat sebagai Pengajar (Pak Bimoro Kusumo)</span>
-          </button>
 
           {/* PILIH CEPAT DARI DAFTAR SISWA RESMI KELAS X-TP.A */}
           <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '12px', border: '1.5px dashed #cbd5e1' }}>
@@ -340,13 +308,13 @@ const StudentLoginModal = () => {
           {/* INPUT NAMA LENGKAP */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-              Nama Lengkap Siswa <span style={{ color: '#ef4444' }}>*</span>
+              Nama Lengkap (Siswa / Guru) <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <input
               type="text"
               list="roster-students"
               required
-              placeholder="Masukkan atau pilih nama lengkap siswa..."
+              placeholder="Masukkan nama lengkap siswa atau guru..."
               value={formData.name}
               onChange={(e) => handleNameInputChange(e.target.value)}
               style={{
@@ -385,7 +353,7 @@ const StudentLoginModal = () => {
                 min="1"
                 max="99"
                 required
-                placeholder="1 - 50"
+                placeholder="1 - 99 (Guru: Absen 1 atau 2)"
                 value={formData.studentNumber}
                 onChange={(e) => setFormData({ ...formData, studentNumber: e.target.value })}
                 style={{
@@ -483,7 +451,7 @@ const StudentLoginModal = () => {
           </div>
 
           {/* INFO BADGE */}
-          {formData.name.toLowerCase().replace(/\s+/g, ' ').trim() === 'bimoro kusumo' && (formData.studentNumber.trim() === '1' || formData.studentNumber.trim() === '01') ? (
+          {isTeacherUser(formData) ? (
             <div
               style={{
                 background: '#fffbeb',

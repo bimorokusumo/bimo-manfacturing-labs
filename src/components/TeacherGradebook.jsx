@@ -15,6 +15,7 @@ import {
   detectLabAndSubQuiz
 } from '../services/sheetService';
 import { sound } from '../utils/audio';
+import { useStudent, isTeacherUser } from '../context/StudentContext';
 import { MASTER_STUDENTS_LIST as ROSTER_STUDENTS } from '../data/studentsData';
 import {
   FileSpreadsheet,
@@ -410,8 +411,11 @@ function buildStudentMapFromRows(allRows) {
     // Cari kecocokan di master 36 siswa:
     var targetKey = null;
 
-    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36
-    if (!isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
+    // Cek apakah akun pengajar (Bimoro Kusumo atau Sri Widada) agar tidak menimpa nilai siswa
+    var isTeacherSubmission = rawNama.toLowerCase().indexOf("bimoro") !== -1 || rawNama.toLowerCase().indexOf("sri widada") !== -1;
+
+    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36 (bukan akun guru)
+    if (!isTeacherSubmission && !isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
       targetKey = "absen_" + parsedAbsenNum;
     } else {
       // Prioritas 2: Cocokkan nama (case-insensitive & pembersihan karakter khusus)
@@ -425,7 +429,7 @@ function buildStudentMapFromRows(allRows) {
       }
     }
 
-    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo atau siswa tamu)
+    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo / Sri Widada atau siswa tamu)
     if (!targetKey) {
       targetKey = "custom_" + rawNama.toLowerCase();
       if (!studentsMap[targetKey]) {
@@ -1543,6 +1547,10 @@ const SUB_QUIZ_CONFIG = {
 };
 
 const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
+  const { student } = useStudent();
+  const teacherDisplayName = (student && student.name && isTeacherUser(student))
+    ? student.name
+    : 'Bimoro Kusumo, S.Pd. / Sri Widada, S.Pd.';
   const [scores, setScores] = useState([]);
   const [webhookUrl, setWebhookUrl] = useState('');
   const [searchQuery, setSearchQuery] = useState(initialSearch || '');
@@ -1785,10 +1793,13 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
       // Cari kecocokan siswa di daftar master (berdasarkan nama atau absen)
       let targetKey = rawNama.toLowerCase();
       if (!studentsMap[targetKey]) {
-        const parsedAbsen = parseInt(item.nomorAbsen, 10);
-        if (!isNaN(parsedAbsen)) {
-          const foundKey = Object.keys(studentsMap).find(k => studentsMap[k].nomorAbsen === String(parsedAbsen));
-          if (foundKey) targetKey = foundKey;
+        const isTeacherSubmission = isTeacherUser({ name: rawNama, studentNumber: item.nomorAbsen });
+        if (!isTeacherSubmission) {
+          const parsedAbsen = parseInt(item.nomorAbsen, 10);
+          if (!isNaN(parsedAbsen)) {
+            const foundKey = Object.keys(studentsMap).find(k => studentsMap[k].nomorAbsen === String(parsedAbsen));
+            if (foundKey) targetKey = foundKey;
+          }
         }
       }
 
@@ -2236,7 +2247,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
               <span>Lembar Aktif: <strong>{currentLabTitle}</strong></span>
             </span>
             <span style={{ color: '#94a3b8' }}>|</span>
-            <span style={{ color: '#cbd5e1' }}>Guru Pengampu: <strong>Bimoro Kusumo, S.Pd.</strong></span>
+            <span style={{ color: '#cbd5e1' }}>Guru Pengampu: <strong>{teacherDisplayName}</strong></span>
             <span style={{ color: '#94a3b8' }}>|</span>
             <span style={{ color: '#cbd5e1' }}>Kelas: <strong>X TPM 1 (Teknik Permesinan)</strong></span>
             <span style={{ color: '#94a3b8' }}>|</span>

@@ -678,7 +678,7 @@ export const exportScoresToExcelHTML = (scores = null) => {
     <body style="font-family: Arial, sans-serif; padding: 20px;">
       <h2 style="color: #064e3b; margin-bottom: 4px;">LEMBAR REKAPITULASI NILAI SISWA (DIKLASIFIKASIKAN PER KUIS)</h2>
       <p style="font-size: 10pt; color: #475569; margin-top: 0;">
-        Instansi: SMKN 2 Depok | Guru Pengampu: Bimoro Kusumo, S.Pd. | Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')} | Total Kuis: ${sortedQuizNames.length} Kuis
+        Instansi: SMKN 2 Depok | Guru Pengampu: Bimoro Kusumo, S.Pd. / Sri Widada, S.Pd. | Tanggal Ekspor: ${new Date().toLocaleDateString('id-ID')} | Total Kuis: ${sortedQuizNames.length} Kuis
       </p>
       <table border="1" style="border-collapse: collapse; font-family: Arial, sans-serif; width: 100%;">
         <thead>

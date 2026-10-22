@@ -7,25 +7,29 @@ const STORAGE_KEY = 'bimo_student_session';
 
 /**
  * Validasi Hak Akses Guru:
- * Khusus untuk Bimoro Kusumo No. Absen 1
+ * - Bimoro Kusumo (No. Absen 1)
+ * - Sri Widada (No. Absen 2)
  */
 export const isTeacherUser = (user) => {
   if (!user) return false;
   const name = (user.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
   const studentNum = (user.studentNumber || '').toString().toLowerCase().trim();
 
-  const isNameMatch = 
+  // Pengajar 1: Bimoro Kusumo (No. Absen 1)
+  const isBimoroName = 
     name === 'bimoro kusumo' || 
     name === 'pak bimoro kusumo' ||
     name === 'pak bimoro' || 
     name === 'pak bimo' || 
+    name === 'bpk bimoro kusumo' ||
+    name === 'bapak bimoro kusumo' ||
     name === 'bimoro kusumo, s.pd.' || 
-    name === 'bimoro kusumo spd' ||
-    name === 'bimoro' ||
+    name === 'bimoro kusumo spd' || 
+    name === 'bimoro kusumo s.pd' ||
+    name === 'bimoro' || 
     name.startsWith('bimoro');
 
-  // Pengajar valid jika nama cocok (nomor absen boleh 1, 01, "-", "guru", "pengajar", atau kosong)
-  const isNumberMatch = 
+  const isBimoroNum = 
     !studentNum || 
     studentNum === '1' || 
     studentNum === '01' || 
@@ -34,7 +38,41 @@ export const isTeacherUser = (user) => {
     studentNum === 'guru' || 
     studentNum === 'pengajar';
 
-  return isNameMatch && isNumberMatch;
+  // Pengajar 2: Sri Widada (No. Absen 2)
+  const isSriWidadaName =
+    name === 'sri widada' ||
+    name === 'pak sri widada' ||
+    name === 'pak sri' ||
+    name === 'bpk sri widada' ||
+    name === 'bapak sri widada' ||
+    name === 'sri widada, s.pd.' ||
+    name === 'sri widada spd' ||
+    name === 'sri widada s.pd' ||
+    name === 'sri widada, m.pd.' ||
+    name === 'sri widada mpd' ||
+    name === 'sri widada m.pd' ||
+    name === 'sri widada, s.t.' ||
+    name === 'sri widada st' ||
+    name === 'sri widada s.t' ||
+    name === 'sri widada, m.t.' ||
+    name === 'sri widada mt' ||
+    name === 'sri widada m.t' ||
+    name.startsWith('sri widada') ||
+    name.includes('sri widada');
+
+  const isSriWidadaNum =
+    !studentNum ||
+    studentNum === '2' ||
+    studentNum === '02' ||
+    studentNum === '-' ||
+    studentNum === '0' ||
+    studentNum === 'guru' ||
+    studentNum === 'pengajar';
+
+  const isBimoro = isBimoroName && isBimoroNum;
+  const isSriWidada = isSriWidadaName && isSriWidadaNum;
+
+  return Boolean(isBimoro || isSriWidada);
 };
 
 export const StudentProvider = ({ children }) => {

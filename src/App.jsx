@@ -363,7 +363,7 @@ function AppInner() {
                 Akses Terbatas: Khusus Pengajar
               </h2>
               <p style={{ fontSize: '0.92rem', color: '#64748b', lineHeight: 1.6, marginBottom: '24px' }}>
-                Fitur <strong>Rekap Nilai Spreadsheet</strong> hanya dapat diakses oleh Pengajar terverifikasi (<strong>Bimoro Kusumo - No. Absen 1</strong> atau <strong>Sri Widada - No. Absen 2</strong>).
+                Fitur <strong>Rekap Nilai Spreadsheet</strong> hanya dapat diakses oleh Pengajar terverifikasi. Silakan masuk menggunakan akun guru Anda.
               </p>
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button

@@ -245,7 +245,7 @@ const StudentLoginModal = () => {
           </div>
 
           <p style={{ margin: 0, fontSize: '0.86rem', color: '#cbd5e1', lineHeight: 1.5, marginTop: '6px' }}>
-            Silakan masukkan nama lengkap dan nomor absen Anda (untuk Pengajar: <strong>Bimoro Kusumo absen 1</strong> atau <strong>Sri Widada absen 2</strong>). Hasil kuis terintegrasi ke <strong>Spreadsheet Rekap Guru</strong>.
+            Silakan masukkan nama lengkap dan nomor absen Anda. Hasil evaluasi & kuis akan terintegrasi langsung ke <strong>Spreadsheet Rekap Guru</strong>.
           </p>
         </div>
 
@@ -308,13 +308,13 @@ const StudentLoginModal = () => {
           {/* INPUT NAMA LENGKAP */}
           <div>
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-              Nama Lengkap (Siswa / Guru) <span style={{ color: '#ef4444' }}>*</span>
+              Nama Lengkap <span style={{ color: '#ef4444' }}>*</span>
             </label>
             <input
               type="text"
               list="roster-students"
               required
-              placeholder="Masukkan nama lengkap siswa atau guru..."
+              placeholder="Masukkan atau pilih nama lengkap..."
               value={formData.name}
               onChange={(e) => handleNameInputChange(e.target.value)}
               style={{
@@ -353,7 +353,7 @@ const StudentLoginModal = () => {
                 min="1"
                 max="99"
                 required
-                placeholder="1 - 99 (Guru: Absen 1 atau 2)"
+                placeholder="1 - 50"
                 value={formData.studentNumber}
                 onChange={(e) => setFormData({ ...formData, studentNumber: e.target.value })}
                 style={{

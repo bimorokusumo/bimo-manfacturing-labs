@@ -24,7 +24,7 @@ import {
 
 const EvaluationView = () => {
   const { student, openLoginModal, isTeacher } = useStudent();
-  const [activeLevel, setActiveLevel] = useState('c1'); // 'c1' | 'c2' | 'c3' | 'hots'
+  const [activeLevel, setActiveLevel] = useState('c1'); // 'c1' | 'c2' | 'c3' | 'c4' | 'c5'
   
   const STORAGE_KEY_EVAL_ANSWERS = 'bimo_evaluation_answers_state';
   const STORAGE_KEY_EVAL_UNLOCKED = 'bimo_evaluation_unlocked_levels';
@@ -55,7 +55,15 @@ const EvaluationView = () => {
       const saved = localStorage.getItem(STORAGE_KEY_EVAL_ANSWERS);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.c1) return parsed;
+        if (parsed && parsed.c1) {
+          return {
+            c1: parsed.c1 || { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+            c2: parsed.c2 || { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+            c3: parsed.c3 || { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+            c4: parsed.c4 || { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+            c5: parsed.c5 || parsed.hots || { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
+          };
+        }
       }
     } catch (e) {
       console.error('Gagal memuat answersByLevel dari localStorage:', e);
@@ -64,17 +72,26 @@ const EvaluationView = () => {
       c1: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
       c2: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
       c3: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
-      hots: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
+      c4: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' },
+      c5: { mcq: {}, essay: {}, isSubmitted: false, score: 0, correctCount: 0, submitTime: '' }
     };
   });
 
-  // Status level terbuka (Scaffolding bertahap C1 -> C2 -> C3 -> HOTS)
+  // Status level terbuka (Scaffolding bertahap C1 -> C2 -> C3 -> C4 -> C5)
   const [unlockedLevels, setUnlockedLevels] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_EVAL_UNLOCKED);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed.c1 === 'boolean') return parsed;
+        if (parsed && typeof parsed.c1 === 'boolean') {
+          return {
+            c1: true,
+            c2: Boolean(parsed.c2),
+            c3: Boolean(parsed.c3),
+            c4: Boolean(parsed.c4),
+            c5: Boolean(parsed.c5 || parsed.hots)
+          };
+        }
       }
     } catch (e) {
       console.error('Gagal memuat unlockedLevels dari localStorage:', e);
@@ -83,7 +100,8 @@ const EvaluationView = () => {
       c1: true,
       c2: false,
       c3: false,
-      hots: false
+      c4: false,
+      c5: false
     };
   });
 
@@ -110,7 +128,8 @@ const EvaluationView = () => {
       const updated = { ...prev, c1: true };
       if (answersByLevel.c1?.isSubmitted) updated.c2 = true;
       if (answersByLevel.c2?.isSubmitted) updated.c3 = true;
-      if (answersByLevel.c3?.isSubmitted) updated.hots = true;
+      if (answersByLevel.c3?.isSubmitted) updated.c4 = true;
+      if (answersByLevel.c4?.isSubmitted) updated.c5 = true;
       return updated;
     });
   }, [answersByLevel]);
@@ -152,15 +171,26 @@ const EvaluationView = () => {
       prerequisiteName: 'Level C2 (Memahami - Menengah)'
     },
     {
-      key: 'hots',
+      key: 'c4',
       stepNumber: 4,
-      badge: 'HOTS FASE E',
-      title: 'Analisis & Kasus (Expert)',
-      desc: '25 Pilgan + 5 Essay (Problem Solving)',
-      color: '#be185d',
-      border: '#f472b6',
+      badge: 'LEVEL C4',
+      title: 'Menganalisis (Analitis)',
+      desc: '25 Pilgan + 5 Essay (Cacat & Problem Solving)',
+      color: '#8b5cf6',
+      border: '#a78bfa',
       prerequisiteKey: 'c3',
       prerequisiteName: 'Level C3 (Menerapkan - Lanjut)'
+    },
+    {
+      key: 'c5',
+      stepNumber: 5,
+      badge: 'LEVEL C5',
+      title: 'Mengevaluasi (Expert)',
+      desc: '25 Pilgan + 5 Essay (Sintesis & Desain)',
+      color: '#be185d',
+      border: '#f472b6',
+      prerequisiteKey: 'c4',
+      prerequisiteName: 'Level C4 (Menganalisis - Analitis)'
     }
   ];
 
@@ -295,7 +325,7 @@ const EvaluationView = () => {
     }));
 
     // Buka level berikutnya secara otomatis
-    const nextMapping = { c1: 'c2', c2: 'c3', c3: 'hots' };
+    const nextMapping = { c1: 'c2', c2: 'c3', c3: 'c4', c4: 'c5' };
     const nextKey = nextMapping[activeLevel];
     if (nextKey) {
       setUnlockedLevels(prev => ({
@@ -303,6 +333,9 @@ const EvaluationView = () => {
         [nextKey]: true
       }));
     }
+
+    const levelTitleText = currentLevelData?.shortTitle || currentLevelData?.badge || `Level ${activeLevel.toUpperCase()}`;
+    const quizTitle = `Evaluasi ${activeLevel.toUpperCase()} (${levelTitleText})`;
 
     // Rekam nilai ke Google Spreadsheet & Local Storage
     recordQuizResult({
@@ -313,7 +346,9 @@ const EvaluationView = () => {
         school: student?.school || ''
       },
       modul: 'Evaluasi Komprehensif',
-      judulKuis: `Evaluasi ${currentLevelData.title}`,
+      subModul: levelTitleText,
+      jenisKuis: `Evaluasi ${activeLevel.toUpperCase()}`,
+      judulKuis: quizTitle,
       skor: calculatedScore,
       jawabanBenar: correctCount,
       totalSoal: mcqList.length,
@@ -443,7 +478,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
             letterSpacing: '-0.5px',
             lineHeight: 1.2
           }}>
-            Evaluasi Bertahap: C1, C2, C3 &amp; HOTS Fase E
+            Evaluasi Bertahap: Tingkat C1, C2, C3, C4 &amp; C5 Fase E
           </h1>
 
           <p style={{
@@ -592,7 +627,7 @@ Status       : ${currentAnswers.score >= 75 ? 'TUNTAS / LULUS' : 'REMEDIAL / BEL
               </span>
             </div>
             <p style={{ margin: '3px 0 0 0', fontSize: '12px', color: '#94a3b8' }}>
-              Selesaikan evaluasi secara berurutan: Kerjakan <strong>C1 (Mengingat)</strong> terlebih dahulu untuk membuka <strong>C2</strong>, <strong>C3</strong>, dan <strong>HOTS Expert</strong>.
+              Selesaikan evaluasi secara berurutan: Kerjakan <strong>C1 (Mengingat)</strong> terlebih dahulu untuk membuka <strong>C2</strong>, <strong>C3</strong>, <strong>C4</strong>, dan <strong>C5 (Mengevaluasi)</strong>.
             </p>
           </div>
 

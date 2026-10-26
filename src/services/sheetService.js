@@ -324,8 +324,25 @@ export const detectLabAndSubQuiz = (item) => {
     subId = 'cad_drawing';
     subLabel = 'Kuis Gambar Teknik & CAD';
   } else if (labId === 'evaluasi') {
-    subId = 'evaluasi_final';
-    subLabel = 'Evaluasi Akhir Komprehensif';
+    if (j.includes('c1') || j.includes('mengingat') || m.includes('c1')) {
+      subId = 'evaluasi_c1';
+      subLabel = 'Evaluasi C1 (Mengingat)';
+    } else if (j.includes('c2') || j.includes('memahami') || m.includes('c2')) {
+      subId = 'evaluasi_c2';
+      subLabel = 'Evaluasi C2 (Memahami)';
+    } else if (j.includes('c3') || j.includes('menerapkan') || m.includes('c3')) {
+      subId = 'evaluasi_c3';
+      subLabel = 'Evaluasi C3 (Menerapkan)';
+    } else if (j.includes('c4') || j.includes('menganalisis') || m.includes('c4')) {
+      subId = 'evaluasi_c4';
+      subLabel = 'Evaluasi C4 (Menganalisis)';
+    } else if (j.includes('c5') || j.includes('mengevaluasi') || j.includes('hots') || m.includes('c5') || m.includes('hots')) {
+      subId = 'evaluasi_c5';
+      subLabel = 'Evaluasi C5 (Mengevaluasi)';
+    } else {
+      subId = 'evaluasi_c1';
+      subLabel = 'Evaluasi C1 (Mengingat)';
+    }
   }
 
   return {

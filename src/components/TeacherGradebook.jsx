@@ -230,7 +230,11 @@ var LAB_CONFIGS = [
     tabName: "10. Evaluasi Akhir",
     shortTitle: "Evaluasi Akhir Komprehensif",
     tasks: [
-      { key: "evaluasi_final", name: "Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+      { key: "evaluasi_c1", name: "Evaluasi C1 (Mengingat)", category: "Evaluasi Kognitif", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
+      { key: "evaluasi_c2", name: "Evaluasi C2 (Memahami)", category: "Evaluasi Kognitif", keywords: ["c2", "memahami", "konsep"] },
+      { key: "evaluasi_c3", name: "Evaluasi C3 (Menerapkan)", category: "Evaluasi Kognitif", keywords: ["c3", "menerapkan", "aplikasi", "prosedur"] },
+      { key: "evaluasi_c4", name: "Evaluasi C4 (Menganalisis)", category: "Evaluasi Kognitif", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
+      { key: "evaluasi_c5", name: "Evaluasi C5 (Mengevaluasi)", category: "Evaluasi Kognitif", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
     ]
   }
 ];
@@ -402,6 +406,7 @@ function buildStudentMapFromRows(allRows) {
   });
 
   // 2. Olah semua row nilai yang masuk dari raw data
+  var evalCounterPerStudent = {};
   (allRows || []).forEach(function(parsed) {
     var rawNama = (parsed.nama || "").trim();
     if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1) return;
@@ -449,6 +454,28 @@ function buildStudentMapFromRows(allRows) {
     var modulName = parsed.modul || "";
     var score = parsed.skor;
     var matched = identifyLabAndTask(modulName, quizTitle);
+
+    // Pemulihan cerdas untuk data evaluasi sebelumnya jika kuis bernilai undefined / evaluasi umum
+    if (matched.labId === "evaluasi") {
+      var fullText = (modulName + " " + quizTitle).toLowerCase();
+      var hasExplicitLevel = fullText.indexOf("c1") !== -1 || fullText.indexOf("c2") !== -1 || fullText.indexOf("c3") !== -1 || fullText.indexOf("c4") !== -1 || fullText.indexOf("c5") !== -1 || fullText.indexOf("mengingat") !== -1 || fullText.indexOf("memahami") !== -1;
+      if (!hasExplicitLevel) {
+        if (!evalCounterPerStudent[targetKey]) evalCounterPerStudent[targetKey] = 0;
+        evalCounterPerStudent[targetKey]++;
+        var seq = evalCounterPerStudent[targetKey];
+        if (seq === 1) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+        } else if (seq === 2) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
+        } else if (seq === 3) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
+        } else if (seq === 4) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
+        } else {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
+        }
+      }
+    }
 
     var taskFullKey = matched.labId + "_" + matched.taskKey;
     if (studentsMap[targetKey].scoresByTask[taskFullKey] === undefined || score > studentsMap[targetKey].scoresByTask[taskFullKey].skor) {
@@ -1098,7 +1125,14 @@ function identifyLabAndTask(modulStr, quizStr) {
   if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
   if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
   if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
-  if (text.indexOf("evaluasi") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "Evaluasi Akhir Komprehensif" };
+  if (text.indexOf("evaluasi") !== -1) {
+    if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
+    if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
+    if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
+    if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
+    return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+  }
 
   return { labId: "machine", taskKey: "machine_gen", taskName: q || "Praktik Machine Lab" };
 }
@@ -1426,7 +1460,11 @@ const LAB_CONFIGS = [
     tabName: "10. Evaluasi Akhir",
     shortTitle: "Evaluasi Akhir Komprehensif",
     tasks: [
-      { key: "evaluasi_final", name: "Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+      { key: "evaluasi_c1", name: "Evaluasi C1 (Mengingat)", category: "Evaluasi Kognitif", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
+      { key: "evaluasi_c2", name: "Evaluasi C2 (Memahami)", category: "Evaluasi Kognitif", keywords: ["c2", "memahami", "konsep"] },
+      { key: "evaluasi_c3", name: "Evaluasi C3 (Menerapkan)", category: "Evaluasi Kognitif", keywords: ["c3", "menerapkan", "aplikasi", "prosedur"] },
+      { key: "evaluasi_c4", name: "Evaluasi C4 (Menganalisis)", category: "Evaluasi Kognitif", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
+      { key: "evaluasi_c5", name: "Evaluasi C5 (Mengevaluasi)", category: "Evaluasi Kognitif", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
     ]
   }
 ];
@@ -1468,6 +1506,11 @@ const renderSubQuizIcon = (id) => {
     case 'caliper_micrometer': return <Ruler size={14} />;
     case 'cad_drawing': return <Compass size={14} />;
     case 'virtual_bengkel': return <Factory size={14} />;
+    case 'evaluasi_c1':
+    case 'evaluasi_c2':
+    case 'evaluasi_c3':
+    case 'evaluasi_c4':
+    case 'evaluasi_c5':
     case 'evaluasi_final': return <GraduationCap size={14} />;
     default: return <FileSpreadsheet size={14} />;
   }
@@ -1542,7 +1585,11 @@ const SUB_QUIZ_CONFIG = {
   ],
   evaluasi: [
     { id: 'all', label: 'Semua Evaluasi', icon: '' },
-    { id: 'evaluasi_final', label: 'Evaluasi Akhir Komprehensif', icon: '' }
+    { id: 'evaluasi_c1', label: 'Evaluasi C1 (Mengingat)', icon: '' },
+    { id: 'evaluasi_c2', label: 'Evaluasi C2 (Memahami)', icon: '' },
+    { id: 'evaluasi_c3', label: 'Evaluasi C3 (Menerapkan)', icon: '' },
+    { id: 'evaluasi_c4', label: 'Evaluasi C4 (Menganalisis)', icon: '' },
+    { id: 'evaluasi_c5', label: 'Evaluasi C5 (Mengevaluasi)', icon: '' }
   ]
 };
 
@@ -1647,15 +1694,51 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
 
   // Normalisasi data dengan penandaan Lab dan Sub-Kuis yang rapi & akurat
   const enrichedScores = useMemo(() => {
-    return scores.map(item => {
+    const evalCountersByStudent = {};
+    const sortedScores = [...scores].sort((a, b) => {
+      const tA = new Date(a.timestamp || a.waktu || 0).getTime();
+      const tB = new Date(b.timestamp || b.waktu || 0).getTime();
+      return tA - tB;
+    });
+
+    return sortedScores.map(item => {
       const detected = detectLabAndSubQuiz(item);
+      let updatedJudul = item.judulKuis || '';
+      let updatedSubLabel = item.subModul || item.jenisKuis || detected.subLabel;
+      let updatedSubId = detected.subId;
+
+      if (detected.labId === 'evaluasi') {
+        const fullText = ((item.modul || '') + ' ' + (item.subModul || '') + ' ' + (item.judulKuis || '')).toLowerCase();
+        const hasExplicitLevel = fullText.includes('c1') || fullText.includes('c2') || fullText.includes('c3') || fullText.includes('c4') || fullText.includes('c5') || fullText.includes('mengingat') || fullText.includes('memahami');
+
+        if (!hasExplicitLevel) {
+          const sKey = (item.namaSiswa || 'unknown').toLowerCase();
+          const count = (evalCountersByStudent[sKey] || 0) + 1;
+          evalCountersByStudent[sKey] = count;
+
+          const levelKeys = ['evaluasi_c1', 'evaluasi_c2', 'evaluasi_c3', 'evaluasi_c4', 'evaluasi_c5'];
+          const levelLabels = [
+            'Evaluasi C1 (Mengingat)',
+            'Evaluasi C2 (Memahami)',
+            'Evaluasi C3 (Menerapkan)',
+            'Evaluasi C4 (Menganalisis)',
+            'Evaluasi C5 (Mengevaluasi)'
+          ];
+          const idx = Math.min(count - 1, 4);
+          updatedSubId = levelKeys[idx];
+          updatedSubLabel = levelLabels[idx];
+          updatedJudul = levelLabels[idx];
+        }
+      }
+
       return {
         ...item,
+        judulKuis: updatedJudul,
         labId: detected.labId,
         labLabel: detected.labLabel,
         labIcon: detected.labIcon,
-        subId: detected.subId,
-        subLabel: item.subModul || item.jenisKuis || detected.subLabel
+        subId: updatedSubId,
+        subLabel: updatedSubLabel
       };
     });
   }, [scores]);
@@ -1819,7 +1902,7 @@ const TeacherGradebook = ({ initialSearch = '', initialTab = 'safety' }) => {
       if (labConfig && labConfig.tasks) {
         const itemText = ((item.modul || '') + ' ' + (item.subLabel || '') + ' ' + (item.judulKuis || '')).toLowerCase();
         for (const t of labConfig.tasks) {
-          if (t.name === rawJudul) {
+          if (t.key === item.subId || t.name === rawJudul) {
             targetColumnName = t.name;
             break;
           }

@@ -1,4 +1,4 @@
-import{r as e}from"./rolldown-runtime-hePW80VL.js";import{c as t}from"./vendor-libs-CzXoy4to.js";import{At as n,Ct as r,E as i,F as a,Gt as o,H as s,It as c,K as l,Kt as u,L as ee,Mt as d,N as f,Nt as p,Ot as m,Qt as h,S as g,U as te,Vt as _,Yt as ne,Zt as v,_ as re,a as y,b as ie,c as b,et as x,f as ae,ft as S,jt as oe,nn as se,o as C,q as ce,sn as le,v as w,w as ue,zt as de}from"./vendor-react-BGJjV_-c.js";import{S as fe,_ as pe,c as me,d as he,f as ge,g as _e,h as ve,i as ye,l as be,o as xe,p as Se,r as T,s as Ce,u as E,v as we,x as Te}from"./index-DBgNfGrL.js";var D=e(t(),1),O=y(),Ee=`/**
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{c as t}from"./vendor-libs-CzXoy4to.js";import{At as n,Ct as r,E as i,F as a,Gt as o,H as s,It as c,K as l,Kt as u,L as ee,Mt as d,N as f,Nt as p,Ot as m,Qt as h,S as g,U as te,Vt as _,Yt as ne,Zt as v,_ as re,a as y,b as ie,c as b,et as x,f as ae,ft as S,jt as oe,nn as se,o as C,q as ce,sn as le,v as w,w as ue,zt as de}from"./vendor-react-BGJjV_-c.js";import{S as fe,_ as pe,c as me,d as he,f as ge,g as _e,h as ve,i as ye,l as be,o as xe,p as Se,r as T,s as Ce,u as E,v as we,x as Te}from"./index-BNMxWLuQ.js";var D=e(t(),1),O=y(),Ee=`/**
  * =============================================================================
  * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
  * =============================================================================
@@ -329,12 +329,24 @@ function onOpen() {
   try {
     var ui = SpreadsheetApp.getUi();
     ui.createMenu("Menu BIMO Labs")
-      .addItem("1. Sinkronkan Seluruh Tab Lab & Evaluasi C1 - C5", "buatSemuaTabModulLab")
+      .addItem("1. Sinkronkan Seluruh Tab Lab (Termasuk Safety Lab & C1 - C5)", "buatSemuaTabModulLab")
       .addItem("2. Perbarui Khusus Sheet 10. Evaluasi Akhir (C1 - C5)", "perbaruiSheetEvaluasiAkhir")
-      .addItem("3. Perbarui Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
+      .addItem("3. Pulihkan / Perbarui Khusus Sheet 1. Safety Lab", "perbaruiSheetSafetyLab")
+      .addItem("4. Perbarui Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
       .addSeparator()
       .addItem("Panduan Pemakaian", "tampilkanPanduan")
       .addToUi();
+  } catch (e) {}
+}
+
+function perbaruiSheetSafetyLab() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var allRows = getAllDataRows(ss);
+  var parsedData = buildStudentMapFromRows(allRows);
+  var safetyLab = LAB_CONFIGS[0];
+  renderLabSheet(ss, safetyLab, parsedData.studentsMap, parsedData.sortedStudentKeys);
+  try {
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSheet 🛡️ 1. Safety Lab telah berhasil dipulihkan dan disinkronkan.");
   } catch (e) {}
 }
 
@@ -381,7 +393,16 @@ function buatSemuaTabModulLab() {
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 
   try {
-    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab (termasuk Evaluasi C1 s.d. C5) telah berhasil disinkronkan dengan 100% Nilai Asli siswa.");
+    var allSheets = ss.getSheets();
+    for (var shIdx = 0; shIdx < allSheets.length; shIdx++) {
+      if (allSheets[shIdx].isSheetHidden && allSheets[shIdx].isSheetHidden()) {
+        allSheets[shIdx].showSheet();
+      }
+    }
+  } catch (eShow) {}
+
+  try {
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh tab lab (termasuk 🛡️ 1. Safety Lab hingga 🎓 10. Evaluasi Akhir) telah berhasil disinkronkan dan ditampilkan secara lengkap.");
   } catch (e) {}
 }
 
@@ -476,6 +497,11 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   if (!sheet) {
     sheet = ss.insertSheet(lab.tabName);
   } else {
+    try {
+      if (sheet.isSheetHidden && sheet.isSheetHidden()) {
+        sheet.showSheet();
+      }
+    } catch (eHidden) {}
     sheet.clear();
   }
 

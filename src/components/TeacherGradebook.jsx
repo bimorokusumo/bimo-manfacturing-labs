@@ -65,36 +65,19 @@ import {
 
 const GOOGLE_APPS_SCRIPT_CODE = `/**
  * =============================================================================
- * BIMO MANUFACTURING LABS - GOOGLE APPS SCRIPT MASTER GRADEBOOK
+ * GOOGLE APPS SCRIPT - BIMO MANUFACTURING LABS (REKAP EVALUASI C1 - C5)
  * =============================================================================
- * Skrip Google Apps Script untuk Google Spreadsheet Rekap Nilai Siswa.
- * Sesuai dengan Struktur Sidebar Website BIMO Manufacturing Labs:
  * 
- * 1. Tab Baris Bawah Spreadsheet (Sheet Tabs) diklasifikasikan per Modul Lab:
- *    - 1. Safety Lab
- *    - 2. Machine Lab
- *    - 3. Alat Pemotong
- *    - 4. Heat Treatment
- *    - 5. Mekanika Teknik
- *    - 6. Welding Lab
- *    - 7. Alat Ukur Presisi
- *    - 8. Design Lab
- *    - 9. Virtual Bengkel
- *    - 10. Evaluasi Akhir
- *    - Rekap Seluruh Lab (Master Summary)
- *    - Data Masuk (Raw Data)
- * 
- * 2. Seluruh nilai yang ditampilkan 100% adalah NILAI ASLI SISWA (Skala 0 - 100,
- *    misal: 75, 80, 85, 90, 100). Tidak ada lagi pecahan/rasio (1/2/3/4/5/6/7/8/9)
- *    maupun jumlah benar di kolom nilai.
+ * Versi Khusus: Mode Sheet Tunggal (Tanpa Menambah Sheet Baru)
+ * - Menggunakan sheet yang sudah ada di spreadsheet Anda secara langsung.
+ * - Menampilkan kolom mandiri: C1, C2, C3, C4, dan C5.
+ * - Otomatis mendeteksi nilai C1 dan C2 yang sudah dikerjakan siswa sebelumnya.
+ * - Real-time auto update ketika siswa mengirim jawaban evaluasi dari web.
+ * - 100% Nilai Asli Siswa skala 0 - 100 dengan indikator KKM 75 (Lulus / Remedial).
  * =============================================================================
  */
 
-// =============================================================================
-// DAFTAR MASTER RESMI 36 SISWA KELAS X-TP.A (SMKN 2 DEPOK)
-// Sumber: Dokumen Daftar Hadir Siswa SMK Negeri 2 Depok (NAMA SISWA.docx)
-// Konsentrasi Keahlian: Teknik Pemesinan A (X-TP.A)
-// =============================================================================
+// DAFTAR RESMI 36 SISWA KELAS X-TP.A (SMKN 2 DEPOK)
 var MASTER_STUDENTS_LIST = [
   { absen: 1, nis: "22946", nama: "ADITYA MIRZA SUSANTO", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
   { absen: 2, nis: "22947", nama: "ADITYA SAPUTRA", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" },
@@ -134,114 +117,447 @@ var MASTER_STUDENTS_LIST = [
   { absen: 36, nis: "22981", nama: "MUHAMMAD RAFAEL AL-HABSI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" }
 ];
 
-// DEFINISI MODUL LAB & TUGAS-TUGASNYA SESUAI SIDEBAR
-var LAB_CONFIGS = [
-  {
-    id: "safety",
-    tabName: "1. Safety Lab",
-    shortTitle: "Safety Lab (K3LH)",
-    tasks: [
-      { key: "apd", name: "Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
-      { key: "jsa_bor", name: "JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
-      { key: "jsa_pahat", name: "JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
-      { key: "apar", name: "Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
-      { key: "5r", name: "Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
-      { key: "perkakas", name: "SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
-      { key: "qc", name: "Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
-      { key: "diag_safety", name: "Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
-    ]
-  },
-  {
-    id: "machine",
-    tabName: "2. Machine Lab",
-    shortTitle: "Machine Lab (Permesinan)",
-    tasks: [
-      { key: "lathe", name: "Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
-      { key: "milling", name: "Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
-      { key: "cnc", name: "Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
-      { key: "diag_machine", name: "Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
-    ]
-  },
-  {
-    id: "cutting-tools",
-    tabName: "3. Perkakas Bengkel",
-    shortTitle: "Perkakas Bengkel & RPM",
-    tasks: [
-      { key: "cutting_quiz", name: "Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
-      { key: "diag_cutting", name: "Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
-    ]
-  },
-  {
-    id: "heat-treatment",
-    tabName: "4. Heat Treatment",
-    shortTitle: "Heat Treatment & Metalurgi",
-    tasks: [
-      { key: "metallurgy", name: "Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
-      { key: "diag_heat", name: "Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
-    ]
-  },
-  {
-    id: "mechanics",
-    tabName: "5. Mekanika Teknik",
-    shortTitle: "Mekanika Teknik Terapan",
-    tasks: [
-      { key: "torque", name: "Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
-      { key: "diag_mechanics", name: "Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
-    ]
-  },
-  {
-    id: "welding",
-    tabName: "6. Welding Lab",
-    shortTitle: "Welding Lab (Pengelasan)",
-    tasks: [
-      { key: "smaw", name: "Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
-      { key: "diag_welding", name: "Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
-    ]
-  },
-  {
-    id: "measuring",
-    tabName: "7. Alat Ukur Presisi",
-    shortTitle: "Alat Ukur Presisi & Metrologi",
-    tasks: [
-      { key: "caliper_micrometer", name: "Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
-      { key: "diag_measuring", name: "Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
-    ]
-  },
-  {
-    id: "design",
-    tabName: "8. Design Lab",
-    shortTitle: "Design Lab & Studio CAD",
-    tasks: [
-      { key: "cad_drawing", name: "Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
-      { key: "diag_design", name: "Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
-    ]
-  },
-  {
-    id: "virtual-bengkel",
-    tabName: "9. Virtual Bengkel",
-    shortTitle: "Virtual Bengkel 3D",
-    tasks: [
-      { key: "virtual_bengkel", name: "Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
-      { key: "diag_virtual", name: "Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
-    ]
-  },
-  {
-    id: "evaluasi",
-    tabName: "10. Evaluasi Akhir",
-    shortTitle: "Evaluasi Akhir Komprehensif",
-    tasks: [
-      { key: "evaluasi_c1", name: "Evaluasi C1 (Mengingat)", category: "Evaluasi Kognitif", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
-      { key: "evaluasi_c2", name: "Evaluasi C2 (Memahami)", category: "Evaluasi Kognitif", keywords: ["c2", "memahami", "konsep"] },
-      { key: "evaluasi_c3", name: "Evaluasi C3 (Menerapkan)", category: "Evaluasi Kognitif", keywords: ["c3", "menerapkan", "aplikasi", "prosedur"] },
-      { key: "evaluasi_c4", name: "Evaluasi C4 (Menganalisis)", category: "Evaluasi Kognitif", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
-      { key: "evaluasi_c5", name: "Evaluasi C5 (Mengevaluasi)", category: "Evaluasi Kognitif", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
-    ]
-  }
+// DEFINISI 5 TINGKATAN EVALUASI KOGNITIF (C1 S.D. C5)
+var EVAL_TASKS = [
+  { key: "c1", colIdx: 5, name: "Evaluasi C1 (Mengingat)", short: "C1: Mengingat", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
+  { key: "c2", colIdx: 6, name: "Evaluasi C2 (Memahami)", short: "C2: Memahami", keywords: ["c2", "memahami", "konsep"] },
+  { key: "c3", colIdx: 7, name: "Evaluasi C3 (Menerapkan)", short: "C3: Menerapkan", keywords: ["c3", "menerapkan", "prosedur", "aplikasi"] },
+  { key: "c4", colIdx: 8, name: "Evaluasi C4 (Menganalisis)", short: "C4: Menganalisis", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
+  { key: "c5", colIdx: 9, name: "Evaluasi C5 (Mengevaluasi)", short: "C5: Mengevaluasi", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
 ];
 
 /**
  * =============================================================================
- * 1. WEBHOOK POST (doPost) - MENERIMA NILAI DARI WEBSITE SECARA REAL-TIME
+ * 1. MENU KHUSUS PADA GOOGLE SPREADSHEET
+ * =============================================================================
+ */
+function onOpen() {
+  try {
+    var ui = SpreadsheetApp.getUi();
+    ui.createMenu("Menu BIMO Labs")
+      .addItem("1. Perbarui Nilai Evaluasi C1 - C5 (Sheet Ini)", "perbaruiSheetEvaluasiIni")
+      .addItem("2. Hapus Tab Tambahan Lainnya (Sisakan Sheet Ini Saja)", "hapusTabTambahan")
+      .addToUi();
+  } catch (e) {}
+}
+
+/**
+ * =============================================================================
+ * 2. MENDAPATKAN SHEET YANG SUDAH ADA (TANPA MENAMBAH SHEET BARU)
+ * =============================================================================
+ */
+function getExistingTargetSheet(ss) {
+  var sheets = ss.getSheets();
+  
+  // 1. Prioritaskan sheet yang aktif dibuka oleh guru
+  var active = ss.getActiveSheet();
+  if (active && active.getName().toLowerCase().indexOf("raw") === -1 && active.getName().toLowerCase().indexOf("data masuk") === -1) {
+    return active;
+  }
+
+  // 2. Cari sheet yang namanya mengandung kata 'evaluasi'
+  for (var i = 0; i < sheets.length; i++) {
+    var name = sheets[i].getName().toLowerCase();
+    if (name.indexOf("evaluasi") !== -1) {
+      return sheets[i];
+    }
+  }
+
+  // 3. Cari sheet pertama yang bukan sheet penampung raw data
+  for (var j = 0; j < sheets.length; j++) {
+    var n = sheets[j].getName().toLowerCase();
+    if (n.indexOf("data") === -1 && n.indexOf("raw") === -1) {
+      return sheets[j];
+    }
+  }
+
+  // 4. Fallback ke sheet pertama yang ada
+  return sheets[0];
+}
+
+/**
+ * =============================================================================
+ * 3. MENGUMPULKAN SEMUA NILAI EVALUASI DARI DATA YANG ADA DI SPREADSHEET
+ * =============================================================================
+ */
+function collectEvaluasiScores(ss) {
+  var studentScores = {};
+
+  // Inisialisasi awal 36 siswa resmi
+  MASTER_STUDENTS_LIST.forEach(function(s) {
+    var k = "absen_" + s.absen;
+    studentScores[k] = {
+      nama: s.nama,
+      absen: String(s.absen),
+      kelas: s.kelas,
+      c1: null,
+      c2: null,
+      c3: null,
+      c4: null,
+      c5: null
+    };
+  });
+
+  var evalCounters = {};
+  var sheets = ss.getSheets();
+
+  sheets.forEach(function(sh) {
+    var data = sh.getDataRange().getValues();
+    if (data.length <= 1) return;
+
+    // Deteksi letak kolom nama, kuis, nilai, absen
+    var headerRowIdx = -1;
+    var colMap = { nama: -1, absen: -1, kuis: -1, modul: -1, nilai: -1, detail: -1 };
+
+    for (var r = 0; r < Math.min(data.length, 5); r++) {
+      var rowStr = data[r].join(" ").toLowerCase();
+      if (rowStr.indexOf("nama") !== -1 && (rowStr.indexOf("nilai") !== -1 || rowStr.indexOf("skor") !== -1 || rowStr.indexOf("kuis") !== -1)) {
+        headerRowIdx = r;
+        for (var c = 0; c < data[r].length; c++) {
+          var h = String(data[r][c] || "").toLowerCase();
+          if (h.indexOf("nama") !== -1 && colMap.nama === -1) colMap.nama = c;
+          if ((h.indexOf("absen") !== -1 || h.indexOf("no.") !== -1) && colMap.absen === -1) colMap.absen = c;
+          if ((h.indexOf("kuis") !== -1 || h.indexOf("asesmen") !== -1 || h.indexOf("tugas") !== -1) && colMap.kuis === -1) colMap.kuis = c;
+          if (h.indexOf("modul") !== -1 && colMap.modul === -1) colMap.modul = c;
+          if ((h.indexOf("nilai") !== -1 || h.indexOf("skor") !== -1) && colMap.nilai === -1) colMap.nilai = c;
+          if (h.indexOf("detail") !== -1 || h.indexOf("rincian") !== -1) colMap.detail = c;
+        }
+        break;
+      }
+    }
+
+    var startRow = headerRowIdx !== -1 ? headerRowIdx + 1 : 1;
+
+    for (var rowIdx = startRow; rowIdx < data.length; rowIdx++) {
+      var row = data[rowIdx];
+      var rawNama = colMap.nama !== -1 ? String(row[colMap.nama] || "").trim() : String(row[1] || "").trim();
+      if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1 || rawNama.toLowerCase().indexOf("testing") !== -1) continue;
+
+      var rawAbsen = colMap.absen !== -1 ? String(row[colMap.absen] || "-").trim() : String(row[2] || "-").trim();
+      var rawModul = colMap.modul !== -1 ? String(row[colMap.modul] || "").trim() : "";
+      var rawKuis = colMap.kuis !== -1 ? String(row[colMap.kuis] || "").trim() : String(row[6] || "").trim();
+      var rawDetail = colMap.detail !== -1 ? String(row[colMap.detail] || "").trim() : "";
+
+      // Cari nilai angka (0 - 100)
+      var scoreVal = 0;
+      if (colMap.nilai !== -1) {
+        scoreVal = Number(row[colMap.nilai]);
+      } else {
+        for (var ci = 6; ci < Math.min(row.length, 11); ci++) {
+          var num = Number(row[ci]);
+          if (!isNaN(num) && num >= 15 && num <= 100) {
+            scoreVal = num;
+            break;
+          }
+        }
+      }
+      if (isNaN(scoreVal) || scoreVal <= 0) continue;
+      if (scoreVal > 0 && scoreVal <= 10) scoreVal = Math.round(scoreVal * 10);
+
+      // Cari kecocokan siswa di master list
+      var targetKey = null;
+      var parsedAbsen = parseInt(rawAbsen, 10);
+      if (!isNaN(parsedAbsen) && parsedAbsen >= 1 && parsedAbsen <= MASTER_STUDENTS_LIST.length) {
+        targetKey = "absen_" + parsedAbsen;
+      } else {
+        var cleanRaw = rawNama.toLowerCase().replace(/[^a-z0-9]/g, "");
+        for (var m = 0; m < MASTER_STUDENTS_LIST.length; m++) {
+          var cleanMaster = MASTER_STUDENTS_LIST[m].nama.toLowerCase().replace(/[^a-z0-9]/g, "");
+          if (cleanRaw === cleanMaster || (cleanRaw.length > 5 && cleanMaster.indexOf(cleanRaw) !== -1)) {
+            targetKey = "absen_" + MASTER_STUDENTS_LIST[m].absen;
+            break;
+          }
+        }
+      }
+
+      if (!targetKey) {
+        targetKey = "custom_" + rawNama.toLowerCase();
+        if (!studentScores[targetKey]) {
+          studentScores[targetKey] = {
+            nama: rawNama,
+            absen: rawAbsen,
+            kelas: "X-TP.A",
+            c1: null,
+            c2: null,
+            c3: null,
+            c4: null,
+            c5: null
+          };
+        }
+      }
+
+      // Identifikasi apakah ini evaluasi C1, C2, C3, C4, atau C5
+      var text = (rawModul + " " + rawKuis + " " + rawDetail).toLowerCase();
+      var detectedLevel = null;
+
+      if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) {
+        detectedLevel = "c1";
+      } else if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) {
+        detectedLevel = "c2";
+      } else if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) {
+        detectedLevel = "c3";
+      } else if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) {
+        detectedLevel = "c4";
+      } else if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) {
+        detectedLevel = "c5";
+      } else if (text.indexOf("evaluasi") !== -1 || text.indexOf("komprehensif") !== -1) {
+        // Pemulihan berurutan jika judul sebelumnya "Evaluasi undefined"
+        if (!evalCounters[targetKey]) evalCounters[targetKey] = 0;
+        evalCounters[targetKey]++;
+        var seq = evalCounters[targetKey];
+        if (seq === 1) detectedLevel = "c1";
+        else if (seq === 2) detectedLevel = "c2";
+        else if (seq === 3) detectedLevel = "c3";
+        else if (seq === 4) detectedLevel = "c4";
+        else detectedLevel = "c5";
+      }
+
+      if (detectedLevel) {
+        var prevScore = studentScores[targetKey][detectedLevel];
+        if (prevScore === null || scoreVal > prevScore) {
+          studentScores[targetKey][detectedLevel] = scoreVal;
+        }
+      }
+    }
+  });
+
+  return studentScores;
+}
+
+/**
+ * =============================================================================
+ * 4. FUNGSI UTAMA: PERBARUI SHEET YANG SUDAH ADA (TANPA MENAMBAH SHEET)
+ * =============================================================================
+ */
+function perbaruiSheetEvaluasiIni() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getExistingTargetSheet(ss);
+  
+  var studentScores = collectEvaluasiScores(ss);
+  var nowFormatted = Utilities.formatDate(new Date(), "Asia/Jakarta", "dd-MM-yyyy HH:mm");
+
+  sheet.clear();
+
+  // BARIS 1: JUDUL UTAMA
+  sheet.appendRow(["REKAPITULASI EVALUASI AKHIR (C1 - C5) - TINGKAT KOGNITIF SISWA"]);
+  var b1 = sheet.getRange(1, 1, 1, 11);
+  b1.merge();
+  b1.setBackground("#064e3b");
+  b1.setFontColor("#ffffff");
+  b1.setFontWeight("bold");
+  b1.setFontSize(11);
+  b1.setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 38);
+
+  // BARIS 2: INFO KKM & WAKTU PEMBARUAN
+  sheet.appendRow([
+    "Konsentrasi Keahlian: X-TP.A (SMKN 2 Depok)  |  Target KKM: 75  |  Level Kognitif: C1 s.d. C5  |  Diperbarui: " + nowFormatted + " WIB"
+  ]);
+  var b2 = sheet.getRange(2, 1, 1, 11);
+  b2.merge();
+  b2.setBackground("#0f766e");
+  b2.setFontColor("#ecfdf5");
+  b2.setFontWeight("bold");
+  b2.setFontSize(9);
+  b2.setVerticalAlignment("middle");
+  sheet.setRowHeight(2, 26);
+
+  // BARIS 3: SPASI
+  sheet.appendRow([""]);
+  sheet.setRowHeight(3, 10);
+
+  // BARIS 4: HEADER TABEL
+  var headers = [
+    "No",
+    "Nama Lengkap Siswa",
+    "No. Absen",
+    "Kelas",
+    "Evaluasi C1 (Mengingat)",
+    "Evaluasi C2 (Memahami)",
+    "Evaluasi C3 (Menerapkan)",
+    "Evaluasi C4 (Menganalisis)",
+    "Evaluasi C5 (Mengevaluasi)",
+    "Rata-rata Nilai",
+    "Status Akhir"
+  ];
+  sheet.appendRow(headers);
+  var hRange = sheet.getRange(4, 1, 1, headers.length);
+  hRange.setBackground("#1e293b");
+  hRange.setFontColor("#ffffff");
+  hRange.setFontWeight("bold");
+  hRange.setFontSize(9);
+  hRange.setHorizontalAlignment("center");
+  hRange.setVerticalAlignment("middle");
+  sheet.setRowHeight(4, 32);
+  sheet.setFrozenRows(4);
+
+  // BARIS 5 s.d 40: DATA SISWA RESMI X-TP.A
+  var c1Total = 0, c1Count = 0;
+  var c2Total = 0, c2Count = 0;
+  var c3Total = 0, c3Count = 0;
+  var c4Total = 0, c4Count = 0;
+  var c5Total = 0, c5Count = 0;
+
+  MASTER_STUDENTS_LIST.forEach(function(s) {
+    var k = "absen_" + s.absen;
+    var rec = studentScores[k] || { c1: null, c2: null, c3: null, c4: null, c5: null };
+
+    var sum = 0;
+    var count = 0;
+    if (rec.c1 !== null) { sum += rec.c1; count++; c1Total += rec.c1; c1Count++; }
+    if (rec.c2 !== null) { sum += rec.c2; count++; c2Total += rec.c2; c2Count++; }
+    if (rec.c3 !== null) { sum += rec.c3; count++; c3Total += rec.c3; c3Count++; }
+    if (rec.c4 !== null) { sum += rec.c4; count++; c4Total += rec.c4; c4Count++; }
+    if (rec.c5 !== null) { sum += rec.c5; count++; c5Total += rec.c5; c5Count++; }
+
+    var avg = count > 0 ? Math.round(sum / count) : 0;
+    var status = count === 0 ? "BELUM MENGERJAKAN" : (avg >= 75 ? "LULUS" : "REMEDIAL");
+
+    sheet.appendRow([
+      s.absen,
+      s.nama,
+      String(s.absen),
+      s.kelas,
+      rec.c1 !== null ? rec.c1 : "-",
+      rec.c2 !== null ? rec.c2 : "-",
+      rec.c3 !== null ? rec.c3 : "-",
+      rec.c4 !== null ? rec.c4 : "-",
+      rec.c5 !== null ? rec.c5 : "-",
+      count > 0 ? avg : "-",
+      status
+    ]);
+
+    var lr = sheet.getLastRow();
+    sheet.setRowHeight(lr, 24);
+    sheet.getRange(lr, 1).setHorizontalAlignment("center");
+    sheet.getRange(lr, 3).setHorizontalAlignment("center");
+    sheet.getRange(lr, 4).setHorizontalAlignment("center");
+
+    // Format nilai C1 - C5
+    for (var col = 5; col <= 9; col++) {
+      var cell = sheet.getRange(lr, col);
+      cell.setHorizontalAlignment("center");
+      var val = cell.getValue();
+      if (typeof val === "number") {
+        cell.setFontWeight("bold");
+        if (val >= 75) {
+          cell.setFontColor("#16a34a");
+        } else {
+          cell.setFontColor("#dc2626");
+        }
+      }
+    }
+
+    // Format Rata-rata & Status
+    var avgCell = sheet.getRange(lr, 10);
+    avgCell.setHorizontalAlignment("center");
+    avgCell.setFontWeight("bold");
+
+    var statCell = sheet.getRange(lr, 11);
+    statCell.setHorizontalAlignment("center");
+    statCell.setFontWeight("bold");
+    if (status === "LULUS") {
+      statCell.setBackground("#dcfce7");
+      statCell.setFontColor("#166534");
+    } else if (status === "REMEDIAL") {
+      statCell.setBackground("#fee2e2");
+      statCell.setFontColor("#991b1b");
+    } else {
+      statCell.setFontColor("#94a3b8");
+    }
+  });
+
+  // BARIS REKAPITULASI RATA-RATA KELAS DI BAGIAN BAWAH
+  sheet.appendRow([""]);
+  var statStartRow = sheet.getLastRow() + 1;
+
+  var avgC1 = c1Count > 0 ? Math.round(c1Total / c1Count) : "-";
+  var avgC2 = c2Count > 0 ? Math.round(c2Total / c2Count) : "-";
+  var avgC3 = c3Count > 0 ? Math.round(c3Total / c3Count) : "-";
+  var avgC4 = c4Count > 0 ? Math.round(c4Total / c4Count) : "-";
+  var avgC5 = c5Count > 0 ? Math.round(c5Total / c5Count) : "-";
+
+  sheet.appendRow([
+    "",
+    "RATA-RATA NILAI KELAS",
+    "",
+    "",
+    avgC1,
+    avgC2,
+    avgC3,
+    avgC4,
+    avgC5,
+    "",
+    ""
+  ]);
+
+  var summaryRow = sheet.getLastRow();
+  sheet.setRowHeight(summaryRow, 28);
+  var sumRange = sheet.getRange(summaryRow, 1, 1, 11);
+  sumRange.setBackground("#334155");
+  sumRange.setFontColor("#ffffff");
+  sumRange.setFontWeight("bold");
+  for (var c = 5; c <= 9; c++) {
+    sheet.getRange(summaryRow, c).setHorizontalAlignment("center");
+  }
+
+  // Atur lebar kolom agar proporsional dan mudah dibaca
+  sheet.setColumnWidth(1, 45);
+  sheet.setColumnWidth(2, 280);
+  sheet.setColumnWidth(3, 80);
+  sheet.setColumnWidth(4, 90);
+  sheet.setColumnWidth(5, 140);
+  sheet.setColumnWidth(6, 140);
+  sheet.setColumnWidth(7, 140);
+  sheet.setColumnWidth(8, 140);
+  sheet.setColumnWidth(9, 140);
+  sheet.setColumnWidth(10, 110);
+  sheet.setColumnWidth(11, 160);
+
+  try {
+    SpreadsheetApp.getUi().alert("[OK] Berhasil!
+
+Sheet ini telah diperbarui secara langsung dengan kolom Evaluasi C1 hingga C5.
+
+Nilai C1 dan C2 yang dikerjakan siswa telah berhasil ditampilkan tanpa menambah sheet baru.");
+  } catch (e) {}
+}
+
+/**
+ * =============================================================================
+ * 5. FUNGSI PEMBERSIH TAB TAMBAHAN (HANYA JIKA DIBUTUHKAN GURU)
+ * =============================================================================
+ */
+function hapusTabTambahan() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var targetSheet = getExistingTargetSheet(ss);
+  var sheets = ss.getSheets();
+
+  if (sheets.length <= 1) {
+    try {
+      SpreadsheetApp.getUi().alert("Hanya ada 1 sheet di spreadsheet ini, tidak ada tab tambahan yang perlu dihapus.");
+    } catch (e) {}
+    return;
+  }
+
+  var ui = SpreadsheetApp.getUi();
+  var resp = ui.alert("Konfirmasi Bersihkan Tab Tambahan", "Apakah Anda ingin menghapus tab-tab tambahan (misal Safety Lab, Machine Lab, dll) dan HANYA MENYISAKAN sheet utama '" + targetSheet.getName() + "'?", ui.ButtonSet.YES_NO);
+  
+  if (resp === ui.Button.YES) {
+    sheets.forEach(function(sh) {
+      if (sh.getSheetId() !== targetSheet.getSheetId()) {
+        try {
+          ss.deleteSheet(sh);
+        } catch (errDel) {}
+      }
+    });
+    ui.alert("[OK] Tab tambahan berhasil dibersihkan! Spreadsheet sekarang hanya memiliki 1 sheet utama.");
+  }
+}
+
+/**
+ * =============================================================================
+ * 6. WEBHOOK POST (doPost) - PENERIMAAN NILAI REAL-TIME DARI WEBSITE
  * =============================================================================
  */
 function doPost(e) {
@@ -250,8 +566,6 @@ function doPost(e) {
 
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var rawSheet = getOrCreateRawSheet(ss);
-
     var data = {};
     if (e && e.postData && e.postData.contents) {
       try {
@@ -263,1105 +577,108 @@ function doPost(e) {
       data = e.parameter;
     }
 
-    var nowStr = data.waktu || Utilities.formatDate(new Date(), "Asia/Jakarta", "yyyy-MM-dd HH:mm:ss");
     var namaSiswa = (data.namaSiswa || "Siswa Praktikan").trim();
-    var nomorAbsen = data.nomorAbsen !== undefined ? String(data.nomorAbsen) : "-";
-    var kelas = data.kelas || "-";
-    var sekolah = data.sekolah || "-";
-    var modul = data.modul || "-";
-    var subModul = data.subModul || data.jenisKuis || "-";
-    var judulKuis = data.judulKuis || "-";
-
-    // Pastikan Nilai Berupa Angka Asli (0 - 100)
+    var nomorAbsen = String(data.nomorAbsen !== undefined ? data.nomorAbsen : "-").trim();
+    var modul = String(data.modul || "").trim();
+    var judulKuis = String(data.judulKuis || "").trim();
+    var detailJawaban = String(data.detailJawaban || "").trim();
     var skor = Number(data.skor !== undefined ? data.skor : 0);
-    if (skor > 0 && skor <= 10) {
-      // Jika terkirim skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100 asli
-      skor = Math.round(skor * 10);
-    }
+    if (skor > 0 && skor <= 10) skor = Math.round(skor * 10);
 
-    var jawabanBenar = data.jawabanBenar !== undefined ? data.jawabanBenar : "-";
-    var totalSoal = data.totalSoal !== undefined ? data.totalSoal : "-";
-    var status = data.status || (skor >= 75 ? "LULUS" : "REMEDIAL");
-    var detailJawaban = typeof data.detailJawaban === "object" ? JSON.stringify(data.detailJawaban) : String(data.detailJawaban || "-");
+    // Dapatkan target sheet yang sudah ada
+    var sheet = getExistingTargetSheet(ss);
 
-    // Periksa apakah format sheet raw menggunakan 12 kolom atau 13 kolom
-    var numCols = rawSheet.getLastColumn();
-    var hasSubModulCol = false;
-    if (rawSheet.getLastRow() > 0 && numCols > 0) {
-      var hRow = rawSheet.getRange(1, 1, 1, Math.min(numCols, 15)).getValues()[0];
-      for (var c = 0; c < hRow.length; c++) {
-        if (String(hRow[c] || "").toLowerCase().indexOf("sub") !== -1) {
-          hasSubModulCol = true;
+    // Identifikasi level C1 - C5
+    var text = (modul + " " + judulKuis + " " + detailJawaban).toLowerCase();
+    var targetCol = 5; // Default C1 (Kolom E)
+    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) targetCol = 6;
+    else if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) targetCol = 7;
+    else if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) targetCol = 8;
+    else if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) targetCol = 9;
+
+    // Cari baris siswa di sheet
+    var lastRow = sheet.getLastRow();
+    var targetRow = -1;
+
+    if (lastRow >= 5) {
+      var sheetData = sheet.getRange(5, 1, lastRow - 4, 3).getValues();
+      var parsedAbsen = parseInt(nomorAbsen, 10);
+
+      for (var r = 0; r < sheetData.length; r++) {
+        var rowAbsen = parseInt(sheetData[r][2], 10);
+        var rowNama = String(sheetData[r][1] || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        var cleanTargetNama = namaSiswa.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+        if (!isNaN(parsedAbsen) && rowAbsen === parsedAbsen) {
+          targetRow = 5 + r;
+          break;
+        } else if (cleanTargetNama && (rowNama === cleanTargetNama || (cleanTargetNama.length > 5 && rowNama.indexOf(cleanTargetNama) !== -1))) {
+          targetRow = 5 + r;
           break;
         }
       }
     }
 
-    var newRowData;
-    if (hasSubModulCol) {
-      newRowData = [
-        nowStr,
-        namaSiswa,
-        nomorAbsen,
-        kelas,
-        sekolah,
-        modul,
-        subModul,
-        judulKuis,
-        skor,
-        jawabanBenar,
-        totalSoal,
-        status,
-        detailJawaban
-      ];
-    } else {
-      newRowData = [
-        nowStr,
-        namaSiswa,
-        nomorAbsen,
-        kelas,
-        sekolah,
-        modul,
-        judulKuis,
-        skor,
-        jawabanBenar,
-        totalSoal,
-        status,
-        detailJawaban
-      ];
-    }
+    if (targetRow !== -1) {
+      // Update cell skor langsung di sheet yang ada
+      var cell = sheet.getRange(targetRow, targetCol);
+      var currentVal = cell.getValue();
+      if (typeof currentVal !== "number" || skor > currentVal) {
+        cell.setValue(skor);
+        cell.setFontWeight("bold");
+        cell.setFontColor(skor >= 75 ? "#16a34a" : "#dc2626");
+      }
 
-    rawSheet.appendRow(newRowData);
+      // Hitung ulang rata-rata baris
+      var rowScores = sheet.getRange(targetRow, 5, 1, 5).getValues()[0];
+      var sum = 0, count = 0;
+      for (var s = 0; s < rowScores.length; s++) {
+        if (typeof rowScores[s] === "number") {
+          sum += rowScores[s];
+          count++;
+        }
+      }
+      if (count > 0) {
+        var avg = Math.round(sum / count);
+        var avgCell = sheet.getRange(targetRow, 10);
+        avgCell.setValue(avg);
+        avgCell.setFontWeight("bold");
 
-    var lastRow = rawSheet.getLastRow();
-    rawSheet.setRowHeight(lastRow, 26);
-    rawSheet.getRange(lastRow, 3).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, 4).setHorizontalAlignment("center");
-
-    var scoreCol = hasSubModulCol ? 9 : 8;
-    var statusCol = hasSubModulCol ? 12 : 11;
-
-    rawSheet.getRange(lastRow, scoreCol).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, scoreCol + 1).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, scoreCol + 2).setHorizontalAlignment("center");
-    rawSheet.getRange(lastRow, statusCol).setHorizontalAlignment("center");
-
-    var scoreCell = rawSheet.getRange(lastRow, scoreCol);
-    var statusCell = rawSheet.getRange(lastRow, statusCol);
-    scoreCell.setFontWeight("bold");
-    statusCell.setFontWeight("bold");
-
-    if (skor >= 75) {
-      statusCell.setBackground("#dcfce7");
-      statusCell.setFontColor("#166534");
-      scoreCell.setFontColor("#16a34a");
-    } else {
-      statusCell.setBackground("#fee2e2");
-      statusCell.setFontColor("#991b1b");
-      scoreCell.setFontColor("#dc2626");
-    }
-
-    // Otomatis perbarui tab modul lab terkait & tab Rekap Seluruh Lab secara real-time
-    try {
-      autoUpdateLabSheetOnPost(ss, modul, judulKuis);
-    } catch (errSync) {
-      console.warn("Auto-update tab modul error: " + errSync);
+        var statCell = sheet.getRange(targetRow, 11);
+        statCell.setValue(avg >= 75 ? "LULUS" : "REMEDIAL");
+        statCell.setFontWeight("bold");
+        if (avg >= 75) {
+          statCell.setBackground("#dcfce7");
+          statCell.setFontColor("#166534");
+        } else {
+          statCell.setBackground("#fee2e2");
+          statCell.setFontColor("#991b1b");
+        }
+      }
     }
 
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
-      message: "Data nilai " + namaSiswa + " (" + skor + ") berhasil dicatat ke spreadsheet.",
-      row: lastRow
+      message: "Nilai " + namaSiswa + " (" + skor + ") berhasil diperbarui di sheet yang ada."
     })).setMimeType(ContentService.MimeType.JSON);
 
-  } catch (error) {
+  } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({
       status: "error",
-      message: error.toString()
+      message: err.toString()
     })).setMimeType(ContentService.MimeType.JSON);
-
   } finally {
     lock.releaseLock();
   }
 }
 
-/**
- * Olah dan cocokkan data baris nilai terhadap 36 Siswa Resmi Master Kelas X-TP.A
- */
-function buildStudentMapFromRows(allRows) {
-  var studentsMap = {};
-
-  // 1. Inisialisasi awal dengan 36 siswa master kelas X-TP.A (SMKN 2 Depok)
-  MASTER_STUDENTS_LIST.forEach(function(s) {
-    var key = "absen_" + String(s.absen);
-    studentsMap[key] = {
-      nama: s.nama,
-      absen: String(s.absen),
-      nis: s.nis,
-      kelas: s.kelas,
-      sekolah: s.sekolah,
-      isMaster: true,
-      scoresByTask: {}
-    };
-  });
-
-  // 2. Olah semua row nilai yang masuk dari raw data
-  var evalCounterPerStudent = {};
-  (allRows || []).forEach(function(parsed) {
-    var rawNama = (parsed.nama || "").trim();
-    if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1) return;
-    var rawAbsen = String(parsed.absen !== undefined ? parsed.absen : "-").trim();
-    var parsedAbsenNum = parseInt(rawAbsen, 10);
-
-    // Cari kecocokan di master 36 siswa:
-    var targetKey = null;
-
-    // Cek apakah akun pengajar (Bimoro Kusumo atau Sri Widada) agar tidak menimpa nilai siswa
-    var isTeacherSubmission = rawNama.toLowerCase().indexOf("bimoro") !== -1 || rawNama.toLowerCase().indexOf("sri widada") !== -1;
-
-    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36 (bukan akun guru)
-    if (!isTeacherSubmission && !isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
-      targetKey = "absen_" + parsedAbsenNum;
-    } else {
-      // Prioritas 2: Cocokkan nama (case-insensitive & pembersihan karakter khusus)
-      var cleanRaw = rawNama.toLowerCase().replace(/[^a-z0-9]/g, "");
-      for (var m = 0; m < MASTER_STUDENTS_LIST.length; m++) {
-        var cleanMaster = MASTER_STUDENTS_LIST[m].nama.toLowerCase().replace(/[^a-z0-9]/g, "");
-        if (cleanRaw === cleanMaster || (cleanRaw.length > 5 && cleanMaster.indexOf(cleanRaw) !== -1) || (cleanMaster.length > 5 && cleanRaw.indexOf(cleanMaster) !== -1)) {
-          targetKey = "absen_" + MASTER_STUDENTS_LIST[m].absen;
-          break;
-        }
-      }
-    }
-
-    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo / Sri Widada atau siswa tamu)
-    if (!targetKey) {
-      targetKey = "custom_" + rawNama.toLowerCase();
-      if (!studentsMap[targetKey]) {
-        studentsMap[targetKey] = {
-          nama: rawNama,
-          absen: rawAbsen,
-          nis: "-",
-          kelas: parsed.kelas || "-",
-          sekolah: parsed.sekolah || "-",
-          isMaster: false,
-          scoresByTask: {}
-        };
-      }
-    }
-
-    var quizTitle = parsed.judulKuis || "";
-    var modulName = parsed.modul || "";
-    var score = parsed.skor;
-    var matched = identifyLabAndTask(modulName, quizTitle);
-
-    // Pemulihan cerdas untuk data evaluasi sebelumnya jika kuis bernilai undefined / evaluasi umum
-    if (matched.labId === "evaluasi") {
-      var fullText = (modulName + " " + quizTitle).toLowerCase();
-      var hasExplicitLevel = fullText.indexOf("c1") !== -1 || fullText.indexOf("c2") !== -1 || fullText.indexOf("c3") !== -1 || fullText.indexOf("c4") !== -1 || fullText.indexOf("c5") !== -1 || fullText.indexOf("mengingat") !== -1 || fullText.indexOf("memahami") !== -1;
-      if (!hasExplicitLevel) {
-        if (!evalCounterPerStudent[targetKey]) evalCounterPerStudent[targetKey] = 0;
-        evalCounterPerStudent[targetKey]++;
-        var seq = evalCounterPerStudent[targetKey];
-        if (seq === 1) {
-          matched = { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
-        } else if (seq === 2) {
-          matched = { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
-        } else if (seq === 3) {
-          matched = { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
-        } else if (seq === 4) {
-          matched = { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
-        } else {
-          matched = { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
-        }
-      }
-    }
-
-    var taskFullKey = matched.labId + "_" + matched.taskKey;
-    if (studentsMap[targetKey].scoresByTask[taskFullKey] === undefined || score > studentsMap[targetKey].scoresByTask[taskFullKey].skor) {
-      studentsMap[targetKey].scoresByTask[taskFullKey] = {
-        skor: score,
-        waktu: parsed.waktu || "",
-        labId: matched.labId,
-        taskKey: matched.taskKey,
-        taskName: matched.taskName
-      };
-    }
-  });
-
-  // Urutkan siswa: 36 Siswa Master (Absen 1 - 36) terlebih dahulu, lalu akun testing/tamu
-  var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
-    var isMasterA = studentsMap[a].isMaster ? 1 : 0;
-    var isMasterB = studentsMap[b].isMaster ? 1 : 0;
-    if (isMasterA !== isMasterB) return isMasterB - isMasterA;
-
-    var numA = parseInt(studentsMap[a].absen, 10);
-    var numB = parseInt(studentsMap[b].absen, 10);
-    if (!isNaN(numA) && !isNaN(numB) && numA !== numB) return numA - numB;
-    return studentsMap[a].nama.localeCompare(studentsMap[b].nama);
-  });
-
-  return {
-    studentsMap: studentsMap,
-    sortedStudentKeys: sortedStudentKeys
-  };
-}
-
-/**
- * Otomatis memperbarui tab modul lab terkait dan tab matriks rekap
- * setiap kali ada siswa yang mengirim nilai kuis secara real-time.
- */
-function autoUpdateLabSheetOnPost(ss, modulStr, quizStr) {
-  var allRows = getAllDataRows(ss);
-  var parsedData = buildStudentMapFromRows(allRows);
-  var studentsMap = parsedData.studentsMap;
-  var sortedStudentKeys = parsedData.sortedStudentKeys;
-
-  var currentMatched = identifyLabAndTask(modulStr, quizStr);
-  var targetLab = null;
-  for (var i = 0; i < LAB_CONFIGS.length; i++) {
-    if (LAB_CONFIGS[i].id === currentMatched.labId) {
-      targetLab = LAB_CONFIGS[i];
-      break;
-    }
-  }
-
-  if (targetLab) {
-    renderLabSheet(ss, targetLab, studentsMap, sortedStudentKeys);
-  }
-
-  renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
-}
-
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: "active",
-    message: "Google Apps Script BIMO Manufacturing Labs aktif & siap menerima data nilai siswa."
+    message: "Google Apps Script BIMO Labs (Mode Sheet Tunggal C1-C5) siap digunakan."
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-/**
- * =============================================================================
- * 2. MENU KHUSUS BIMO LABS PADA SPREADSHEET
- * =============================================================================
- */
-function onOpen() {
-  try {
-    var ui = SpreadsheetApp.getUi();
-    ui.createMenu("Menu BIMO Labs")
-      .addItem("1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)", "buatSemuaTabModulLab")
-      .addItem("2. Buat Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
-      .addItem("3. Sinkronkan & Rapikan Ulang Semua Data", "buatSemuaTabModulLab")
-      .addSeparator()
-      .addItem("Panduan Pemakaian", "tampilkanPanduan")
-      .addToUi();
-  } catch (e) {}
-}
-
-function tampilkanPanduan() {
-  var pesan = "CARA MENGGUNAKAN MENU BIMO LABS:\n\n" +
-    "1. Klik '1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)':\n" +
-    "   Sistem otomatis membuat tab di bar bawah sesuai sidebar website:\n" +
-    "   Safety Lab, Machine Lab, Perkakas Bengkel, Heat Treatment, dll.\n\n" +
-    "2. Nilai yang ditampilkan adalah NILAI ASLI SISWA (Skala 0 - 100, misal: 80, 85, 90, 100).\n" +
-    "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama & nilai asli).\n" +
-    "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Merah = REMEDIAL, Abu-abu = Belum).\n\n" +
-    "3. Tab 'Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.\n\n" +
-    "Seluruh data nilai dijamin 100% aman dan tidak akan terhapus.";
-  SpreadsheetApp.getUi().alert("Panduan Rekap Nilai BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
-}
-
-// ALIAS: Jika guru menekan tombol '▷ Jalankan' di toolbar atas Apps Script
-function buatMatriksRekapPengumpulan() {
-  buatSemuaTabModulLab();
-}
-
-function rapikanDanPisahkanKuisOtomatis() {
-  buatSemuaTabModulLab();
-}
-
-/**
- * =============================================================================
- * 3. FUNGSI UTAMA: BUAT TAB-TAB MODUL LAB SESUAI SIDEBAR
- * =============================================================================
- */
-function buatSemuaTabModulLab() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var allRows = getAllDataRows(ss);
-
-  var parsedData = buildStudentMapFromRows(allRows);
-  var studentsMap = parsedData.studentsMap;
-  var sortedStudentKeys = parsedData.sortedStudentKeys;
-
-  // 2. Bangun masing-masing Tab Modul Lab sesuai urutan Sidebar
-  LAB_CONFIGS.forEach(function(lab) {
-    renderLabSheet(ss, lab, studentsMap, sortedStudentKeys);
-  });
-
-  // 3. Bangun Tab Master: Rekap Seluruh Lab
-  renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
-
-  try {
-    SpreadsheetApp.getUi().alert("[OK] Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
-  } catch (e) {}
-}
-
-/**
- * =============================================================================
- * 4. RENDER SATU SHEET LAB: BERISI REKAP TUGAS PER ROW + MATRIKS SISWA
- * =============================================================================
- */
-function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
-  var sheet = ss.getSheetByName(lab.tabName);
-  if (!sheet) {
-    sheet = ss.insertSheet(lab.tabName);
-  } else {
-    sheet.clear();
-  }
-
-  var tasks = lab.tasks;
-  var totalStudents = sortedStudentKeys.length;
-  var nowFormatted = Utilities.formatDate(new Date(), "Asia/Jakarta", "dd-MM-yyyy HH:mm");
-
-  // BANNER 1: JUDUL BESAR LAB
-  sheet.appendRow([lab.tabName.toUpperCase() + " - REKAPITULASI TUGAS & MATRIKS PENGUMPULAN SISWA"]);
-  var b1 = sheet.getRange(1, 1, 1, 11);
-  b1.merge();
-  b1.setBackground("#064e3b");
-  b1.setFontColor("#ffffff");
-  b1.setFontWeight("bold");
-  b1.setFontSize(11);
-  b1.setVerticalAlignment("middle");
-  sheet.setRowHeight(1, 38);
-
-  // BANNER 2: INFO MODUL & STANDAR KKM
-  sheet.appendRow([
-    "Modul: " + lab.shortTitle + "  |  Target KKM: 75  |  Total Tugas: " + tasks.length + " Tugas  |  Total Siswa Terdaftar: " + totalStudents + " Siswa  |  Diperbarui: " + nowFormatted + " WIB"
-  ]);
-  var b2 = sheet.getRange(2, 1, 1, 11);
-  b2.merge();
-  b2.setBackground("#0f766e");
-  b2.setFontColor("#ecfdf5");
-  b2.setFontWeight("bold");
-  b2.setFontSize(9);
-  b2.setVerticalAlignment("middle");
-  sheet.setRowHeight(2, 26);
-
-  // SPASI BARIS 3
-  sheet.appendRow([""]);
-  sheet.setRowHeight(3, 10);
-
-  // ---------------------------------------------------------------------------
-  // BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR PER ROW / BARIS)
-  // ---------------------------------------------------------------------------
-  sheet.appendRow(["BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
-  var sec1Title = sheet.getRange(4, 1, 1, 11);
-  sec1Title.merge();
-  sec1Title.setBackground("#1e293b");
-  sec1Title.setFontColor("#f8fafc");
-  sec1Title.setFontWeight("bold");
-  sec1Title.setFontSize(10);
-  sec1Title.setVerticalAlignment("middle");
-  sheet.setRowHeight(4, 28);
-
-  var taskHeaders = [
-    "No",
-    "Nama Tugas / Asesmen Lab",
-    "Kategori Asesmen",
-    "Target KKM",
-    "Siswa Selesai",
-    "Lulus (>=75)",
-    "Remedial (<75)",
-    "% Kelulusan",
-    "Rata-rata Nilai Asli",
-    "Daftar Siswa yang Sudah Mengumpulkan (Lengkap dg Nilai Asli)",
-    "Daftar Siswa yang Belum Mengumpulkan"
-  ];
-  sheet.appendRow(taskHeaders);
-  var tHRange = sheet.getRange(5, 1, 1, taskHeaders.length);
-  tHRange.setBackground("#334155");
-  tHRange.setFontColor("#ffffff");
-  tHRange.setFontWeight("bold");
-  tHRange.setFontSize(9);
-  tHRange.setHorizontalAlignment("center");
-  tHRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(5, 30);
-
-  // ISI DATA ROW UNTUK SETIAP TUGAS LAB
-  var noTask = 1;
-
-  tasks.forEach(function(t) {
-    var taskFullKey = lab.id + "_" + t.key;
-    var submittedStudents = [];
-    var notSubmittedStudents = [];
-    var passedCount = 0;
-    var totalScore = 0;
-
-    sortedStudentKeys.forEach(function(k) {
-      var s = studentsMap[k];
-      var rec = s.scoresByTask[taskFullKey];
-      if (rec !== undefined) {
-        submittedStudents.push(s.nama + " (" + rec.skor + ")");
-        totalScore += rec.skor;
-        if (rec.skor >= 75) passedCount++;
-      } else {
-        notSubmittedStudents.push(s.nama);
-      }
-    });
-
-    var subCount = submittedStudents.length;
-    var remCount = subCount - passedCount;
-    var avgScore = subCount > 0 ? Math.round(totalScore / subCount) : 0;
-    var passPct = subCount > 0 ? Math.round((passedCount / subCount) * 100) + "%" : "0%";
-
-    var submittedText = submittedStudents.length > 0 ? submittedStudents.join(", ") : "-";
-    var notSubmittedText = notSubmittedStudents.length > 0 ? notSubmittedStudents.join(", ") : "(Semua Sudah Mengumpulkan)";
-
-    sheet.appendRow([
-      noTask++,
-      t.name,
-      t.category,
-      ">= 75",
-      subCount + " Siswa",
-      passedCount + " Siswa",
-      remCount + " Siswa",
-      passPct,
-      avgScore,
-      submittedText,
-      notSubmittedText
-    ]);
-
-    var lr = sheet.getLastRow();
-    sheet.setRowHeight(lr, 26);
-    sheet.getRange(lr, 1).setHorizontalAlignment("center");
-    sheet.getRange(lr, 4).setHorizontalAlignment("center");
-    sheet.getRange(lr, 5).setHorizontalAlignment("center");
-    sheet.getRange(lr, 6).setHorizontalAlignment("center");
-    sheet.getRange(lr, 7).setHorizontalAlignment("center");
-    sheet.getRange(lr, 8).setHorizontalAlignment("center");
-    sheet.getRange(lr, 9).setHorizontalAlignment("center");
-
-    var avgCell = sheet.getRange(lr, 9);
-    avgCell.setFontWeight("bold");
-    if (avgScore >= 75) {
-      avgCell.setFontColor("#16a34a");
-    } else if (subCount > 0) {
-      avgCell.setFontColor("#dc2626");
-    }
-
-    var subCell = sheet.getRange(lr, 5);
-    subCell.setFontWeight("bold");
-    if (subCount === totalStudents && totalStudents > 0) {
-      subCell.setBackground("#dcfce7");
-      subCell.setFontColor("#166534");
-    }
-  });
-
-  // SPASI ANTAR BAGIAN
-  sheet.appendRow([""]);
-  var curRow = sheet.getLastRow();
-  sheet.setRowHeight(curRow, 14);
-
-  // ---------------------------------------------------------------------------
-  // BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (STATUS PENGUMPULAN PER SISWA)
-  // ---------------------------------------------------------------------------
-  var sec2StartRow = curRow + 1;
-  sheet.appendRow(["BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
-  var sec2Title = sheet.getRange(sec2StartRow, 1, 1, 4 + tasks.length + 3);
-  sec2Title.merge();
-  sec2Title.setBackground("#1e293b");
-  sec2Title.setFontColor("#f8fafc");
-  sec2Title.setFontWeight("bold");
-  sec2Title.setFontSize(10);
-  sec2Title.setVerticalAlignment("middle");
-  sheet.setRowHeight(sec2StartRow, 28);
-
-  var matrixHeaders = ["No", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan"];
-  tasks.forEach(function(t) {
-    matrixHeaders.push(t.name);
-  });
-  matrixHeaders.push("Total Tugas Selesai");
-  matrixHeaders.push("Rata-rata Nilai Asli");
-  matrixHeaders.push("Status Kelengkapan");
-
-  sheet.appendRow(matrixHeaders);
-  var mHRow = sec2StartRow + 1;
-  var mHRange = sheet.getRange(mHRow, 1, 1, matrixHeaders.length);
-  mHRange.setBackground("#0f172a");
-  mHRange.setFontColor("#ffffff");
-  mHRange.setFontWeight("bold");
-  mHRange.setFontSize(9);
-  mHRange.setHorizontalAlignment("center");
-  mHRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(mHRow, 34);
-
-  // ISI ROW DATA SETIAP SISWA
-  var noSiswa = 1;
-  var taskSubmissionCounts = [];
-  var taskScoreSums = [];
-  for (var ti = 0; ti < tasks.length; ti++) {
-    taskSubmissionCounts.push(0);
-    taskScoreSums.push(0);
-  }
-
-  sortedStudentKeys.forEach(function(k) {
-    var s = studentsMap[k];
-    var row = [noSiswa++, s.nama, s.absen, s.kelas];
-    var finishedCount = 0;
-    var studentScoreSum = 0;
-
-    tasks.forEach(function(t, idx) {
-      var taskFullKey = lab.id + "_" + t.key;
-      var rec = s.scoresByTask[taskFullKey];
-      if (rec !== undefined) {
-        finishedCount++;
-        studentScoreSum += rec.skor;
-        taskSubmissionCounts[idx]++;
-        taskScoreSums[idx] += rec.skor;
-        // Tampilkan Nilai Asli Siswa
-        if (rec.skor >= 75) {
-          row.push(rec.skor + " (LULUS)");
-        } else {
-          row.push(rec.skor + " (REMEDIAL)");
-        }
-      } else {
-        row.push("[BELUM]");
-      }
-    });
-
-    var studentAvg = finishedCount > 0 ? Math.round(studentScoreSum / finishedCount) : 0;
-    row.push(finishedCount + " Tugas");
-    row.push(studentAvg);
-    row.push(finishedCount === tasks.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA"));
-
-    sheet.appendRow(row);
-    var rRow = sheet.getLastRow();
-    sheet.setRowHeight(rRow, 26);
-    sheet.getRange(rRow, 1).setHorizontalAlignment("center");
-    sheet.getRange(rRow, 3).setHorizontalAlignment("center");
-    sheet.getRange(rRow, 4).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length - 2).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length - 1).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length).setHorizontalAlignment("center");
-
-    // Format warna sel kuis
-    for (var c = 0; c < tasks.length; c++) {
-      var cell = sheet.getRange(rRow, 5 + c);
-      cell.setHorizontalAlignment("center");
-      var val = String(row[4 + c]);
-      if (val.indexOf("Belum") !== -1) {
-        cell.setBackground("#f1f5f9");
-        cell.setFontColor("#94a3b8");
-      } else if (val.indexOf("LULUS") !== -1) {
-        cell.setBackground("#dcfce7");
-        cell.setFontColor("#166534");
-        cell.setFontWeight("bold");
-      } else {
-        cell.setBackground("#fee2e2");
-        cell.setFontColor("#991b1b");
-        cell.setFontWeight("bold");
-      }
-    }
-
-    var compCell = sheet.getRange(rRow, matrixHeaders.length);
-    compCell.setFontWeight("bold");
-    if (finishedCount === tasks.length) {
-      compCell.setBackground("#dcfce7");
-      compCell.setFontColor("#166534");
-    } else if (finishedCount > 0) {
-      compCell.setBackground("#fef3c7");
-      compCell.setFontColor("#92400e");
-    } else {
-      compCell.setBackground("#f1f5f9");
-      compCell.setFontColor("#64748b");
-    }
-  });
-
-  // BARIS FOOTER TOTAL PENGUMPULAN
-  var footerRow = ["TOTAL SISWA MENGUMPULKAN:", "", "", ""];
-  tasks.forEach(function(t, idx) {
-    footerRow.push(taskSubmissionCounts[idx] + " Siswa");
-  });
-  footerRow.push("-");
-  footerRow.push("-");
-  footerRow.push("-");
-
-  sheet.appendRow(footerRow);
-  var fRow = sheet.getLastRow();
-  sheet.setRowHeight(fRow, 28);
-  var fMerged = sheet.getRange(fRow, 1, 1, 4);
-  fMerged.merge();
-  fMerged.setHorizontalAlignment("right");
-  fMerged.setFontWeight("bold");
-
-  var fRange = sheet.getRange(fRow, 1, 1, matrixHeaders.length);
-  fRange.setBackground("#e2e8f0");
-  fRange.setFontWeight("bold");
-  fRange.setFontSize(9);
-  for (var c = 0; c < tasks.length; c++) {
-    sheet.getRange(fRow, 5 + c).setHorizontalAlignment("center");
-  }
-
-  // ATUR LEBAR KOLOM IDEAL
-  sheet.setColumnWidth(1, 45);  // No
-  sheet.setColumnWidth(2, 220); // Nama Lengkap
-  sheet.setColumnWidth(3, 85);  // Absen
-  sheet.setColumnWidth(4, 120); // Kelas
-  for (var i = 0; i < tasks.length; i++) {
-    sheet.setColumnWidth(5 + i, 190); // Kolom Tugas
-  }
-  sheet.setColumnWidth(matrixHeaders.length - 2, 140); // Total Tugas Selesai
-  sheet.setColumnWidth(matrixHeaders.length - 1, 130); // Rata-rata Nilai Asli
-  sheet.setColumnWidth(matrixHeaders.length, 140);     // Status
-}
-
-/**
- * =============================================================================
- * 5. RENDER MASTER TAB: REKAP SELURUH LAB (SUMMARY MATRIX)
- * =============================================================================
- */
-function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
-  var masterName = "Rekap Seluruh Lab";
-  var sheet = ss.getSheetByName(masterName);
-  if (!sheet) {
-    sheet = ss.insertSheet(masterName, 0);
-  } else {
-    sheet.clear();
-  }
-
-  // BANNER MASTER
-  sheet.appendRow(["REKAPITULASI KELENGKAPAN TUGAS SELURUH LABORATORIUM (BIMO MANUFACTURING LABS)"]);
-  var b1 = sheet.getRange(1, 1, 1, 4 + labs.length + 3);
-  b1.merge();
-  b1.setBackground("#0f172a");
-  b1.setFontColor("#ffffff");
-  b1.setFontWeight("bold");
-  b1.setFontSize(11);
-  sheet.setRowHeight(1, 38);
-
-  var nowFormatted = Utilities.formatDate(new Date(), "Asia/Jakarta", "dd-MM-yyyy HH:mm");
-  sheet.appendRow([
-    "Instansi: SMKN 2 Depok  |  Master Gradebook Seluruh Modul  |  Total Lab: " + labs.length + " Modul  |  Diperbarui: " + nowFormatted + " WIB"
-  ]);
-  var b2 = sheet.getRange(2, 1, 1, 4 + labs.length + 3);
-  b2.merge();
-  b2.setBackground("#1e293b");
-  b2.setFontColor("#cbd5e1");
-  b2.setFontWeight("bold");
-  b2.setFontSize(9);
-  sheet.setRowHeight(2, 26);
-
-  var headers = ["No", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan"];
-  labs.forEach(function(l) {
-    headers.push(l.tabName);
-  });
-  headers.push("Total Semua Tugas Selesai");
-  headers.push("Rata-rata Nilai Keseluruhan");
-  headers.push("Status Akhir Siswa");
-
-  sheet.appendRow(headers);
-  var hRange = sheet.getRange(3, 1, 1, headers.length);
-  hRange.setBackground("#064e3b");
-  hRange.setFontColor("#ffffff");
-  hRange.setFontWeight("bold");
-  hRange.setFontSize(9);
-  hRange.setHorizontalAlignment("center");
-  sheet.setRowHeight(3, 34);
-  sheet.setFrozenRows(3);
-
-  var no = 1;
-  sortedStudentKeys.forEach(function(k) {
-    var s = studentsMap[k];
-    var row = [no++, s.nama, s.absen, s.kelas];
-    var overallFinished = 0;
-    var overallScoreSum = 0;
-
-    labs.forEach(function(l) {
-      var labTasks = l.tasks;
-      var labFinished = 0;
-      var labScoreSum = 0;
-
-      labTasks.forEach(function(t) {
-        var taskFullKey = l.id + "_" + t.key;
-        var rec = s.scoresByTask[taskFullKey];
-        if (rec !== undefined) {
-          labFinished++;
-          labScoreSum += rec.skor;
-          overallFinished++;
-          overallScoreSum += rec.skor;
-        }
-      });
-
-      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau [BELUM])
-      if (labFinished > 0) {
-        var labAvg = Math.round(labScoreSum / labFinished);
-        if (labAvg >= 75) {
-          row.push(labAvg + " (LULUS)");
-        } else {
-          row.push(labAvg + " (REMEDIAL)");
-        }
-      } else {
-        row.push("[BELUM]");
-      }
-    });
-
-    var overallAvg = overallFinished > 0 ? Math.round(overallScoreSum / overallFinished) : 0;
-    row.push(overallFinished + " Tugas Selesai");
-    row.push(overallAvg);
-    row.push(overallFinished > 0 ? (overallAvg >= 75 ? "LULUS" : "REMEDIAL") : "BELUM ADA");
-
-    sheet.appendRow(row);
-    var lr = sheet.getLastRow();
-    sheet.setRowHeight(lr, 26);
-    sheet.getRange(lr, 1).setHorizontalAlignment("center");
-    sheet.getRange(lr, 3).setHorizontalAlignment("center");
-    sheet.getRange(lr, 4).setHorizontalAlignment("center");
-    sheet.getRange(lr, headers.length - 2).setHorizontalAlignment("center");
-    sheet.getRange(lr, headers.length - 1).setHorizontalAlignment("center");
-    sheet.getRange(lr, headers.length).setHorizontalAlignment("center");
-
-    for (var c = 0; c < labs.length; c++) {
-      var cell = sheet.getRange(lr, 5 + c);
-      cell.setHorizontalAlignment("center");
-      var val = String(row[4 + c]);
-      if (val.indexOf("Belum") !== -1) {
-        cell.setBackground("#f1f5f9");
-        cell.setFontColor("#94a3b8");
-      } else if (val.indexOf("LULUS") !== -1) {
-        cell.setBackground("#dcfce7");
-        cell.setFontColor("#166534");
-        cell.setFontWeight("bold");
-      } else {
-        cell.setBackground("#fee2e2");
-        cell.setFontColor("#991b1b");
-        cell.setFontWeight("bold");
-      }
-    }
-
-    var compCell = sheet.getRange(lr, headers.length);
-    compCell.setFontWeight("bold");
-    if (overallFinished > 0 && overallAvg >= 75) {
-      compCell.setBackground("#dcfce7");
-      compCell.setFontColor("#166534");
-    } else if (overallFinished > 0) {
-      compCell.setBackground("#fef3c7");
-      compCell.setFontColor("#92400e");
-    }
-  });
-
-  sheet.setColumnWidth(1, 45);
-  sheet.setColumnWidth(2, 220);
-  sheet.setColumnWidth(3, 85);
-  sheet.setColumnWidth(4, 120);
-  for (var i = 0; i < labs.length; i++) {
-    sheet.setColumnWidth(5 + i, 160);
-  }
-  sheet.setColumnWidth(headers.length - 2, 160);
-  sheet.setColumnWidth(headers.length - 1, 140);
-  sheet.setColumnWidth(headers.length, 140);
-}
-
-function buatMatriksRekapSeluruhLab() {
-  buatSemuaTabModulLab();
-}
-
-/**
- * =============================================================================
- * 6. HELPER: PENGENALAN LAB & TUGAS SPESIFIK BERDASARKAN JUDUL & MODUL
- * =============================================================================
- */
-function identifyLabAndTask(modulStr, quizStr) {
-  var m = String(modulStr || "").toLowerCase();
-  var q = String(quizStr || "").toLowerCase();
-  var text = m + " " + q;
-
-  // 1. PRIORITAS UTAMA: Jika kuis merupakan Tes Diagnostik
-  if (text.indexOf("diagnostik") !== -1) {
-    for (var i = 0; i < LAB_CONFIGS.length; i++) {
-      var lab = LAB_CONFIGS[i];
-      for (var j = 0; j < lab.tasks.length; j++) {
-        var task = lab.tasks[j];
-        if (task.key.indexOf("diag") !== -1) {
-          for (var k = 0; k < task.keywords.length; k++) {
-            if (text.indexOf(task.keywords[k]) !== -1) {
-              return { labId: lab.id, taskKey: task.key, taskName: task.name };
-            }
-          }
-        }
-      }
-    }
-    if (text.indexOf("machine") !== -1 || text.indexOf("mesin") !== -1) {
-      return { labId: "machine", taskKey: "diag_machine", taskName: "Tes Diagnostik Machine Lab" };
-    }
-  }
-
-  // 2. Cocokkan tugas per lab berdasarkan kata kunci spesifik
-  for (var i = 0; i < LAB_CONFIGS.length; i++) {
-    var lab = LAB_CONFIGS[i];
-    for (var j = 0; j < lab.tasks.length; j++) {
-      var task = lab.tasks[j];
-      var matched = false;
-      for (var k = 0; k < task.keywords.length; k++) {
-        if (text.indexOf(task.keywords[k]) !== -1) {
-          matched = true;
-          break;
-        }
-      }
-      if (matched) {
-        return {
-          labId: lab.id,
-          taskKey: task.key,
-          taskName: task.name
-        };
-      }
-    }
-  }
-
-  if (text.indexOf("safety") !== -1 || text.indexOf("k3") !== -1) return { labId: "safety", taskKey: "safety_gen", taskName: q || "Praktik Safety K3" };
-  if (text.indexOf("cutting") !== -1 || text.indexOf("potong") !== -1) return { labId: "cutting-tools", taskKey: "cutting_gen", taskName: q || "Praktik Alat Potong" };
-  if (text.indexOf("heat") !== -1 || text.indexOf("panas") !== -1) return { labId: "heat-treatment", taskKey: "heat_gen", taskName: q || "Praktik Heat Treatment" };
-  if (text.indexOf("mekanika") !== -1 || text.indexOf("mechanic") !== -1) return { labId: "mechanics", taskKey: "mech_gen", taskName: q || "Praktik Mekanika" };
-  if (text.indexOf("weld") !== -1 || text.indexOf("las") !== -1) return { labId: "welding", taskKey: "weld_gen", taskName: q || "Praktik Pengelasan" };
-  if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
-  if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
-  if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
-  if (text.indexOf("evaluasi") !== -1) {
-    if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
-    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
-    if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
-    if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
-    if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
-    return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
-  }
-
-  return { labId: "machine", taskKey: "machine_gen", taskName: q || "Praktik Machine Lab" };
-}
-
-/**
- * =============================================================================
- * 7. HELPER: PARSING DATA BARIS SECARA CERDAS & DETEKSI NILAI ASLI (0 - 100)
- * =============================================================================
- */
-function parseRowData(row, headerMap) {
-  var nama = "";
-  var absen = "-";
-  var kelas = "-";
-  var sekolah = "-";
-  var modul = "";
-  var judulKuis = "";
-  var skor = 0;
-  var waktu = "";
-
-  if (headerMap) {
-    if (headerMap.waktu !== undefined) waktu = String(row[headerMap.waktu] || "");
-    if (headerMap.nama !== undefined) nama = String(row[headerMap.nama] || "").trim();
-    if (headerMap.absen !== undefined) absen = String(row[headerMap.absen] !== undefined ? row[headerMap.absen] : "-").trim();
-    if (headerMap.kelas !== undefined) kelas = String(row[headerMap.kelas] || "-").trim();
-    if (headerMap.sekolah !== undefined) sekolah = String(row[headerMap.sekolah] || "-").trim();
-    if (headerMap.modul !== undefined) modul = String(row[headerMap.modul] || "").trim();
-    if (headerMap.kuis !== undefined) judulKuis = String(row[headerMap.kuis] || "").trim();
-    if (headerMap.nilai !== undefined) skor = Number(row[headerMap.nilai]);
-  }
-
-  if (!waktu) waktu = String(row[0] || "");
-  if (!nama) nama = String(row[1] || row[2] || "").trim();
-  if (absen === "-") absen = String(row[2] || "-").trim();
-  if (kelas === "-") kelas = String(row[3] || "-").trim();
-  if (!modul) modul = String(row[5] || "").trim();
-
-  if (!judulKuis) {
-    var candidate1 = String(row[7] || "").trim();
-    var candidate2 = String(row[6] || "").trim();
-    if (isNaN(Number(candidate1)) && candidate1.length > 3) {
-      judulKuis = candidate1;
-    } else if (isNaN(Number(candidate2)) && candidate2.length > 3) {
-      judulKuis = candidate2;
-    } else {
-      judulKuis = candidate2 || candidate1;
-    }
-  }
-
-  // DETEKSI NILAI ASLI SISWA (0 - 100):
-  // 1. Ambil nilai dari kolom nilai (indeks 7 atau 8)
-  var val7 = Number(row[7]);
-  var val8 = Number(row[8]);
-  var candidateScore = !isNaN(val7) ? val7 : (!isNaN(val8) ? val8 : skor);
-
-  // Jika nilai berada pada rentang 15 s.d 100, gunakan langsung
-  if (candidateScore >= 15 && candidateScore <= 100) {
-    skor = candidateScore;
-  } else if (candidateScore > 0 && candidateScore <= 10) {
-    // Jika nilai tersimpan dalam skala 1-10 (misal benar 8 dari 10 soal), ubah ke skala 100
-    skor = Math.round(candidateScore * 10);
-  } else {
-    // Scan kolom lain untuk menemukan nilai riil 0 - 100
-    var found = false;
-    for (var j = 6; j < Math.min(row.length, 11); j++) {
-      var num = Number(row[j]);
-      if (!isNaN(num) && num >= 15 && num <= 100) {
-        skor = num;
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      for (var k = 7; k < Math.min(row.length, 10); k++) {
-        var n = Number(row[k]);
-        if (!isNaN(n) && n > 0 && n <= 10) {
-          skor = Math.round(n * 10);
-          break;
-        }
-      }
-    }
-  }
-
-  // Jaminan 100%: Nilai tidak boleh bernilai 1 - 10, harus skala 100
-  if (skor > 0 && skor <= 10) {
-    skor = Math.round(skor * 10);
-  }
-
-  return {
-    waktu: waktu,
-    nama: nama,
-    absen: absen,
-    kelas: kelas,
-    sekolah: sekolah,
-    modul: modul,
-    judulKuis: judulKuis,
-    skor: skor
-  };
-}
-
-/**
- * =============================================================================
- * 8. HELPER: AMBIL SELURUH DATA BARIS DARI SPREADSHEET (TERTINGGI PER SISWA)
- * =============================================================================
- */
-function getAllDataRows(ss) {
-  var bestRows = {};
-  var sheets = ss.getSheets();
-
-  sheets.forEach(function(sheet) {
-    var name = sheet.getName();
-    if (name.indexOf("Rekap") !== -1 || name.indexOf("Safety") !== -1 || name.indexOf("Machine") !== -1 || name.indexOf("Perkakas") !== -1 || name.indexOf("Heat") !== -1 || name.indexOf("Mekanika") !== -1 || name.indexOf("Welding") !== -1 || name.indexOf("Ukur") !== -1 || name.indexOf("Design") !== -1 || name.indexOf("Bengkel") !== -1 || name.indexOf("Evaluasi") !== -1) {
-      return;
-    }
-
-    var data = sheet.getDataRange().getValues();
-    if (data.length <= 1) return;
-
-    var headerRowIdx = -1;
-    var headerMap = {};
-
-    for (var i = 0; i < Math.min(data.length, 5); i++) {
-      var row = data[i];
-      var rowStr = row.join(" ").toLowerCase();
-      if (rowStr.indexOf("nama") !== -1 && (rowStr.indexOf("nilai") !== -1 || rowStr.indexOf("kuis") !== -1 || rowStr.indexOf("skor") !== -1)) {
-        headerRowIdx = i;
-        for (var c = 0; c < row.length; c++) {
-          var h = String(row[c] || "").toLowerCase().trim();
-          if (h.indexOf("waktu") !== -1 || h.indexOf("tanggal") !== -1) headerMap.waktu = c;
-          else if (h.indexOf("nama") !== -1 && h.indexOf("kuis") === -1) headerMap.nama = c;
-          else if (h.indexOf("absen") !== -1) headerMap.absen = c;
-          else if (h.indexOf("kelas") !== -1) headerMap.kelas = c;
-          else if (h.indexOf("sekolah") !== -1) headerMap.sekolah = c;
-          else if (h.indexOf("modul") !== -1 && h.indexOf("sub") === -1) headerMap.modul = c;
-          else if (h.indexOf("kuis") !== -1 || h.indexOf("asesmen") !== -1) headerMap.kuis = c;
-          else if (h.indexOf("nilai") !== -1 || h.indexOf("skor") !== -1) headerMap.nilai = c;
-        }
-        break;
-      }
-    }
-
-    if (headerRowIdx === -1) return;
-
-    for (var r = headerRowIdx + 1; r < data.length; r++) {
-      var row = data[r];
-      var parsed = parseRowData(row, headerMap);
-
-      if (parsed.nama && parsed.judulKuis && parsed.nama.toLowerCase().indexOf("percobaan") === -1) {
-        var studentKey = parsed.nama.toLowerCase() + "_" + parsed.judulKuis.toLowerCase();
-        if (!bestRows[studentKey] || parsed.skor > bestRows[studentKey].skor) {
-          bestRows[studentKey] = parsed;
-        }
-      }
-    }
-  });
-
-  var result = Object.keys(bestRows).map(function(k) { return bestRows[k]; });
-
-  if (result.length === 0) {
-    var firstSheet = ss.getSheets()[0];
-    var curData = firstSheet.getDataRange().getValues();
-    for (var i = 1; i < curData.length; i++) {
-      var parsedFallback = parseRowData(curData[i], null);
-      if (parsedFallback.nama && parsedFallback.nama.toLowerCase().indexOf("percobaan") === -1) {
-        result.push(parsedFallback);
-      }
-    }
-  }
-
-  return result;
-}
-
-/**
- * =============================================================================
- * 9. HELPER: CARI ATAU BUAT SHEET RAW DATA MASUK
- * =============================================================================
- */
-function getOrCreateRawSheet(ss) {
-  var rawName = "Data Masuk (Raw Data)";
-  var sheet = ss.getSheetByName(rawName);
-  if (!sheet) {
-    var firstSheet = ss.getSheets()[0];
-    var firstSheetName = firstSheet.getName();
-    if (firstSheetName === "Sheet1" || firstSheetName === "Halaman1" || firstSheetName === "Jawaban Formulir 1") {
-      firstSheet.setName(rawName);
-      sheet = firstSheet;
-    } else {
-      sheet = ss.insertSheet(rawName);
-    }
-  }
-
-  if (sheet.getLastRow() === 0) {
-    var headers = [
-      "Waktu & Tanggal",
-      "Nama Lengkap Siswa",
-      "No. Absen",
-      "Kelas / Jurusan",
-      "Sekolah / Instansi",
-      "Modul Laboratorium",
-      "Nama Kuis / Asesmen",
-      "Nilai (0 - 100)",
-      "Jawaban Benar",
-      "Total Soal",
-      "Status KKM",
-      "Rincian Jawaban Siswa"
-    ];
-    sheet.appendRow(headers);
-    var hRange = sheet.getRange(1, 1, 1, headers.length);
-    hRange.setBackground("#064e3b");
-    hRange.setFontColor("#ffffff");
-    hRange.setFontWeight("bold");
-    hRange.setHorizontalAlignment("center");
-    sheet.setFrozenRows(1);
-
-    sheet.setColumnWidth(1, 170);
-    sheet.setColumnWidth(2, 220);
-    sheet.setColumnWidth(3, 85);
-    sheet.setColumnWidth(4, 120);
-    sheet.setColumnWidth(5, 170);
-    sheet.setColumnWidth(6, 170);
-    sheet.setColumnWidth(7, 240);
-    sheet.setColumnWidth(8, 110);
-    sheet.setColumnWidth(9, 110);
-    sheet.setColumnWidth(10, 100);
-    sheet.setColumnWidth(11, 110);
-    sheet.setColumnWidth(12, 280);
-  }
-
-  return sheet;
-}
 `;
 
 // DEFINISI MODUL LAB & TUGAS-TUGASNYA SESUAI SIDEBAR

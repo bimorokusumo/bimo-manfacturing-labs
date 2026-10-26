@@ -394,12 +394,24 @@ function onOpen() {
   try {
     var ui = SpreadsheetApp.getUi();
     ui.createMenu("Menu BIMO Labs")
-      .addItem("1. Sinkronkan Seluruh Tab Lab & Evaluasi C1 - C5", "buatSemuaTabModulLab")
+      .addItem("1. Sinkronkan Seluruh Tab Lab (Termasuk Safety Lab & C1 - C5)", "buatSemuaTabModulLab")
       .addItem("2. Perbarui Khusus Sheet 10. Evaluasi Akhir (C1 - C5)", "perbaruiSheetEvaluasiAkhir")
-      .addItem("3. Perbarui Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
+      .addItem("3. Pulihkan / Perbarui Khusus Sheet 1. Safety Lab", "perbaruiSheetSafetyLab")
+      .addItem("4. Perbarui Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
       .addSeparator()
       .addItem("Panduan Pemakaian", "tampilkanPanduan")
       .addToUi();
+  } catch (e) {}
+}
+
+function perbaruiSheetSafetyLab() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var allRows = getAllDataRows(ss);
+  var parsedData = buildStudentMapFromRows(allRows);
+  var safetyLab = LAB_CONFIGS[0];
+  renderLabSheet(ss, safetyLab, parsedData.studentsMap, parsedData.sortedStudentKeys);
+  try {
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSheet 🛡️ 1. Safety Lab telah berhasil dipulihkan dan disinkronkan.");
   } catch (e) {}
 }
 
@@ -446,7 +458,16 @@ function buatSemuaTabModulLab() {
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 
   try {
-    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab (termasuk Evaluasi C1 s.d. C5) telah berhasil disinkronkan dengan 100% Nilai Asli siswa.");
+    var allSheets = ss.getSheets();
+    for (var shIdx = 0; shIdx < allSheets.length; shIdx++) {
+      if (allSheets[shIdx].isSheetHidden && allSheets[shIdx].isSheetHidden()) {
+        allSheets[shIdx].showSheet();
+      }
+    }
+  } catch (eShow) {}
+
+  try {
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh tab lab (termasuk 🛡️ 1. Safety Lab hingga 🎓 10. Evaluasi Akhir) telah berhasil disinkronkan dan ditampilkan secara lengkap.");
   } catch (e) {}
 }
 
@@ -541,6 +562,11 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   if (!sheet) {
     sheet = ss.insertSheet(lab.tabName);
   } else {
+    try {
+      if (sheet.isSheetHidden && sheet.isSheetHidden()) {
+        sheet.showSheet();
+      }
+    } catch (eHidden) {}
     sheet.clear();
   }
 

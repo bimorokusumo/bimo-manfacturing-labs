@@ -6,18 +6,18 @@
  * Sesuai dengan Struktur Sidebar Website BIMO Manufacturing Labs:
  * 
  * 1. Tab Baris Bawah Spreadsheet (Sheet Tabs) diklasifikasikan per Modul Lab:
- *    - 🛡️ 1. Safety Lab
- *    - ⚙️ 2. Machine Lab
- *    - 🔪 3. Alat Pemotong
- *    - 🌡️ 4. Heat Treatment
- *    - 🔧 5. Mekanika Teknik
- *    - ⚡ 6. Welding Lab
- *    - 📏 7. Alat Ukur Presisi
- *    - 📐 8. Design Lab
- *    - 🏭 9. Virtual Bengkel
- *    - 🎓 10. Evaluasi Akhir
- *    - 📊 Rekap Seluruh Lab (Master Summary)
- *    - 📥 Data Masuk (Raw Data)
+ *    - 1. Safety Lab
+ *    - 2. Machine Lab
+ *    - 3. Alat Pemotong
+ *    - 4. Heat Treatment
+ *    - 5. Mekanika Teknik
+ *    - 6. Welding Lab
+ *    - 7. Alat Ukur Presisi
+ *    - 8. Design Lab
+ *    - 9. Virtual Bengkel
+ *    - 10. Evaluasi Akhir
+ *    - Rekap Seluruh Lab (Master Summary)
+ *    - Data Masuk (Raw Data)
  * 
  * 2. Seluruh nilai yang ditampilkan 100% adalah NILAI ASLI SISWA (Skala 0 - 100,
  *    misal: 75, 80, 85, 90, 100). Tidak ada lagi pecahan/rasio (1/2/3/4/5/6/7/8/9)
@@ -73,99 +73,103 @@ var MASTER_STUDENTS_LIST = [
 var LAB_CONFIGS = [
   {
     id: "safety",
-    tabName: "🛡️ 1. Safety Lab",
+    tabName: "1. Safety Lab",
     shortTitle: "Safety Lab (K3LH)",
     tasks: [
-      { key: "apd", name: "🛡️ Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
-      { key: "jsa_bor", name: "📋 JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
-      { key: "jsa_pahat", name: "📋 JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
-      { key: "apar", name: "🧯 Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
-      { key: "5r", name: "✨ Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
-      { key: "perkakas", name: "🔧 SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
-      { key: "qc", name: "🔍 Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
-      { key: "diag_safety", name: "📝 Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
+      { key: "apd", name: "Inspeksi APD Operator", category: "Kuis Praktik K3", keywords: ["inspeksi apd", "apd"] },
+      { key: "jsa_bor", name: "JSA Pengeboran Pelat Baja", category: "Asesmen JSA", keywords: ["pengeboran", "pelat", "bor meja"] },
+      { key: "jsa_pahat", name: "JSA Pengasahan Pahat Bubut", category: "Asesmen JSA", keywords: ["pengasahan", "pahat", "gerinda"] },
+      { key: "apar", name: "Simulasi APAR P-A-S-S", category: "Tanggap Darurat", keywords: ["apar", "pass", "kebakaran"] },
+      { key: "5r", name: "Budaya Kerja 5R & Etika DUDI", category: "Etika Industri", keywords: ["5r", "budaya"] },
+      { key: "perkakas", name: "SOP Perkakas Tangan & Ragum", category: "SOP Praktik", keywords: ["perkakas", "ragum"] },
+      { key: "qc", name: "Audit QC Benda Uji DUDI", category: "Pengukuran & QC", keywords: ["qc", "benda uji", "tarik"] },
+      { key: "diag_safety", name: "Tes Diagnostik Safety K3", category: "Tes Diagnostik", keywords: ["diagnostik safety", "diagnostik k3"] }
     ]
   },
   {
     id: "machine",
-    tabName: "⚙️ 2. Machine Lab",
+    tabName: "2. Machine Lab",
     shortTitle: "Machine Lab (Permesinan)",
     tasks: [
-      { key: "pretest", name: "⚙️ Pre-Test Teori Permesinan", category: "Pre-Test Formatif", keywords: ["pre-test", "pretest", "teori permesinan"] },
-      { key: "cnc", name: "💻 Kuis Teori & Kode CNC", category: "Kuis CNC & G-Code", keywords: ["cnc", "g-code", "kode g"] },
-      { key: "lathe", name: "🔩 Praktik Mesin Bubut & Frais", category: "Praktik Mesin", keywords: ["bubut", "frais", "praktik mesin"] },
-      { key: "diag_machine", name: "📝 Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
+      { key: "lathe", name: "Test Teori Mesin Bubut", category: "Teori Mesin Bubut", keywords: ["soal test kompetensi mesin bubut", "pre-test mesin bubut", "lathe test", "mesin bubut", "bubut", "lathe"] },
+      { key: "milling", name: "Test Teori Mesin Frais", category: "Teori Mesin Frais", keywords: ["soal test kompetensi mesin frais", "pre-test mesin frais", "milling test", "mesin frais", "frais", "milling"] },
+      { key: "cnc", name: "Test Teori & Kode CNC", category: "Teori & Kode CNC", keywords: ["asesmen teori & kode cnc", "kode cnc", "cnc", "g-code", "kode g"] },
+      { key: "diag_machine", name: "Tes Diagnostik Machine Lab", category: "Tes Diagnostik", keywords: ["diagnostik machine", "diagnostik mesin"] }
     ]
   },
   {
     id: "cutting-tools",
-    tabName: "🔪 3. Alat Pemotong",
-    shortTitle: "Alat Pemotong & RPM",
+    tabName: "3. Perkakas Bengkel",
+    shortTitle: "Perkakas Bengkel & RPM",
     tasks: [
-      { key: "cutting_quiz", name: "🔪 Kuis Pahat & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "pahat", "sudut potong", "cutting"] },
-      { key: "diag_cutting", name: "📝 Tes Diagnostik Alat Potong", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong"] }
+      { key: "cutting_quiz", name: "Kuis Perkakas & Kalkulasi RPM", category: "Kuis Parameter Potong", keywords: ["kalkulasi rpm", "perkakas", "kikir", "pahat", "sudut potong", "cutting"] },
+      { key: "diag_cutting", name: "Tes Diagnostik Perkakas Bengkel", category: "Tes Diagnostik", keywords: ["diagnostik cutting", "diagnostik alat potong", "diagnostik perkakas"] }
     ]
   },
   {
     id: "heat-treatment",
-    tabName: "🌡️ 4. Heat Treatment",
+    tabName: "4. Heat Treatment",
     shortTitle: "Heat Treatment & Metalurgi",
     tasks: [
-      { key: "metallurgy", name: "🌡️ Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
-      { key: "diag_heat", name: "📝 Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
+      { key: "metallurgy", name: "Kuis Evaluasi Metalurgi", category: "Evaluasi Metalurgi", keywords: ["metalurgi", "hardening", "quenching", "tempering", "heat treatment"] },
+      { key: "diag_heat", name: "Tes Diagnostik Heat Treatment", category: "Tes Diagnostik", keywords: ["diagnostik heat", "diagnostik perlakuan panas"] }
     ]
   },
   {
     id: "mechanics",
-    tabName: "🔧 5. Mekanika Teknik",
+    tabName: "5. Mekanika Teknik",
     shortTitle: "Mekanika Teknik Terapan",
     tasks: [
-      { key: "torque", name: "⚖️ Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
-      { key: "diag_mechanics", name: "📝 Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
+      { key: "torque", name: "Kuis Momen Gaya & Torsi", category: "Kuis Mekanika Terapan", keywords: ["torsi", "momen gaya", "tuas", "kesetimbangan"] },
+      { key: "diag_mechanics", name: "Tes Diagnostik Mekanika", category: "Tes Diagnostik", keywords: ["diagnostik mekanika", "diagnostik mechanics"] }
     ]
   },
   {
     id: "welding",
-    tabName: "⚡ 6. Welding Lab",
+    tabName: "6. Welding Lab",
     shortTitle: "Welding Lab (Pengelasan)",
     tasks: [
-      { key: "smaw", name: "⚡ Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
-      { key: "diag_welding", name: "📝 Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
+      { key: "smaw", name: "Kuis Asesmen Las SMAW", category: "Asesmen Pengelasan", keywords: ["smaw", "las busur", "pengelasan", "welding"] },
+      { key: "diag_welding", name: "Tes Diagnostik Welding Lab", category: "Tes Diagnostik", keywords: ["diagnostik welding", "diagnostik las"] }
     ]
   },
   {
     id: "measuring",
-    tabName: "📏 7. Alat Ukur Presisi",
+    tabName: "7. Alat Ukur Presisi",
     shortTitle: "Alat Ukur Presisi & Metrologi",
     tasks: [
-      { key: "caliper_micrometer", name: "📏 Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
-      { key: "diag_measuring", name: "📝 Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
+      { key: "caliper_micrometer", name: "Uji Pembacaan Kaliper & Mikrometer", category: "Uji Presisi", keywords: ["kaliper", "mikrometer", "jangka sorong", "alat ukur", "measuring"] },
+      { key: "diag_measuring", name: "Tes Diagnostik Alat Ukur", category: "Tes Diagnostik", keywords: ["diagnostik alat ukur", "diagnostik measuring"] }
     ]
   },
   {
     id: "design",
-    tabName: "📐 8. Design Lab",
+    tabName: "8. Design Lab",
     shortTitle: "Design Lab & Studio CAD",
     tasks: [
-      { key: "cad_drawing", name: "📐 Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
-      { key: "diag_design", name: "📝 Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
+      { key: "cad_drawing", name: "Kuis Gambar Teknik & CAD", category: "Kuis Gambar Teknik", keywords: ["gambar teknik", "cad", "proyeksi", "studio cad"] },
+      { key: "diag_design", name: "Tes Diagnostik Design Lab", category: "Tes Diagnostik", keywords: ["diagnostik design", "diagnostik gambar"] }
     ]
   },
   {
     id: "virtual-bengkel",
-    tabName: "🏭 9. Virtual Bengkel",
+    tabName: "9. Virtual Bengkel",
     shortTitle: "Virtual Bengkel 3D",
     tasks: [
-      { key: "virtual_bengkel", name: "🏭 Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
-      { key: "diag_virtual", name: "📝 Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
+      { key: "virtual_bengkel", name: "Praktik Workshop 3D", category: "Eksplorasi Bengkel", keywords: ["workshop 3d", "virtual bengkel", "bengkel 3d", "sop bengkel"] },
+      { key: "diag_virtual", name: "Tes Diagnostik Bengkel 3D", category: "Tes Diagnostik", keywords: ["diagnostik bengkel", "diagnostik virtual"] }
     ]
   },
   {
     id: "evaluasi",
-    tabName: "🎓 10. Evaluasi Akhir",
+    tabName: "10. Evaluasi Akhir",
     shortTitle: "Evaluasi Akhir Komprehensif",
     tasks: [
-      { key: "evaluasi_final", name: "🎓 Evaluasi Akhir Komprehensif", category: "Ujian Akhir", keywords: ["evaluasi akhir", "komprehensif", "ujian akhir", "evaluasi"] }
+      { key: "evaluasi_c1", name: "Evaluasi C1 (Mengingat)", category: "Evaluasi Kognitif", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
+      { key: "evaluasi_c2", name: "Evaluasi C2 (Memahami)", category: "Evaluasi Kognitif", keywords: ["c2", "memahami", "konsep"] },
+      { key: "evaluasi_c3", name: "Evaluasi C3 (Menerapkan)", category: "Evaluasi Kognitif", keywords: ["c3", "menerapkan", "aplikasi", "prosedur"] },
+      { key: "evaluasi_c4", name: "Evaluasi C4 (Menganalisis)", category: "Evaluasi Kognitif", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
+      { key: "evaluasi_c5", name: "Evaluasi C5 (Mengevaluasi)", category: "Evaluasi Kognitif", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
     ]
   }
 ];
@@ -337,6 +341,7 @@ function buildStudentMapFromRows(allRows) {
   });
 
   // 2. Olah semua row nilai yang masuk dari raw data
+  var evalCounterPerStudent = {};
   (allRows || []).forEach(function(parsed) {
     var rawNama = (parsed.nama || "").trim();
     if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1) return;
@@ -346,8 +351,11 @@ function buildStudentMapFromRows(allRows) {
     // Cari kecocokan di master 36 siswa:
     var targetKey = null;
 
-    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36
-    if (!isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
+    // Cek apakah akun pengajar (Bimoro Kusumo atau Sri Widada) agar tidak menimpa nilai siswa
+    var isTeacherSubmission = rawNama.toLowerCase().indexOf("bimoro") !== -1 || rawNama.toLowerCase().indexOf("sri widada") !== -1;
+
+    // Prioritas 1: Cocokkan nomor absen jika 1 s.d. 36 (bukan akun guru)
+    if (!isTeacherSubmission && !isNaN(parsedAbsenNum) && parsedAbsenNum >= 1 && parsedAbsenNum <= MASTER_STUDENTS_LIST.length) {
       targetKey = "absen_" + parsedAbsenNum;
     } else {
       // Prioritas 2: Cocokkan nama (case-insensitive & pembersihan karakter khusus)
@@ -361,7 +369,7 @@ function buildStudentMapFromRows(allRows) {
       }
     }
 
-    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo atau siswa tamu)
+    // Jika siswa di luar daftar master (misal akun pengajar Bimoro Kusumo / Sri Widada atau siswa tamu)
     if (!targetKey) {
       targetKey = "custom_" + rawNama.toLowerCase();
       if (!studentsMap[targetKey]) {
@@ -381,6 +389,28 @@ function buildStudentMapFromRows(allRows) {
     var modulName = parsed.modul || "";
     var score = parsed.skor;
     var matched = identifyLabAndTask(modulName, quizTitle);
+
+    // Pemulihan cerdas untuk data evaluasi sebelumnya jika kuis bernilai undefined / evaluasi umum
+    if (matched.labId === "evaluasi") {
+      var fullText = (modulName + " " + quizTitle).toLowerCase();
+      var hasExplicitLevel = fullText.indexOf("c1") !== -1 || fullText.indexOf("c2") !== -1 || fullText.indexOf("c3") !== -1 || fullText.indexOf("c4") !== -1 || fullText.indexOf("c5") !== -1 || fullText.indexOf("mengingat") !== -1 || fullText.indexOf("memahami") !== -1;
+      if (!hasExplicitLevel) {
+        if (!evalCounterPerStudent[targetKey]) evalCounterPerStudent[targetKey] = 0;
+        evalCounterPerStudent[targetKey]++;
+        var seq = evalCounterPerStudent[targetKey];
+        if (seq === 1) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+        } else if (seq === 2) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
+        } else if (seq === 3) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
+        } else if (seq === 4) {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
+        } else {
+          matched = { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
+        }
+      }
+    }
 
     var taskFullKey = matched.labId + "_" + matched.taskKey;
     if (studentsMap[targetKey].scoresByTask[taskFullKey] === undefined || score > studentsMap[targetKey].scoresByTask[taskFullKey].skor) {
@@ -453,25 +483,25 @@ function doGet(e) {
 function onOpen() {
   try {
     var ui = SpreadsheetApp.getUi();
-    ui.createMenu("⚡ Menu BIMO Labs")
-      .addItem("📊 1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)", "buatSemuaTabModulLab")
-      .addItem("📋 2. Buat Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
-      .addItem("🔄 3. Sinkronkan & Rapikan Ulang Semua Data", "buatSemuaTabModulLab")
+    ui.createMenu("Menu BIMO Labs")
+      .addItem("1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)", "buatSemuaTabModulLab")
+      .addItem("2. Buat Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
+      .addItem("3. Sinkronkan & Rapikan Ulang Semua Data", "buatSemuaTabModulLab")
       .addSeparator()
-      .addItem("ℹ️ Panduan Pemakaian", "tampilkanPanduan")
+      .addItem("Panduan Pemakaian", "tampilkanPanduan")
       .addToUi();
   } catch (e) {}
 }
 
 function tampilkanPanduan() {
   var pesan = "CARA MENGGUNAKAN MENU BIMO LABS:\n\n" +
-    "1. Klik '📊 1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)':\n" +
+    "1. Klik '1. Buat Semua Tab Lab & Rekap Tugas (Sesuai Sidebar)':\n" +
     "   Sistem otomatis membuat tab di bar bawah sesuai sidebar website:\n" +
-    "   🛡️ Safety Lab, ⚙️ Machine Lab, 🔪 Alat Pemotong, 🌡️ Heat Treatment, dll.\n\n" +
+    "   Safety Lab, Machine Lab, Perkakas Bengkel, Heat Treatment, dll.\n\n" +
     "2. Nilai yang ditampilkan adalah NILAI ASLI SISWA (Skala 0 - 100, misal: 80, 85, 90, 100).\n" +
     "   - Bagian 1: Daftar tugas-tugas lab per row (lengkap dengan nama & nilai asli).\n" +
     "   - Bagian 2: Matriks ceklis nilai siswa (Hijau = LULUS, Merah = REMEDIAL, Abu-abu = Belum).\n\n" +
-    "3. Tab '📊 Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.\n\n" +
+    "3. Tab 'Rekap Seluruh Lab' memperlihatkan nilai asli rata-rata tiap lab untuk seluruh siswa.\n\n" +
     "Seluruh data nilai dijamin 100% aman dan tidak akan terhapus.";
   SpreadsheetApp.getUi().alert("Panduan Rekap Nilai BIMO Labs", pesan, SpreadsheetApp.getUi().ButtonSet.OK);
 }
@@ -507,7 +537,7 @@ function buatSemuaTabModulLab() {
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
 
   try {
-    SpreadsheetApp.getUi().alert("✅ Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
+    SpreadsheetApp.getUi().alert("[OK] Berhasil!\n\nSeluruh 36 siswa kelas X-TP.A dan seluruh tab modul lab telah berhasil disinkronkan dengan 100% NILAI ASLI siswa.");
   } catch (e) {}
 }
 
@@ -559,7 +589,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // ---------------------------------------------------------------------------
   // BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR PER ROW / BARIS)
   // ---------------------------------------------------------------------------
-  sheet.appendRow(["📌 BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
+  sheet.appendRow(["BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
   var sec1Title = sheet.getRange(4, 1, 1, 11);
   sec1Title.merge();
   sec1Title.setBackground("#1e293b");
@@ -671,7 +701,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   // BAGIAN 2: MATRIKS CEKLIS NILAI SISWA (STATUS PENGUMPULAN PER SISWA)
   // ---------------------------------------------------------------------------
   var sec2StartRow = curRow + 1;
-  sheet.appendRow(["📋 BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
+  sheet.appendRow(["BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
   var sec2Title = sheet.getRange(sec2StartRow, 1, 1, 4 + tasks.length + 3);
   sec2Title.merge();
   sec2Title.setBackground("#1e293b");
@@ -730,7 +760,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
           row.push(rec.skor + " (REMEDIAL)");
         }
       } else {
-        row.push("⏳ Belum");
+        row.push("[BELUM]");
       }
     });
 
@@ -826,7 +856,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
  * =============================================================================
  */
 function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
-  var masterName = "📊 Rekap Seluruh Lab";
+  var masterName = "Rekap Seluruh Lab";
   var sheet = ss.getSheetByName(masterName);
   if (!sheet) {
     sheet = ss.insertSheet(masterName, 0);
@@ -835,7 +865,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
   }
 
   // BANNER MASTER
-  sheet.appendRow(["📊 REKAPITULASI KELENGKAPAN TUGAS SELURUH LABORATORIUM (BIMO MANUFACTURING LABS)"]);
+  sheet.appendRow(["REKAPITULASI KELENGKAPAN TUGAS SELURUH LABORATORIUM (BIMO MANUFACTURING LABS)"]);
   var b1 = sheet.getRange(1, 1, 1, 4 + labs.length + 3);
   b1.merge();
   b1.setBackground("#0f172a");
@@ -897,7 +927,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
         }
       });
 
-      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau ⏳ Belum)
+      // Tampilkan Nilai Asli Rata-rata Modul Lab (misal: 85 (LULUS) atau [BELUM])
       if (labFinished > 0) {
         var labAvg = Math.round(labScoreSum / labFinished);
         if (labAvg >= 75) {
@@ -906,7 +936,7 @@ function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
           row.push(labAvg + " (REMEDIAL)");
         }
       } else {
-        row.push("⏳ Belum");
+        row.push("[BELUM]");
       }
     });
 
@@ -980,6 +1010,27 @@ function identifyLabAndTask(modulStr, quizStr) {
   var q = String(quizStr || "").toLowerCase();
   var text = m + " " + q;
 
+  // 1. PRIORITAS UTAMA: Jika kuis merupakan Tes Diagnostik
+  if (text.indexOf("diagnostik") !== -1) {
+    for (var i = 0; i < LAB_CONFIGS.length; i++) {
+      var lab = LAB_CONFIGS[i];
+      for (var j = 0; j < lab.tasks.length; j++) {
+        var task = lab.tasks[j];
+        if (task.key.indexOf("diag") !== -1) {
+          for (var k = 0; k < task.keywords.length; k++) {
+            if (text.indexOf(task.keywords[k]) !== -1) {
+              return { labId: lab.id, taskKey: task.key, taskName: task.name };
+            }
+          }
+        }
+      }
+    }
+    if (text.indexOf("machine") !== -1 || text.indexOf("mesin") !== -1) {
+      return { labId: "machine", taskKey: "diag_machine", taskName: "Tes Diagnostik Machine Lab" };
+    }
+  }
+
+  // 2. Cocokkan tugas per lab berdasarkan kata kunci spesifik
   for (var i = 0; i < LAB_CONFIGS.length; i++) {
     var lab = LAB_CONFIGS[i];
     for (var j = 0; j < lab.tasks.length; j++) {
@@ -1009,7 +1060,14 @@ function identifyLabAndTask(modulStr, quizStr) {
   if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1) return { labId: "measuring", taskKey: "meas_gen", taskName: q || "Praktik Alat Ukur" };
   if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1) return { labId: "design", taskKey: "cad_gen", taskName: q || "Praktik Design Lab" };
   if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "bengkel_gen", taskName: q || "Praktik Bengkel 3D" };
-  if (text.indexOf("evaluasi") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_final", taskName: "🎓 Evaluasi Akhir Komprehensif" };
+  if (text.indexOf("evaluasi") !== -1) {
+    if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "Evaluasi C2 (Memahami)" };
+    if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "Evaluasi C3 (Menerapkan)" };
+    if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "Evaluasi C4 (Menganalisis)" };
+    if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "Evaluasi C5 (Mengevaluasi)" };
+    return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "Evaluasi C1 (Mengingat)" };
+  }
 
   return { labId: "machine", taskKey: "machine_gen", taskName: q || "Praktik Machine Lab" };
 }
@@ -1120,7 +1178,7 @@ function getAllDataRows(ss) {
 
   sheets.forEach(function(sheet) {
     var name = sheet.getName();
-    if (name.indexOf("📊") !== -1 || name.indexOf("🛡️") !== -1 || name.indexOf("⚙️") !== -1 || name.indexOf("🔪") !== -1 || name.indexOf("🌡️") !== -1 || name.indexOf("🔧") !== -1 || name.indexOf("⚡") !== -1 || name.indexOf("📏") !== -1 || name.indexOf("📐") !== -1 || name.indexOf("🏭") !== -1 || name.indexOf("🎓") !== -1 || name.indexOf("📋") !== -1) {
+    if (name.indexOf("Rekap") !== -1 || name.indexOf("Safety") !== -1 || name.indexOf("Machine") !== -1 || name.indexOf("Perkakas") !== -1 || name.indexOf("Heat") !== -1 || name.indexOf("Mekanika") !== -1 || name.indexOf("Welding") !== -1 || name.indexOf("Ukur") !== -1 || name.indexOf("Design") !== -1 || name.indexOf("Bengkel") !== -1 || name.indexOf("Evaluasi") !== -1) {
       return;
     }
 
@@ -1187,7 +1245,7 @@ function getAllDataRows(ss) {
  * =============================================================================
  */
 function getOrCreateRawSheet(ss) {
-  var rawName = "📥 Data Masuk (Raw Data)";
+  var rawName = "Data Masuk (Raw Data)";
   var sheet = ss.getSheetByName(rawName);
   if (!sheet) {
     var firstSheet = ss.getSheets()[0];

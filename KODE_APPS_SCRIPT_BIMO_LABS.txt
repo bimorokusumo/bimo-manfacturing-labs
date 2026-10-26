@@ -4,7 +4,7 @@
  * =============================================================================
  * 
  * Versi Khusus: Mode Sheet Tunggal (Tanpa Menambah Sheet Baru)
- * - Menggunakan sheet yang sudah ada di spreadsheet Anda secara langsung.
+ * - Menggunakan sheet yang sudah ada di spreadsheet Anda (misal: '🎓 10. Evaluasi Akhir').
  * - Menampilkan kolom mandiri: C1, C2, C3, C4, dan C5.
  * - Otomatis mendeteksi nilai C1 dan C2 yang sudah dikerjakan siswa sebelumnya.
  * - Real-time auto update ketika siswa mengirim jawaban evaluasi dari web.
@@ -52,15 +52,6 @@ var MASTER_STUDENTS_LIST = [
   { absen: 36, nis: "22981", nama: "MUHAMMAD RAFAEL AL-HABSI", kelas: "X-TP.A", sekolah: "SMKN 2 DEPOK" }
 ];
 
-// DEFINISI 5 TINGKATAN EVALUASI KOGNITIF (C1 S.D. C5)
-var EVAL_TASKS = [
-  { key: "c1", colIdx: 5, name: "Evaluasi C1 (Mengingat)", short: "C1: Mengingat", keywords: ["c1", "mengingat", "pengetahuan dasar"] },
-  { key: "c2", colIdx: 6, name: "Evaluasi C2 (Memahami)", short: "C2: Memahami", keywords: ["c2", "memahami", "konsep"] },
-  { key: "c3", colIdx: 7, name: "Evaluasi C3 (Menerapkan)", short: "C3: Menerapkan", keywords: ["c3", "menerapkan", "prosedur", "aplikasi"] },
-  { key: "c4", colIdx: 8, name: "Evaluasi C4 (Menganalisis)", short: "C4: Menganalisis", keywords: ["c4", "menganalisis", "analisis", "cacat"] },
-  { key: "c5", colIdx: 9, name: "Evaluasi C5 (Mengevaluasi)", short: "C5: Mengevaluasi", keywords: ["c5", "mengevaluasi", "evaluasi", "hots"] }
-];
-
 /**
  * =============================================================================
  * 1. MENU KHUSUS PADA GOOGLE SPREADSHEET
@@ -78,24 +69,24 @@ function onOpen() {
 
 /**
  * =============================================================================
- * 2. MENDAPATKAN SHEET YANG SUDAH ADA (TANPA MENAMBAH SHEET BARU)
+ * 2. MENDAPATKAN SHEET YANG SUDAH ADA (FLEKSIBEL DENGAN EMOJI / SIMBOL APAPUN)
  * =============================================================================
  */
 function getExistingTargetSheet(ss) {
   var sheets = ss.getSheets();
   
-  // 1. Prioritaskan sheet yang aktif dibuka oleh guru
-  var active = ss.getActiveSheet();
-  if (active && active.getName().toLowerCase().indexOf("raw") === -1 && active.getName().toLowerCase().indexOf("data masuk") === -1) {
-    return active;
-  }
-
-  // 2. Cari sheet yang namanya mengandung kata 'evaluasi'
+  // 1. Cari sheet yang namanya mengandung kata 'evaluasi' (misal: '🎓 10. Evaluasi Akhir', 'Evaluasi Akhir', dll)
   for (var i = 0; i < sheets.length; i++) {
     var name = sheets[i].getName().toLowerCase();
     if (name.indexOf("evaluasi") !== -1) {
       return sheets[i];
     }
+  }
+
+  // 2. Prioritaskan sheet yang sedang aktif dibuka jika bukan data raw
+  var active = ss.getActiveSheet();
+  if (active && active.getName().toLowerCase().indexOf("raw") === -1 && active.getName().toLowerCase().indexOf("data masuk") === -1) {
+    return active;
   }
 
   // 3. Cari sheet pertama yang bukan sheet penampung raw data
@@ -106,7 +97,7 @@ function getExistingTargetSheet(ss) {
     }
   }
 
-  // 4. Fallback ke sheet pertama yang ada
+  // 4. Fallback ke sheet pertama
   return sheets[0];
 }
 
@@ -140,7 +131,6 @@ function collectEvaluasiScores(ss) {
     var data = sh.getDataRange().getValues();
     if (data.length <= 1) return;
 
-    // Deteksi letak kolom nama, kuis, nilai, absen
     var headerRowIdx = -1;
     var colMap = { nama: -1, absen: -1, kuis: -1, modul: -1, nilai: -1, detail: -1 };
 
@@ -173,7 +163,6 @@ function collectEvaluasiScores(ss) {
       var rawKuis = colMap.kuis !== -1 ? String(row[colMap.kuis] || "").trim() : String(row[6] || "").trim();
       var rawDetail = colMap.detail !== -1 ? String(row[colMap.detail] || "").trim() : "";
 
-      // Cari nilai angka (0 - 100)
       var scoreVal = 0;
       if (colMap.nilai !== -1) {
         scoreVal = Number(row[colMap.nilai]);
@@ -189,7 +178,6 @@ function collectEvaluasiScores(ss) {
       if (isNaN(scoreVal) || scoreVal <= 0) continue;
       if (scoreVal > 0 && scoreVal <= 10) scoreVal = Math.round(scoreVal * 10);
 
-      // Cari kecocokan siswa di master list
       var targetKey = null;
       var parsedAbsen = parseInt(rawAbsen, 10);
       if (!isNaN(parsedAbsen) && parsedAbsen >= 1 && parsedAbsen <= MASTER_STUDENTS_LIST.length) {
@@ -221,7 +209,6 @@ function collectEvaluasiScores(ss) {
         }
       }
 
-      // Identifikasi apakah ini evaluasi C1, C2, C3, C4, atau C5
       var text = (rawModul + " " + rawKuis + " " + rawDetail).toLowerCase();
       var detectedLevel = null;
 
@@ -236,7 +223,6 @@ function collectEvaluasiScores(ss) {
       } else if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) {
         detectedLevel = "c5";
       } else if (text.indexOf("evaluasi") !== -1 || text.indexOf("komprehensif") !== -1) {
-        // Pemulihan berurutan jika judul sebelumnya "Evaluasi undefined"
         if (!evalCounters[targetKey]) evalCounters[targetKey] = 0;
         evalCounters[targetKey]++;
         var seq = evalCounters[targetKey];
@@ -368,7 +354,6 @@ function perbaruiSheetEvaluasiIni() {
     sheet.getRange(lr, 3).setHorizontalAlignment("center");
     sheet.getRange(lr, 4).setHorizontalAlignment("center");
 
-    // Format nilai C1 - C5
     for (var col = 5; col <= 9; col++) {
       var cell = sheet.getRange(lr, col);
       cell.setHorizontalAlignment("center");
@@ -383,7 +368,6 @@ function perbaruiSheetEvaluasiIni() {
       }
     }
 
-    // Format Rata-rata & Status
     var avgCell = sheet.getRange(lr, 10);
     avgCell.setHorizontalAlignment("center");
     avgCell.setFontWeight("bold");
@@ -404,7 +388,6 @@ function perbaruiSheetEvaluasiIni() {
 
   // BARIS REKAPITULASI RATA-RATA KELAS DI BAGIAN BAWAH
   sheet.appendRow([""]);
-  var statStartRow = sheet.getLastRow() + 1;
 
   var avgC1 = c1Count > 0 ? Math.round(c1Total / c1Count) : "-";
   var avgC2 = c2Count > 0 ? Math.round(c2Total / c2Count) : "-";
@@ -436,7 +419,7 @@ function perbaruiSheetEvaluasiIni() {
     sheet.getRange(summaryRow, c).setHorizontalAlignment("center");
   }
 
-  // Atur lebar kolom agar proporsional dan mudah dibaca
+  // Atur lebar kolom
   sheet.setColumnWidth(1, 45);
   sheet.setColumnWidth(2, 280);
   sheet.setColumnWidth(3, 80);
@@ -450,11 +433,11 @@ function perbaruiSheetEvaluasiIni() {
   sheet.setColumnWidth(11, 160);
 
   try {
-    SpreadsheetApp.getUi().alert("[OK] Berhasil!
-
-Sheet ini telah diperbarui secara langsung dengan kolom Evaluasi C1 hingga C5.
-
-Nilai C1 dan C2 yang dikerjakan siswa telah berhasil ditampilkan tanpa menambah sheet baru.");
+    var sheetTitle = sheet.getName();
+    var pesanBerhasil = "[OK] Berhasil!\n\n" +
+      "Sheet '" + sheetTitle + "' telah diperbarui secara langsung dengan kolom Evaluasi C1 hingga C5.\n\n" +
+      "Nilai C1 dan C2 yang dikerjakan siswa telah berhasil ditampilkan tanpa menambah sheet baru.";
+    SpreadsheetApp.getUi().alert(pesanBerhasil);
   } catch (e) {}
 }
 
@@ -476,7 +459,8 @@ function hapusTabTambahan() {
   }
 
   var ui = SpreadsheetApp.getUi();
-  var resp = ui.alert("Konfirmasi Bersihkan Tab Tambahan", "Apakah Anda ingin menghapus tab-tab tambahan (misal Safety Lab, Machine Lab, dll) dan HANYA MENYISAKAN sheet utama '" + targetSheet.getName() + "'?", ui.ButtonSet.YES_NO);
+  var pesanKonfirmasi = "Apakah Anda ingin menghapus tab-tab tambahan (misal Safety Lab, Machine Lab, dll) dan HANYA MENYISAKAN sheet utama '" + targetSheet.getName() + "'?";
+  var resp = ui.alert("Konfirmasi Bersihkan Tab Tambahan", pesanKonfirmasi, ui.ButtonSet.YES_NO);
   
   if (resp === ui.Button.YES) {
     sheets.forEach(function(sh) {
@@ -520,18 +504,15 @@ function doPost(e) {
     var skor = Number(data.skor !== undefined ? data.skor : 0);
     if (skor > 0 && skor <= 10) skor = Math.round(skor * 10);
 
-    // Dapatkan target sheet yang sudah ada
     var sheet = getExistingTargetSheet(ss);
 
-    // Identifikasi level C1 - C5
     var text = (modul + " " + judulKuis + " " + detailJawaban).toLowerCase();
-    var targetCol = 5; // Default C1 (Kolom E)
+    var targetCol = 5;
     if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) targetCol = 6;
     else if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) targetCol = 7;
     else if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) targetCol = 8;
     else if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) targetCol = 9;
 
-    // Cari baris siswa di sheet
     var lastRow = sheet.getLastRow();
     var targetRow = -1;
 
@@ -555,7 +536,6 @@ function doPost(e) {
     }
 
     if (targetRow !== -1) {
-      // Update cell skor langsung di sheet yang ada
       var cell = sheet.getRange(targetRow, targetCol);
       var currentVal = cell.getValue();
       if (typeof currentVal !== "number" || skor > currentVal) {
@@ -564,7 +544,6 @@ function doPost(e) {
         cell.setFontColor(skor >= 75 ? "#16a34a" : "#dc2626");
       }
 
-      // Hitung ulang rata-rata baris
       var rowScores = sheet.getRange(targetRow, 5, 1, 5).getValues()[0];
       var sum = 0, count = 0;
       for (var s = 0; s < rowScores.length; s++) {

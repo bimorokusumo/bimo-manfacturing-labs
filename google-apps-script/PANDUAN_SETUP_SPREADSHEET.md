@@ -27,12 +27,12 @@ Panduan ini ditujukan bagi **Bapak/Ibu Guru** untuk menyiapkan Google Spreadshee
 ---
 
 ### Langkah 4: Terapkan Sebagai Aplikasi Web (Deploy as Web App)
-1. Di pojok kanan atas editor Apps Script, klik tombol biru **Terapkan** (*Deploy*) ➔ pilih **Penerapan baru** (*New deployment*).
-2. Di jendela yang muncul, klik ikon **Roda Gigi (⚙️)** di sebelah "Pilih jenis", lalu pilih **Aplikasi web** (*Web app*).
+1. Di pojok kanan atas editor Apps Script, klik tombol biru **Terapkan** (*Deploy*) -> pilih **Penerapan baru** (*New deployment*).
+2. Di jendela yang muncul, klik ikon **Roda Gigi** di sebelah "Pilih jenis", lalu pilih **Aplikasi web** (*Web app*).
 3. Isi kolom pengaturan berikut:
    - **Deskripsi**: `Webhook Nilai Bimo Labs`
    - **Jalankan sebagai** (*Execute as*): **Saya** (*Me - email Anda*)
-   - **Yang memiliki akses** (*Who has access*): **Siapa saja** (*Anyone*) ⚠️ **WAJIB DIPILIH AGAR SISWA BISA MENGIRIM NILAI**
+   - **Yang memiliki akses** (*Who has access*): **Siapa saja** (*Anyone*) - **WAJIB DIPILIH AGAR SISWA BISA MENGIRIM NILAI**
 4. Klik tombol **Terapkan** (*Deploy*).
 5. Jika muncul permintaan izin (*Authorization required*):
    - Klik **Tinjau Izin** (*Review Permissions*).
@@ -50,7 +50,7 @@ Panduan ini ditujukan bagi **Bapak/Ibu Guru** untuk menyiapkan Google Spreadshee
 ### Langkah 5: Hubungkan ke Website BIMO Labs
 1. Buka website **BIMO Manufacturing Labs**.
 2. Masuk ke menu sidebar: **"Monitoring Nilai Guru"** (atau klik ikon profil di Header).
-3. Klik tombol **"⚙️ Konfigurasi Spreadsheet"**.
+3. Klik tombol **"Konfigurasi Spreadsheet"**.
 4. Tempelkan (*Paste*) URL Web App yang tadi disalin.
 5. Klik **"Simpan & Uji Koneksi"**.
 6. Sistem akan otomatis mengirimkan satu baris data uji coba ke Spreadsheet Anda! Buka spreadsheet Anda, baris data uji coba beserta header warna akan langsung terbuat secara otomatis.

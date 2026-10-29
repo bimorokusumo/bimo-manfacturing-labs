@@ -484,6 +484,118 @@ function findSheetFlexible(ss, targetCanonicalName, fallbackKeywords) {
   return null;
 }
 
+function findSheetsForLab(ss, targetCanonicalName, fallbackKeywords) {
+  var matchedSheets = [];
+  var allSheets = ss.getSheets();
+  var cleanTarget = targetCanonicalName.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  allSheets.forEach(function(sh) {
+    var shName = sh.getName();
+    var sLower = shName.toLowerCase();
+
+    // Abaikan sheet rekapitulasi utama dan data masuk (raw)
+    if (sLower.indexOf("rekap") !== -1 || sLower.indexOf("raw") !== -1 || sLower.indexOf("data masuk") !== -1) {
+      return;
+    }
+
+    // Cocokkan nama persis
+    if (shName === targetCanonicalName) {
+      matchedSheets.push(sh);
+      return;
+    }
+
+    // Cocokkan teks bersih (tanpa emoji, simbol, dan spasi)
+    var cleanSh = sLower.replace(/[^a-z0-9]/g, "");
+    if (cleanSh.length > 3 && (cleanSh === cleanTarget || cleanSh.indexOf(cleanTarget) !== -1 || cleanTarget.indexOf(cleanSh) !== -1)) {
+      matchedSheets.push(sh);
+      return;
+    }
+
+    // Cocokkan kata kunci fallback jika ada
+    if (fallbackKeywords && fallbackKeywords.length > 0) {
+      var matchAll = true;
+      for (var k = 0; k < fallbackKeywords.length; k++) {
+        if (sLower.indexOf(fallbackKeywords[k].toLowerCase()) === -1) {
+          matchAll = false;
+          break;
+        }
+      }
+      if (matchAll) {
+        matchedSheets.push(sh);
+      }
+    }
+  });
+
+  // Hapus duplikasi sheet berdasarkan ID
+  var uniqueSheets = [];
+  var seenIds = {};
+  for (var i = 0; i < matchedSheets.length; i++) {
+    var sId = matchedSheets[i].getSheetId();
+    if (!seenIds[sId]) {
+      seenIds[sId] = true;
+      uniqueSheets.push(matchedSheets[i]);
+    }
+  }
+
+  return uniqueSheets;
+}
+
+function getStudentTaskScore(s, labId, taskKey) {
+  if (!s || !s.scoresByTask) return undefined;
+  var fullKey = labId + "_" + taskKey;
+  if (s.scoresByTask[fullKey] !== undefined) {
+    return s.scoresByTask[fullKey];
+  }
+
+  // Safety Lab aliases
+  if (labId === "safety") {
+    if (taskKey === "jsa_bor") {
+      return s.scoresByTask["safety_jsa"] ||
+             s.scoresByTask["safety_jsa_dudi"] ||
+             s.scoresByTask["safety_jsa_pengeboran"] ||
+             s.scoresByTask["safety_jsa_bor"];
+    }
+    if (taskKey === "jsa_pahat") {
+      return s.scoresByTask["safety_jsa_pahat"] ||
+             s.scoresByTask["safety_jsa_gerinda"] ||
+             s.scoresByTask["safety_jsa_pengasahan"];
+    }
+    if (taskKey === "perkakas") {
+      return s.scoresByTask["safety_perkakas"] ||
+             s.scoresByTask["safety_ragum"] ||
+             s.scoresByTask["safety_perkakas_tangan"];
+    }
+    if (taskKey === "qc") {
+      return s.scoresByTask["safety_qc"] ||
+             s.scoresByTask["safety_qc_dudi"] ||
+             s.scoresByTask["safety_mutu"];
+    }
+    if (taskKey === "apd") {
+      return s.scoresByTask["safety_apd"] ||
+             s.scoresByTask["safety_inspeksi_apd"];
+    }
+    if (taskKey === "apar") {
+      return s.scoresByTask["safety_apar"] ||
+             s.scoresByTask["safety_pass"];
+    }
+    if (taskKey === "5r") {
+      return s.scoresByTask["safety_5r"] ||
+             s.scoresByTask["safety_budaya_5r"];
+    }
+  }
+
+  // Evaluasi Lab aliases
+  if (labId === "evaluasi") {
+    if (taskKey === "evaluasi_c1") return s.scoresByTask["evaluasi_c1"] || s.scoresByTask["evaluasi_mengingat"];
+    if (taskKey === "evaluasi_c2") return s.scoresByTask["evaluasi_c2"] || s.scoresByTask["evaluasi_memahami"];
+    if (taskKey === "evaluasi_c3") return s.scoresByTask["evaluasi_c3"] || s.scoresByTask["evaluasi_menerapkan"];
+    if (taskKey === "evaluasi_c4") return s.scoresByTask["evaluasi_c4"] || s.scoresByTask["evaluasi_menganalisis"];
+    if (taskKey === "evaluasi_c5") return s.scoresByTask["evaluasi_c5"] || s.scoresByTask["evaluasi_mengevaluasi"];
+  }
+
+  return undefined;
+}
+
 function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   var keywords = [lab.id];
   if (lab.id === "safety") keywords = ["safety"];
@@ -497,17 +609,24 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   else if (lab.id === "virtual-bengkel") keywords = ["bengkel"];
   else if (lab.id === "evaluasi") keywords = ["evaluasi"];
 
-  var sheet = findSheetFlexible(ss, lab.tabName, keywords);
-  if (!sheet) {
-    sheet = ss.insertSheet(lab.tabName);
-  } else {
-    try {
-      if (sheet.isSheetHidden && sheet.isSheetHidden()) {
-        sheet.showSheet();
-      }
-    } catch (eHidden) {}
-    sheet.clear();
+  var targetSheets = findSheetsForLab(ss, lab.tabName, keywords);
+  if (targetSheets.length === 0) {
+    var newSheet = ss.insertSheet(lab.tabName);
+    targetSheets.push(newSheet);
   }
+
+  targetSheets.forEach(function(sh) {
+    renderSingleLabSheet(sh, lab, studentsMap, sortedStudentKeys);
+  });
+}
+
+function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
+  try {
+    if (sheet.isSheetHidden && sheet.isSheetHidden()) {
+      sheet.showSheet();
+    }
+  } catch (eHidden) {}
+  sheet.clear();
 
   var tasks = lab.tasks;
   var totalStudents = sortedStudentKeys.length;
@@ -515,7 +634,8 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   var totalCols = Math.max(11, 4 + tasks.length + 3);
 
   // BANNER 1: JUDUL BESAR LAB
-  sheet.appendRow([lab.tabName.toUpperCase() + " - REKAPITULASI TUGAS & MATRIKS PENGUMPULAN SISWA"]);
+  var displayTitle = sheet.getName();
+  sheet.appendRow([displayTitle.toUpperCase() + " - REKAPITULASI TUGAS & MATRIKS PENGUMPULAN SISWA"]);
   var b1 = sheet.getRange(1, 1, 1, totalCols);
   b1.merge();
   b1.setBackground("#064e3b");
@@ -578,7 +698,6 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
 
   var noTask = 1;
   tasks.forEach(function(t) {
-    var taskFullKey = lab.id + "_" + t.key;
     var submittedStudents = [];
     var notSubmittedStudents = [];
     var passedCount = 0;
@@ -586,7 +705,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
 
     sortedStudentKeys.forEach(function(k) {
       var s = studentsMap[k];
-      var rec = s.scoresByTask[taskFullKey];
+      var rec = getStudentTaskScore(s, lab.id, t.key);
       if (rec !== undefined) {
         submittedStudents.push(s.nama + " (" + rec.skor + ")");
         totalScore += rec.skor;
@@ -695,8 +814,7 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
     var studentScoreSum = 0;
 
     tasks.forEach(function(t, idx) {
-      var taskFullKey = lab.id + "_" + t.key;
-      var rec = s.scoresByTask[taskFullKey];
+      var rec = getStudentTaskScore(s, lab.id, t.key);
       if (rec !== undefined) {
         finishedCount++;
         studentScoreSum += rec.skor;
@@ -948,9 +1066,9 @@ function identifyLabAndTask(modulStr, quizStr, detailStr) {
   var labId = "";
   if (m.indexOf("evaluasi") !== -1 || (q.indexOf("evaluasi") !== -1 && m.indexOf("heat") === -1 && m.indexOf("panas") === -1 && m.indexOf("metalurgi") === -1 && m.indexOf("safety") === -1 && m.indexOf("mesin") === -1 && m.indexOf("perkakas") === -1)) {
     labId = "evaluasi";
-  } else if (m.indexOf("safety") !== -1 || m.indexOf("k3") !== -1 || q.indexOf("inspeksi apd") !== -1 || q.indexOf("apar pass") !== -1 || q.indexOf("budaya 5r") !== -1 || q.indexOf("job safety") !== -1 || q.indexOf("qc dudi") !== -1) {
+  } else if (m.indexOf("safety") !== -1 || m.indexOf("k3") !== -1 || q.indexOf("inspeksi apd") !== -1 || q.indexOf("apar pass") !== -1 || q.indexOf("budaya 5r") !== -1 || q.indexOf("job safety") !== -1 || q.indexOf("jsa") !== -1 || d.indexOf("jsa") !== -1 || q.indexOf("qc dudi") !== -1 || text.indexOf("perkakas tangan") !== -1) {
     labId = "safety";
-  } else if (m.indexOf("pemotong") !== -1 || m.indexOf("cutting") !== -1 || m.indexOf("perkakas bengkel") !== -1 || q.indexOf("kalkulasi kecepatan potong") !== -1 || q.indexOf("ensiklopedia perkakas") !== -1) {
+  } else if (m.indexOf("pemotong") !== -1 || m.indexOf("cutting") !== -1 || (m.indexOf("perkakas") !== -1 && m.indexOf("safety") === -1) || q.indexOf("kalkulasi kecepatan potong") !== -1 || q.indexOf("ensiklopedia perkakas") !== -1) {
     labId = "cutting-tools";
   } else if (m.indexOf("heat") !== -1 || m.indexOf("panas") !== -1 || m.indexOf("metalurgi") !== -1 || q.indexOf("perlakuan panas") !== -1) {
     labId = "heat-treatment";
@@ -980,13 +1098,33 @@ function identifyLabAndTask(modulStr, quizStr, detailStr) {
 
   if (labId === "safety") {
     if (text.indexOf("diagnostik") !== -1) return { labId: "safety", taskKey: "diag_safety", taskName: "📝 Tes Diagnostik Safety K3" };
-    if (text.indexOf("apd") !== -1) return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
-    if (text.indexOf("apar") !== -1 || text.indexOf("pass") !== -1 || text.indexOf("kebakaran") !== -1) return { labId: "safety", taskKey: "apar", taskName: "🧯 Simulasi APAR P-A-S-S" };
-    if (text.indexOf("5r") !== -1 || text.indexOf("budaya") !== -1 || text.indexOf("etika") !== -1) return { labId: "safety", taskKey: "5r", taskName: "✨ Budaya Kerja 5R & Etika DUDI" };
-    if (text.indexOf("qc") !== -1 || text.indexOf("mutu benda") !== -1) return { labId: "safety", taskKey: "qc", taskName: "🔍 Audit QC Benda Uji DUDI" };
-    if (text.indexOf("pengeboran") !== -1 || text.indexOf("pelat") !== -1 || text.indexOf("bor meja") !== -1) return { labId: "safety", taskKey: "jsa_bor", taskName: "📋 JSA Pengeboran Pelat Baja" };
-    if (text.indexOf("pengasahan") !== -1 || (text.indexOf("pahat") !== -1 && text.indexOf("gerinda") !== -1)) return { labId: "safety", taskKey: "jsa_pahat", taskName: "📋 JSA Pengasahan Pahat Bubut" };
-    if (text.indexOf("perkakas") !== -1 || text.indexOf("ragum") !== -1) return { labId: "safety", taskKey: "perkakas", taskName: "🔧 SOP Perkakas Tangan & Ragum" };
+    if (text.indexOf("jsa") !== -1 || text.indexOf("job safety") !== -1) {
+      if (text.indexOf("pengasahan") !== -1 || (text.indexOf("pahat") !== -1 && text.indexOf("gerinda") !== -1) || text.indexOf("gerinda_duduk") !== -1) {
+        return { labId: "safety", taskKey: "jsa_pahat", taskName: "📋 JSA Pengasahan Pahat Bubut" };
+      }
+      return { labId: "safety", taskKey: "jsa_bor", taskName: "📋 JSA Pengeboran Pelat Baja" };
+    }
+    if (text.indexOf("perkakas") !== -1 || text.indexOf("ragum") !== -1) {
+      return { labId: "safety", taskKey: "perkakas", taskName: "🔧 SOP Perkakas Tangan & Ragum" };
+    }
+    if (text.indexOf("qc") !== -1 || text.indexOf("mutu") !== -1 || text.indexOf("benda uji") !== -1) {
+      return { labId: "safety", taskKey: "qc", taskName: "🔍 Audit QC Benda Uji DUDI" };
+    }
+    if (text.indexOf("apar") !== -1 || text.indexOf("pass") !== -1 || text.indexOf("kebakaran") !== -1) {
+      return { labId: "safety", taskKey: "apar", taskName: "🧯 Simulasi APAR P-A-S-S" };
+    }
+    if (text.indexOf("5r") !== -1 || text.indexOf("budaya") !== -1 || text.indexOf("etika") !== -1) {
+      return { labId: "safety", taskKey: "5r", taskName: "✨ Budaya Kerja 5R & Etika DUDI" };
+    }
+    if (text.indexOf("pengeboran") !== -1 || text.indexOf("pelat") !== -1 || text.indexOf("bor meja") !== -1) {
+      return { labId: "safety", taskKey: "jsa_bor", taskName: "📋 JSA Pengeboran Pelat Baja" };
+    }
+    if (text.indexOf("pengasahan") !== -1 || (text.indexOf("pahat") !== -1 && text.indexOf("gerinda") !== -1)) {
+      return { labId: "safety", taskKey: "jsa_pahat", taskName: "📋 JSA Pengasahan Pahat Bubut" };
+    }
+    if (text.indexOf("apd") !== -1 || text.indexOf("alat pelindung") !== -1 || text.indexOf("inspeksi apd") !== -1) {
+      return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
+    }
     return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
   }
 
@@ -1132,7 +1270,7 @@ function buildStudentMapFromRows(allRows) {
 
   (allRows || []).forEach(function(parsed) {
     var rawNama = (parsed.nama || "").trim();
-    if (!rawNama || rawNama.toLowerCase().indexOf("percobaan") !== -1) return;
+    if (!rawNama) return;
     var rawAbsen = String(parsed.absen !== undefined ? parsed.absen : "-").trim();
     var parsedAbsenNum = parseInt(rawAbsen, 10);
 
@@ -1207,6 +1345,12 @@ function buildStudentMapFromRows(allRows) {
         taskName: matched.taskName
       };
     }
+
+    if (matched.labId === "safety" && (matched.taskKey === "jsa_bor" || matched.taskKey === "jsa_pahat")) {
+      if (studentsMap[targetKey].scoresByTask["safety_jsa"] === undefined || score > studentsMap[targetKey].scoresByTask["safety_jsa"].skor) {
+        studentsMap[targetKey].scoresByTask["safety_jsa"] = studentsMap[targetKey].scoresByTask[taskFullKey];
+      }
+    }
   });
 
   var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
@@ -1268,7 +1412,7 @@ function getAllDataRows(ss) {
           else if (h.indexOf("sub") !== -1) headerMap.subModul = c;
           else if (h.indexOf("kuis") !== -1 || h.indexOf("asesmen") !== -1) headerMap.kuis = c;
           else if (h.indexOf("nilai") !== -1 || h.indexOf("skor") !== -1) headerMap.nilai = c;
-          else if (h.indexOf("detail") !== -1 || h.indexOf("jawaban") !== -1) headerMap.detail = c;
+          else if (h.indexOf("detail") !== -1 || h.indexOf("rincian") !== -1) headerMap.detail = c;
         }
         break;
       }
@@ -1279,7 +1423,7 @@ function getAllDataRows(ss) {
     for (var r = headerRowIdx + 1; r < data.length; r++) {
       var rowData = data[r];
       var parsed = parseRowData(rowData, headerMap);
-      if (parsed.nama && parsed.nama.toLowerCase().indexOf("percobaan") === -1) {
+      if (parsed.nama) {
         allRows.push(parsed);
       }
     }
@@ -1290,7 +1434,7 @@ function getAllDataRows(ss) {
     var rData = rawSh.getDataRange().getValues();
     for (var k = 1; k < rData.length; k++) {
       var p = parseRowData(rData[k], null);
-      if (p.nama && p.nama.toLowerCase().indexOf("percobaan") === -1) {
+      if (p.nama) {
         allRows.push(p);
       }
     }

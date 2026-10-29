@@ -329,7 +329,7 @@ function onOpen() {
   try {
     var ui = SpreadsheetApp.getUi();
     ui.createMenu("Menu BIMO Labs")
-      .addItem("1. Sinkronkan Seluruh Tab Lab (Termasuk Safety Lab & C1 - C5)", "buatSemuaTabModulLab")
+      .addItem("1. Input & Sinkronkan Nilai Data Masuk ke Semua Sheet Modul Lab", "buatSemuaTabModulLab")
       .addItem("2. Perbarui Khusus Sheet 10. Evaluasi Akhir (C1 - C5)", "perbaruiSheetEvaluasiAkhir")
       .addItem("3. Pulihkan / Perbarui Khusus Sheet 1. Safety Lab", "perbaruiSheetSafetyLab")
       .addItem("4. Perbarui Matriks Rekap Seluruh Lab", "buatMatriksRekapSeluruhLab")
@@ -337,6 +337,10 @@ function onOpen() {
       .addItem("Panduan Pemakaian", "tampilkanPanduan")
       .addToUi();
   } catch (e) {}
+}
+
+function inputNilaiDataMasukKeSemuaSheet() {
+  buatSemuaTabModulLab();
 }
 
 function perbaruiSheetSafetyLab() {
@@ -940,50 +944,94 @@ function identifyLabAndTask(modulStr, quizStr, detailStr) {
   var d = String(detailStr || "").toLowerCase();
   var text = m + " " + q + " " + d;
 
-  if (text.indexOf("evaluasi") !== -1 || text.indexOf("komprehensif") !== -1 || text.indexOf("ujian akhir") !== -1) {
-    if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) {
-      return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "🎓 Evaluasi C1 (Mengingat)" };
-    }
-    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) {
-      return { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "🎓 Evaluasi C2 (Memahami)" };
-    }
-    if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) {
-      return { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "🎓 Evaluasi C3 (Menerapkan)" };
-    }
-    if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) {
-      return { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "🎓 Evaluasi C4 (Menganalisis)" };
-    }
-    if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) {
-      return { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "🎓 Evaluasi C5 (Mengevaluasi)" };
-    }
+  // 1. TENTUKAN LAB ID TERLEBIH DAHULU (BERDASARKAN MODUL / JUDUL UTAMA)
+  var labId = "";
+  if (m.indexOf("evaluasi") !== -1 || (q.indexOf("evaluasi") !== -1 && m.indexOf("heat") === -1 && m.indexOf("panas") === -1 && m.indexOf("metalurgi") === -1 && m.indexOf("safety") === -1 && m.indexOf("mesin") === -1 && m.indexOf("perkakas") === -1)) {
+    labId = "evaluasi";
+  } else if (m.indexOf("safety") !== -1 || m.indexOf("k3") !== -1 || q.indexOf("inspeksi apd") !== -1 || q.indexOf("apar pass") !== -1 || q.indexOf("budaya 5r") !== -1 || q.indexOf("job safety") !== -1 || q.indexOf("qc dudi") !== -1) {
+    labId = "safety";
+  } else if (m.indexOf("pemotong") !== -1 || m.indexOf("cutting") !== -1 || m.indexOf("perkakas bengkel") !== -1 || q.indexOf("kalkulasi kecepatan potong") !== -1 || q.indexOf("ensiklopedia perkakas") !== -1) {
+    labId = "cutting-tools";
+  } else if (m.indexOf("heat") !== -1 || m.indexOf("panas") !== -1 || m.indexOf("metalurgi") !== -1 || q.indexOf("perlakuan panas") !== -1) {
+    labId = "heat-treatment";
+  } else if (m.indexOf("mekanika") !== -1 || m.indexOf("mechanic") !== -1 || q.indexOf("torsi") !== -1 || q.indexOf("fisika terapan") !== -1 || q.indexOf("momen gaya") !== -1) {
+    labId = "mechanics";
+  } else if (m.indexOf("weld") !== -1 || m.indexOf("las") !== -1 || q.indexOf("smaw") !== -1 || q.indexOf("pengelasan") !== -1) {
+    labId = "welding";
+  } else if (m.indexOf("ukur") !== -1 || m.indexOf("measur") !== -1 || m.indexOf("metrologi") !== -1 || q.indexOf("membaca alat ukur") !== -1 || q.indexOf("jangka sorong") !== -1 || q.indexOf("mikrometer") !== -1) {
+    labId = "measuring";
+  } else if (m.indexOf("design") !== -1 || m.indexOf("cad") !== -1 || m.indexOf("gambar") !== -1 || q.indexOf("gambar proyeksi") !== -1 || q.indexOf("toleransi iso") !== -1) {
+    labId = "design";
+  } else if (m.indexOf("bengkel 3d") !== -1 || m.indexOf("virtual bengkel") !== -1 || q.indexOf("eksplorasi bengkel") !== -1 || q.indexOf("tata letak bengkel") !== -1) {
+    labId = "virtual-bengkel";
+  } else {
+    labId = "machine";
+  }
+
+  // 2. TENTUKAN TUGAS SPESIFIK BERDASARKAN LAB ID
+  if (labId === "evaluasi") {
+    if (text.indexOf("c1") !== -1 || text.indexOf("mengingat") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c1", taskName: "🎓 Evaluasi C1 (Mengingat)" };
+    if (text.indexOf("c2") !== -1 || text.indexOf("memahami") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c2", taskName: "🎓 Evaluasi C2 (Memahami)" };
+    if (text.indexOf("c3") !== -1 || text.indexOf("menerapkan") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c3", taskName: "🎓 Evaluasi C3 (Menerapkan)" };
+    if (text.indexOf("c4") !== -1 || text.indexOf("menganalisis") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c4", taskName: "🎓 Evaluasi C4 (Menganalisis)" };
+    if (text.indexOf("c5") !== -1 || text.indexOf("mengevaluasi") !== -1 || text.indexOf("hots") !== -1) return { labId: "evaluasi", taskKey: "evaluasi_c5", taskName: "🎓 Evaluasi C5 (Mengevaluasi)" };
     return { labId: "evaluasi", taskKey: "evaluasi_unspecified", taskName: "🎓 Evaluasi Komprehensif" };
   }
 
-  for (var i = 0; i < LAB_CONFIGS.length; i++) {
-    var lab = LAB_CONFIGS[i];
-    if (lab.id === "evaluasi") continue;
-    for (var j = 0; j < lab.tasks.length; j++) {
-      var task = lab.tasks[j];
-      for (var k = 0; k < task.keywords.length; k++) {
-        if (text.indexOf(task.keywords[k]) !== -1) {
-          return {
-            labId: lab.id,
-            taskKey: task.key,
-            taskName: task.name
-          };
-        }
-      }
-    }
+  if (labId === "safety") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "safety", taskKey: "diag_safety", taskName: "📝 Tes Diagnostik Safety K3" };
+    if (text.indexOf("apd") !== -1) return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
+    if (text.indexOf("apar") !== -1 || text.indexOf("pass") !== -1 || text.indexOf("kebakaran") !== -1) return { labId: "safety", taskKey: "apar", taskName: "🧯 Simulasi APAR P-A-S-S" };
+    if (text.indexOf("5r") !== -1 || text.indexOf("budaya") !== -1 || text.indexOf("etika") !== -1) return { labId: "safety", taskKey: "5r", taskName: "✨ Budaya Kerja 5R & Etika DUDI" };
+    if (text.indexOf("qc") !== -1 || text.indexOf("mutu benda") !== -1) return { labId: "safety", taskKey: "qc", taskName: "🔍 Audit QC Benda Uji DUDI" };
+    if (text.indexOf("pengeboran") !== -1 || text.indexOf("pelat") !== -1 || text.indexOf("bor meja") !== -1) return { labId: "safety", taskKey: "jsa_bor", taskName: "📋 JSA Pengeboran Pelat Baja" };
+    if (text.indexOf("pengasahan") !== -1 || (text.indexOf("pahat") !== -1 && text.indexOf("gerinda") !== -1)) return { labId: "safety", taskKey: "jsa_pahat", taskName: "📋 JSA Pengasahan Pahat Bubut" };
+    if (text.indexOf("perkakas") !== -1 || text.indexOf("ragum") !== -1) return { labId: "safety", taskKey: "perkakas", taskName: "🔧 SOP Perkakas Tangan & Ragum" };
+    return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
   }
 
-  if (text.indexOf("safety") !== -1 || text.indexOf("k3") !== -1) return { labId: "safety", taskKey: "apd", taskName: "🛡️ Inspeksi APD Operator" };
-  if (text.indexOf("cutting") !== -1 || text.indexOf("potong") !== -1) return { labId: "cutting-tools", taskKey: "cutting_quiz", taskName: "🔪 Kuis Pahat & Kalkulasi RPM" };
-  if (text.indexOf("heat") !== -1 || text.indexOf("panas") !== -1 || text.indexOf("metalurgi") !== -1) return { labId: "heat-treatment", taskKey: "metallurgy", taskName: "🌡️ Kuis Evaluasi Metalurgi" };
-  if (text.indexOf("mekanika") !== -1 || text.indexOf("mechanic") !== -1 || text.indexOf("torsi") !== -1) return { labId: "mechanics", taskKey: "torque", taskName: "⚖️ Kuis Momen Gaya & Torsi" };
-  if (text.indexOf("weld") !== -1 || text.indexOf("las") !== -1) return { labId: "welding", taskKey: "smaw", taskName: "⚡ Kuis Asesmen Las SMAW" };
-  if (text.indexOf("ukur") !== -1 || text.indexOf("measur") !== -1 || text.indexOf("kaliper") !== -1) return { labId: "measuring", taskKey: "caliper_micrometer", taskName: "📏 Uji Pembacaan Kaliper & Mikrometer" };
-  if (text.indexOf("design") !== -1 || text.indexOf("cad") !== -1 || text.indexOf("gambar") !== -1) return { labId: "design", taskKey: "cad_drawing", taskName: "📐 Kuis Gambar Teknik & CAD" };
-  if (text.indexOf("bengkel") !== -1) return { labId: "virtual-bengkel", taskKey: "virtual_bengkel", taskName: "🏭 Praktik Workshop 3D" };
+  if (labId === "machine") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "machine", taskKey: "diag_machine", taskName: "📝 Tes Diagnostik Machine Lab" };
+    if (text.indexOf("pretest") !== -1 || text.indexOf("pre-test") !== -1) return { labId: "machine", taskKey: "pretest", taskName: "⚙️ Pre-Test Teori Permesinan" };
+    if (text.indexOf("cnc") !== -1 || text.indexOf("g-code") !== -1 || text.indexOf("kode g") !== -1) return { labId: "machine", taskKey: "cnc", taskName: "💻 Kuis Teori & Kode CNC" };
+    if (text.indexOf("bubut") !== -1 || text.indexOf("lathe") !== -1 || text.indexOf("frais") !== -1 || text.indexOf("milling") !== -1) return { labId: "machine", taskKey: "lathe", taskName: "🔩 Praktik Mesin Bubut & Frais" };
+    return { labId: "machine", taskKey: "lathe", taskName: "🔩 Praktik Mesin Bubut & Frais" };
+  }
+
+  if (labId === "cutting-tools") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "cutting-tools", taskKey: "diag_cutting", taskName: "📝 Tes Diagnostik Alat Potong" };
+    return { labId: "cutting-tools", taskKey: "cutting_quiz", taskName: "🔪 Kuis Pahat & Kalkulasi RPM" };
+  }
+
+  if (labId === "heat-treatment") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "heat-treatment", taskKey: "diag_heat", taskName: "📝 Tes Diagnostik Heat Treatment" };
+    return { labId: "heat-treatment", taskKey: "metallurgy", taskName: "🌡️ Kuis Evaluasi Metalurgi" };
+  }
+
+  if (labId === "mechanics") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "mechanics", taskKey: "diag_mechanics", taskName: "📝 Tes Diagnostik Mekanika" };
+    return { labId: "mechanics", taskKey: "torque", taskName: "⚖️ Kuis Momen Gaya & Torsi" };
+  }
+
+  if (labId === "welding") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "welding", taskKey: "diag_welding", taskName: "📝 Tes Diagnostik Welding Lab" };
+    return { labId: "welding", taskKey: "smaw", taskName: "⚡ Kuis Asesmen Las SMAW" };
+  }
+
+  if (labId === "measuring") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "measuring", taskKey: "diag_measuring", taskName: "📝 Tes Diagnostik Alat Ukur" };
+    return { labId: "measuring", taskKey: "caliper_micrometer", taskName: "📏 Uji Pembacaan Kaliper & Mikrometer" };
+  }
+
+  if (labId === "design") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "design", taskKey: "diag_design", taskName: "📝 Tes Diagnostik Design Lab" };
+    return { labId: "design", taskKey: "cad_drawing", taskName: "📐 Kuis Gambar Teknik & CAD" };
+  }
+
+  if (labId === "virtual-bengkel") {
+    if (text.indexOf("diagnostik") !== -1) return { labId: "virtual-bengkel", taskKey: "diag_virtual", taskName: "📝 Tes Diagnostik Bengkel 3D" };
+    return { labId: "virtual-bengkel", taskKey: "virtual_bengkel", taskName: "🏭 Praktik Workshop 3D" };
+  }
 
   return { labId: "machine", taskKey: "lathe", taskName: "🔩 Praktik Mesin Bubut & Frais" };
 }
@@ -1031,20 +1079,20 @@ function parseRowData(row, headerMap) {
     }
   }
 
-  var candidateScore = skor;
-  if (isNaN(candidateScore) || candidateScore <= 0) {
-    for (var c = 6; c < Math.min(row.length, 11); c++) {
-      var n = Number(row[c]);
-      if (!isNaN(n) && n > 0) {
-        candidateScore = n;
-        break;
-      }
+  if (headerMap && headerMap.nilai !== undefined && !isNaN(Number(row[headerMap.nilai]))) {
+    skor = Number(row[headerMap.nilai]);
+  } else {
+    var candidateScore = skor;
+    if (isNaN(candidateScore) || candidateScore === 0) {
+      if (!isNaN(Number(row[8]))) candidateScore = Number(row[8]);
+      else if (!isNaN(Number(row[7]))) candidateScore = Number(row[7]);
+      else if (!isNaN(Number(row[6]))) candidateScore = Number(row[6]);
     }
+    skor = candidateScore || 0;
   }
-  if (candidateScore > 0 && candidateScore <= 10) {
-    candidateScore = Math.round(candidateScore * 10);
+  if (skor > 0 && skor <= 10) {
+    skor = Math.round(skor * 10);
   }
-  skor = candidateScore || 0;
 
   if (!detailJawaban && row.length > 10) {
     detailJawaban = String(row[row.length - 1] || "");

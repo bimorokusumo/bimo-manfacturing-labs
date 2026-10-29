@@ -413,9 +413,10 @@ function perbaruiSheetSafetyLab() {
   var allRows = getAllDataRows(ss);
   var parsedData = buildStudentMapFromRows(allRows);
   var safetyLab = LAB_CONFIGS[0];
-  renderLabSheet(ss, safetyLab, parsedData.studentsMap, parsedData.sortedStudentKeys);
+  var classifiedRows = (parsedData.labRowsMap && parsedData.labRowsMap[safetyLab.id]) ? parsedData.labRowsMap[safetyLab.id] : [];
+  renderLabSheet(ss, safetyLab, parsedData.studentsMap, parsedData.sortedStudentKeys, classifiedRows);
   try {
-    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSheet 🛡️ 1. Safety Lab telah berhasil dipulihkan dan disinkronkan.");
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSheet 🛡️ 1. Safety Lab telah berhasil diperbarui dan seluruh data JSA, APD, APAR, 5R, Perkakas, QC telah dimasukkan sesuai klasifikasinya.");
   } catch (e) {}
 }
 
@@ -454,9 +455,11 @@ function buatSemuaTabModulLab() {
   var parsedData = buildStudentMapFromRows(allRows);
   var studentsMap = parsedData.studentsMap;
   var sortedStudentKeys = parsedData.sortedStudentKeys;
+  var labRowsMap = parsedData.labRowsMap || {};
 
   LAB_CONFIGS.forEach(function(lab) {
-    renderLabSheet(ss, lab, studentsMap, sortedStudentKeys);
+    var classifiedRows = labRowsMap[lab.id] || [];
+    renderLabSheet(ss, lab, studentsMap, sortedStudentKeys, classifiedRows);
   });
 
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
@@ -471,7 +474,7 @@ function buatSemuaTabModulLab() {
   } catch (eShow) {}
 
   try {
-    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh tab lab (termasuk 🛡️ 1. Safety Lab hingga 🎓 10. Evaluasi Akhir) telah berhasil disinkronkan dan ditampilkan secara lengkap.");
+    SpreadsheetApp.getUi().alert("Berhasil!\\n\\nSeluruh data masuk telah berhasil diklasifikasikan dan diinputkan ke dalam sheet masing-masing lab (Safety Lab, Machine Lab, Evaluasi Akhir C1-C5, dll) lengkap dengan Matriks Nilai & Riwayat Data Masuk.");
   } catch (e) {}
 }
 
@@ -482,6 +485,7 @@ function perbaruiSheetEvaluasiAkhir() {
   var parsedData = buildStudentMapFromRows(allRows);
   var studentsMap = parsedData.studentsMap;
   var sortedStudentKeys = parsedData.sortedStudentKeys;
+  var labRowsMap = parsedData.labRowsMap || {};
 
   var evalLab = null;
   for (var i = 0; i < LAB_CONFIGS.length; i++) {
@@ -492,7 +496,8 @@ function perbaruiSheetEvaluasiAkhir() {
   }
 
   if (evalLab) {
-    renderLabSheet(ss, evalLab, studentsMap, sortedStudentKeys);
+    var classifiedRows = labRowsMap[evalLab.id] || [];
+    renderLabSheet(ss, evalLab, studentsMap, sortedStudentKeys, classifiedRows);
   }
 
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);
@@ -661,7 +666,7 @@ function getStudentTaskScore(s, labId, taskKey) {
   return undefined;
 }
 
-function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
+function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys, classifiedRows) {
   var keywords = [lab.id];
   if (lab.id === "safety") keywords = ["safety"];
   else if (lab.id === "machine") keywords = ["machine"];
@@ -681,11 +686,11 @@ function renderLabSheet(ss, lab, studentsMap, sortedStudentKeys) {
   }
 
   targetSheets.forEach(function(sh) {
-    renderSingleLabSheet(sh, lab, studentsMap, sortedStudentKeys);
+    renderSingleLabSheet(sh, lab, studentsMap, sortedStudentKeys, classifiedRows);
   });
 }
 
-function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
+function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys, classifiedRows) {
   try {
     if (sheet.isSheetHidden && sheet.isSheetHidden()) {
       sheet.showSheet();
@@ -696,11 +701,12 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   var tasks = lab.tasks;
   var totalStudents = sortedStudentKeys.length;
   var nowFormatted = Utilities.formatDate(new Date(), "Asia/Jakarta", "dd-MM-yyyy HH:mm");
-  var totalCols = Math.max(11, 4 + tasks.length + 3);
+  var matrixCols = 4 + tasks.length + 3;
+  var totalCols = Math.max(11, matrixCols);
 
   // BANNER 1: JUDUL BESAR LAB
   var displayTitle = sheet.getName();
-  sheet.appendRow([displayTitle.toUpperCase() + " - REKAPITULASI TUGAS & MATRIKS PENGUMPULAN SISWA"]);
+  sheet.appendRow([displayTitle.toUpperCase() + " - REKAPITULASI NILAI ASLI & DATA MASUK TERKLASIFIKASI"]);
   var b1 = sheet.getRange(1, 1, 1, totalCols);
   b1.merge();
   b1.setBackground("#064e3b");
@@ -711,8 +717,9 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   sheet.setRowHeight(1, 38);
 
   // BANNER 2: INFO MODUL & STANDAR KKM
+  var totalClassified = (classifiedRows || []).length;
   sheet.appendRow([
-    "Modul: " + lab.shortTitle + "  |  Target KKM: 75  |  Total Tugas: " + tasks.length + " Tugas  |  Total Siswa Terdaftar: " + totalStudents + " Siswa  |  Diperbarui: " + nowFormatted + " WIB"
+    "Modul: " + lab.shortTitle + "  |  Target KKM: 75  |  Total Tugas: " + tasks.length + " Tugas  |  Total Siswa: " + totalStudents + " Siswa  |  Data Masuk Terklasifikasi: " + totalClassified + " Pengumpulan  |  Diperbarui: " + nowFormatted + " WIB"
   ]);
   var b2 = sheet.getRange(2, 1, 1, totalCols);
   b2.merge();
@@ -727,9 +734,11 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   sheet.appendRow([""]);
   sheet.setRowHeight(3, 10);
 
-  // BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR PER ROW / BARIS)
-  sheet.appendRow(["BAGIAN 1: REKAPITULASI TUGAS LABORATORIUM (DAFTAR TUGAS PER BARIS / ROW)"]);
-  var sec1Title = sheet.getRange(4, 1, 1, 11);
+  // =========================================================================
+  // BAGIAN 1: MATRIKS CEKLIS NILAI ASLI SISWA (36 SISWA X-TP.A)
+  // =========================================================================
+  sheet.appendRow(["BAGIAN 1: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN & NILAI ASLI PER SISWA)"]);
+  var sec1Title = sheet.getRange(4, 1, 1, totalCols);
   sec1Title.merge();
   sec1Title.setBackground("#1e293b");
   sec1Title.setFontColor("#f8fafc");
@@ -738,131 +747,30 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   sec1Title.setVerticalAlignment("middle");
   sheet.setRowHeight(4, 28);
 
-  var taskHeaders = [
-    "No",
-    "Nama Tugas / Asesmen Lab",
-    "Kategori Asesmen",
-    "Target KKM",
-    "Siswa Selesai",
-    "Lulus (>=75)",
-    "Remedial (<75)",
-    "% Kelulusan",
-    "Rata-rata Nilai Asli",
-    "Daftar Siswa yang Sudah Mengumpulkan (Lengkap dg Nilai Asli)",
-    "Daftar Siswa yang Belum Mengumpulkan"
-  ];
-  sheet.appendRow(taskHeaders);
-  var tHRange = sheet.getRange(5, 1, 1, taskHeaders.length);
-  tHRange.setBackground("#334155");
-  tHRange.setFontColor("#ffffff");
-  tHRange.setFontWeight("bold");
-  tHRange.setFontSize(9);
-  tHRange.setHorizontalAlignment("center");
-  tHRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(5, 30);
-
-  var noTask = 1;
-  tasks.forEach(function(t) {
-    var submittedStudents = [];
-    var notSubmittedStudents = [];
-    var passedCount = 0;
-    var totalScore = 0;
-
-    sortedStudentKeys.forEach(function(k) {
-      var s = studentsMap[k];
-      var rec = getStudentTaskScore(s, lab.id, t.key);
-      if (rec !== undefined) {
-        submittedStudents.push(s.nama + " (" + rec.skor + ")");
-        totalScore += rec.skor;
-        if (rec.skor >= 75) passedCount++;
-      } else {
-        notSubmittedStudents.push(s.nama);
-      }
-    });
-
-    var subCount = submittedStudents.length;
-    var remCount = subCount - passedCount;
-    var avgScore = subCount > 0 ? Math.round(totalScore / subCount) : 0;
-    var passPct = subCount > 0 ? Math.round((passedCount / subCount) * 100) + "%" : "0%";
-
-    var submittedText = submittedStudents.length > 0 ? submittedStudents.join(", ") : "-";
-    var notSubmittedText = notSubmittedStudents.length > 0 ? notSubmittedStudents.join(", ") : "(Semua Sudah Mengumpulkan)";
-
-    sheet.appendRow([
-      noTask++,
-      t.name,
-      t.category,
-      ">= 75",
-      subCount + " Siswa",
-      passedCount + " Siswa",
-      remCount + " Siswa",
-      passPct,
-      avgScore,
-      submittedText,
-      notSubmittedText
-    ]);
-
-    var lr = sheet.getLastRow();
-    sheet.setRowHeight(lr, 26);
-    sheet.getRange(lr, 1).setHorizontalAlignment("center");
-    sheet.getRange(lr, 4).setHorizontalAlignment("center");
-    sheet.getRange(lr, 5).setHorizontalAlignment("center");
-    sheet.getRange(lr, 6).setHorizontalAlignment("center");
-    sheet.getRange(lr, 7).setHorizontalAlignment("center");
-    sheet.getRange(lr, 8).setHorizontalAlignment("center");
-    sheet.getRange(lr, 9).setHorizontalAlignment("center");
-
-    var avgCell = sheet.getRange(lr, 9);
-    avgCell.setFontWeight("bold");
-    if (avgScore >= 75) {
-      avgCell.setFontColor("#16a34a");
-    } else if (subCount > 0) {
-      avgCell.setFontColor("#dc2626");
-    }
-
-    var subCell = sheet.getRange(lr, 5);
-    subCell.setFontWeight("bold");
-    if (subCount === totalStudents && totalStudents > 0) {
-      subCell.setBackground("#dcfce7");
-      subCell.setFontColor("#166534");
-    }
-  });
-
-  // SPASI ANTAR BAGIAN
-  sheet.appendRow([""]);
-  var curRow = sheet.getLastRow();
-  sheet.setRowHeight(curRow, 14);
-
-  // BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)
-  var sec2StartRow = curRow + 1;
-  sheet.appendRow(["BAGIAN 2: MATRIKS CEKLIS NILAI ASLI SISWA (STATUS PENGUMPULAN PER SISWA)"]);
-  var sec2Title = sheet.getRange(sec2StartRow, 1, 1, 4 + tasks.length + 3);
-  sec2Title.merge();
-  sec2Title.setBackground("#1e293b");
-  sec2Title.setFontColor("#f8fafc");
-  sec2Title.setFontWeight("bold");
-  sec2Title.setFontSize(10);
-  sec2Title.setVerticalAlignment("middle");
-  sheet.setRowHeight(sec2StartRow, 28);
-
   var matrixHeaders = ["No", "Nama Lengkap Siswa", "No. Absen", "Kelas / Jurusan"];
   tasks.forEach(function(t) {
     matrixHeaders.push(t.name);
   });
   matrixHeaders.push("Total Tugas Selesai");
   matrixHeaders.push("Rata-rata Nilai Asli");
-  matrixHeaders.push("Status Kelengkapan");
+  matrixHeaders.push("Status Kelulusan");
 
-  sheet.appendRow(matrixHeaders);
-  var mHRow = sec2StartRow + 1;
-  var mHRange = sheet.getRange(mHRow, 1, 1, matrixHeaders.length);
-  mHRange.setBackground("#0f172a");
-  mHRange.setFontColor("#ffffff");
-  mHRange.setFontWeight("bold");
-  mHRange.setFontSize(9);
-  mHRange.setHorizontalAlignment("center");
-  mHRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(mHRow, 34);
+  var matrixValues = [matrixHeaders];
+  var matrixBgs = [];
+  var matrixColors = [];
+  var matrixWeights = [];
+
+  var hBgs = [];
+  var hColors = [];
+  var hWeights = [];
+  for (var hc = 0; hc < matrixHeaders.length; hc++) {
+    hBgs.push("#0f172a");
+    hColors.push("#ffffff");
+    hWeights.push("bold");
+  }
+  matrixBgs.push(hBgs);
+  matrixColors.push(hColors);
+  matrixWeights.push(hWeights);
 
   var noSiswa = 1;
   var taskSubmissionCounts = [];
@@ -875,6 +783,10 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   sortedStudentKeys.forEach(function(k) {
     var s = studentsMap[k];
     var row = [noSiswa++, s.nama, s.absen, s.kelas];
+    var rBgs = ["#ffffff", "#ffffff", "#ffffff", "#ffffff"];
+    var rColors = ["#000000", "#000000", "#000000", "#000000"];
+    var rWeights = ["normal", "normal", "normal", "normal"];
+
     var finishedCount = 0;
     var studentScoreSum = 0;
 
@@ -887,84 +799,261 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
         taskScoreSums[idx] += rec.skor;
         if (rec.skor >= 75) {
           row.push(rec.skor + " (LULUS)");
+          rBgs.push("#dcfce7");
+          rColors.push("#166534");
+          rWeights.push("bold");
         } else {
           row.push(rec.skor + " (REMEDIAL)");
+          rBgs.push("#fee2e2");
+          rColors.push("#991b1b");
+          rWeights.push("bold");
         }
       } else {
         row.push("Belum");
+        rBgs.push("#f1f5f9");
+        rColors.push("#94a3b8");
+        rWeights.push("normal");
       }
     });
 
     var studentAvg = finishedCount > 0 ? Math.round(studentScoreSum / finishedCount) : 0;
-    row.push(finishedCount + " Tugas");
+    row.push(finishedCount + " / " + tasks.length + " Tugas");
+    rBgs.push("#ffffff");
+    rColors.push("#000000");
+    rWeights.push("normal");
+
     row.push(studentAvg);
-    row.push(finishedCount === tasks.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA"));
+    rBgs.push(studentAvg >= 75 ? "#dcfce7" : (finishedCount > 0 ? "#fee2e2" : "#f1f5f9"));
+    rColors.push(studentAvg >= 75 ? "#166534" : (finishedCount > 0 ? "#dc2626" : "#64748b"));
+    rWeights.push("bold");
 
-    sheet.appendRow(row);
-    var rRow = sheet.getLastRow();
-    sheet.setRowHeight(rRow, 26);
-    sheet.getRange(rRow, 1).setHorizontalAlignment("center");
-    sheet.getRange(rRow, 3).setHorizontalAlignment("center");
-    sheet.getRange(rRow, 4).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length - 2).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length - 1).setHorizontalAlignment("center");
-    sheet.getRange(rRow, matrixHeaders.length).setHorizontalAlignment("center");
+    var compStatus = finishedCount === tasks.length ? "LENGKAP" : (finishedCount > 0 ? "SEBAGIAN" : "BELUM ADA");
+    row.push(compStatus);
+    rBgs.push(finishedCount === tasks.length ? "#dcfce7" : (finishedCount > 0 ? "#fef3c7" : "#f1f5f9"));
+    rColors.push(finishedCount === tasks.length ? "#166534" : (finishedCount > 0 ? "#92400e" : "#64748b"));
+    rWeights.push("bold");
 
-    for (var c = 0; c < tasks.length; c++) {
-      var cell = sheet.getRange(rRow, 5 + c);
-      cell.setHorizontalAlignment("center");
-      var val = String(row[4 + c]);
-      if (val.indexOf("Belum") !== -1) {
-        cell.setBackground("#f1f5f9");
-        cell.setFontColor("#94a3b8");
-      } else if (val.indexOf("LULUS") !== -1) {
-        cell.setBackground("#dcfce7");
-        cell.setFontColor("#166534");
-        cell.setFontWeight("bold");
-      } else {
-        cell.setBackground("#fee2e2");
-        cell.setFontColor("#991b1b");
-        cell.setFontWeight("bold");
-      }
-    }
-
-    var compCell = sheet.getRange(rRow, matrixHeaders.length);
-    compCell.setFontWeight("bold");
-    if (finishedCount === tasks.length) {
-      compCell.setBackground("#dcfce7");
-      compCell.setFontColor("#166534");
-    } else if (finishedCount > 0) {
-      compCell.setBackground("#fef3c7");
-      compCell.setFontColor("#92400e");
-    } else {
-      compCell.setBackground("#f1f5f9");
-      compCell.setFontColor("#64748b");
-    }
+    matrixValues.push(row);
+    matrixBgs.push(rBgs);
+    matrixColors.push(rColors);
+    matrixWeights.push(rWeights);
   });
 
-  // BARIS FOOTER TOTAL PENGUMPULAN
-  var footerRow = ["TOTAL SISWA MENGUMPULKAN:", "", "", ""];
+  // Footer Row: TOTAL SISWA MENGUMPULKAN
+  var fRow1 = ["TOTAL SISWA MENGUMPULKAN:", "", "", ""];
+  var fRow1Bgs = ["#e2e8f0", "#e2e8f0", "#e2e8f0", "#e2e8f0"];
+  var fRow1Colors = ["#0f172a", "#0f172a", "#0f172a", "#0f172a"];
+  var fRow1Weights = ["bold", "bold", "bold", "bold"];
+
   tasks.forEach(function(t, idx) {
-    footerRow.push(taskSubmissionCounts[idx] + " Siswa");
+    fRow1.push(taskSubmissionCounts[idx] + " Siswa");
+    fRow1Bgs.push(taskSubmissionCounts[idx] > 0 ? "#dcfce7" : "#f1f5f9");
+    fRow1Colors.push(taskSubmissionCounts[idx] > 0 ? "#166534" : "#64748b");
+    fRow1Weights.push("bold");
   });
-  footerRow.push("-");
-  footerRow.push("-");
-  footerRow.push("-");
+  fRow1.push("-"); fRow1Bgs.push("#e2e8f0"); fRow1Colors.push("#0f172a"); fRow1Weights.push("bold");
+  fRow1.push("-"); fRow1Bgs.push("#e2e8f0"); fRow1Colors.push("#0f172a"); fRow1Weights.push("bold");
+  fRow1.push("-"); fRow1Bgs.push("#e2e8f0"); fRow1Colors.push("#0f172a"); fRow1Weights.push("bold");
 
-  sheet.appendRow(footerRow);
-  var fRow = sheet.getLastRow();
-  sheet.setRowHeight(fRow, 28);
-  var fMerged = sheet.getRange(fRow, 1, 1, 4);
-  fMerged.merge();
-  fMerged.setHorizontalAlignment("right");
-  fMerged.setFontWeight("bold");
+  matrixValues.push(fRow1);
+  matrixBgs.push(fRow1Bgs);
+  matrixColors.push(fRow1Colors);
+  matrixWeights.push(fRow1Weights);
 
-  var fRange = sheet.getRange(fRow, 1, 1, matrixHeaders.length);
-  fRange.setBackground("#e2e8f0");
-  fRange.setFontWeight("bold");
-  fRange.setFontSize(9);
-  for (var fc = 0; fc < tasks.length; fc++) {
-    sheet.getRange(fRow, 5 + fc).setHorizontalAlignment("center");
+  var matrixStartRow = 5;
+  var matrixRange = sheet.getRange(matrixStartRow, 1, matrixValues.length, matrixHeaders.length);
+  matrixRange.setValues(matrixValues);
+  matrixRange.setBackgrounds(matrixBgs);
+  matrixRange.setFontColors(matrixColors);
+  matrixRange.setFontWeights(matrixWeights);
+  matrixRange.setFontSize(9);
+  matrixRange.setVerticalAlignment("middle");
+
+  var numMatrixRows = matrixValues.length;
+  sheet.getRange(matrixStartRow, 1, numMatrixRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(matrixStartRow, 3, numMatrixRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(matrixStartRow, 4, numMatrixRows, 1).setHorizontalAlignment("center");
+  for (var cIdx = 0; cIdx < tasks.length; cIdx++) {
+    sheet.getRange(matrixStartRow, 5 + cIdx, numMatrixRows, 1).setHorizontalAlignment("center");
+  }
+  sheet.getRange(matrixStartRow, matrixHeaders.length - 2, numMatrixRows, 3).setHorizontalAlignment("center");
+
+  var footerRowNum = matrixStartRow + numMatrixRows - 1;
+  sheet.getRange(footerRowNum, 1, 1, 4).merge().setHorizontalAlignment("right");
+  sheet.setRowHeight(matrixStartRow, 32);
+
+  for (var rIdx = 1; rIdx < numMatrixRows; rIdx++) {
+    sheet.setRowHeight(matrixStartRow + rIdx, 25);
+  }
+
+  // =========================================================================
+  // SPASI ANTARA MATRIKS & DATA MASUK TERKLASIFIKASI
+  // =========================================================================
+  var afterMatrixRow = footerRowNum + 1;
+  sheet.getRange(afterMatrixRow, 1).setValue("");
+  sheet.setRowHeight(afterMatrixRow, 16);
+
+  // =========================================================================
+  // BAGIAN 2: DAFTAR DATA MASUK KHUSUS MODUL INI (TERKLASIFIKASI DARI RAW DATA)
+  // =========================================================================
+  var sec2TitleRow = afterMatrixRow + 1;
+  sheet.getRange(sec2TitleRow, 1).setValue(
+    "BAGIAN 2: DAFTAR DATA MASUK KHUSUS " + lab.shortTitle.toUpperCase() + " (HASIL KLASIFIKASI DARI SHEET DATA MASUK)"
+  );
+  var sec2Title = sheet.getRange(sec2TitleRow, 1, 1, totalCols);
+  sec2Title.merge();
+  sec2Title.setBackground("#1e293b");
+  sec2Title.setFontColor("#f8fafc");
+  sec2Title.setFontWeight("bold");
+  sec2Title.setFontSize(10);
+  sec2Title.setVerticalAlignment("middle");
+  sheet.setRowHeight(sec2TitleRow, 28);
+
+  var logHeaders = [
+    "No",
+    "Waktu & Tanggal Masuk",
+    "Nama Lengkap Siswa",
+    "No. Absen",
+    "Kelas / Jurusan",
+    "Tugas / Kuis Teridentifikasi",
+    "Nilai Asli (0 - 100)",
+    "Jawaban Benar",
+    "Total Soal",
+    "Status KKM",
+    "Rincian Jawaban Siswa"
+  ];
+
+  var logValues = [logHeaders];
+  var logBgs = [];
+  var logColors = [];
+  var logWeights = [];
+
+  var logHBgs = [];
+  var logHColors = [];
+  var logHWeights = [];
+  for (var lc = 0; lc < logHeaders.length; lc++) {
+    logHBgs.push("#334155");
+    logHColors.push("#ffffff");
+    logHWeights.push("bold");
+  }
+  logBgs.push(logHBgs);
+  logColors.push(logHColors);
+  logWeights.push(logHWeights);
+
+  var rawList = classifiedRows || [];
+  if (rawList.length === 0) {
+    var emptyRow = [
+      "-",
+      "-",
+      "(Belum ada data masuk untuk modul " + lab.shortTitle + " di sheet Data Masuk)",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-",
+      "-"
+    ];
+    var emptyBgs = [];
+    var emptyColors = [];
+    var emptyWeights = [];
+    for (var ec = 0; ec < logHeaders.length; ec++) {
+      emptyBgs.push("#f8fafc");
+      emptyColors.push("#64748b");
+      emptyWeights.push("normal");
+    }
+    logValues.push(emptyRow);
+    logBgs.push(emptyBgs);
+    logColors.push(emptyColors);
+    logWeights.push(emptyWeights);
+  } else {
+    for (var ri = 0; ri < rawList.length; ri++) {
+      var item = rawList[ri];
+      var isLulus = item.skor >= 75;
+      var rowItem = [
+        ri + 1,
+        item.waktu || "-",
+        item.nama || "-",
+        item.absen || "-",
+        item.kelas || "-",
+        item.taskName || item.judulKuis || "-",
+        item.skor,
+        item.jawabanBenar !== undefined ? item.jawabanBenar : "-",
+        item.totalSoal !== undefined ? item.totalSoal : "-",
+        item.status || (isLulus ? "LULUS" : "REMEDIAL"),
+        item.detailJawaban || "-"
+      ];
+
+      var rBg = isLulus ? "#dcfce7" : "#fee2e2";
+      var rColor = isLulus ? "#166534" : "#991b1b";
+
+      var rowBgs = [
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        "#ffffff",
+        rBg,
+        "#ffffff",
+        "#ffffff",
+        rBg,
+        "#ffffff"
+      ];
+      var rowColors = [
+        "#000000",
+        "#000000",
+        "#000000",
+        "#000000",
+        "#000000",
+        "#000000",
+        rColor,
+        "#000000",
+        "#000000",
+        rColor,
+        "#334155"
+      ];
+      var rowWeights = [
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "normal",
+        "bold",
+        "normal",
+        "normal",
+        "bold",
+        "normal"
+      ];
+
+      logValues.push(rowItem);
+      logBgs.push(rowBgs);
+      logColors.push(rowColors);
+      logWeights.push(rowWeights);
+    }
+  }
+
+  var logStartRow = sec2TitleRow + 1;
+  var logRange = sheet.getRange(logStartRow, 1, logValues.length, logHeaders.length);
+  logRange.setValues(logValues);
+  logRange.setBackgrounds(logBgs);
+  logRange.setFontColors(logColors);
+  logRange.setFontWeights(logWeights);
+  logRange.setFontSize(9);
+  logRange.setVerticalAlignment("middle");
+
+  var numLogRows = logValues.length;
+  sheet.getRange(logStartRow, 1, numLogRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(logStartRow, 2, numLogRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(logStartRow, 4, numLogRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(logStartRow, 5, numLogRows, 1).setHorizontalAlignment("center");
+  sheet.getRange(logStartRow, 7, numLogRows, 4).setHorizontalAlignment("center");
+
+  sheet.setRowHeight(logStartRow, 30);
+  for (var lrIdx = 1; lrIdx < numLogRows; lrIdx++) {
+    sheet.setRowHeight(logStartRow + lrIdx, 25);
   }
 
   // ATUR LEBAR KOLOM
@@ -978,6 +1067,9 @@ function renderSingleLabSheet(sheet, lab, studentsMap, sortedStudentKeys) {
   sheet.setColumnWidth(matrixHeaders.length - 2, 140);
   sheet.setColumnWidth(matrixHeaders.length - 1, 130);
   sheet.setColumnWidth(matrixHeaders.length, 140);
+
+  sheet.setColumnWidth(6, 260);
+  sheet.setColumnWidth(11, 300);
 }
 
 function renderMasterMatrixSheet(ss, labs, studentsMap, sortedStudentKeys) {
@@ -1249,6 +1341,9 @@ function parseRowData(row, headerMap) {
   var subModul = "";
   var judulKuis = "";
   var skor = 0;
+  var jawabanBenar = "-";
+  var totalSoal = "-";
+  var status = "";
   var detailJawaban = "";
 
   if (headerMap) {
@@ -1261,6 +1356,9 @@ function parseRowData(row, headerMap) {
     if (headerMap.subModul !== undefined) subModul = String(row[headerMap.subModul] || "").trim();
     if (headerMap.kuis !== undefined) judulKuis = String(row[headerMap.kuis] || "").trim();
     if (headerMap.nilai !== undefined) skor = Number(row[headerMap.nilai]);
+    if (headerMap.benar !== undefined) jawabanBenar = String(row[headerMap.benar] !== undefined ? row[headerMap.benar] : "-");
+    if (headerMap.total !== undefined) totalSoal = String(row[headerMap.total] !== undefined ? row[headerMap.total] : "-");
+    if (headerMap.status !== undefined) status = String(row[headerMap.status] || "");
     if (headerMap.detail !== undefined) detailJawaban = String(row[headerMap.detail] || "").trim();
   }
 
@@ -1297,6 +1395,10 @@ function parseRowData(row, headerMap) {
     skor = Math.round(skor * 10);
   }
 
+  if (!status) {
+    status = skor >= 75 ? "LULUS" : "REMEDIAL";
+  }
+
   if (!detailJawaban && row.length > 10) {
     detailJawaban = String(row[row.length - 1] || "");
   }
@@ -1311,12 +1413,19 @@ function parseRowData(row, headerMap) {
     subModul: subModul,
     judulKuis: judulKuis,
     skor: skor,
+    jawabanBenar: jawabanBenar,
+    totalSoal: totalSoal,
+    status: status,
     detailJawaban: detailJawaban
   };
 }
 
 function buildStudentMapFromRows(allRows) {
   var studentsMap = {};
+  var labRowsMap = {};
+  LAB_CONFIGS.forEach(function(l) {
+    labRowsMap[l.id] = [];
+  });
 
   MASTER_STUDENTS_LIST.forEach(function(s) {
     var key = "absen_" + String(s.absen);
@@ -1416,6 +1525,26 @@ function buildStudentMapFromRows(allRows) {
         studentsMap[targetKey].scoresByTask["safety_jsa"] = studentsMap[targetKey].scoresByTask[taskFullKey];
       }
     }
+
+    if (labRowsMap[matched.labId]) {
+      labRowsMap[matched.labId].push({
+        waktu: parsed.waktu || "-",
+        nama: rawNama,
+        absen: rawAbsen,
+        kelas: parsed.kelas || "-",
+        sekolah: parsed.sekolah || "-",
+        modul: modulName,
+        subModul: parsed.subModul || "-",
+        judulKuis: quizTitle,
+        taskKey: matched.taskKey,
+        taskName: matched.taskName,
+        skor: score,
+        jawabanBenar: parsed.jawabanBenar !== undefined ? parsed.jawabanBenar : "-",
+        totalSoal: parsed.totalSoal !== undefined ? parsed.totalSoal : "-",
+        status: parsed.status || (score >= 75 ? "LULUS" : "REMEDIAL"),
+        detailJawaban: parsed.detailJawaban || "-"
+      });
+    }
   });
 
   var sortedStudentKeys = Object.keys(studentsMap).sort(function(a, b) {
@@ -1431,7 +1560,8 @@ function buildStudentMapFromRows(allRows) {
 
   return {
     studentsMap: studentsMap,
-    sortedStudentKeys: sortedStudentKeys
+    sortedStudentKeys: sortedStudentKeys,
+    labRowsMap: labRowsMap
   };
 }
 
@@ -1477,6 +1607,9 @@ function getAllDataRows(ss) {
           else if (h.indexOf("sub") !== -1) headerMap.subModul = c;
           else if (h.indexOf("kuis") !== -1 || h.indexOf("asesmen") !== -1) headerMap.kuis = c;
           else if (h.indexOf("nilai") !== -1 || h.indexOf("skor") !== -1) headerMap.nilai = c;
+          else if (h.indexOf("benar") !== -1) headerMap.benar = c;
+          else if (h.indexOf("total") !== -1 || h.indexOf("soal") !== -1) headerMap.total = c;
+          else if (h.indexOf("status") !== -1 || h.indexOf("kkm") !== -1) headerMap.status = c;
           else if (h.indexOf("detail") !== -1 || h.indexOf("rincian") !== -1) headerMap.detail = c;
         }
         break;
@@ -1497,10 +1630,30 @@ function getAllDataRows(ss) {
   if (allRows.length === 0) {
     var rawSh = getOrCreateRawSheet(ss);
     var rData = rawSh.getDataRange().getValues();
-    for (var k = 1; k < rData.length; k++) {
-      var p = parseRowData(rData[k], null);
-      if (p.nama) {
-        allRows.push(p);
+    if (rData.length > 1) {
+      var rawHMap = {};
+      var rHeader = rData[0];
+      for (var rc = 0; rc < rHeader.length; rc++) {
+        var rh = String(rHeader[rc] || "").toLowerCase().trim();
+        if (rh.indexOf("waktu") !== -1 || rh.indexOf("tanggal") !== -1) rawHMap.waktu = rc;
+        else if (rh.indexOf("nama") !== -1 && rh.indexOf("kuis") === -1) rawHMap.nama = rc;
+        else if (rh.indexOf("absen") !== -1) rawHMap.absen = rc;
+        else if (rh.indexOf("kelas") !== -1) rawHMap.kelas = rc;
+        else if (rh.indexOf("sekolah") !== -1) rawHMap.sekolah = rc;
+        else if (rh.indexOf("modul") !== -1 && rh.indexOf("sub") === -1) rawHMap.modul = rc;
+        else if (rh.indexOf("sub") !== -1) rawHMap.subModul = rc;
+        else if (rh.indexOf("kuis") !== -1 || rh.indexOf("asesmen") !== -1) rawHMap.kuis = rc;
+        else if (rh.indexOf("nilai") !== -1 || rh.indexOf("skor") !== -1) rawHMap.nilai = rc;
+        else if (rh.indexOf("benar") !== -1) rawHMap.benar = rc;
+        else if (rh.indexOf("total") !== -1 || rh.indexOf("soal") !== -1) rawHMap.total = rc;
+        else if (rh.indexOf("status") !== -1 || rh.indexOf("kkm") !== -1) rawHMap.status = rc;
+        else if (rh.indexOf("detail") !== -1 || rh.indexOf("rincian") !== -1) rawHMap.detail = rc;
+      }
+      for (var k = 1; k < rData.length; k++) {
+        var p = parseRowData(rData[k], rawHMap);
+        if (p.nama) {
+          allRows.push(p);
+        }
       }
     }
   }
@@ -1571,6 +1724,7 @@ function autoUpdateLabSheetOnPost(ss, modulStr, quizStr, detailStr) {
   var parsedData = buildStudentMapFromRows(allRows);
   var studentsMap = parsedData.studentsMap;
   var sortedStudentKeys = parsedData.sortedStudentKeys;
+  var labRowsMap = parsedData.labRowsMap || {};
 
   var currentMatched = identifyLabAndTask(modulStr, quizStr, detailStr);
   var targetLab = null;
@@ -1582,7 +1736,8 @@ function autoUpdateLabSheetOnPost(ss, modulStr, quizStr, detailStr) {
   }
 
   if (targetLab) {
-    renderLabSheet(ss, targetLab, studentsMap, sortedStudentKeys);
+    var classifiedRows = labRowsMap[targetLab.id] || [];
+    renderLabSheet(ss, targetLab, studentsMap, sortedStudentKeys, classifiedRows);
   }
 
   renderMasterMatrixSheet(ss, LAB_CONFIGS, studentsMap, sortedStudentKeys);

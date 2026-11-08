@@ -49,11 +49,11 @@ export const DIAGNOSTIC_CATEGORIES = {
   },
   welding: {
     id: 'welding',
-    title: 'Diagnostik Welding Lab (Las Busur SMAW)',
+    title: 'Diagnostik Welding Lab (Dasar-Dasar Pengelasan SMAW)',
     shortTitle: 'Welding Lab',
     icon: '[LAS]',
-    badge: 'Fabrikasi Las',
-    desc: 'Diagnosa prinsip las busur manual SMAW, kode elektroda AWS E6013, pengaturan ampere, sudut elektroda, dan mitigasi cacat las.'
+    badge: 'Fabrikasi Las (TaRL)',
+    desc: 'Asesmen diagnostik awal (Pre-Test) 20 soal dasar pengelasan busur listrik SMAW, pengenalan 5 alat utama, selaput fluks elektroda, K3 juru las, dan jenis sambungan (TaRL).'
   },
   measuring: {
     id: 'measuring',
@@ -635,138 +635,268 @@ export const DIAGNOSTIC_QUESTIONS = {
   ],
 
   // =========================================================================
-  // 5. WELDING LAB (10 SOAL)
+  // 5. WELDING LAB (20 SOAL PRE-TEST DASAR PENGELASAN SMAW - TaRL)
   // =========================================================================
   welding: [
     {
       id: 1,
-      domain: 'Prinsip Las SMAW',
-      question: 'Prinsip dasar pembentukan sambungan logam pada proses las busur listrik SMAW (Shielded Metal Arc Welding) adalah...',
+      domain: 'Pengertian Mengelas',
+      question: 'Apa yang dimaksud dengan proses pengelasan (welding) pada bahan logam?',
       options: [
-        'A. Pencairan logam dasar dan elektroda melalui loncatan busur listrik bertegangan rendah berarus tinggi yang dilindungi selaput fluks',
-        'B. Penekanan dua pelat logam menggunakan roda tembaga berputar tanpa elektroda tambahan',
-        'C. Pembakaran gas asetilin dan oksigen murni untuk melunakkan kawat solder timah',
-        'D. Perekatan logam dingin menggunakan cairan kimia epoksi dua komponen'
+        'A. Memotong pelat besi menjadi potongan-potongan kecil menggunakan gergaji',
+        'B. Menyambung dua bagian logam menjadi satu dengan cara mencairkannya menggunakan panas',
+        'C. Mengecat permukaan logam agar terlihat mengkilap dan tidak berkarat',
+        'D. Meratakan permukaan pelat logam menggunakan kikir tangan',
       ],
-      correct: 0,
-      explanation: 'SMAW memanfaatkan loncatan busur api listrik antara ujung elektroda berselaput dengan benda kerja (suhu mencapai 3000°C - 5000°C) yang mencairkan logam secara serentak.'
+      correct: 1,
+      explanation: 'Mengelas adalah proses menyatukan dua bagian logam dengan cara mencairkannya menggunakan panas sehingga membeku menyatu kokoh.'
     },
     {
       id: 2,
-      domain: 'Kode Elektroda AWS E6013',
-      question: 'Pada kode elektroda las busur listrik menurut standar AWS A5.1 "E6013", arti angka "60" menyatakan...',
+      domain: 'Sumber Panas Listrik',
+      question: 'Pada pengelasan las listrik busur manual (SMAW), sumber panas yang digunakan untuk melelehkan logam berasal dari...',
       options: [
-        'A. Kekuatan tarik minimum logam las sebesar 60.000 psi (pon per inci persegi)',
-        'B. Panjang kawat elektroda 60 sentimeter',
-        'C. Diameter kawat inti sebesar 6.0 milimeter',
-        'D. Kuat arus listrik pengelasan wajib 60 Ampere'
+        'A. Nyala api kompor gas dapur',
+        'B. Gesekan antara amplas dan pelat logam',
+        'C. Loncatan busur api listrik yang sangat panas',
+        'D. Sinar matahari yang dikumpulkan oleh kaca pembesar',
       ],
-      correct: 0,
-      explanation: 'Dua angka pertama (atau 3 angka pada E70xx/E100xx) menunjukkan kuat tarik minimum (tensile strength) x 1000 psi. E60 = 60.000 psi (~42 kg/mm²).'
+      correct: 2,
+      explanation: 'Pada las SMAW (las listrik), panas dihasilkan dari loncatan busur api listrik yang sangat panas di antara ujung kawat las dan besi.'
     },
     {
       id: 3,
-      domain: 'Posisi Pengelasan Kode AWS',
-      question: 'Pada kode elektroda AWS E6013, arti digit ketiga angka "1" menunjukkan bahwa elektroda tersebut dapat digunakan untuk posisi...',
+      domain: 'Mesin Las (Trafo)',
+      question: 'Alat utama di bengkel pengelasan yang berfungsi sebagai penyedia dan pengatur arus listrik las disebut...',
       options: [
-        'A. Semua posisi pengelasan (datar, horizontal, vertikal, dan di atas kepala / overhead)',
-        'B. Hanya posisi datar (flat position) saja',
-        'C. Hanya posisi vertikal turun (vertical down) saja',
-        'D. Khusus pengelasan di dalam air laut (underwater)'
+        'A. Ragum meja',
+        'B. Mesin las (trafo las)',
+        'C. Mesin bor duduk',
+        'D. Gergaji mesin',
       ],
-      correct: 0,
-      explanation: 'Angka 1 = semua posisi pengelasan (all positions). Angka 2 = hanya posisi flat dan horizontal fillet. Angka 4 = vertikal turun khusus.'
+      correct: 1,
+      explanation: 'Mesin las bertugas mengubah listrik PLN menjadi arus las yang kuat dan bisa diatur besar-kecilnya sesuai ketebalan besi.'
     },
     {
       id: 4,
-      domain: 'Fungsi Selaput Fluks (Flux Coating)',
-      question: 'Salah satu fungsi krusial dari selaput fluks yang membungkus kawat inti elektroda las SMAW saat terbakar adalah...',
+      domain: 'Tang Las (Holder)',
+      question: 'Alat berisolasi yang dipegang oleh tangan juru las untuk menjepit batang kawat las (elektroda) saat mengelas dinamakan...',
       options: [
-        'A. Menghasilkan gas pelindung dan terak (slag) cair untuk melindungi cairan logam las dari kontaminasi oksigen dan nitrogen udara luar',
-        'B. Mendinginkan kawat elektroda agar tidak cepat mencair',
-        'C. Mengubah arus AC dari trafo las menjadi arus DC otomatis',
-        'D. Menempelkan elektroda secara permanen pada klem masa'
+        'A. Tang potong kawat',
+        'B. Tang las (pemegang elektroda / holder)',
+        'C. Kunci inggris',
+        'D. Obeng plat',
       ],
-      correct: 0,
-      explanation: 'Fluks yang terbakar menghasilkan atmosfer gas pelindung (CO2/CO) dan lapisan terak (slag) yang mengapung di atas kawah las, mencegah oksidasi dan pembentukan gelembung porositas.'
+      correct: 1,
+      explanation: 'Tang las berfungsi memegang/menjepit kawat las dan gagangnya dilapisi plastik tebal agar tangan juru las aman tidak tersetrum.'
     },
     {
       id: 5,
-      domain: 'Polaritas Pengelasan DC',
-      question: 'Pengelasan DC dengan konfigurasi DCEP (Direct Current Electrode Positive / Polaritas Terbalik) memiliki karakteristik utama...',
+      domain: 'Klem Massa (Ground)',
+      question: 'Kabel yang ujungnya berupa penjepit logam dan harus dijepitkan erat pada meja las atau benda kerja agar listrik mengalir disebut...',
       options: [
-        'A. Penetrasi tembusan las yang lebih dalam pada benda kerja dasar',
-        'B. Elektroda tidak memanas sama sekali selama pengelasan',
-        'C. Terak las tidak perlu dibersihkan setelah selesai',
-        'D. Benda kerja selalu tetap dingin di bawah 0°C'
+        'A. Klem massa (ground clamp)',
+        'B. Tali tambang',
+        'C. Kawat jemuran',
+        'D. Selang kompresor',
       ],
       correct: 0,
-      explanation: 'Pada DCEP (elektroda kutub positif), 70% panas busur terkonsentrasi pada benda kerja (kutub negatif) sehingga menghasilkan penetrasi akar las yang dalam.'
+      explanation: 'Klem massa harus dijepitkan ke meja/benda kerja agar sirkuit listrik tertutup sehingga api las bisa menyala.'
     },
     {
       id: 6,
-      domain: 'Penyetelan Arus (Ampere) Las',
-      question: 'Apa akibat yang terjadi pada hasil sambungan las jika operator menyetel kuat arus (Ampere) TERLALU TINGGI melebihi batas rekomendasi elektroda?',
+      domain: 'Kawat Las (Elektroda)',
+      question: 'Bahan batangan yang mencair untuk mengisi celah sambungan logam saat proses pengelasan las listrik disebut...',
       options: [
-        'A. Terjadi cacat bakar tembus (burn through), alur undercut di tepi las, dan percikan (spatter) berlebihan',
-        'B. Busur las sangat sulit menyala dan elektroda terus-menerus menempel membeku',
-        'C. Penetrasi las menjadi sangat dangkal dan tidak menyatu',
-        'D. Elektroda las bertambah panjang secara otomatis'
+        'A. Kawat pagar',
+        'B. Timah solder elektronik',
+        'C. Kawat las (elektroda)',
+        'D. Paku keling',
       ],
-      correct: 0,
-      explanation: 'Arus terlalu tinggi menyebabkan kawah las terlalu cair dan bergolak hebat, mengikis dinding sambungan (undercut) dan menimbulkan semburan spatter yang kotor.'
+      correct: 2,
+      explanation: 'Kawat las adalah bahan pengisi yang ikut mencair bersama pelat besi untuk merekatkan sambungan.'
     },
     {
       id: 7,
-      domain: 'Panjang Busur Nyala (Arc Length)',
-      question: 'Berapakah jarak panjang busur nyala (arc length) yang ideal antara ujung kawat elektroda dengan kawah las?',
+      domain: 'Selaput Fluks Kawat',
+      question: 'Jika kita memegang sebatang kawat las listrik, kawat tersebut dibungkus oleh lapisan padat berwarna abu-abu. Lapisan pembungkus kawat las tersebut dinamakan...',
       options: [
-        'A. Kira-kira sama dengan diameter kawat inti elektroda (misal kawat Ø 3.2 mm maka jarak busur ~3 mm)',
-        'B. Minimal 20 mm hingga 30 mm dari permukaan pelat',
-        'C. Menekan kuat menyentuh pelat hingga tidak ada celah',
-        'D. Sekitar 1 meter di atas meja las'
+        'A. Kertas amplas',
+        'B. Selaput fluks',
+        'C. Lakban hitam',
+        'D. Lapisan cat kayu',
       ],
-      correct: 0,
-      explanation: 'Panjang busur standar sama dengan diameter kawat inti elektroda (1 x d). Busur terlalu panjang menyebabkan percikan banyak dan gas pelindung hilang.'
+      correct: 1,
+      explanation: 'Lapisan abu-abu di luar kawat las dinamakan fluks. Fluks akan terbakar saat mengelas untuk melindungi cairan besi.'
     },
     {
       id: 8,
-      domain: 'Alat Pelindung Diri (APD) Las',
-      question: 'Kaca filter gelap pada topeng/kedok las (welding helmet) nomor shade DIN 10 - 11 wajib digunakan saat mengelas busur listrik untuk melindungi mata dari bahaya...',
+      domain: 'Fungsi Selaput Fluks',
+      question: 'Fungsi utama dari lapisan pembungkus kawat las (fluks) saat terbakar oleh busur api las adalah...',
       options: [
-        'A. Radiasi sinar ultraviolet (UV) dan inframerah (IR) intensitas tinggi yang memicu radang mata (arc eye / welders flash)',
-        'B. Percikan tetesan air pendingin biasa',
-        'C. Hembusan angin sepoi-sepoi bengkel',
-        'D. Suara bising kompresor udara'
+        'A. Melindungi cairan logam las dari udara sekitar agar hasil sambungan tidak berlubang atau keropos',
+        'B. Memberikan aroma harum di dalam ruang bengkel',
+        'C. Membuat kawat las terasa lebih berat di tangan',
+        'D. Mencegah kawat las agar tidak basah saat terkena air',
       ],
       correct: 0,
-      explanation: 'Sinar busur listrik memancarkan sinar UV dan inframerah intensitas tinggi yang dapat membakar kornea mata dalam hitungan detik dan merusak retina secara permanen.'
+      explanation: 'Fluks yang terbakar menghasilkan asap gas pelindung agar udara luar tidak masuk, sehingga hasil lasan padat dan tidak keropos berlubang.'
     },
     {
       id: 9,
-      domain: 'Cacat Las Undercut',
-      question: 'Cacat las berupa alur parit celah termakan pada pinggiran jalur las yang tidak terisi logam cair pengisi disebut...',
+      domain: 'Palu Terak (Chipping)',
+      question: 'Setelah selesai mengelas, di atas sambungan las akan terbentuk lapisan kerak hitam yang mengeras (terak). Perkakas tangan berujung runcing yang digunakan untuk mengetuk dan melepaskan kerak terak tersebut adalah...',
       options: [
-        'A. Undercut',
-        'B. Porosity',
-        'C. Incomplete Penetration',
-        'D. Slag Inclusion'
+        'A. Palu terak (chipping hammer)',
+        'B. Obeng minus',
+        'C. Kunci pas',
+        'D. Tang buaya',
       ],
       correct: 0,
-      explanation: 'Undercut adalah lekukan parit pada batas tepi sambungan las akibat arus terlalu tinggi atau ayunan elektroda terlalu cepat di bagian tepi sisi sambungan.'
+      explanation: 'Palu terak memiliki ujung runcing dan pipih, khusus untuk mengetuk kerak kotoran hitam (terak) yang menempel di atas jalur las.'
     },
     {
       id: 10,
-      domain: 'Pembersihan Terak Las',
-      question: 'Saat membersihkan terak las (slag) yang membeku menggunakan palu terak (chipping hammer) dan sikat baja, operator wajib mengenakan...',
+      domain: 'Sikat Kawat Baja',
+      question: 'Setelah kerak terak diketuk lepas, alat yang digunakan untuk menyikat dan membersihkan kotoran sisa las agar sambungan bersih mengkilap adalah...',
       options: [
-        'A. Kacamata pengaman bening (safety clear glasses) untuk mencegah serpihan terak panas memantul mengenai mata',
-        'B. Sarung tangan kain rajut tipis yang basah',
-        'C. Sandal jepit karet santai',
-        'D. Menutup kedua mata rapat-rapat saat memukul'
+        'A. Sikat gigi plastik',
+        'B. Sapu lidi',
+        'C. Sikat kawat baja',
+        'D. Spons cuci piring',
+      ],
+      correct: 2,
+      explanation: 'Sikat kawat baja dipakai untuk membersihkan sisa kotoran kerak terak agar permukaan hasil las terlihat bersih dan rapi.'
+    },
+    {
+      id: 11,
+      domain: 'Bahaya Sinar Api Las',
+      question: 'Mengapa kita TIDAK BOLEH melihat langsung cahaya api las listrik dengan mata telanjang dari jarak dekat?',
+      options: [
+        'A. Karena tidak ada pengaruh apa-apa bagi mata',
+        'B. Karena cahaya las sangat terang dan memancarkan sinar berbahaya yang dapat membuat mata pedih, perih, dan kelilipan hebat (iritasi mata)',
+        'C. Karena dapat mengubah warna bola mata menjadi kuning',
+        'D. Karena mata akan mengeluarkan air mata manis',
+      ],
+      correct: 1,
+      explanation: 'Sinar api las sangat terang dan memancarkan radiasi tak terlihat. Jika dilihat tanpa kaca pelindung, mata akan terasa pedih dan seperti berpasir.'
+    },
+    {
+      id: 12,
+      domain: 'Helm Kedok Las Gelap',
+      question: 'Alat Pelindung Diri (APD) utama yang WAJIB dipakai menutupi kepala dan wajah saat menyalakan api las adalah...',
+      options: [
+        'A. Topi caping bambu',
+        'B. Helm kedok las yang memiliki kaca filter gelap',
+        'C. Kacamata renang bening',
+        'D. Masker bedah sekali pakai',
+      ],
+      correct: 1,
+      explanation: 'Helm las dilengkapi kaca khusus yang sangat gelap agar mata tidak silau dan wajah terlindung dari percikan api.'
+    },
+    {
+      id: 13,
+      domain: 'Kacamata Hitam Biasa',
+      question: 'Mengapa juru las DILARANG hanya menggunakan kacamata hitam gaya biasa saat mengelas las listrik?',
+      options: [
+        'A. Karena kacamata hitam biasa tidak dapat menahan sinar radiasi las yang kuat dan tidak melindungi seluruh muka dari percikan api',
+        'B. Karena modelnya kurang bagus untuk foto',
+        'C. Karena harganya terlalu murah',
+        'D. Karena kacamata hitam hanya boleh digunakan saat berlibur ke pantai',
       ],
       correct: 0,
-      explanation: 'Serpihan terak las sangat rapuh, tajam, dan bersuhu tinggi. Saat dipukul palu terak, serpihan terak mudah melenting tajam ke arah mata operator.'
+      explanation: 'Kacamata hitam biasa kacanya terlalu tipis dan tidak bisa menyaring radiasi sinar las, serta tidak menutup wajah dari percikan.'
+    },
+    {
+      id: 14,
+      domain: 'Sarung Tangan Kulit',
+      question: 'Di bengkel las, sarung tangan yang digunakan juru las harus terbuat dari bahan KULIT TEBAL, bukan kain tipis. Alasan utamanya adalah...',
+      options: [
+        'A. Agar sarung tangan terlihat mewah',
+        'B. Untuk melindungi tangan dari panas logam, percikan api las yang membakar, dan bahaya sengatan listrik',
+        'C. Agar jari-jari tangan tidak mudah berkeringat',
+        'D. Sebagai pengganti tang las untuk memegang kawat las',
+      ],
+      correct: 1,
+      explanation: 'Bahan kulit tidak mudah terbakar oleh percikan bunga api las, tahan panas, dan mencegah bahaya tersetrum listrik.'
+    },
+    {
+      id: 15,
+      domain: 'Apron Kulit (Celemek)',
+      question: 'Pakaian pelindung yang dipakai di depan dada seperti celemek dan terbuat dari kulit tebal untuk melindungi tubuh dari percikan bunga api las disebut...',
+      options: [
+        'A. Jas hujan',
+        'B. Apron kulit',
+        'C. Rompi pelampung',
+        'D. Jaket parasut',
+      ],
+      correct: 1,
+      explanation: 'Apron kulit melindungi baju wearpack dan dada juru las agar tidak terbakar bolong terkena percikan besi panas.'
+    },
+    {
+      id: 16,
+      domain: 'Sepatu Safety Baja',
+      question: 'Mengapa saat berada di bengkel las siswa TIDAK BOLEH memakai sandal jepit dan WAJIB memakai sepatu tertutup (safety shoes)?',
+      options: [
+        'A. Karena sandal jepit mudah basah oleh air lantai',
+        'B. Agar kaki terlindung jika tertimpa potongan besi baja berat dan tidak melepuh terkena percikan logam panas',
+        'C. Karena memakai sandal jepit membuat jalan menjadi lambat',
+        'D. Karena sandal jepit hanya cocok dipakai saat tidur',
+      ],
+      correct: 1,
+      explanation: 'Sepatu keselamatan memiliki pelindung baja di ujung jari kaki untuk melindungi dari kejatuhan potongan besi berat di bengkel.'
+    },
+    {
+      id: 17,
+      domain: 'Ventilasi Asap Las',
+      question: 'Proses pengelasan mengeluarkan asap dari kawat las yang terbakar. Agar asap tidak terhirup terlalu banyak dan membahayakan paru-paru, tindakan yang benar adalah...',
+      options: [
+        'A. Menutup semua ventilasi dan jendela bengkel rapat-rapat',
+        'B. Menyalakan kipas pembuangan udara (exhaust fan) di bengkel dan menggunakan masker pelindung',
+        'C. Menahan napas selama 1 jam saat berada di bengkel',
+        'D. Mengelas di dalam ruangan sempit tanpa ventilasi',
+      ],
+      correct: 1,
+      explanation: 'Asap las mengandung partikel kimia. Bengkel wajib menyalakan kipas pembuangan (exhaust fan) agar sirkulasi udara bersih.'
+    },
+    {
+      id: 18,
+      domain: 'Sambungan Butt Joint',
+      question: 'Jika Anda menyambung dua lembar pelat besi yang diletakkan berdampingan secara rata di atas meja (seperti menyambung dua lantai ubin yang sejajar), bentuk sambungan tersebut dinamakan...',
+      options: [
+        'A. Sambungan tumpul (Butt joint)',
+        'B. Sambungan pipa paralon',
+        'C. Sambungan rantai sepeda',
+        'D. Sambungan paku',
+      ],
+      correct: 0,
+      explanation: 'Menyambung dua pelat besi yang posisinya mendatar sejajar berdampingan dinamakan sambungan tumpul (butt joint).'
+    },
+    {
+      id: 19,
+      domain: 'Sambungan T-Joint',
+      question: "Jika ada dua pelat besi yang disambung di mana satu pelat berdiri tegak menyiku ($90^\\circ$) di atas permukaan pelat lainnya sehingga membentuk huruf 'T' (seperti tiang pagar yang menempel di lantai), sambungan ini dinamakan...",
+      options: [
+        'A. Sambungan bundar',
+        'B. Sambungan huruf T (T-Joint / sambungan sudut)',
+        'C. Sambungan tali',
+        'D. Sambungan gantung',
+      ],
+      correct: 1,
+      explanation: 'Menyambung pelat tegak menyiku 90° di atas pelat lain seperti tiang pagar disebut sambungan T (T-Joint / sudut).'
+    },
+    {
+      id: 20,
+      domain: 'Posisi Datar (1G/Flat)',
+      question: 'Bagi siswa pemula yang baru pertama kali belajar mengelas di bengkel, posisi pengelasan yang paling mudah dan dilakukan mendatar di atas meja kerja di bawah pandangan tangan disebut...',
+      options: [
+        'A. Posisi mengelas di atas kepala (overhead)',
+        'B. Posisi mengelas tegak vertikal (naik ke atas)',
+        'C. Posisi mengelas di bawah tangan / datar (flat)',
+        'D. Posisi mengelas sambil melompat',
+      ],
+      correct: 2,
+      explanation: 'Posisi mengelas di atas meja di bawah tangan adalah posisi paling dasar dan paling mudah dipelajari oleh siswa pemula.'
     }
   ],
 

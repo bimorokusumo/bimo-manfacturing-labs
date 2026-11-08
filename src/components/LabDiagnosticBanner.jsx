@@ -4,6 +4,8 @@ import { ClipboardCheck, ArrowRight } from 'lucide-react';
 
 const LabDiagnosticBanner = ({ 
   labTitle = 'Laboratorium', 
+  desc = null,
+  questionCount = null,
   onOpenDiagnostic 
 }) => {
   if (!onOpenDiagnostic) return null;
@@ -70,7 +72,7 @@ const LabDiagnosticBanner = ({
           transition: 'all 0.15s'
         }}
       >
-        <span>Mulai Tes (10 Soal)</span>
+        <span>Mulai Tes ({questionCount ? `${questionCount} Soal` : '10 Soal'})</span>
         <ArrowRight size={14} />
       </button>
     </div>

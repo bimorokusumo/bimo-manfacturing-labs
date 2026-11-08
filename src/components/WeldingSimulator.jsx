@@ -883,8 +883,9 @@ const WeldingSimulator = ({ onOpenDiagnostic }) => {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', maxWidth: '100%', minWidth: 0, boxSizing: 'border-box', overflowX: 'hidden' }}>
       
       <LabDiagnosticBanner
-        labTitle="Welding Lab (SMAW, GMAW, OAW & K3 Las)"
-        desc="Diagnosa 10 soal kode elektroda (E6013/E7018), cacat las (undercut/porosity), dan keselamatan helm filter shade #10-12."
+        labTitle="Welding Lab (Dasar-Dasar Pengelasan SMAW)"
+        desc="Pre-Test 20 soal dasar pengelasan busur listrik SMAW, pengenalan 5 alat utama, fluks elektroda, K3 juru las, dan jenis sambungan (TaRL)."
+        questionCount={20}
         onOpenDiagnostic={onOpenDiagnostic}
       />
 

@@ -66,6 +66,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
   });
 
   const [copiedToast, setCopiedToast] = useState(false);
+  const [reviewFilter, setReviewFilter] = useState('all'); // 'all', 'wrong', 'correct'
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [syncStatus, setSyncStatus] = useState(null);
 
@@ -80,6 +81,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
   const handleCategorySelect = (catKey) => {
     sound.playClick();
     setSelectedCategory(catKey);
+    setReviewFilter('all');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -147,8 +149,14 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
     // Tentukan kategori kesiapan
     let levelLabel = 'Perlu Bimbingan';
-    if (calculatedScore >= 80) levelLabel = 'Mahir (Siap Praktik Mandiri)';
-    else if (calculatedScore >= 60) levelLabel = 'Cakap (Standar)';
+    if (selectedCategory === 'welding') {
+      if (calculatedScore >= 80) levelLabel = 'Level 3: MAHIR (Cakap / Mandiri)';
+      else if (calculatedScore >= 55) levelLabel = 'Level 2: MENENGAH (Berkembang)';
+      else levelLabel = 'Level 1: FONDASI (Perlu Bimbingan)';
+    } else {
+      if (calculatedScore >= 80) levelLabel = 'Mahir (Siap Praktik Mandiri)';
+      else if (calculatedScore >= 60) levelLabel = 'Cakap (Standar)';
+    }
 
     setAnswersState(prev => ({
       ...prev,
@@ -209,6 +217,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
           submitTime: ''
         }
       }));
+      setReviewFilter('all');
     }
   };
 
@@ -295,7 +304,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
               gap: '4px'
             }}>
               <Target size={12} />
-              <span>Tepat 10 Soal Pilihan Ganda</span>
+              <span>{currentQuestions.length} Soal Pilihan Ganda</span>
             </span>
             <span style={{
               background: 'rgba(59, 130, 246, 0.25)',
@@ -331,7 +340,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 fontSize: '0.92rem',
                 lineHeight: 1.5
               }}>
-                Asesmen diagnostik <strong>10 soal pilihan ganda</strong> untuk mengukur kesiapan kognitif, pemahaman konsep dasar,
+                Asesmen diagnostik <strong>{currentQuestions.length} soal pilihan ganda</strong> untuk mengukur kesiapan kognitif, pemahaman konsep dasar,
                 dan SOP keselamatan siswa sebelum memulai praktikum di <strong>{currentCategoryData?.shortTitle || 'Lab'}</strong>.
               </p>
             </div>
@@ -496,7 +505,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
       {/* CATEGORY TABS SELECTOR (10 SOAL PER KATEGORI) */}
       <div style={{ marginBottom: '20px' }}>
         <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#475569', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          Pilih Paket Asesmen Diagnostik (Masing-masing 10 Soal Pilihan Ganda):
+          Pilih Paket Asesmen Diagnostik Laboratorium:
         </div>
 
         <div style={{
@@ -535,7 +544,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                     background: hasSubmitted ? (catRes.score >= 75 ? '#dcfce7' : '#fee2e2') : (isSelected ? '#dbeafe' : '#f1f5f9'),
                     color: hasSubmitted ? (catRes.score >= 75 ? '#166534' : '#991b1b') : (isSelected ? '#1e40af' : '#64748b')
                   }}>
-                    {hasSubmitted ? `Skor: ${catRes.score}` : '10 Soal'}
+                    {hasSubmitted ? `Skor: ${catRes.score}` : `${(DIAGNOSTIC_QUESTIONS[catKey] || []).length} Soal`}
                   </span>
                 </div>
 
@@ -615,21 +624,40 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                   color: currentResult.score >= 80 ? '#15803d' : (currentResult.score >= 60 ? '#b45309' : '#b91c1c')
                 }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                    {currentResult.score >= 80 ? (
-                      <>
-                        <CheckCircle2 size={14} className="text-emerald-600" />
-                        <span>KATEGORI MAHIR</span>
-                      </>
-                    ) : currentResult.score >= 60 ? (
-                      <>
-                        <AlertTriangle size={14} className="text-amber-600" />
-                        <span>KATEGORI CAKAP</span>
-                      </>
+                    {selectedCategory === 'welding' ? (
+                      currentResult.score >= 80 ? (
+                        <>
+                          <CheckCircle2 size={14} className="text-emerald-600" />
+                          <span>LEVEL 3: MAHIR (Cakap / Mandiri)</span>
+                        </>
+                      ) : currentResult.score >= 55 ? (
+                        <>
+                          <AlertTriangle size={14} className="text-amber-600" />
+                          <span>LEVEL 2: MENENGAH (Berkembang)</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle size={14} className="text-red-600" />
+                          <span>LEVEL 1: FONDASI (Perlu Bimbingan)</span>
+                        </>
+                      )
                     ) : (
-                      <>
-                        <XCircle size={14} className="text-red-600" />
-                        <span>PERLU BIMBINGAN</span>
-                      </>
+                      currentResult.score >= 80 ? (
+                        <>
+                          <CheckCircle2 size={14} className="text-emerald-600" />
+                          <span>KATEGORI MAHIR</span>
+                        </>
+                      ) : currentResult.score >= 60 ? (
+                        <>
+                          <AlertTriangle size={14} className="text-amber-600" />
+                          <span>KATEGORI CAKAP</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle size={14} className="text-red-600" />
+                          <span>PERLU BIMBINGAN</span>
+                        </>
+                      )
                     )}
                   </span>
                 </div>
@@ -718,7 +746,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             </button>
           </div>
 
-          {/* TINDAK LANJUT GURU & STRATEGI DIFERENSIASI */}
+          {/* TINDAK LANJUT GURU & STRATEGI DIFERENSIASI (TaRL) */}
           <div style={{
             background: '#f8fafc',
             border: '1px solid #e2e8f0',
@@ -728,27 +756,49 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
           }}>
             <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#0f172a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Lightbulb size={16} className="text-amber-500" />
-              <span>Rekomendasi Guru & Rencana Diferensiasi Pembelajaran:</span>
+              <span>Rekomendasi Guru & Rencana Diferensiasi Pembelajaran (TaRL):</span>
             </div>
             <div style={{ fontSize: '0.84rem', color: '#334155', lineHeight: 1.5 }}>
-              {currentResult.score >= 80 ? (
-                <div>
-                  <strong>Kelompok Mahir (Pengayaan):</strong> Siswa telah menguasai konsep dasar dengan sangat baik. 
-                  Siswa siap untuk langsung praktik pengoperasian mesin mandiri, diberikan penugasan proyek manufaktur tingkat lanjut, 
-                  atau diberdayakan menjadi <em>tutor sebaya</em> bagi rekan sekelasnya.
-                </div>
-              ) : currentResult.score >= 60 ? (
-                <div>
-                  <strong>Kelompok Cakap (Pembelajaran Reguler):</strong> Siswa memiliki pemahaman umum yang cukup, namun masih 
-                  memerlukan penguatan singkat pada perhitungan rumus teknis atau pembacaan alat ukur teliti. 
-                  Dapat diberikan lembar kerja panduan (job sheet terstruktur) sebelum mulai mengeksekusi benda kerja.
-                </div>
+              {selectedCategory === 'welding' ? (
+                currentResult.score >= 80 ? (
+                  <div>
+                    <strong style={{ color: '#15803d' }}>Level 3: MAHIR (Cakap / Mandiri) - Skor {currentResult.score}/100 ({currentResult.correctCount}/{currentQuestions.length} Soal Benar):</strong><br />
+                    <em>Karakteristik Murid:</em> Memiliki wawasan awal yang sangat baik tentang alat las dan K3 (pernah melihat atau mencoba las di rumah/bengkel).<br />
+                    <em>Tindak Lanjut & Penugasan LKM:</em> Mengerjakan Jobsheet LKM Level 3: Analisis hasil sambungan butt & T-joint, belajar mengenali cacat las, dan dipercaya sebagai <strong>Tutor Sebaya</strong> bagi rekan sekelasnya.
+                  </div>
+                ) : currentResult.score >= 55 ? (
+                  <div>
+                    <strong style={{ color: '#b45309' }}>Level 2: MENENGAH (Berkembang) - Skor {currentResult.score}/100 ({currentResult.correctCount}/{currentQuestions.length} Soal Benar):</strong><br />
+                    <em>Karakteristik Murid:</em> Sudah memiliki logika umum tentang pengelasan dan keselamatan kerja; siap mempelajari penyambungan dan parameter las.<br />
+                    <em>Tindak Lanjut & Penugasan LKM:</em> Mengerjakan Jobsheet LKM Level 2: Mengenal jenis sambungan butt/T, belajar menyetel ampere trafo las, dan latihan striking arc busur las.
+                  </div>
+                ) : (
+                  <div>
+                    <strong style={{ color: '#b91c1c' }}>Level 1: FONDASI (Perlu Bimbingan) - Skor {currentResult.score}/100 ({currentResult.correctCount}/{currentQuestions.length} Soal Benar):</strong><br />
+                    <em>Karakteristik Murid:</em> Benar-benar belum pernah mengenal alat las listrik, masih asing dengan istilah fluks dan fungsi alat K3.<br />
+                    <em>Tindak Lanjut & Penugasan LKM:</em> Fokus pada Jobsheet LKM Level 1: Pengenalan fisik 5 alat utama SMAW, peragaan memakai APD las lengkap (helm kedok filter gelap, sarung tangan kulit, apron), dan fungsi dasar kawat elektroda.
+                  </div>
+                )
               ) : (
-                <div>
-                  <strong>Kelompok Perlu Bimbingan Khusus (Intervensi Awal):</strong> Siswa belum menguasai konsep prasyarat atau 
-                  SOP keselamatan kerja dasar. Guru disarankan memberikan <em>remedial teaching</em> intensif, bimbingan langsung satu per satu, 
-                  serta wajib diverifikasi pemahamannya sebelum diizinkan mengoperasikan mesin bubut/gerinda berputar.
-                </div>
+                currentResult.score >= 80 ? (
+                  <div>
+                    <strong>Kelompok Mahir (Pengayaan):</strong> Siswa telah menguasai konsep dasar dengan sangat baik. 
+                    Siswa siap untuk langsung praktik pengoperasian mesin mandiri, diberikan penugasan proyek manufaktur tingkat lanjut, 
+                    atau diberdayakan menjadi <em>tutor sebaya</em> bagi rekan sekelasnya.
+                  </div>
+                ) : currentResult.score >= 60 ? (
+                  <div>
+                    <strong>Kelompok Cakap (Pembelajaran Reguler):</strong> Siswa memiliki pemahaman umum yang cukup, namun masih 
+                    memerlukan penguatan singkat pada perhitungan rumus teknis atau pembacaan alat ukur teliti. 
+                    Dapat diberikan lembar kerja panduan (job sheet terstruktur) sebelum mulai mengeksekusi benda kerja.
+                  </div>
+                ) : (
+                  <div>
+                    <strong>Kelompok Perlu Bimbingan Khusus (Intervensi Awal):</strong> Siswa belum menguasai konsep prasyarat atau 
+                    SOP keselamatan kerja dasar. Guru disarankan memberikan <em>remedial teaching</em> intensif, bimbingan langsung satu per satu, 
+                    serta wajib diverifikasi pemahamannya sebelum diizinkan mengoperasikan mesin bubut/gerinda berputar.
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -939,9 +989,120 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
         </div>
       </div>
 
-      {/* DAFTAR 10 SOAL PILGAN */}
+      {/* BILAH UMPAN BALIK HASIL & FILTER SETELAH SUBMIT */}
+      {currentResult.isSubmitted && (
+        <div style={{
+          background: '#ffffff',
+          border: '1.5px solid #cbd5e1',
+          borderRadius: '12px',
+          padding: '14px 18px',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '12px',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#0f172a' }}>
+              Umpan Balik Koreksi Soal:
+            </span>
+            <span style={{
+              background: '#dcfce7',
+              color: '#15803d',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              padding: '4px 10px',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              <CheckCircle2 size={14} />
+              <span>{currentResult.correctCount} Soal Benar</span>
+            </span>
+            {currentQuestions.length - (currentResult.correctCount || 0) > 0 && (
+              <span style={{
+                background: '#fee2e2',
+                color: '#b91c1c',
+                fontWeight: 700,
+                fontSize: '0.78rem',
+                padding: '4px 10px',
+                borderRadius: '8px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <XCircle size={14} />
+                <span>{currentQuestions.length - (currentResult.correctCount || 0)} Soal Perlu Perbaikan (Letak Kesalahan)</span>
+              </span>
+            )}
+          </div>
+
+          {/* Filter Buttons */}
+          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>Tampilkan:</span>
+            <button
+              onClick={() => setReviewFilter('all')}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                border: reviewFilter === 'all' ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
+                background: reviewFilter === 'all' ? '#eff6ff' : '#ffffff',
+                color: reviewFilter === 'all' ? '#1d4ed8' : '#475569',
+                cursor: 'pointer'
+              }}
+            >
+              Semua ({currentQuestions.length})
+            </button>
+            <button
+              onClick={() => setReviewFilter('wrong')}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                border: reviewFilter === 'wrong' ? '1.5px solid #dc2626' : '1px solid #cbd5e1',
+                background: reviewFilter === 'wrong' ? '#fef2f2' : '#ffffff',
+                color: reviewFilter === 'wrong' ? '#b91c1c' : '#475569',
+                cursor: 'pointer'
+              }}
+            >
+              Salah Saja ({currentQuestions.length - (currentResult.correctCount || 0)})
+            </button>
+            <button
+              onClick={() => setReviewFilter('correct')}
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                border: reviewFilter === 'correct' ? '1.5px solid #16a34a' : '1px solid #cbd5e1',
+                background: reviewFilter === 'correct' ? '#f0fdf4' : '#ffffff',
+                color: reviewFilter === 'correct' ? '#15803d' : '#475569',
+                cursor: 'pointer'
+              }}
+            >
+              Benar ({currentResult.correctCount || 0})
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* DAFTAR SOAL PILGAN */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginBottom: '32px' }}>
-        {currentQuestions.map((q, idx) => {
+        {currentQuestions
+          .filter(q => {
+            if (!currentResult.isSubmitted || reviewFilter === 'all') return true;
+            const isCorrect = currentResult.answers[q.id] === q.correct;
+            if (reviewFilter === 'wrong') return !isCorrect;
+            if (reviewFilter === 'correct') return isCorrect;
+            return true;
+          })
+          .map((q, idx) => {
           const selectedOption = currentResult.answers[q.id];
           const isAnswered = selectedOption !== undefined;
           const isSubmitted = currentResult.isSubmitted;
@@ -974,7 +1135,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                     padding: '3px 9px',
                     borderRadius: '6px'
                   }}>
-                    Soal {idx + 1} / 10
+                    Soal {q.id} / {currentQuestions.length}
                   </span>
                   <span style={{
                     background: '#f1f5f9',
@@ -1086,24 +1247,58 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                 })}
               </div>
 
-              {/* EXPLANATION AFTER SUBMIT */}
-              {isSubmitted && q.explanation && (
-                <div style={{
-                  marginTop: '14px',
-                  background: '#f8fafc',
-                  borderLeft: '4px solid #3b82f6',
-                  borderRadius: '0 8px 8px 0',
-                  padding: '10px 14px',
-                  fontSize: '0.82rem',
-                  color: '#334155',
-                  lineHeight: 1.45
-                }}>
-                  <strong style={{ color: '#1e40af', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                    <Lightbulb size={13} className="text-amber-500" />
-                    <span>Konsep & Pembahasan Teknis:</span>
-                  </strong>{' '}
-                  {q.explanation}
-                </div>
+              {/* UMPAN BALIK LANGSUNG SETELAH SISWA MENGIRIM JAWABAN */}
+              {isSubmitted && (
+                !isQuestionCorrect ? (
+                  <div style={{
+                    marginTop: '16px',
+                    background: '#fff1f2',
+                    border: '1.5px solid #fecdd3',
+                    borderLeft: '5px solid #e11d48',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    fontSize: '0.85rem',
+                    color: '#881337',
+                    lineHeight: 1.55
+                  }}>
+                    <div style={{ fontWeight: 800, marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px', color: '#be123c', fontSize: '0.88rem' }}>
+                      <XCircle size={16} />
+                      <span>Umpan Balik Koreksi & Letak Kesalahan:</span>
+                    </div>
+                    <div style={{ marginBottom: '8px', color: '#9f1239' }}>
+                      Jawaban Anda ({selectedOption !== undefined ? `Pilihan ${['A', 'B', 'C', 'D'][selectedOption]}` : 'Belum Dijawab'}) <strong>belum tepat</strong>. Kunci jawaban yang benar adalah{' '}
+                      <strong>
+                        {q.options[q.correct]}
+                      </strong>.
+                    </div>
+                    <div style={{ background: '#ffffff', borderRadius: '8px', padding: '10px 14px', border: '1px solid #ffe4e6', color: '#334155' }}>
+                      <strong style={{ color: '#0f172a', display: 'block', marginBottom: '4px' }}>
+                        Pembahasan Edukatif & Mengapa Ini Benar:
+                      </strong>
+                      {q.explanation}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{
+                    marginTop: '16px',
+                    background: '#f0fdf4',
+                    border: '1.5px solid #bbf7d0',
+                    borderLeft: '5px solid #16a34a',
+                    borderRadius: '10px',
+                    padding: '12px 16px',
+                    fontSize: '0.85rem',
+                    color: '#14532d',
+                    lineHeight: 1.55
+                  }}>
+                    <div style={{ fontWeight: 800, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px', color: '#15803d', fontSize: '0.88rem' }}>
+                      <CheckCircle2 size={16} />
+                      <span>Jawaban Anda Tepat! Penguatan Konsep:</span>
+                    </div>
+                    <div style={{ color: '#1e3a5f' }}>
+                      {q.explanation}
+                    </div>
+                  </div>
+                )
               )}
             </div>
           );
@@ -1133,7 +1328,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             </div>
             <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
               {answeredCount === currentQuestions.length
-                ? 'Semua 10 soal pilihan ganda telah dijawab dengan lengkap!'
+                ? `Semua ${currentQuestions.length} soal pilihan ganda telah dijawab dengan lengkap!`
                 : `Masih ada ${currentQuestions.length - answeredCount} soal yang belum dijawab.`}
             </div>
           </div>

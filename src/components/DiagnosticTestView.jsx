@@ -87,17 +87,24 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
   const handleSelectOption = (questionId, optionIndex) => {
     if (currentResult.isSubmitted) return;
-    sound.playClick();
-    setAnswersState(prev => ({
-      ...prev,
-      [selectedCategory]: {
-        ...prev[selectedCategory],
-        answers: {
-          ...prev[selectedCategory].answers,
-          [questionId]: optionIndex
+    try {
+      sound.playClick();
+    } catch {
+      // Audio fallback
+    }
+    setAnswersState(prev => {
+      const currentCatState = prev[selectedCategory] || { answers: {}, isSubmitted: false };
+      return {
+        ...prev,
+        [selectedCategory]: {
+          ...currentCatState,
+          answers: {
+            ...currentCatState.answers,
+            [questionId]: optionIndex
+          }
         }
-      }
-    }));
+      };
+    });
   };
 
   const handleSubmit = async () => {
@@ -158,17 +165,20 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
       else if (calculatedScore >= 60) levelLabel = 'Cakap (Standar)';
     }
 
-    setAnswersState(prev => ({
-      ...prev,
-      [selectedCategory]: {
-        ...prev[selectedCategory],
-        isSubmitted: true,
-        score: calculatedScore,
-        correctCount: correct,
-        submitTime: timeStr,
-        domainScores
-      }
-    }));
+    setAnswersState(prev => {
+      const currentCatState = prev[selectedCategory] || { answers: {}, isSubmitted: false };
+      return {
+        ...prev,
+        [selectedCategory]: {
+          ...currentCatState,
+          isSubmitted: true,
+          score: calculatedScore,
+          correctCount: correct,
+          submitTime: timeStr,
+          domainScores
+        }
+      };
+    });
 
     // Simpan ke Gradebook & Google Sheets
     try {
@@ -179,12 +189,12 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
           className: studentInfo.classRoom || 'X TPM',
           school: studentInfo.school || 'SMKN 2 Depok'
         },
-        modul: currentCategoryData.shortTitle || 'Heat Treatment',
-        judulKuis: `Tes Diagnostik: ${currentCategoryData.title}`,
+        modul: currentCategoryData?.shortTitle || 'Welding Lab',
+        judulKuis: `Tes Diagnostik: ${currentCategoryData?.title || 'Pengelasan'}`,
         skor: calculatedScore,
         jawabanBenar: correct,
         totalSoal: currentQuestions.length,
-        detailJawaban: `Kategori: ${levelLabel}. Benar: ${correct}/${currentQuestions.length} Soal. Diagnostik ${currentCategoryData.title}`
+        detailJawaban: `Kategori: ${levelLabel}. Benar: ${correct}/${currentQuestions.length} Soal. Diagnostik ${currentCategoryData?.title || ''}`
       });
 
       if (res && res.sheetResult) {
@@ -205,7 +215,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
   };
 
   const handleReset = () => {
-    if (window.confirm(`Apakah Anda yakin ingin mengulang ${currentCategoryData.title}? Jawaban akan direset.`)) {
+    if (window.confirm(`Apakah Anda yakin ingin mengulang ${currentCategoryData?.title || 'tes ini'}? Jawaban akan direset.`)) {
       sound.playClick();
       setAnswersState(prev => ({
         ...prev,
@@ -223,7 +233,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
 
   const scrollToQuestion = (id) => {
     const el = document.getElementById(`diag-q-${id}`);
-    if (el) {
+    if (el && typeof el.scrollIntoView === 'function') {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
@@ -231,7 +241,7 @@ const DiagnosticTestView = ({ initialCategory = 'machine', onNavigateToLab = nul
   const handleCopySummary = () => {
     if (!currentResult.isSubmitted) return;
     const text = `[RAPOR] HASIL TES DIAGNOSTIK AWAL SISWA
-Kategori: ${currentCategoryData.title}
+Kategori: ${currentCategoryData?.title || 'Diagnostik'}
 Nama: ${studentInfo.name || '-'}
 Kelas: ${studentInfo.classRoom || '-'} | No. Absen: ${studentInfo.studentId || '-'}
 Sekolah: ${studentInfo.school || '-'}
@@ -240,9 +250,19 @@ Skor Akhir: ${currentResult.score}/100 (${currentResult.correctCount} dari ${cur
 Status Kesiapan: ${currentResult.score >= 80 ? '[MAHIR] (Siap Praktik Mandiri)' : currentResult.score >= 60 ? '[CAKAP] (Perlu Penguatan Konsep)' : '[PERLU BIMBINGAN] (Remedial K3 & Teori)'}
 Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
 
-    navigator.clipboard.writeText(text);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(text).catch(() => {});
+      }
+    } catch {
+      // ignore
+    }
     setCopiedToast(true);
-    sound.playClick();
+    try {
+      sound.playClick();
+    } catch {
+      // ignore
+    }
     setTimeout(() => setCopiedToast(false), 3000);
   };
 
@@ -544,7 +564,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
                     background: hasSubmitted ? (catRes.score >= 75 ? '#dcfce7' : '#fee2e2') : (isSelected ? '#dbeafe' : '#f1f5f9'),
                     color: hasSubmitted ? (catRes.score >= 75 ? '#166534' : '#991b1b') : (isSelected ? '#1e40af' : '#64748b')
                   }}>
-                    {hasSubmitted ? `Skor: ${catRes.score}` : `${(DIAGNOSTIC_QUESTIONS[catKey] || []).length} Soal`}
+                    {hasSubmitted ? `Skor: ${catRes.score}` : `${(DIAGNOSTIC_QUESTIONS[cat.id] || []).length} Soal`}
                   </span>
                 </div>
 
@@ -582,9 +602,9 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
           }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '1.4rem' }}>{currentCategoryData.icon}</span>
+                <span style={{ fontSize: '1.4rem' }}>{currentCategoryData?.icon || '📋'}</span>
                 <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#0f172a' }}>
-                  Hasil Diagnostik: {currentCategoryData.title}
+                  Hasil Diagnostik: {currentCategoryData?.title || 'Laboratorium'}
                 </h2>
               </div>
               <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
@@ -913,7 +933,6 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
           {currentQuestions.map((q, idx) => {
             const isAnswered = currentResult.answers[q.id] !== undefined;
             const isCorrect = currentResult.isSubmitted && currentResult.answers[q.id] === q.correct;
-            const isWrong = currentResult.isSubmitted && currentResult.answers[q.id] !== q.correct;
 
             let bgColor = '#f8fafc';
             let borderColor = '#cbd5e1';
@@ -1102,7 +1121,7 @@ Platform: BIMO Manufacturing Labs - SMKN 2 Depok`;
             if (reviewFilter === 'correct') return isCorrect;
             return true;
           })
-          .map((q, idx) => {
+          .map((q) => {
           const selectedOption = currentResult.answers[q.id];
           const isAnswered = selectedOption !== undefined;
           const isSubmitted = currentResult.isSubmitted;

@@ -52,8 +52,14 @@ const LabDiagnosticBanner = ({
       <button
         className="lab-diagnostic-btn"
         onClick={() => {
-          sound.playClick();
-          onOpenDiagnostic();
+          try {
+            sound.playClick();
+          } catch {
+            // Audio fallback
+          }
+          if (typeof onOpenDiagnostic === 'function') {
+            onOpenDiagnostic();
+          }
         }}
         style={{
           background: '#ffffff',
